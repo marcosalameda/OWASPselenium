@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR TBLB]/
 		}
 
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "text", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "text", FieldType.TEXT);
 			Qfield.FieldDescription = "Text";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -85,7 +84,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "numint", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "numint", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Numeric (Integer)";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -96,7 +95,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "numdec", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "numdec", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Numeric (Decimal)";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -108,7 +107,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "curint", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "curint", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Currency (Interger)";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -120,7 +119,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "curdec", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "curdec", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Currency (Decimal)";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -132,7 +131,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "bool", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "bool", FieldType.LOGIC);
 			Qfield.FieldDescription = "Boolean";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -142,7 +141,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "date", FieldType.DATA);
+			Qfield = new Field(info.Alias, "date", FieldType.DATE);
 			Qfield.FieldDescription = "Date";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -152,7 +151,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "datetm", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "datetm", FieldType.DATETIME);
 			Qfield.FieldDescription = "DateTime (Minutes)";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -162,7 +161,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "datets", FieldType.DATASEGUNDO);
+			Qfield = new Field(info.Alias, "datets", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "DateTime (Seconds)";
 			Qfield.FieldSize =  19;
 			Qfield.MQueue = false;
@@ -172,7 +171,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "timehm", FieldType.TEMPO);
+			Qfield = new Field(info.Alias, "timehm", FieldType.TIME_HOURS);
 			Qfield.FieldDescription = "Time (Hours-Minutes)";
 			Qfield.FieldSize =  5;
 			Qfield.MQueue = false;
@@ -182,7 +181,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "enumt", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "enumt", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Enumeration (Text)";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -194,7 +193,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "enumn", FieldType.ARRAY_COD_NUMERICO);
+			Qfield = new Field(info.Alias, "enumn", FieldType.ARRAY_NUMERIC);
 			Qfield.FieldDescription = "Enumeration (Numeric)";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -206,7 +205,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -280,8 +279,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Table (Basic Types)";
 			info.AreaPluralDesignation="Tables (Basic Types)";
 			info.DescriptionCav="TABLE__BASIC_TYPES_42027";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

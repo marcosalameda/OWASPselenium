@@ -128,7 +128,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcattp.FldCodtpcat, CSGenioAcattp.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAcattp.FldTpcatego, FieldType.TEXTO, Resources.Resources.CATEGORY_TYPE23058, 30, 0, true),
+                new Exports.QColumn(CSGenioAcattp.FldTpcatego, FieldType.TEXT, Resources.Resources.CATEGORY_TYPE23058, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

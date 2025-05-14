@@ -140,8 +140,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERO, Resources.Resources.NO_BATE21045, 10, 0, true),
-                new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 8, 0, true),
+                new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERIC, Resources.Resources.NO_BATE21045, 10, 0, true),
+                new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATETIME, Resources.Resources.DECOMISSION14486, 8, 0, true),
                 new Exports.QColumn(CSGenioAdecom.FldNote, FieldType.MEMO, Resources.Resources.NOTES05274, 30, 3, true),
             };
 

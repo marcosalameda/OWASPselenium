@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR FAMIL]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "family", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "family", FieldType.TEXT);
 			Qfield.FieldDescription = "Equipment family";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -138,8 +137,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Equipment familiy";
 			info.AreaPluralDesignation="Equipmente families";
 			info.DescriptionCav="EQUIPMENT_FAMILIY58959";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

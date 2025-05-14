@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR CFAQS]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "icon", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "icon", FieldType.IMAGE);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -87,7 +86,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -161,8 +160,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Category FAQS";
 			info.AreaPluralDesignation="Category FAQS";
 			info.DescriptionCav="CATEGORY_FAQS42471";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

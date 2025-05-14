@@ -110,21 +110,21 @@ namespace GenioMVC.ViewModels.Wareh
 
 				if (Qfield.FullName.Equals("item.itemdes"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Item", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 				}
 
 				if (Qfield.FullName.Equals("item.itemcod"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Code", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 2, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 				}
 
 				if (Qfield.FullName.Equals("item.date"))
 				{
-					var fieldType = FieldType.DATA;
+					var fieldType = FieldType.DATE;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Date", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 				}

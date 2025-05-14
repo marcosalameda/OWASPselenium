@@ -128,11 +128,11 @@ FieldRef[] fields = new FieldRef[] { CSGenioAtradu.FldCodtradu, CSGenioAtradu.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtradu.FldReferenc, FieldType.TEXTO, Resources.Resources.REF_A30225, 30, 0, true),
-                new Exports.QColumn(CSGenioAlang1.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 30, 0, true),
-                new Exports.QColumn(CSGenioAtradu.FldAtraduzi, FieldType.TEXTO, Resources.Resources.A_TRADUZIR48203, 30, 0, true),
-                new Exports.QColumn(CSGenioAlang2.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 30, 0, true),
-                new Exports.QColumn(CSGenioAtradu.FldTraduzid, FieldType.TEXTO, Resources.Resources.TRADUZIDO46556, 30, 0, true),
+                new Exports.QColumn(CSGenioAtradu.FldReferenc, FieldType.TEXT, Resources.Resources.REF_A30225, 30, 0, true),
+                new Exports.QColumn(CSGenioAlang1.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 30, 0, true),
+                new Exports.QColumn(CSGenioAtradu.FldAtraduzi, FieldType.TEXT, Resources.Resources.A_TRADUZIR48203, 30, 0, true),
+                new Exports.QColumn(CSGenioAlang2.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 30, 0, true),
+                new Exports.QColumn(CSGenioAtradu.FldTraduzid, FieldType.TEXT, Resources.Resources.TRADUZIDO46556, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

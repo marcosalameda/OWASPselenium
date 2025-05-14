@@ -128,10 +128,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioApwcom.FldCodpwcom, CSGenioApwcom.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXTO, Resources.Resources.LOGIN48703, 20, 0, true),
-                new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-                !ajaxRequest ? new Exports.QColumn(CSGenioApwcom.FldFoto, FieldType.IMAGEM_JPEG, Resources.Resources.FOTO19492, 3, 1, true):null,
-                new Exports.QColumn(CSGenioApwcom.FldNridenti, FieldType.NUMERO, Resources.Resources.IDENTIFICATION37731, 6, 0, true),
+                new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXT, Resources.Resources.LOGIN48703, 20, 0, true),
+                new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+                !ajaxRequest ? new Exports.QColumn(CSGenioApwcom.FldFoto, FieldType.IMAGE, Resources.Resources.FOTO19492, 3, 1, true):null,
+                new Exports.QColumn(CSGenioApwcom.FldNridenti, FieldType.NUMERIC, Resources.Resources.IDENTIFICATION37731, 6, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

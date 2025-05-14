@@ -69,9 +69,9 @@ namespace CSGenio.persistence
         }
 
         /// <inheritdoc/>
-        public override string generatePrimaryKey(string id_object, string id_field, int size, CodeType format)
+        public override string generatePrimaryKey(string id_object, string id_field, int size, FieldType format)
         {
-            if (format == CodeType.GUID_KEY)
+            if (format == FieldType.KEY_GUID)
             {
                 return Guid.NewGuid().ToString();
             }

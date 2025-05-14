@@ -93,10 +93,10 @@ namespace GenioMVC.ViewModels.Item
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAoutpu.FldExitdt, FieldType.DATAHORA, Resources.Resources.EXIT_INSTANT27038, 16, 0, true),
-                new Exports.QColumn(CSGenioAoutpt.FldDocumenr, FieldType.NUMERO, Resources.Resources.DOCUMENT_NO_30174, 10, 0, true),
-                new Exports.QColumn(CSGenioAoutpu.FldLine, FieldType.NUMERO, Resources.Resources.LINE27983, 5, 1, true),
-                new Exports.QColumn(CSGenioAoutpu.FldExitqnty, FieldType.NUMERO, Resources.Resources.QTD_OUTPUT12876, 10, 0, true),
+                new Exports.QColumn(CSGenioAoutpu.FldExitdt, FieldType.DATETIME, Resources.Resources.EXIT_INSTANT27038, 16, 0, true),
+                new Exports.QColumn(CSGenioAoutpt.FldDocumenr, FieldType.NUMERIC, Resources.Resources.DOCUMENT_NO_30174, 10, 0, true),
+                new Exports.QColumn(CSGenioAoutpu.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 5, 1, true),
+                new Exports.QColumn(CSGenioAoutpu.FldExitqnty, FieldType.NUMERIC, Resources.Resources.QTD_OUTPUT12876, 10, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

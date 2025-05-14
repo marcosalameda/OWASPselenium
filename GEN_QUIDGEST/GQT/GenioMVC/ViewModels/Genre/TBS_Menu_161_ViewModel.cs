@@ -128,10 +128,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXTO, Resources.Resources.GENUS37471, 20, 0, true),
-                new Exports.QColumn(CSGenioAgenre.FldAgencont, FieldType.ARRAY_COD_TEXTO, Resources.Resources.GENDER_CONTACT17830, 1, 0, true, "GenConta"),
-                new Exports.QColumn(CSGenioAgenre.FldBackcolo, FieldType.TEXTO, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
-                new Exports.QColumn(CSGenioAgenre.FldTextcolo, FieldType.TEXTO, Resources.Resources.TEXT_COLOR24820, 30, 0, false),
+                new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXT, Resources.Resources.GENUS37471, 20, 0, true),
+                new Exports.QColumn(CSGenioAgenre.FldAgencont, FieldType.ARRAY_TEXT, Resources.Resources.GENDER_CONTACT17830, 1, 0, true, "GenConta"),
+                new Exports.QColumn(CSGenioAgenre.FldBackcolo, FieldType.TEXT, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
+                new Exports.QColumn(CSGenioAgenre.FldTextcolo, FieldType.TEXT, Resources.Resources.TEXT_COLOR24820, 30, 0, false),
             };
 
             columns.RemoveAll(item => item == null);

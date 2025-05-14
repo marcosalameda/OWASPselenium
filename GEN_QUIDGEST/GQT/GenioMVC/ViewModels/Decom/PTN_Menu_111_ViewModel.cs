@@ -128,13 +128,13 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 16, 0, true),
-                new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERO, Resources.Resources.NO_BATE21045, 10, 0, true),
+                new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATETIME, Resources.Resources.DECOMISSION14486, 16, 0, true),
+                new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERIC, Resources.Resources.NO_BATE21045, 10, 0, true),
                 new Exports.QColumn(CSGenioAdecom.FldNote, FieldType.MEMO, Resources.Resources.NOTES05274, 30, 3, true),
-                new Exports.QColumn(CSGenioAdecom.FldCreatdat, FieldType.DATACRIA, Resources.Resources.CRIADO_EM61283, 8, 0, true),
-                new Exports.QColumn(CSGenioAdecom.FldCreatope, FieldType.OPERCRIA, Resources.Resources.CRIADO_POR17895, 20, 0, true),
-                new Exports.QColumn(CSGenioAdecom.FldChngdate, FieldType.DATAMUDA, Resources.Resources.ALTERADO_EM23573, 8, 0, true),
-                new Exports.QColumn(CSGenioAdecom.FldOperchng, FieldType.OPERMUDA, Resources.Resources.ALTERADO_POR39254, 20, 0, true),
+                new Exports.QColumn(CSGenioAdecom.FldCreatdat, FieldType.DATETIMESECONDS, Resources.Resources.CRIADO_EM61283, 8, 0, true),
+                new Exports.QColumn(CSGenioAdecom.FldCreatope, FieldType.TEXT, Resources.Resources.CRIADO_POR17895, 20, 0, true),
+                new Exports.QColumn(CSGenioAdecom.FldChngdate, FieldType.DATETIMESECONDS, Resources.Resources.ALTERADO_EM23573, 8, 0, true),
+                new Exports.QColumn(CSGenioAdecom.FldOperchng, FieldType.TEXT, Resources.Resources.ALTERADO_POR39254, 20, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

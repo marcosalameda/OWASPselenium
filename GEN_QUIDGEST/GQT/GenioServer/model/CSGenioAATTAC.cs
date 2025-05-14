@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR ATTAC]/
 		}
 
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "attached", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "attached", FieldType.DATETIME);
 			Qfield.FieldDescription = "Attached";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -85,7 +84,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "document", FieldType.FICHEIRO_BD);
+			Qfield = new Field(info.Alias, "document", FieldType.DOCUMENT);
 			Qfield.FieldDescription = "Document";
 			Qfield.FieldSize =  85;
 			Qfield.MQueue = false;
@@ -93,13 +92,13 @@ namespace CSGenio.business
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
- 			Qfield = new Field(info.Alias, "documentfk", FieldType.CHAVE_ESTRANGEIRA_GUID);
+ 			Qfield = new Field(info.Alias, "documentfk", FieldType.KEY_GUID);
 			Qfield.FieldSize = 16;
 			Qfield.FieldDescription = "Chave estrangeira para o documento";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -175,8 +174,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Attachment";
 			info.AreaPluralDesignation="Attachments";
 			info.DescriptionCav="ATTACHMENT29376";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

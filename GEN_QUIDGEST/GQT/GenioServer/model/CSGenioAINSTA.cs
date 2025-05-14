@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR INSTA]/
 		}
 
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "designat", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "designat", FieldType.TEXT);
 			Qfield.FieldDescription = "Scheduling";
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "SCHEDULING24801";
@@ -81,7 +80,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtiniage", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtiniage", FieldType.DATETIME);
 			Qfield.FieldDescription = "Beginning";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "BEGINNING18124";
@@ -90,7 +89,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtfimage", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtfimage", FieldType.DATETIME);
 			Qfield.FieldDescription = "End";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "END47577";
@@ -109,7 +108,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "allday", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "allday", FieldType.LOGIC);
 			Qfield.FieldDescription = "All day";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "ALL_DAY18496";
@@ -118,7 +117,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "since", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "since", FieldType.DATETIME);
 			Qfield.FieldDescription = "Since";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "SINCE47259";
@@ -127,7 +126,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "until", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "until", FieldType.DATETIME);
 			Qfield.FieldDescription = "Until";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "UNTIL39173";
@@ -136,7 +135,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "hours", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "hours", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Qtd hours";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 7;
@@ -152,7 +151,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "precohor", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "precohor", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Hourly price";
 			Qfield.FieldSize =  12;
 			Qfield.IntegerDigits = 9;
@@ -164,7 +163,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "value", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "value", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Value";
 			Qfield.FieldSize =  12;
 			Qfield.IntegerDigits = 9;
@@ -180,7 +179,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "coordgeo", FieldType.GEOGRAPHY);
+			Qfield = new Field(info.Alias, "coordgeo", FieldType.GEOGRAPHY_POINT);
 			Qfield.FieldDescription = "Geographic coordinate";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "GEOGRAPHIC_COORDINAT21394";
@@ -189,7 +188,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -224,11 +223,11 @@ namespace CSGenio.business
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
 			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("cntry","equip");
+			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -287,8 +286,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Installation";
 			info.AreaPluralDesignation="Facilities";
 			info.DescriptionCav="INSTALLATION12952";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

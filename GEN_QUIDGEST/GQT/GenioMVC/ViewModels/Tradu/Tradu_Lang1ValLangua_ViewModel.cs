@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Tradu
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAlang1.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 50, 0, true),
+                new Exports.QColumn(CSGenioAlang1.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

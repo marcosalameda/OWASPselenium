@@ -128,10 +128,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZz
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
-                new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
-                new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGICO, Resources.Resources.IN_USE42606, 1, 0, true),
-                new Exports.QColumn(CSGenioAitem.FldItemtype, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TYPE00312, 1, 0, true, "TipoArti"),
+                new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 30, 0, true),
+                new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXT, Resources.Resources.CODE49225, 15, 0, true),
+                new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGIC, Resources.Resources.IN_USE42606, 1, 0, true),
+                new Exports.QColumn(CSGenioAitem.FldItemtype, FieldType.ARRAY_TEXT, Resources.Resources.TYPE00312, 1, 0, true, "TipoArti"),
             };
 
             columns.RemoveAll(item => item == null);

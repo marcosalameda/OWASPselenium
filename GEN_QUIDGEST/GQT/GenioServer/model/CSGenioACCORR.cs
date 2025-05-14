@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR CCORR]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "norder", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "norder", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Order";
 			Qfield.FieldSize =  6;
 			Qfield.IntegerDigits = 6;
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "date", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "date", FieldType.DATETIME);
 			Qfield.FieldDescription = "Instant";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "INSTANT35907";
@@ -73,7 +72,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "type", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "type", FieldType.TEXT);
 			Qfield.FieldDescription = "Type";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "TYPE00312";
@@ -100,7 +99,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "qnty", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "qnty", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 10;
@@ -110,7 +109,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "balance", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "balance", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Balance";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 10;
@@ -120,7 +119,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "referenc", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "referenc", FieldType.TEXT);
 			Qfield.FieldDescription = "Ref";
 			Qfield.FieldSize =  10;
 			Qfield.CavDesignation = "REF48861";
@@ -129,7 +128,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -214,8 +213,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Current account";
 			info.AreaPluralDesignation="Current account";
 			info.DescriptionCav="CURRENT_ACCOUNT19471";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

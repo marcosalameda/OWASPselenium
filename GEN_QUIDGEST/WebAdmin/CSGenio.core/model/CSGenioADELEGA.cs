@@ -54,20 +54,19 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-      info.RegisterFieldDB(new Field(info.Alias, "coddelega", FieldType.CHAVE_PRIMARIA_GUID));
-      info.RegisterFieldDB(new Field(info.Alias, "codpswup", FieldType.CHAVE_ESTRANGEIRA_GUID));
-      info.RegisterFieldDB(new Field(info.Alias, "codpswdw", FieldType.CHAVE_ESTRANGEIRA_GUID));
-	  info.KeyType = CodeType.GUID_KEY;
-      info.RegisterFieldDB(new Field(info.Alias, "dateini", FieldType.DATA));
-      info.RegisterFieldDB(new Field(info.Alias, "dateend", FieldType.DATA));
-      info.RegisterFieldDB(new Field(info.Alias, "message", FieldType.TEXTO));
-      info.RegisterFieldDB(new Field(info.Alias, "revoked", FieldType.LOGICO));
-      info.RegisterFieldDB(new Field(info.Alias, "auditusr", FieldType.TEXTO));
-      info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.TEXTO));
-      info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATA));
-      info.RegisterFieldDB(new Field(info.Alias, "opermuda", FieldType.TEXTO));
-      info.RegisterFieldDB(new Field(info.Alias, "datamuda", FieldType.DATA));
-      info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
+      info.RegisterFieldDB(new Field(info.Alias, "coddelega", FieldType.KEY_GUID));
+      info.RegisterFieldDB(new Field(info.Alias, "codpswup", FieldType.KEY_GUID));
+      info.RegisterFieldDB(new Field(info.Alias, "codpswdw", FieldType.KEY_GUID));
+      info.RegisterFieldDB(new Field(info.Alias, "dateini", FieldType.DATE));
+      info.RegisterFieldDB(new Field(info.Alias, "dateend", FieldType.DATE));
+      info.RegisterFieldDB(new Field(info.Alias, "message", FieldType.TEXT));
+      info.RegisterFieldDB(new Field(info.Alias, "revoked", FieldType.LOGIC));
+      info.RegisterFieldDB(new Field(info.Alias, "auditusr", FieldType.TEXT));
+      info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.TEXT));
+      info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATE));
+      info.RegisterFieldDB(new Field(info.Alias, "opermuda", FieldType.TEXT));
+      info.RegisterFieldDB(new Field(info.Alias, "datamuda", FieldType.DATE));
+      info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
 			// Relações Filhas
 			//------------------------------

@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Tpeq1
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAfami1.FldFamily, FieldType.TEXTO, Resources.Resources.FAMILIA_DE_EQUIPAMEN12158, 50, 0, true),
+                new Exports.QColumn(CSGenioAfami1.FldFamily, FieldType.TEXT, Resources.Resources.FAMILIA_DE_EQUIPAMEN12158, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

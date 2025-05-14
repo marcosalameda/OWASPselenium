@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR GAMES]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "gamedt", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "gamedt", FieldType.DATETIME);
 			Qfield.FieldDescription = "Game date";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "GAME_DATE09550";
@@ -81,7 +80,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -157,8 +156,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Game";
 			info.AreaPluralDesignation="Games";
 			info.DescriptionCav="GAME57681";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

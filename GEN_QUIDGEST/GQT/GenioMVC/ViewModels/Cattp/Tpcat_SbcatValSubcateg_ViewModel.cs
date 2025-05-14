@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Cattp
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAsbcat.FldSubcateg, FieldType.TEXTO, Resources.Resources.SUB_CATEGORIA15612, 50, 0, true),
+                new Exports.QColumn(CSGenioAsbcat.FldSubcateg, FieldType.TEXT, Resources.Resources.SUB_CATEGORIA15612, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

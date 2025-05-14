@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR USERS]/
 		}
 
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -103,8 +102,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("psw","psw");
 			info.Pathways.Add("perso","perso");
+			info.Pathways.Add("psw","psw");
 		}
 
 		/// <summary>
@@ -150,8 +149,6 @@ namespace CSGenio.business
 			info.AreaDesignation="User";
 			info.AreaPluralDesignation="Users";
 			info.DescriptionCav="USER57012";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

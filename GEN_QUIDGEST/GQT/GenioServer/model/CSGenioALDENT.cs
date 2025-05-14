@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR LDENT]/
 		}
 
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "line", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "line", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Line";
 			Qfield.FieldSize =  5;
 			Qfield.IntegerDigits = 3;
@@ -103,7 +102,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "qtdentra", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "qtdentra", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Qtd entry";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 10;
@@ -114,7 +113,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dhentra", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dhentra", FieldType.DATETIME);
 			Qfield.FieldDescription = "Instant entrance";
 			Qfield.FieldSize =  16;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -124,7 +123,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "emuso", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "emuso", FieldType.LOGIC);
 			Qfield.FieldDescription = "Articles in use";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "ARTICLES_IN_USE35156";
@@ -133,7 +132,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -235,8 +234,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Entry";
 			info.AreaPluralDesignation="Entries";
 			info.DescriptionCav="ENTRY29068";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

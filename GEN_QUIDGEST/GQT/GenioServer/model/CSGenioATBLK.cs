@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR TBLK]/
 		}
 
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXT);
 			Qfield.FieldDescription = "Name";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -84,7 +83,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -113,8 +112,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("trsb","trsb");
 			info.Pathways.Add("grpb","grpb");
+			info.Pathways.Add("trsb","trsb");
 		}
 
 		/// <summary>
@@ -160,8 +159,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Table (Foreign Keys)";
 			info.AreaPluralDesignation="Tables (Foreign Keys)";
 			info.DescriptionCav="TABLE__FOREIGN_KEYS_21641";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

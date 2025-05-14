@@ -228,7 +228,7 @@ namespace CSGenio.persistence
             }
             //a conversaoBd assume (e bem) que o Qfield ja vem no tipo certo, no entanto aqui queremos transformar o inteiro
             //em diferentes tipos consoante o tipo de Qfield.
-            return convertIntegerToInterno(Qvalue, Qfield.FieldType.Formatting);
+            return convertIntegerToInterno(Qvalue, Qfield.FieldType.GetFormatting());
         }
 
         private static object convertIntegerToInterno(int Qvalue, FieldFormatting tipo)
@@ -284,14 +284,9 @@ namespace CSGenio.persistence
 					if (campoBD.IsVirtual)
                         continue;
 
-                    //always skip creation audit fields during update
-                    if (campoBD.FieldType.Equals(FieldType.DATACRIA) || campoBD.FieldType.Equals(FieldType.OPERCRIA)
-                        || campoBD.FieldType.Equals(FieldType.HORACRIA) || campoBD.FieldType.Equals(FieldType.INSTANTECRIA))
-                        continue;
-
                     //skip empty binary fields
-                    if ((campoBD.FieldType.Equals(FieldType.IMAGEM_JPEG) || campoBD.FieldType.Equals(FieldType.PATH)
-                        || campoBD.FieldType.Equals(FieldType.MEMO_COMP_RTF) /*|| campoBD.FieldType.Equals(FieldType.FICHEIRO_BD)*/)
+                    if ((campoBD.FieldType.Equals(FieldType.IMAGE) || campoBD.FieldType.Equals(FieldType.PATH)
+                        || campoBD.FieldType.Equals(FieldType.BINARY))
                         && (campoPedido.Value.ToString().Length == 0 || campoPedido.Value.ToString().StartsWith("*")))
                         continue;
 
@@ -496,28 +491,26 @@ namespace CSGenio.persistence
         public static object ToValidDbValue(object value, FieldType type)
         {
             //Empty keys and dates are represented as null in the database
-            if ((Field.IsKey(type) || value is DateTime) && Field.isEmptyValue(value, type.Formatting))
+            if ((type.IsKey() || value is DateTime) && Field.isEmptyValue(value, type.GetFormatting()))
                 return DBNull.Value;
 
             //Convert keys into their correct database type
-            if (Field.IsKey(type))
+            if (type.IsKey())
             {
-                if (type.Formatting == FieldFormatting.GUID)
+                if (type == FieldType.KEY_GUID)
                     return new Guid(value.ToString());
-                //Currently integer keys are formatted as text, so this will never be called here
-                //There would need to exist a new format for integer keys that is internal string and external int.
-                else if (type.Formatting == FieldFormatting.INTEIRO)
+                else if (type == FieldType.KEY_INT)
                     return int.Parse(value.ToString());
-                else if (type.Formatting == FieldFormatting.CARACTERES)
+                else if (type == FieldType.KEY_VARCHAR)
                     return value;
             }
 
             //Encrypt secure data before sending to database
-            if (type.Formatting == FieldFormatting.ENCRYPTED)
+            if (type == FieldType.ENCRYPTED)
                 return (value as EncryptedDataType)?.EncryptedValue;
 
             //Truncate time of days of date-only fields
-            if (type == FieldType.DATA)
+            if (type == FieldType.DATE)
                 return ((DateTime)value).Date;
 
             //Convert custom type fields
@@ -527,13 +520,13 @@ namespace CSGenio.persistence
                     return System.Text.Encoding.UTF8.GetBytes("");
                 return System.Text.Encoding.UTF8.GetBytes(value.ToString());
             }
-            if (type == FieldType.GEOGRAPHY)
+            if (type == FieldType.GEOGRAPHY_POINT)
             {
                 if (string.IsNullOrEmpty(Convert.ToString(value)))
                     return DBNull.Value;
                 return GeographicData.GetPointFromText(Convert.ToString(value));
             }
-            if (type == FieldType.GEO_SHAPE || type == FieldType.GEOMETRIC)
+            if (type == FieldType.GEOGRAPHY_SHAPE || type == FieldType.GEOMETRY_SHAPE)
             {
                 if (value == null)
                     return DBNull.Value;

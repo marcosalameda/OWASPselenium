@@ -128,20 +128,20 @@ FieldRef[] fields = new FieldRef[] { CSGenioAnotif.FldCodnotif, CSGenioAnotif.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAnotif.FldNrcomoda, FieldType.NUMERO, Resources.Resources.NO__OF_THE_DADATO35934, 6, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldBegin, FieldType.DATAHORA, Resources.Resources.BEGINNING18124, 16, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldEnd, FieldType.DATAHORA, Resources.Resources.END47577, 16, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldEmail, FieldType.TEXTO, Resources.Resources.RECIPIENT_S_EMAIL43894, 30, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldIdnotif, FieldType.TEXTO, Resources.Resources.NOTIFICATION_ID_THAT61751, 30, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldIdmsg, FieldType.TEXTO, Resources.Resources.MESSAGE_ID37133, 30, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldNrcomoda, FieldType.NUMERIC, Resources.Resources.NO__OF_THE_DADATO35934, 6, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldBegin, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldEnd, FieldType.DATETIME, Resources.Resources.END47577, 16, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldEmail, FieldType.TEXT, Resources.Resources.RECIPIENT_S_EMAIL43894, 30, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldIdnotif, FieldType.TEXT, Resources.Resources.NOTIFICATION_ID_THAT61751, 30, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldIdmsg, FieldType.TEXT, Resources.Resources.MESSAGE_ID37133, 30, 0, true),
                 new Exports.QColumn(CSGenioAnotif.FldMessage, FieldType.MEMO, Resources.Resources.TEXT_OF_THE_SENT_MES52307, 30, 15, true),
-                new Exports.QColumn(CSGenioAnotif.FldMailerr, FieldType.TEXTO, Resources.Resources.ERROR_SENDING_EMAIL53846, 30, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldDesignat, FieldType.TEXTO, Resources.Resources.RECIPIENT65165, 30, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldCreatdat, FieldType.DATACRIA, Resources.Resources.CREATION__DATE13180, 8, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldCreatope, FieldType.OPERCRIA, Resources.Resources.CREATION__OPERATOR50535, 20, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldReturned, FieldType.LOGICO, Resources.Resources.RETURNED01606, 1, 0, true),
-                new Exports.QColumn(CSGenioAnotif.FldDtdevolu, FieldType.DATA, Resources.Resources.RETURN32222, 8, 0, true),
-                new Exports.QColumn(CSGenioApess2.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldMailerr, FieldType.TEXT, Resources.Resources.ERROR_SENDING_EMAIL53846, 30, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldDesignat, FieldType.TEXT, Resources.Resources.RECIPIENT65165, 30, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldCreatdat, FieldType.DATETIMESECONDS, Resources.Resources.CREATION__DATE13180, 8, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldCreatope, FieldType.TEXT, Resources.Resources.CREATION__OPERATOR50535, 20, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldReturned, FieldType.LOGIC, Resources.Resources.RETURNED01606, 1, 0, true),
+                new Exports.QColumn(CSGenioAnotif.FldDtdevolu, FieldType.DATE, Resources.Resources.RETURN32222, 8, 0, true),
+                new Exports.QColumn(CSGenioApess2.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

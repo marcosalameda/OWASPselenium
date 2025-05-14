@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR BRDPS]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "brdpsid", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "brdpsid", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Boarding Pass ID";
 			Qfield.FieldSize =  12;
 			Qfield.MQueue = false;
@@ -65,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "emitdate", FieldType.DATA);
+			Qfield = new Field(info.Alias, "emitdate", FieldType.DATE);
 			Qfield.FieldDescription = "Emission Date";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -115,7 +114,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "gate", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "gate", FieldType.TEXT);
 			Qfield.FieldDescription = "Boarding Gate";
 			Qfield.FieldSize =  5;
 			Qfield.MQueue = false;
@@ -125,7 +124,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "seat", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "seat", FieldType.TEXT);
 			Qfield.FieldDescription = "Seat";
 			Qfield.FieldSize =  4;
 			Qfield.MQueue = false;
@@ -135,7 +134,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "haschkin", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "haschkin", FieldType.LOGIC);
 			Qfield.FieldDescription = "Has Checkin?";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -145,7 +144,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "ckndtime", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "ckndtime", FieldType.DATETIME);
 			Qfield.FieldDescription = "Checkin Date/Time";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -155,7 +154,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -192,8 +191,8 @@ namespace CSGenio.business
 			info.Pathways.Add("fltsc","fltsc");
 			info.Pathways.Add("airln","fligh");
 			info.Pathways.Add("airpt","fligh");
-			info.Pathways.Add("airfr","fligh");
 			info.Pathways.Add("airto","fligh");
+			info.Pathways.Add("airfr","fligh");
 			info.Pathways.Add("cntry","fligh");
 		}
 
@@ -240,8 +239,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Boarding Pass";
 			info.AreaPluralDesignation="Boarding Passes";
 			info.DescriptionCav="BOARDING_PASS38735";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR AIRTO]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "airptnam", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "airptnam", FieldType.TEXT);
 			Qfield.FieldDescription = "Airport Name";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "iatacode", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "iatacode", FieldType.TEXT);
 			Qfield.FieldDescription = "IATA Code";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -84,7 +83,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -160,8 +159,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Airport To";
 			info.AreaPluralDesignation="Airports To";
 			info.DescriptionCav="AIRPORT_TO14602";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

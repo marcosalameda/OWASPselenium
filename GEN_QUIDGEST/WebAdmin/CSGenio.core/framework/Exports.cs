@@ -130,7 +130,7 @@ namespace CSGenio.framework
             DataTable dt = new DataTable();
             foreach (QColumn campopedido in columns)
             {
-                dt.Columns.Add(campopedido.Name, campopedido.Type.Type);
+                dt.Columns.Add(campopedido.Name, campopedido.Type.GetExternalType());
             }
             DataSet ds = new DataSet();
             ds.Tables.Add(dt);
@@ -245,7 +245,7 @@ namespace CSGenio.framework
             {
                 this.Name = Qfield.FullName;
                 this.Type = fieldType;
-                this.Formatting = fieldType.Formatting;
+                this.Formatting = fieldType.GetFormatting();
                 this.ArrayName = null;
                 this.Description = descricao;
                 this.Size = size;
@@ -257,7 +257,7 @@ namespace CSGenio.framework
             {
                 this.Name = Qfield.FullName;
                 this.Type = fieldType;
-                this.Formatting = fieldType.Formatting;
+                this.Formatting = fieldType.GetFormatting();
                 this.ArrayName = arrayName;
                 this.Description = descricao;
                 this.Size = size;
@@ -750,7 +750,7 @@ namespace CSGenio.framework
                         }
 
                         // Verify column type
-                        switch (columns[c].Type.Formatting)
+                        switch (columns[c].Type.GetFormatting())
                         {
                             case FieldFormatting.DATA:
                                 worksheet.Cells[idx, c + 1].Style.Numberformat.Format = Configuration.DateFormat.Date;
@@ -770,7 +770,7 @@ namespace CSGenio.framework
                             case FieldFormatting.INTEIRO:
                             case FieldFormatting.LOGICO:
                                 // Ignore logical arrays
-                                if (columns[c].Type == FieldType.ARRAY_COD_LOGICO)
+                                if (columns[c].Type == FieldType.ARRAY_LOGIC)
                                    goto default;
 
                                 worksheet.Cells[idx, c + 1].Style.Numberformat.Format = "0";
@@ -779,7 +779,7 @@ namespace CSGenio.framework
 
                             case FieldFormatting.FLOAT:
                                 // Ignore numeric arrays
-                                if (columns[c].Type == FieldType.ARRAY_COD_NUMERICO)
+                                if (columns[c].Type == FieldType.ARRAY_NUMERIC)
                                    goto default;
 
                                 // Excel already changes number separators for localization
@@ -787,7 +787,7 @@ namespace CSGenio.framework
                                 int decimais = columns[c].Decimals;
 
 								//BPM - Add 2 decimals for defaults in the money
-                                if (columns[c].Type.Id == "$")
+                                if (columns[c].Type == FieldType.CURRENCY)
                                     decimais += 2;
 
                                 if (decimais > 0)
@@ -948,7 +948,7 @@ namespace CSGenio.framework
 			if(user != null)
 				lang = user.Language;
             string text = Conversion.internal2String(data, column.Type);
-            if ((column.Type == FieldType.ARRAY_COD_TEXTO || column.Type == FieldType.ARRAY_COD_NUMERICO || column.Type == FieldType.ARRAY_COD_LOGICO)
+            if ((column.Type == FieldType.ARRAY_TEXT || column.Type == FieldType.ARRAY_NUMERIC || column.Type == FieldType.ARRAY_LOGIC)
                 && !String.IsNullOrEmpty(column.ArrayName) && !String.IsNullOrEmpty(text))
             {
                 ArrayInfo array = new ArrayInfo(column.ArrayName);

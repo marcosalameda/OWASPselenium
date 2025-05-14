@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR AIRPL]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "airplid", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "airplid", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Airplane ID";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -65,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "airplnm", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "airplnm", FieldType.TEXT);
 			Qfield.FieldDescription = "Airplane Name";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -86,7 +85,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "seatcap", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "seatcap", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Seating Capacity";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -107,7 +106,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -181,8 +180,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Airplane";
 			info.AreaPluralDesignation="Airplanes";
 			info.DescriptionCav="AIRPLANE10508";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

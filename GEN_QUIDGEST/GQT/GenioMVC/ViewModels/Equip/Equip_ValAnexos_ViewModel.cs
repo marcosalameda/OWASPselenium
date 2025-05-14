@@ -93,9 +93,9 @@ namespace GenioMVC.ViewModels.Equip
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATAHORA, Resources.Resources.ATTACHED26247, 16, 0, true),
-                new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-                new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.FICHEIRO_BD, Resources.Resources.DOCUMENT00695, 30, 0, true),
+                new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATETIME, Resources.Resources.ATTACHED26247, 16, 0, true),
+                new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+                new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

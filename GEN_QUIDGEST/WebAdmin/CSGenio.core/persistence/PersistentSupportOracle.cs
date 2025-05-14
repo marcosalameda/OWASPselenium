@@ -133,9 +133,9 @@ namespace CSGenio.persistence
         }
 
         /// <inheritdoc/>
-        public override string generatePrimaryKey(string id_object, string id_field, int size, CodeType format)
+        public override string generatePrimaryKey(string id_object, string id_field, int size, FieldType format)
         {
-            if (format.Equals(CodeType.GUID_KEY))
+            if (format == FieldType.KEY_GUID)
                 return Guid.NewGuid().ToString();
 #pragma warning disable 618
             OracleCommand command = CreateCommand("updateCod") as OracleCommand;
@@ -160,7 +160,7 @@ namespace CSGenio.persistence
                 // return null;
             }
 
-			if (format.Equals(CodeType.STRING_KEY))
+			if (format == FieldType.KEY_VARCHAR)
             {
                 return codigoNovo.ToString().PadLeft(size);
             }

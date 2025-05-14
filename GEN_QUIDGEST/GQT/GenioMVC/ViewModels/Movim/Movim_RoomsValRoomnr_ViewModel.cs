@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Movim
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXTO, Resources.Resources.N_R__ROOM43805, 10, 0, true),
+                new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXT, Resources.Resources.N_R__ROOM43805, 10, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR ASSET]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXT);
 			Qfield.FieldDescription = "Identification name";
 			Qfield.FieldSize =  85;
 			Qfield.MQueue = false;
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "assetnum", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "assetnum", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Asset number";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -78,7 +77,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "assettyp", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "assettyp", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Asset type";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -91,7 +90,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "identtyp", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "identtyp", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Identifier type";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -103,7 +102,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "grai", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "grai", FieldType.TEXT);
 			Qfield.FieldDescription = "GRAI – Global Returnable Asset Identifier";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -123,7 +122,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "giai", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "giai", FieldType.TEXT);
 			Qfield.FieldDescription = "GIAI – Global Individual Asset Identifier";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -143,7 +142,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "photo", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "photo", FieldType.IMAGE);
 			Qfield.FieldDescription = "Photo";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -174,7 +173,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -257,8 +256,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Asset";
 			info.AreaPluralDesignation="Assets";
 			info.DescriptionCav="ASSET37028";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

@@ -569,10 +569,6 @@ namespace CSGenio.business
         /// </summary>
         protected Hashtable fields = new Hashtable();
 
-        /// <summary>
-        /// Type de Key Primária
-        /// </summary>
-        protected CodeType KeyType;
 
         //Static class accessed a lot during startup, must have concurrency concerns
         private static ConcurrentDictionary<string, Type> m_areaRegistry = new ConcurrentDictionary<string, Type>();
@@ -834,15 +830,15 @@ namespace CSGenio.business
                                 throw new BusinessException("O campo " + Qfield.FieldDescription + " (" + Qfield.Alias + "." + Qfield.Name + ")  é obrigatório mas não está preenchido.", function, "The field " + Qfield.FieldDescription + " (" + Qfield.Alias + "." + Qfield.Name + ")  is mandatory but is not filled.");
                         }
 
-                        if (Qfield.FieldSize < 0 && Qfield.FieldType == FieldType.TEXTO && Qfield.FieldSize < fieldsvalues[i].ToString().Length)
+                        if (Qfield.FieldSize < 0 && Qfield.FieldType == FieldType.TEXT && Qfield.FieldSize < fieldsvalues[i].ToString().Length)
                             throw new BusinessException("O campo " + Qfield.FieldDescription + " excede a dimensão máxima permitida.", "Area.AuxNomesValoresCampos", "The field " + Qfield.FieldDescription + " exceeds the maximum length allowed.");
 
                         campoPedido.FieldType = Qfield.FieldType;
-                        if (campoPedido.FieldType.Equals(FieldType.IMAGEM_JPEG))
+                        if (campoPedido.FieldType.Equals(FieldType.IMAGE))
                             throw new BusinessException("Erro ao gravar a imagem.", "Area.AuxNomesValoresCampos", "The field type JPEG image is not supported by function " + function);
 
                         // RR 01-04-2011 - os fields tipo path e file db não são geridos a este nível, mas sim a um nível superior
-                        campoPedido.Value = Conversion.string2TypeInternal(fieldsvalues[i], Qfield.FieldType.Formatting);
+                        campoPedido.Value = Conversion.string2TypeInternal(fieldsvalues[i], Qfield.FieldType.GetFormatting());
                     }
 
                     if (!Fields.ContainsKey(fieldName))
@@ -890,11 +886,6 @@ namespace CSGenio.business
         {
             foreach(Field fieldInfo in DBFields.Values)
             {
-                if (fieldInfo.FieldType == FieldType.DATACRIA 
-                    || fieldInfo.FieldType == FieldType.OPERCRIA 
-                    || fieldInfo.FieldType == FieldType.HORACRIA)
-                    continue;
-
                 if (!Fields.ContainsKey(fieldInfo.FullName))
                 {
                     var campoPedido = new RequestedField(fieldInfo.FullName, Alias);
@@ -937,7 +928,7 @@ namespace CSGenio.business
                     fieldInfo ??= DBFields[campoPedido.Name];
                     fieldType = fieldInfo.FieldType;
                     campoPedido.FieldType = fieldType;
-                    campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.Formatting);
+                    campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.GetFormatting());
                     trimPrecision(campoPedido);
                 }
                 //field belongs to another area
@@ -955,7 +946,7 @@ namespace CSGenio.business
                         fieldInfo = Area.GetInfoArea(campoPedido.Area).DBFields[campoPedido.Name];
                         fieldType = fieldInfo.FieldType;
                         campoPedido.FieldType = fieldType;
-                        campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.Formatting);
+                        campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.GetFormatting());
                     }
                     //----------------------------------------------------------------
                 }
@@ -988,7 +979,7 @@ namespace CSGenio.business
         /// </remarks>
         private void trimPrecision(RequestedField field)
         {
-            if(field.FieldType.Formatting == FieldFormatting.FLOAT)
+            if(field.FieldType.GetFormatting() == FieldFormatting.FLOAT)
             {
                 var dec = DBFields[field.Name].Decimals;
                 field.Value = Math.Round((decimal)field.Value, dec, MidpointRounding.AwayFromZero);
@@ -1312,20 +1303,19 @@ namespace CSGenio.business
         {
             try
             {
-                if (this.StampFieldsIns != null && this.StampFieldsIns.Length != 0)
+                if (StampFieldsIns == null)
+                    return;
+
+                DateTime now = DateTime.Now;
+                foreach(string stamp in StampFieldsIns) 
                 {
-                    string[] camposCarimbo = Information.StampFieldsIns;
-                    for (int i = 0; i < camposCarimbo.Length; i++)
-                    {
-                        Field campoCarimbo = DBFields[camposCarimbo[i]];
-                        DateTime dataHoje = DateTime.Now;
-                        if (campoCarimbo.FieldType == FieldType.DATACRIA || campoCarimbo.FieldType == FieldType.INSTANTECRIA)//preenche o datacria se existir
-                            insertNameValueField(campoCarimbo.FullName, dataHoje);
-                        if (campoCarimbo.FieldType == FieldType.OPERCRIA)//preenche o opercria se existir
-                            insertNameValueField(campoCarimbo.FullName, user.Name);
-                        if (campoCarimbo.FieldType == FieldType.HORACRIA)//preenche o horacria se existir
-                            insertNameValueField(campoCarimbo.FullName, string.Format("{0:00}:{1:00}", dataHoje.Hour, dataHoje.Minute));
-                    }
+                    Field info = DBFields[stamp];
+                    if(info.FieldType == FieldType.DATETIMESECONDS)
+                        insertNameValueField(info.FullName, now);
+                    else if (info.FieldType == FieldType.TEXT)
+                        insertNameValueField(info.FullName, user.Name);
+                    else if (info.FieldType == FieldType.TIME_HOURS)
+                        insertNameValueField(info.FullName, string.Format("{0:00}:{1:00}", now.Hour, now.Minute));
                 }
             }
             catch (GenioException ex)
@@ -1345,20 +1335,19 @@ namespace CSGenio.business
         {
             try
             {
-                if (StampFieldsAlt != null && StampFieldsAlt.Length != 0)
+                if (StampFieldsAlt == null)
+                    return;
+
+                DateTime now = DateTime.Now;
+                foreach (string stamp in StampFieldsAlt)
                 {
-                    string[] camposCarimbo = StampFieldsAlt;
-                    for (int i = 0; i < camposCarimbo.Length; i++)
-                    {
-                        Field campoCarimbo = DBFields[camposCarimbo[i]];
-                        DateTime dataHoje = DateTime.Now;
-                        if (campoCarimbo.FieldType == FieldType.DATAMUDA)//preenche o datamuda se existir
-                            insertNameValueField(campoCarimbo.FullName, dataHoje);
-                        if (campoCarimbo.FieldType == FieldType.OPERMUDA)//preenche o operChange se existir
-                            insertNameValueField(campoCarimbo.FullName, user.Name);
-                        if (campoCarimbo.FieldType == FieldType.HORAMUDA)//preenche o horamuda se existir
-                            insertNameValueField(campoCarimbo.FullName, string.Format("{0}:{1}", dataHoje.Hour, dataHoje.Minute));
-                    }
+                    Field info = DBFields[stamp];
+                    if (info.FieldType == FieldType.DATETIMESECONDS)
+                        insertNameValueField(info.FullName, now);
+                    else if (info.FieldType == FieldType.TEXT)
+                        insertNameValueField(info.FullName, user.Name);
+                    else if (info.FieldType == FieldType.TIME_HOURS)
+                        insertNameValueField(info.FullName, string.Format("{0:00}:{1:00}", now.Hour, now.Minute));
                 }
             }
             catch (GenioException ex)
@@ -1621,8 +1610,7 @@ namespace CSGenio.business
                         }
                         else
                         {
-                            FieldFormatting cFormat = campoLN.FieldFormat;
-                            string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                            string funcaoSQL = campoLN.FieldType.GetEPHFunction();
                             auxWhere.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(tabelaEPH.TableName, ephArea.Field)), 1);
                         }
                         auxWhere.Like(tabelaEPH.TableName, ephArea.Field, listaValores[0] + "%"); // TODO: Use LEFT. BackOffice: (LEFT(%s,%d)=
@@ -1640,8 +1628,7 @@ namespace CSGenio.business
                         }
                         else
                         {
-                            FieldFormatting cFormat = Qfield.FieldFormat;
-                            string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                            string funcaoSQL = Qfield.FieldType.GetEPHFunction();
                             lim.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(tabelaEPH.TableName, ephArea.Field)), 1);
                         }
                         lim.Equal(tabelaEPH.TableName, ephArea.Field, listaValores[0]);
@@ -2273,7 +2260,7 @@ namespace CSGenio.business
                     continue;
 
                 // Encrypt the fields before save in the database
-                if (dbField.FieldFormat == FieldFormatting.ENCRYPTED && dbField.EncryptFieldValueFormula != null)
+                if (dbField.FieldType == FieldType.ENCRYPTED && dbField.EncryptFieldValueFormula != null)
                 {
                     // The encrypted field, if it does not have the value, will not change what is in the database.
                     if (!dbField.isEmptyValue(requestedField.Value))

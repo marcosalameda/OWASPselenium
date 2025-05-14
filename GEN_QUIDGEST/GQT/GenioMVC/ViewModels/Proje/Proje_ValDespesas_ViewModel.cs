@@ -93,9 +93,9 @@ namespace GenioMVC.ViewModels.Proje
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAexpen.FldDescript, FieldType.TEXTO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
-                new Exports.QColumn(CSGenioAexpen.FldValue, FieldType.VALOR, Resources.Resources.VALUE10285, 10, 0, true),
-                new Exports.QColumn(CSGenioAyear.FldYear, FieldType.TEXTO, Resources.Resources.ANO33022, 4, 0, true),
+                new Exports.QColumn(CSGenioAexpen.FldDescript, FieldType.TEXT, Resources.Resources.DESCRIPTION07383, 30, 0, true),
+                new Exports.QColumn(CSGenioAexpen.FldValue, FieldType.CURRENCY, Resources.Resources.VALUE10285, 10, 0, true),
+                new Exports.QColumn(CSGenioAyear.FldYear, FieldType.TEXT, Resources.Resources.ANO33022, 4, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

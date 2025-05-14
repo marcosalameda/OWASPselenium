@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR FLTSC]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "scaleid", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "scaleid", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Scale ID";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -75,7 +74,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -108,8 +107,8 @@ namespace CSGenio.business
 			info.Pathways.Add("fligh","fligh");
 			info.Pathways.Add("airln","fligh");
 			info.Pathways.Add("airpt","fligh");
-			info.Pathways.Add("airfr","fligh");
 			info.Pathways.Add("airto","fligh");
+			info.Pathways.Add("airfr","fligh");
 			info.Pathways.Add("cntry","fligh");
 		}
 
@@ -156,8 +155,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Flight Scale";
 			info.AreaPluralDesignation="Flight Scales";
 			info.DescriptionCav="FLIGHT_SCALE13079";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

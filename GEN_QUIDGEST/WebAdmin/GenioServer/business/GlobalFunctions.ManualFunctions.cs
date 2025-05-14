@@ -132,8 +132,8 @@ return DateTime.Now.ToString("HH:mm");
 		{
 			try
 			{
-				object paramlat = QueryUtils.ToValidDbValue(lat, FieldType.NUMERO);
-				object paramlng = QueryUtils.ToValidDbValue(lng, FieldType.NUMERO);
+				object paramlat = QueryUtils.ToValidDbValue(lat, FieldType.NUMERIC);
+				object paramlng = QueryUtils.ToValidDbValue(lng, FieldType.NUMERIC);
 
 				SelectQuery query = new SelectQuery()
 					.Select(new SqlFunction(SqlFunctionType.Custom,

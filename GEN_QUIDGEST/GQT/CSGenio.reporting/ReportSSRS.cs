@@ -587,7 +587,7 @@ namespace CSGenio.reporting
                 string ParamName = "";
 
                 //podemos incializar o tpField com um tipo qualquer pois vamos sempre actualizar a vari�vel quando encontrarmos o Qfield
-                FieldType tpField = FieldType.CHAVE_PRIMARIA;
+                FieldType tpField = FieldType.KEY_VARCHAR;
                 //to cada name tem que se verificar se vem s� o name da area ou se vem o name completo
                 //se vier s� o name da area tem que se descobrir a rela��o com a area base
                 if (!historicFieldNames[i].Contains("."))//s� vem o name da area pelo que assumimos que � uma key prim�ria

@@ -354,35 +354,18 @@ namespace CSGenio.framework
                         throw new ArgumentException("String not recognized as date: " + dataString);
                 }
                 DateTime data;
-                if (formField.Equals(FieldFormatting.DIA_MES_ANO))//day/month/Qyear
-                {
-                    if (dataSplit[2].Trim().Length == 4)
-                        data = new DateTime(int.Parse(dataSplit[2].Trim()), int.Parse(dataSplit[1].Trim()), int.Parse(dataSplit[0].Trim()));
-                    else
-                    {
-                        string temp = dataSplit[2];
-                        string[] dataSplit2 = temp.Split(' ');
-                        int Qyear = int.Parse(dataSplit2[0]);
-                        int day = int.Parse(dataSplit[0].Trim());
-                        int month = int.Parse(dataSplit[1].Trim());
-
-                        data = new DateTime(Qyear, month, day);
-                    }
-                }
+                //day/month/Qyear
+                if (dataSplit[2].Trim().Length == 4)
+                    data = new DateTime(int.Parse(dataSplit[2].Trim()), int.Parse(dataSplit[1].Trim()), int.Parse(dataSplit[0].Trim()));
                 else
-                {   //Qyear/month/day
-                    if (dataSplit[0].Trim().Length == 4)
-                        data = new DateTime(int.Parse(dataSplit[0].Trim()), int.Parse(dataSplit[1].Trim()), int.Parse(dataSplit[2].Trim()));
-                    else
-                    {
-                        string temp = dataSplit[0];
-                        string[] dataSplit2 = temp.Split(' ');
-                        int Qyear = int.Parse(dataSplit2[0]);
-                        int day = int.Parse(dataSplit[2].Trim());
-                        int month = int.Parse(dataSplit[1].Trim());
+                {
+                    string temp = dataSplit[2];
+                    string[] dataSplit2 = temp.Split(' ');
+                    int Qyear = int.Parse(dataSplit2[0]);
+                    int day = int.Parse(dataSplit[0].Trim());
+                    int month = int.Parse(dataSplit[1].Trim());
 
-                        data = new DateTime(Qyear, month, day);
-                    }
+                    data = new DateTime(Qyear, month, day);
                 }
                 return data;
             }
@@ -826,14 +809,14 @@ namespace CSGenio.framework
         {
             try
             {
-                FieldFormatting forField = tpField.Formatting;
+                FieldFormatting forField = tpField.GetFormatting();
                 switch (forField)
                 {
                     case FieldFormatting.INTEIRO:
                     case FieldFormatting.LOGICO:
                         return internalInt2String(fieldValue);
                     case FieldFormatting.FLOAT:
-                        if (tpField.Equals(FieldType.ARRAY_COD_NUMERICO))
+                        if (tpField.Equals(FieldType.ARRAY_NUMERIC))
                             return internalArrayNumerical2String(fieldValue);
                         else
                             return internalNumeric2String(fieldValue);
@@ -844,8 +827,6 @@ namespace CSGenio.framework
                         else
                             return fieldValue.ToString();
                     case FieldFormatting.DATA:
-                    case FieldFormatting.ANO_MES_DIA:
-                    case FieldFormatting.DIA_MES_ANO:
                         return internalDateTime2String(fieldValue);
                     case FieldFormatting.TEMPO:
                     case FieldFormatting.CARACTERES:
@@ -967,7 +948,7 @@ namespace CSGenio.framework
                 if (data.Equals(DateTime.MinValue))
                     return "";
                 else
-                    return Conversion.dateTime2DateString(data, FieldFormatting.DIA_MES_ANO);
+                    return Conversion.dateTime2DateString(data, FieldFormatting.DATA);
             }
             if (fieldValue is string)
                 return fieldValue.ToString();

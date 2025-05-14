@@ -463,7 +463,7 @@ namespace CSGenio.business
                     if (campoBD.DefaultValue != null && campoBD.DefaultValue.tpDefault.Equals(DefaultValue.DefaultType.PRE_DEF_BD))
                     {
                         object valorObj = QueryUtils.getRandomValue(campoBD);
-                        condition = DBConversion.FromInternal(valorObj, campoBD.FieldType.Formatting);
+                        condition = DBConversion.FromInternal(valorObj, campoBD.FieldType.GetFormatting());
                     }
                     if (condition != null)
                     {
@@ -624,7 +624,7 @@ namespace CSGenio.business
                         insertNameValueField(Qfield.FullName, value);
                     }
                 }//Text trim
-                else if (textTrim && (Qfield.FieldType.Equals(FieldType.TEXTO) || Qfield.FieldType.Equals(FieldType.MUITAS_LINHAS)))
+                else if (textTrim && (Qfield.FieldType.Equals(FieldType.TEXT) || Qfield.FieldType.Equals(FieldType.MEMO)))
                 {
                     string value = returnValueField(Qfield.FullName) as string;
                     if (!string.IsNullOrEmpty(value))
@@ -634,7 +634,7 @@ namespace CSGenio.business
                     }
                 }
 				//Data trim, remove time values
-				else if(Qfield.FieldType.Equals(FieldType.DATA))
+				else if(Qfield.FieldType.Equals(FieldType.DATE))
                 {
                     DateTime value = (DateTime)returnValueField(Qfield.FullName);
                     insertNameValueField(Qfield.FullName, value.Date);
@@ -784,15 +784,15 @@ namespace CSGenio.business
                             if (!group2Info.isEmptyValue(group2Value))//se não existe valor, nao ha nada para mudar
                             {
                                 ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat, 
-                                    group1Value, group1Info.FieldType.Formatting, 
-                                    group2Value, group2Info.FieldType.Formatting,
+                                    group1Value, group1Info.FieldType.GetFormatting(), 
+                                    group2Value, group2Info.FieldType.GetFormatting(),
                                     sp);
                             }
                         }
                         else
 						{
                             ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat,
-                                group1Value, group1Info.FieldType.Formatting,
+                                group1Value, group1Info.FieldType.GetFormatting(),
                                 sp);
                         }
                     }
@@ -1167,7 +1167,7 @@ namespace CSGenio.business
                                 updates.Add(target.ReplicaDestinationTable+"_"+target.ForeignKey, uq);
                             }
 
-                            uq.Set(target.ReplicaTargetFields, ((campoReplica.FieldType == FieldType.CHAVE_FALSA_GUID || campoReplica.FieldType == FieldType.CHAVE_PRIMARIA_GUID || campoReplica.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) && String.Equals(valorReplica, "")) ?
+                            uq.Set(target.ReplicaTargetFields, ((campoReplica.FieldType == FieldType.KEY_GUID || campoReplica.FieldType == FieldType.KEY_GUID || campoReplica.FieldType == FieldType.KEY_GUID) && String.Equals(valorReplica, "")) ?
                                     null :
                                     valorReplica);
                         }
@@ -2453,11 +2453,11 @@ namespace CSGenio.business
             var camposSR = new List<string>(this.RelatedSumFields ?? new string[] { }); // To simplificar o código na validação e não ter que lidar com array vazio
             foreach(var campoPedido in Fields.Values)
             {
-                if (DBFields[campoPedido.Name] != null)
+                if (DBFields.TryGetValue(campoPedido.Name, out Field campoBD))
                 {
-                    Field campoBD = (Field)DBFields[campoPedido.Name];
-                    //RMR(2017-06-01) - Whenever a record is duplicated, every DATAMUDA/HORAMUDA/OPERMUDA should also be reseted
-                    if (campoBD.ZeroDuplication || campoBD.FieldType == FieldType.DATAMUDA || campoBD.FieldType == FieldType.OPERMUDA || campoBD.FieldType == FieldType.HORAMUDA
+                    if (campoBD.ZeroDuplication
+                        // Whenever a record is duplicated, every DATAMUDA/HORAMUDA/OPERMUDA should also be reseted
+                        || StampFieldsAlt.Contains(campoBD.Name)
                         // The target fields of the SRs must be reseted
                         || camposSR.Contains(campoBD.Name)
                         // The encrypted fields can never be duplicated!

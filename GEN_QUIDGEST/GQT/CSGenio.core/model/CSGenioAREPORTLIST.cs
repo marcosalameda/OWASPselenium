@@ -54,15 +54,13 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-            info.RegisterFieldDB(new Field(info.Alias, "codreport", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codreport"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-            info.RegisterFieldDB(new Field(info.Alias, "report", FieldType.TEXTO));
-	        info.RegisterFieldDB(new Field(info.Alias, "slotid", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "titulo", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATACRIA));	  
-			info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.OPERCRIA)); 
-			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));			
+            info.RegisterFieldDB(new Field(info.Alias, "codreport", FieldType.KEY_GUID));
+            info.RegisterFieldDB(new Field(info.Alias, "report", FieldType.TEXT));
+	        info.RegisterFieldDB(new Field(info.Alias, "slotid", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "titulo", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATETIMESECONDS));	  
+			info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.TEXT)); 
+			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));			
 
             // Carimbos automáticos na BD
             //------------------------------

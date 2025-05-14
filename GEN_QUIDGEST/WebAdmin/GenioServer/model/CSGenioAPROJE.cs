@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PROJE]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "projecto", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "projecto", FieldType.TEXT);
 			Qfield.FieldDescription = "Project";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "year", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "year", FieldType.TEXT);
 			Qfield.FieldDescription = "Year";
 			Qfield.FieldSize =  4;
 			Qfield.MQueue = false;
@@ -85,7 +84,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "primeiro", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "primeiro", FieldType.CURRENCY);
 			Qfield.FieldDescription = "First";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -98,7 +97,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "before", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "before", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Before";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -111,7 +110,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "followin", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "followin", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Following";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -124,7 +123,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "ultimo", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "ultimo", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Last";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -137,7 +136,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "saldo1", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "saldo1", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Next - Previous =";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -154,7 +153,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "saldo2", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "saldo2", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Last - First =";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -171,7 +170,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -261,8 +260,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Project";
 			info.AreaPluralDesignation="Projects";
 			info.DescriptionCav="PROJECT37121";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

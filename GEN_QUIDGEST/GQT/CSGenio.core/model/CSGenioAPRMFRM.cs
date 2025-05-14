@@ -54,19 +54,18 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field(info.Alias, "codprmfrm", FieldType.CHAVE_PRIMARIA_GUID));
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field(info.Alias, "autoriza", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "comprova", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "mensag1", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "mensag2", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "mensag3", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "mensag4", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "prazodia", FieldType.NUMERO));
-			info.RegisterFieldDB(new Field(info.Alias, "prazohor", FieldType.NUMERO));
-			info.RegisterFieldDB(new Field(info.Alias, "prfvalid", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "secompro", FieldType.LOGICO));
-			info.RegisterFieldDB(new Field(info.Alias, "sevalida", FieldType.LOGICO));
+			info.RegisterFieldDB(new Field(info.Alias, "codprmfrm", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "autoriza", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "comprova", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "mensag1", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "mensag2", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "mensag3", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "mensag4", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "prazodia", FieldType.NUMERIC));
+			info.RegisterFieldDB(new Field(info.Alias, "prazohor", FieldType.NUMERIC));
+			info.RegisterFieldDB(new Field(info.Alias, "prfvalid", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "secompro", FieldType.LOGIC));
+			info.RegisterFieldDB(new Field(info.Alias, "sevalida", FieldType.LOGIC));
 
 			// Relações Filhas
 			//------------------------------

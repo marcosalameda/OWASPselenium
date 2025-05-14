@@ -54,26 +54,23 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field(info.Alias, "codtblcfg", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codtblcfg"].FieldSize = 36;
-			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID));
-			info.DBFields["codpsw"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field(info.Alias, "uuid", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "name", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "codtblcfg", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "uuid", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "name", FieldType.TEXT));
 			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"uuid","name"}, new int[] {0,1}, "tblcfg", "codtblcfg"));
-			info.RegisterFieldDB(new Field(info.Alias, "configid", FieldType.TEXTO){
+			info.RegisterFieldDB(new Field(info.Alias, "configid", FieldType.TEXT){
 				Formula = new InternalOperationFormula(argumentsListByArea, 3, delegate(object[] args, User user, string module, PersistentSupport sp) {
 					return ((string)args[0])+((string)args[1])+((string)args[2]);
 				}),
 				NotDup = true,
 				PrefNDup = "codpsw"
 			});
-			info.RegisterFieldDB(new Field(info.Alias, "config", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "usrsetv", FieldType.INTEIRO));
-            info.RegisterFieldDB(new Field(info.Alias, "date", FieldType.DATACRIA));
-            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "config", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "usrsetv", FieldType.INTEGER));
+            info.RegisterFieldDB(new Field(info.Alias, "date", FieldType.DATETIMESECONDS));
+            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
             // Carimbos automáticos na BD
             //------------------------------

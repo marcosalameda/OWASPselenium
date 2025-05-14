@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR ANEXD]/
 		}
 
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dthranex", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dthranex", FieldType.DATETIME);
 			Qfield.FieldDescription = "Attached";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "ATTACHED26247";
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "title", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "title", FieldType.TEXT);
 			Qfield.FieldDescription = "Title";
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "TITLE21885";
@@ -81,14 +80,14 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "document", FieldType.FICHEIRO_BD);
+			Qfield = new Field(info.Alias, "document", FieldType.DOCUMENT);
 			Qfield.FieldDescription = "Document";
 			Qfield.FieldSize =  260;
 			Qfield.CavDesignation = "DOCUMENT00695";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
- 			Qfield = new Field(info.Alias, "documentfk", FieldType.CHAVE_ESTRANGEIRA_GUID);
+ 			Qfield = new Field(info.Alias, "documentfk", FieldType.KEY_GUID);
 			Qfield.FieldSize = 16;
 			Qfield.FieldDescription = "Chave estrangeira para o documento";
 			info.RegisterFieldDB(Qfield);
@@ -103,7 +102,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "tittradu", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "tittradu", FieldType.TEXT);
 			Qfield.FieldDescription = "Translated title";
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "TRANSLATED_TITLE58577";
@@ -113,7 +112,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "referenc", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "referenc", FieldType.TEXT);
 			Qfield.FieldDescription = "Reference";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "REFERENCE28402";
@@ -122,7 +121,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -155,14 +154,14 @@ namespace CSGenio.business
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
 			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("item","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("famil","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("cntry","equip");
+			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -228,8 +227,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Digital Attachement";
 			info.AreaPluralDesignation="Digital Attachements";
 			info.DescriptionCav="DIGITAL_ATTACHEMENT41252";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

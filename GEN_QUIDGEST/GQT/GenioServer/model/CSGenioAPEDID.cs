@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PEDID]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtpedido", FieldType.DATA);
+			Qfield = new Field(info.Alias, "dtpedido", FieldType.DATE);
 			Qfield.FieldDescription = "Date";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "DATE18475";
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "nrpedido", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "nrpedido", FieldType.NUMERIC);
 			Qfield.FieldDescription = "No.";
 			Qfield.FieldSize =  6;
 			Qfield.IntegerDigits = 6;
@@ -86,7 +85,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -165,8 +164,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Equipment request";
 			info.AreaPluralDesignation="Equipment requests";
 			info.DescriptionCav="EQUIPMENT_REQUEST62893";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

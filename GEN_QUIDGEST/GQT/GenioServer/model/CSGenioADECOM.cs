@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR DECOM]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtdeco", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtdeco", FieldType.DATETIME);
 			Qfield.FieldDescription = "Decomission";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "DECOMISSION14486";
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "decomnr", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "decomnr", FieldType.NUMERIC);
 			Qfield.FieldDescription = "No bate";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 10;
@@ -94,7 +93,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "creatdat", FieldType.DATACRIA);
+			Qfield = new Field(info.Alias, "creatdat", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Creation date";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -104,7 +103,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "creatope", FieldType.OPERCRIA);
+			Qfield = new Field(info.Alias, "creatope", FieldType.TEXT);
 			Qfield.FieldDescription = "Created by";
 			Qfield.FieldSize =  20;
 			Qfield.MQueue = false;
@@ -114,7 +113,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "chngdate", FieldType.DATAMUDA);
+			Qfield = new Field(info.Alias, "chngdate", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Changed on";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -124,7 +123,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "operchng", FieldType.OPERMUDA);
+			Qfield = new Field(info.Alias, "operchng", FieldType.TEXT);
 			Qfield.FieldDescription = "Changed by";
 			Qfield.FieldSize =  20;
 			Qfield.MQueue = false;
@@ -134,7 +133,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -215,8 +214,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Equipment decommission";
 			info.AreaPluralDesignation="Equipment decomissions";
 			info.DescriptionCav="EQUIPMENT_DECOMMISSI11875";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

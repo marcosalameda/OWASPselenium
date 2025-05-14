@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR CATTP]/
 		}
 
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "tpcatego", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "tpcatego", FieldType.TEXT);
 			Qfield.FieldDescription = "Category type";
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "CATEGORY_TYPE23058";
@@ -76,7 +75,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -155,8 +154,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Category type";
 			info.AreaPluralDesignation="Category types";
 			info.DescriptionCav="CATEGORY_TYPE23058";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

@@ -128,14 +128,14 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-                new Exports.QColumn(CSGenioAcmpny.FldAcronym, FieldType.TEXTO, Resources.Resources.ACRONYM00872, 15, 0, true),
-                new Exports.QColumn(CSGenioAcmpny.FldNif, FieldType.TEXTO, Resources.Resources.TAX_IDENTIFICATION51190, 15, 0, true),
-                new Exports.QColumn(CSGenioAcmpny.FldTelephon, FieldType.TEXTO, Resources.Resources.PHONE56703, 30, 0, true),
-                new Exports.QColumn(CSGenioAcmpny.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-                !ajaxRequest ? new Exports.QColumn(CSGenioAcmpny.FldLogo, FieldType.IMAGEM_JPEG, Resources.Resources.LOGO62483, 3, 1, true):null,
-                new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXTO, Resources.Resources.COUNTRY64133, 30, 0, true),
-                new Exports.QColumn(CSGenioAcmpny.FldQtdpesso, FieldType.NUMERO, Resources.Resources.NUMBER_OF_PEOPLE08859, 10, 0, true),
+                new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+                new Exports.QColumn(CSGenioAcmpny.FldAcronym, FieldType.TEXT, Resources.Resources.ACRONYM00872, 15, 0, true),
+                new Exports.QColumn(CSGenioAcmpny.FldNif, FieldType.TEXT, Resources.Resources.TAX_IDENTIFICATION51190, 15, 0, true),
+                new Exports.QColumn(CSGenioAcmpny.FldTelephon, FieldType.TEXT, Resources.Resources.PHONE56703, 30, 0, true),
+                new Exports.QColumn(CSGenioAcmpny.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+                !ajaxRequest ? new Exports.QColumn(CSGenioAcmpny.FldLogo, FieldType.IMAGE, Resources.Resources.LOGO62483, 3, 1, true):null,
+                new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 30, 0, true),
+                new Exports.QColumn(CSGenioAcmpny.FldQtdpesso, FieldType.NUMERIC, Resources.Resources.NUMBER_OF_PEOPLE08859, 10, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

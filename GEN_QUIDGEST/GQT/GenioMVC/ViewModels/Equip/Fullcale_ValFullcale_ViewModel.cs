@@ -93,13 +93,13 @@ namespace GenioMVC.ViewModels.Equip
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAvisit.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-                new Exports.QColumn(CSGenioAvisit.FldStartdt, FieldType.DATAHORA, Resources.Resources.BEGINNING18124, 16, 0, true),
-                new Exports.QColumn(CSGenioAvisit.FldDtfim, FieldType.DATAHORA, Resources.Resources.END47577, 16, 0, true),
+                new Exports.QColumn(CSGenioAvisit.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+                new Exports.QColumn(CSGenioAvisit.FldStartdt, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
+                new Exports.QColumn(CSGenioAvisit.FldDtfim, FieldType.DATETIME, Resources.Resources.END47577, 16, 0, true),
                 new Exports.QColumn(CSGenioAvisit.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 3, true),
-                new Exports.QColumn(CSGenioAvisit.FldTodoodia, FieldType.LOGICO, Resources.Resources.DAY27593, 1, 0, true),
-                new Exports.QColumn(CSGenioAvisit.FldColor, FieldType.TEXTO, Resources.Resources.COR09431, 30, 0, true),
-                new Exports.QColumn(CSGenioAvisit.FldBack, FieldType.LOGICO, Resources.Resources.BACKGROUND45121, 1, 0, true),
+                new Exports.QColumn(CSGenioAvisit.FldTodoodia, FieldType.LOGIC, Resources.Resources.DAY27593, 1, 0, true),
+                new Exports.QColumn(CSGenioAvisit.FldColor, FieldType.TEXT, Resources.Resources.COR09431, 30, 0, true),
+                new Exports.QColumn(CSGenioAvisit.FldBack, FieldType.LOGIC, Resources.Resources.BACKGROUND45121, 1, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

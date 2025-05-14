@@ -93,8 +93,8 @@ namespace GenioMVC.ViewModels.Tpequ
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtabpr.FldSince, FieldType.DATAHORA, Resources.Resources.SINCE47259, 16, 0, true),
-                new Exports.QColumn(CSGenioAtabpr.FldPrecohor, FieldType.VALOR, Resources.Resources.PRICE_BY_HOUR01060, 16, 0, true),
+                new Exports.QColumn(CSGenioAtabpr.FldSince, FieldType.DATETIME, Resources.Resources.SINCE47259, 16, 0, true),
+                new Exports.QColumn(CSGenioAtabpr.FldPrecohor, FieldType.CURRENCY, Resources.Resources.PRICE_BY_HOUR01060, 16, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR ADDRL]/
 		}
 
@@ -65,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "parentidtypecode", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "parentidtypecode", FieldType.TEXT);
 			Qfield.FieldDescription = "parentId Type";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -76,7 +75,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "addressnumber", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "addressnumber", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Address Number";
 			Qfield.FieldSize =  9;
 			Qfield.MQueue = false;
@@ -87,7 +86,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "objecttypecode", FieldType.ARRAY_COD_NUMERICO);
+			Qfield = new Field(info.Alias, "objecttypecode", FieldType.ARRAY_NUMERIC);
 			Qfield.FieldDescription = "Object Type";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -99,7 +98,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "objecttypecode_display", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "objecttypecode_display", FieldType.TEXT);
 			Qfield.FieldDescription = "objectTypeCode_display";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -109,7 +108,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "addresstypecode", FieldType.ARRAY_COD_NUMERICO);
+			Qfield = new Field(info.Alias, "addresstypecode", FieldType.ARRAY_NUMERIC);
 			Qfield.FieldDescription = "Address Type Code";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -121,7 +120,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -208,8 +207,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Address";
 			info.AreaPluralDesignation="Address";
 			info.DescriptionCav="ADDRESS04342";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

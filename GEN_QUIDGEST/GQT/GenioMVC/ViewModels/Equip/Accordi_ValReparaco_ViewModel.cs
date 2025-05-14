@@ -93,12 +93,12 @@ namespace GenioMVC.ViewModels.Equip
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioArepar.FldNrrepara, FieldType.NUMERO, Resources.Resources.NO_RUMOUR_IN_THE_COM15248, 10, 0, true),
-                new Exports.QColumn(CSGenioArepar.FldDtrepara, FieldType.DATAHORA, Resources.Resources.FIXED_IN00179, 16, 0, true),
-                new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXTO, Resources.Resources.SPECIALTY09304, 30, 0, true),
-                new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.EXPERT27393, 30, 0, true),
+                new Exports.QColumn(CSGenioArepar.FldNrrepara, FieldType.NUMERIC, Resources.Resources.NO_RUMOUR_IN_THE_COM15248, 10, 0, true),
+                new Exports.QColumn(CSGenioArepar.FldDtrepara, FieldType.DATETIME, Resources.Resources.FIXED_IN00179, 16, 0, true),
+                new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXT, Resources.Resources.SPECIALTY09304, 30, 0, true),
+                new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXT, Resources.Resources.EXPERT27393, 30, 0, true),
                 new Exports.QColumn(CSGenioArepar.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION_OF_THE_R26085, 30, 3, true),
-                new Exports.QColumn(CSGenioArepar.FldHours, FieldType.NUMERO, Resources.Resources.SPENT_ON_HOURS19285, 10, 0, true),
+                new Exports.QColumn(CSGenioArepar.FldHours, FieldType.NUMERIC, Resources.Resources.SPENT_ON_HOURS19285, 10, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

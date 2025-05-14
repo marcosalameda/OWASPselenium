@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR YEAR1]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "year", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "year", FieldType.TEXT);
 			Qfield.FieldDescription = "Year";
 			Qfield.FieldSize =  4;
 			Qfield.MQueue = false;
@@ -68,7 +67,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "value", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "value", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Value";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -80,7 +79,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "yearnum", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "yearnum", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Year (numbers)";
 			Qfield.FieldSize =  4;
 			Qfield.MQueue = false;
@@ -94,7 +93,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -173,8 +172,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Year";
 			info.AreaPluralDesignation="Years";
 			info.DescriptionCav="YEAR61794";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

@@ -93,12 +93,12 @@ namespace GenioMVC.ViewModels.Item
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAccorr.FldNorder, FieldType.NUMERO, Resources.Resources.ORDER39632, 6, 0, true),
-                new Exports.QColumn(CSGenioAccorr.FldDate, FieldType.DATAHORA, Resources.Resources.INSTANT35907, 16, 0, true),
-                new Exports.QColumn(CSGenioAccorr.FldType, FieldType.TEXTO, Resources.Resources.TYPE00312, 8, 0, true),
-                new Exports.QColumn(CSGenioAccorr.FldReferenc, FieldType.TEXTO, Resources.Resources.REF_A30225, 10, 0, true),
-                new Exports.QColumn(CSGenioAccorr.FldQnty, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 10, 0, true),
-                new Exports.QColumn(CSGenioAccorr.FldBalance, FieldType.NUMERO, Resources.Resources.BALANCE13297, 10, 0, true),
+                new Exports.QColumn(CSGenioAccorr.FldNorder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 6, 0, true),
+                new Exports.QColumn(CSGenioAccorr.FldDate, FieldType.DATETIME, Resources.Resources.INSTANT35907, 16, 0, true),
+                new Exports.QColumn(CSGenioAccorr.FldType, FieldType.TEXT, Resources.Resources.TYPE00312, 8, 0, true),
+                new Exports.QColumn(CSGenioAccorr.FldReferenc, FieldType.TEXT, Resources.Resources.REF_A30225, 10, 0, true),
+                new Exports.QColumn(CSGenioAccorr.FldQnty, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 10, 0, true),
+                new Exports.QColumn(CSGenioAccorr.FldBalance, FieldType.NUMERIC, Resources.Resources.BALANCE13297, 10, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

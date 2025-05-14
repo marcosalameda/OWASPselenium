@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR FACI2]/
 		}
 
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "incorpor", FieldType.DATA);
+			Qfield = new Field(info.Alias, "incorpor", FieldType.DATE);
 			Qfield.FieldDescription = "Incorporation";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXT);
 			Qfield.FieldDescription = "Facility name";
 			Qfield.FieldSize =  85;
 			Qfield.MQueue = false;
@@ -84,7 +83,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "faciltyp", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "faciltyp", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Facility type";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -116,7 +115,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "image", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "image", FieldType.IMAGE);
 			Qfield.FieldDescription = "Image";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
@@ -126,7 +125,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "gpsinput", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "gpsinput", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "GPS input";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "GPS_INPUT13625";
@@ -137,7 +136,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "latitude", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "latitude", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Latitude";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 3;
@@ -148,7 +147,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "longitud", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "longitud", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Longitude";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 3;
@@ -159,7 +158,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "geocoori", FieldType.GEOGRAPHY);
+			Qfield = new Field(info.Alias, "geocoori", FieldType.GEOGRAPHY_POINT);
 			Qfield.FieldDescription = "Geographical coordinate";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "GEOGRAPHICAL_COORDIN45869";
@@ -168,7 +167,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "geocoord", FieldType.GEOGRAPHY);
+			Qfield = new Field(info.Alias, "geocoord", FieldType.GEOGRAPHY_POINT);
 			Qfield.FieldDescription = "Geographical coordinate";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -192,7 +191,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -301,8 +300,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Facility";
 			info.AreaPluralDesignation="Facilities";
 			info.DescriptionCav="FACILITY55206";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

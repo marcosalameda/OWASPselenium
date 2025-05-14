@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR S_UA]/
 		}
 
@@ -65,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "sistema", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "sistema", FieldType.TEXT);
 			Qfield.FieldDescription = "System";
 			Qfield.FieldSize =  20;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -75,7 +74,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "modulo", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "modulo", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Module";
 			Qfield.FieldSize =  3;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -87,7 +86,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "naodupli", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "naodupli", FieldType.TEXT);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  39;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -103,7 +102,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "role", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "role", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Role";
 			Qfield.FieldSize =  16;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -117,7 +116,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "nivel", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "nivel", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Level";
 			Qfield.FieldSize =  15;
 			Qfield.IntegerDigits = 15;
@@ -133,7 +132,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "opercria", FieldType.OPERCRIA);
+			Qfield = new Field(info.Alias, "opercria", FieldType.TEXT);
 			Qfield.FieldDescription = "Created by";
 			Qfield.FieldSize =  128;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -143,7 +142,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "datacria", FieldType.DATACRIA);
+			Qfield = new Field(info.Alias, "datacria", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Created on";
 			Qfield.FieldSize =  8;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -153,7 +152,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "opermuda", FieldType.OPERMUDA);
+			Qfield = new Field(info.Alias, "opermuda", FieldType.TEXT);
 			Qfield.FieldDescription = "Changed by";
 			Qfield.FieldSize =  128;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -163,7 +162,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "datamuda", FieldType.DATAMUDA);
+			Qfield = new Field(info.Alias, "datamuda", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Changed on";
 			Qfield.FieldSize =  8;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -173,7 +172,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -251,8 +250,6 @@ namespace CSGenio.business
 			info.AreaDesignation="User Authorization";
 			info.AreaPluralDesignation="User Authorization";
 			info.DescriptionCav="USER_AUTHORIZATION53599";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(0);

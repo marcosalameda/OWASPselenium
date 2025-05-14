@@ -1,127 +1,126 @@
 ﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 
 namespace CSGenio.framework
 {
-    /// <summary>
-    /// Tipos de fields das tables
-    /// </summary>
-    //SO 20060814 alterei a classe, os métodos de conversão passaram to a classe Conversion
-    public class FieldType
+    public enum FieldType
     {
-        public static readonly FieldType TEXTO = new FieldType("C", FieldFormatting.CARACTERES, typeof(string));					// text (string)
+        KEY_VARCHAR,
+        KEY_GUID,
+        KEY_INT,
+        TEXT,
+        MEMO,
+        MEMO_COMP_RTF,
+        PATH,
+        TIME_HOURS,
+        NUMERIC,
+        CURRENCY,
+        INTEGER,
+        LOGIC,
+        DATE,
+        DATETIME,
+        DATETIMESECONDS,
+        ARRAY_NUMERIC,
+        ARRAY_TEXT,
+        ARRAY_LOGIC,
+        IMAGE,
+        DOCUMENT,
+        BINARY,
+        GEOGRAPHY_POINT,
+        GEOMETRY_SHAPE,
+        GEOGRAPHY_SHAPE,
+        ENCRYPTED
+    }
 
-		public static readonly FieldType CHAVE_ESTRANGEIRA = new FieldType("CE", FieldFormatting.CARACTERES, typeof(string));	// key estrangeira (string)
-        public static readonly FieldType CHAVE_ESTRANGEIRA_GUID = new FieldType("CEG", FieldFormatting.GUID, typeof(string));	// key estrangeira (Guid)
-
-		public static readonly FieldType CHAVE_FALSA_GUID = new FieldType("CF", FieldFormatting.GUID, typeof(string));						// key falsa (guid)
-        public static readonly FieldType CHAVE_FALSA = new FieldType("CF", FieldFormatting.CARACTERES, typeof(string));			// key falsa (string) //AJATODO _ CHAVEFALSA
-
-        public static readonly FieldType MUITAS_LINHAS = new FieldType("M", FieldFormatting.CARACTERES, typeof(string));			// muitas linhas (string)
-        public static readonly FieldType MEMO = new FieldType("MO", FieldFormatting.CARACTERES, typeof(string));					// memo (string)
-        public static readonly FieldType MEMO_COMP_RTF = new FieldType("MM", FieldFormatting.CARACTERES, typeof(string));		// memo sem RTF (string)
-        public static readonly FieldType MEMO_RTF = new FieldType("MN", FieldFormatting.CARACTERES, typeof(string));				// memo com RTP (string)
-
-        public static readonly FieldType CHAVE_PRIMARIA = new FieldType("+", FieldFormatting.CARACTERES, typeof(string));		// key primária (string)
-        public static readonly FieldType CHAVE_PRIMARIA_GUID = new FieldType("+G", FieldFormatting.GUID, typeof(string));		// key primária (Guid)
-
-        public static readonly FieldType PATH = new FieldType("P", FieldFormatting.CARACTERES, typeof(string));					// path (string)
-        public static readonly FieldType ANO = new FieldType("Y", FieldFormatting.INTEIRO, typeof(int));						// Qyear (inteiro) AV(2010/07/05) Corrigi de characters to inteiro
-        public static readonly FieldType TEMPO = new FieldType("T", FieldFormatting.TEMPO, typeof(string));					// time (string)
-        public static readonly FieldType NUMERO = new FieldType("N", FieldFormatting.FLOAT, typeof(decimal));						// numérico (double)
-        public static readonly FieldType VALOR = new FieldType("$", FieldFormatting.FLOAT, typeof(decimal));						// Qvalue monetário (double)
-        //em C# é bool na BD é int
-        public static readonly FieldType LOGICO = new FieldType("L", FieldFormatting.LOGICO, typeof(int));					// lógico (long)
-
-        public static readonly FieldType INTEIRO = new FieldType("I", FieldFormatting.INTEIRO, typeof(int));					// lógico (long)
-
-        public static readonly FieldType DATA = new FieldType("D", FieldFormatting.DATA, typeof(DateTime));						// data (datetime)
-        public static readonly FieldType DATAHORA = new FieldType("DT", FieldFormatting.DATAHORA, typeof(DateTime));				// data e hour (datetime)
-        public static readonly FieldType DATASEGUNDO = new FieldType("DS", FieldFormatting.DATASEGUNDO, typeof(DateTime));			// data e hour (datetime)
-
-        public static readonly FieldType DATACRIA = new FieldType("OD", FieldFormatting.DATA, typeof(DateTime));					// data (datetime)
-        public static readonly FieldType DATAMUDA = new FieldType("ED", FieldFormatting.DATA, typeof(DateTime));					// data (datetime)
-        public static readonly FieldType OPERCRIA = new FieldType("ON", FieldFormatting.CARACTERES, typeof(string));				// text (string)
-        public static readonly FieldType OPERMUDA = new FieldType("EN", FieldFormatting.CARACTERES, typeof(string));				// text (string)
-        public static readonly FieldType HORACRIA = new FieldType("OT", FieldFormatting.TEMPO, typeof(string));				// time (string)
-        public static readonly FieldType HORAMUDA = new FieldType("ET", FieldFormatting.TEMPO, typeof(string));				// time (string)
-        public static readonly FieldType INSTANTECRIA = new FieldType("OI", FieldFormatting.DATASEGUNDO, typeof(string));			// time com segundos (datetime)
-
-        public static readonly FieldType ARRAY_COD_NUMERICO = new FieldType("AN", FieldFormatting.FLOAT, typeof(decimal));		//DQ 180107 - estes fields são numéricos		// array com código numérico
-        public static readonly FieldType ARRAY_COD_TEXTO = new FieldType("AC", FieldFormatting.CARACTERES, typeof(string));		// array com código text
-        public static readonly FieldType ARRAY_COD_LOGICO = new FieldType("AL", FieldFormatting.LOGICO, typeof(string));		// array com código text
-        public static readonly FieldType IMAGEM_JPEG = new FieldType("IJ", FieldFormatting.JPEG, typeof(byte[]));				// imagem gravada na db
-        public static readonly FieldType FICHEIRO_BD = new FieldType("IB", FieldFormatting.CARACTERES, typeof(string));			//AV 20090302  - name do file que fica gravado na table docums
-
-        public static readonly FieldType FICHEIRO_BIN = new FieldType("BIN", FieldFormatting.BINARIO, typeof(byte[]));           // file binario na db
-
-		public static readonly FieldType GEOGRAPHY = new FieldType("GG", FieldFormatting.GEOGRAPHY, typeof(byte[]));           // Qfield de coordenadas geograficas na db
-		public static readonly FieldType GEO_SHAPE = new FieldType("GS", FieldFormatting.GEO_SHAPE, typeof(byte[]));
-		public static readonly FieldType GEOMETRIC = new FieldType("GC", FieldFormatting.GEOMETRIC, typeof(byte[]));
-
-        /// <summary>
-        /// Encrypted field type.
-        /// Will have to manage two values (encrypted and decrypted) in memory at the same time.
-        /// </summary>
-        public static readonly FieldType ENCRYPTED = new FieldType("ENCRYPTED", FieldFormatting.ENCRYPTED, typeof(EncryptedDataType));
-
-        /// <summary>
-        /// Id do tipo de Qfield
-        /// </summary>
-        public string Id { get; }
-
-        /// <summary>
-        /// Formatação
-        /// </summary>
-        public FieldFormatting Formatting { get; }
-
-        /// <summary>
-        /// Type de dados interno
-        /// </summary>
-        public Type Type { get; }
-
-        /// <summary>
-        /// Construtor privado to inicialização dos membros
-        /// </summary>
-        /// <param name="anID"></param>
-        private FieldType(string anID, FieldFormatting tipoInt, Type tipo)
+    public static class FieldTypeUtils
+    {
+        private readonly struct FieldTypeInfo(FieldType fieldType, FieldFormatting formatting, string ephFunction, Type externalType)
         {
-            Id = anID;
-            Formatting = tipoInt;
-            Type = tipo;
+            public readonly FieldType fieldType = fieldType;
+            public readonly FieldFormatting formatting = formatting;
+            public readonly string ephFunction = ephFunction;
+            public readonly Type externalType = externalType;
         }
 
         /// <summary>
-        /// Devolve o identifier do tipo de Qfield
+        /// Register the metadata info associated with each field type
+        /// The position of the items of this list MUST match the ordinal values of the FieldType enum.
         /// </summary>
-        /// <returns>Identificador do tipo de Qfield</returns>
-        public override string ToString()
+        private static readonly FieldTypeInfo[] info = [
+            new FieldTypeInfo(FieldType.KEY_VARCHAR     , FieldFormatting.CARACTERES    , "EMPTYG", typeof(string)),
+            new FieldTypeInfo(FieldType.KEY_GUID        , FieldFormatting.GUID          , "EMPTYG", typeof(Guid)),
+            new FieldTypeInfo(FieldType.KEY_INT         , FieldFormatting.INTEIRO       , "EMPTYG", typeof(int)),
+            new FieldTypeInfo(FieldType.TEXT            , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
+            new FieldTypeInfo(FieldType.MEMO            , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
+            new FieldTypeInfo(FieldType.MEMO_COMP_RTF   , FieldFormatting.BINARIO       , null    , typeof(byte[])),
+            new FieldTypeInfo(FieldType.PATH            , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
+            new FieldTypeInfo(FieldType.TIME_HOURS      , FieldFormatting.TEMPO         , "EMPTYT", typeof(string)),
+            new FieldTypeInfo(FieldType.NUMERIC         , FieldFormatting.FLOAT         , "EMPTYN", typeof(decimal)),
+            new FieldTypeInfo(FieldType.CURRENCY        , FieldFormatting.FLOAT         , "EMPTYN", typeof(decimal)),
+            new FieldTypeInfo(FieldType.INTEGER         , FieldFormatting.INTEIRO       , "EMPTYN", typeof(int)),
+            new FieldTypeInfo(FieldType.LOGIC           , FieldFormatting.LOGICO        , "EMPTYL", typeof(int)),
+            new FieldTypeInfo(FieldType.DATE            , FieldFormatting.DATA          , "EMPTYD", typeof(DateTime)),
+            new FieldTypeInfo(FieldType.DATETIME        , FieldFormatting.DATAHORA      , "EMPTYD", typeof(DateTime)),
+            new FieldTypeInfo(FieldType.DATETIMESECONDS , FieldFormatting.DATASEGUNDO   , "EMPTYD", typeof(DateTime)),
+            new FieldTypeInfo(FieldType.ARRAY_NUMERIC   , FieldFormatting.FLOAT         , "EMPTYN", typeof(decimal)),
+            new FieldTypeInfo(FieldType.ARRAY_TEXT      , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
+            new FieldTypeInfo(FieldType.ARRAY_LOGIC     , FieldFormatting.LOGICO        , "EMPTYL", typeof(int)),
+            new FieldTypeInfo(FieldType.IMAGE           , FieldFormatting.BINARIO       , null    , typeof(byte[])),
+            new FieldTypeInfo(FieldType.DOCUMENT        , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
+            new FieldTypeInfo(FieldType.BINARY          , FieldFormatting.BINARIO       , null    , typeof(byte[])),
+            new FieldTypeInfo(FieldType.GEOGRAPHY_POINT , FieldFormatting.GEOGRAPHY     , null    , typeof(byte[])),
+            new FieldTypeInfo(FieldType.GEOMETRY_SHAPE  , FieldFormatting.GEOMETRIC     , null    , typeof(byte[])),
+            new FieldTypeInfo(FieldType.GEOGRAPHY_SHAPE , FieldFormatting.GEO_SHAPE     , null    , typeof(byte[])),
+            new FieldTypeInfo(FieldType.ENCRYPTED       , FieldFormatting.ENCRYPTED     , null    , typeof(EncryptedDataType)),
+            ];
+
+
+        /// <summary>
+        /// Data type format associated with this field
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static FieldFormatting GetFormatting(this FieldType type)
         {
-            return Id;
+            return info[(int)type].formatting;
         }
 
-		/// <summary>
-        /// Mapeamento entre o tipo de Field e Função SQL que validate se está vazio
+        /// <summary>
+        /// Sql function to be used to test if this field type is empty
         /// </summary>
-		private static Dictionary<string, string> EPHFieldType = new Dictionary<string, string>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static string GetEPHFunction(this FieldType type)
         {
-			{"ANO_MES_DIA", "EMPTYD"},
-			{"DIA_MES_ANO", "EMPTYD"},
-			{"CARACTERES", "EMPTYC"},
-			{"GUID", "EMPTYG"},
-			{"INTEIRO", "EMPTYN"},
-			{"DATA","EMPTYD"},
-			{"DATAHORA", "EMPTYD"},
-			{"LOGICO", "EMPTYL"},
-			{"FLOAT", "EMPTYN"},
-			{"DATASEGUNDO", "EMPTYD"}
-	    };
-
-        public static string getEPHFunction(FieldFormatting fField)
-        {
-            EPHFieldType.TryGetValue(fField.ToString(), out string funcaoSQL);
-            return funcaoSQL;
+            return info[(int)type].ephFunction ?? throw new InvalidOperationException();
         }
+
+        /// <summary>
+        /// Native type associated with this data type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static Type GetExternalType(this FieldType type)
+        {
+            return info[(int)type].externalType ?? throw new InvalidOperationException();
+        }
+
+        /// <summary>
+        /// Tests if this field type is considered a database key
+        /// </summary>
+        /// <param name="type"></param>
+        /// <returns></returns>
+        public static bool IsKey(this FieldType type)
+        {
+            return type switch
+            {
+                FieldType.KEY_VARCHAR => true,
+                FieldType.KEY_GUID => true,
+                FieldType.KEY_INT => true,
+                _ => false
+            };
+        }
+
     }
 }

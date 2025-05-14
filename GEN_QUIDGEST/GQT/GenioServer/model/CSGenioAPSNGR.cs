@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PSNGR]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "psngrid", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "psngrid", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Passenger ID";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -65,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "fstname", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "fstname", FieldType.TEXT);
 			Qfield.FieldDescription = "First Name";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -75,7 +74,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "lstname", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "lstname", FieldType.TEXT);
 			Qfield.FieldDescription = "Last Name";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -85,7 +84,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "fullname", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "fullname", FieldType.TEXT);
 			Qfield.FieldDescription = "Full Name";
 			Qfield.FieldSize =  100;
 			Qfield.MQueue = false;
@@ -95,7 +94,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "passprtn", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "passprtn", FieldType.TEXT);
 			Qfield.FieldDescription = "Passport Number";
 			Qfield.FieldSize =  15;
 			Qfield.MQueue = false;
@@ -105,7 +104,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "psngrdob", FieldType.DATA);
+			Qfield = new Field(info.Alias, "psngrdob", FieldType.DATE);
 			Qfield.FieldDescription = "Date of Birth";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -126,7 +125,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "psemail", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "psemail", FieldType.TEXT);
 			Qfield.FieldDescription = "Email Address";
 			Qfield.FieldSize =  100;
 			Qfield.MQueue = false;
@@ -136,7 +135,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "ctcnumbr", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "ctcnumbr", FieldType.TEXT);
 			Qfield.FieldDescription = "Contact Number";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -146,7 +145,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -221,8 +220,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Passenger";
 			info.AreaPluralDesignation="Passengers";
 			info.DescriptionCav="PASSENGER40365";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

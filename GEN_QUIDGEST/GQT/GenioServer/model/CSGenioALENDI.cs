@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR LENDI]/
 		}
 
@@ -83,7 +82,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "lendinnr", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "lendinnr", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Number of lending";
 			Qfield.FieldSize =  6;
 			Qfield.IntegerDigits = 6;
@@ -97,7 +96,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "start", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "start", FieldType.DATETIME);
 			Qfield.FieldDescription = "Beginning";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "BEGINNING18124";
@@ -108,7 +107,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "warndt", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "warndt", FieldType.DATETIME);
 			Qfield.FieldDescription = "Warning";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "WARNING52043";
@@ -123,7 +122,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "end", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "end", FieldType.DATETIME);
 			Qfield.FieldDescription = "End";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "END47577";
@@ -147,7 +146,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "returndt", FieldType.DATA);
+			Qfield = new Field(info.Alias, "returndt", FieldType.DATE);
 			Qfield.FieldDescription = "Return";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "RETURN32222";
@@ -156,7 +155,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "returned", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "returned", FieldType.LOGIC);
 			Qfield.FieldDescription = "Returned";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "RETURNED01606";
@@ -170,7 +169,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dayslimi", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "dayslimi", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Days for return period";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 10;
@@ -185,7 +184,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "ifoutdt", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "ifoutdt", FieldType.LOGIC);
 			Qfield.FieldDescription = "If out of date";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "IF_OUT_OF_DATE49042";
@@ -199,7 +198,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -229,20 +228,20 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(14);
-			info.Pathways.Add("pess2","pess2");
 			info.Pathways.Add("pess1","pess1");
+			info.Pathways.Add("pess2","pess2");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("stake","pess2");
-			info.Pathways.Add("cmpny","pess2");
-			info.Pathways.Add("cntry","pess2");
+			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
+			info.Pathways.Add("cmpny","pess1");
+			info.Pathways.Add("cntry","pess1");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("item","equip");
-			info.Pathways.Add("famil","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 		}
 
 		/// <summary>
@@ -299,8 +298,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Lending";
 			info.AreaPluralDesignation="Lending";
 			info.DescriptionCav="LENDING18782";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

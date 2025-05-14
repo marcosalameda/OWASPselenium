@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Tblk
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAgrpb.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 50, 0, true),
+                new Exports.QColumn(CSGenioAgrpb.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

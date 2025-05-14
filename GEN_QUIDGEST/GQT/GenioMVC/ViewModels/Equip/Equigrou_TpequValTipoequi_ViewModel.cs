@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Equip
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TIPOEQUI34411, 50, 0, true),
+                new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TIPOEQUI34411, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

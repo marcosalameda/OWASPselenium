@@ -93,9 +93,9 @@ namespace GenioMVC.ViewModels.Equip
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAmovim.FldDhmudanc, FieldType.DATAHORA, Resources.Resources.CHANGE36355, 16, 0, true),
-                new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXTO, Resources.Resources.N_R__ROOM43805, 10, 0, true),
-                new Exports.QColumn(CSGenioArooms.FldDesignat, FieldType.TEXTO, Resources.Resources.ROOM_DESIGNATION37895, 30, 0, true),
+                new Exports.QColumn(CSGenioAmovim.FldDhmudanc, FieldType.DATETIME, Resources.Resources.CHANGE36355, 16, 0, true),
+                new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXT, Resources.Resources.N_R__ROOM43805, 10, 0, true),
+                new Exports.QColumn(CSGenioArooms.FldDesignat, FieldType.TEXT, Resources.Resources.ROOM_DESIGNATION37895, 30, 0, true),
                 new Exports.QColumn(CSGenioAmovim.FldObservat, FieldType.MEMO, Resources.Resources.OBSERVATION37880, 30, 2, true),
             };
 

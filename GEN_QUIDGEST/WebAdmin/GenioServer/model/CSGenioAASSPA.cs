@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR ASSPA]/
 		}
 
@@ -84,7 +83,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "datatype", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "datatype", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Data type";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -97,7 +96,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "decimalplaces", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "decimalplaces", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Decimal places";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -108,7 +107,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "text", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "text", FieldType.TEXT);
 			Qfield.FieldDescription = "Text";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -118,7 +117,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "quantity", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "quantity", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Quantity";
 			Qfield.FieldSize =  12;
 			Qfield.MQueue = false;
@@ -130,7 +129,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "date", FieldType.DATA);
+			Qfield = new Field(info.Alias, "date", FieldType.DATE);
 			Qfield.FieldDescription = "Date";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -140,7 +139,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "toshow", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "toshow", FieldType.TEXT);
 			Qfield.FieldDescription = "To show";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -155,7 +154,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -237,8 +236,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Asset parameter";
 			info.AreaPluralDesignation="Asset parameters";
 			info.DescriptionCav="ASSET_PARAMETER22072";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

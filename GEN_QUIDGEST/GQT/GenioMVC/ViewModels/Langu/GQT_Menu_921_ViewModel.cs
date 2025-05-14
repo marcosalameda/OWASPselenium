@@ -128,8 +128,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAlangu.FldCodlang, CSGenioAlangu.Fld
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAlangu.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 30, 0, true),
-                new Exports.QColumn(CSGenioAlangu.FldAcron, FieldType.TEXTO, Resources.Resources.ACRONYM00872, 5, 0, true),
+                new Exports.QColumn(CSGenioAlangu.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 30, 0, true),
+                new Exports.QColumn(CSGenioAlangu.FldAcron, FieldType.TEXT, Resources.Resources.ACRONYM00872, 5, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

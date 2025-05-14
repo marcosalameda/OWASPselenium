@@ -128,11 +128,11 @@ FieldRef[] fields = new FieldRef[] { CSGenioAregis.FldCodregis, CSGenioAregis.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAregis.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 50, 0, true),
-                new Exports.QColumn(CSGenioAregis.FldNif, FieldType.TEXTO, Resources.Resources.NIF55908, 20, 0, true),
-                new Exports.QColumn(CSGenioAregis.FldEmail1, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-                new Exports.QColumn(CSGenioAregis.FldEmail2, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-                new Exports.QColumn(CSGenioAregis.FldTelephon, FieldType.TEXTO, Resources.Resources.PHONE56703, 15, 0, true),
+                new Exports.QColumn(CSGenioAregis.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 50, 0, true),
+                new Exports.QColumn(CSGenioAregis.FldNif, FieldType.TEXT, Resources.Resources.NIF55908, 20, 0, true),
+                new Exports.QColumn(CSGenioAregis.FldEmail1, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+                new Exports.QColumn(CSGenioAregis.FldEmail2, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+                new Exports.QColumn(CSGenioAregis.FldTelephon, FieldType.TEXT, Resources.Resources.PHONE56703, 15, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

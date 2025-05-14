@@ -93,17 +93,17 @@ namespace GenioMVC.ViewModels.Fami1
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldTpequcod, FieldType.TEXTO, Resources.Resources.CODE49225, 20, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldTpequpai, FieldType.TEXTO, Resources.Resources.DEPENDENT_ON28321, 20, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldNivel, FieldType.NUMERO, Resources.Resources.LEVEL06184, 3, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldBackcolo, FieldType.TEXTO, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldCorletra, FieldType.TEXTO, Resources.Resources.LETTER_COLOR15736, 30, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldPrecomax, FieldType.VALOR, Resources.Resources.MAXIMUM_PRICE55489, 12, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldPrecoult, FieldType.VALOR, Resources.Resources.LAST_PRICE25852, 12, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldSince, FieldType.DATAHORA, Resources.Resources.IN34902, 16, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldQtdequip, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 6, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldKit, FieldType.LOGICO, Resources.Resources.KIT27179, 1, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldTpequcod, FieldType.TEXT, Resources.Resources.CODE49225, 20, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldTpequpai, FieldType.TEXT, Resources.Resources.DEPENDENT_ON28321, 20, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldNivel, FieldType.NUMERIC, Resources.Resources.LEVEL06184, 3, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldBackcolo, FieldType.TEXT, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldCorletra, FieldType.TEXT, Resources.Resources.LETTER_COLOR15736, 30, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldPrecomax, FieldType.CURRENCY, Resources.Resources.MAXIMUM_PRICE55489, 12, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldPrecoult, FieldType.CURRENCY, Resources.Resources.LAST_PRICE25852, 12, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldSince, FieldType.DATETIME, Resources.Resources.IN34902, 16, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldQtdequip, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 6, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldKit, FieldType.LOGIC, Resources.Resources.KIT27179, 1, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

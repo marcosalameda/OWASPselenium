@@ -45,13 +45,13 @@ namespace GenioMVC.ViewModels.Lstusr
             listing = null;
             conditions = null;
             columns = new List<Exports.QColumn>() {
-                new Exports.QColumn(CSGenioAlstcol.FldTabela, FieldType.TEXTO, Resources.Resources.TABELA44049, 30, 0, true),
-                new Exports.QColumn(CSGenioAlstcol.FldAlias, FieldType.TEXTO, Resources.Resources.NOME_DA_COLUNA14566, 30, 0, true),
-                new Exports.QColumn(CSGenioAlstcol.FldCampo, FieldType.TEXTO, Resources.Resources.CAMPO46284, 30, 0, true),
-                new Exports.QColumn(CSGenioAlstcol.FldVisivel, FieldType.LOGICO, Resources.Resources.VISIVEL07768, 1, 0, true),
-                new Exports.QColumn(CSGenioAlstcol.FldPosicao, FieldType.NUMERO, Resources.Resources.ORDEM38897, 3, 0, true),
-                new Exports.QColumn(CSGenioAlstcol.FldOperacao, FieldType.NUMERO, Resources.Resources.OPERACAO29482, 3, 0, true),
-                new Exports.QColumn(CSGenioAlstcol.FldTipo, FieldType.NUMERO, Resources.Resources.TIPO55111, 3, 0, true),
+                new Exports.QColumn(CSGenioAlstcol.FldTabela, FieldType.TEXT, Resources.Resources.TABELA44049, 30, 0, true),
+                new Exports.QColumn(CSGenioAlstcol.FldAlias, FieldType.TEXT, Resources.Resources.NOME_DA_COLUNA14566, 30, 0, true),
+                new Exports.QColumn(CSGenioAlstcol.FldCampo, FieldType.TEXT, Resources.Resources.CAMPO46284, 30, 0, true),
+                new Exports.QColumn(CSGenioAlstcol.FldVisivel, FieldType.LOGIC, Resources.Resources.VISIVEL07768, 1, 0, true),
+                new Exports.QColumn(CSGenioAlstcol.FldPosicao, FieldType.NUMERIC, Resources.Resources.ORDEM38897, 3, 0, true),
+                new Exports.QColumn(CSGenioAlstcol.FldOperacao, FieldType.NUMERIC, Resources.Resources.OPERACAO29482, 3, 0, true),
+                new Exports.QColumn(CSGenioAlstcol.FldTipo, FieldType.NUMERIC, Resources.Resources.TIPO55111, 3, 0, true),
              };
 
             Load(-1, requestValues, ajaxRequest, true, ref listing, ref conditions);

@@ -127,9 +127,9 @@ namespace CSGenio.persistence
         }
 
         /// <inheritdoc/>
-        public override string generatePrimaryKey(string id_object, string id_field, int size, CodeType format)
+        public override string generatePrimaryKey(string id_object, string id_field, int size, FieldType format)
         {
-            if (format.Equals(CodeType.GUID_KEY))
+            if (format == FieldType.KEY_GUID)
                 return Guid.NewGuid().ToString();
 
             var command = CreateCommand("select nextval('" + id_object + "_" + id_field + "_seq'::regclass)");
@@ -137,21 +137,21 @@ namespace CSGenio.persistence
 
             var res = codeStart.ToString();
 
-            if (format.Equals(CodeType.STRING_KEY))
+            if (format == FieldType.KEY_VARCHAR)
                 res = res.PadLeft(size);
 
             return res;
         }
 
         /// <inheritdoc/>
-        public override List<string> generatePrimaryKey(string id_object, string id_field, int size, CodeType format, int range)
+        public override List<string> generatePrimaryKey(string id_object, string id_field, int size, FieldType format, int range)
         {
             if (range < 1)
                 throw new ArgumentException("range must be 1 or larger", nameof(range));
 
             List<string> codes = new List<string>();
 
-            if (format.Equals(CodeType.GUID_KEY))
+            if (format == FieldType.KEY_GUID)
             {
                 for (int i = 0; i < range; i++)
                     codes.Add(Guid.NewGuid().ToString());
@@ -165,7 +165,7 @@ namespace CSGenio.persistence
                     codes.Add(reader.GetValue(0).ToString());
             }
 
-            if (format.Equals(CodeType.STRING_KEY))
+            if (format == FieldType.KEY_VARCHAR)
             {
                 for (int i = 0; i < range; i++)
                     codes[i] = codes[i].PadLeft(size);

@@ -128,14 +128,14 @@ namespace GenioMVC.ViewModels.Equip
 
 				if (Qfield.FullName.Equals("visit.title"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Título", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 				}
 
 				if (Qfield.FullName.Equals("visit.observat"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Observações", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 2, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 				}
@@ -194,7 +194,7 @@ namespace GenioMVC.ViewModels.Equip
 
 				if (Qfield.FullName.Equals("repar.nrrepara"))
 				{
-					var fieldType = FieldType.NUMERO;
+					var fieldType = FieldType.NUMERIC;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "N.º reparação na Empresa", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 				}
@@ -208,14 +208,14 @@ namespace GenioMVC.ViewModels.Equip
 
 				if (Qfield.FullName.Equals("pesso.name"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Nome", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 5, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 				}
 
 				if (Qfield.FullName.Equals("speci.especial"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Especialidade", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 6, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 				}

@@ -93,9 +93,9 @@ namespace GenioMVC.ViewModels.Pesso
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAevcat.FldSince, FieldType.DATA, Resources.Resources.SINCE47259, 8, 0, true),
-                new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXTO, Resources.Resources.CATEGORY18978, 30, 0, true),
-                new Exports.QColumn(CSGenioAevcat.FldFimperio, FieldType.DATA, Resources.Resources.END_OF_PERIOD44616, 8, 0, true),
+                new Exports.QColumn(CSGenioAevcat.FldSince, FieldType.DATE, Resources.Resources.SINCE47259, 8, 0, true),
+                new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXT, Resources.Resources.CATEGORY18978, 30, 0, true),
+                new Exports.QColumn(CSGenioAevcat.FldFimperio, FieldType.DATE, Resources.Resources.END_OF_PERIOD44616, 8, 0, true),
                 new Exports.QColumn(CSGenioAevcat.FldObservat, FieldType.MEMO, Resources.Resources.OBSERVATION37880, 30, 2, true),
             };
 

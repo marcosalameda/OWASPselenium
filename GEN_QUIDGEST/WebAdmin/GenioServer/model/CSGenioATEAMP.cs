@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR TEAMP]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "equipa", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "equipa", FieldType.TEXT);
 			Qfield.FieldDescription = "Team";
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "TEAM59909";
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -137,8 +136,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Team of players";
 			info.AreaPluralDesignation="Teams of players";
 			info.DescriptionCav="TEAM_OF_PLAYERS02382";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

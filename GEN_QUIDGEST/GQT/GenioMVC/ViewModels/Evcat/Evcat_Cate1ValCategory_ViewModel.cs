@@ -93,8 +93,8 @@ namespace GenioMVC.ViewModels.Evcat
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXTO, Resources.Resources.CATEGORY18978, 50, 0, true),
-                new Exports.QColumn(CSGenioAcate1.FldAbbreviation, FieldType.TEXTO, Resources.Resources.ABBREVIATION31267, 10, 0, true),
+                new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXT, Resources.Resources.CATEGORY18978, 50, 0, true),
+                new Exports.QColumn(CSGenioAcate1.FldAbbreviation, FieldType.TEXT, Resources.Resources.ABBREVIATION31267, 10, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

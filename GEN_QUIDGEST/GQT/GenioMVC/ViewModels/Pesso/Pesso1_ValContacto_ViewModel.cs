@@ -93,8 +93,8 @@ namespace GenioMVC.ViewModels.Pesso
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXTO, Resources.Resources.GENUS37471, 20, 0, true),
-                new Exports.QColumn(CSGenioAconta.FldContacto, FieldType.TEXTO, Resources.Resources.CONTACT59247, 30, 0, true),
+                new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXT, Resources.Resources.GENUS37471, 20, 0, true),
+                new Exports.QColumn(CSGenioAconta.FldContacto, FieldType.TEXT, Resources.Resources.CONTACT59247, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

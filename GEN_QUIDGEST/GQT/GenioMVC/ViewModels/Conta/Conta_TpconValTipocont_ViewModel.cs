@@ -95,7 +95,7 @@ namespace GenioMVC.ViewModels.Conta
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 50, 0, true),
+                new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

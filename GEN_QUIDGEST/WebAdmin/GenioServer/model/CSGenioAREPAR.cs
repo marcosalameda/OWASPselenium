@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR REPAR]/
 		}
 
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtrepara", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtrepara", FieldType.DATETIME);
 			Qfield.FieldDescription = "Fixed in";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "FIXED_IN00179";
@@ -83,7 +82,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "nrrepara", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "nrrepara", FieldType.NUMERIC);
 			Qfield.FieldDescription = "No rumour in the Company";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 10;
@@ -97,7 +96,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "tipoarea", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "tipoarea", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Technical area";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "TECHNICAL_AREA50773";
@@ -145,7 +144,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "hours", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "hours", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Spent on hours";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 10;
@@ -155,7 +154,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -202,12 +201,12 @@ namespace CSGenio.business
 			info.Pathways.Add("regi1","pesso");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("item","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -262,8 +261,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Repair";
 			info.AreaPluralDesignation="Repairs";
 			info.DescriptionCav="REPAIR34508";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

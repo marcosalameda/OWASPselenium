@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR UICOM]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXT);
 			Qfield.FieldDescription = "Name";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "category", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "category", FieldType.TEXT);
 			Qfield.FieldDescription = "Category";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "menuid", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "menuid", FieldType.TEXT);
 			Qfield.FieldDescription = "Fixed menu name";
 			Qfield.FieldSize =  30;
 			Qfield.MQueue = false;
@@ -84,7 +83,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "thumbnai", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "thumbnai", FieldType.IMAGE);
 			Qfield.FieldDescription = "Thumbnail";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -95,7 +94,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -167,8 +166,6 @@ namespace CSGenio.business
 			info.AreaDesignation="UI Component";
 			info.AreaPluralDesignation="UI Components";
 			info.DescriptionCav="UI_COMPONENT15435";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

@@ -128,8 +128,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApedid.FldCodpedid, CSGenioApedid.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioApedid.FldDtpedido, FieldType.DATA, Resources.Resources.DATE18475, 8, 0, true),
-                new Exports.QColumn(CSGenioApedid.FldNrpedido, FieldType.NUMERO, Resources.Resources.NO_14817, 6, 0, true),
+                new Exports.QColumn(CSGenioApedid.FldDtpedido, FieldType.DATE, Resources.Resources.DATE18475, 8, 0, true),
+                new Exports.QColumn(CSGenioApedid.FldNrpedido, FieldType.NUMERIC, Resources.Resources.NO_14817, 6, 0, true),
                 new Exports.QColumn(CSGenioApedid.FldMotivo, FieldType.MEMO, Resources.Resources.REASON00008, 30, 3, true),
             };
 

@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PHOTO]/
 		}
 
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "photogra", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "photogra", FieldType.IMAGE);
 			Qfield.FieldDescription = "Photo";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
@@ -73,7 +72,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "title", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "title", FieldType.TEXT);
 			Qfield.FieldDescription = "Title";
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "TITLE21885";
@@ -82,7 +81,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "anexed", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "anexed", FieldType.DATETIME);
 			Qfield.FieldDescription = "Attached";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "ATTACHED26247";
@@ -91,7 +90,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -122,14 +121,14 @@ namespace CSGenio.business
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
 			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("item","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("famil","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("cntry","equip");
+			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -188,8 +187,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Photo";
 			info.AreaPluralDesignation="Photographs";
 			info.DescriptionCav="PHOTO51874";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

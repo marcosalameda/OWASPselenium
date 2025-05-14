@@ -94,7 +94,7 @@ namespace GenioMVC.ViewModels.Flds
             var columns = new List<Exports.QColumn>()
             {
                 new Exports.QColumn(CSGenioAflds.FldDescrip, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
-                new Exports.QColumn(CSGenioAfeeca.FldFeedback, FieldType.TEXTO, Resources.Resources.FEEDBACK52855, 30, 0, true),
+                new Exports.QColumn(CSGenioAfeeca.FldFeedback, FieldType.TEXT, Resources.Resources.FEEDBACK52855, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

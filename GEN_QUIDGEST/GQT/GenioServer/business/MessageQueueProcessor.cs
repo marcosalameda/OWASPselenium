@@ -913,21 +913,21 @@ namespace GenioServer.business
                 xmlMainElem.SetAttribute("year", ano_app);
                 xmlMainElem.SetAttribute("isackqueue", "true");
 
-                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "key", FieldType.TEXTO, key, 6));
+                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "key", FieldType.TEXT, key, 6));
                 xml.AppendChild(xmlMainElem);
-                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "mqstatus", FieldType.TEXTO, mQueueACK, 80));
+                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "mqstatus", FieldType.TEXT, mQueueACK, 80));
                 xml.AppendChild(xmlMainElem);
-                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "descr", FieldType.TEXTO, description, 80));
+                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "descr", FieldType.TEXT, description, 80));
                 xml.AppendChild(xmlMainElem);
-                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "dtorig", FieldType.DATA, dtorig, 8));
+                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "dtorig", FieldType.DATE, dtorig, 8));
                 xml.AppendChild(xmlMainElem);
-                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "dtproc", FieldType.DATA, dtproc, 8));
+                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "dtproc", FieldType.DATE, dtproc, 8));
                 xml.AppendChild(xmlMainElem);
-                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "modulo", FieldType.TEXTO, module, 3));
+                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "modulo", FieldType.TEXT, module, 3));
                 xml.AppendChild(xmlMainElem);
-                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "operacao", FieldType.TEXTO, operation, 2));
+                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "operacao", FieldType.TEXT, operation, 2));
                 xml.AppendChild(xmlMainElem);
-                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "progress", FieldType.INTEIRO, progress, 5));
+                xmlMainElem.AppendChild(MQXml.FieldAdd(xml, "progress", FieldType.INTEGER, progress, 5));
                 xml.AppendChild(xmlMainElem);
                 
                 StringWriter sw = new StringWriter();

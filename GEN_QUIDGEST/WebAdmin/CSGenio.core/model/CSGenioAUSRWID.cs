@@ -54,18 +54,14 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field(info.Alias, "codusrwid", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codusrwid"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field(info.Alias, "codlstusr", FieldType.CHAVE_ESTRANGEIRA_GUID));
-			info.DBFields["codlstusr"].FieldSize = 36;
-
-            info.RegisterFieldDB(new Field(info.Alias, "widget", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "rowkey", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "visible", FieldType.LOGICO));
-            info.RegisterFieldDB(new Field(info.Alias, "hposition", FieldType.INTEIRO));
-            info.RegisterFieldDB(new Field(info.Alias, "vposition", FieldType.INTEIRO));
-            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "codusrwid", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codlstusr", FieldType.KEY_GUID));
+            info.RegisterFieldDB(new Field(info.Alias, "widget", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "rowkey", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "visible", FieldType.LOGIC));
+            info.RegisterFieldDB(new Field(info.Alias, "hposition", FieldType.INTEGER));
+            info.RegisterFieldDB(new Field(info.Alias, "vposition", FieldType.INTEGER));
+            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
 
 			// Relações Filhas

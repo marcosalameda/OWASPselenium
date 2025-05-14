@@ -131,9 +131,9 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwareh.FldCodwareh, CSGenioAwareh.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
-                new Exports.QColumn(CSGenioAwareh.FldWarehcod, FieldType.TEXTO, Resources.Resources.ACRONYM00872, 10, 0, true),
-                new Exports.QColumn(CSGenioAwareh.FldActivity, FieldType.ARRAY_COD_LOGICO, Resources.Resources.ACTIVIDADE44684, 1, 0, true, "activida"),
+                new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+                new Exports.QColumn(CSGenioAwareh.FldWarehcod, FieldType.TEXT, Resources.Resources.ACRONYM00872, 10, 0, true),
+                new Exports.QColumn(CSGenioAwareh.FldActivity, FieldType.ARRAY_LOGIC, Resources.Resources.ACTIVIDADE44684, 1, 0, true, "activida"),
             };
 
             columns.RemoveAll(item => item == null);

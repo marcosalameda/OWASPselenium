@@ -30,7 +30,7 @@ namespace GenioMVC.ViewModels.UserAdmin
 			conditions = null;
 			columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXTO, Resources.Resources.UTILIZADORES39761, 20, 0, true),
+				new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXT, Resources.Resources.UTILIZADORES39761, 20, 0, true),
 			};
 
 			Load(-1, requestValues, ajaxRequest, true, ref listing, ref conditions);

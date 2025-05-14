@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR EXPEN]/
 		}
 
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "yearnumb", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "yearnumb", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Year";
 			Qfield.FieldSize =  4;
 			Qfield.MQueue = false;
@@ -90,7 +89,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "yearprev", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "yearprev", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Previous year";
 			Qfield.FieldSize =  4;
 			Qfield.MQueue = false;
@@ -116,7 +115,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "descript", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "descript", FieldType.TEXT);
 			Qfield.FieldDescription = "Description";
 			Qfield.FieldSize =  85;
 			Qfield.MQueue = false;
@@ -126,7 +125,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "value", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "value", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Value";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -138,7 +137,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "prevval", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "prevval", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Previous Value";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 7;
@@ -150,7 +149,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -245,8 +244,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Expense";
 			info.AreaPluralDesignation="Expenses";
 			info.DescriptionCav="EXPENSE49437";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

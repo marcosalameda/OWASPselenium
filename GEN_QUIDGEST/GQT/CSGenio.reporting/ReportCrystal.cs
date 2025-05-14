@@ -138,11 +138,11 @@ namespace CSGenio.reporting
 
             // Convert array name
             string arrayPrefix = "";
-            if (field.FieldType == FieldType.ARRAY_COD_NUMERICO)
+            if (field.FieldType == FieldType.ARRAY_NUMERIC)
                 arrayPrefix = "dbo.GetValArrayN";
-            else if (field.FieldType == FieldType.ARRAY_COD_TEXTO)
+            else if (field.FieldType == FieldType.ARRAY_TEXT)
                 arrayPrefix = "dbo.GetValArrayC";
-            else if (field.FieldType == FieldType.ARRAY_COD_LOGICO)
+            else if (field.FieldType == FieldType.ARRAY_LOGIC)
                 arrayPrefix = "dbo.GetValArrayL";
             else
                 return; //TODO: should we throw exception here?
@@ -556,7 +556,7 @@ namespace CSGenio.reporting
 
                             //RMR(2020-04-22) - Support for multi-selected integer keys
                             List<string> keys = new List<string>();
-                            if (areaBase.KeyType == CodeType.INT_KEY)
+                            if (areaBase.KeyType == FieldType.KEY_INT)
                                 keys = limit.FieldValue.Select(val => $"{{{tempFieldName}}} = {val}").ToList();
                             else
                                 keys =limit.FieldValue.Select(val => $"{{{tempFieldName}}} = '{{{val.TrimStart('{').TrimEnd('}')}}}'").ToList();
@@ -731,8 +731,6 @@ namespace CSGenio.reporting
                 condicoesEph += "{" + programa + areaBase.Alias.ToUpper() + "." + crorigem.ToUpper() + "} IN [";
 
                 FieldFormatting fcampo = tabelaEPH.DBFields[ephArea.Field].FieldFormat;
-                if (Area.GetInfoArea(ephArea.Table).KeyType == CodeType.INT_KEY && tabelaEPH.DBFields[ephArea.Field].isKey())
-                    fcampo = FieldFormatting.INTEIRO;
 
                 for (int i = 0; i < listaValores.Length; i++)
                 {
@@ -767,8 +765,6 @@ namespace CSGenio.reporting
                     {
                         Field campoEPH = tabelaEPH.DBFields[ephArea.Field];
                         FieldFormatting cFormat = campoEPH.FieldFormat;
-                        if (campoEPH.isKey() && tabelaEPH.KeyType == CodeType.INT_KEY)
-                            cFormat = FieldFormatting.INTEIRO; // <- ??
                         condicoesEph += "isnull({" + programa + tabelaEPH.Alias.ToUpper() + "." + ephArea.Field.ToUpper() + "}) OR ";
                         if (cFormat == FieldFormatting.CARACTERES)
                             condicoesEph += "{" + programa + tabelaEPH.Alias.ToUpper() + "." + ephArea.Field.ToUpper() + "} = \"\" OR ";
@@ -787,9 +783,6 @@ namespace CSGenio.reporting
 
                     //NH(2016.11.23) - Se o Qfield for key em Inteiro, vamos mudar a formatação to Inteiros
                     FieldFormatting fcampo = tabelaEPH.DBFields[ephArea.Field].FieldFormat;
-
-                    if (Area.GetInfoArea(ephArea.Table).KeyType == CodeType.INT_KEY && tabelaEPH.DBFields[ephArea.Field].isKey())
-                        fcampo = FieldFormatting.INTEIRO;
 
                     for (int i = 0; i < listaValores.Length; i++)
                     {
@@ -830,8 +823,6 @@ namespace CSGenio.reporting
 
                 //NH(2016.11.23) - Se o Qfield for key em Inteiro, vamos mudar a formatação to Inteiros
                 FieldFormatting fcampo = areaBase.DBFields[ephArea.Field].FieldFormat;
-                if (Area.GetInfoArea(ephArea.Table).KeyType == CodeType.INT_KEY && areaBase.DBFields[ephArea.Field].isKey())
-                    fcampo = FieldFormatting.INTEIRO;
 
                 condicoesEph += "{" + programa + areaBase.Alias.ToUpper() + "." + ephArea.Field.ToUpper() + "} IN [";
                 for (int i = 0; i < listaValores.Length; i++)
@@ -865,8 +856,6 @@ namespace CSGenio.reporting
                     {
                         Field campoEPH = areaBase.DBFields[ephArea.Field];
                         FieldFormatting cFormat = campoEPH.FieldFormat;
-                        if (campoEPH.isKey() && areaBase.Information.KeyType == CodeType.INT_KEY)
-                            cFormat = FieldFormatting.INTEIRO; // <- ??
                         condicoesEph += "isnull({" + programa + areaBase.Alias.ToUpper() + "." + ephArea.Field.ToUpper() + "}) OR ";
                         if (cFormat == FieldFormatting.CARACTERES)
                             condicoesEph += "{" + programa + areaBase.Alias.ToUpper() + "." + ephArea.Field.ToUpper() + "} = \"\" OR ";
@@ -967,17 +956,14 @@ namespace CSGenio.reporting
                 StringBuilder str_recordselection; //TSX (2008-10-30)
                 StringBuilder str_recordselectionCampo = new StringBuilder(""); //TSX (2008-10-30)
                 //podemos incializar o tpField com um tipo qualquer pois vamos sempre actualizar a variável quando encontrarmos o Qfield
-                FieldType tpField = FieldType.CHAVE_PRIMARIA;
+                FieldType tpField = FieldType.KEY_VARCHAR;
                 //to cada name tem que se verificar se vem só o name da area ou se vem o name completo
                 //se vier só o name da area tem que se descobrir a relação com a area base
                 if (!nomesCamposHistorial[i].Contains("."))//só vem o name da area pelo que assumimos que é uma key primária
                 {
                     if (area == nomesCamposHistorial[i])//AV(2011/03/29) o histórico é da área base do rpt
                     {
-                        if (areaBase.KeyType == CodeType.INT_KEY)
-                            tpField = FieldType.INTEIRO;
-                        else
-                       		tpField = areaBase.DBFields[areaBase.PrimaryKeyName].FieldType;
+                  		tpField = areaBase.DBFields[areaBase.PrimaryKeyName].FieldType;
                         str_recordselectionCampo = new StringBuilder("{" + Configuration.Program + areaBase.Alias + "." + areaBase.PrimaryKeyName + "}=");
                     }
                     else
@@ -987,10 +973,7 @@ namespace CSGenio.reporting
                         {
                             Relation relacao = (Relation)areaBase.ParentTables[nomesCamposHistorial[i]];
                             
-                            if (Area.GetInfoArea(relacao.AliasTargetTab).KeyType == CodeType.INT_KEY)
-                                tpField = FieldType.INTEIRO;
-                            else
-                            	tpField = areaBase.DBFields[relacao.SourceRelField].FieldType;
+                           	tpField = areaBase.DBFields[relacao.SourceRelField].FieldType;
                             str_recordselectionCampo = new StringBuilder("{" + Configuration.Program + relacao.AliasSourceTab + "." + relacao.SourceRelField + "}=");
                         }
                         else
@@ -1001,10 +984,7 @@ namespace CSGenio.reporting
                                 //AV(2011/03/29) o histórico é de uma das áreas do rpt identificada nas definições
                                 if (areaReport == nomesCamposHistorial[i])
                                 {
-                                    if (areaRpt.KeyType == CodeType.INT_KEY)
-                                        tpField = FieldType.INTEIRO;
-                                    else
-                                    	tpField = areaRpt.DBFields[areaRpt.PrimaryKeyName].FieldType;
+                                   	tpField = areaRpt.DBFields[areaRpt.PrimaryKeyName].FieldType;
                                     str_recordselectionCampo = new StringBuilder("{" + Configuration.Program + areaRpt.Alias + "." + areaRpt.PrimaryKeyName + "}=");
                                     break;
                                 }
@@ -1014,10 +994,7 @@ namespace CSGenio.reporting
                                     if (areaRpt.ParentTables.ContainsKey(nomesCamposHistorial[i]))
                                     {
                                         Relation relacao = (Relation)areaRpt.ParentTables[nomesCamposHistorial[i]];
-                                        if (Area.GetInfoArea(relacao.AliasTargetTab).KeyType == CodeType.INT_KEY)
-                                            tpField = FieldType.INTEIRO;
-                                        else
-                                        	tpField = areaRpt.DBFields[relacao.SourceRelField].FieldType;
+                                       	tpField = areaRpt.DBFields[relacao.SourceRelField].FieldType;
                                         str_recordselectionCampo = new StringBuilder("{" + Configuration.Program + relacao.AliasSourceTab + "." + relacao.SourceRelField + "}=");
                                         break;
                                     }
@@ -1032,10 +1009,7 @@ namespace CSGenio.reporting
                     //AV(2011/03/29) o histórico é dum Qfield da área base do rpt
                     if (area == campoCompleto[0])
                     {
-                        if (areaBase.KeyType == CodeType.INT_KEY && campoCompleto[1]==areaBase.PrimaryKeyName)
-                            tpField = FieldType.INTEIRO;
-                        else
-                        	tpField = areaBase.DBFields[campoCompleto[1]].FieldType;
+                       	tpField = areaBase.DBFields[campoCompleto[1]].FieldType;
                         str_recordselectionCampo = new StringBuilder("{" + Configuration.Program + nomesCamposHistorial[i] + "}=");
                     }
                     else
@@ -1048,10 +1022,6 @@ namespace CSGenio.reporting
                             {
 								//RMR(2016-10-04) - Before converting to int in case of integer keys, gets the field format, and verifies if this field is any kind of key
                                 tpField = areaRpt.DBFields[campoCompleto[1]].FieldType;
-
-                                if (areaRpt.KeyType == CodeType.INT_KEY &&
-                                    (tpField == FieldType.CHAVE_ESTRANGEIRA || tpField == FieldType.CHAVE_FALSA || tpField == FieldType.CHAVE_PRIMARIA))
-                                    tpField = FieldType.INTEIRO;
 
                                 str_recordselectionCampo = new StringBuilder("{" + Configuration.Program + nomesCamposHistorial[i] + "}=");
                                 break;
@@ -1076,11 +1046,11 @@ namespace CSGenio.reporting
                     str_recordselection = new StringBuilder("(");
                     for (int nr = 0; nr < Nentradas.Length - 1; nr++)
                     {
-                        str_recordselection.Append(str_recordselectionCampo + CrystalConversion.FromInternal(Nentradas[nr], tpField.Formatting));
+                        str_recordselection.Append(str_recordselectionCampo + CrystalConversion.FromInternal(Nentradas[nr], tpField.GetFormatting()));
                         str_recordselection.Append(" OR ");
                     }
                     //AV(2011/03/29) o último Qvalue de Nentradas não precisa do OR por isso é feito fora do for
-                    str_recordselection.Append(str_recordselectionCampo + CrystalConversion.FromInternal(Nentradas[Nentradas.Length - 1], tpField.Formatting));
+                    str_recordselection.Append(str_recordselectionCampo + CrystalConversion.FromInternal(Nentradas[Nentradas.Length - 1], tpField.GetFormatting()));
 
                     str_recordselection.Append(")");
                     adicionaCondicaoRecordSelectionFormula(str_recordselection.ToString().ToUpper());

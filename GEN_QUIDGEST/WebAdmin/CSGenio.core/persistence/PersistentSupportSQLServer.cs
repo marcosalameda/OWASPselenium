@@ -141,9 +141,9 @@ namespace CSGenio.persistence
         }
 
         /// <inheritdoc/>
-        public override string generatePrimaryKey(string id_object, string id_field, int size, CodeType format)
+        public override string generatePrimaryKey(string id_object, string id_field, int size, FieldType format)
         {
-			if (format.Equals(CodeType.GUID_KEY))
+			if (format == FieldType.KEY_GUID)
                 return Guid.NewGuid().ToString();
 
             //database side keys use sequences instead of the Codigos_Sequenciais table
@@ -170,7 +170,7 @@ namespace CSGenio.persistence
 				                               "The primary key generated for object with id " + id_object + ", with size " + size + " and format " + format.ToString() + " is invalid: " + codigoNovo.ToString());
             }
 
-			if (format.Equals(CodeType.STRING_KEY))
+			if (format == FieldType.KEY_VARCHAR)
             {
                 return codigoNovo.ToString().PadLeft(size);
             }
@@ -179,14 +179,14 @@ namespace CSGenio.persistence
         }
 
         /// <inheritdoc/>
-        public override List<string> generatePrimaryKey(string id_object, string id_field, int size, CodeType format, int range)
+        public override List<string> generatePrimaryKey(string id_object, string id_field, int size, FieldType format, int range)
         {
             if (range < 1)
                 throw new ArgumentException("range must be 1 or larger", nameof(range));
 
             List<string> codes = new List<string>();
 
-            if (format.Equals(CodeType.GUID_KEY))
+            if (format == FieldType.KEY_GUID)
             {
                 for (int i = 0; i < range; i++)
                     codes.Add(Guid.NewGuid().ToString());
@@ -214,7 +214,7 @@ namespace CSGenio.persistence
             for (int i = 0; i < range; i++)
                 codes.Add((codeStart + i).ToString());
 
-            if (format.Equals(CodeType.STRING_KEY))
+            if (format == FieldType.KEY_VARCHAR)
             {
                 for (int i = 0; i < range; i++)
                     codes[i] = codes[i].PadLeft(size);
@@ -888,12 +888,12 @@ namespace CSGenio.persistence
             //Setup the schema
             foreach (var col in info.DBFields)
             {
-                var dataType = col.Value.FieldType.Type;
+                var dataType = col.Value.FieldType.GetExternalType();
 
                 if (changeDatatypes)
                 {
                     //SqlBulkCopy does not handle implicit conversion unless you set the correct type
-                    if (col.Value.isKey() && info.KeyType == CodeType.GUID_KEY)
+                    if (col.Value.isKey() && info.KeyType == FieldType.KEY_GUID)
                         dataType = typeof(Guid);
                 }
 

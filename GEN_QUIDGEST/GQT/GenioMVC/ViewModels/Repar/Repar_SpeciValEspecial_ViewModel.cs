@@ -95,8 +95,8 @@ namespace GenioMVC.ViewModels.Repar
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXTO, Resources.Resources.SPECIALTY09304, 50, 0, true),
-                new Exports.QColumn(CSGenioAspeci.FldAreatecn, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
+                new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXT, Resources.Resources.SPECIALTY09304, 50, 0, true),
+                new Exports.QColumn(CSGenioAspeci.FldAreatecn, FieldType.ARRAY_TEXT, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
             };
 
             columns.RemoveAll(item => item == null);

@@ -600,24 +600,17 @@ public class TestConversionDb
 
         // var value in System.Enum.GetValues(typeof(FieldFormatting)) ){}
         /*
-        FieldFormatting.ANO_MES_DIA;
         FieldFormatting.BINARIO;
         FieldFormatting.CARACTERES;
         FieldFormatting.DATA;
         FieldFormatting.DATAHORA;
         FieldFormatting.DATASEGUNDO;
-        FieldFormatting.DIA_MES_ANO;
         FieldFormatting.FLOAT;
         FieldFormatting.GUID;
         FieldFormatting.INTEIRO;
         FieldFormatting.JPEG;
         FieldFormatting.LOGICO;
         */
-        //
-        // FieldFormatting.ANO_MES_DIA *** Não é usado
-        //
-        //res = DBConversion.ToInternal(null, FieldFormatting.ANO_MES_DIA);
-        //Assert.IsNull(res);
 
         //
         // FieldFormatting.BINARIO
@@ -667,10 +660,6 @@ public class TestConversionDb
 
         //
         // FieldFormatting.DATASEGUNDO;
-        //
-
-        //
-        // FieldFormatting.DIA_MES_ANO;
         //
 
         //
@@ -771,10 +760,6 @@ public class TestConversionDb
 
         //
         // FieldFormatting.DATASEGUNDO
-        //
-
-        //
-        // FieldFormatting.DIA_MES_ANO
         //
 
         //

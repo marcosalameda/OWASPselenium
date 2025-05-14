@@ -95,7 +95,7 @@ namespace GenioMVC.ViewModels.Propr
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAregio.FldRegiao, FieldType.TEXTO, Resources.Resources.REGION12723, 50, 0, true),
+                new Exports.QColumn(CSGenioAregio.FldRegiao, FieldType.TEXT, Resources.Resources.REGION12723, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

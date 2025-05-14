@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR DISPA]/
 		}
 
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "isprepar", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "isprepar", FieldType.LOGIC);
 			Qfield.FieldDescription = "Is prepared";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -84,7 +83,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dispadt", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dispadt", FieldType.DATETIME);
 			Qfield.FieldDescription = "Dispatch date";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -98,7 +97,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dispanr", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "dispanr", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Dispatch number";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -112,7 +111,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "prepared", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "prepared", FieldType.DATETIME);
 			Qfield.FieldDescription = "Prepared";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -138,7 +137,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "status", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "status", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Status";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -155,7 +154,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -252,8 +251,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Dispatch";
 			info.AreaPluralDesignation="Dispatches";
 			info.DescriptionCav="DISPATCH46310";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

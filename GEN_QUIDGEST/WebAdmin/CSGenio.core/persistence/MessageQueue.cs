@@ -16,7 +16,7 @@ namespace CSGenio.framework
 
         private static string get_type(FieldType cp)
         {
-            switch (cp.Formatting)
+            switch (cp.GetFormatting())
             {
                 case FieldFormatting.CARACTERES:
                 case FieldFormatting.TEMPO:
@@ -24,11 +24,9 @@ namespace CSGenio.framework
                 case FieldFormatting.BINARIO:
                 case FieldFormatting.JPEG:
                     return "C";
-                case FieldFormatting.ANO_MES_DIA:
                 case FieldFormatting.DATA:
 				case FieldFormatting.DATAHORA:
                 case FieldFormatting.DATASEGUNDO:
-                case FieldFormatting.DIA_MES_ANO:
                     return "D";
                 case FieldFormatting.FLOAT:
                 case FieldFormatting.INTEIRO:
@@ -36,7 +34,7 @@ namespace CSGenio.framework
                 case FieldFormatting.LOGICO:
                     return "L";
                 default:
-                    throw new FrameworkException(null, "MQXml.get_type", "Format undefined: " + cp.Formatting.ToString());
+                    throw new FrameworkException(null, "MQXml.get_type", "Format undefined: " + cp.GetFormatting().ToString());
             }
         }
 
@@ -45,14 +43,14 @@ namespace CSGenio.framework
             switch(cp.Name)
             {
                 case "String":
-                    return FieldType.TEXTO;
+                    return FieldType.TEXT;
                 case "DateTime":
-                    return FieldType.DATA;
+                    return FieldType.DATE;
                 case "float":
                 case "int":
-                    return FieldType.NUMERO;
+                    return FieldType.NUMERIC;
                 case "bool":
-                    return FieldType.LOGICO;
+                    return FieldType.LOGIC;
                 default:
 					throw new FrameworkException(null, "MQXml.get_tipoCampo", "Type undefined: " + cp.Name);
             }
@@ -169,10 +167,10 @@ namespace CSGenio.framework
             xml_elem.AppendChild(FieldPropertieAdd(xml, "TIPO", MQXml.get_type(type)));
             xml_elem.AppendChild(FieldPropertieAdd(xml, "COMP", lenght.ToString()));
 
-            if (type == FieldType.NUMERO || type == FieldType.VALOR)
+            if (type == FieldType.NUMERIC || type == FieldType.CURRENCY)
                 xml_elem.AppendChild(FieldPropertieAdd(xml, "DC", value.ToString()));
 
-            xml_elem.AppendChild(FieldPropertieValueAdd(xml, "VL", value, type.Formatting));
+            xml_elem.AppendChild(FieldPropertieValueAdd(xml, "VL", value, type.GetFormatting()));
 
             return xml_elem;
         }

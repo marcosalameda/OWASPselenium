@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Flds
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAaero.FldName, FieldType.TEXTO, Resources.Resources.NOME_DA_COMPANHIA48638, 50, 0, true),
+                new Exports.QColumn(CSGenioAaero.FldName, FieldType.TEXT, Resources.Resources.NOME_DA_COMPANHIA48638, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

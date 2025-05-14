@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Sale
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAorgan.FldOrganiza, FieldType.TEXTO, Resources.Resources.ORGANIZATION__NEW_OR35065, 85, 0, true),
+                new Exports.QColumn(CSGenioAorgan.FldOrganiza, FieldType.TEXT, Resources.Resources.ORGANIZATION__NEW_OR35065, 85, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

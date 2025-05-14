@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR STRAT]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "estrateg", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "estrateg", FieldType.TEXT);
 			Qfield.FieldDescription = "Strategy";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "ESTRATEGIA20488";
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "creatdat", FieldType.DATACRIA);
+			Qfield = new Field(info.Alias, "creatdat", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Creation date";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "CRIADO_EM61283";
@@ -73,7 +72,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "creatope", FieldType.OPERCRIA);
+			Qfield = new Field(info.Alias, "creatope", FieldType.TEXT);
 			Qfield.FieldDescription = "Created by";
 			Qfield.FieldSize =  200;
 			Qfield.CavDesignation = "CRIADO_POR17895";
@@ -82,7 +81,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "chngdate", FieldType.DATAMUDA);
+			Qfield = new Field(info.Alias, "chngdate", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Changed on";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "ALTERADO_EM23573";
@@ -91,7 +90,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "operchng", FieldType.OPERMUDA);
+			Qfield = new Field(info.Alias, "operchng", FieldType.TEXT);
 			Qfield.FieldDescription = "Changed by";
 			Qfield.FieldSize =  200;
 			Qfield.CavDesignation = "ALTERADO_POR39254";
@@ -110,7 +109,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -182,8 +181,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Estratégia";
 			info.AreaPluralDesignation="Estratégias";
 			info.DescriptionCav="ESTRATEGIA31298";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

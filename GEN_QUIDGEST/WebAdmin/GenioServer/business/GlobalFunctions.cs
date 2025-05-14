@@ -1095,7 +1095,7 @@ namespace CSGenio.business
                     //framework.Field Qfield;
                     fields.TryGetValue(fieldName, out var Qfield);
                     //Se for uma data é preciso ter em atençao a formatting
-                    if (Qfield.FieldType.Equals(CSGenio.framework.FieldType.DATA))
+                    if (Qfield.FieldType.Equals(CSGenio.framework.FieldType.DATE))
                     {
                         DateTime d = (DateTime)a.returnValueField(QtableName + "." + fieldName);
                         if(d == DateTime.MinValue)
@@ -1227,7 +1227,7 @@ namespace CSGenio.business
                 framework.Field Qfield;
                 camps.TryGetValue(fieldName, out Qfield);
                 //Se for uma data é preciso ter em atençao a formatting
-                if (Qfield.FieldType.Equals(CSGenio.framework.FieldType.DATA) || Qfield.FieldType.Equals(CSGenio.framework.FieldType.DATAHORA))
+                if (Qfield.FieldType.Equals(CSGenio.framework.FieldType.DATE) || Qfield.FieldType.Equals(CSGenio.framework.FieldType.DATETIME))
                 {
                     String l = fieldsvalues.GetDirect(0, nomeTabelaBD + "." + fieldName).ToString();
                     if (l.Equals(""))
@@ -1237,7 +1237,7 @@ namespace CSGenio.business
                 }
                 else
                 {
-                        if (Qfield.FieldType.Formatting == FieldFormatting.GUID && fieldsvalues.GetDirect(0, nomeTabelaBD + "." + fieldName).ToString().Length != 0)
+                        if (Qfield.FieldType.GetFormatting() == FieldFormatting.GUID && fieldsvalues.GetDirect(0, nomeTabelaBD + "." + fieldName).ToString().Length != 0)
                             HashRegis += fieldsvalues.GetDirect(0, nomeTabelaBD + "." + fieldName).ToString().ToUpper();
                         else
                             HashRegis += fieldsvalues.GetDirect(0, nomeTabelaBD + "." + fieldName).ToString();

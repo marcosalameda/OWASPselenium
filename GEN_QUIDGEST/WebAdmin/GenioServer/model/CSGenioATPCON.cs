@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR TPCON]/
 		}
 
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "genconta", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "genconta", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Genre";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "GENRE63303";
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "tipocont", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "tipocont", FieldType.TEXT);
 			Qfield.FieldDescription = "Designation";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "DESIGNATION35876";
@@ -83,7 +82,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -159,8 +158,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Contact type";
 			info.AreaPluralDesignation="Contact types";
 			info.DescriptionCav="CONTACT_TYPE65233";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

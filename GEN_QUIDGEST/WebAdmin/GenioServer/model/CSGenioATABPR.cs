@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR TABPR]/
 		}
 
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "since", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "since", FieldType.DATETIME);
 			Qfield.FieldDescription = "Since";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "SINCE47259";
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "precohor", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "precohor", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Price-by-hour";
 			Qfield.FieldSize =  12;
 			Qfield.IntegerDigits = 9;
@@ -83,7 +82,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -177,8 +176,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Table price";
 			info.AreaPluralDesignation="Table prices";
 			info.DescriptionCav="TABLE_PRICE14309";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

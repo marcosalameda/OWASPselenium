@@ -128,9 +128,9 @@ FieldRef[] fields = new FieldRef[] { CSGenioAconta.FldCodconta, CSGenioAconta.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-                new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXTO, Resources.Resources.TYPE00312, 30, 0, true),
-                new Exports.QColumn(CSGenioAconta.FldContacto, FieldType.TEXTO, Resources.Resources.CONTACT59247, 30, 0, true),
+                new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+                new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXT, Resources.Resources.TYPE00312, 30, 0, true),
+                new Exports.QColumn(CSGenioAconta.FldContacto, FieldType.TEXT, Resources.Resources.CONTACT59247, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR DESAM]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtini", FieldType.DATA);
+			Qfield = new Field(info.Alias, "dtini", FieldType.DATE);
 			Qfield.FieldDescription = "Start date";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "START_DATE46038";
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtfim", FieldType.DATA);
+			Qfield = new Field(info.Alias, "dtfim", FieldType.DATE);
 			Qfield.FieldDescription = "End date";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "END_DATE34754";
@@ -73,7 +72,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "observat", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "observat", FieldType.TEXT);
 			Qfield.FieldDescription = "Observations";
 			Qfield.FieldSize =  100;
 			Qfield.CavDesignation = "OBSERVATIONS03729";
@@ -82,7 +81,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "creatope", FieldType.OPERCRIA);
+			Qfield = new Field(info.Alias, "creatope", FieldType.TEXT);
 			Qfield.FieldDescription = "Created by";
 			Qfield.FieldSize =  200;
 			Qfield.CavDesignation = "CREATED_BY12292";
@@ -91,7 +90,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "creatdat", FieldType.DATACRIA);
+			Qfield = new Field(info.Alias, "creatdat", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Creation date";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "CREATION_DATE51875";
@@ -100,7 +99,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "operchng", FieldType.OPERMUDA);
+			Qfield = new Field(info.Alias, "operchng", FieldType.TEXT);
 			Qfield.FieldDescription = "Changed by";
 			Qfield.FieldSize =  200;
 			Qfield.CavDesignation = "CHANGED_BY08967";
@@ -109,7 +108,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "chngdate", FieldType.DATAMUDA);
+			Qfield = new Field(info.Alias, "chngdate", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Changed on";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "CHANGED_ON19727";
@@ -118,7 +117,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -190,8 +189,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Deactivation of Evaluation/Monitoring";
 			info.AreaPluralDesignation="Deactivation of Evaluation/Monitoring";
 			info.DescriptionCav="DEACTIVATION_OF_EVAL00608";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

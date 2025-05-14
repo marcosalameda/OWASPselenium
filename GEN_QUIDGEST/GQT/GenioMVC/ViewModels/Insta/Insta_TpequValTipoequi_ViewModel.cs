@@ -93,9 +93,9 @@ namespace GenioMVC.ViewModels.Insta
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXTO, Resources.Resources.CODE49225, 20, 0, true),
-                new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
-                new Exports.QColumn(CSGenioAtpequ.FldQtdequip, FieldType.NUMERO, Resources.Resources.EQUIPMENT03632, 6, 0, true),
+                new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXT, Resources.Resources.CODE49225, 20, 0, true),
+                new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
+                new Exports.QColumn(CSGenioAtpequ.FldQtdequip, FieldType.NUMERIC, Resources.Resources.EQUIPMENT03632, 6, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

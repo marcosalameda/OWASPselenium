@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Pworg
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXTO, Resources.Resources.NAME31974, 20, 0, true),
+                new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXT, Resources.Resources.NAME31974, 20, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

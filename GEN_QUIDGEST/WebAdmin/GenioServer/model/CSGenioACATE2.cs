@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR CATE2]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "categoria", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "categoria", FieldType.TEXT);
 			Qfield.FieldDescription = "Category";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "CATEGORY18978";
@@ -65,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "abbreviation", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "abbreviation", FieldType.TEXT);
 			Qfield.FieldDescription = "Abbreviation";
 			Qfield.FieldSize =  10;
 			Qfield.CavDesignation = "ABBREVIATION31267";
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -150,8 +149,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Professional category";
 			info.AreaPluralDesignation="Professional categories";
 			info.DescriptionCav="PROFESSIONAL_CATEGOR16809";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

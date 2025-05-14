@@ -358,7 +358,7 @@ namespace GenioMVC.Models
 			PersistentSupport sp = UserContext.Current.PersistentSupport;
 			field = field.Substring(0, 3).ToLower() == "val" ? field.Substring(3).ToLower() : field.ToLower();
 
-			List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(baseklass.Alias).DBFields.Where(x => x.Value.FieldType.Equals(FieldType.FICHEIRO_BD)).ToList();
+			List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(baseklass.Alias).DBFields.Where(x => x.Value.FieldType.Equals(FieldType.DOCUMENT)).ToList();
 
 			if (fields.Exists(x => x.Key.ToLower() == field))
 			{
@@ -752,9 +752,10 @@ namespace GenioMVC.Models
 			{
 				// Condition for field type added because sorting by an image field causes an error
 				if (firstVisibleColumn != null
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGEM_JPEG
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEO_SHAPE)
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGE
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_POINT
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOMETRY_SHAPE
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_SHAPE)
 				{
 					ColumnSort sortFirstVisibleColumn = new ColumnSort(new ColumnReference(firstVisibleColumn), SortOrder.Ascending);
 					sorts.Add(sortFirstVisibleColumn);

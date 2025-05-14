@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR MEM]/
 		}
 
@@ -55,7 +54,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "login", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "login", FieldType.TEXT);
 			Qfield.FieldDescription = "Name";
 			Qfield.FieldSize =  128;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -65,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "rotina", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "rotina", FieldType.TEXT);
 			Qfield.FieldDescription = "Routine";
 			Qfield.FieldSize =  100;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -75,7 +74,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "altura", FieldType.DATA);
+			Qfield = new Field(info.Alias, "altura", FieldType.DATE);
 			Qfield.FieldDescription = "Date";
 			Qfield.FieldSize =  8;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -85,7 +84,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "obs", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "obs", FieldType.TEXT);
 			Qfield.FieldDescription = "Obs";
 			Qfield.FieldSize =  100;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -95,7 +94,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "hostid", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "hostid", FieldType.TEXT);
 			Qfield.FieldDescription = "Host";
 			Qfield.FieldSize =  20;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -105,7 +104,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "clientid", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "clientid", FieldType.TEXT);
 			Qfield.FieldDescription = "Client ip address";
 			Qfield.FieldSize =  50;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -115,7 +114,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -187,8 +186,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Logbook";
 			info.AreaPluralDesignation="Logbook";
 			info.DescriptionCav="LOGBOOK00124";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(0);

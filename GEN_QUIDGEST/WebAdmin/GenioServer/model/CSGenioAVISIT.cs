@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR VISIT]/
 		}
 
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "title", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "title", FieldType.TEXT);
 			Qfield.FieldDescription = "Title";
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "TITLE21885";
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "startdt", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "startdt", FieldType.DATETIME);
 			Qfield.FieldDescription = "Beginning";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "BEGINNING18124";
@@ -81,7 +80,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtfim", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtfim", FieldType.DATETIME);
 			Qfield.FieldDescription = "End";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "END47577";
@@ -100,7 +99,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "todoodia", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "todoodia", FieldType.LOGIC);
 			Qfield.FieldDescription = "Day";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "DAY27593";
@@ -109,7 +108,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "observat", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "observat", FieldType.TEXT);
 			Qfield.FieldDescription = "Observations";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "OBSERVATIONS03729";
@@ -118,7 +117,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "color", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "color", FieldType.TEXT);
 			Qfield.FieldDescription = "Color";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -128,7 +127,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "back", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "back", FieldType.LOGIC);
 			Qfield.FieldDescription = "Background";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -138,7 +137,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -170,14 +169,14 @@ namespace CSGenio.business
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
-			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
 			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("item","equip");
+			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("famil","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("cntry","equip");
+			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -225,8 +224,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Visit";
 			info.AreaPluralDesignation="Visits";
 			info.DescriptionCav="VISIT42885";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

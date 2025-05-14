@@ -30,7 +30,7 @@ namespace WebTest
 
         public static List<Exports.QColumn> TestColumns()
         {
-            var field = new Field("TestArea", "TestCol", FieldType.TEXTO);
+            var field = new Field("TestArea", "TestCol", FieldType.TEXT);
             field.FieldDescription = "Test Column";
 
             return new List<Exports.QColumn>

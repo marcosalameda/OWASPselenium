@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR TRADU]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "referenc", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "referenc", FieldType.TEXT);
 			Qfield.FieldDescription = "Reference";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "REFERENCE28402";
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "atraduzi", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "atraduzi", FieldType.TEXT);
 			Qfield.FieldDescription = "To review";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "TO_REVIEW46268";
@@ -90,7 +89,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "traduzid", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "traduzid", FieldType.TEXT);
 			Qfield.FieldDescription = "Translated";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "TRANSLATED03333";
@@ -99,7 +98,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -128,8 +127,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("lang1","lang1");
 			info.Pathways.Add("lang2","lang2");
+			info.Pathways.Add("lang1","lang1");
 		}
 
 		/// <summary>
@@ -175,8 +174,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Translation";
 			info.AreaPluralDesignation="Translations";
 			info.DescriptionCav="TRANSLATION05211";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

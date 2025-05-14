@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR DTTYP]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "string", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "string", FieldType.TEXT);
 			Qfield.FieldDescription = "string";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "uuid", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "uuid", FieldType.TEXT);
 			Qfield.FieldDescription = "UUID (aka GUID)";
 			Qfield.FieldSize =  36;
 			Qfield.MQueue = false;
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "uppercas", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "uppercas", FieldType.TEXT);
 			Qfield.FieldDescription = "Upper case";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -88,7 +87,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "qrcode", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "qrcode", FieldType.TEXT);
 			Qfield.FieldDescription = "QR Code";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -125,7 +124,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "boolean", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "boolean", FieldType.LOGIC);
 			Qfield.FieldDescription = "Logical (tinyint) (storage 1 byte)";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -135,7 +134,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "boolean2", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "boolean2", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Conditional (smallint) (storage: 2 byte)";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -145,7 +144,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "smallint", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "smallint", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Numeric  4.0 - small integer (storage: 2 byte)";
 			Qfield.FieldSize =  4;
 			Qfield.MQueue = false;
@@ -156,7 +155,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "integer", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "integer", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Numeric  9.0 - integer (storage: 4 byte)";
 			Qfield.FieldSize =  9;
 			Qfield.MQueue = false;
@@ -167,7 +166,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "bigint", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "bigint", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Numeric 15.0 - big integer (storage: 8 byte)";
 			Qfield.FieldSize =  15;
 			Qfield.MQueue = false;
@@ -178,7 +177,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "real", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "real", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Numeric  8.2 real=float(24) (precision 7 digits) (storage: 4 byte)";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -190,7 +189,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "float", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "float", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Numeric 15.2 double = float(53) (precision 15 digits) (storage: 8 byte)";
 			Qfield.FieldSize =  15;
 			Qfield.MQueue = false;
@@ -202,7 +201,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "decimal", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "decimal", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Decimal (1-10) (storage: 5 byte)";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -214,7 +213,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "decimal9", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "decimal9", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Decimal (11-15) (storage: 9 byte)";
 			Qfield.FieldSize =  15;
 			Qfield.MQueue = false;
@@ -226,7 +225,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "money", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "money", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Money - decimal (1-10) (storage: 5 byte)";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -238,7 +237,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "money9", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "money9", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Money - decimal (11-15) (storage: 9 byte)";
 			Qfield.FieldSize =  15;
 			Qfield.MQueue = false;
@@ -250,7 +249,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "date", FieldType.DATA);
+			Qfield = new Field(info.Alias, "date", FieldType.DATE);
 			Qfield.FieldDescription = "Date";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -260,7 +259,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "datetime", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "datetime", FieldType.DATETIME);
 			Qfield.FieldDescription = "Date Time";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -270,7 +269,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtsesond", FieldType.DATASEGUNDO);
+			Qfield = new Field(info.Alias, "dtsesond", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Date Time Second";
 			Qfield.FieldSize =  19;
 			Qfield.MQueue = false;
@@ -280,7 +279,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "time", FieldType.TEMPO);
+			Qfield = new Field(info.Alias, "time", FieldType.TIME_HOURS);
 			Qfield.FieldDescription = "Time";
 			Qfield.FieldSize =  5;
 			Qfield.MQueue = false;
@@ -290,7 +289,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "start", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "start", FieldType.DATETIME);
 			Qfield.FieldDescription = "Starting time with inclusive boundary";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -300,7 +299,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "end", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "end", FieldType.DATETIME);
 			Qfield.FieldDescription = "End time with inclusive boundary, if not ongoing";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -310,7 +309,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "image", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "image", FieldType.IMAGE);
 			Qfield.FieldDescription = "Image (binary)";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -321,7 +320,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -397,8 +396,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Data type";
 			info.AreaPluralDesignation="Data types";
 			info.DescriptionCav="DATA_TYPE47159";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

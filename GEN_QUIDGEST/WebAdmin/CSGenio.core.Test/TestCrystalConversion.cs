@@ -151,25 +151,17 @@ public class TestConversaoCrystal
     {
         // var value in System.Enum.GetValues(typeof(FieldFormatting)) ){}
         /*
-        FieldFormatting.ANO_MES_DIA;
         FieldFormatting.BINARIO;
         FieldFormatting.CARACTERES;
         FieldFormatting.DATA;
         FieldFormatting.DATAHORA;
         FieldFormatting.DATASEGUNDO;
-        FieldFormatting.DIA_MES_ANO;
         FieldFormatting.FLOAT;
         FieldFormatting.GUID;
         FieldFormatting.INTEIRO;
         FieldFormatting.JPEG;
         FieldFormatting.LOGICO;
         */
-
-        //
-        // FieldFormatting.ANO_MES_DIA
-        //
-
-        // Não é usado
 
         //
         // FieldFormatting.BINARIO
@@ -237,10 +229,6 @@ public class TestConversaoCrystal
 
         //
         // FieldFormatting.DATASEGUNDO
-        //
-
-        //
-        // FieldFormatting.DIA_MES_ANO
         //
 
         //

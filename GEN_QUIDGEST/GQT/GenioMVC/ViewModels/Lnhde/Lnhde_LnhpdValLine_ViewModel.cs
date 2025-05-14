@@ -95,7 +95,7 @@ namespace GenioMVC.ViewModels.Lnhde
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAlnhpd.FldLine, FieldType.NUMERO, Resources.Resources.LINE27983, 3, 0, true),
+                new Exports.QColumn(CSGenioAlnhpd.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 3, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

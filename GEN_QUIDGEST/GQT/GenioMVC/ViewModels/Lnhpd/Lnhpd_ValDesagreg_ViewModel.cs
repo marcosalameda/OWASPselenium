@@ -93,12 +93,12 @@ namespace GenioMVC.ViewModels.Lnhpd
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAlnhde.FldOrdem, FieldType.NUMERO, Resources.Resources.ORDER39632, 3, 0, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
-                new Exports.QColumn(CSGenioAlnhde.FldQuantida, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 3, 0, true),
+                new Exports.QColumn(CSGenioAlnhde.FldOrdem, FieldType.NUMERIC, Resources.Resources.ORDER39632, 3, 0, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
+                new Exports.QColumn(CSGenioAlnhde.FldQuantida, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 3, 0, true),
                 new Exports.QColumn(CSGenioAlnhde.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 2, true),
-                new Exports.QColumn(CSGenioAlnhde.FldCode, FieldType.TEXTO, Resources.Resources.CODE49225, 10, 0, true),
-                new Exports.QColumn(CSGenioAlnhde.FldUrl, FieldType.TEXTO, Resources.Resources.SITE06486, 30, 0, true),
+                new Exports.QColumn(CSGenioAlnhde.FldCode, FieldType.TEXT, Resources.Resources.CODE49225, 10, 0, true),
+                new Exports.QColumn(CSGenioAlnhde.FldUrl, FieldType.TEXT, Resources.Resources.SITE06486, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

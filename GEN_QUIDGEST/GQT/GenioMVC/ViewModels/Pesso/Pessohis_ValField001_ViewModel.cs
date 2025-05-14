@@ -93,9 +93,9 @@ namespace GenioMVC.ViewModels.Pesso
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAhpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-                new Exports.QColumn(CSGenioAhpess.FldDate, FieldType.DATACRIA, Resources.Resources.DATE18475, 8, 0, true),
-                new Exports.QColumn(CSGenioAhpess.FldAuthor, FieldType.OPERCRIA, Resources.Resources.AUTHOR21241, 30, 0, true),
+                new Exports.QColumn(CSGenioAhpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+                new Exports.QColumn(CSGenioAhpess.FldDate, FieldType.DATETIMESECONDS, Resources.Resources.DATE18475, 8, 0, true),
+                new Exports.QColumn(CSGenioAhpess.FldAuthor, FieldType.TEXT, Resources.Resources.AUTHOR21241, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

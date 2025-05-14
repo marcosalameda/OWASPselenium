@@ -54,21 +54,18 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field(info.Alias, "codua", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codua"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID));
-			info.DBFields["codpsw"].FieldSize = 36;
-			info.RegisterFieldDB(new Field(info.Alias, "sistema", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "modulo", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "naodupli", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "role", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "nivel", FieldType.NUMERO));
-            info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.OPERCRIA));
-            info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATACRIA));
-            info.RegisterFieldDB(new Field(info.Alias, "opermuda", FieldType.OPERMUDA));
-            info.RegisterFieldDB(new Field(info.Alias, "datamuda", FieldType.DATAMUDA));
-			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "codua", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "sistema", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "modulo", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "naodupli", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "role", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "nivel", FieldType.NUMERIC));
+            info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATETIMESECONDS));
+            info.RegisterFieldDB(new Field(info.Alias, "opermuda", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "datamuda", FieldType.DATETIMESECONDS));
+			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
             // Carimbos automáticos na BD
             //------------------------------
@@ -350,9 +347,6 @@ namespace CSGenio.business
             if (role.Type != RoleType.ROLE)
                 userauth.ValNivel = role.GetLevelInt();
             userauth.ValCodpsw = codpsw;
-            userauth.Information.StampFieldsIns = new string[] { "opercria", "datacria" };
-            userauth.Information.DBFields["opercria"].FieldType = FieldType.OPERCRIA;
-            userauth.Information.DBFields["datacria"].FieldType = FieldType.DATACRIA;
             userauth.insert(sp);
         }
 

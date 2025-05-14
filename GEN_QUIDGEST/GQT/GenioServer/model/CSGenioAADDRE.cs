@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR ADDRE]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "addressuse", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "addressuse", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Address Use";
 			Qfield.FieldSize =  7;
 			Qfield.MQueue = false;
@@ -66,7 +65,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "addresstype", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "addresstype", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Address Type";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -89,7 +88,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "addresscity", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addresscity", FieldType.TEXT);
 			Qfield.FieldDescription = "Address City";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -99,7 +98,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "addressdistrict", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addressdistrict", FieldType.TEXT);
 			Qfield.FieldDescription = "Address District";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -109,7 +108,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "addressstate", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addressstate", FieldType.TEXT);
 			Qfield.FieldDescription = "Address State";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -119,7 +118,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "addresspostalcode", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addresspostalcode", FieldType.TEXT);
 			Qfield.FieldDescription = "Address Postal Code";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -129,7 +128,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "addresscountry", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addresscountry", FieldType.TEXT);
 			Qfield.FieldDescription = "Address Country";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -139,7 +138,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "periodstart", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "periodstart", FieldType.DATETIME);
 			Qfield.FieldDescription = "Period Start";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -149,7 +148,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "periodend", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "periodend", FieldType.DATETIME);
 			Qfield.FieldDescription = "Period End";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -159,7 +158,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -260,8 +259,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Address";
 			info.AreaPluralDesignation="Addresses";
 			info.DescriptionCav="ADDRESS04342";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

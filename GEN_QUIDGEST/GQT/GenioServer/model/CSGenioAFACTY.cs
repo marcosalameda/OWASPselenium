@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR FACTY]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "type", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "type", FieldType.TEXT);
 			Qfield.FieldDescription = "Facility type";
 			Qfield.FieldSize =  25;
 			Qfield.MQueue = false;
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "layrname", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "layrname", FieldType.TEXT);
 			Qfield.FieldDescription = "Layer name";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "iconurl", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "iconurl", FieldType.TEXT);
 			Qfield.FieldDescription = "Icon URL";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -84,7 +83,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "shadowur", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "shadowur", FieldType.TEXT);
 			Qfield.FieldDescription = "Shadow URL";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -94,7 +93,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "iconancx", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "iconancx", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Icon anchor (x-axis)";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -105,7 +104,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "iconancy", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "iconancy", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Icon anchor (y-axis)";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -116,7 +115,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "iconheig", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "iconheig", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Icon height";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -127,7 +126,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "iconwid", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "iconwid", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Icon width";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -138,7 +137,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "popupanx", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "popupanx", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Popup anchor (x-axis)";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -149,7 +148,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "popupany", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "popupany", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Popup anchor (y-axis)";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -160,7 +159,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "shadowax", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "shadowax", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Shadow anchor (x-axis)";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -171,7 +170,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "shadoway", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "shadoway", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Shadow anchor (y-axis)";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -182,7 +181,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "shadowhe", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "shadowhe", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Shadow height";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -193,7 +192,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "shadowwi", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "shadowwi", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Shadow width";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -204,7 +203,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -279,8 +278,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Facility type";
 			info.AreaPluralDesignation="Facility types";
 			info.DescriptionCav="FACILITY_TYPE44577";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

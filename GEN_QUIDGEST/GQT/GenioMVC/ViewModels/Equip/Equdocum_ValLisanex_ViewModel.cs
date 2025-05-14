@@ -93,11 +93,11 @@ namespace GenioMVC.ViewModels.Equip
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATAHORA, Resources.Resources.ATTACHED26247, 16, 0, true),
-                new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-                new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.FICHEIRO_BD, Resources.Resources.DOCUMENT00695, 30, 0, true),
-                new Exports.QColumn(CSGenioAanexd.FldTittradu, FieldType.TEXTO, Resources.Resources.TRANSLATED_TITLE58577, 30, 0, true),
-                new Exports.QColumn(CSGenioAanexd.FldReferenc, FieldType.TEXTO, Resources.Resources.REFERENCE28402, 30, 0, true),
+                new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATETIME, Resources.Resources.ATTACHED26247, 16, 0, true),
+                new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+                new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
+                new Exports.QColumn(CSGenioAanexd.FldTittradu, FieldType.TEXT, Resources.Resources.TRANSLATED_TITLE58577, 30, 0, true),
+                new Exports.QColumn(CSGenioAanexd.FldReferenc, FieldType.TEXT, Resources.Resources.REFERENCE28402, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

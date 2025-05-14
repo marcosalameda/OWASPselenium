@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR EQUIP]/
 		}
 
@@ -76,7 +75,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "sequennr", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "sequennr", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Sequential no.";
 			Qfield.FieldSize =  6;
 			Qfield.IntegerDigits = 6;
@@ -89,7 +88,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "registnr", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "registnr", FieldType.TEXT);
 			Qfield.FieldDescription = "No. register";
 			Qfield.FieldSize =  6;
 			Qfield.CavDesignation = "NO__REGISTER04207";
@@ -130,7 +129,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "designat", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "designat", FieldType.TEXT);
 			Qfield.FieldDescription = "Designation";
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "DESIGNATION35876";
@@ -145,7 +144,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtaquisi", FieldType.DATA);
+			Qfield = new Field(info.Alias, "dtaquisi", FieldType.DATE);
 			Qfield.FieldDescription = "Acquisition";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "ACQUISITION44180";
@@ -163,7 +162,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtdeco", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtdeco", FieldType.DATETIME);
 			Qfield.FieldDescription = "Decomission";
 			Qfield.FieldSize =  16;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -173,7 +172,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "ifabatif", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "ifabatif", FieldType.LOGIC);
 			Qfield.FieldDescription = "Downed equipment";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "DOWNED_EQUIPMENT43331";
@@ -187,7 +186,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "photogra", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "photogra", FieldType.IMAGE);
 			Qfield.FieldDescription = "Photo";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
@@ -197,7 +196,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "valortot", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "valortot", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Total value";
 			Qfield.FieldSize =  12;
 			Qfield.IntegerDigits = 9;
@@ -208,7 +207,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "frequenc", FieldType.ARRAY_COD_NUMERICO);
+			Qfield = new Field(info.Alias, "frequenc", FieldType.ARRAY_NUMERIC);
 			Qfield.FieldDescription = "Loan frequency";
 			Qfield.FieldSize =  2;
 			Qfield.CavDesignation = "LOAN_FREQUENCY00701";
@@ -219,7 +218,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "bought", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "bought", FieldType.LOGIC);
 			Qfield.FieldDescription = "Bought";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "BOUGHT32044";
@@ -242,7 +241,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtrefere", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtrefere", FieldType.DATETIME);
 			Qfield.FieldDescription = "Reference";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "REFERENCE28402";
@@ -251,7 +250,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "first", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "first", FieldType.TEXT);
 			Qfield.FieldDescription = "First";
 			Qfield.FieldSize =  10;
 			Qfield.CavDesignation = "FIRST42972";
@@ -261,7 +260,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "before", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "before", FieldType.TEXT);
 			Qfield.FieldDescription = "Before";
 			Qfield.FieldSize =  10;
 			Qfield.CavDesignation = "BEFORE60156";
@@ -271,7 +270,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "followin", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "followin", FieldType.TEXT);
 			Qfield.FieldDescription = "Following";
 			Qfield.FieldSize =  10;
 			Qfield.CavDesignation = "FOLLOWING22170";
@@ -281,7 +280,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "last", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "last", FieldType.TEXT);
 			Qfield.FieldDescription = "Last";
 			Qfield.FieldSize =  10;
 			Qfield.CavDesignation = "LAST49207";
@@ -292,7 +291,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "sitefabr", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "sitefabr", FieldType.TEXT);
 			Qfield.FieldDescription = "Manufacturer's website";
 			Qfield.FieldSize =  256;
 			Qfield.CavDesignation = "MANUFACTURER_S_WEBSI11084";
@@ -301,7 +300,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "lastpho", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "lastpho", FieldType.IMAGE);
 			Qfield.FieldDescription = "Last photo attached";
 			Qfield.FieldSize =  3;
 			Qfield.Decimals = 1;
@@ -322,7 +321,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "qtdmovim", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "qtdmovim", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Qtd. movimentações";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -333,7 +332,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "showrc", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "showrc", FieldType.LOGIC);
 			Qfield.FieldDescription = "Show record";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -343,7 +342,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -389,14 +388,14 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(12);
 			info.Pathways.Add("decom","decom");
 			info.Pathways.Add("wareh","wareh");
-			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("room1","room1");
-			info.Pathways.Add("item","item");
 			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("item","item");
+			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("pess1","pess1");
-			info.Pathways.Add("famil","tpequ");
-			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("cntry","cmpny");
+			info.Pathways.Add("gitem","item");
+			info.Pathways.Add("famil","tpequ");
 			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
 		}
@@ -480,8 +479,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Equipment";
 			info.AreaPluralDesignation="Equipment";
 			info.DescriptionCav="EQUIPMENT03632";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

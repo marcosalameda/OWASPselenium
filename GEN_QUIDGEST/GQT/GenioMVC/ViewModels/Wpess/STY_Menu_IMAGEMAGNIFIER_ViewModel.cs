@@ -131,22 +131,22 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATA, Resources.Resources.DATA_DE_NASCIMENTO48110, 8, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_COD_TEXTO, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
-                new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldAdress, FieldType.TEXTO, Resources.Resources.ADDRESS04342, 30, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldZipcode, FieldType.TEXTO, Resources.Resources.ZIP_CODE56964, 8, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldCountry, FieldType.TEXTO, Resources.Resources.PAIS04637, 30, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldCellphon, FieldType.NUMERO, Resources.Resources.NOTELEFONE56747, 9, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldNaturali, FieldType.TEXTO, Resources.Resources.NATURALNESS33189, 30, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldNacional, FieldType.TEXTO, Resources.Resources.NACIONALIDADE23735, 30, 0, true),
-                !ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldPfoto, FieldType.IMAGEM_JPEG, Resources.Resources.FOTO_DE_PERFIL03502, 3, 1, true):null,
-                new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
-                !ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtimgtop, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE_TOP34930, 3, 1, true):null,
-                !ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtthumb, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE_THUMBNAIL01682, 3, 1, true):null,
-                !ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtbackgr, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE_BACKGROUND07216, 3, 1, true):null,
+                new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATE, Resources.Resources.DATA_DE_NASCIMENTO48110, 8, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_TEXT, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
+                new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERIC, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldAdress, FieldType.TEXT, Resources.Resources.ADDRESS04342, 30, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldZipcode, FieldType.TEXT, Resources.Resources.ZIP_CODE56964, 8, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldCountry, FieldType.TEXT, Resources.Resources.PAIS04637, 30, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldCellphon, FieldType.NUMERIC, Resources.Resources.NOTELEFONE56747, 9, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldNaturali, FieldType.TEXT, Resources.Resources.NATURALNESS33189, 30, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldNacional, FieldType.TEXT, Resources.Resources.NACIONALIDADE23735, 30, 0, true),
+                !ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldPfoto, FieldType.IMAGE, Resources.Resources.FOTO_DE_PERFIL03502, 3, 1, true):null,
+                new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+                !ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtimgtop, FieldType.IMAGE, Resources.Resources.IMAGE_TOP34930, 3, 1, true):null,
+                !ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtthumb, FieldType.IMAGE, Resources.Resources.IMAGE_THUMBNAIL01682, 3, 1, true):null,
+                !ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtbackgr, FieldType.IMAGE, Resources.Resources.IMAGE_BACKGROUND07216, 3, 1, true):null,
             };
 
             columns.RemoveAll(item => item == null);

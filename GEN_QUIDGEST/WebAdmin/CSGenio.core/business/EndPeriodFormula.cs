@@ -42,8 +42,6 @@ namespace CSGenio.business
             switch (formatting)
             {
                 case FieldFormatting.DATA:
-                case FieldFormatting.ANO_MES_DIA:
-                case FieldFormatting.DIA_MES_ANO:
                     return ((DateTime)Qvalue).AddDays(-1);
                 case FieldFormatting.INTEIRO:
                     return ((int)Qvalue) - 1;

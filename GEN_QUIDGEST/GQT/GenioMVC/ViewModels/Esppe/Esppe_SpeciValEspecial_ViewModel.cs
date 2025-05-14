@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Esppe
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXTO, Resources.Resources.SPECIALTY09304, 50, 0, true),
+                new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXT, Resources.Resources.SPECIALTY09304, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

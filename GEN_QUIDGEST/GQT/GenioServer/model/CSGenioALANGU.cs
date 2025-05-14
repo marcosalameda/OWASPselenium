@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR LANGU]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "langua", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "langua", FieldType.TEXT);
 			Qfield.FieldDescription = "Language";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "LANGUAGE16872";
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "acron", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "acron", FieldType.TEXT);
 			Qfield.FieldDescription = "Acronym";
 			Qfield.FieldSize =  5;
 			Qfield.CavDesignation = "ACRONYM00872";
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -147,8 +146,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Language";
 			info.AreaPluralDesignation="Languages";
 			info.DescriptionCav="LANGUAGE16872";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

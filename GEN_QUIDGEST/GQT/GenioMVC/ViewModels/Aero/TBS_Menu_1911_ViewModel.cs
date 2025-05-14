@@ -128,8 +128,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZz
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAaero.FldName, FieldType.TEXTO, Resources.Resources.NOME_DA_COMPANHIA48638, 30, 0, true),
-                new Exports.QColumn(CSGenioAaero.FldCodcmaer, FieldType.NUMERO, Resources.Resources.CODE49225, 2, 0, true),
+                new Exports.QColumn(CSGenioAaero.FldName, FieldType.TEXT, Resources.Resources.NOME_DA_COMPANHIA48638, 30, 0, true),
+                new Exports.QColumn(CSGenioAaero.FldCodcmaer, FieldType.NUMERIC, Resources.Resources.CODE49225, 2, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

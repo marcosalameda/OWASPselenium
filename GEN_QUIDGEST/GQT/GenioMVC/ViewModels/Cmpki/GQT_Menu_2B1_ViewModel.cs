@@ -128,10 +128,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
-                new Exports.QColumn(CSGenioAcmpki.FldOrder, FieldType.NUMERO, Resources.Resources.ORDER39632, 5, 1, true),
-                new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
-                new Exports.QColumn(CSGenioAcmpki.FldQuantida, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 3, 0, true),
+                new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
+                new Exports.QColumn(CSGenioAcmpki.FldOrder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 5, 1, true),
+                new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
+                new Exports.QColumn(CSGenioAcmpki.FldQuantida, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 3, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

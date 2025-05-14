@@ -128,10 +128,10 @@ FieldRef[] fields = new FieldRef[] { CSGenioAuicom.FldCoduicom, CSGenioAuicom.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAuicom.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-                new Exports.QColumn(CSGenioAuicom.FldCategory, FieldType.TEXTO, Resources.Resources.CATEGORY18978, 30, 0, true),
-                new Exports.QColumn(CSGenioAuicom.FldMenuid, FieldType.TEXTO, Resources.Resources.FIXED_MENU_NAME38578, 30, 0, true),
-                !ajaxRequest ? new Exports.QColumn(CSGenioAuicom.FldThumbnai, FieldType.IMAGEM_JPEG, Resources.Resources.THUMBNAIL30025, 3, 1, true):null,
+                new Exports.QColumn(CSGenioAuicom.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+                new Exports.QColumn(CSGenioAuicom.FldCategory, FieldType.TEXT, Resources.Resources.CATEGORY18978, 30, 0, true),
+                new Exports.QColumn(CSGenioAuicom.FldMenuid, FieldType.TEXT, Resources.Resources.FIXED_MENU_NAME38578, 30, 0, true),
+                !ajaxRequest ? new Exports.QColumn(CSGenioAuicom.FldThumbnai, FieldType.IMAGE, Resources.Resources.THUMBNAIL30025, 3, 1, true):null,
             };
 
             columns.RemoveAll(item => item == null);

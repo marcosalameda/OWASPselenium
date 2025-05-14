@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR INPGR]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "icongro", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "icongro", FieldType.TEXT);
 			Qfield.FieldDescription = "Icon";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "numbgro", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "numbgro", FieldType.NUMERIC);
 			Qfield.FieldDescription = "VAT Number";
 			Qfield.FieldSize =  9;
 			Qfield.MQueue = false;
@@ -75,7 +74,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "textgro", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "textgro", FieldType.TEXT);
 			Qfield.FieldDescription = "Text Field";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -85,7 +84,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "buttngro", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "buttngro", FieldType.TEXT);
 			Qfield.FieldDescription = "Button";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -95,7 +94,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "spangro", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "spangro", FieldType.TEXT);
 			Qfield.FieldDescription = "Profile";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -105,7 +104,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "iconspan", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "iconspan", FieldType.TEXT);
 			Qfield.FieldDescription = "Icon";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -115,7 +114,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXT);
 			Qfield.FieldDescription = "Name";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -125,7 +124,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "lastname", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "lastname", FieldType.TEXT);
 			Qfield.FieldDescription = "Last name";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -135,7 +134,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "adress", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "adress", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Address type";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -147,7 +146,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "prefix", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "prefix", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Prefix";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -159,7 +158,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "phone", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "phone", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Phone number";
 			Qfield.FieldSize =  15;
 			Qfield.MQueue = false;
@@ -170,7 +169,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "email", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "email", FieldType.TEXT);
 			Qfield.FieldDescription = "E-mail";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -184,7 +183,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "web", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "web", FieldType.TEXT);
 			Qfield.FieldDescription = "Web";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -194,7 +193,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "iban", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "iban", FieldType.TEXT);
 			Qfield.FieldDescription = "IBAN";
 			Qfield.FieldSize =  34;
 			Qfield.MQueue = false;
@@ -208,7 +207,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "bankacco", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "bankacco", FieldType.TEXT);
 			Qfield.FieldDescription = "Banking Account Number";
 			Qfield.FieldSize =  24;
 			Qfield.MQueue = false;
@@ -222,7 +221,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "textspan", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "textspan", FieldType.TEXT);
 			Qfield.FieldDescription = "Text";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -232,7 +231,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "directio", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "directio", FieldType.TEXT);
 			Qfield.FieldDescription = "Adress";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -242,7 +241,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "bankcomp", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "bankcomp", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Entity";
 			Qfield.FieldSize =  2;
 			Qfield.MQueue = false;
@@ -254,7 +253,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -326,8 +325,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Input Group";
 			info.AreaPluralDesignation="Input Groups";
 			info.DescriptionCav="INPUT_GROUP17182";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

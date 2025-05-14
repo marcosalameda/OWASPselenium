@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR WAREH]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "warehdes", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "warehdes", FieldType.TEXT);
 			Qfield.FieldDescription = "Warehouse";
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "WAREHOUSE51864";
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "warehcod", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "warehcod", FieldType.TEXT);
 			Qfield.FieldDescription = "Acronym";
 			Qfield.FieldSize =  10;
 			Qfield.CavDesignation = "ACRONYM00872";
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "activity", FieldType.ARRAY_COD_LOGICO);
+			Qfield = new Field(info.Alias, "activity", FieldType.ARRAY_LOGIC);
 			Qfield.FieldDescription = "Activity";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "ACTIVITY02681";
@@ -83,7 +82,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "showreco", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "showreco", FieldType.LOGIC);
 			Qfield.FieldDescription = "Show Record";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -93,7 +92,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "num_employee", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "num_employee", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Number of employees";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -104,7 +103,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -188,8 +187,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Warehouse";
 			info.AreaPluralDesignation="Warehouses";
 			info.DescriptionCav="WAREHOUSE51864";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

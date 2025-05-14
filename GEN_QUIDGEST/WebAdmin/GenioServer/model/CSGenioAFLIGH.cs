@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR FLIGH]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "flightid", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "flightid", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Flight ID";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -65,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "depdate", FieldType.DATA);
+			Qfield = new Field(info.Alias, "depdate", FieldType.DATE);
 			Qfield.FieldDescription = "Departure Date";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -75,7 +74,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "deptime", FieldType.TEMPO);
+			Qfield = new Field(info.Alias, "deptime", FieldType.TIME_HOURS);
 			Qfield.FieldDescription = "Departure Time";
 			Qfield.FieldSize =  5;
 			Qfield.MQueue = false;
@@ -85,7 +84,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "arvdate", FieldType.DATA);
+			Qfield = new Field(info.Alias, "arvdate", FieldType.DATE);
 			Qfield.FieldDescription = "Arrival Date";
 			Qfield.FieldSize =  8;
 			Qfield.MQueue = false;
@@ -95,7 +94,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "arrtime", FieldType.TEMPO);
+			Qfield = new Field(info.Alias, "arrtime", FieldType.TIME_HOURS);
 			Qfield.FieldDescription = "Arrival Time";
 			Qfield.FieldSize =  5;
 			Qfield.MQueue = false;
@@ -145,7 +144,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -181,8 +180,8 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(5);
 			info.Pathways.Add("airln","airln");
 			info.Pathways.Add("airpt","airpt");
-			info.Pathways.Add("airfr","airfr");
 			info.Pathways.Add("airto","airto");
+			info.Pathways.Add("airfr","airfr");
 			info.Pathways.Add("cntry","airpt");
 		}
 
@@ -229,8 +228,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Flight";
 			info.AreaPluralDesignation="Flights";
 			info.DescriptionCav="FLIGHT55228";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

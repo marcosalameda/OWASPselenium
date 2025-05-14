@@ -128,8 +128,8 @@ FieldRef[] fields = new FieldRef[] { CSGenioApworg.FldCodpworg, CSGenioApworg.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXTO, Resources.Resources.NAME31974, 20, 0, true),
-                new Exports.QColumn(CSGenioAorgan.FldOrganiza, FieldType.TEXTO, Resources.Resources.ORGANIZACAO47877, 30, 0, true),
+                new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXT, Resources.Resources.NAME31974, 20, 0, true),
+                new Exports.QColumn(CSGenioAorgan.FldOrganiza, FieldType.TEXT, Resources.Resources.ORGANIZACAO47877, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

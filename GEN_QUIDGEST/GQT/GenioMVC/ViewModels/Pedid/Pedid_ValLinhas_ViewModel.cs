@@ -93,8 +93,8 @@ namespace GenioMVC.ViewModels.Pedid
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAlnhpd.FldLine, FieldType.NUMERO, Resources.Resources.LINE27983, 3, 0, true),
-                new Exports.QColumn(CSGenioAlnhpd.FldQuantida, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 3, 0, true),
+                new Exports.QColumn(CSGenioAlnhpd.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 3, 0, true),
+                new Exports.QColumn(CSGenioAlnhpd.FldQuantida, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 3, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

@@ -94,7 +94,7 @@ namespace GenioMVC.ViewModels.Pesso
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAregi1.FldRegiao, FieldType.TEXTO, Resources.Resources.REGION12723, 50, 0, true),
+                new Exports.QColumn(CSGenioAregi1.FldRegiao, FieldType.TEXT, Resources.Resources.REGION12723, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

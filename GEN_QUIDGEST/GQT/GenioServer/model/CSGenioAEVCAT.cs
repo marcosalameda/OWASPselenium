@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR EVCAT]/
 		}
 
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "since", FieldType.DATA);
+			Qfield = new Field(info.Alias, "since", FieldType.DATE);
 			Qfield.FieldDescription = "Since";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "SINCE47259";
@@ -81,7 +80,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "untilman", FieldType.DATA);
+			Qfield = new Field(info.Alias, "untilman", FieldType.DATE);
 			Qfield.FieldDescription = "Up manual";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "UP_MANUAL46500";
@@ -95,7 +94,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "until", FieldType.DATA);
+			Qfield = new Field(info.Alias, "until", FieldType.DATE);
 			Qfield.FieldDescription = "Until";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "UNTIL39173";
@@ -120,7 +119,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "fimperio", FieldType.DATA);
+			Qfield = new Field(info.Alias, "fimperio", FieldType.DATE);
 			Qfield.FieldDescription = "End-of-period";
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "END_OF_PERIOD44616";
@@ -134,7 +133,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -234,8 +233,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Evolution in the category";
 			info.AreaPluralDesignation="Evolution in categories";
 			info.DescriptionCav="EVOLUTION_IN_THE_CAT03122";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

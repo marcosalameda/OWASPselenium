@@ -54,15 +54,13 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-      info.RegisterFieldDB(new Field(info.Alias, "codusrset", FieldType.CHAVE_PRIMARIA_GUID));
-		info.RegisterFieldDB(new Field(info.Alias, "modulo", FieldType.TEXTO));
-		info.KeyType = CodeType.GUID_KEY;
-		
-		info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID));
+        info.RegisterFieldDB(new Field(info.Alias, "codusrset", FieldType.KEY_GUID));
+		info.RegisterFieldDB(new Field(info.Alias, "modulo", FieldType.TEXT));
+		info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.KEY_GUID));
 
-        info.RegisterFieldDB(new Field(info.Alias, "chave", FieldType.TEXTO));
-		info.RegisterFieldDB(new Field(info.Alias, "valor", FieldType.TEXTO));
-		info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
+        info.RegisterFieldDB(new Field(info.Alias, "chave", FieldType.TEXT));
+		info.RegisterFieldDB(new Field(info.Alias, "valor", FieldType.TEXT));
+		info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
 
 			// Relações Filhas

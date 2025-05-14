@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR FTGRI]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "foto", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "foto", FieldType.IMAGE);
 			Qfield.FieldDescription = "Photos";
 			Qfield.FieldSize =  3;
 			Qfield.MQueue = false;
@@ -65,7 +64,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "legenda", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "legenda", FieldType.TEXT);
 			Qfield.FieldDescription = "Legenda";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -75,7 +74,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -149,8 +148,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Grid Foto";
 			info.AreaPluralDesignation="Grid Fotos";
 			info.DescriptionCav="GRID_FOTO05588";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

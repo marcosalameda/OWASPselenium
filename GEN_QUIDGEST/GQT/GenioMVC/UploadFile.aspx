@@ -155,7 +155,7 @@
                         coddocums = docums.ValCoddocums;
                         RequestedField campo = new RequestedField(baseklass.Alias + "." + baseklass.PrimaryKeyName, baseklass.Alias);
                         campo.Value = codtabela;
-                        campo.FieldType = FieldType.CHAVE_PRIMARIA;
+                        campo.FieldType = FieldType.KEY_VARCHAR;
                         baseklass.Fields.Add(baseklass.Alias + "." + baseklass.PrimaryKeyName, campo);
                         string nomedoc = postedFile.FileName.Replace("Sign", "");
                         string auxnome = nomedoc.Substring(0, (nomedoc.Length - nomedoc.Split('.').Last().Length - 1));

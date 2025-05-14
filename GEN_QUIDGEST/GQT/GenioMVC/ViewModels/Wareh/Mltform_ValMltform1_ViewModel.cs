@@ -93,9 +93,9 @@ namespace GenioMVC.ViewModels.Wareh
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.EMPLOYEE_NUMBER50873, 1, 0, true),
-                new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATA, Resources.Resources.BIRTH_DATE00284, 8, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERIC, Resources.Resources.EMPLOYEE_NUMBER50873, 1, 0, true),
+                new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATE, Resources.Resources.BIRTH_DATE00284, 8, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR GENRE]/
 		}
 
@@ -54,7 +53,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "gender", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "gender", FieldType.TEXT);
 			Qfield.FieldDescription = "Genre";
 			Qfield.FieldSize =  20;
 			Qfield.CavDesignation = "GENRE63303";
@@ -63,7 +62,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "agencont", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "agencont", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Gender contact";
 			Qfield.FieldSize =  1;
 			Qfield.CavDesignation = "GENDER_CONTACT17830";
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "backcolo", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "backcolo", FieldType.TEXT);
 			Qfield.FieldDescription = "Background color";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "BACKGROUND_COLOR47883";
@@ -83,7 +82,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "textcolo", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "textcolo", FieldType.TEXT);
 			Qfield.FieldDescription = "Text color";
 			Qfield.FieldSize =  50;
 			Qfield.CavDesignation = "TEXT_COLOR24820";
@@ -92,7 +91,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -167,8 +166,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Contact type";
 			info.AreaPluralDesignation="Contact genres";
 			info.DescriptionCav="CONTACT_TYPE65233";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

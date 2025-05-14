@@ -2526,7 +2526,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="size">The size of the key to generate to the case of internal code</param>
         /// <param name="format">The key format to generate</param>
         /// <returns>A single primary key</returns>
-        public abstract string generatePrimaryKey(string id_object, string id_field, int size, CodeType format);
+        public abstract string generatePrimaryKey(string id_object, string id_field, int size, FieldType format);
 
         /// <summary>
         /// Gets a range of new primary keys in bulk to a particular object
@@ -2537,7 +2537,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="format">The key format to generate</param>
         /// <param name="range">The number of primary keys to obtain in bulk</param>
         /// <returns>A single primary key</returns>
-        public virtual List<string> generatePrimaryKey(string id_object, string id_field, int size, CodeType format, int range)
+        public virtual List<string> generatePrimaryKey(string id_object, string id_field, int size, FieldType format, int range)
         {
             // This is a unoptimized generic version of bulk alocation of primary keys
             // Each provider is responsible to implement a more efficient version.
@@ -2554,7 +2554,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         {
             string tabelaDocums = "docums";
             object primaryKeyValue = area.returnValueField(area.Alias + "." + area.PrimaryKeyName);
-            if (area.DBFields[area.PrimaryKeyName].FieldFormat.Equals(FieldFormatting.GUID))
+            if (area.DBFields[area.PrimaryKeyName].FieldType == FieldType.KEY_GUID)
                 primaryKeyValue = primaryKeyValue.ToString().Replace("-", "");
             Field chaveDocums = CSGenioAdocums.GetInformation().DBFields["coddocums"];
             object valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, "coddocums", chaveDocums.FieldSize, CSGenioAdocums.GetInformation().KeyType);
@@ -2600,7 +2600,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 if (area.Information.DocumsForeignKeys != null)
                 {
                     object valorChavePrimariaAux = area.QPrimaryKey;
-                    if (area.DBFields[area.PrimaryKeyName].FieldFormat.Equals(FieldFormatting.GUID))
+                    if (area.DBFields[area.PrimaryKeyName].FieldType == FieldType.KEY_GUID)
                         valorChavePrimariaAux = valorChavePrimariaAux.ToString().Replace("-", "");
 
                     var formatacaoChaveDocums = CSGenioAdocums.GetInformation().KeyType;
@@ -3398,10 +3398,10 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             {
                 // Condition for field type added because sorting by an image field causes an error
                 if (firstVisibleColumn != null
-                    && CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGEM_JPEG
-                    && CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY
-                    && CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEO_SHAPE
-                    && CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOMETRIC)
+                    && CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGE
+                    && CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_POINT
+                    && CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_SHAPE
+                    && CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOMETRY_SHAPE)
 				{
                     ColumnSort sortFirstVisibleColumn = new ColumnSort(new ColumnReference(firstVisibleColumn), GenericSortOrder.Ascending);
                     orderby.Add(sortFirstVisibleColumn);

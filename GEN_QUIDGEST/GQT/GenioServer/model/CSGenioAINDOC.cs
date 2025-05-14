@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR INDOC]/
 		}
 
@@ -91,7 +90,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "documenr", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "documenr", FieldType.NUMERIC);
 			Qfield.FieldDescription = "No.";
 			Qfield.FieldSize =  10;
 			Qfield.IntegerDigits = 10;
@@ -105,7 +104,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dhdocume", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dhdocume", FieldType.DATETIME);
 			Qfield.FieldDescription = "Date";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "DATE18475";
@@ -118,7 +117,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "date", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "date", FieldType.DATETIME);
 			Qfield.FieldDescription = "Date";
 			Qfield.FieldSize =  16;
 			Qfield.CavDesignation = "DATE18475";
@@ -132,7 +131,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -232,8 +231,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Input document";
 			info.AreaPluralDesignation="Input documents";
 			info.DescriptionCav="INPUT_DOCUMENT28194";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

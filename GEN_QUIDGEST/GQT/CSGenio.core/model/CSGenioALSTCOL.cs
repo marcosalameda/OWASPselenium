@@ -54,20 +54,16 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field(info.Alias, "codlstcol", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codlstcol"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field(info.Alias, "codlstusr", FieldType.CHAVE_ESTRANGEIRA_GUID));
-			info.DBFields["codlstusr"].FieldSize = 36;
-
-			info.RegisterFieldDB(new Field(info.Alias, "tabela", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "alias", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "campo", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "visivel", FieldType.LOGICO));
-            info.RegisterFieldDB(new Field(info.Alias, "posicao", FieldType.NUMERO));
-            info.RegisterFieldDB(new Field(info.Alias, "operacao", FieldType.NUMERO));
-            info.RegisterFieldDB(new Field(info.Alias, "tipo", FieldType.NUMERO));
-            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "codlstcol", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codlstusr", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "tabela", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "alias", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "campo", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "visivel", FieldType.LOGIC));
+            info.RegisterFieldDB(new Field(info.Alias, "posicao", FieldType.NUMERIC));
+            info.RegisterFieldDB(new Field(info.Alias, "operacao", FieldType.NUMERIC));
+            info.RegisterFieldDB(new Field(info.Alias, "tipo", FieldType.NUMERIC));
+            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
 
 			// Relações Filhas

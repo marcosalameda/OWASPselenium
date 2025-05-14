@@ -93,8 +93,8 @@ namespace GenioMVC.ViewModels.Equip
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAphoto.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-                !ajaxRequest ? new Exports.QColumn(CSGenioAphoto.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
+                new Exports.QColumn(CSGenioAphoto.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+                !ajaxRequest ? new Exports.QColumn(CSGenioAphoto.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
             };
 
             columns.RemoveAll(item => item == null);

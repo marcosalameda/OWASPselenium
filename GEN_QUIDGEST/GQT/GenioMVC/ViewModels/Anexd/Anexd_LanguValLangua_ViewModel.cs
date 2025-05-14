@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Anexd
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAlangu.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 50, 0, true),
+                new Exports.QColumn(CSGenioAlangu.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

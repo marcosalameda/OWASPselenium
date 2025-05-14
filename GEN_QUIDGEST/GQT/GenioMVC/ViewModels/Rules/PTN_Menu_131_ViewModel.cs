@@ -128,9 +128,9 @@ FieldRef[] fields = new FieldRef[] { CSGenioArules.FldCodregra, CSGenioArules.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioArules.FldTipocond, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TIPO_DE_CONDICAO09986, 1, 0, true, "tipoCond"),
-                new Exports.QColumn(CSGenioArules.FldDescript, FieldType.TEXTO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
-                new Exports.QColumn(CSGenioArules.FldLocal, FieldType.ARRAY_COD_TEXTO, Resources.Resources.LOCAL_ONDE_EXECUTA12798, 1, 0, true, "aLocRegr"),
+                new Exports.QColumn(CSGenioArules.FldTipocond, FieldType.ARRAY_TEXT, Resources.Resources.TIPO_DE_CONDICAO09986, 1, 0, true, "tipoCond"),
+                new Exports.QColumn(CSGenioArules.FldDescript, FieldType.TEXT, Resources.Resources.DESCRIPTION07383, 30, 0, true),
+                new Exports.QColumn(CSGenioArules.FldLocal, FieldType.ARRAY_TEXT, Resources.Resources.LOCAL_ONDE_EXECUTA12798, 1, 0, true, "aLocRegr"),
             };
 
             columns.RemoveAll(item => item == null);

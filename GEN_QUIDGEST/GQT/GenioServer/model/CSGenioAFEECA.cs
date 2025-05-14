@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR FEECA]/
 		}
 
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "feedback", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "feedback", FieldType.TEXT);
 			Qfield.FieldDescription = "Feedback";
 			Qfield.FieldSize =  50;
 			Qfield.MQueue = false;
@@ -74,7 +73,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -107,14 +106,14 @@ namespace CSGenio.business
 			info.Pathways.Add("equip","flds");
 			info.Pathways.Add("decom","flds");
 			info.Pathways.Add("wareh","flds");
-			info.Pathways.Add("tpequ","flds");
 			info.Pathways.Add("room1","flds");
-			info.Pathways.Add("item","flds");
 			info.Pathways.Add("cmpny","flds");
+			info.Pathways.Add("item","flds");
+			info.Pathways.Add("tpequ","flds");
 			info.Pathways.Add("pess1","flds");
-			info.Pathways.Add("famil","flds");
-			info.Pathways.Add("gitem","flds");
 			info.Pathways.Add("cntry","flds");
+			info.Pathways.Add("gitem","flds");
+			info.Pathways.Add("famil","flds");
 			info.Pathways.Add("stake","flds");
 			info.Pathways.Add("cate2","flds");
 		}
@@ -162,8 +161,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Field feedback";
 			info.AreaPluralDesignation="Field feedback";
 			info.DescriptionCav="FIELD_FEEDBACK53085";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

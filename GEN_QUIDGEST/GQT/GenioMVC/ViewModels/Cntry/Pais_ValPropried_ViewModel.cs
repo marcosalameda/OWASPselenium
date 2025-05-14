@@ -93,20 +93,20 @@ namespace GenioMVC.ViewModels.Cntry
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioApropr.FldName, FieldType.TEXTO, Resources.Resources.PROPERTY_NAME18934, 30, 0, true),
-                new Exports.QColumn(CSGenioApropr.FldPrecoest, FieldType.VALOR, Resources.Resources.ESTIMATED_PRICE02986, 12, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldName, FieldType.TEXT, Resources.Resources.PROPERTY_NAME18934, 30, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldPrecoest, FieldType.CURRENCY, Resources.Resources.ESTIMATED_PRICE02986, 12, 0, true),
                 new Exports.QColumn(CSGenioApropr.FldEndereco, FieldType.MEMO, Resources.Resources.ADDRESS04342, 30, 2, true),
-                new Exports.QColumn(CSGenioApropr.FldLocalida, FieldType.TEXTO, Resources.Resources.LOCALE34521, 30, 0, true),
-                new Exports.QColumn(CSGenioApropr.FldPostalco, FieldType.TEXTO, Resources.Resources.ZIP_CODE56964, 20, 0, true),
-                new Exports.QColumn(CSGenioApropr.FldPostallo, FieldType.TEXTO, Resources.Resources.POSTAL_LOCATION08708, 30, 0, true),
-                new Exports.QColumn(CSGenioApropr.FldMobilada, FieldType.LOGICO, Resources.Resources.FURNISHED37431, 1, 0, true),
-                new Exports.QColumn(CSGenioApropr.FldQtd_wc, FieldType.NUMERO, Resources.Resources.BATHROOMS54249, 6, 0, true),
-                new Exports.QColumn(CSGenioApropr.FldQtdquart, FieldType.NUMERO, Resources.Resources.ROOMS06809, 6, 0, true),
-                new Exports.QColumn(CSGenioApropr.FldM2, FieldType.NUMERO, Resources.Resources.SQUARE_METERS28913, 6, 0, true),
-                new Exports.QColumn(CSGenioApropr.FldDtdispon, FieldType.DATA, Resources.Resources.AVAILABLE_FROM53703, 8, 0, true),
-                !ajaxRequest ? new Exports.QColumn(CSGenioApropr.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
+                new Exports.QColumn(CSGenioApropr.FldLocalida, FieldType.TEXT, Resources.Resources.LOCALE34521, 30, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldPostalco, FieldType.TEXT, Resources.Resources.ZIP_CODE56964, 20, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldPostallo, FieldType.TEXT, Resources.Resources.POSTAL_LOCATION08708, 30, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldMobilada, FieldType.LOGIC, Resources.Resources.FURNISHED37431, 1, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldQtd_wc, FieldType.NUMERIC, Resources.Resources.BATHROOMS54249, 6, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldQtdquart, FieldType.NUMERIC, Resources.Resources.ROOMS06809, 6, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldM2, FieldType.NUMERIC, Resources.Resources.SQUARE_METERS28913, 6, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldDtdispon, FieldType.DATE, Resources.Resources.AVAILABLE_FROM53703, 8, 0, true),
+                !ajaxRequest ? new Exports.QColumn(CSGenioApropr.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
                 new Exports.QColumn(CSGenioApropr.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 10, true),
-                new Exports.QColumn(CSGenioApropr.FldCoordgeo, FieldType.GEOGRAPHY, Resources.Resources.GEOGRAPHIC_COORDINAT21394, 30, 0, true),
+                new Exports.QColumn(CSGenioApropr.FldCoordgeo, FieldType.GEOGRAPHY_POINT, Resources.Resources.GEOGRAPHIC_COORDINAT21394, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

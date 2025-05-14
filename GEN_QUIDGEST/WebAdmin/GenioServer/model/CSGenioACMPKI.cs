@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR CMPKI]/
 		}
 
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "order", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "order", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Order";
 			Qfield.FieldSize =  5;
 			Qfield.IntegerDigits = 3;
@@ -94,7 +93,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "quantida", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "quantida", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  3;
 			Qfield.IntegerDigits = 3;
@@ -115,7 +114,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "code", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "code", FieldType.TEXT);
 			Qfield.FieldDescription = "Code";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -125,7 +124,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "url", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "url", FieldType.TEXT);
 			Qfield.FieldDescription = "Site";
 			Qfield.FieldSize =  250;
 			Qfield.MQueue = false;
@@ -135,7 +134,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -220,8 +219,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Kit component";
 			info.AreaPluralDesignation="Kit components";
 			info.DescriptionCav="KIT_COMPONENT05829";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

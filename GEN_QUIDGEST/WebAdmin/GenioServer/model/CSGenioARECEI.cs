@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR RECEI]/
 		}
 
@@ -64,7 +63,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "number", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "number", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Receipt number";
 			Qfield.FieldSize =  10;
 			Qfield.MQueue = false;
@@ -78,7 +77,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtreceip", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtreceip", FieldType.DATETIME);
 			Qfield.FieldDescription = "Receipt date";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -92,7 +91,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtcheck", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtcheck", FieldType.DATETIME);
 			Qfield.FieldDescription = "Receipt verification";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -102,7 +101,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "checked", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "checked", FieldType.LOGIC);
 			Qfield.FieldDescription = "Checked";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -117,7 +116,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "tocheck", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "tocheck", FieldType.LOGIC);
 			Qfield.FieldDescription = "To check";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -132,7 +131,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "stored", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "stored", FieldType.LOGIC);
 			Qfield.FieldDescription = "Stored";
 			Qfield.FieldSize =  1;
 			Qfield.MQueue = false;
@@ -142,7 +141,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "dtstorag", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtstorag", FieldType.DATETIME);
 			Qfield.FieldDescription = "Storage date";
 			Qfield.FieldSize =  16;
 			Qfield.MQueue = false;
@@ -152,7 +151,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -245,8 +244,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Receipt of good";
 			info.AreaPluralDesignation="Receipts of goods";
 			info.DescriptionCav="RECEIPT_OF_GOOD16561";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

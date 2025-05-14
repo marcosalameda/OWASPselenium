@@ -54,29 +54,27 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codpsw"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field(info.Alias, "gqt", FieldType.NUMERO));
+			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "gqt", FieldType.NUMERIC));
 			info.DBFields["gqt"].FieldSize = 3;
-			info.RegisterFieldDB(new Field(info.Alias, "ptn", FieldType.NUMERO));
+			info.RegisterFieldDB(new Field(info.Alias, "ptn", FieldType.NUMERIC));
 			info.DBFields["ptn"].FieldSize = 3;
-			info.RegisterFieldDB(new Field(info.Alias, "tbs", FieldType.NUMERO));
+			info.RegisterFieldDB(new Field(info.Alias, "tbs", FieldType.NUMERIC));
 			info.DBFields["tbs"].FieldSize = 3;
-			info.RegisterFieldDB(new Field(info.Alias, "reg", FieldType.NUMERO));
+			info.RegisterFieldDB(new Field(info.Alias, "reg", FieldType.NUMERIC));
 			info.DBFields["reg"].FieldSize = 3;
-			info.RegisterFieldDB(new Field(info.Alias, "sty", FieldType.NUMERO));
+			info.RegisterFieldDB(new Field(info.Alias, "sty", FieldType.NUMERIC));
 			info.DBFields["sty"].FieldSize = 3;
-			info.RegisterFieldDB(new Field(info.Alias, "nome", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "nome", FieldType.TEXT));
 			info.DBFields["nome"].FieldSize = 100;
 			
-			info.RegisterFieldDB(new Field(info.Alias, "password", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "password", FieldType.TEXT));
 			info.DBFields["password"].FieldSize = 150;
 			
-			info.RegisterFieldDB(new Field(info.Alias, "certsn", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "certsn", FieldType.TEXT));
 			info.DBFields["certsn"].FieldSize = 32;
 			
-			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
 			// Relações Filhas
 			//------------------------------

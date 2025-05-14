@@ -235,7 +235,7 @@ namespace GenioMVC.ViewModels
                 var areaInfo = (CSGenio.business.AreaInfo)areaType.GetMethod("GetInformation").Invoke(areaType, null);
                 var field = areaInfo.DBFields[fieldRef.Field];
 
-                if (field.FieldType == FieldType.IMAGEM_JPEG)
+                if (field.FieldType == FieldType.IMAGE)
                     return null;
 
                 t.SetSort(column, dir);
@@ -355,7 +355,7 @@ namespace GenioMVC.ViewModels
                 var field = areaInfo.DBFields[fieldRef.Field];
 
 				//Column types that are not sorted
-                if (field.FieldType == FieldType.IMAGEM_JPEG)
+                if (field.FieldType == FieldType.IMAGE)
                     continue;
 				//> Create column reference and check if sortable
 
@@ -456,14 +456,14 @@ namespace GenioMVC.ViewModels
                                 case "EQ":
 									if (x < 1)
 										continue;
-									if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
+									if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
                                     {
                                         CriteriaSet eqRange = CriteriaSet.And();
                                         eqRange.GreaterOrEqual(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute));
                                         eqRange.Lesser(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute).AddMinutes(1));
                                         conditions.SubSets.Add(eqRange);
                                     }
-                                    else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA) {
+                                    else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA) {
                                         CriteriaSet eqRange = CriteriaSet.And();
                                         eqRange.GreaterOrEqual(sc.AreaField, Values[0].Date);
                                         eqRange.Lesser(sc.AreaField, Values[0].Date.AddDays(1));
@@ -477,14 +477,14 @@ namespace GenioMVC.ViewModels
                                 case "NOTEQ":
 									if (x < 1)
 										continue;
-									if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
+									if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
                                     {
                                         CriteriaSet eqRange = CriteriaSet.And();
                                         eqRange.Lesser(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute));
                                         eqRange.GreaterOrEqual(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute).AddMinutes(1));
                                         conditions.SubSets.Add(eqRange);
                                     }
-                                    else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA) {
+                                    else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA) {
                                         CriteriaSet eqRange = CriteriaSet.And();
                                         eqRange.Lesser(sc.AreaField, Values[0].Date);
                                         eqRange.GreaterOrEqual(sc.AreaField, Values[0].Date.AddDays(1));
@@ -498,11 +498,11 @@ namespace GenioMVC.ViewModels
                                 case "AFT":
 									if (x < 1)
 										continue;
-									if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
+									if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
                                     {
                                         conditions.GreaterOrEqual(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute).AddMinutes(1));
                                     }
-                                    else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA) {
+                                    else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA) {
                                         conditions.GreaterOrEqual(sc.AreaField, Values[0].Date.AddDays(1));
                                     }
 									else
@@ -513,11 +513,11 @@ namespace GenioMVC.ViewModels
                                 case "BEF":
 									if (x < 1)
 										continue;
-									if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
+									if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
                                     {
                                         conditions.Lesser(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute));
                                     }
-                                    else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA) {
+                                    else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA) {
                                         conditions.Lesser(sc.AreaField, Values[0].Date);
                                     }
 									else
@@ -1430,15 +1430,16 @@ namespace GenioMVC.ViewModels
 
             //Tries to position area and field to a real record: if we have information about the area key, then it will be enough, otherwise, it will use a 'virtual' positioning on the first record and field variable will be manually set
             //Model has a field with the desired value filled acting as the limit (As an example Limit type "C" (field) is expecting this to be happening on AreaLimitaN)
-            if ((field.FieldType == FieldType.CHAVE_PRIMARIA || field.FieldType == FieldType.CHAVE_PRIMARIA_GUID || field.FieldType == FieldType.CHAVE_ESTRANGEIRA || field.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) && //field a key
+            if ((field.isKey()) && //field a key
                 (GenFunctions.emptyG(this_limit_field) == 0 || GenFunctions.emptyG(nav_limit_area) == 0)) //and the key is present either in this_limit_field or in nav_limit_area
             {
                 if (GenFunctions.emptyG(this_limit_field) == 0) //this will give priority to field value with key to position the record.
                     nav_limit_area = this_limit_field.ToString();
 
-                if (field.FieldType == FieldType.CHAVE_ESTRANGEIRA || field.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) //if limit_field is refering to a related area, then update model to the correct parent
+                //if limit_field is refering to a related area, then update model to the correct parent
+                string parent_table_name = model_limit_area.ParentTables.Where(x => x.Value.SourceRelField == field.Name).Select(x => x.Key).FirstOrDefault();
+                if(parent_table_name != null)
                 {//double check this case!
-                    string parent_table_name = model_limit_area.ParentTables.Where(x => x.Value.SourceRelField == field.Name).FirstOrDefault().Key;
                     CSGenio.business.Area parent_area = CSGenio.business.Area.createArea(parent_table_name, UserContext.Current.User, UserContext.Current.User.CurrentModule);
                     model_limit_area = parent_area; //change model to the one being related by foreign key
                     area_info = model_limit_area.Information;

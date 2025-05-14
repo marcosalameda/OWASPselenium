@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Lnhde
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAlnhdf.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
+                new Exports.QColumn(CSGenioAlnhdf.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

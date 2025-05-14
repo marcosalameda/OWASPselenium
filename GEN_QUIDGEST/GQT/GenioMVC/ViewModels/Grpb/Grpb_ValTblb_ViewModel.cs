@@ -93,19 +93,19 @@ namespace GenioMVC.ViewModels.Grpb
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXTO, Resources.Resources.TEXT04938, 30, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXT, Resources.Resources.TEXT04938, 30, 0, true),
                 new Exports.QColumn(CSGenioAtblb.FldTextml, FieldType.MEMO, Resources.Resources.MULTILINE_TEXT38013, 30, 0, true),
-                new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERO, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true),
-                new Exports.QColumn(CSGenioAtblb.FldNumdec, FieldType.NUMERO, Resources.Resources.NUMERIC__DECIMAL_36157, 10, 3, true),
-                new Exports.QColumn(CSGenioAtblb.FldCurint, FieldType.VALOR, Resources.Resources.CURRENCY__INTERGER_21437, 10, 0, true),
-                new Exports.QColumn(CSGenioAtblb.FldCurdec, FieldType.VALOR, Resources.Resources.CURRENCY__DECIMAL_11718, 10, 2, true),
-                new Exports.QColumn(CSGenioAtblb.FldBool, FieldType.LOGICO, Resources.Resources.BOOLEAN45002, 1, 0, true),
-                new Exports.QColumn(CSGenioAtblb.FldDate, FieldType.DATA, Resources.Resources.DATE18475, 8, 0, true),
-                new Exports.QColumn(CSGenioAtblb.FldDatetm, FieldType.DATAHORA, Resources.Resources.DATETIME__MINUTES_59352, 16, 0, true),
-                new Exports.QColumn(CSGenioAtblb.FldDatets, FieldType.DATASEGUNDO, Resources.Resources.DATETIME__SECONDS_49861, 19, 0, true),
-                new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TEMPO, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true),
-                new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ENUMERATION__TEXT_15855, 10, 0, true, "typet"),
-                new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.ENUMERATION__NUMERIC44708, 10, 0, true, "typen"),
+                new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERIC, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldNumdec, FieldType.NUMERIC, Resources.Resources.NUMERIC__DECIMAL_36157, 10, 3, true),
+                new Exports.QColumn(CSGenioAtblb.FldCurint, FieldType.CURRENCY, Resources.Resources.CURRENCY__INTERGER_21437, 10, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldCurdec, FieldType.CURRENCY, Resources.Resources.CURRENCY__DECIMAL_11718, 10, 2, true),
+                new Exports.QColumn(CSGenioAtblb.FldBool, FieldType.LOGIC, Resources.Resources.BOOLEAN45002, 1, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldDate, FieldType.DATE, Resources.Resources.DATE18475, 8, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldDatetm, FieldType.DATETIME, Resources.Resources.DATETIME__MINUTES_59352, 16, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldDatets, FieldType.DATETIMESECONDS, Resources.Resources.DATETIME__SECONDS_49861, 19, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TIME_HOURS, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true),
+                new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_TEXT, Resources.Resources.ENUMERATION__TEXT_15855, 10, 0, true, "typet"),
+                new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_NUMERIC, Resources.Resources.ENUMERATION__NUMERIC44708, 10, 0, true, "typen"),
             };
 
             columns.RemoveAll(item => item == null);

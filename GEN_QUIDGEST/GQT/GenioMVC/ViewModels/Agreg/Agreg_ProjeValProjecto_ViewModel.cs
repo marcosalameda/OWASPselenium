@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Agreg
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAproje.FldProjecto, FieldType.TEXTO, Resources.Resources.PROJECTO50142, 50, 0, true),
+                new Exports.QColumn(CSGenioAproje.FldProjecto, FieldType.TEXT, Resources.Resources.PROJECTO50142, 50, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

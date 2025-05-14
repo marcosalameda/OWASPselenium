@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Expen
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAyear.FldYear, FieldType.TEXTO, Resources.Resources.ANO33022, 4, 0, true),
+                new Exports.QColumn(CSGenioAyear.FldYear, FieldType.TEXT, Resources.Resources.ANO33022, 4, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

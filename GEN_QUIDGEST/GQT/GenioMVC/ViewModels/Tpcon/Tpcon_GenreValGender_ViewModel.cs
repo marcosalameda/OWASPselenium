@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Tpcon
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXTO, Resources.Resources.GENUS37471, 20, 0, true),
+                new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXT, Resources.Resources.GENUS37471, 20, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

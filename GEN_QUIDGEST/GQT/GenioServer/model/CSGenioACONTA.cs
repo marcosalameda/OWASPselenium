@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR CONTA]/
 		}
 
@@ -81,7 +80,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "contacto", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "contacto", FieldType.TEXT);
 			Qfield.FieldDescription = "Contact";
 			Qfield.FieldSize =  254;
 			Qfield.CavDesignation = "CONTACT59247";
@@ -90,7 +89,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -173,8 +172,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Contact";
 			info.AreaPluralDesignation="Contacts";
 			info.DescriptionCav="CONTACT59247";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

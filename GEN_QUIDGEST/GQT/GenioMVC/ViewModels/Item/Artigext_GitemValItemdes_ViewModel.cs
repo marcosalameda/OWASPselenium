@@ -93,8 +93,8 @@ namespace GenioMVC.ViewModels.Item
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAgitem.FldItemdes, FieldType.TEXTO, Resources.Resources.GLOBAL_ARTICLE63861, 30, 0, true),
-                new Exports.QColumn(CSGenioAgitem.FldItemgcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
+                new Exports.QColumn(CSGenioAgitem.FldItemdes, FieldType.TEXT, Resources.Resources.GLOBAL_ARTICLE63861, 30, 0, true),
+                new Exports.QColumn(CSGenioAgitem.FldItemgcod, FieldType.TEXT, Resources.Resources.CODE49225, 15, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

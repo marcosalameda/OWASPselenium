@@ -128,7 +128,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcfaqs.FldCodcfaqs, CSGenioAcfaqs.Fl
         {
             var columns = new List<Exports.QColumn>()
             {
-                !ajaxRequest ? new Exports.QColumn(CSGenioAcfaqs.FldIcon, FieldType.IMAGEM_JPEG, String.Empty, 3, 1, true):null,
+                !ajaxRequest ? new Exports.QColumn(CSGenioAcfaqs.FldIcon, FieldType.IMAGE, String.Empty, 3, 1, true):null,
                 new Exports.QColumn(CSGenioAcfaqs.FldCategory, FieldType.MEMO, Resources.Resources.CATEGORY18978, 30, 3, true),
                 new Exports.QColumn(CSGenioAcfaqs.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 3, true),
             };

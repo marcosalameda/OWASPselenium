@@ -93,7 +93,7 @@ namespace GenioMVC.ViewModels.Propr
         {
             var columns = new List<Exports.QColumn>()
             {
-                new Exports.QColumn(CSGenioAtppro.FldTppropri, FieldType.TEXTO, Resources.Resources.PROPERTY_TYPE51419, 20, 0, true),
+                new Exports.QColumn(CSGenioAtppro.FldTppropri, FieldType.TEXT, Resources.Resources.PROPERTY_TYPE51419, 20, 0, true),
             };
 
             columns.RemoveAll(item => item == null);

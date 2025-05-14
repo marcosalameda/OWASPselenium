@@ -27,7 +27,6 @@ namespace CSGenio.business
 		{
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR LNHAG]/
 		}
 
@@ -72,7 +71,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "qtdtpequ", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "qtdtpequ", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Amount";
 			Qfield.FieldSize =  6;
 			Qfield.IntegerDigits = 6;
@@ -82,7 +81,7 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
 
@@ -165,8 +164,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Equipment grouping";
 			info.AreaPluralDesignation="Equipment groupings";
 			info.DescriptionCav="EQUIPMENT_GROUPING44771";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

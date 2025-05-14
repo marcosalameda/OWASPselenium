@@ -54,19 +54,16 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field(info.Alias, "codlstusr", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codlstusr"].FieldSize = 36;
-			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID));
-			info.DBFields["codpsw"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field(info.Alias, "idlist", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field(info.Alias, "descric", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "modulo", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "sistema", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field(info.Alias, "ordercol", FieldType.INTEIRO));
-            info.RegisterFieldDB(new Field(info.Alias, "ordertype", FieldType.INTEIRO));
-            info.RegisterFieldDB(new Field(info.Alias, "data", FieldType.DATACRIA));
-            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "codlstusr", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "idlist", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "descric", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "modulo", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "sistema", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "ordercol", FieldType.INTEGER));
+            info.RegisterFieldDB(new Field(info.Alias, "ordertype", FieldType.INTEGER));
+            info.RegisterFieldDB(new Field(info.Alias, "data", FieldType.DATETIMESECONDS));
+            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
             // Carimbos automáticos na BD
             //------------------------------

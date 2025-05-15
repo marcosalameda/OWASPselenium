@@ -125,13 +125,32 @@ namespace GenioServer.security
 				AllowAuthenticationRecovery = Configuration.LoginType == Configuration.LoginTypes.AD;
 				if (Configuration.LoginType == Configuration.LoginTypes.PUREAD)
 				{
-					AddIdentityProvider("ldap", "Ldap", typeof(LdapIdentityProvider).FullName, "Dominio=" + Configuration.Domain);
+                    m_idProviders.Add(ParseIdentityProvider(new IdentityProviderCfgEl()
+					{
+						Name = "ldap",
+						Description = "Ldap",
+						Type = typeof(LdapIdentityProvider).FullName,
+						Config = "Dominio=" + Configuration.Domain
+					}));
 				}
 				else
 				{
-					AddIdentityProvider("quidgest", "Quidgest", typeof(QuidgestIdentityProvider).FullName, null);
+                    m_idProviders.Add(ParseIdentityProvider(new IdentityProviderCfgEl()
+                    {
+                        Name = "quidgest",
+                        Description = "Quidgest",
+                        Type = typeof(QuidgestIdentityProvider).FullName,
+                        Config = null
+                    }));
 				}
-				AddRoleProvider("quidgest", typeof(QuidgestRoleProvider).FullName, null, null);
+				m_roleProviders.Add(new RoleProviderConfig(ParseRoleProvider(new RoleProviderCfgEl()
+				{
+					Name = "quidgest",
+					Type = typeof(QuidgestRoleProvider).FullName,
+					Config = null
+                })
+					, "quidgest"
+                    , null));
 			}
 			else
 			{
@@ -141,89 +160,88 @@ namespace GenioServer.security
 				//aqui deve ir ler das configurações e inicializar a cadeia de providers
 				foreach (IdentityProviderCfgEl provider in Configuration.Security.IdentityProviders)
 				{
-					AddIdentityProvider(provider.Name, provider.Description, provider.Type, provider.Config);
+                    m_idProviders.Add(ParseIdentityProvider(provider));
 				}
 				foreach (RoleProviderCfgEl provider in Configuration.Security.RoleProviders)
 				{
-					AddRoleProvider(provider.Name, provider.Type, provider.Config, provider.Precond);
+					m_roleProviders.Add(new RoleProviderConfig(ParseRoleProvider(provider), provider.Name, provider.Precond));
 				}
 			}
         }
 
-        /// <summary>
-        /// Helper method to allocate the correct identity provider instance
-        /// </summary>
-        /// <param name="type">the type of provider</param>
-        /// <param name="descriptor">the provider configuration string</param>
-        private static void AddIdentityProvider(string name, string description, string type, string descriptor)
-        {
-            Type providerType = Type.GetType(type);
+		/// <summary>
+		/// Instantiates a identity provider of the correct type class, and configures its options
+		/// </summary>
+		/// <param name="config">The configuration element</param>
+		/// <returns>An instatiated Identity provider</returns>
+		public static IIdentityProvider ParseIdentityProvider(IdentityProviderCfgEl config)
+		{
+            Type providerType = Type.GetType(config.Type);
 
             IIdentityProvider provider = Activator.CreateInstance(providerType) as IIdentityProvider;
 
             if (provider == null)
             {
-                throw new NotImplementedException(type + " does not implement interface GenioServer.security.IIdentityProvider");
+                throw new NotImplementedException(config.Type + " does not implement interface GenioServer.security.IIdentityProvider");
             }
 
-			provider.Id = name;
-			provider.Description = description ?? "";
+            provider.Id = config.Name;
+            provider.Description = config.Description ?? "";
 
-			if (descriptor != null)
-			{
-				bool needsJsonInit = false;
-				string[] keyValues = descriptor.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
-				foreach (string keyValue in keyValues)
-				{
-					string key = HttpUtility.UrlDecode(keyValue.Substring(0, keyValue.IndexOf("=")));
-					string value = HttpUtility.UrlDecode(keyValue.Substring(keyValue.IndexOf("=")+1));
+            if (config.Config != null)
+            {
+                bool needsJsonInit = false;
+                string[] keyValues = config.Config.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string keyValue in keyValues)
+                {
+                    string key = HttpUtility.UrlDecode(keyValue.Substring(0, keyValue.IndexOf("=")));
+                    string value = HttpUtility.UrlDecode(keyValue.Substring(keyValue.IndexOf("=") + 1));
 
-					PropertyInfo pi = providerType.GetProperty(key);
-					if (pi != null)
-					{
-						try
-						{
-							pi.SetValue(provider, Convert.ChangeType(value, pi.PropertyType, CultureInfo.InvariantCulture), null);
-						}
-						catch(InvalidCastException)
-						{
-							//json options are not convertible
-							needsJsonInit = true;
-						}
-					}
-				}
+                    PropertyInfo pi = providerType.GetProperty(key);
+                    if (pi != null)
+                    {
+                        try
+                        {
+                            pi.SetValue(provider, Convert.ChangeType(value, pi.PropertyType, CultureInfo.InvariantCulture), null);
+                        }
+                        catch (InvalidCastException)
+                        {
+                            //json options are not convertible
+                            needsJsonInit = true;
+                        }
+                    }
+                }
 
-				//Legacy mechanism so we can initialize the json options without doing it in the constructor
-				//TODO: The complex options configuration format needs to be refactored!
-				if(needsJsonInit)
-				{
-					MethodInfo mi = providerType.GetMethod("InitJsonOptions");
-					mi?.Invoke(provider, null);
-				}
-			}
-
-            m_idProviders.Add(provider);
+                //Legacy mechanism so we can initialize the json options without doing it in the constructor
+                //TODO: The complex options configuration format needs to be refactored!
+                if (needsJsonInit)
+                {
+                    MethodInfo mi = providerType.GetMethod("InitJsonOptions");
+                    mi?.Invoke(provider, null);
+                }
+            }
+			return provider;
         }
 
         /// <summary>
-        /// Helper method to allocate the correct role provider instance
+        /// Instantiates a role provider of the correct type class, and configures its options
         /// </summary>
-        /// <param name="type">the type of provider</param>
-        /// <param name="descriptor">the provider configuration string</param>
-        private static void AddRoleProvider(string name, string type, string descriptor, string precond)
+        /// <param name="config">The configuration element</param>
+        /// <returns>An instatiated Role provider</returns>
+        public static IRoleProvider ParseRoleProvider(RoleProviderCfgEl config)
         {
-            Type providerType = Type.GetType(type);
+            Type providerType = Type.GetType(config.Type);
 
             IRoleProvider provider = Activator.CreateInstance(providerType) as IRoleProvider;
 
             if (provider == null)
             {
-                throw new NotImplementedException(type + " does not implement interface GenioServer.security.IRoleProvider");
+                throw new NotImplementedException(config.Type + " does not implement interface GenioServer.security.IRoleProvider");
             }
 
-			if (descriptor != null)
+			if (config.Config != null)
 			{
-				string[] keyValues = descriptor.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+				string[] keyValues = config.Config.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
 				foreach (string keyValue in keyValues)
 				{
 					string[] parts = keyValue.Split('=');
@@ -238,7 +256,7 @@ namespace GenioServer.security
 				}
 			}
 
-            m_roleProviders.Add(new RoleProviderConfig(provider, name, precond));
+			return provider;
         }
 
         /// <summary>

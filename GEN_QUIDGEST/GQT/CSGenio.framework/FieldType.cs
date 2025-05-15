@@ -48,7 +48,7 @@ namespace CSGenio.framework
         private static readonly FieldTypeInfo[] info = [
             new FieldTypeInfo(FieldType.KEY_VARCHAR     , FieldFormatting.CARACTERES    , "EMPTYG", typeof(string)),
             new FieldTypeInfo(FieldType.KEY_GUID        , FieldFormatting.GUID          , "EMPTYG", typeof(Guid)),
-            new FieldTypeInfo(FieldType.KEY_INT         , FieldFormatting.INTEIRO       , "EMPTYG", typeof(int)),
+            new FieldTypeInfo(FieldType.KEY_INT         , FieldFormatting.CARACTERES    , "EMPTYG", typeof(int)),
             new FieldTypeInfo(FieldType.TEXT            , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
             new FieldTypeInfo(FieldType.MEMO            , FieldFormatting.CARACTERES    , "EMPTYC", typeof(string)),
             new FieldTypeInfo(FieldType.MEMO_COMP_RTF   , FieldFormatting.CARACTERES    , null    , typeof(string)),

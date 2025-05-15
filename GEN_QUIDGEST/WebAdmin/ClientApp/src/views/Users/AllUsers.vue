@@ -166,6 +166,7 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
+	import bootbox from 'bootbox';
 
 	export default {
 		name: 'allUsers',
@@ -235,8 +236,7 @@
 				},
 				domainprovider: '',
 				identityProviders: [],
-				columnModules : true,
-				hasAdIdentityProviders: false
+				columnModules : true
 			};
 		},
 		computed: {
@@ -262,7 +262,10 @@
                     this.Modules.WMS.active = value;
                     return value;
                 }
-            }
+            },
+			hasAdIdentityProviders() {
+				return this.identityProviders && this.identityProviders.length > 0;
+			}
         },
 		methods: {
 			createUser() {
@@ -301,12 +304,7 @@
 				QUtils.log("Fetch data - Users");
 				QUtils.FetchData(QUtils.apiActionURL('Users', 'Index')).done(function (data) {
 					if (data.Success) {
-						// Update IdentityProviders list
-						vm.identityProviders = [];
-						$.each(data.model.IdentityProviders, function (idx, identityProvider) {
-							vm.identityProviders.push({ Value: identityProvider, Text: identityProvider });
-						});
-						vm.hasAdIdentityProviders = data.model.HasAdIdentityProviders;
+						vm.identityProviders = data.model.IdentityProviders;
 					}
 				});
 				this.GetUserList();
@@ -447,23 +445,11 @@
 		ImportarUsersAD() {
 			if (this.hasAdIdentityProviders === false) return
 
-			var vm = this,
-				domain = this.domainprovider;
+			var vm = this;
 
 			if ($.isEmptyObject(domain)) {
 				bootbox.alert(vm.Resources.E_NECESSARIO_ESCOLHE33714);
 				return;
-			}
-
-			var domainSplited = new Array();
-			domainSplited = domain.split('=');
-
-			if (domainSplited.length < 2 || $.isEmptyObject(domainSplited[1])) {
-				bootbox.alert(vm.Resources.DOMINIO_IVALIDO_36204);
-				return;
-			}
-			else {
-				domain = domainSplited[1];
 			}
 
 			bootbox.confirm({
@@ -480,7 +466,7 @@
 				},
 				callback(result) {
 					if (result) {
-						QUtils.postData('Users', 'ImportUsersFromAD', null, { dominio: domain }, function (data) {
+						QUtils.postData('Users', 'ImportUsersFromAD', null, { providerId: vm.domainprovider }, function (data) {
 							vm.fetchData();
 						});
 					}

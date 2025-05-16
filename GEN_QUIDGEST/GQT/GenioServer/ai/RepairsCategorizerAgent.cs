@@ -109,7 +109,7 @@ namespace GenioServer.ai
 
     public class RepairsCategorizerResponse
     {             
-        [Newtonsoft.Json.JsonProperty("Category")]         
+        [Newtonsoft.Json.JsonProperty("Category")]
         public string Category { get; set; }
     }
 

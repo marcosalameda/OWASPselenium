@@ -1340,6 +1340,84 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Prospecting" code="PROSPECTING26583">
     <ENUS>Prospecting</ENUS>
   </msg>
+  <msg id="Administrative Genders" code="ADMINISTRATIVE_GENDE39506">
+    <ENUS>Administrative Genders</ENUS>
+  </msg>
+  <msg id="High" code="HIGH47127">
+    <ENUS>High</ENUS>
+  </msg>
+  <msg id="Good points" code="GOOD_POINTS27572">
+    <ENUS>Good points</ENUS>
+  </msg>
+  <msg id="Timeline Month- Armazém" code="TIMELINE_MONTH__ARMA63891">
+    <ENUS>Timeline Month- Armazém</ENUS>
+  </msg>
+  <msg id="Total de referências" code="TOTAL_DE_REFERENCIAS35020">
+    <ENUS>Total de referências</ENUS>
+  </msg>
+  <msg id="Companhias Aéreas" code="COMPANHIAS_AEREAS50886">
+    <ENUS>Companhias Aéreas</ENUS>
+  </msg>
+  <msg id="Abordagem efectuada" code="ABORDAGEM_EFECTUADA60152">
+    <ENUS>Abordagem efectuada</ENUS>
+  </msg>
+  <msg id="Number of employees" code="NUMBER_OF_EMPLOYEES52067">
+    <ENUS>Number of employees</ENUS>
+  </msg>
+  <msg id="Manufacturers" code="MANUFACTURERS25464">
+    <ENUS>Manufacturers</ENUS>
+  </msg>
+  <msg id="&gt;&gt;ASSET" code="__ASSET57857">
+    <ENUS>&gt;&gt;ASSET</ENUS>
+  </msg>
+  <msg id="  100" code="__10021922">
+    <ENUS>Value as a percentage of the target for issuing an alert, whenever the value achieved is equal to or greater than the target.</ENUS>
+  </msg>
+  <msg id="Data Aprovação" code="DATA_APROVACAO17003">
+    <ENUS>Data Aprovação</ENUS>
+  </msg>
+  <msg id="No:" code="NO_29277">
+    <ENUS>No:</ENUS>
+  </msg>
+  <msg id="Alphabetic 3" code="ALPHABETIC_316640">
+    <ENUS>Alphabetic 3</ENUS>
+  </msg>
+  <msg id="Aggregator Assessment Body" code="AGGREGATOR_ASSESSMEN17844">
+    <ENUS>Aggregator Assessment Body</ENUS>
+  </msg>
+  <msg id="Description of the repair" code="DESCRIPTION_OF_THE_R26085">
+    <ENUS>Description of the repair</ENUS>
+  </msg>
+  <msg id="Orçamento" code="ORCAMENTO35878">
+    <ENUS>Orçamento</ENUS>
+  </msg>
+  <msg id="Multiline text" code="MULTILINE_TEXT57254">
+    <ENUS>Multiline text</ENUS>
+  </msg>
+  <msg id="Table (Foreign Keys)" code="TABLE__FOREIGN_KEYS_21641">
+    <ENUS>Table (Foreign Keys)</ENUS>
+  </msg>
+  <msg id="Locale" code="LOCALE34521">
+    <ENUS>Locale</ENUS>
+  </msg>
+  <msg id="Extended Form support" code="EXTENDED_FORM_SUPPOR22249">
+    <ENUS>Extended Form support</ENUS>
+  </msg>
+  <msg id="Indicadores Bons" code="INDICADORES_BONS61997">
+    <ENUS>Indicadores Bons</ENUS>
+  </msg>
+  <msg id="Translated title" code="TRANSLATED_TITLE58577">
+    <ENUS>Translated title</ENUS>
+  </msg>
+  <msg id="Razoável" code="RAZOAVEL14967">
+    <ENUS>Razoável</ENUS>
+  </msg>
+  <msg id="Module" code="MODULE42049">
+    <ENUS>Module</ENUS>
+  </msg>
+  <msg id="Address Type" code="ADDRESS_TYPE12455">
+    <ENUS>Address Type</ENUS>
+  </msg>
   <msg id="Aba" code="ABA64771">
     <ENUS>Aba</ENUS>
   </msg>
@@ -1577,9 +1655,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Código do Organismo" code="CODIGO_DO_ORGANISMO22253">
     <ENUS>Body code</ENUS>
   </msg>
-  <msg id="Aggregator Assessment Body" code="AGGREGATOR_ASSESSMEN17844">
-    <ENUS>Aggregator Assessment Body</ENUS>
-  </msg>
   <msg id=" 1067" code="_106754886">
     <ENUS>Valor Real</ENUS>
   </msg>
@@ -1684,9 +1759,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   </msg>
   <msg id="   95" code="___9508268">
     <ENUS>Default value as a percentage of the target for the lower limit of the &apos;Exceeded&apos; range. This range is intended to highlight realised values that are clearly above the target, from the point of view of being clearly exceeded.</ENUS>
-  </msg>
-  <msg id="Administrative Genders" code="ADMINISTRATIVE_GENDE39506">
-    <ENUS>Administrative Genders</ENUS>
   </msg>
   <msg id="  229" code="__22919394">
     <ENUS>Mostra os mapas que já foram fechados.</ENUS>
@@ -2265,9 +2337,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="  246" code="__24613144">
     <ENUS>Neste espaço deverão ser apresentados relatórios e justificações.</ENUS>
   </msg>
-  <msg id="Good points" code="GOOD_POINTS27572">
-    <ENUS>Good points</ENUS>
-  </msg>
   <msg id="If present, Start SHALL have a lower value than End" code="IF_PRESENT__START_SH55168">
     <ENUS>If present, Start SHALL have a lower value than End</ENUS>
   </msg>
@@ -2619,9 +2688,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
   <msg id="Away Team" code="AWAY_TEAM44592">
     <ENUS>Away Team</ENUS>
   </msg>
-  <msg id="Orçamento" code="ORCAMENTO35878">
-    <ENUS>Orçamento</ENUS>
-  </msg>
   <msg id="Async process" code="ASYNC_PROCESS56674">
     <ENUS>Async process</ENUS>
   </msg>
@@ -2644,9 +2710,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
   </msg>
   <msg id="&gt;ROOM" code="_ROOM54790">
     <ENUS>&gt;ROOM</ENUS>
-  </msg>
-  <msg id="Number of employees" code="NUMBER_OF_EMPLOYEES52067">
-    <ENUS>Number of employees</ENUS>
   </msg>
   <msg id="Data types" code="DATA_TYPES15706">
     <ENUS>Data types</ENUS>
@@ -3558,9 +3621,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="País pessoa" code="PAIS_PESSOA61621">
     <ENUS>País pessoa</ENUS>
   </msg>
-  <msg id="Multiline text" code="MULTILINE_TEXT57254">
-    <ENUS>Multiline text</ENUS>
-  </msg>
   <msg id="   63" code="___6349376">
     <ENUS>This field is used to associate the identification of each indicator with the various possible strategies.</ENUS>
   </msg>
@@ -4205,74 +4265,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="October" code="OCTOBER62709">
     <ENUS>October</ENUS>
   </msg>
-  <msg id="FACILITIES" code="FACILITIES10422">
-    <ENUS>FACILITIES</ENUS>
-  </msg>
-  <msg id="Word" code="WORD56536">
-    <ENUS>Word</ENUS>
-  </msg>
-  <msg id="Beginning of the year" code="BEGINNING_OF_THE_YEA06960">
-    <ENUS>Beginning of the year</ENUS>
-  </msg>
-  <msg id="Category FAQS" code="CATEGORY_FAQS42471">
-    <ENUS>Category FAQS</ENUS>
-  </msg>
-  <msg id="   98" code="___9814807">
-    <ENUS>Default value as a percentage of the target, for the lower limit of the &apos;Bad&apos; range</ENUS>
-  </msg>
-  <msg id="Eficiência" code="EFICIENCIA22805">
-    <ENUS>Eficiência</ENUS>
-  </msg>
-  <msg id="Menu per table" code="MENU_PER_TABLE22221">
-  </msg>
-  <msg id="Falhou condição de inserção na tabela" code="FALHOU_CONDICAO_DE_I08738">
-    <ENUS>Falhou condição de inserção na tabela</ENUS>
-  </msg>
-  <msg id="Polaridade" code="POLARIDADE33928">
-    <ENUS>Polaridade</ENUS>
-  </msg>
-  <msg id="People from a Company" code="PEOPLE_FROM_A_COMPAN11094">
-    <ENUS>People from a Company</ENUS>
-  </msg>
-  <msg id="ActivoBank" code="ACTIVOBANK40861">
-    <ENUS>ActivoBank</ENUS>
-  </msg>
-  <msg id="1123" code="_112342843">
-    <ENUS>Help in table list</ENUS>
-  </msg>
-  <msg id="PDF" code="PDF54897">
-    <ENUS>PDF</ENUS>
-  </msg>
-  <msg id="Editable table list" code="EDITABLE_TABLE_LIST14479">
-    <ENUS>Editable table list</ENUS>
-  </msg>
-  <msg id="Warehouse" code="WAREHOUSE51864">
-    <ENUS>Warehouse</ENUS>
-  </msg>
-  <msg id="E-mail sent?" code="E_MAIL_SENT_60490">
-    <ENUS>E-mail sent?</ENUS>
-  </msg>
-  <msg id="Overcome Objections" code="OVERCOME_OBJECTIONS53799">
-    <ENUS>Overcome Objections</ENUS>
-  </msg>
-  <msg id="  395" code="__39563476">
-    <ENUS>Sigla para mapa</ENUS>
-  </msg>
-  <msg id="Facility" code="FACILITY55206">
-    <ENUS>Facility</ENUS>
-  </msg>
-  <msg id="35" code="_3534512">
-    <ENUS>35</ENUS>
-  </msg>
-  <msg id="Rule" code="RULE61609">
-    <ENUS>Rule</ENUS>
-  </msg>
-  <msg id="Responsibles for the Indicators" code="RESPONSIBLES_FOR_THE21020">
-    <ENUS>Responsibles for the Indicators</ENUS>
-  </msg>
-  <msg id="Local da regra" code="LOCAL_DA_REGRA49987">
-    <ENUS>Local da regra</ENUS>
-  </msg>
   <msg id="Canceled by" code="CANCELED_BY01167">
     <ENUS>Canceled by</ENUS>
   </msg>
@@ -4378,189 +4370,313 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Meta Real" code="META_REAL47614">
     <ENUS>Meta Real</ENUS>
   </msg>
-  <msg id="Total value" code="TOTAL_VALUE30570">
-    <ENUS>Total value</ENUS>
+  <msg id="FACILITIES" code="FACILITIES10422">
+    <ENUS>FACILITIES</ENUS>
   </msg>
-  <msg id="1123_VERBOSE" code="_1123_VERBOSE41412">
-    <ENUS>Help in table list verbose</ENUS>
+  <msg id="Word" code="WORD56536">
+    <ENUS>Word</ENUS>
   </msg>
-  <msg id="Obs" code="OBS42026">
-    <ENUS>Obs</ENUS>
+  <msg id="Beginning of the year" code="BEGINNING_OF_THE_YEA06960">
+    <ENUS>Beginning of the year</ENUS>
   </msg>
-  <msg id="Vision (Instances)" code="VISION__INSTANCES_57695">
-    <ENUS>Vision (Instances)</ENUS>
+  <msg id="Category FAQS" code="CATEGORY_FAQS42471">
+    <ENUS>Category FAQS</ENUS>
   </msg>
-  <msg id="Airport To" code="AIRPORT_TO14602">
+  <msg id="   98" code="___9814807">
+    <ENUS>Default value as a percentage of the target, for the lower limit of the &apos;Bad&apos; range</ENUS>
   </msg>
-  <msg id="Conditions" code="CONDITIONS63260">
-    <ENUS>Conditions</ENUS>
+  <msg id="Eficiência" code="EFICIENCIA22805">
+    <ENUS>Eficiência</ENUS>
   </msg>
-  <msg id="  105" code="__10524173">
-    <ENUS>Name of the Perspective. According to the description of the Company or Institution as a set of Resources, Organized to serve certain Customers with a view to Value Creation Results.</ENUS>
+  <msg id="Menu per table" code="MENU_PER_TABLE22221">
   </msg>
-  <msg id="Numeric ISO-3166" code="NUMERIC_ISO_316620341">
+  <msg id="Falhou condição de inserção na tabela" code="FALHOU_CONDICAO_DE_I08738">
+    <ENUS>Falhou condição de inserção na tabela</ENUS>
   </msg>
-  <msg id="Project completed" code="PROJECT_COMPLETED06496">
-    <ENUS>Project completed</ENUS>
+  <msg id="Polaridade" code="POLARIDADE33928">
+    <ENUS>Polaridade</ENUS>
   </msg>
-  <msg id="Responsible for BSC" code="RESPONSIBLE_FOR_BSC33799">
-    <ENUS>Responsible for BSC</ENUS>
+  <msg id="People from a Company" code="PEOPLE_FROM_A_COMPAN11094">
+    <ENUS>People from a Company</ENUS>
   </msg>
-  <msg id="Undifferentiated" code="UNDIFFERENTIATED28573">
-    <ENUS>Undifferentiated</ENUS>
+  <msg id="ActivoBank" code="ACTIVOBANK40861">
+    <ENUS>ActivoBank</ENUS>
   </msg>
-  <msg id="Estratégias" code="ESTRATEGIAS49201">
-    <ENUS>Estratégias</ENUS>
+  <msg id="1123" code="_112342843">
+    <ENUS>Help in table list</ENUS>
   </msg>
-  <msg id="T2" code="T233813">
-    <ENUS>T2</ENUS>
+  <msg id="PDF" code="PDF54897">
+    <ENUS>PDF</ENUS>
   </msg>
-  <msg id="Notification Message" code="NOTIFICATION_MESSAGE31108">
-    <ENUS>Notification Message</ENUS>
+  <msg id="Editable table list" code="EDITABLE_TABLE_LIST14479">
+    <ENUS>Editable table list</ENUS>
   </msg>
-  <msg id="Dependent on" code="DEPENDENT_ON28321">
-    <ENUS>Dependent on</ENUS>
+  <msg id="Warehouse" code="WAREHOUSE51864">
+    <ENUS>Warehouse</ENUS>
   </msg>
-  <msg id="% Limit Exceeded" code="__LIMIT_EXCEEDED24774">
-    <ENUS>% Limit Exceeded</ENUS>
+  <msg id="E-mail sent?" code="E_MAIL_SENT_60490">
+    <ENUS>E-mail sent?</ENUS>
   </msg>
-  <msg id="Numeric Enumeration" code="NUMERIC_ENUMERATION19068">
-    <ENUS>Numeric Enumeration</ENUS>
+  <msg id="Overcome Objections" code="OVERCOME_OBJECTIONS53799">
+    <ENUS>Overcome Objections</ENUS>
   </msg>
-  <msg id="Optional records" code="OPTIONAL_RECORDS50081">
-    <ENUS>Optional records</ENUS>
+  <msg id="  395" code="__39563476">
+    <ENUS>Sigla para mapa</ENUS>
   </msg>
-  <msg id="Building types" code="BUILDING_TYPES23872">
-    <ENUS>Building types</ENUS>
+  <msg id="Facility" code="FACILITY55206">
+    <ENUS>Facility</ENUS>
   </msg>
-  <msg id="Receipts of goods" code="RECEIPTS_OF_GOODS02355">
-    <ENUS>Receipts of goods</ENUS>
+  <msg id="35" code="_3534512">
+    <ENUS>35</ENUS>
   </msg>
-  <msg id="Ground Size" code="GROUND_SIZE62055">
-    <ENUS>Ground Size</ENUS>
+  <msg id="Rule" code="RULE61609">
+    <ENUS>Rule</ENUS>
   </msg>
-  <msg id="Startegic Map" code="STARTEGIC_MAP51039">
-    <ENUS>Startegic Map</ENUS>
+  <msg id="Responsibles for the Indicators" code="RESPONSIBLES_FOR_THE21020">
+    <ENUS>Responsibles for the Indicators</ENUS>
   </msg>
-  <msg id="Contact type" code="CONTACT_TYPE65233">
-    <ENUS>Contact type</ENUS>
+  <msg id="Local da regra" code="LOCAL_DA_REGRA49987">
+    <ENUS>Local da regra</ENUS>
   </msg>
-  <msg id="High" code="HIGH47127">
-    <ENUS>High</ENUS>
+  <msg id="  399" code="__39955504">
+    <ENUS>Resultado: Definen los logros obtenidos con relación a los objetivos y metas planteados.
+Producto:  Miden los bienes y servicios que de manera cuantitativa son producidos y provistos por un determinado organismo público
+Proceso:  Centran su medición en el desarrollo de las actividades, las cuales están vinculadas a garantizar la prestación de servicios o generación de productos</ENUS>
   </msg>
-  <msg id="Timeline Month- Armazém" code="TIMELINE_MONTH__ARMA63891">
-    <ENUS>Timeline Month- Armazém</ENUS>
+  <msg id="Initial Value" code="INITIAL_VALUE45123">
+    <ENUS>Initial Value</ENUS>
   </msg>
-  <msg id="Total de referências" code="TOTAL_DE_REFERENCIAS35020">
-    <ENUS>Total de referências</ENUS>
+  <msg id=" 1146" code="_114630263">
+    <ENUS>Help in the second enumeration item</ENUS>
   </msg>
-  <msg id="Companhias Aéreas" code="COMPANHIAS_AEREAS50886">
-    <ENUS>Companhias Aéreas</ENUS>
+  <msg id="  134" code="__13431422">
+    <ENUS>Tipo de meta para os Segmentos. Se os segmentos são Acumulados por Média ou por Somatório.</ENUS>
   </msg>
-  <msg id="Abordagem efectuada" code="ABORDAGEM_EFECTUADA60152">
-    <ENUS>Abordagem efectuada</ENUS>
+  <msg id="Latitudes range from -90 to 90." code="LATITUDES_RANGE_FROM48085">
+    <ENUS>Latitudes range from -90 to 90.</ENUS>
   </msg>
-  <msg id="Manufacturers" code="MANUFACTURERS25464">
-    <ENUS>Manufacturers</ENUS>
+  <msg id="Flag" code="FLAG51937">
+    <ENUS>Flag</ENUS>
   </msg>
-  <msg id="&gt;&gt;ASSET" code="__ASSET57857">
-    <ENUS>&gt;&gt;ASSET</ENUS>
+  <msg id="Chave Primária" code="CHAVE_PRIMARIA61422">
+    <ENUS>Chave Primária</ENUS>
   </msg>
-  <msg id="  100" code="__10021922">
-    <ENUS>Value as a percentage of the target for issuing an alert, whenever the value achieved is equal to or greater than the target.</ENUS>
+  <msg id="Tax identification no." code="TAX_IDENTIFICATION_N63094">
+    <ENUS>Tax identification no.</ENUS>
   </msg>
-  <msg id="Data Aprovação" code="DATA_APROVACAO17003">
-    <ENUS>Data Aprovação</ENUS>
+  <msg id="Bill To" code="BILL_TO10407">
+    <ENUS>Bill To</ENUS>
   </msg>
-  <msg id="No:" code="NO_29277">
-    <ENUS>No:</ENUS>
+  <msg id="Save" code="SAVE04165">
+    <ENUS>Save</ENUS>
   </msg>
-  <msg id="Alphabetic 3" code="ALPHABETIC_316640">
-    <ENUS>Alphabetic 3</ENUS>
+  <msg id="Allow feature removal" code="ALLOW_FEATURE_REMOVA13844">
+    <ENUS>Allow feature removal</ENUS>
   </msg>
-  <msg id="Description of the repair" code="DESCRIPTION_OF_THE_R26085">
-    <ENUS>Description of the repair</ENUS>
+  <msg id="Country" code="COUNTRY64133">
+    <ENUS>Country</ENUS>
   </msg>
-  <msg id="Table (Foreign Keys)" code="TABLE__FOREIGN_KEYS_21641">
-    <ENUS>Table (Foreign Keys)</ENUS>
+  <msg id="End time" code="END_TIME53495">
+    <ENUS>End time</ENUS>
   </msg>
-  <msg id="Locale" code="LOCALE34521">
-    <ENUS>Locale</ENUS>
+  <msg id="Dispatch" code="DISPATCH46310">
+    <ENUS>Dispatch</ENUS>
   </msg>
-  <msg id="Extended Form support" code="EXTENDED_FORM_SUPPOR22249">
-    <ENUS>Extended Form support</ENUS>
+  <msg id="Equipamentos por tipos detalhes" code="EQUIPAMENTOS_POR_TIP07400">
+    <ENUS>Equipamentos por tipos detalhes</ENUS>
   </msg>
-  <msg id="Indicadores Bons" code="INDICADORES_BONS61997">
-    <ENUS>Indicadores Bons</ENUS>
+  <msg id="Preparing" code="PREPARING26576">
+    <ENUS>Preparing</ENUS>
   </msg>
-  <msg id="Translated title" code="TRANSLATED_TITLE58577">
-    <ENUS>Translated title</ENUS>
+  <msg id="Data Fixa Recolha" code="DATA_FIXA_RECOLHA65356">
+    <ENUS>Data Fixa Recolha</ENUS>
   </msg>
-  <msg id="Razoável" code="RAZOAVEL14967">
-    <ENUS>Razoável</ENUS>
-  </msg>
-  <msg id="Module" code="MODULE42049">
-    <ENUS>Module</ENUS>
-  </msg>
-  <msg id="Address Type" code="ADDRESS_TYPE12455">
-    <ENUS>Address Type</ENUS>
-  </msg>
-  <msg id="Configuração de homepage" code="CONFIGURACAO_DE_HOME06050">
-    <ENUS>Configuração de homepage</ENUS>
-  </msg>
-  <msg id="Tipo de segmento" code="TIPO_DE_SEGMENTO49650">
-    <ENUS>Tipo de segmento</ENUS>
-  </msg>
-  <msg id="This help is for a field of type numeric" code="THIS_HELP_IS_FOR_A_F63644">
+  <msg id="   21" code="___2105408">
     <ENUS>This help is for a field of type numeric</ENUS>
   </msg>
-  <msg id="Novobanco" code="NOVOBANCO44101">
-    <ENUS>Novobanco</ENUS>
+  <msg id="Posição X" code="POSICAO_X12026">
+    <ENUS>Posição X</ENUS>
   </msg>
-  <msg id="Numeric 15.0 - big integer (storage: 8 byte)" code="NUMERIC_15_0___BIG_I46007">
-    <ENUS>Numeric 15.0 - big integer (storage: 8 byte)</ENUS>
+  <msg id="Airline" code="AIRLINE57868">
+    <ENUS>Airline</ENUS>
   </msg>
-  <msg id="Order (Float field)" code="ORDER__FLOAT_FIELD_21693">
-    <ENUS>Order (Float field)</ENUS>
+  <msg id="Horário" code="HORARIO56549">
+    <ENUS>Horário</ENUS>
   </msg>
-  <msg id="Modal" code="MODAL19269">
-    <ENUS>Modal</ENUS>
+  <msg id="Minimum Map Color" code="MINIMUM_MAP_COLOR51094">
+    <ENUS>Minimum Map Color</ENUS>
   </msg>
-  <msg id="Nif" code="NIF55908">
-    <ENUS>Nif</ENUS>
+  <msg id="Articles" code="ARTICLES59822">
+    <ENUS>Articles</ENUS>
   </msg>
-  <msg id="Card-Img-Background" code="CARD_IMG_BACKGROUND51759">
-    <ENUS>Card-Img-Background</ENUS>
+  <msg id="Comodantes" code="COMODANTES42347">
+    <ENUS>Comodantes</ENUS>
   </msg>
-  <msg id="Where did the equipment go" code="WHERE_DID_THE_EQUIPM11916">
-    <ENUS>Where did the equipment go</ENUS>
+  <msg id="Marca Água" code="MARCA_AGUA18601">
+    <ENUS>Marca Água</ENUS>
   </msg>
-  <msg id="Output documents" code="OUTPUT_DOCUMENTS44871">
-    <ENUS>Output documents</ENUS>
+  <msg id="Logical" code="LOGICAL47485">
+    <ENUS>Logical</ENUS>
   </msg>
-  <msg id="Chave Estrangeira" code="CHAVE_ESTRANGEIRA25502">
-    <ENUS>Chave Estrangeira</ENUS>
+  <msg id="Feedback" code="FEEDBACK52855">
+    <ENUS>Feedback</ENUS>
   </msg>
-  <msg id="Calculations exclusively with working days?" code="CALCULATIONS_EXCLUSI63239">
-    <ENUS>Calculations exclusively with working days?</ENUS>
+  <msg id="  276" code="__27661657">
+    <ENUS>Periodicidade de recolha</ENUS>
+  </msg>
+  <msg id="Criado por" code="CRIADO_POR17895">
+    <ENUS>Criado por</ENUS>
+  </msg>
+  <msg id="Receipt" code="RECEIPT15218">
+    <ENUS>Receipt</ENUS>
+  </msg>
+  <msg id="Tipo de Actividade" code="TIPO_DE_ACTIVIDADE39047">
+    <ENUS>Tipo de Actividade</ENUS>
+  </msg>
+  <msg id="X Position (ME)" code="X_POSITION__ME_47625">
+    <ENUS>X Position (ME)</ENUS>
+  </msg>
+  <msg id="Property Name" code="PROPERTY_NAME01442">
+  </msg>
+  <msg id="  398" code="__39855363">
+    <ENUS>Descrição do tipo de segmento</ENUS>
+  </msg>
+  <msg id="&gt; PERSON" code="__PERSON25810">
+  </msg>
+  <msg id="Ministério" code="MINISTERIO28390">
+    <ENUS>Ministério</ENUS>
+  </msg>
+  <msg id="Lending Report" code="LENDING_REPORT39327">
+    <ENUS>Lending Report</ENUS>
+  </msg>
+  <msg id="Storage date" code="STORAGE_DATE59954">
+    <ENUS>Storage date</ENUS>
+  </msg>
+  <msg id="Palavra-Chave Acesso SMTP" code="PALAVRA_CHAVE_ACESSO43416">
+    <ENUS>Palavra-Chave Acesso SMTP</ENUS>
+  </msg>
+  <msg id="Nº Horas Semanais" code="NO_HORAS_SEMANAIS27486">
+    <ENUS>Nº Horas Semanais</ENUS>
+  </msg>
+  <msg id="Show Record" code="SHOW_RECORD11620">
+    <ENUS>Show Record</ENUS>
+  </msg>
+  <msg id="Subject" code="SUBJECT33942">
+    <ENUS>Subject</ENUS>
+  </msg>
+  <msg id="Regra" code="REGRA09608">
+    <ENUS>Regra</ENUS>
+  </msg>
+  <msg id="Entid key" code="ENTID_KEY04396">
+    <ENUS>Entid key</ENUS>
+  </msg>
+  <msg id="Users" code="USERS13319">
+    <ENUS>Users</ENUS>
+  </msg>
+  <msg id="  272" code="__27265157">
+    <ENUS>Superou os limites.</ENUS>
+  </msg>
+  <msg id="Table List One action" code="TABLE_LIST_ONE_ACTIO48776">
+    <ENUS>Table List One action</ENUS>
+  </msg>
+  <msg id="Inverse?" code="INVERSE_39989">
+    <ENUS>Inverse?</ENUS>
+  </msg>
+  <msg id="Actividade" code="ACTIVIDADE44684">
+    <ENUS>Actividade</ENUS>
+  </msg>
+  <msg id="Yes" code="YES34196">
+    <ENUS>Yes</ENUS>
+  </msg>
+  <msg id="Code" code="CODE49225">
+    <ENUS>Code</ENUS>
+  </msg>
+  <msg id="Alert Perc." code="ALERT_PERC_15762">
+    <ENUS>Alert Perc.</ENUS>
+  </msg>
+  <msg id=" 1102" code="_110253217">
+    <ENUS>A postal code designating a region defined by the postal service.</ENUS>
+  </msg>
+  <msg id="Good limit 2" code="GOOD_LIMIT_258360">
+    <ENUS>Good limit 2</ENUS>
+  </msg>
+  <msg id="Group 2" code="GROUP_205486">
+    <ENUS>Group 2</ENUS>
+  </msg>
+  <msg id="Lending" code="LENDING18782">
+    <ENUS>Lending</ENUS>
+  </msg>
+  <msg id="Query" code="QUERY30986">
+    <ENUS>Query</ENUS>
+  </msg>
+  <msg id="&gt;EQUIPMENT" code="_EQUIPMENT12605">
+    <ENUS>&gt;EQUIPMENT</ENUS>
+  </msg>
+  <msg id="Price-by-hour" code="PRICE_BY_HOUR01060">
+    <ENUS>Price-by-hour</ENUS>
+  </msg>
+  <msg id="Types of equipment" code="TYPES_OF_EQUIPMENT61264">
+    <ENUS>Types of equipment</ENUS>
+  </msg>
+  <msg id="Specific path with conditions with routine -&gt; DB + MB + MC + R" code="SPECIFIC_PATH_WITH_C61947">
+    <ENUS>Specific path with conditions with routine -&gt; DB + MB + MC + R</ENUS>
+  </msg>
+  <msg id="Reference" code="REFERENCE28402">
+    <ENUS>Reference</ENUS>
+  </msg>
+  <msg id="  417" code="__41749205">
+    <ENUS>Global: Se refiere a los indicadores de la lista oficial del sistema de Naciones Unidas.
+Nacional: Se refiere a la propuesta nacional que proviene de las instituciones relacionadas a la meta.</ENUS>
+  </msg>
+  <msg id="   66" code="___6649983">
+    <ENUS>Name of the initiative / project so that it is easily identifiable.</ENUS>
+  </msg>
+  <msg id="Tolerância" code="TOLERANCIA56961">
+    <ENUS>Tolerância</ENUS>
+  </msg>
+  <msg id="QUIDGEST" code="QUIDGEST56322">
+    <ENUS>QUIDGEST</ENUS>
+  </msg>
+  <msg id="Prod. e Cresc." code="PROD__E_CRESC_35758">
+    <ENUS>Prod. e Cresc.</ENUS>
+  </msg>
+  <msg id="Identification number" code="IDENTIFICATION_NUMBE11999">
+    <ENUS>Identification number</ENUS>
+  </msg>
+  <msg id="&gt;ARMAZEM" code="_ARMAZEM43996">
+    <ENUS>&gt;ARMAZEM</ENUS>
+  </msg>
+  <msg id="Facility type Parameter" code="FACILITY_TYPE_PARAME05479">
+    <ENUS>Facility type Parameter</ENUS>
+  </msg>
+  <msg id="Logical (tinyint) (storage: 1 byte)" code="LOGICAL__TINYINT___S35014">
+    <ENUS>Logical (tinyint) (storage: 1 byte)</ENUS>
+  </msg>
+  <msg id="Novembro" code="NOVEMBRO18614">
+    <ENUS>Novembro</ENUS>
+  </msg>
+  <msg id="HTML format?" code="HTML_FORMAT_60293">
+    <ENUS>HTML format?</ENUS>
   </msg>
   <msg id="   75" code="___7534129">
     <ENUS>This should be a full and complete description of the initiative/project, including the potential risks and/or factors that will help to ensure its successful completion.</ENUS>
   </msg>
-  <msg id="Third-parties" code="THIRD_PARTIES02148">
-    <ENUS>Third-parties</ENUS>
+  <msg id="Countries" code="COUNTRIES64527">
+    <ENUS>Countries</ENUS>
   </msg>
-  <msg id="Decimal (1-10) (storage: 5 byte)" code="DECIMAL__1_10___STOR64402">
-    <ENUS>Decimal (1-10) (storage: 5 byte)</ENUS>
+  <msg id="Airline Name" code="AIRLINE_NAME07971">
   </msg>
-  <msg id="Qtd hours" code="QTD_HOURS28684">
-    <ENUS>Qtd hours</ENUS>
+  <msg id="ID de Destino" code="ID_DE_DESTINO64139">
+    <ENUS>ID de Destino</ENUS>
   </msg>
-  <msg id="Regions" code="REGIONS31874">
-    <ENUS>Regions</ENUS>
+  <msg id="Office" code="OFFICE22960">
+    <ENUS>Office</ENUS>
   </msg>
-  <msg id="Rate" code="RATE50728">
-    <ENUS>Rate</ENUS>
+  <msg id="Add ANEXD" code="ADD_ANEXD17106">
+    <ENUS>Add ANEXD</ENUS>
+  </msg>
+  <msg id="Multiple connections (Strategic Map)" code="MULTIPLE_CONNECTIONS11060">
+    <ENUS>Multiple connections (Strategic Map)</ENUS>
   </msg>
   <msg id="second level group" code="SECOND_LEVEL_GROUP06141">
   </msg>
@@ -4665,9 +4781,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Classe Económica" code="CLASSE_ECONOMICA36282">
     <ENUS>Classe Económica</ENUS>
   </msg>
-  <msg id="Chave Primária" code="CHAVE_PRIMARIA61422">
-    <ENUS>Chave Primária</ENUS>
-  </msg>
   <msg id="  307" code="__30747434">
     <ENUS>Extensão</ENUS>
   </msg>
@@ -4692,9 +4805,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Equipamentos por tipos" code="EQUIPAMENTOS_POR_TIP43683">
     <ENUS>Equipamentos por tipos</ENUS>
   </msg>
-  <msg id="Countries" code="COUNTRIES64527">
-    <ENUS>Countries</ENUS>
-  </msg>
   <msg id="Required" code="REQUIRED58276">
     <ENUS>Required</ENUS>
   </msg>
@@ -4711,9 +4821,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="Indicator Goal" code="INDICATOR_GOAL37404">
     <ENUS>Indicator Goal</ENUS>
-  </msg>
-  <msg id="Nº Horas Semanais" code="NO_HORAS_SEMANAIS27486">
-    <ENUS>Nº Horas Semanais</ENUS>
   </msg>
   <msg id="Campo com condições client-side" code="CAMPO_COM_CONDICOES_42569">
     <ENUS>Field with client-side conditions</ENUS>
@@ -4756,9 +4863,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="Mail" code="MAIL12094">
     <ENUS>Mail</ENUS>
-  </msg>
-  <msg id="Allow feature removal" code="ALLOW_FEATURE_REMOVA13844">
-    <ENUS>Allow feature removal</ENUS>
   </msg>
   <msg id="1º Classe" code="_1O_CLASSE38057">
     <ENUS>1º Classe</ENUS>
@@ -4847,6 +4951,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="  388" code="__38812468">
     <ENUS>Documentos do ciclo de gestão</ENUS>
   </msg>
+  <msg id="Output documents" code="OUTPUT_DOCUMENTS44871">
+    <ENUS>Output documents</ENUS>
+  </msg>
   <msg id="Timeline Secundary" code="TIMELINE_SECUNDARY50965">
     <ENUS>Timeline Secundary</ENUS>
   </msg>
@@ -4896,6 +5003,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="Accumulation Periods" code="ACCUMULATION_PERIODS07158">
     <ENUS>Accumulation Periods</ENUS>
+  </msg>
+  <msg id="Third-parties" code="THIRD_PARTIES02148">
+    <ENUS>Third-parties</ENUS>
   </msg>
   <msg id="Row Ordering (Float field)" code="ROW_ORDERING__FLOAT_49344">
     <ENUS>Row Ordering (Float field)</ENUS>
@@ -5115,9 +5225,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="[EQUIP-&gt;REGISTNR] - [EQUIP-&gt;DESIGNAT] - [TPEQU-&gt;TIPOEQUI]" code="_EQUIP__REGISTNR____25672">
     <ENUS>&#91;EQUIP-&gt;REGISTNR&#93; - &#91;EQUIP-&gt;DESIGNAT&#93; - &#91;TPEQU-&gt;TIPOEQUI&#93;</ENUS>
   </msg>
-  <msg id="Horário" code="HORARIO56549">
-    <ENUS>Horário</ENUS>
-  </msg>
   <msg id="UUID (aka GUID)" code="UUID__AKA_GUID_13998">
     <ENUS>UUID (aka GUID)</ENUS>
   </msg>
@@ -5158,6 +5265,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="  355" code="__35514869">
     <ENUS>Escala do Gantt</ENUS>
+  </msg>
+  <msg id="Undifferentiated" code="UNDIFFERENTIATED28573">
+    <ENUS>Undifferentiated</ENUS>
   </msg>
   <msg id="Real value" code="REAL_VALUE28924">
     <ENUS>Real value</ENUS>
@@ -5245,9 +5355,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="Accumulation Type" code="ACCUMULATION_TYPE54819">
     <ENUS>Accumulation Type</ENUS>
-  </msg>
-  <msg id="Logical (tinyint) (storage: 1 byte)" code="LOGICAL__TINYINT___S35014">
-    <ENUS>Logical (tinyint) (storage: 1 byte)</ENUS>
   </msg>
   <msg id="Dispatch number" code="DISPATCH_NUMBER23616">
     <ENUS>Dispatch number</ENUS>
@@ -5376,9 +5483,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="Qtd output" code="QTD_OUTPUT12876">
     <ENUS>Qtd output</ENUS>
-  </msg>
-  <msg id="Tolerância" code="TOLERANCIA56961">
-    <ENUS>Tolerância</ENUS>
   </msg>
   <msg id="Modo de processamento" code="MODO_DE_PROCESSAMENT14469">
     <ENUS>Modo de processamento</ENUS>
@@ -5538,6 +5642,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Order" code="ORDER39632">
     <ENUS>Order</ENUS>
   </msg>
+  <msg id="Numeric 15.0 - big integer (storage: 8 byte)" code="NUMERIC_15_0___BIG_I46007">
+    <ENUS>Numeric 15.0 - big integer (storage: 8 byte)</ENUS>
+  </msg>
   <msg id="Objective value" code="OBJECTIVE_VALUE30995">
     <ENUS>Objective value</ENUS>
   </msg>
@@ -5553,14 +5660,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Fields with table conditions" code="FIELDS_WITH_TABLE_CO37994">
     <ENUS>Fields with table conditions</ENUS>
   </msg>
-  <msg id="Price-by-hour" code="PRICE_BY_HOUR01060">
-    <ENUS>Price-by-hour</ENUS>
-  </msg>
   <msg id="Follow-up" code="FOLLOW_UP22119">
     <ENUS>Follow-up</ENUS>
-  </msg>
-  <msg id="Add ANEXD" code="ADD_ANEXD17106">
-    <ENUS>Add ANEXD</ENUS>
   </msg>
   <msg id="Campo com condições server-side" code="CAMPO_COM_CONDICOES_22485">
     <ENUS>Field with server-side conditions</ENUS>
@@ -5632,9 +5733,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Company&apos;s people count" code="COMPANY_S_PEOPLE_COU57461">
     <ENUS>Company&apos;s people count</ENUS>
   </msg>
-  <msg id="Lending Report" code="LENDING_REPORT39327">
-    <ENUS>Lending Report</ENUS>
-  </msg>
   <msg id="Recipient&apos;s email" code="RECIPIENT_S_EMAIL43894">
     <ENUS>Recipient&apos;s email</ENUS>
   </msg>
@@ -5690,22 +5788,11 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Item:" code="ITEM_31041">
     <ENUS>Item:</ENUS>
   </msg>
-  <msg id="Types of equipment" code="TYPES_OF_EQUIPMENT61264">
-    <ENUS>Types of equipment</ENUS>
-  </msg>
-  <msg id="Palavra-Chave Acesso SMTP" code="PALAVRA_CHAVE_ACESSO43416">
-    <ENUS>Palavra-Chave Acesso SMTP</ENUS>
-  </msg>
   <msg id="Information elements" code="INFORMATION_ELEMENTS50322">
     <ENUS>Information elements</ENUS>
   </msg>
   <msg id="Justificação dos Alvos" code="JUSTIFICACAO_DOS_ALV14775">
     <ENUS>Justificação dos Alvos</ENUS>
-  </msg>
-  <msg id="  399" code="__39955504">
-    <ENUS>Resultado: Definen los logros obtenidos con relación a los objetivos y metas planteados.
-Producto:  Miden los bienes y servicios que de manera cuantitativa son producidos y provistos por un determinado organismo público
-Proceso:  Centran su medición en el desarrollo de las actividades, las cuales están vinculadas a garantizar la prestación de servicios o generación de productos</ENUS>
   </msg>
   <msg id="Toilet" code="TOILET13557">
     <ENUS>Toilet</ENUS>
@@ -5754,9 +5841,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
   </msg>
   <msg id="Geographical coordinate" code="GEOGRAPHICAL_COORDIN45869">
     <ENUS>Geographical coordinate</ENUS>
-  </msg>
-  <msg id="Show Record" code="SHOW_RECORD11620">
-    <ENUS>Show Record</ENUS>
   </msg>
   <msg id="  318" code="__31820591">
     <ENUS>Estado calculado a partir da tabela de relatórios</ENUS>
@@ -5915,9 +5999,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
   <msg id="Organization, New Organization" code="ORGANIZATION__NEW_OR35065">
     <ENUS>Organization, New Organization</ENUS>
   </msg>
-  <msg id="Office" code="OFFICE22960">
-    <ENUS>Office</ENUS>
-  </msg>
   <msg id="Period" code="PERIOD00768">
     <ENUS>Period</ENUS>
   </msg>
@@ -6008,17 +6089,11 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
   <msg id="Respons. Iniciativa" code="RESPONS__INICIATIVA38392">
     <ENUS>Respons. Iniciativa</ENUS>
   </msg>
-  <msg id="Country" code="COUNTRY64133">
-    <ENUS>Country</ENUS>
-  </msg>
   <msg id="Organic Units" code="ORGANIC_UNITS18795">
     <ENUS>Organic Units</ENUS>
   </msg>
   <msg id="Contact Type:" code="CONTACT_TYPE_27897">
     <ENUS>Contact Type:</ENUS>
-  </msg>
-  <msg id="Ministério" code="MINISTERIO28390">
-    <ENUS>Ministério</ENUS>
   </msg>
   <msg id="Collection" code="COLLECTION52862">
     <ENUS>Collection</ENUS>
@@ -6102,9 +6177,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   <msg id="  321" code="__32120439">
     <ENUS>Logotipo do ministério</ENUS>
   </msg>
-  <msg id="Actividade" code="ACTIVIDADE44684">
-    <ENUS>Actividade</ENUS>
-  </msg>
   <msg id="Layer name" code="LAYER_NAME49545">
     <ENUS>Layer name</ENUS>
   </msg>
@@ -6140,8 +6212,8 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   <msg id="Numeric Decimal" code="NUMERIC_DECIMAL37352">
     <ENUS>Numeric Decimal</ENUS>
   </msg>
-  <msg id="Inverse?" code="INVERSE_39989">
-    <ENUS>Inverse?</ENUS>
+  <msg id="Calculations exclusively with working days?" code="CALCULATIONS_EXCLUSI63239">
+    <ENUS>Calculations exclusively with working days?</ENUS>
   </msg>
   <msg id="  322" code="__32228994">
     <ENUS>Data de aprovação do QUAR</ENUS>
@@ -6155,9 +6227,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   <msg id="Total points" code="TOTAL_POINTS15636">
     <ENUS>Total points</ENUS>
   </msg>
-  <msg id="Storage date" code="STORAGE_DATE59954">
-    <ENUS>Storage date</ENUS>
-  </msg>
   <msg id="Mau" code="MAU45741">
     <ENUS>Mau</ENUS>
   </msg>
@@ -6169,6 +6238,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   </msg>
   <msg id="Separadores" code="SEPARADORES25231">
     <ENUS>Separadores</ENUS>
+  </msg>
+  <msg id="Total value" code="TOTAL_VALUE30570">
+    <ENUS>Total value</ENUS>
   </msg>
   <msg id="Balance" code="BALANCE13297">
     <ENUS>Balance</ENUS>
@@ -6212,9 +6284,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   </msg>
   <msg id="Specific buttons -&gt; DB + MB + F" code="SPECIFIC_BUTTONS____08735">
   </msg>
-  <msg id="Alert Perc." code="ALERT_PERC_15762">
-    <ENUS>Alert Perc.</ENUS>
-  </msg>
   <msg id="Mostrar Anos Anteriores" code="MOSTRAR_ANOS_ANTERIO34446">
     <ENUS>Mostrar Anos Anteriores</ENUS>
   </msg>
@@ -6245,9 +6314,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   </msg>
   <msg id="Translated Title" code="TRANSLATED_TITLE04469">
     <ENUS>Translated Title</ENUS>
-  </msg>
-  <msg id="ID de Destino" code="ID_DE_DESTINO64139">
-    <ENUS>ID de Destino</ENUS>
   </msg>
   <msg id="Currency (Decimal)" code="CURRENCY__DECIMAL_11718">
     <ENUS>Currency (Decimal)</ENUS>
@@ -6285,9 +6351,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   </msg>
   <msg id="Maximum" code="MAXIMUM48308">
     <ENUS>Maximum</ENUS>
-  </msg>
-  <msg id="Regra" code="REGRA09608">
-    <ENUS>Regra</ENUS>
   </msg>
   <msg id="Mês" code="MES61580">
     <ENUS>Mês</ENUS>
@@ -6422,6 +6485,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   <msg id="  274" code="__27461951">
     <ENUS>Inserir valor inicial.</ENUS>
   </msg>
+  <msg id="Building types" code="BUILDING_TYPES23872">
+    <ENUS>Building types</ENUS>
+  </msg>
   <msg id="Foto de Perfil" code="FOTO_DE_PERFIL03502">
     <ENUS>Profile photo</ENUS>
   </msg>
@@ -6475,9 +6541,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   <msg id="Specifications" code="SPECIFICATIONS59226">
     <ENUS>Specifications</ENUS>
   </msg>
-  <msg id="Novembro" code="NOVEMBRO18614">
-    <ENUS>Novembro</ENUS>
-  </msg>
   <msg id="Acesso a Organização" code="ACESSO_A_ORGANIZACAO01976">
     <ENUS>Acesso a Organização</ENUS>
   </msg>
@@ -6517,6 +6580,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   </msg>
   <msg id="Tipo de condição" code="TIPO_DE_CONDICAO09986">
     <ENUS>Tipo de condição</ENUS>
+  </msg>
+  <msg id="Optional records" code="OPTIONAL_RECORDS50081">
+    <ENUS>Optional records</ENUS>
   </msg>
   <msg id="Baggage Type" code="BAGGAGE_TYPE35947">
   </msg>
@@ -6684,6 +6750,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   <msg id="Height (ME)" code="HEIGHT__ME_36593">
     <ENUS>Height (ME)</ENUS>
   </msg>
+  <msg id="Card-Img-Background" code="CARD_IMG_BACKGROUND51759">
+    <ENUS>Card-Img-Background</ENUS>
+  </msg>
   <msg id="Receipt number" code="RECEIPT_NUMBER31380">
     <ENUS>Receipt number</ENUS>
   </msg>
@@ -6758,9 +6827,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   <msg id="Asset Manuals" code="ASSET_MANUALS04899">
     <ENUS>Asset Manuals</ENUS>
   </msg>
-  <msg id="Tax identification no." code="TAX_IDENTIFICATION_N63094">
-    <ENUS>Tax identification no.</ENUS>
-  </msg>
   <msg id="Address District" code="ADDRESS_DISTRICT48524">
     <ENUS>Address District</ENUS>
   </msg>
@@ -6805,9 +6871,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   </msg>
   <msg id="Tipo de UO" code="TIPO_DE_UO17072">
     <ENUS>Tipo de UO</ENUS>
-  </msg>
-  <msg id="Identification number" code="IDENTIFICATION_NUMBE11999">
-    <ENUS>Identification number</ENUS>
   </msg>
   <msg id="Another" code="ANOTHER00311">
     <ENUS>Another</ENUS>
@@ -6854,6 +6917,9 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   </msg>
   <msg id="Missão" code="MISSAO57811">
     <ENUS>Missão</ENUS>
+  </msg>
+  <msg id="Dependent on" code="DEPENDENT_ON28321">
+    <ENUS>Dependent on</ENUS>
   </msg>
   <msg id="Box (Strategic Map)" code="BOX__STRATEGIC_MAP_60771">
     <ENUS>Box (Strategic Map)</ENUS>
@@ -6978,9 +7044,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   <msg id="Project state" code="PROJECT_STATE35425">
     <ENUS>Project state</ENUS>
   </msg>
-  <msg id="   21" code="___2105408">
-    <ENUS>This help is for a field of type numeric</ENUS>
-  </msg>
   <msg id="Aggregated per year" code="AGGREGATED_PER_YEAR01261">
     <ENUS>Aggregated per year</ENUS>
   </msg>
@@ -7096,45 +7159,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   <msg id="Planeado" code="PLANEADO30031">
     <ENUS>Planeado</ENUS>
   </msg>
-  <msg id="Initial Value" code="INITIAL_VALUE45123">
-    <ENUS>Initial Value</ENUS>
-  </msg>
-  <msg id=" 1146" code="_114630263">
-    <ENUS>Help in the second enumeration item</ENUS>
-  </msg>
-  <msg id="  134" code="__13431422">
-    <ENUS>Tipo de meta para os Segmentos. Se os segmentos são Acumulados por Média ou por Somatório.</ENUS>
-  </msg>
-  <msg id="Latitudes range from -90 to 90." code="LATITUDES_RANGE_FROM48085">
-    <ENUS>Latitudes range from -90 to 90.</ENUS>
-  </msg>
-  <msg id="Flag" code="FLAG51937">
-    <ENUS>Flag</ENUS>
-  </msg>
-  <msg id="Bill To" code="BILL_TO10407">
-    <ENUS>Bill To</ENUS>
-  </msg>
-  <msg id="Save" code="SAVE04165">
-    <ENUS>Save</ENUS>
-  </msg>
-  <msg id="End time" code="END_TIME53495">
-    <ENUS>End time</ENUS>
-  </msg>
-  <msg id="Dispatch" code="DISPATCH46310">
-    <ENUS>Dispatch</ENUS>
-  </msg>
-  <msg id="Equipamentos por tipos detalhes" code="EQUIPAMENTOS_POR_TIP07400">
-    <ENUS>Equipamentos por tipos detalhes</ENUS>
-  </msg>
-  <msg id="Preparing" code="PREPARING26576">
-    <ENUS>Preparing</ENUS>
-  </msg>
-  <msg id="Data Fixa Recolha" code="DATA_FIXA_RECOLHA65356">
-    <ENUS>Data Fixa Recolha</ENUS>
-  </msg>
-  <msg id="Posição X" code="POSICAO_X12026">
-    <ENUS>Posição X</ENUS>
-  </msg>
   <msg id="Dictionary" code="DICTIONARY61997">
     <ENUS>Dictionary</ENUS>
   </msg>
@@ -7161,9 +7185,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   </msg>
   <msg id="Type of Sub-goals" code="TYPE_OF_SUB_GOALS32599">
     <ENUS>Type of Sub-goals</ENUS>
-  </msg>
-  <msg id="Subject" code="SUBJECT33942">
-    <ENUS>Subject</ENUS>
   </msg>
   <msg id="NºFuncionário" code="NOFUNCIONARIO21429">
     <ENUS>NºFuncionário</ENUS>
@@ -7229,11 +7250,11 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   <msg id="N/A" code="N_A00986">
     <ENUS>N/A</ENUS>
   </msg>
+  <msg id="Startegic Map" code="STARTEGIC_MAP51039">
+    <ENUS>Startegic Map</ENUS>
+  </msg>
   <msg id="Address Types" code="ADDRESS_TYPES26269">
     <ENUS>Address Types</ENUS>
-  </msg>
-  <msg id="  398" code="__39855363">
-    <ENUS>Descrição do tipo de segmento</ENUS>
   </msg>
   <msg id="Maximum Price" code="MAXIMUM_PRICE26470">
     <ENUS>Maximum Price</ENUS>
@@ -7314,52 +7335,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   </msg>
   <msg id="Timeline - Days" code="TIMELINE___DAYS09927">
     <ENUS>Timeline - Days</ENUS>
-  </msg>
-  <msg id="Entid key" code="ENTID_KEY04396">
-    <ENUS>Entid key</ENUS>
-  </msg>
-  <msg id="Users" code="USERS13319">
-    <ENUS>Users</ENUS>
-  </msg>
-  <msg id="  272" code="__27265157">
-    <ENUS>Superou os limites.</ENUS>
-  </msg>
-  <msg id="Table List One action" code="TABLE_LIST_ONE_ACTIO48776">
-    <ENUS>Table List One action</ENUS>
-  </msg>
-  <msg id="Yes" code="YES34196">
-    <ENUS>Yes</ENUS>
-  </msg>
-  <msg id="Code" code="CODE49225">
-    <ENUS>Code</ENUS>
-  </msg>
-  <msg id=" 1102" code="_110253217">
-    <ENUS>A postal code designating a region defined by the postal service.</ENUS>
-  </msg>
-  <msg id="Good limit 2" code="GOOD_LIMIT_258360">
-    <ENUS>Good limit 2</ENUS>
-  </msg>
-  <msg id="Group 2" code="GROUP_205486">
-    <ENUS>Group 2</ENUS>
-  </msg>
-  <msg id="Lending" code="LENDING18782">
-    <ENUS>Lending</ENUS>
-  </msg>
-  <msg id="Query" code="QUERY30986">
-    <ENUS>Query</ENUS>
-  </msg>
-  <msg id="&gt;EQUIPMENT" code="_EQUIPMENT12605">
-    <ENUS>&gt;EQUIPMENT</ENUS>
-  </msg>
-  <msg id="Specific path with conditions with routine -&gt; DB + MB + MC + R" code="SPECIFIC_PATH_WITH_C61947">
-    <ENUS>Specific path with conditions with routine -&gt; DB + MB + MC + R</ENUS>
-  </msg>
-  <msg id="Reference" code="REFERENCE28402">
-    <ENUS>Reference</ENUS>
-  </msg>
-  <msg id="  417" code="__41749205">
-    <ENUS>Global: Se refiere a los indicadores de la lista oficial del sistema de Naciones Unidas.
-Nacional: Se refiere a la propuesta nacional que proviene de las instituciones relacionadas a la meta.</ENUS>
   </msg>
   <msg id="ZIP/Popstal code" code="ZIP_POPSTAL_CODE65164">
     <ENUS>ZIP/Popstal code</ENUS>
@@ -7499,32 +7474,6 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
   <msg id="title in kpi" code="TITLE_IN_KPI56534">
     <ENUS>title in kpi</ENUS>
   </msg>
-  <msg id="   66" code="___6649983">
-    <ENUS>Name of the initiative / project so that it is easily identifiable.</ENUS>
-  </msg>
-  <msg id="QUIDGEST" code="QUIDGEST56322">
-    <ENUS>QUIDGEST</ENUS>
-  </msg>
-  <msg id="Prod. e Cresc." code="PROD__E_CRESC_35758">
-    <ENUS>Prod. e Cresc.</ENUS>
-  </msg>
-  <msg id="&gt;ARMAZEM" code="_ARMAZEM43996">
-    <ENUS>&gt;ARMAZEM</ENUS>
-  </msg>
-  <msg id="Facility type Parameter" code="FACILITY_TYPE_PARAME05479">
-    <ENUS>Facility type Parameter</ENUS>
-  </msg>
-  <msg id="HTML format?" code="HTML_FORMAT_60293">
-    <ENUS>HTML format?</ENUS>
-  </msg>
-  <msg id="X Position (ME)" code="X_POSITION__ME_47625">
-    <ENUS>X Position (ME)</ENUS>
-  </msg>
-  <msg id="Airline Name" code="AIRLINE_NAME07971">
-  </msg>
-  <msg id="Multiple connections (Strategic Map)" code="MULTIPLE_CONNECTIONS11060">
-    <ENUS>Multiple connections (Strategic Map)</ENUS>
-  </msg>
   <msg id="   92" code="___9209289">
     <ENUS>Default value as a percentage of the target, for the upper limit of the &apos;Bad&apos; range</ENUS>
   </msg>
@@ -7534,6 +7483,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
   <msg id="##CUSTOMER" code="__CUSTOMER21546">
     <ENUS>##CUSTOMER</ENUS>
   </msg>
+  <msg id="Novobanco" code="NOVOBANCO44101">
+    <ENUS>Novobanco</ENUS>
+  </msg>
   <msg id="Opção 2" code="OPCAO_214220">
     <ENUS>Opção 2</ENUS>
   </msg>
@@ -7542,6 +7494,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
   </msg>
   <msg id="Char String" code="CHAR_STRING32451">
     <ENUS>Char String</ENUS>
+  </msg>
+  <msg id="Contact type" code="CONTACT_TYPE65233">
+    <ENUS>Contact type</ENUS>
   </msg>
   <msg id="Máximo Sup." code="MAXIMO_SUP_02835">
     <ENUS>Máximo Sup.</ENUS>
@@ -7638,6 +7593,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="   32" code="___3261074">
     <ENUS>This help is for a field of type DATE</ENUS>
+  </msg>
+  <msg id="Receipts of goods" code="RECEIPTS_OF_GOODS02355">
+    <ENUS>Receipts of goods</ENUS>
   </msg>
   <msg id="Specific path with conditions -&gt; DB + MB + MC + F" code="SPECIFIC_PATH_WITH_C42725">
     <ENUS>Specific path with conditions -&gt; DB + MB + MC + F</ENUS>
@@ -7769,6 +7727,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Alerta" code="ALERTA41713">
     <ENUS>Alerta</ENUS>
   </msg>
+  <msg id="Decimal (1-10) (storage: 5 byte)" code="DECIMAL__1_10___STOR64402">
+    <ENUS>Decimal (1-10) (storage: 5 byte)</ENUS>
+  </msg>
   <msg id="Months" code="MONTHS54799">
     <ENUS>Months</ENUS>
   </msg>
@@ -7788,11 +7749,17 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Activity:" code="ACTIVITY_63514">
     <ENUS>Activity:</ENUS>
   </msg>
+  <msg id="1123_VERBOSE" code="_1123_VERBOSE41412">
+    <ENUS>Help in table list verbose</ENUS>
+  </msg>
   <msg id=" 1124" code="_112414944">
     <ENUS>Help in button to form</ENUS>
   </msg>
   <msg id="Gauge" code="GAUGE40223">
     <ENUS>Gauge</ENUS>
+  </msg>
+  <msg id="  105" code="__10524173">
+    <ENUS>Name of the Perspective. According to the description of the Company or Institution as a set of Resources, Organized to serve certain Customers with a view to Value Creation Results.</ENUS>
   </msg>
   <msg id="Total Bonificações" code="TOTAL_BONIFICACOES13450">
     <ENUS>Total Bonificações</ENUS>
@@ -7984,6 +7951,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Type 1" code="TYPE_119298">
     <ENUS>Type 1</ENUS>
   </msg>
+  <msg id="Responsible for BSC" code="RESPONSIBLE_FOR_BSC33799">
+    <ENUS>Responsible for BSC</ENUS>
+  </msg>
   <msg id="  226" code="__22650687">
     <ENUS>Utilizador responsável pela iniciativa.</ENUS>
   </msg>
@@ -8106,6 +8076,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Cancel" code="CANCEL65428">
     <ENUS>Cancel</ENUS>
   </msg>
+  <msg id="Modal" code="MODAL19269">
+    <ENUS>Modal</ENUS>
+  </msg>
   <msg id="Limite Superado" code="LIMITE_SUPERADO31240">
     <ENUS>Limite Superado</ENUS>
   </msg>
@@ -8114,9 +8087,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Asset location" code="ASSET_LOCATION64080">
     <ENUS>Asset location</ENUS>
-  </msg>
-  <msg id="Marca Água" code="MARCA_AGUA18601">
-    <ENUS>Marca Água</ENUS>
   </msg>
   <msg id="Menus" code="MENUS09526">
     <ENUS>Menus</ENUS>
@@ -8154,9 +8124,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Property name" code="PROPERTY_NAME18934">
     <ENUS>Property name</ENUS>
   </msg>
-  <msg id="Feedback" code="FEEDBACK52855">
-    <ENUS>Feedback</ENUS>
-  </msg>
   <msg id="Groupbox" code="GROUPBOX00384">
     <ENUS>Groupbox</ENUS>
   </msg>
@@ -8177,6 +8144,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Has Checkin?" code="HAS_CHECKIN_57252">
   </msg>
+  <msg id="Qtd hours" code="QTD_HOURS28684">
+    <ENUS>Qtd hours</ENUS>
+  </msg>
   <msg id="Airplanes" code="AIRPLANES09747">
   </msg>
   <msg id="Patient" code="PATIENT10865">
@@ -8194,14 +8164,35 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="boolean (tinyint) (storage 1 byte)" code="BOOLEAN__TINYINT___S57956">
     <ENUS>boolean (tinyint) (storage 1 byte)</ENUS>
   </msg>
-  <msg id="Articles" code="ARTICLES59822">
-    <ENUS>Articles</ENUS>
-  </msg>
   <msg id="Articles [WAREH-&gt;WAREHDES]" code="ARTICLES__WAREH__WAR35760">
     <ENUS>Articles &#91;WAREH-&gt;WAREHDES&#93;</ENUS>
   </msg>
-  <msg id="Criado por" code="CRIADO_POR17895">
-    <ENUS>Criado por</ENUS>
+  <msg id="Configuração de homepage" code="CONFIGURACAO_DE_HOME06050">
+    <ENUS>Configuração de homepage</ENUS>
+  </msg>
+  <msg id="Tipo de segmento" code="TIPO_DE_SEGMENTO49650">
+    <ENUS>Tipo de segmento</ENUS>
+  </msg>
+  <msg id="This help is for a field of type numeric" code="THIS_HELP_IS_FOR_A_F63644">
+    <ENUS>This help is for a field of type numeric</ENUS>
+  </msg>
+  <msg id="Order (Float field)" code="ORDER__FLOAT_FIELD_21693">
+    <ENUS>Order (Float field)</ENUS>
+  </msg>
+  <msg id="Nif" code="NIF55908">
+    <ENUS>Nif</ENUS>
+  </msg>
+  <msg id="Where did the equipment go" code="WHERE_DID_THE_EQUIPM11916">
+    <ENUS>Where did the equipment go</ENUS>
+  </msg>
+  <msg id="Chave Estrangeira" code="CHAVE_ESTRANGEIRA25502">
+    <ENUS>Chave Estrangeira</ENUS>
+  </msg>
+  <msg id="Regions" code="REGIONS31874">
+    <ENUS>Regions</ENUS>
+  </msg>
+  <msg id="Rate" code="RATE50728">
+    <ENUS>Rate</ENUS>
   </msg>
   <msg id="Enumeration (Numeric)" code="ENUMERATION__NUMERIC44708">
     <ENUS>Enumeration (Numeric)</ENUS>
@@ -8237,6 +8228,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <ENUS>Goal type</ENUS>
   </msg>
   <msg id="Codigo" code="CODIGO30770">
+  </msg>
+  <msg id="Project completed" code="PROJECT_COMPLETED06496">
+    <ENUS>Project completed</ENUS>
   </msg>
   <msg id="Next - Previous =" code="NEXT___PREVIOUS__58212">
     <ENUS>Next - Previous =</ENUS>
@@ -8294,9 +8288,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Fecho da venda" code="FECHO_DA_VENDA48081">
     <ENUS>Fecho da venda</ENUS>
   </msg>
-  <msg id="Airline" code="AIRLINE57868">
-    <ENUS>Airline</ENUS>
-  </msg>
   <msg id="Automáticas" code="AUTOMATICAS54417">
     <ENUS>Automáticas</ENUS>
   </msg>
@@ -8335,6 +8326,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Objetivo Operacional Relevante" code="OBJETIVO_OPERACIONAL26547">
     <ENUS>Objetivo Operacional Relevante</ENUS>
+  </msg>
+  <msg id="% Limit Exceeded" code="__LIMIT_EXCEEDED24774">
+    <ENUS>% Limit Exceeded</ENUS>
   </msg>
   <msg id="Global Items" code="GLOBAL_ITEMS20388">
     <ENUS>Global Items</ENUS>
@@ -8417,30 +8411,11 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Objectivo (extenso)" code="OBJECTIVO__EXTENSO_30411">
     <ENUS>Objectivo (extenso)</ENUS>
   </msg>
+  <msg id="Estratégias" code="ESTRATEGIAS49201">
+    <ENUS>Estratégias</ENUS>
+  </msg>
   <msg id="Contact genres" code="CONTACT_GENRES29532">
     <ENUS>Contact genres</ENUS>
-  </msg>
-  <msg id="Minimum Map Color" code="MINIMUM_MAP_COLOR51094">
-    <ENUS>Minimum Map Color</ENUS>
-  </msg>
-  <msg id="Comodantes" code="COMODANTES42347">
-    <ENUS>Comodantes</ENUS>
-  </msg>
-  <msg id="Logical" code="LOGICAL47485">
-    <ENUS>Logical</ENUS>
-  </msg>
-  <msg id="  276" code="__27661657">
-    <ENUS>Periodicidade de recolha</ENUS>
-  </msg>
-  <msg id="Receipt" code="RECEIPT15218">
-    <ENUS>Receipt</ENUS>
-  </msg>
-  <msg id="Tipo de Actividade" code="TIPO_DE_ACTIVIDADE39047">
-    <ENUS>Tipo de Actividade</ENUS>
-  </msg>
-  <msg id="Property Name" code="PROPERTY_NAME01442">
-  </msg>
-  <msg id="&gt; PERSON" code="__PERSON25810">
   </msg>
   <msg id="Types  (Text)" code="TYPES___TEXT_11871">
     <ENUS>Types  (Text)</ENUS>
@@ -8521,6 +8496,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Estado do processo" code="ESTADO_DO_PROCESSO07540">
     <ENUS>Estado do processo</ENUS>
+  </msg>
+  <msg id="Ground Size" code="GROUND_SIZE62055">
+    <ENUS>Ground Size</ENUS>
   </msg>
   <msg id="Maximum Perc." code="MAXIMUM_PERC_21724">
     <ENUS>Maximum Perc.</ENUS>
@@ -8608,6 +8586,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Vehicle" code="VEHICLE49593">
     <ENUS>Vehicle</ENUS>
   </msg>
+  <msg id="Notification Message" code="NOTIFICATION_MESSAGE31108">
+    <ENUS>Notification Message</ENUS>
+  </msg>
   <msg id="Terminado" code="TERMINADO46276">
     <ENUS>Terminado</ENUS>
   </msg>
@@ -8621,6 +8602,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <ENUS>&#123;GQT_DEVOL_Count&#125; to be returned</ENUS>
   </msg>
   <msg id="third level group" code="THIRD_LEVEL_GROUP51382">
+  </msg>
+  <msg id="T2" code="T233813">
+    <ENUS>T2</ENUS>
   </msg>
   <msg id="Date of Birth" code="DATE_OF_BIRTH36542">
   </msg>
@@ -8675,6 +8659,22 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Falhou a validação do form sem apply" code="FALHOU_A_VALIDACAO_D60313">
     <ENUS>Falhou a validação do form sem apply</ENUS>
+  </msg>
+  <msg id="Obs" code="OBS42026">
+    <ENUS>Obs</ENUS>
+  </msg>
+  <msg id="Vision (Instances)" code="VISION__INSTANCES_57695">
+    <ENUS>Vision (Instances)</ENUS>
+  </msg>
+  <msg id="Airport To" code="AIRPORT_TO14602">
+  </msg>
+  <msg id="Conditions" code="CONDITIONS63260">
+    <ENUS>Conditions</ENUS>
+  </msg>
+  <msg id="Numeric ISO-3166" code="NUMERIC_ISO_316620341">
+  </msg>
+  <msg id="Numeric Enumeration" code="NUMERIC_ENUMERATION19068">
+    <ENUS>Numeric Enumeration</ENUS>
   </msg>
   <msg id="Facilities:" code="FACILITIES_23844">
     <ENUS>Facilities:</ENUS>
@@ -16524,9 +16524,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Add security key" code="ADD_SECURITY_KEY18935">
     <ENUS>Add security key</ENUS>
   </msg>
-  <msg id="Setup" code="SETUP44001">
-    <ENUS>Setup</ENUS>
-  </msg>
   <msg id="Security key" code="SECURITY_KEY47415">
     <ENUS>Security key</ENUS>
   </msg>
@@ -16535,6 +16532,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="order one at a supplier you trust" code="ORDER_ONE_AT_A_SUPPL48566">
     <ENUS>order one at a supplier you trust</ENUS>
+  </msg>
+  <msg id="Setup" code="SETUP44001">
+    <ENUS>Setup</ENUS>
   </msg>
   <msg id="A 2nd authentication method must be configured" code="A_2ND_AUTHENTICATION36972">
     <ENUS>A 2nd authentication method must be configured</ENUS>

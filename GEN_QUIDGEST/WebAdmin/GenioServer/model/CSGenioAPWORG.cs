@@ -102,8 +102,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("organ","organ");
 			info.Pathways.Add("psw","psw");
+			info.Pathways.Add("organ","organ");
 		}
 
 		/// <summary>

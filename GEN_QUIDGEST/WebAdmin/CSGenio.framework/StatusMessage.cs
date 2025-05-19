@@ -42,7 +42,8 @@ namespace CSGenio.framework
 		/// Método que permite fazer uma copia do objecto sem ser por referencia. Este método nao copia a stack.
 		/// </summary>
 		/// <param name="obj">objecto a copiar</param>
-		public void Clone(StatusMessage msg){
+		public void Clone(StatusMessage msg)
+		{
 			this.status = msg.Status;
 			this.mensagem = msg.Message;
 			this.origin = msg.Origin;
@@ -78,6 +79,21 @@ namespace CSGenio.framework
 		}
 
 		/// <summary>
+		/// True if there's an error among the status messages, false otherwise
+		/// </summary>
+		public bool HasError => this.ContainsStatus(Status.E);
+
+		/// <summary>
+		/// True if there's a warning among the status messages, false otherwise
+		/// </summary>
+		public bool HasWarning => this.ContainsStatus(Status.W);
+
+		/// <summary>
+		/// True if there's no errors or warnings among the status messages, false otherwise
+		/// </summary>
+		public bool IsOk => !HasError && !HasWarning;
+
+		/// <summary>
 		/// Status da resposta
 		/// </summary>
 		public Status Status
@@ -87,9 +103,9 @@ namespace CSGenio.framework
 				// Se tiver um E -> Erro
 				// Se foram todos W -> Warning
 				// Se só OK, então OK
-				if (this.ContainsStatus(Status.E))
+				if (HasError)
 					return Status.E;
-				else if (this.ContainsStatus(Status.W)) // Basta um "W" ou devem ser todos !?
+				else if (HasWarning) // Basta um "W" ou devem ser todos !?
 					return Status.W;
 				return this.status;
 			}
@@ -213,6 +229,7 @@ namespace CSGenio.framework
 		}
 
 		#region Static functions
+
 		public static StatusMessage GetAggregator()
 		{
 			return new StatusMessage();
@@ -229,6 +246,7 @@ namespace CSGenio.framework
 		{
 			return new StatusMessage(Status.W, msg ?? "Warning", origin);
 		}
+
 		#endregion
 	}
 }

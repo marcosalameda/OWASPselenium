@@ -139,22 +139,22 @@ app.mixin({
 	},
 	methods: {
 		setYears(years, defaultYear) {
-			var vm = this,
-			_years = years || [];
-			vm.Years = [];
+			const _years = years || []
+			this.Years = []
 			$.each(_years, function (i, y) {
-				vm.Years.push({ Text: y, Value: y});
-			});
-			vm.DefaultYear = defaultYear;
-			if ($.isEmptyObject(vm.currentYear) || !$.isArray(vm.currentYear, _years)) { vm.currentYear = vm.DefaultYear; }
+				this.Years.push({ Text: y, Value: y })
+			})
+			this.DefaultYear = defaultYear
+			if ($.isEmptyObject(this.currentYear) || !$.isArray(this.currentYear, _years)) {
+				this.currentYear = this.DefaultYear
+			}
 
-			vm.isMultiYearApp = vm.Years.length > 1
+			this.isMultiYearApp = this.Years.length > 1
 		},
 		_changeRouteData(culture, system) {
-			var vm = this,
-				route = vm.$route,
-				rName = route.name,
-				rParams = Object.assign({}, route.params)
+			const route = this.$route
+			const rName = route.name
+			const rParams = Object.assign({}, route.params)
 
 			if (rParams.culture === culture && rParams.system === system) return
 			if ($.isEmptyObject(rName) || rName === 'main' || rName === 'main_params') return
@@ -162,7 +162,7 @@ app.mixin({
 			rParams.culture = culture
 			rParams.system = system
 
-			vm.$router.replace(
+			this.$router.replace(
 				{ name: rName, params: rParams },
 				() => {},
 				() => {}

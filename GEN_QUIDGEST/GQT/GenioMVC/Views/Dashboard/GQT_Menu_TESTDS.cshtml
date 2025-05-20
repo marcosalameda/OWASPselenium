@@ -1,0 +1,33 @@
+﻿@model GenioMVC.ViewModels.Dashboard.GQT_Menu_TESTDS_ViewModel
+@{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
+@{ ViewBag.Title = Model.DashboardTitle; }
+    
+@using (Ajax.BeginForm("GQT_Menu_TESTDS", "Dashboard", new AjaxOptions
+{
+    HttpMethod = "POST",
+    InsertionMode = InsertionMode.Replace,
+    UpdateTargetId = "Menu"
+}, new { @class = "form-horizontal", area = "Dashboard", data_form = "GQT_Menu_TESTDS" }))
+{
+    <div id="Menu">
+        @{ Html.RenderPartial("Template/Dashboard"); }
+    </div>
+    @Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "GQT_Menu_TESTDS" })
+    @Html.Hidden("CurrentNavigationId", Model.Navigation.NavigationId, new { data_interface_id = "GQT_Menu_TESTDS" })
+    @Html.Hidden("NavigationFormHistLock", Model.Navigation.FormHistLock(), new { data_interface_id = "GQT_Menu_TESTDS" })
+    @Html.AntiForgeryToken()
+}
+
+@helper codeJavascript()
+{
+    <script>
+        QLocalStorage.remLocalStorage("savedInfo");
+    </script>
+}
+
+
+@section code_javascript {
+    @codeJavascript()
+}
+
+

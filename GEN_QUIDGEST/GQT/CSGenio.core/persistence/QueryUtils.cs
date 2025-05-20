@@ -524,7 +524,7 @@ namespace CSGenio.persistence
             {
                 if (string.IsNullOrEmpty(Convert.ToString(value)))
                     return DBNull.Value;
-                return GeographicData.GetPointFromText(Convert.ToString(value));
+                return Convert.ToString(value);
             }
             if (type == FieldType.GEOGRAPHY_SHAPE || type == FieldType.GEOMETRY_SHAPE)
             {

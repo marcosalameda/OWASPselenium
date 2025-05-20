@@ -579,6 +579,9 @@ namespace CSGenio.business
 			int offset = 0;
 			int numberOfRecords = -1;
 			List<ColumnSort> sorts = null;
+			
+			if (GenFunctions.emptyG(codtpequ) == 1)
+				return StatusMessage.Error();
 
 			FieldRef[] fields = new FieldRef[]
 			{

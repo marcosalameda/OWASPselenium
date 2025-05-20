@@ -39,6 +39,7 @@ namespace GenioMVC.ViewModels
  			alerts.AddRange(GenAlert_NCARDSDANGER(sp, user));
  			alerts.AddRange(GenAlert_NCARDSWARNING(sp, user));
  			alerts.AddRange(GenAlert_NCARDSINFO(sp, user));
+ 			alerts.AddRange(GenAlert_NOTUSEDITEMS(sp, user));
  			alerts.AddRange(GenAlert_DEVOLUCAO(sp, user));
  			alerts.AddRange(GenAlert_NCARDSSUCESS(sp, user));
 			sp.closeConnection();
@@ -290,6 +291,100 @@ namespace GenioMVC.ViewModels
 			}
 
 			return Alert_NCARDSINFO;
+		}
+
+ 		public List<Models.Navigation.Alert> GenAlert_NOTUSEDITEMS(PersistentSupport sp, User user)
+		{
+			List<Models.Navigation.Alert> Alert_NOTUSEDITEMS = new List<Models.Navigation.Alert>();
+			List<Models.Navigation.Alert> Alert_EMPTY = new List<Models.Navigation.Alert>();
+
+			string alertTitle = CSGenio.framework.Translations.GetByCode("_GQT_UNUSED_ITEMS_CO34020", user.Language);
+			string alertText = CSGenio.framework.Translations.GetByCode("_GQT_UNUSED_ITEMS_CO35460", user.Language);
+			int dismissible = 1;
+			int disableIfLowerThan = 0;
+			int alertType = 0;
+			string idalert = "NOTUSEDITEMS";
+
+			//inits
+			string alertModule = string.Empty;
+			double alertTagValue = 0;
+			string action = string.Empty;
+			string controller = string.Empty;
+			object additionalRouteValues = null;
+
+			Role alertRole = Role.UNAUTHORIZED;
+
+			if (!user.VerifyAccess(alertRole))
+				return Alert_EMPTY;
+
+			// Tag processing
+			{ //{GQT_UNUSED_ITEMS_Count}
+				// Count menu records
+				ViewModels.Item.GQT_Menu_UNUSED_ITEMS_ViewModel vm = new ViewModels.Item.GQT_Menu_UNUSED_ITEMS_ViewModel(Navigation);
+				vm.Identifier = "ALERT_NOTUSEDITEMS";
+				float tagValue = vm.GetCount(user);
+
+				// Replace the tag with the value
+				alertTitle = alertTitle.Replace("{GQT_UNUSED_ITEMS_Count}", tagValue.ToString("F0"));
+				alertText = alertText.Replace("{GQT_UNUSED_ITEMS_Count}", tagValue.ToString("F0"));
+
+				// (tag matches alert main tag) - this tag was selected to override alert defaults
+				alertTagValue = tagValue;
+
+				// URL link request from current alert menu
+				string oldCurrentModule = user.CurrentModule;
+				user.CurrentModule = "GQT"; //simulates user entry
+				action = "GQT_Menu_UNUSED_ITEMS";
+				controller = "ITEM";
+
+				CSGenio.framework.StatusMessage result = vm.CheckPermissions(FormMode.List);
+				user.CurrentModule = oldCurrentModule;
+
+				if (result.Status.Equals(CSGenio.framework.Status.E))
+					return Alert_EMPTY;
+
+				//Alert level is defined by thresholds of this Tag
+				float lvl0Threshhold = 5;
+				float lvl1Threshhold = 10;
+				float lvl2Threshhold = 15;
+				float lvl3Threshhold = 20;
+
+				if (alertTagValue >= lvl0Threshhold)
+					alertType = 0;
+				if (alertTagValue >= lvl1Threshhold)
+					alertType = 1;
+				if (alertTagValue >= lvl2Threshhold)
+					alertType = 2;
+				if (alertTagValue >= lvl3Threshhold)
+					alertType = 3;
+
+				System.Web.Mvc.UrlHelper urlHelper
+					= new System.Web.Mvc.UrlHelper(HttpContext.Current.Request.RequestContext);
+
+				//JGF 2022.04.21 Should always redirect to the target module, or the EPH won't be correctly applied
+				additionalRouteValues = new { module = "GQT"};
+				Models.Navigation.Alert alert = new Models.Navigation.Alert()
+				{
+					Count = tagValue,
+					Content = alertText,
+					Dismissible = dismissible,
+					Idalert = idalert,
+					Module = alertModule,
+					Title = alertTitle,
+					Type = Enum.GetName(typeof(AlertType), alertType),
+					Action = action,
+					Controller = controller,
+					Target = new AlertClickTarget() { Type = "menu", Name = "GQT_UNUSED_ITEMS" },
+					AdditionalRouteValues = additionalRouteValues,
+					DisableIfLowerThan = disableIfLowerThan,
+					URL = urlHelper.Action(action, controller, additionalRouteValues)
+				};
+				Alert_NOTUSEDITEMS.Add(alert);
+
+
+			}
+
+			return Alert_NOTUSEDITEMS;
 		}
 
  		public List<Models.Navigation.Alert> GenAlert_DEVOLUCAO(PersistentSupport sp, User user)

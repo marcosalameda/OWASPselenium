@@ -118,13 +118,13 @@
 {
 	<text>
 	@*Hidden Foreign Keys Controls*@
-			this.Controls.LED_FULLCALETPEQUCODTPEQU = new QHiddenControl($('[data-identifier="LED_FULLCALETPEQUCODTPEQU"]', this.element), window.Form_Fullcale);
 			this.Controls.LED_FULLCALEROOM1CODROOMS = new QHiddenControl($('[data-identifier="LED_FULLCALEROOM1CODROOMS"]', this.element), window.Form_Fullcale);
 			this.Controls.LED_FULLCALEDECOMCODDECO_ = new QHiddenControl($('[data-identifier="LED_FULLCALEDECOMCODDECO_"]', this.element), window.Form_Fullcale);
-			this.Controls.LED_FULLCALEPESS1CODPESSO = new QHiddenControl($('[data-identifier="LED_FULLCALEPESS1CODPESSO"]', this.element), window.Form_Fullcale);
 			this.Controls.LED_FULLCALECMPNYCODEMPRE = new QHiddenControl($('[data-identifier="LED_FULLCALECMPNYCODEMPRE"]', this.element), window.Form_Fullcale);
 			this.Controls.LED_FULLCALEWAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_FULLCALEWAREHCODWAREH"]', this.element), window.Form_Fullcale);
 			this.Controls.LED_FULLCALEITEM_CODITEM_ = new QHiddenControl($('[data-identifier="LED_FULLCALEITEM_CODITEM_"]', this.element), window.Form_Fullcale);
+			this.Controls.LED_FULLCALEPESS1CODPESSO = new QHiddenControl($('[data-identifier="LED_FULLCALEPESS1CODPESSO"]', this.element), window.Form_Fullcale);
+			this.Controls.LED_FULLCALETPEQUCODTPEQU = new QHiddenControl($('[data-identifier="LED_FULLCALETPEQUCODTPEQU"]', this.element), window.Form_Fullcale);
 	</text>
 }
 			this.Controls.LED_FULLCALEEQUIPCODEQUIP = new QHiddenControl($('[data-identifier="LED_FULLCALEEQUIPCODEQUIP"]', this.element), window.Form_Fullcale);
@@ -196,13 +196,13 @@
 @{
 	<text>
 		window.Form_Fullcale.Data.RelationKeysSelector = {
-				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ', $('[data-form="Fullcale"]')); /* Hidden */ },
 				get room1() { return $(':not([elem-identifier="Multiform"]) > #ValCodrooms', $('[data-form="Fullcale"]')); /* Hidden */ },
 				get decom() { return $(':not([elem-identifier="Multiform"]) > #ValCoddeco', $('[data-form="Fullcale"]')); /* Hidden */ },
-				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1', $('[data-form="Fullcale"]')); /* Hidden */ },
 				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre', $('[data-form="Fullcale"]')); /* Hidden */ },
 				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh', $('[data-form="Fullcale"]')); /* Hidden */ },
 				get item() { return $(':not([elem-identifier="Multiform"]) > #ValCoditem', $('[data-form="Fullcale"]')); /* Hidden */ },
+				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1', $('[data-form="Fullcale"]')); /* Hidden */ },
+				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ', $('[data-form="Fullcale"]')); /* Hidden */ },
 		};
 
 		window.Form_Fullcale.getAllForeignKeySelectors = function () {
@@ -212,20 +212,20 @@
 
 		window.Form_Fullcale.Data.RelationKeys = {
 			get formContext() { return window.Form_Fullcale; },
-			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* Hidden FK */ },
-			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get room1() { return (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value; /* Hidden FK */ },
 			set room1(newValue) { (this.formContext.Data.RelationKeysSelector.room1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get decom() { return (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value; /* Hidden FK */ },
 			set decom(newValue) { (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value = newValue; /* Hidden FK */ },
-			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* Hidden FK */ },
-			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* Hidden FK */ },
 			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get wareh() { return (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value; /* Hidden FK */ },
 			set wareh(newValue) { (this.formContext.Data.RelationKeysSelector.wareh.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get item() { return (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value; /* Hidden FK */ },
 			set item(newValue) { (this.formContext.Data.RelationKeysSelector.item.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* Hidden FK */ },
+			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* Hidden FK */ },
+			set tpequ(newValue) { (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 		};
 	</text>
 }

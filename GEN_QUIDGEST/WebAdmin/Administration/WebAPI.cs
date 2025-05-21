@@ -30,7 +30,7 @@ namespace Administration
         public static readonly string LANGUAGE = "LANGUAGE";
         public static readonly string ZEROTRUE = "ZEROTRUE";
 		public static readonly string FILESTREAM = "FILESTREAM";
-        public static readonly string NOCONNECTION = NOCONNECTION;
+        public static readonly string NOCONNECTION = "NOCONNECTION";
     }
 
     public class WebAPI(IConfigurationManager configManager) : IAdminService

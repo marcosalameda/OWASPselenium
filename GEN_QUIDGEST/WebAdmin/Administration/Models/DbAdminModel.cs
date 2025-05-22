@@ -153,8 +153,6 @@ namespace Administration.Models
         //model number
         public int Num { get; set; }
 
-        public int NumTableCols { get; set; }
-
         public int OrderCol { get; set; }
 
         public string ProgressMessage { get; set; }
@@ -221,10 +219,6 @@ namespace Administration.Models
         //whether the use views checkbox is selected or not
         [Display(Name = "Considerar chaves a NULL")]
         public bool NullsIsChecked { get; set; }
-
-        public Dictionary<HardCodedLists.RelationsMode, string> RelationModeImageSource { get; set; }
-
-        public int NumTableCols { get; set; }
     }
 
     public class UnusedIndexItem

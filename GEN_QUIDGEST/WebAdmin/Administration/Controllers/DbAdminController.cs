@@ -39,7 +39,6 @@ namespace Administration.Controllers
                 new IndexModel()
                 {
                     Num = 0,
-                    NumTableCols = 9, //10 colunas (0 a 7)
                     OrderCol = 0, // coluna de ordenação
                     Active = false,
                     ProgressMessage ="",
@@ -53,7 +52,6 @@ namespace Administration.Controllers
                 new IndexModel()
                 {
                     Num = 1,
-                    NumTableCols = 10, //8 colunas (0 a 6)
                     OrderCol = 0, // coluna de ordenação
                     Active = false,
                     ProgressMessage ="",
@@ -76,29 +74,21 @@ namespace Administration.Controllers
                 new IncoherencyModel()
                 {
                     Num = 0,
-                    NumTableCols = 7, //8 colunas (0 a 7)
-            Active = false,
-            ProgressMessage = "",
-            ProgressPercent = 0,
-            Completed = true,
-            LastUpdate = DateTime.MinValue,
+                    Active = false,
+                    ProgressMessage = "",
+                    ProgressPercent = 0,
+                    Completed = true,
+                    LastUpdate = DateTime.MinValue,
                     IncoherentRelations = new List<IncoherentRelationItem>(),
                     IncoherenceType = "IncoherentRelation",
                     IncoherenceTitle = "INCOERENCIA_DE_RELAC38138",
                     RelationMode=HardCodedLists.RelationsMode.AMBAS,
                     ViewsIsChecked = false,
-                    NullsIsChecked = true,
-                    RelationModeImageSource = new Dictionary<HardCodedLists.RelationsMode, string>(){
-                        { HardCodedLists.RelationsMode.DIRETAS, "/Images/rel_inc_d.gif" },
-                        { HardCodedLists.RelationsMode.INDIRETAS, "/Images/rel_inc_i.gif" },
-                        { HardCodedLists.RelationsMode.AMBAS, "/Images/rel_inc_2.gif"}
-                    }
-
+                    NullsIsChecked = true
                 },
                 new IncoherencyModel()
                 {
                     Num = 1,
-                    NumTableCols = 4, // 5 colunas (0 a 4)
                     Active = false,
                     ProgressMessage = "",
                     ProgressPercent = 0,
@@ -108,10 +98,7 @@ namespace Administration.Controllers
                     OrphanRelations = new List<OrphanRelation>(),
                     IncoherenceType = "OrphanRelation",
                     IncoherenceTitle = "REGISTOS_ORFAOS26691",
-                    ViewsIsChecked = false,
-                    RelationModeImageSource = new Dictionary<HardCodedLists.RelationsMode, string>(){
-                        { HardCodedLists.RelationsMode.DIRETAS, "/Images/rel_inc_o.gif" }
-                    }
+                    ViewsIsChecked = false
                 }
             }
         };

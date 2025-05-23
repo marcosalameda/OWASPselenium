@@ -55,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 4057;
+        public static int Version { get; } = 4076;
 
         /// <summary>
         /// System id
@@ -85,12 +85,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 4057;
+        public const int VersionDbGen = 4076;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1727;
+        public const int VersionIdxDbGen = 1746;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -110,7 +110,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2931;
+        public const int BuildVersionGen = 2930;
         /// <summary>
         /// Solution release version
         /// </summary>

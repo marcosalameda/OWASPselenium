@@ -19,6 +19,7 @@ public class PessosepForm: PageObject {
 	public BaseInputControl LED_PESSOSEPPESSOEXTERNA_ => new BaseInputControl(driver, "[data-identifier='LED_PESSOSEPPESSOEXTERNA_']");
 	public LookupControl IFF_PESSOSEPCATEGCATEGORY => new LookupControl(driver, "CONTAINER_IFF_PESSOSEPCATEGCATEGORY", "ValCodcateg_chzn");
 	public BaseInputControl LED_PESSOSEPPESSODTULTCAT => new BaseInputControl(driver, "[data-identifier='LED_PESSOSEPPESSODTULTCAT']");
+	public BaseInputControl LED_PESSOSEPPESSOCURRICUL => new BaseInputControl(driver, "[data-identifier='LED_PESSOSEPPESSOCURRICUL']");
 	public BaseInputControl IFF_PESSOSEPPSEUDOBRIGATO => new BaseInputControl(driver, "[data-identifier='IFF_PESSOSEPPSEUDOBRIGATO']");
 	public BaseInputControl IFF_PESSOSEPPSEUDPESSOS00 => new BaseInputControl(driver, "[data-identifier='IFF_PESSOSEPPSEUDPESSOS00']");
 	public BaseInputControl IFF_PESSOSEPPSEUDPESSOS01 => new BaseInputControl(driver, "[data-identifier='IFF_PESSOSEPPSEUDPESSOS01']");

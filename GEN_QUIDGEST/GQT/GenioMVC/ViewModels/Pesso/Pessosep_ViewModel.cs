@@ -82,6 +82,14 @@ namespace GenioMVC.ViewModels.Pesso
 		[DateAttribute("D")]
 		public DateTime? ValDtultcat { get; set; }
 
+		/// <summary>Campo : "Curriculum" Tipo:"IB"</summary>
+		[Display(Name = "CURRICULUM51182", ResourceType = typeof(Resources.Resources))]
+		[UIHint("DBDocument")]
+		[Document("ValCurricul", false, false, false, false, DocumentViewTypeMode.Preview)]
+		public string ValCurricul { get; set; }
+		public string ValCurriculfk { get; set; }
+		public DocumsProperties_ViewModel ValCurriculPropertiesVM { get; set; }
+
 
 		/// <summary>Campo : "Designation" Tipo:"C"</summary>
 		[Display(Name = "DESIGNATION35876", ResourceType = typeof(Resources.Resources))]
@@ -259,6 +267,8 @@ namespace GenioMVC.ViewModels.Pesso
 				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
 				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
 				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
+				ValCurricul = ViewModelConversion.ToString(m.ValCurricul);
+				ValCurriculfk = ViewModelConversion.ToString(m.ValCurriculfk);
 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
@@ -293,6 +303,9 @@ namespace GenioMVC.ViewModels.Pesso
 				m.ValInterna = ViewModelConversion.ToLogic(ValInterna);
 				m.ValExterna = ViewModelConversion.ToLogic(ValExterna);
 				m.ValDtultcat = ViewModelConversion.ToDateTime(ValDtultcat);
+				m.ValCurricul = ViewModelConversion.ToString(ValCurricul);
+				m.ValCurriculfk = ViewModelConversion.ToString(ValCurriculfk);
+
 				m.ValTelephon = ViewModelConversion.ToString(ValTelephon);
 				m.ValEmail = ViewModelConversion.ToString(ValEmail);
 				m.ValCodcateg = ViewModelConversion.ToString(ValCodcateg);
@@ -364,6 +377,14 @@ namespace GenioMVC.ViewModels.Pesso
 
 		protected override void LoadDocumentsProperties(Models.Pesso row)
 		{
+			try
+			{
+				ValCurriculPropertiesVM = row.GetInfoDoc("ValCurricul");
+			}
+			catch (Exception)
+			{
+				ValCurriculPropertiesVM = DocumsProperties_ViewModel.EmptyDocum();
+			}
 		}
 
 		/// <summary>

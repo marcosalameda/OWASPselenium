@@ -244,6 +244,13 @@ namespace GenioMVC.Models
 		public bool ValCanexpor { get { return Convert.ToBoolean(klass.ValCanexpor); } set { klass.ValCanexpor = Convert.ToInt32(value); } }
 		public bool ShouldSerializeValCanexpor() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pess2.ValCanexpor");
 
+		[DisplayName("Resume")]
+		/// <summary>Field : "Curriculum" Tipo: "IB" Formula:  ""</summary>
+		[Document("ValCurricul", false, true, false, false)]
+		public string ValCurricul { get { return klass.ValCurricul; } set { klass.ValCurricul = value; } }
+		public string ValCurriculfk { get { return klass.ValCurriculfk; } set { klass.ValCurriculfk = value; } }
+		public bool ShouldSerializeValCurricul() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Pess2.ValCurricul");
+
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }

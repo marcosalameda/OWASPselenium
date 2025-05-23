@@ -13,7 +13,7 @@
 @if (!Model.NestedForm) {
     if(Model.IsEditableMode || Model.FormMode == FormMode.Delete)
     {
-        using (Html.BeginForm("Action", "Pesso", FormMethod.Post, new { @class = "form-horizontal", area="Pesso", data_form="Pessosep" }))
+        using (Html.BeginForm("Action", "Pesso", FormMethod.Post, new { enctype="multipart/form-data", @class = "form-horizontal", area="Pesso", data_form="Pessosep" }))
         {
             @form_content_alert()
             @Html.QValidationSummary()
@@ -38,7 +38,7 @@ else {
 			<div class="row">
 				<div class="col-12">
 					<div class="control-row-group">
-						<div class="row-line-group">
+						<div class="control-join-group">
                             <div class="c-groupbox " id="GROUPBOX_PESSOSEP_NOVOGR02">
 
                                 <div class="c-groupbox__title" elem-identifier="GroupZone"  help-id="IFF_PESSOSEPPSEUDNOVOGR02" 
@@ -56,7 +56,7 @@ else {
 													@Html.LabelFor(model => model.ValIdfuncio, new { label_id="LED_PESSOSEPPESSOIDFUNCIO", @class = " i-text__label", id="LABEL_LED_PESSOSEPPESSOIDFUNCIO"}, true, true)
 													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 													<a href="javascript:OpenSuggestion('LED_PESSOSEPPESSOIDFUNCIO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-													@Html.NumberFor(model => model.ValIdfuncio, new {help_id = "LED_PESSOSEPPESSOIDFUNCIO", @class = "Number text-right i-text__field i-text input-small", data_sequencial = "M1", data_identifier = "LED_PESSOSEPPESSOIDFUNCIO", @pers_cs_area = "Pesso", @pers_cs_field = "ValIdfuncio", @db_field = "ValIdfuncio", title = @Resources.EMPLOYEE_NO_01176, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+													@Html.NumberFor(model => model.ValIdfuncio, new {help_id = "LED_PESSOSEPPESSOIDFUNCIO", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_PESSOSEPPESSOIDFUNCIO", @pers_cs_area = "Pesso", @pers_cs_field = "ValIdfuncio", @db_field = "ValIdfuncio", title = @Resources.EMPLOYEE_NO_01176, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
 													@Html.ValidationMessageFor(model => model.ValIdfuncio)
 													</div>
 												<div class="i-text draggable " id="CONTAINER_LED_PESSOSEPPESSONAME____">
@@ -99,7 +99,7 @@ else {
 													@Html.ValidationMessageFor(model => model.ValInterna)
 													</div>
 												<div class="i-checkbox draggable " id="CONTAINER_LED_PESSOSEPPESSOEXTERNA_">
-													@Html.CheckBoxFor(model => model.ValExterna, new {help_id = "LED_PESSOSEPPESSOEXTERNA_", @class = "i-checkbox__field i-checkbox input-small", data_identifier = "LED_PESSOSEPPESSOEXTERNA_", @pers_cs_area = "Pesso", @pers_cs_field = "ValExterna", @db_field = "ValExterna", title = @Resources.EXTERNAL13375 }, @Model.IsEditableMode, false)
+													@Html.CheckBoxFor(model => model.ValExterna, new {help_id = "LED_PESSOSEPPESSOEXTERNA_", @class = "i-checkbox__field i-checkbox input-mini", data_identifier = "LED_PESSOSEPPESSOEXTERNA_", @pers_cs_area = "Pesso", @pers_cs_field = "ValExterna", @db_field = "ValExterna", title = @Resources.EXTERNAL13375 }, @Model.IsEditableMode, false)
 													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 													@Html.ValidationMessageFor(model => model.ValExterna)
 													</div>
@@ -133,15 +133,29 @@ else {
 											</div>
 										</div>
 									</div>
+									<div class="row">
+										<div class="col-12">
+											<div class="control-row-group">
+												<div class="control-join-group">
+												<div class="i-document draggable " id="CONTAINER_LED_PESSOSEPPESSOCURRICUL">
+													<div class="d-flex">
+													@Html.LabelFor(model => model.ValCurricul, new { label_id="LED_PESSOSEPPESSOCURRICUL", @class = " i-text__label", id="LABEL_LED_PESSOSEPPESSOCURRICUL"}, true, false)
+													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+													<a href="javascript:OpenSuggestion('LED_PESSOSEPPESSOCURRICUL','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+													@if (Model.IsEditableMode) {
+														@Html.EditorFor(model => model.ValCurricul, new { fieldFk = Model.ValCurriculfk, docProperties = Model.ValCurriculPropertiesVM, baseArea = "Pesso", baseAreaKey = Model.ValCodpesso, useTemplates =  false, data_identifier="LED_PESSOSEPPESSOCURRICUL", identifier = "FPESSOSEP", fieldSize = "input-xxlarge", isRequired = false, maxSize = "10485760", allowedTypes = "null", htmlAttributes = new {help_id = "LED_PESSOSEPPESSOCURRICUL", title = @Resources.CURRICULUM51182 }})
+													} else {
+														@Html.DisplayFor(model => model.ValCurricul, new { fieldFk = Model.ValCurriculfk, docProperties = Model.ValCurriculPropertiesVM, baseArea = "Pesso", baseAreaKey = Model.ValCodpesso, useTemplates =  false, data_identifier="LED_PESSOSEPPESSOCURRICUL", identifier = "FPESSOSEP", fieldSize = "input-xxlarge", htmlAttributes = new {help_id = "LED_PESSOSEPPESSOCURRICUL", title = @Resources.CURRICULUM51182 }})
+													}
+													@Html.ValidationMessageFor(model => model.ValCurricul)
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
                                 </div>
                             </div>
  						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-12">
-					<div class="control-row-group">
 						<div class="control-join-group">
 						<div class="i-static-text draggable " id="CONTAINER_IFF_PESSOSEPPSEUDOBRIGATO">
 									<div id="ValObrigato">@Html.Raw(@Resources.AT_REQUIRED65277)</div>

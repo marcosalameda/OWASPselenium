@@ -312,6 +312,53 @@ namespace GenioMVC.Controllers
 
         #region  Documents
 
+		[AuthorizeForUsers]
+        public new ActionResult GetDocumsVersionsDBEdit(string ticket, bool isRequired = false)
+        {
+            return base.GetDocumsVersionsDBEdit(ticket, isRequired);
+        }
+
+		[AuthorizeForUsers]
+        public new ActionResult GetFileProperties(string ticket, string identifier = null)
+        {
+            return base.GetFileProperties(ticket, identifier);
+        }
+
+		[AuthorizeForUsers]
+        public new ActionResult SubmitVersion(string ticket, string fieldSize = "", string dataIdentifier = "", bool isRequired = false, int? maxFileSize = null, string allowedTypes = null)
+        {
+            return base.SubmitVersion(ticket, fieldSize, dataIdentifier, isRequired, maxFileSize, allowedTypes);
+        }
+
+		[AuthorizeForUsers]
+        public new ActionResult CheckoutDocum(string ticket, bool usesTemplates, string fieldSize = "", string dataIdentifier = "", bool isRequired = false, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print, int? maxFileSize = null, string allowedTypes = null)
+        {
+            return base.CheckoutDocum(ticket, usesTemplates, fieldSize, dataIdentifier, isRequired, viewType, maxFileSize, allowedTypes);
+        }
+
+		[AuthorizeForUsers]
+        public new ActionResult DeleteFile(string ticket, bool usesTemplates, ControllerBase.VersionDeleteAction action = VersionDeleteAction.All, string fieldSize = "", string dataIdentifier = "", bool isRequired = false, int? maxFileSize = null, string allowedTypes = null)
+        {
+            return base.DeleteFile(ticket, usesTemplates, action, fieldSize, dataIdentifier, isRequired, maxFileSize, allowedTypes);
+        }
+
+		[AuthorizeForUsers]
+        public new ActionResult SetFile(string ticket, bool usesTemplates, ControllerBase.VersionSubmitAction mode = VersionSubmitAction.Insert, string version = "1", string fieldSize = "", string dataIdentifier = "", bool isRequired = false, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print, int? maxFileSize = null, string allowedTypes = null)
+        {
+            return base.SetFile(ticket, usesTemplates, mode, version, fieldSize, dataIdentifier, isRequired, viewType, maxFileSize, allowedTypes);
+        }
+
+		[AuthorizeForUsers]
+        public new ActionResult GetFile(string ticket, string identifier = null, DocumentViewTypeMode viewType = DocumentViewTypeMode.Print)
+        {
+            return base.GetFile(ticket, identifier, viewType);
+        }
+
+		[AuthorizeForUsers]
+        public new ActionResult GetSpecificFile(string ticket)
+        {
+            return base.GetSpecificFile(ticket);
+        }
 
         #endregion
     }

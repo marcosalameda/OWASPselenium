@@ -255,7 +255,7 @@ namespace GenioMVC.ViewModels
                     {
                         string maxLimValue = limit.AreaLimita.Fields[
                             limit.AreaLimita.Alias + "." + "maxLim"
-                        ].ToString();
+                        ].Value.ToString();
 
                         limitDisplayData.ValueMax = GenioMVC.Models.AuditModel.GetHumanValue(
                             sp,

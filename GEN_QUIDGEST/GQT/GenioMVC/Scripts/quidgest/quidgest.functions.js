@@ -873,7 +873,7 @@ qapi.prototype.DateGetMonth = function (date)
 {
 	if (!(date instanceof Date))
 		return 0;
-	return date.getUTCMonth();
+	return date.getUTCMonth() + 1;
 }
 
 qapi.prototype.DateGetDay = function (date)

@@ -362,7 +362,7 @@ namespace CSGenio.framework
     public static class QResources
     {
 		private static ConcurrentDictionary<string, Type> ResourceTypes { get; set; } = new ConcurrentDictionary<string, Type>();
-		
+
         // a key e o vector de inicialização que são re-gerados sempre que o application pool arranca
         // o que implica que os tickets gerados anteriormente ficam inválidos to leitura
 
@@ -402,10 +402,10 @@ namespace CSGenio.framework
         /// </summary>
         /// <param name="localizacao">Localização, serve to validação</param>
         /// <param name="recurso">Resource em si</param>
+        /// <param name="allowWrite">Whether write operations to the DB are allowed when using this ticket</param>
         /// <returns>string em base 64 com a representação dos objectos serializados e cifrados</returns>
-        public static string CreateTicketEncryptedBase64(string username, string location, Resource resource)
+        public static string CreateTicketEncryptedBase64(string username, string location, Resource resource, bool allowWrite = true)
         {
-            //byte[] objsByteArray = SerializationFunctions.SerializeObjectsToByteArray(username, location, resource);
             byte[] objsByteArray;
             using (var stream = new MemoryStream())
             using (var writer = new BinaryWriter(stream, Encoding.UTF8))
@@ -415,6 +415,7 @@ namespace CSGenio.framework
                 Type type = resource.GetType();
 				writer.Write(type.FullName);
 				writer.Write(type.Assembly.GetName().Name);
+                writer.Write(allowWrite);
                 resource.ToBinaryStream(writer);
                 objsByteArray = stream.ToArray();
             }
@@ -440,7 +441,7 @@ namespace CSGenio.framework
             // propriedades da classe to garantir que foram inicializados
             byte[] ticketClean = CryptographicFunctions.DecryptData(QResources.Key, QResources.IV, ticket);
 
-            object[] objs = new object[3];
+            object[] objs = new object[4];
             using (var stream = new MemoryStream(ticketClean))
             using (var reader = new BinaryReader(stream, Encoding.UTF8))
             {
@@ -462,14 +463,15 @@ namespace CSGenio.framework
                     });
                 }
 
-                //Invoke the constructor using the BinaryReader parameter
-                objs[2] = type.GetConstructor(new Type[] { typeof(BinaryReader) }).Invoke(new object[] { reader });
+                objs[3] = reader.ReadBoolean(); // Are writes allowed?
+                // Invoke the constructor using the BinaryReader parameter
+                objs[2] = type.GetConstructor([typeof(BinaryReader)]).Invoke([reader]);
             }
 
             return objs;
         }
     }
-	
+
 	public static class QResourcesSign
     {
         // a key e o vector de inicialização que são re-gerados sempre que o application pool arranca

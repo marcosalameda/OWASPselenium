@@ -2513,19 +2513,26 @@ namespace CSGenio.business
             List<FieldRef> fieldsToUpdate = new List<FieldRef>();
 
             // SR
-            area.RelatedSumArgs?.ForEach(rel =>
-                fieldsToUpdate.Add(new FieldRef(rel.AliasSR, rel.SRField))
-            );
+            area.RelatedSumArgs?
+                .Where(rel => rel.AliasSR == this.Alias)
+                .ToList()
+                .ForEach(rel => fieldsToUpdate.Add(new FieldRef(rel.AliasSR, rel.SRField)));
 
             //UV
-            area.LastValueArgs?.ForEach(rel =>
-            {
-                foreach (var field in rel.LVRFields)
-                    fieldsToUpdate.Add(new FieldRef(rel.AliasRUV, field));
-            });
+            area.LastValueArgs?
+                .Where(rel => rel.AliasRUV == this.Alias)
+                .ToList()
+                .ForEach(rel =>
+                {
+                    foreach (var field in rel.LVRFields)
+                        fieldsToUpdate.Add(new FieldRef(rel.AliasRUV, field));
+                });
 
             // List Aggregate
-            area.ArgsListAggregate?.ForEach(rel => fieldsToUpdate.Add(new FieldRef(rel.AliasLG, rel.LGField)));
+            area.ArgsListAggregate?
+                .Where(rel => rel.AliasLG == this.Alias)
+                .ToList()
+                .ForEach(rel => fieldsToUpdate.Add(new FieldRef(rel.AliasLG, rel.LGField)));
 
             return fieldsToUpdate;
         }

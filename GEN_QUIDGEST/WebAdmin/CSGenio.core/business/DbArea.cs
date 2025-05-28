@@ -2450,14 +2450,15 @@ namespace CSGenio.business
         private void zeroDuplicar()
         {
             List<string> camposToZero = new List<string>();
-            var camposSR = new List<string>(this.RelatedSumFields ?? new string[] { }); // To simplificar o código na validação e não ter que lidar com array vazio
+            var camposSR = new List<string>(this.RelatedSumFields ?? new string[] { }); // To simplify validation code and not have to deal with empty arrays
+            var stampFields = new List<string>(this.StampFieldsAlt ?? new string[] { }); // To simplify validation code and not have to deal with empty arrays
             foreach(var campoPedido in Fields.Values)
             {
                 if (DBFields.TryGetValue(campoPedido.Name, out Field campoBD))
                 {
                     if (campoBD.ZeroDuplication
                         // Whenever a record is duplicated, every DATAMUDA/HORAMUDA/OPERMUDA should also be reseted
-                        || StampFieldsAlt.Contains(campoBD.Name)
+                        || stampFields.Contains(campoBD.Name)
                         // The target fields of the SRs must be reseted
                         || camposSR.Contains(campoBD.Name)
                         // The encrypted fields can never be duplicated!

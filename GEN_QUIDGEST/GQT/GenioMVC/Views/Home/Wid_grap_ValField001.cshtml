@@ -4,8 +4,6 @@
 @{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
 
 @*List properties DBEDIT BUTTONS*@
-@if (this.Model.Menu.Elements.Count() >= 1)
-{
 <div class="row">
 	<div class="col">
 		<div elem-identifier="List"  help-id="IFF_WID_GRAPPSEUDFIELD001" style="padding-top: 0.5rem;"><label class = "i-text__label table-title c-table__title" > <h2 list-header>@Resources.COMPANY_S_PEOPLE_COU57461</h2 list-header> </label></div>
@@ -14,7 +12,6 @@
 	</div>
 </div>
 
-}
 @* USE /[MANUAL GQT TABLE_FOR WID_GRAP_FIELD001]/ *@
 @{ Dictionary<int, MvcHtmlString> renderings = new Dictionary<int, MvcHtmlString>(); }
 @{

@@ -25,6 +25,8 @@ namespace GenioMVC.ViewModels.Equip
 		public Timequip_ValPrimary_ViewModel(NavigationContext current_navigation)
 		{
 			this.Navigation = current_navigation;
+						ValCodequip = current_navigation.CurrentLevel.GetEntry("equip")?.ToString();
+						
 		}
 
 		public void Load(int numberListItems, bool ajaxRequest = false)
@@ -103,6 +105,7 @@ namespace GenioMVC.ViewModels.Equip
 
 			model.Icon = "";
 			model.Escala = "dd";
+			model.TipoTimeLine = "";
 
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{

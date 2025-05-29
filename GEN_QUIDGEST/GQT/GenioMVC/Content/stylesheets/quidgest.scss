@@ -5536,7 +5536,258 @@ body.qloading {
     height: 35px;
     border-radius: 50%;
 }
+//simple timeline
+.c-simple_timeline {
+	position: relative;
+	padding: 2em 0;
+	
+	&__container {
+        width: 100%;
+        //max-width: 1080px;
+        margin: 0 auto;
+        background: $container-bg-color;
+        padding: 0 5%;
+        //border-radius: 0.2rem;
+    }
+	&__item {
+        position: relative;
+		
+		&-datetime {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: .02rem;
+            text-transform: uppercase;
+        }
 
+        &-divider {
+            margin-top: 0.5rem;
+            margin-left: -1rem;
+            margin-right: -1rem;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+        }
+
+        &-end {
+            margin: .75rem 0 1rem 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+            width: 8%;
+        }
+		
+		& &-title {
+            margin-left: .5rem;
+            color: #000000;
+            font-weight: 600;
+            font-size: 1.25rem;
+            letter-spacing: .02rem;
+            line-height: 1.5;
+        }
+
+        &-field {
+            color: #404b69;
+        }
+
+        span.c-timeline__item-datetime .e-badge {
+            color: #fff !important;
+            padding: .25rem;
+            margin-bottom: .35rem;
+        }
+		
+        .c-timeline__item-datetime .e-badge--dark {
+            color: #fff !important;
+            background-color: $primary;
+        }
+		
+	}
+	
+	.c_timeline__item-content {
+        position: relative;
+        margin-left: 50px;
+        background-color: #fff;
+        color: #1e2436;
+        display: inline-block;
+        margin-bottom: .5rem;
+
+        &::before {
+            content: '';
+            position: absolute;
+            right: 100%;
+            height: 0;
+            width: 0;
+            border: 7px solid transparent;
+            border-right: 7px solid $primary;
+        }
+
+        .c_timeline__item {
+            &-header {
+                margin-left: 0;
+                color: #fff;
+                background-color: $primary;
+                padding: .25rem .75rem;
+            }
+
+            &-title {
+                margin-left: .5rem;
+                color: #000000;
+                font-weight: 600;
+                font-size: 1.25rem;
+                letter-spacing: .02rem;
+                line-height: 1.5;
+            }
+
+            &-text {
+                margin-left: 0;
+                text-decoration: none;
+                font-weight: 400;
+                font-size: 0.9rem;
+                padding: 1rem;
+                color: $primary;
+            }
+
+            &-datetime {
+                color: #404b69;
+                font-size: 0.8rem;
+                font-weight: 700;
+                letter-spacing: .02rem;
+                text-transform: uppercase;
+                padding-bottom: 1rem;
+            }
+        }
+
+        .e-badge {
+            color: #fff !important;
+            padding: .25rem;
+            margin-bottom: .35rem;
+        }
+    }
+	
+.c_timeline__item {
+        &:before {
+            content: "";
+            width: 4px;
+            height: 100%;
+            background: none;
+            left: 1.5rem;
+            top: 0;
+            position: absolute;
+        }
+}
+
+		&--alternate {
+			position: relative;
+			padding: 2em 0;
+			margin-top: 0.5rem;
+			margin-bottom: 2em;
+		
+			.c_timeline__item {
+				position: relative;
+				//margin: 2em 0;
+				&:after {
+					content: "";
+					display: table;
+					clear: both;
+				}
+
+				&:first-child {
+					margin-top: 0;
+				}
+
+				:last-child {
+					margin-bottom: 0;
+				}
+			}	
+	
+			&-content {
+                position: relative;
+                margin-left: 60px;
+                margin-right: 30px;
+                background-color: #fff;
+
+                &:after {
+                    content: "";
+                    display: table;
+                    clear: both;
+                }
+			}
+	
+			&-title {
+                margin-left: .5rem;
+                color: #000000;
+                font-weight: 600;
+                font-size: 1.25rem;
+                letter-spacing: .02rem;
+                line-height: 1.5;
+			}	
+	
+		}
+	
+		&_horizontal {
+			width: 100%;
+			height: 20%;
+			margin: 1.5rem 0;
+
+			&_line {
+				background: #747c91;
+				height: 2px;
+				margin-bottom: 50px;
+				width: 95%;
+				border-radius: 5px;
+				margin: auto;
+				top: 50%;
+				transform: translateY(-50%);
+				position: relative;
+			}
+		}
+		
+	&_circle {
+       width: 20px;
+       height: 20px;
+       background: $primary;
+       border-radius: 15px;
+       position: absolute;
+       top: -9px;
+       border: 3px solid $primary;
+       cursor: pointer;
+		
+        &::before {
+            content: '';
+            width: 10px;
+            height: 10px;
+            background: $primary;
+            position: absolute;
+            border-radius: 100%;
+			outline: 8px solid $primary;
+            top: 2px;
+            left: 2px;
+            display: none;
+			box-shadow: 0 0 0 0.62rem $input-focus-color;
+        }
+
+        .popupSpan {
+            width: auto;
+            height: auto;
+            padding: 10px;
+            white-space: nowrap;
+            display: inline-block;
+            color: white;
+            position: absolute;
+            top: 20px;
+            left: -75px;
+            display: none;
+            transition: all 0.1s ease-out;
+        }
+
+        &.hover:before, &.active:before {
+            display: block;
+        }
+
+        &.hover .popupSpan, &.active .popupSpan {
+            display: block;
+        }
+
+        &.active .popupSpan {
+            top: -40px;
+        }
+	}
+}	
 //timeline
 .c-timeline {
     position: relative;
@@ -5556,7 +5807,7 @@ body.qloading {
         //max-width: 1080px;
         margin: 0 auto;
         background: $container-bg-color;
-        padding: 0 10%;
+        padding: 0 5%;
         //border-radius: 0.2rem;
     }
 
@@ -5633,7 +5884,7 @@ body.qloading {
 
         .c-timeline__item-datetime .e-badge--dark {
             color: #fff !important;
-            background-color: #404b69;
+            background-color: #4b4f5d;;
         }
 
         & &-field {
@@ -5875,14 +6126,16 @@ body.qloading {
 
         &:before {
             content: '';
-            width: 10px;
-            height: 10px;
-            background: white;
-            position: absolute;
-            border-radius: 100%;
-            top: 2px;
-            left: 2px;
-            display: none;
+		  width: 10px;
+		  height: 10px;
+		  background: $primary;
+		  position: absolute;
+		  border-radius: 100%;
+		  outline: 8px solid $primary;
+		  top: 2px;
+		  left: 2px;
+		  display: none;
+		  box-shadow: 0 0 0 0.62rem $input-focus-color;
         }
 
         .popupSpan {

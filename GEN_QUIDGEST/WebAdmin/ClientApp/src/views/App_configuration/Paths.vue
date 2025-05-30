@@ -9,11 +9,11 @@
 					<q-text-field
 						v-model="Model.pathApp"
 						size="xlarge"
-						:label="Resources.CAMINHO_PARA_A_APLIC44450" />
+						:label="appConfigTexts.pathAppLabel" />
 					<q-text-field
 						v-model="Model.pathDocuments"
 						size="xlarge"
-						:label="Resources.CAMINHO_PARA_DOCUMEN18456" />
+						:label="appConfigTexts.pathDocumentsLabel" />
 				</q-row-container>
 			</q-card>
 		</row>
@@ -21,14 +21,14 @@
 		<row class="footer-btn">
 			<q-button
 				variant="bold"
-				:label="Resources.GRAVAR_CONFIGURACAO36308"
+				:label="hardcodedTexts.saveConfiguration"
 				@click="SavePathCfg" />
 		</row>
 
 		<row>
 			<q-card
 				class="q-card--admin-border-top q-card--admin-compact"
-				:title="Resources.DESCARREGAR_FICHEIRO61580"
+				:title="appConfigTexts.downloadConfigFile"
 				variant="minor"
 				width="block">
 				<q-button
@@ -44,6 +44,8 @@
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import bootbox from 'bootbox';
+	import { texts } from '@/resources/hardcodedTexts.ts';
+	import { AppConfigTexts } from '@/resources/viewResources.ts';
 
 	export default {
 		name: 'paths',
@@ -85,9 +87,17 @@
 			DownloadRedirect() {
 				return QUtils.apiActionURL('Config', 'DownloadRedirect');
 			},
-			
+
 			GetTitle() {
 				return this.Resources.CAMINHOS41141 + ' ' + '(' + this.currentApp +')';
+			},
+			hardcodedTexts() {
+				return {
+					saveConfiguration: this.Resources[texts.saveConfiguration]
+				};
+			},
+			appConfigTexts() {
+				return new AppConfigTexts(this);
 			}
 		}
 	};

@@ -13,10 +13,10 @@
 					<template #extras>
 						<q-icon icon="information-outline" />
 						{{ texts.O_SISTEMA_DE_DADOS_U47595 }}
-					</template>					
+					</template>
 				</q-select>
 				<q-checkbox
-					v-model="model.HideYears" 
+					v-model="model.HideYears"
 					:label="texts.OCULTAR_SISTEMAS_DE_60940">
 					<template #extras>
 						<q-icon icon="information-outline" />
@@ -78,14 +78,14 @@
 		<hr>
 
 		<row>
-			<q-button 
+			<q-button
 				variant="bold"
 				:label="texts.GRAVAR_CONFIGURACAO36308"
 				@click="SaveConfigDataSystems" />
 		</row>
 	</div>
 
-	<q-dialog 
+	<q-dialog
 		v-model="showDefaultDialog"
 		:title="isErrorDialog ? texts.ERRO38355 : ''"
 		:icon="defaultDialogIcon"
@@ -97,9 +97,9 @@
 		:title="texts.CRIAR_UM_NOVO_SISTEM49777"
 		:buttons="newSystemDialogButtons">
 		<template #body.content>
-			<div 
+			<div
 				class="data-systems__dialog--container" >
-				<q-text-field 
+				<q-text-field
 					v-model="newDsName"
 					:class="{ 'data-systems__inputs--with-errors': invalidNewDataSystemName }"
 					size="block"
@@ -109,7 +109,7 @@
 						{{ texts.OS_NOMES_DOS_SISTEMA01515 }}
 					</template>
 				</q-text-field>
-				<q-text-field 
+				<q-text-field
 					v-model="newDsSchema"
 					:class="{ 'data-systems__inputs--with-errors': invalidNewDbName }"
 					size="block"
@@ -491,7 +491,7 @@
 					// Swap to default data system if needed
 					if (this.currentYear == data.system) {
 						this.$router.replace({ name: 'system_setup', params: { culture: this.currentLang, system: this.model.DefaultYear } })
-						message += ` ${this.texts.O_SISTEMA_DE_DADOS_A48279}` 
+						message += ` ${this.texts.O_SISTEMA_DE_DADOS_A48279}`
 					}
 
 					this.updateDataSystemList()
@@ -596,7 +596,7 @@
 
 				this.defaultDialogText = message
 
-				if (buttons)				
+				if (buttons)
 					this.defaultDialogButtons = buttons
 
 				if (icon)
@@ -621,7 +621,7 @@
 			 */
 			invalidNewDataSystem(newValue) {
 				this.newSystemDialogButtons[0].props.disabled = newValue
-			} 
+			}
 		}
 	}
 </script>

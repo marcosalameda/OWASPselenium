@@ -15,13 +15,13 @@
 								<q-button-group borderless>
 									<q-button
 										variant="text"
-										:title="Resources.EDITAR11616"
+										:title="hardcodedTexts.edit"
 										@click="changeAdvancedProperty(props.row)">
 										<q-icon icon="pencil" />
 									</q-button>
 									<q-button
 										variant="text"
-										:title="Resources.ELIMINAR21155"
+										:title="hardcodedTexts.delete"
 										@click="deleteAdvancedProperty(props.row)">
 									<q-icon icon="bin" />
 									</q-button>
@@ -31,7 +31,7 @@
 								<tr>
 									<td colspan="3">
 									<q-button
-										:label="Resources.INSERIR43365"
+										:label="hardcodedTexts.insert"
 										@click="createAdvancedProperty">
 										<q-icon icon="add" />
 									</q-button>
@@ -46,7 +46,7 @@
 
 		<q-dialog
 			v-model="showDialogAdvanced"
-			:title="Resources.PROPERTY43977"
+			:title="systemConfigTexts.property"
 			:buttons="buttonsAdvanced">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -54,7 +54,7 @@
 						<div id="help_container"  v-if="help">
 							<div class="q-help__info-banner">
 								<div class="q-help__info-banner-header">
-									<q-icon icon="information-outline" />									
+									<q-icon icon="information-outline" />
 								</div>
 								<div class="q-help__info-banner-body">
 									<span style="white-space: pre-line">
@@ -66,13 +66,13 @@
 						</div>
 						<q-button v-if="!inDeleteModeAdvanced"
 							@click="showNewKeyInput=true"
-							:label="Resources.INSERT_NEW_KEY15186">
+							:label="systemConfigTexts.insertNewKey">
 								<q-icon icon="pencil" />
 						</q-button>
 						<q-select
 							v-model="rowKey"
 							v-if="SelectLists"
-							:label="Resources.KEY01046"
+							:label="hardcodedTexts.key"
 							:items="SelectLists.PropertyList"
 							size="large"
 							:readonly="inDeleteModeAdvanced"
@@ -83,28 +83,28 @@
 					<div v-else>
 						<q-button
 							@click="showNewKeyInput=false"
-							:label="Resources.LIST_DEFAULT_KEYS58194"
+							:label="systemConfigTexts.listDefaultKeys"
 							v-if="hasInitProperties && !inDeleteModeAdvanced">
 								<q-icon icon="list" />
 						</q-button>
 						<q-text-field
 							v-model="rowKey"
 							:class="{ 'input-error' : isSameKey }"
-							:label="Resources.KEY01046"
+							:label="hardcodedTexts.key"
 							:readonly="inDeleteModeAdvanced"
 							required
 							size="large">
 							<template #extras v-if="isSameKey">
 								<q-icon icon="information-outline" />
-								{{ Resources.THIS_KEY_ALREADY_EXI09944 }}
+								{{ hardcodedTexts.thisKeyAlreadyExists }}
 							</template>
-						</q-text-field>						
+						</q-text-field>
 					</div>
 					<div>
 						<component
 							:is="valueComponent"
 							v-model="rowValue"
-							:label="Resources.VALUE10285"
+							:label="hardcodedTexts.value"
 							:readonly="inDeleteModeAdvanced"
 							:isReadOnly="inDeleteModeAdvanced"
 							required
@@ -123,6 +123,8 @@
 	import QAlert from '@/components/QAlert.vue';
 	import { QTextField, QCheckbox, QPasswordField} from '@quidgest/ui/components';
 	import numeric_input from '@/components/Numeric_input.vue';
+	import { texts } from '@/resources/hardcodedTexts.ts';
+    import { SystemConfigTexts } from '@/resources/viewResources.ts';
 
 	export default {
 		name: 'extra',
@@ -164,7 +166,7 @@
 				tAdvP: {
 					rows: [],
 					columns: [{
-						label: this.$t('ACOES22599'),
+						label: '',
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -173,24 +175,24 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: this.$t('KEY01046'),
+						label: '',
 						name: "Key",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: this.$t('VALUE10285'),
+						label: '',
 						name: "Val",
 						sort: true
 					}],
 					config: {
-						table_title: this.$t('PROPRIEDADES_AVANCAD23972')
+						table_title: ''
 					}
 				},
 				valueComponent: QTextField,
 				showNewKeyInput : false,
-				help:'',				
+				help:'',
 			};
 		},
 
@@ -209,17 +211,36 @@
 			},
 			invalidProps() {
 				return this.rowKey === '' || this.rowValue === '' || (this.dialogModeAdvanced === 'new' && this.isSameKey)
-			}
+			},
+			hardcodedTexts() {
+				return {
+					insert: this.Resources[texts.insert],
+					delete: this.Resources[texts.delete],
+					edit: this.Resources[texts.edit],
+					actions: this.Resources[texts.actions],
+					key: this.Resources[texts.key],
+					value: this.Resources[texts.value],
+					thisKeyAlreadyExists: this.Resources[texts.thisKeyAlreadyExists],
+					valueCannotBeEmpty: this.Resources[texts.valueCannotBeEmpty],
+					languageLabel: this.Resources[texts.languageLabel],
+					erase: this.Resources[texts.erase],
+					save: this.Resources[texts.save],
+					cancel: this.Resources[texts.cancel],
+				};
+			},
+            systemConfigTexts() {
+                return new SystemConfigTexts(this);
+            }
 		},
-		
+
 		methods: {
-			getButtonsDialogAdvanced() {	
+			getButtonsDialogAdvanced() {
 				switch(this.dialogModeAdvanced) {
 					case 'delete':
 						this.buttonsAdvanced.push({
 							id: 'delete-btn',
 							props: {
-								label: this.Resources.APAGAR04097,
+								label: this.hardcodedTexts.erase,
 								variant: 'bold',
 								color: "danger"
 							},
@@ -233,7 +254,7 @@
 						this.buttonsAdvanced.push({
 							id: 'save-btn',
 							props: {
-								label: this.Resources.GRAVAR45301,
+								label: this.hardcodedTexts.save,
 								variant: 'bold',
 								disabled: this.invalidProps
 							},
@@ -249,7 +270,7 @@
 				this.buttonsAdvanced.push({
 					id: 'cancel-btn',
 					props: {
-						label: this.Resources.CANCELAR49513
+						label: this.hardcodedTexts.cancel
 					},
 					action: () => this.clearMorePropertyValues()
 				})
@@ -261,8 +282,8 @@
 					FormMode: this.dialogModeAdvanced,
 				}
 				QUtils.postData('Config', 'SaveMoreProperty', propsValues, { appId: this.$store.state.currentApp }, (data) => {
-					if (data.emptyVal) { this.$emit('alert-class', { ResultMsg: this.Resources.VALUE_CANNOT_BE_EMPT24668, AlertType: 'danger' }); }
-					else if (!data.success) { this.$emit('alert-class', { ResultMsg: this.Resources.THIS_KEY_ALREADY_EXI09944, AlertType: 'danger' }); }
+					if (data.emptyVal) { this.$emit('alert-class', { ResultMsg: this.hardcodedTexts.valueCannotBeEmpty, AlertType: 'danger' }); }
+					else if (!data.success) { this.$emit('alert-class', { ResultMsg: this.hardcodedTexts.thisKeyAlreadyExists, AlertType: 'danger' }); }
 					else {
 						switch (propsValues.FormMode) {
 						case 'new':
@@ -278,8 +299,8 @@
 							const newPropIndex = this.advancedProps.findIndex(value => value.Key == this.rowKey)
 							this.advancedProps[newPropIndex].Val = this.rowValue;
 							break;
-						case 'delete':							
-							this.advancedProps = this.advancedProps.filter(prop => prop.Key != this.rowKey);							
+						case 'delete':
+							this.advancedProps = this.advancedProps.filter(prop => prop.Key != this.rowKey);
 							break;
 						default:
 							break;
@@ -323,6 +344,12 @@
 		},
 		mounted() {
 			this.advancedProps = this.model.AdvancedProperties || [];
+
+			this.tAdvP.columns[0].label = this.hardcodedTexts.actions;
+			this.tAdvP.columns[1].label = this.hardcodedTexts.key;
+			this.tAdvP.columns[2].label = this.hardcodedTexts.value;
+			this.tAdvP.config.table_title = this.systemConfigTexts.advancedProperties;
+
 		},
 		watch: {
 			invalidProps(newValue) {
@@ -334,13 +361,13 @@
 				if (advancedItem?.Type) {
 					switch (advancedItem.Type) {
 						case 'C':
-							this.valueComponent = QTextField							
+							this.valueComponent = QTextField
 							break;
 						case 'N':
 							this.valueComponent = numeric_input
 							break;
 						case 'L':
-							this.valueComponent = QCheckbox							
+							this.valueComponent = QCheckbox
 							break;
 						case 'P':
 							this.valueComponent = QPasswordField

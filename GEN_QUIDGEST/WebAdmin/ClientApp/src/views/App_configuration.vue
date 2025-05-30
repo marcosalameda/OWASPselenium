@@ -2,7 +2,7 @@
 	<div id="app_config">
 		<div class="q-stack--column">
 			<h1 class="f-header__title">
-			{{ Resources.CONFIGURACAO_DA_APLI59110 }}
+			{{ appConfigTexts.appConfigurationTitle }}
 			</h1>
 		</div>
 		<hr />
@@ -31,6 +31,8 @@ import { QUtils } from '@/utils/mainUtils';
 import { reactive, computed } from 'vue';
 import security from './App_configuration/Security.vue';
 import paths from './App_configuration/Paths.vue';
+import { texts } from '@/resources/hardcodedTexts.ts';
+import { AppConfigTexts } from '@/resources/viewResources.ts';
 
 export default {
 	name: 'app_config',
@@ -52,7 +54,7 @@ export default {
 						id: 'security-tab',
 						componentId: 'security',
 						name: 'security',
-						label: vm.$t('SEGURANCA53664'),
+						label: '',
 						disabled: false,
 						isVisible: true,
 						props: { model: computed(() => vm.Model?.Security), SelectLists: computed(() => vm.Model?.SelectLists) },
@@ -62,7 +64,7 @@ export default {
 						id: 'paths-tab',
 						componentId: 'paths',
 						name: 'paths',
-						label: vm.$t('CAMINHOS41141'), 
+						label: '',
 						disabled: false,
 						isVisible: true,
 						props: { model: computed(() => vm.Paths) },
@@ -83,7 +85,16 @@ export default {
 		Cores() {
 			var vm = this;
 			return !$.isEmptyObject(vm.currentApp) && !$.isEmptyObject(vm.Model.Cores) ? (vm.Model.Cores[vm.currentApp] || null) : null;
-		}
+		},
+		hardcodedTexts() {
+			return {
+				securityLabel: this.Resources[texts.securityLabel],
+				pathsLabel: this.Resources[texts.pathsLabel],
+			};
+		},
+		appConfigTexts() {
+			return new AppConfigTexts(this);
+		},
 	},
 	methods: {
 		fetchData() {
@@ -143,6 +154,9 @@ export default {
 		}
 	},
 	mounted() {
+		this.tabGroup.tabsList[0].label = this.hardcodedTexts.securityLabel;
+		this.tabGroup.tabsList[1].label = this.hardcodedTexts.pathsLabel;
+
 		var vm = this;
 		vm.observer = new MutationObserver(mutations => {
 			for (const m of mutations) {

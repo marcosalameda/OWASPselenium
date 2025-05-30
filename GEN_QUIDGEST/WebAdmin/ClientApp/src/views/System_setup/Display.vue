@@ -3,14 +3,14 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="Resources.GARANTIA_DE_QUALIDAD19784"
+				:title="systemConfigTexts.qualityAssuranceTitle"
 				width="block">
-				<q-checkbox 
-					v-model="model.QAEnvironment" 
-					:label="Resources.AMBIENTE_DE_QA_09940">
+				<q-checkbox
+					v-model="model.QAEnvironment"
+					:label="systemConfigTexts.qaEnvironmentLabel">
 					<template #extras>
 						<q-icon icon="information-outline" />
-						{{ Resources.SELECIONE_PARA_MOSTR59643 }}
+						{{ systemConfigTexts.qaEnvironmentInfo }}
 					</template>
 				</q-checkbox>
 			</q-card>
@@ -19,24 +19,24 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="Resources.FORMATO_DAS_DATAS11781"
+				:title="systemConfigTexts.dateFormatTitle"
 				width="block">
 				<q-row-container v-if="model.DateFormat">
-					<q-text-field 
+					<q-text-field
 						v-model="model.DateFormat.date"
-						:label="Resources.DATA18071"
+						:label="hardcodedTexts.dataLabel"
 						size="medium" />
 					<q-text-field
 						v-model="model.DateFormat.dateTime"
-						:label="Resources.DATA_E_HORA33196"
+						:label="hardcodedTexts.dateTimeLabel"
 						size="medium" />
 					<q-text-field
 						v-model="model.DateFormat.dateTimeSeconds"
-						:label="Resources.DATA__HORAS_E_SEGUND03637"
+						:label="hardcodedTexts.dateTimeSecondsLabel"
 						size="large" />
 					<q-text-field
 						v-model="model.DateFormat.time"
-						:label="Resources.HORAS01448"
+						:label="hardcodedTexts.hoursLabel"
 						size="small" />
 				</q-row-container>
 			</q-card>
@@ -45,7 +45,7 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="Resources.FORMATO_DE_NUMERO58330"
+				:title="systemConfigTexts.numberFormatTitle"
 				width="block">
 				<q-row-container v-if="SelectLists">
 					<q-select
@@ -53,13 +53,13 @@
 						:items="SelectLists.DecimalSeparator"
 						item-value="Value"
 						item-label="Text"
-						:label="Resources.SEPARADOR_DECIMAL14173" />
+						:label="systemConfigTexts.decimalSeparatorLabel" />
 					<q-select
 						v-model="model.GroupSeparator"
 						:items="SelectLists.GroupSeparator"
 						item-value="Value"
 						item-label="Text"
-						:label="Resources.SEPARADOR_DE_GRUPO26735" />
+						:label="systemConfigTexts.groupSeparatorLabel" />
 				</q-row-container>
 			</q-card>
 		</row>
@@ -67,7 +67,7 @@
 		<row class="footer-btn">
 			<q-button
 				variant="bold"
-				:label="Resources.GRAVAR_CONFIGURACAO36308"
+				:label="hardcodedTexts.saveConfiguration"
 				@click="saveConfigOthers" />
 		</row>
 	</div>
@@ -77,6 +77,8 @@
 // @ is an alias to /src
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';
+import { texts } from '@/resources/hardcodedTexts.ts';
+import { SystemConfigTexts } from '@/resources/viewResources.ts';
 
 export default {
 	name: 'settings',
@@ -93,7 +95,7 @@ export default {
 	mixins: [reusableMixin],
 
 	emits: ['update-model', 'alert-class'],
-	
+
 	data() {
 		var vm = this;
 		return {
@@ -109,19 +111,40 @@ export default {
 			},
 		};
 	},
+	computed: {
+		hardcodedTexts() {
+			return {
+				dataLabel: this.Resources[texts.dataLabel],
+				dateTimeLabel: this.Resources[texts.dateTimeLabel],
+				dateTimeSecondsLabel: this.Resources[texts.dateTimeSecondsLabel],
+				hoursLabel: this.Resources[texts.hoursLabel],
+				saveConfiguration: this.Resources[texts.saveConfiguration],
+				changesSavedSuccess: this.Resources[texts.changesSavedSuccess],
+				languageLabel: this.Resources[texts.languageLabel]
+			}
+		},
+		systemConfigTexts() {
+			return new SystemConfigTexts(this)
+		}
+	},
 	methods: {
 		saveConfigOthers() {
 			QUtils.log("SaveConfigOthers - Request", QUtils.apiActionURL('Config', 'SaveConfigOthers'));
 			QUtils.postData('Config', 'SaveConfigOthers', this.model, null, (data) => {
 				QUtils.log("SaveConfigOthers - Response", data);
 				if (data.Success) {
-					this.$emit('alert-class', { ResultMsg: this.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
+					this.$emit('alert-class', { ResultMsg: this.hardcodedTexts.changesSavedSuccess, AlertType: 'success' });
 				}
 				else {
 					this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 				}
 			});
 		},
-	}
+	},
+	mounted() {
+		this.tRepor.columns[0].label = this.systemConfigTexts.reportLabel
+		this.tRepor.columns[1].label = this.hardcodedTexts.languageLabel
+		this.tRepor.config.table_title = this.systemConfigTexts.reportsByLanguageTitle
+	},
 };
 </script>

@@ -2,7 +2,7 @@
 	<row>
 		<q-card
 			id="system_setup_elasticsearch_container"
-			:title="Resources.ELASTICSEARCH49143"
+			:title="systemConfigTexts.elasticsearchTitle"
 			width="block"
 			class="q-card--admin-default">
 			<q-row-container>
@@ -16,13 +16,13 @@
 					<q-button-group borderless>
 						<q-button
 							variant="text"
-							:title="Resources.EDITAR11616"
+							:title="hardcodedTexts.edit"
 							@click="editCore(props.row)">
 							<q-icon icon="pencil" />
 						</q-button>
 						<q-button
 							variant="text"
-							:title="Resources.ELIMINAR21155"
+							:title="hardcodedTexts.delete"
 							@click="deleteCore(props.row)">
 							<q-icon icon="bin" />
 						</q-button>
@@ -32,7 +32,7 @@
 						<tr>
 							<td colspan="2">
 							<q-button
-								:label="Resources.INSERIR43365"
+								:label="hardcodedTexts.insert"
 								@click="createCore">
 								<q-icon icon="add" />
 							</q-button>
@@ -46,45 +46,45 @@
 
 	<q-dialog
 		v-model="showDialog"
-		:title="Resources.MOTOR_DE_PESQUISA__E50766"
+		:title="systemConfigTexts.elasticsearchSearchEngineTitle"
 		:buttons="buttons">
 		<template #body.content>
 			<div class="q-dialog-container">
 				<q-text-field
 					v-model="rowIndex"
-					:label="Resources.INDEX00140"
+					:label="hardcodedTexts.indexLabel"
 					:readonly="inEditMode || inDeleteMode"
 					required
 					size="large" />
 				<q-text-field
 					v-model="rowId"
-					:label="Resources.ID36840"
+					:label="hardcodedTexts.id"
 					:readonly="inEditMode || inDeleteMode"
 					required
 					size="large"/>
 				<q-text-field
 					v-model="rowArea"
-					:label="Resources.AREA19058"
+					:label="hardcodedTexts.areaLabel"
 					:readonly="inDeleteMode"
 					size="large" />
 				<q-text-field
 					v-model="rowUrlfscrawler"
-					:label="Resources.FSCRAWLER01982"
+					:label="systemConfigTexts.fscrawlerLabel"
 					:readonly="inDeleteMode"
 					size="large" />
 				<q-text-field
 					v-model="rowUrl"
-					:label="Resources.URL05719"
+					:label="hardcodedTexts.url"
 					:readonly="inDeleteMode"
 					size="large" />
 				<q-text-field
 					v-model="rowElasticUser"
-					:label="Resources.UTILIZADOR52387"
+					:label="hardcodedTexts.user"
 					:readonly="inDeleteMode"
 					size="large" />
 				<password-input
 					v-model="rowElasticPsw"
-					:label="Resources.PALAVRA_PASSE44126"
+					:label="hardcodedTexts.password"
 					:isReadOnly="inDeleteMode"
 					size="large">
 				</password-input>
@@ -97,6 +97,8 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
+	import { texts } from '@/resources/hardcodedTexts.ts';
+	import { SystemConfigTexts } from '@/resources/viewResources.ts';
 
 	export default {
 		name: 'elasticsearch',
@@ -134,7 +136,7 @@
 				cfgCores: {
 					rows: [],
 					columns: [{
-						label: this.$t('ACOES22599'),
+						label: '',
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -143,37 +145,37 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: this.$t('INDEX00140'),
+						label: '',
 						name: "Index",
 						sort: false
 					},
 					{
-						label: this.$t('ID36840'),
+						label: '',
 						name: "Id",
 						sort: false
 					},
 					{
-						label: this.$t('AREA19058'),
+						label: '',
 						name: "Area",
 						sort: false
 					},
 					{
-						label: this.$t('FSCRAWLER01982'),
+						label: '',
 						name: "Urlfscrawler",
 						sort: false
 					},
 					{
-						label: this.$t('URL05719'),
+						label: '',
 						name: "Url",
 						sort: false
 					},
 					{
-						label: this.$t('UTILIZADOR52387'),
+						label: '',
 						name: "ElasticUser",
 						sort: false
 					}],
 					config: {
-						table_title: this.$t("MOTOR_DE_PESQUISA__E50766"),
+						table_title: '',
 						global_search: {
 						classes: "qtable-global-search",
 						showRefreshButton: true,
@@ -199,6 +201,27 @@
 			inEditMode() {
 				return this.dialogMode === 'edit';
 			},
+			hardcodedTexts() {
+				return {
+					edit: this.Resources[texts.edit],
+					delete: this.Resources[texts.delete],
+					insert: this.Resources[texts.insert],
+					id: this.Resources[texts.id],
+					user: this.Resources[texts.user],
+					password: this.Resources[texts.password],
+					url: this.Resources[texts.url],
+					erase: this.Resources[texts.erase],
+					save: this.Resources[texts.save],
+					cancel: this.Resources[texts.cancel],
+					actions: this.Resources[texts.actions],
+					languageLabel: this.Resources[texts.languageLabel],
+					indexLabel: this.Resources[texts.indexLabel],
+					areaLabel: this.Resources[texts.areaLabel],
+				}
+			},
+			systemConfigTexts() {
+				return new SystemConfigTexts(this)
+			}
 		},
 		methods: {
 			showCoreModal(mode) {
@@ -290,13 +313,13 @@
 					this.clearCoreValues()
 				});
 			},
-			getButtonsDialog() {	
+			getButtonsDialog() {
 				switch(this.dialogMode) {
 					case 'delete':
 						this.buttons.push({
 							id: 'delete-btn',
 							props: {
-								label: this.Resources.APAGAR04097,
+								label: this.hardcodedTexts.erase,
 								variant: 'bold',
 								color: "danger"
 							},
@@ -310,7 +333,7 @@
 						this.buttons.push({
 							id: 'save-btn',
 							props: {
-								label: this.Resources.GRAVAR45301,
+								label: this.hardcodedTexts.save,
 								variant: 'bold',
 								disabled: this.invalidProps
 							},
@@ -326,7 +349,7 @@
 				this.buttons.push({
 					id: 'cancel-btn',
 					props: {
-						label: this.Resources.CANCELAR49513
+						label: this.hardcodedTexts.cancel
 					},
 					action: () => this.clearCoreValues()
 				})
@@ -344,6 +367,18 @@
 			}
 		},
 		mounted() {
+			this.cfgCores.columns[0].label = this.hardcodedTexts.actions;
+			this.cfgCores.columns[1].label = this.hardcodedTexts.indexLabel;
+			this.cfgCores.columns[2].label = this.hardcodedTexts.id;
+			this.cfgCores.columns[3].label = this.hardcodedTexts.areaLabel;
+			this.cfgCores.columns[4].label = this.systemConfigTexts.fscrawlerLabel;
+			this.cfgCores.columns[5].label = this.hardcodedTexts.url;
+			this.cfgCores.columns[6].label = this.hardcodedTexts.user;
+			this.cfgCores.config.table_title = this.systemConfigTexts.elasticsearchSearchEngineTitle;
+			this.tRepor.columns[0].label = this.systemConfigTexts.reportLabel
+			this.tRepor.columns[0].label = this.hardcodedTexts.languageLabel
+			this.tRepor.config.table_title = this.systemConfigTexts.reportsByLanguageTitle
+
 			this.core = this.model.Cores || [];
 		}
 	};

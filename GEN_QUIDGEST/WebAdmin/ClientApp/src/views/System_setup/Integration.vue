@@ -2,7 +2,7 @@
 	<div id="system_setup_integration_container">
 		<row>
 			<q-card
-				:title="Resources.SISTEMA_DE_MENSAGENS07077"
+				:title="systemConfigTexts.messagingSystemTitle"
 				width="block"
 				class="q-card--admin-default">
 				<q-row-container>
@@ -19,7 +19,7 @@
 		<row class="footer-btn">
 			<q-button
 				variant="bold"
-				:label="Resources.GRAVAR_CONFIGURACAO36308"
+				:label="hardcodedTexts.saveConfiguration"
 				@click="SaveIntegrationConfig" />
 		</row>
 	</div>
@@ -29,6 +29,8 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
+	import { texts } from '@/resources/hardcodedTexts.ts';
+	import { SystemConfigTexts } from '@/resources/viewResources.ts';
 	import QAlert from '@/components/QAlert.vue';
 	import message from './Message';
 	export default {
@@ -66,7 +68,18 @@
 				}
 			};
 		},
-		
+
+		computed: {
+			hardcodedTexts() {
+				return {
+					saveConfiguration: this.Resources[texts.saveConfiguration]
+				}
+			},
+			systemConfigTexts() {
+				return new SystemConfigTexts(this)
+			}
+		},
+
 		methods: {
 			forwardAlert(alertData) {
 				this.$emit('alert-class', alertData)

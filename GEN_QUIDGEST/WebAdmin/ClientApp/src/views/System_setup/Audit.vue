@@ -3,20 +3,20 @@
         <q-card
             width="block"
             class="q-card--admin-default"
-            :title="Resources.AUDITORIA29703">
+            :title="systemConfigTexts.auditTitle">
             <q-row-container>
                 <q-checkbox
                     v-model="model.RegistLoginOut"
-                    :label="Resources.AUDITORIA_DE_LOGIN_D00905" />
+                    :label="systemConfigTexts.auditLoginLabel" />
                 <q-checkbox
                     v-model="model.RegistActions"
-                    :label="Resources.AUDITORIA_DE_ACOES_D42106" />
+                    :label="systemConfigTexts.auditActionsLabel" />
                 <q-checkbox
                     v-model="model.AuditInterface"
-                    :label="Resources.AUDITORIA_DO_SISTEMA08460" />
+                    :label="systemConfigTexts.auditSystemLabel" />
                 <q-checkbox
                     v-model="model.EventTracking"
-                    :label="Resources.REGISTO_DE_EVENTOS65341" />
+                    :label="systemConfigTexts.eventTrackingLabel" />
             </q-row-container>
         </q-card>
     </row>
@@ -25,6 +25,7 @@
 <script>
     import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
+	import { SystemConfigTexts } from '@/resources/viewResources.ts';
 
     export default {
 		name: 'audit',
@@ -36,6 +37,12 @@
         props: {
 			model: {
 				required: true
+			}
+		},
+
+		computed: {
+			systemConfigTexts() {
+				return new SystemConfigTexts(this)
 			}
 		}
     }

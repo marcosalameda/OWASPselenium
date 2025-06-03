@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Ldent;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LDENT]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class LdentController : ControllerBase
 	{
-		public LdentController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public LdentController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION LDENT]/
 
 
@@ -199,6 +208,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Ldent" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -212,6 +222,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Ldent)
 			);
 		}
+
 
 
 		/// <summary>

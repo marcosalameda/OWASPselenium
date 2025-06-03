@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Perso;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PERSO]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class PersoController : ControllerBase
 	{
-		public PersoController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public PersoController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PERSO]/
 
 
@@ -42,6 +51,7 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER PERSO]/
+
 
 
 

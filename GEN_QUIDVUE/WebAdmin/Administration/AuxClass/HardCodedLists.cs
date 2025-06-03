@@ -58,7 +58,9 @@ namespace Administration.AuxClass
             [Display(Name = @"MySQL")]
             MYSQL,
             [Display(Name = @"SQL Lite")]
-            SQLITE
+            SQLITE,
+            [Display(Name = @"Postgres")]
+            POSTGRES
             //[Display(Name = "NÃO USAR")]
             //ERRO
         }

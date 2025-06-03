@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Proje
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,7 +147,7 @@ namespace GenioMVC.ViewModels.Proje
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAproje.FldProjecto, FieldType.TEXTO, Resources.Resources.PROJECTO50142, 30, 0, true),
+				new Exports.QColumn(CSGenioAproje.FldProjecto, FieldType.TEXT, Resources.Resources.PROJECTO50142, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -212,8 +210,6 @@ namespace GenioMVC.ViewModels.Proje
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -360,8 +356,7 @@ namespace GenioMVC.ViewModels.Proje
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("proje", "projecto");
+					firstVisibleColumn ??= new FieldRef("proje", "projecto");
 				}
 
 
@@ -390,6 +385,8 @@ namespace GenioMVC.ViewModels.Proje
 
 // USE /[MANUAL GQT OVERRQ A11]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -417,7 +414,7 @@ namespace GenioMVC.ViewModels.Proje
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAproje> listing = Models.ModelBase.Where<CSGenioAproje>(m_userContext, false, gqt_menu_a11Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLA11", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAproje> listing = Models.ModelBase.Where<CSGenioAproje>(m_userContext, distinct, gqt_menu_a11Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLA11", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -498,6 +495,8 @@ namespace GenioMVC.ViewModels.Proje
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -547,7 +546,7 @@ namespace GenioMVC.ViewModels.Proje
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValProjecto", CSGenioAproje.FldProjecto, typeof(string), defaultSearch : true)
+			new TableSearchColumn("ValProjecto", CSGenioAproje.FldProjecto, typeof(string), defaultSearch : true),
 		];
 	}
 }

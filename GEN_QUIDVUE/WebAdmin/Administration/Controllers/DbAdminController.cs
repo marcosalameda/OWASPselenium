@@ -185,7 +185,9 @@ namespace Administration.Controllers
             model.DSName = dataSystem.Name;
 
             List<RdxOperationLog> scriptLog = RdxOperationLog.readAggregateXML(PersistentSupport.LogReindexPath());
-            RdxOperationLog lastLog = scriptLog.Count > 0 ? scriptLog.Last() : null;
+            RdxOperationLog lastLog = scriptLog?
+                .Where(log => log != null && log.DataSystem == model.DSName)
+                .LastOrDefault();
 
             List<ReIndexFunction> modelItems = model.reindexMenu.ReIndexItems
                 .Where(item =>
@@ -292,8 +294,9 @@ namespace Administration.Controllers
         }
 
 
-        public RdxParamUpgradeSchema startReindexation(DbAdminModel model, string Year, CancellationToken cToken)
+        public RdxParamUpgradeSchema startReindexation(DbAdminModel[] models, string Year, CancellationToken cToken, int currentModelIdx = 0)
         {
+            DbAdminModel model = models[currentModelIdx];
             RdxParamUpgradeSchema rdxParam = new RdxParamUpgradeSchema()
             {
                 Username = model.DbUser,
@@ -313,12 +316,12 @@ namespace Administration.Controllers
             List<string> allSelectedItems = rdxFunctions.Select(x => x.Id).ToList(); //Get the ids
 
             //If no scripts were selected
-            if(rdxFunctions.Where(x => x.Selectable == true).Count() == 0)
+            if(!rdxFunctions.Where(x => x.Selectable == true).Any())
             {
                 rdxParam = new RdxParamUpgradeSchema();
 
                 rdxParam.Progress.Message = Resources.Resources.NAO_FORAM_SELECIONAD28047;
-                rdxParam.Progress.State = RdxProgressStatus.SUCCESS;
+                rdxParam.Progress.State = RdxProgressStatus.FINISHED;
 
                 return rdxParam;
             }
@@ -331,9 +334,18 @@ namespace Administration.Controllers
                 (sender, eventArgs, status) =>
                 {
                     rdxParam.Progress = status.Clone();
-                    if(status.State == RdxProgressStatus.SUCCESS) {
-                        model.AlertType = AlertTypeEnum.success;
-                        rdxParam.Progress.Message = Resources.Resources.A_OPERACAO_FOI_CONCL36721;
+                    if (status.State == RdxProgressStatus.SUCCESS) {
+                        if(++currentModelIdx < models.Length)
+                        {
+                            string nextYear = models[currentModelIdx].DSName;
+                            RdxItem = startReindexation(models, nextYear, cToken, currentModelIdx);
+                        }
+                        else
+                        {
+                            model.AlertType = AlertTypeEnum.success;
+                            rdxParam.Progress.State = RdxProgressStatus.FINISHED;
+                            rdxParam.Progress.Message = Resources.Resources.A_OPERACAO_FOI_CONCL36721;
+                        }
                     }
                 },
                 cToken, model.Timeout);
@@ -351,30 +363,35 @@ namespace Administration.Controllers
         }
 
         [HttpPost]
-        public IActionResult Start([FromBody] DbAdminModel model)
+        public IActionResult Start([FromBody] DbAdminModel[] models)
         {
             try
             {
-                //Create cancellation token
-                reindexCTknSrc = new CancellationTokenSource();
-                CancellationToken cToken = reindexCTknSrc.Token;
-
                 //Check if something is running
                 if (RdxItem != null)
                 {
                     if (RdxItem.Progress.State == RdxProgressStatus.RUNNING)
                         return Json(new { Success = true });
                 }
+
+                //Create cancellation token
+                reindexCTknSrc = new CancellationTokenSource();
+                CancellationToken cToken = reindexCTknSrc.Token;
+
                 //Start reindex
-                RdxItem = startReindexation(model, CurrentYear, cToken);
+                RdxItem = startReindexation(models, models[0].DSName, cToken);
             }
             catch (GenioException e)
             {
                 if(RdxItem == null)
                     RdxItem = new RdxParamUpgradeSchema();
 
+                DbAdminModel model = models.FirstOrDefault(model => model.DSName == RdxItem.Year);
+
+                if (model != null)
+                    model.AlertType = AlertTypeEnum.danger;
+
                 RdxItem.Progress.Message = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
-                model.AlertType = AlertTypeEnum.danger;
                 RdxItem.Progress.State = RdxProgressStatus.ERROR;
             }
             catch (Exception e)
@@ -382,9 +399,13 @@ namespace Administration.Controllers
                 if(RdxItem == null)
                     RdxItem = new RdxParamUpgradeSchema();
 
+                DbAdminModel model = models.FirstOrDefault(model => model.DSName == RdxItem.Year);
+
+                if (model != null)
+                    model.AlertType = AlertTypeEnum.danger;
+
                 RdxItem.Progress.Message = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
                 RdxItem.Progress.State = RdxProgressStatus.ERROR;
-                model.AlertType = AlertTypeEnum.danger;
             }
 
             if (RdxItem.Progress.State == RdxProgressStatus.ERROR) return Json(new { Success = false, Message = RdxItem.Progress.Message, AlertType = AlertTypeEnum.danger });
@@ -394,24 +415,18 @@ namespace Administration.Controllers
         [HttpGet]
         public IActionResult Progress()
         {
-            if (RdxItem == null)
-                return Json(new
-                {
-                    Count = 0,
-                    Message = "",
-                    ActualScript = "",
-                    Status = RdxProgressStatus.NOT_STARTED.ToString()
-                });
+            MaintenanceProgress progress = new();
 
-            var res = new
+            if (RdxItem != null)
             {
-                Count = RdxItem.Progress.Percentage(),
-                Message = RdxItem.Progress.Message,
-                ActualScript = !string.IsNullOrEmpty(RdxItem.Progress.ActualScript) ? RdxItem.Progress.ActualScript + "..." : "",
-                Status = RdxItem.Progress.State.ToString()
-            };
+                progress.Count = RdxItem.Progress.Percentage();
+                progress.Message = RdxItem.Progress.Message;
+                progress.ActualScript = RdxItem.Progress.ActualScript ?? "";
+                progress.ActualModel = RdxItem.Year;
+                progress.Status = RdxItem.Progress.State.ToString();
+            }
 
-            return Json(res);
+            return Json(progress);
         }
 
         [HttpGet]

@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Estimated price" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Propr.ValPrecoest")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecoest { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecoest, 2)); } set { klass.ValPrecoest = Convert.ToDecimal(value); } }
+		public decimal? ValPrecoest { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecoest, 2)); } set { klass.ValPrecoest = Convert.ToDecimal(value); } }
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -135,19 +135,19 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Bathrooms" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Propr.ValQtd_wc")]
 		[NumericAttribute(0)]
-		public decimal? ValQtd_wc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtd_wc, 0)); } set { klass.ValQtd_wc = Convert.ToDecimal(value); } }
+		public decimal? ValQtd_wc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtd_wc, 0)); } set { klass.ValQtd_wc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Rooms")]
 		/// <summary>Field : "Rooms" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Propr.ValQtdquart")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdquart { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdquart, 0)); } set { klass.ValQtdquart = Convert.ToDecimal(value); } }
+		public decimal? ValQtdquart { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdquart, 0)); } set { klass.ValQtdquart = Convert.ToDecimal(value); } }
 
 		[DisplayName("Square meters")]
 		/// <summary>Field : "Square meters" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Propr.ValM2")]
 		[NumericAttribute(0)]
-		public decimal? ValM2 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValM2, 0)); } set { klass.ValM2 = Convert.ToDecimal(value); } }
+		public decimal? ValM2 { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValM2, 0)); } set { klass.ValM2 = Convert.ToDecimal(value); } }
 
 		[DisplayName("Available from")]
 		/// <summary>Field : "Available from" Tipo: "D" Formula:  ""</summary>

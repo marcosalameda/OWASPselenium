@@ -21,6 +21,8 @@ using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER GAMES]/
@@ -29,7 +31,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class GamesController : ControllerBase
 	{
-		public GamesController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public GamesController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION GAMES]/
 
 

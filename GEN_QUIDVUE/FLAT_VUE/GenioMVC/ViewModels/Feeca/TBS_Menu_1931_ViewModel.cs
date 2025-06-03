@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Feeca
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -151,8 +149,8 @@ namespace GenioMVC.ViewModels.Feeca
 			var columns = new List<Exports.QColumn>()
 			{
 				new Exports.QColumn(CSGenioAflds.FldDescrip, FieldType.MEMO, Resources.Resources.DESCRICAO51618, 30, 0, true),
-				new Exports.QColumn(CSGenioAfeeca.FldFeedback, FieldType.TEXTO, Resources.Resources.FEEDBACK52855, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldAttach, FieldType.FICHEIRO_BD, Resources.Resources.ANEXOS65235, 30, 0, true),
+				new Exports.QColumn(CSGenioAfeeca.FldFeedback, FieldType.TEXT, Resources.Resources.FEEDBACK52855, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldAttach, FieldType.DOCUMENT, Resources.Resources.ANEXOS65235, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -215,8 +213,6 @@ namespace GenioMVC.ViewModels.Feeca
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -363,8 +359,7 @@ namespace GenioMVC.ViewModels.Feeca
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("flds", "descrip");
+					firstVisibleColumn ??= new FieldRef("flds", "descrip");
 				}
 
 
@@ -393,6 +388,8 @@ namespace GenioMVC.ViewModels.Feeca
 
 // USE /[MANUAL TBS OVERRQ 1931]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -420,7 +417,7 @@ namespace GenioMVC.ViewModels.Feeca
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfeeca> listing = Models.ModelBase.Where<CSGenioAfeeca>(m_userContext, false, tbs_menu_1931Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1931", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfeeca> listing = Models.ModelBase.Where<CSGenioAfeeca>(m_userContext, distinct, tbs_menu_1931Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1931", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -503,6 +500,8 @@ namespace GenioMVC.ViewModels.Feeca
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -575,7 +574,7 @@ namespace GenioMVC.ViewModels.Feeca
 		[
 			new TableSearchColumn("Flds_ValDescrip", CSGenioAflds.FldDescrip, typeof(string)),
 			new TableSearchColumn("ValFeedback", CSGenioAfeeca.FldFeedback, typeof(string), defaultSearch : true),
-			new TableSearchColumn("Flds_ValAttach", CSGenioAflds.FldAttach, typeof(string))
+			new TableSearchColumn("Flds_ValAttach", CSGenioAflds.FldAttach, typeof(string)),
 		];
 	}
 }

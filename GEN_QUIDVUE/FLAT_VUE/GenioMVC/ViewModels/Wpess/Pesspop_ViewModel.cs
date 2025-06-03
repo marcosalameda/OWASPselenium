@@ -615,7 +615,7 @@ namespace GenioMVC.ViewModels.Wpess
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -662,7 +662,7 @@ namespace GenioMVC.ViewModels.Wpess
 				// Fill List fields
 				this.ValCodwareh = ViewModelConversion.ToString(row["wareh.codwareh"]);
 				TableWarehWarehdes.Value = (string)row["wareh.warehdes"];
-				if (GlobalFunctions.emptyG(this.ValCodwareh) == 1)
+				if (GenFunctions.emptyG(this.ValCodwareh) == 1)
 				{
 					this.ValCodwareh = "";
 					TableWarehWarehdes.Value = "";

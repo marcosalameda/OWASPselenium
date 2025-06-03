@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Propr
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Propr
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtppro.FldTppropri, FieldType.TEXTO, Resources.Resources.PROPERTY_TYPE51419, 20, 0, true),
+				new Exports.QColumn(CSGenioAtppro.FldTppropri, FieldType.TEXT, Resources.Resources.PROPERTY_TYPE51419, 20, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Propr
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Propr
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tppro", "tppropri");
+					firstVisibleColumn ??= new FieldRef("tppro", "tppropri");
 				}
 
 
@@ -368,6 +363,8 @@ namespace GenioMVC.ViewModels.Propr
 
 // USE /[MANUAL GQT OVERRQ PROPR00_TPPROTPPROPRI]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -394,7 +391,7 @@ namespace GenioMVC.ViewModels.Propr
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtppro> listing = Models.ModelBase.Where<CSGenioAtppro>(m_userContext, false, propr00_tpprotppropriConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROPR00_TPPROTPPROPRI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtppro> listing = Models.ModelBase.Where<CSGenioAtppro>(m_userContext, distinct, propr00_tpprotppropriConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROPR00_TPPROTPPROPRI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -474,6 +471,8 @@ namespace GenioMVC.ViewModels.Propr
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -523,7 +522,7 @@ namespace GenioMVC.ViewModels.Propr
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValTppropri", CSGenioAtppro.FldTppropri, typeof(string))
+			new TableSearchColumn("ValTppropri", CSGenioAtppro.FldTppropri, typeof(string)),
 		];
 	}
 }

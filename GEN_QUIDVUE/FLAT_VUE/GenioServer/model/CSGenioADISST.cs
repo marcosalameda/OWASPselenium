@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAdisst(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR DISST]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("coddisst", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "coddisst", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("status", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "status", FieldType.TEXT);
 			Qfield.FieldDescription = "Status";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "STATUS62033";
 
@@ -68,10 +64,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("order", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "order", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Order";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 3;
 			Qfield.CavDesignation = "ORDER39632";
@@ -80,10 +75,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("descript", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "descript", FieldType.TEXT);
 			Qfield.FieldDescription = "Description";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "DESCRIPTION07383";
 
@@ -91,9 +85,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -166,8 +159,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Dispatchment Status";
 			info.AreaPluralDesignation="Dispatchment Status";
 			info.DescriptionCav="DISPATCHMENT_STATUS18877";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

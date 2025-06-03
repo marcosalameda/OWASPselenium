@@ -6,4 +6,6 @@ public interface IMenuControl
     void ActivateModule(string moduleId);
 
     public int GetMenuCount(string moduleId, string itemId);
+
+    public int GetBookmarkCount();
 }

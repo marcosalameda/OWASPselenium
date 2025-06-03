@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Entit
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Entit
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfaci2.FldName, FieldType.TEXTO, Resources.Resources.FACILITY_NAME19514, 85, 0, true),
+				new Exports.QColumn(CSGenioAfaci2.FldName, FieldType.TEXT, Resources.Resources.FACILITY_NAME19514, 85, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Entit
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Entit
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("faci2", "name");
+					firstVisibleColumn ??= new FieldRef("faci2", "name");
 				}
 
 
@@ -357,6 +352,8 @@ namespace GenioMVC.ViewModels.Entit
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ ENTIT_FACI2NAME]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -384,7 +381,7 @@ namespace GenioMVC.ViewModels.Entit
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfaci2> listing = Models.ModelBase.Where<CSGenioAfaci2>(m_userContext, false, entit___faci2name____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ENTIT___FACI2NAME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfaci2> listing = Models.ModelBase.Where<CSGenioAfaci2>(m_userContext, distinct, entit___faci2name____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ENTIT___FACI2NAME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -464,6 +461,8 @@ namespace GenioMVC.ViewModels.Entit
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -513,7 +512,7 @@ namespace GenioMVC.ViewModels.Entit
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValName", CSGenioAfaci2.FldName, typeof(string))
+			new TableSearchColumn("ValName", CSGenioAfaci2.FldName, typeof(string)),
 		];
 	}
 }

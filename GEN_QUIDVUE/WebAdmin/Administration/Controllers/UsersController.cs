@@ -8,6 +8,7 @@ using Quidgest.Persistence.GenericQuery;
 using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using DbAdmin;
+using GenioServer.security;
 
 namespace Administration.Controllers
 {
@@ -18,22 +19,21 @@ namespace Administration.Controllers
         {
             var model = new UsersModel();
             model.Users = new List<UserItem>();
-            model.IdentityProviders = new List<string>();
 
             CSGenio.framework.Configuration.Reload();
             if(!PersistentSupport.TestDBConnection(CurrentYear))
                 model.ResultMsg = Resources.Resources.FICHEIRO_DE_CONFIGUR13972;
 
-            //only if webadmin has any ldap identity provider makes sense to fill identity providers list
-            if(CSGenio.framework.Configuration.HasLdapIdentityProvider())
-            {
-                model.IdentityProviders = new List<string>();
-                var allProviders = CSGenio.framework.Configuration.Security.IdentityProviders;
-                model.IdentityProviders = allProviders.Where(p => p.Type.Equals("GenioServer.security.LdapIdentityProvider"))
-                                                    .GroupBy(x => x.Config)
-                                                    .Select(x => x.First().Config)
-                                                    .ToList();
-            }
+            //list ldap identity providers
+            var conf = configManager.GetExistingConfig();
+            model.IdentityProviders = conf.Security.SelectMany(p => p.IdentityProviders)
+                .Where(p => p.Type.Equals("GenioServer.security.LdapIdentityProvider"))
+                .Select(p => new AuxFunctions.SelectlistElement()
+                {
+                    Value = p.Name,
+                    Text = string.IsNullOrEmpty(p.Description) ? p.Name : p.Description
+                })
+                .ToList();
 
             return Json(new { Success = true, model = model });
         }
@@ -81,7 +81,6 @@ namespace Administration.Controllers
             {
                 var model = new UsersModel();
                 model.Users = new List<UserItem>();
-                model.IdentityProviders = new List<string>();
 
                 var component = FromQuery("component");
 
@@ -235,11 +234,28 @@ namespace Administration.Controllers
 		}
 
 		[HttpPost]
-        public IActionResult ImportUsersFromAD(string dominio)
+        public IActionResult ImportUsersFromAD(string providerId)
         {
             User user = SysConfiguration.CreateWebAdminUser();
+
+            var conf = configManager.GetExistingConfig();
+            var provider = conf.Security.SelectMany(p => p.IdentityProviders)
+                .Where(p => p.Type.Equals("GenioServer.security.LdapIdentityProvider") && p.Name == providerId)
+                .FirstOrDefault();
+            if (provider == null)
+                return Json(new { Status.E });
+
+            var ldap = SecurityFactory.ParseIdentityProvider(provider) as LdapIdentityProvider;
+            if (ldap == null)
+                return Json(new { Status.E });
+
+            //When possible, refactor the ImportUsersFromAD that uses a deprecated method to
+            //use the more generic:
+            //ldap.ImportUsers(adminUser, adminPsw);
+            //and split the user creation into another function
+
             PersistentSupport sp = AuxFunctions.GetPersistentSupport(configManager, CurrentYear);
-            StatusMessage st =  new GlobalFunctions(user, user.CurrentModule, sp).ImportUsersFromAD(dominio);
+            StatusMessage st =  new GlobalFunctions(user, user.CurrentModule, sp).ImportUsersFromAD(ldap.Domain);
             return Json(new { Status = st.Status.ToString(), });
         }
 
@@ -326,7 +342,12 @@ namespace Administration.Controllers
 
                 finalData.DbDataSet.Tables[0].Rows.Add(objs);
 
-                ModuleRoleModel roleModel = ModuleRoleModel.GetRole(p2Dm.DbDataSet.Tables[0].Rows[i][1].ToString(), p2Dm.DbDataSet.Tables[0].Rows[i][3].ToString(), Convert.ToInt32(p2Dm.DbDataSet.Tables[0].Rows[i][2].ToString()));
+                string module = p2Dm.DbDataSet.Tables[0].Rows[i][1].ToString();
+                string role = p2Dm.DbDataSet.Tables[0].Rows[i][3].ToString();
+                string s_level = p2Dm.DbDataSet.Tables[0].Rows[i][2].ToString();
+                int level = Convert.ToInt32(!string.IsNullOrWhiteSpace(s_level) ? s_level : 0);
+
+                ModuleRoleModel roleModel = ModuleRoleModel.GetRole(module, role, level);
 
                 if (roleModel != null)
                     finalData.DbDataSet.Tables[0].Rows[i][2] = Resources.Resources.ResourceManager.GetString(roleModel.Designation);

@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Item
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCoditem { get; set; }
+		public string ItemValCoditem { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -69,7 +69,7 @@ namespace GenioMVC.ViewModels.Item
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
-				conds.Equal(CSGenioAldent.FldCoditem, this.ValCoditem ?? Navigation.GetStrValue("item"));
+				conds.Equal(CSGenioAldent.FldCoditem, this.ItemValCoditem ?? Navigation.GetStrValue("item"));
 
 				return conds;
 			}
@@ -97,7 +97,6 @@ namespace GenioMVC.ViewModels.Item
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -115,7 +114,7 @@ namespace GenioMVC.ViewModels.Item
 		/// <param name="userContext">The current user request context</param>
 		public Artig_ValLentrada_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
+			ItemValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
 		}
 
 		/// <summary>
@@ -133,10 +132,10 @@ namespace GenioMVC.ViewModels.Item
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAldent.FldDhentra, FieldType.DATAHORA, Resources.Resources.INSTANT_ENTRANCE27379, 16, 0, true),
-				new Exports.QColumn(CSGenioAindoc.FldDocumenr, FieldType.NUMERO, Resources.Resources.DOCUMENT_NO_30174, 10, 0, true),
-				new Exports.QColumn(CSGenioAldent.FldLine, FieldType.NUMERO, Resources.Resources.LINE27983, 5, 1, true),
-				new Exports.QColumn(CSGenioAldent.FldQtdentra, FieldType.NUMERO, Resources.Resources.QTD_ENTRY35144, 10, 0, true),
+				new Exports.QColumn(CSGenioAldent.FldDhentra, FieldType.DATETIME, Resources.Resources.INSTANT_ENTRANCE27379, 16, 0, true),
+				new Exports.QColumn(CSGenioAindoc.FldDocumenr, FieldType.NUMERIC, Resources.Resources.DOCUMENT_NO_30174, 10, 0, true),
+				new Exports.QColumn(CSGenioAldent.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 5, 1, true),
+				new Exports.QColumn(CSGenioAldent.FldQtdentra, FieldType.NUMERIC, Resources.Resources.QTD_ENTRY35144, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -201,10 +200,8 @@ namespace GenioMVC.ViewModels.Item
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCoditem != null)
-				crs.Equal(CSGenioAldent.FldCoditem, this.ValCoditem);
-
-
+			if (this.ItemValCoditem != null)
+				crs.Equal(CSGenioAldent.FldCoditem, this.ItemValCoditem);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -350,8 +347,7 @@ namespace GenioMVC.ViewModels.Item
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("ldent", "dhentra");
+					firstVisibleColumn ??= new FieldRef("ldent", "dhentra");
 				}
 
 
@@ -380,6 +376,8 @@ namespace GenioMVC.ViewModels.Item
 
 // USE /[MANUAL GQT OVERRQ ARTIG_PSEUDLENTRADA]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -407,7 +405,7 @@ namespace GenioMVC.ViewModels.Item
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAldent> listing = Models.ModelBase.Where<CSGenioAldent>(m_userContext, false, artig___pseudlentradaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARTIG___PSEUDLENTRADA", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAldent> listing = Models.ModelBase.Where<CSGenioAldent>(m_userContext, distinct, artig___pseudlentradaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARTIG___PSEUDLENTRADA", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -489,6 +487,8 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -541,7 +541,7 @@ namespace GenioMVC.ViewModels.Item
 			new TableSearchColumn("ValDhentra", CSGenioAldent.FldDhentra, typeof(DateTime?)),
 			new TableSearchColumn("Indoc_ValDocumenr", CSGenioAindoc.FldDocumenr, typeof(decimal?)),
 			new TableSearchColumn("ValLine", CSGenioAldent.FldLine, typeof(decimal?)),
-			new TableSearchColumn("ValQtdentra", CSGenioAldent.FldQtdentra, typeof(decimal?))
+			new TableSearchColumn("ValQtdentra", CSGenioAldent.FldQtdentra, typeof(decimal?)),
 		];
 	}
 }

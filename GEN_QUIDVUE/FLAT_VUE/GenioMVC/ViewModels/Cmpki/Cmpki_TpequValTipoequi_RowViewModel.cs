@@ -12,22 +12,21 @@ public class Cmpki_TpequValTipoequi_RowViewModel : Models.Tpequ
 
 	public Cmpki_TpequValTipoequi_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public Cmpki_TpequValTipoequi_RowViewModel(UserContext userContext, CSGenioAtpequ val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -118,4 +117,12 @@ public class Cmpki_TpequValTipoequi_RowViewModel : Models.Tpequ
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
 	public string BackgroundColor => "";
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

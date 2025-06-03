@@ -13,11 +13,14 @@
 							class="control-row-group">
 							<base-input-structure
 								class="i-text">
-								<select-input
+								<q-select
 									v-if="Model.SelectLists"
 									v-model="Model.RelationMode"
-									:options="Model.SelectLists.RelationsMode"
-									:label="Resources.TIPO_DE_PESQUISA13226" />
+									item-value="Value"
+									item-label="Text"
+									:items="Model.SelectLists.RelationsMode"
+									:label="Resources.TIPO_DE_PESQUISA13226"
+									size="large" />
 							</base-input-structure>
 						</q-control-wrapper>
 						<q-control-wrapper class="control-row-group">
@@ -40,7 +43,6 @@
 
 					<row class="footer-btn">
 						<q-button
-							b-style="secondary"
 							:label="Resources.EXECUTAR_ATUALIZACAO61833"
 							@click="DataQualityStart" />
 						<data-system-badge
@@ -98,9 +100,9 @@
 				</row>
 
 				<row v-if="Model.Active">
-					<label :for="'progressbarVw_' + Model.Num">
-						{{ Resources.PROGRESSO52692 }}
-					</label>
+					<q-label
+						:for="'progressbarVw_' + Model.Num"
+						:label="Resources.PROGRESSO52692" />
 					<div
 						class="progress"
 						:id="'progressbarVw_' + Model.Num">

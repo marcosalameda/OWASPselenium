@@ -24,7 +24,18 @@ namespace GenioMVC.Controllers
 
         public async Task ChatbotApiStreamProxy()
         {
-            var stream = await _chatbotService.GetChatbotStreamAsync(HttpContext.Request.Body);
+            var form = HttpContext.Request.Form;
+
+            var formFields = form
+                .SelectMany(f => f.Value.Select(val => new KeyValuePair<string, string>(f.Key, val)))
+                .ToList();
+
+            var formFiles = form.Files
+                .Select(file => ( file.Name, file.ContentType, file.OpenReadStream()))
+                .ToList();
+
+            var stream = await _chatbotService.GetChatbotStreamAsync(formFields, formFiles);
+
             Response.ContentType = "text/event-stream";
 
             using (var reader = new StreamReader(stream))

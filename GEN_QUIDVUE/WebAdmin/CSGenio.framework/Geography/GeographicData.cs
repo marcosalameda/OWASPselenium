@@ -251,6 +251,24 @@ namespace CSGenio.framework.Geography
 			return geoData;
 		}
 
+		public static GeographicPoint GetPointFromText(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text) || text == "Null")
+                return null;
+
+            var geoReader = new WKTReader();
+            IGeometry readData = geoReader.Read(text);
+
+			if (readData is Point)
+			{
+				double lat = readData.Coordinate.CoordinateValue.Y;
+				double lng = readData.Coordinate.CoordinateValue.X;
+				return new GeographicPoint(lat, lng);
+			}
+
+			return null;
+        }
+
 		public static ICollection<GeographicShape> SplitGeometry(GeographicData geometry)
 		{
 			return geometry?.shapes ?? new List<GeographicShape>();

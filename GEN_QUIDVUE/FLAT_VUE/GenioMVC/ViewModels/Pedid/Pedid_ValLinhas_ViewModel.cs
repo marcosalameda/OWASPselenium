@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Pedid
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodpedid { get; set; }
+		public string PedidValCodpedid { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -69,7 +69,7 @@ namespace GenioMVC.ViewModels.Pedid
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
-				conds.Equal(CSGenioAlnhpd.FldCodpedid, this.ValCodpedid ?? Navigation.GetStrValue("pedid"));
+				conds.Equal(CSGenioAlnhpd.FldCodpedid, this.PedidValCodpedid ?? Navigation.GetStrValue("pedid"));
 
 				return conds;
 			}
@@ -97,7 +97,6 @@ namespace GenioMVC.ViewModels.Pedid
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -115,7 +114,7 @@ namespace GenioMVC.ViewModels.Pedid
 		/// <param name="userContext">The current user request context</param>
 		public Pedid_ValLinhas_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodpedid = userContext.CurrentNavigation.CurrentLevel.GetEntry("pedid")?.ToString();
+			PedidValCodpedid = userContext.CurrentNavigation.CurrentLevel.GetEntry("pedid")?.ToString();
 		}
 
 		/// <summary>
@@ -133,8 +132,8 @@ namespace GenioMVC.ViewModels.Pedid
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlnhpd.FldLine, FieldType.NUMERO, Resources.Resources.LINE27983, 3, 0, true),
-				new Exports.QColumn(CSGenioAlnhpd.FldQuantida, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 3, 0, true),
+				new Exports.QColumn(CSGenioAlnhpd.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 3, 0, true),
+				new Exports.QColumn(CSGenioAlnhpd.FldQuantida, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 3, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -199,10 +198,8 @@ namespace GenioMVC.ViewModels.Pedid
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodpedid != null)
-				crs.Equal(CSGenioAlnhpd.FldCodpedid, this.ValCodpedid);
-
-
+			if (this.PedidValCodpedid != null)
+				crs.Equal(CSGenioAlnhpd.FldCodpedid, this.PedidValCodpedid);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -348,8 +345,7 @@ namespace GenioMVC.ViewModels.Pedid
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("lnhpd", "line");
+					firstVisibleColumn ??= new FieldRef("lnhpd", "line");
 				}
 
 
@@ -378,6 +374,8 @@ namespace GenioMVC.ViewModels.Pedid
 
 // USE /[MANUAL GQT OVERRQ PEDID_PSEUDLINHAS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -405,7 +403,7 @@ namespace GenioMVC.ViewModels.Pedid
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlnhpd> listing = Models.ModelBase.Where<CSGenioAlnhpd>(m_userContext, false, pedid___pseudlinhas__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PEDID___PSEUDLINHAS__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlnhpd> listing = Models.ModelBase.Where<CSGenioAlnhpd>(m_userContext, distinct, pedid___pseudlinhas__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PEDID___PSEUDLINHAS__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -485,6 +483,8 @@ namespace GenioMVC.ViewModels.Pedid
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -535,7 +535,7 @@ namespace GenioMVC.ViewModels.Pedid
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValLine", CSGenioAlnhpd.FldLine, typeof(decimal?)),
-			new TableSearchColumn("ValQuantida", CSGenioAlnhpd.FldQuantida, typeof(decimal?))
+			new TableSearchColumn("ValQuantida", CSGenioAlnhpd.FldQuantida, typeof(decimal?)),
 		];
 	}
 }

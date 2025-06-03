@@ -234,7 +234,7 @@ namespace GenioMVC.ViewModels
 					{
 						string minLimValue = limit.AreaLimita.Fields[
 							limit.AreaLimita.Alias + "." + "minLim"
-						].ToString();
+						].Value.ToString();
 
 						limitDisplayData.ValueMin = GenioMVC.Models.AuditModel.GetHumanValue(
 							sp,
@@ -250,7 +250,7 @@ namespace GenioMVC.ViewModels
 					{
 						string maxLimValue = limit.AreaLimita.Fields[
 							limit.AreaLimita.Alias + "." + "maxLim"
-						].ToString();
+						].Value.ToString();
 
 						limitDisplayData.ValueMax = GenioMVC.Models.AuditModel.GetHumanValue(
 							sp,
@@ -369,7 +369,7 @@ namespace GenioMVC.ViewModels
 					else if (
 						LimitArea.Alias == TableAlias
 						&& FieldName == LimitArea.Information.PrimaryKeyName
-						&& CSGenio.business.GlobalFunctions.emptyC(
+						&& CSGenio.framework.GenFunctions.emptyC(
 							LimitArea.Information.HumanKeyName
 						) == 0
 					) //special case

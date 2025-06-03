@@ -48,7 +48,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Address Number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Addrl.ValAddressnumber")]
 		[NumericAttribute(0)]
-		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDecimal(value); } }
+		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDecimal(value); } }
 
 		[DisplayName("Object Type")]
 		/// <summary>Field : "Object Type" Tipo: "AN" Formula:  ""</summary>

@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Wareh
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodwareh { get; set; }
+		public string WarehValCodwareh { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Wareh
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Wareh
 		/// <param name="userContext">The current user request context</param>
 		public Armaz_ValPessarma_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodwareh = userContext.CurrentNavigation.CurrentLevel.GetEntry("wareh")?.ToString();
+			WarehValCodwareh = userContext.CurrentNavigation.CurrentLevel.GetEntry("wareh")?.ToString();
 		}
 
 		/// <summary>
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Wareh
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_COD_TEXTO, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
-				new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_TEXT, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
+				new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERIC, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -195,10 +194,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodwareh != null)
-				crs.Equal(CSGenioAwpess.FldCodwareh, this.ValCodwareh);
-
-
+			if (this.WarehValCodwareh != null)
+				crs.Equal(CSGenioAwpess.FldCodwareh, this.WarehValCodwareh);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -336,8 +333,7 @@ namespace GenioMVC.ViewModels.Wareh
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("wpess", "name");
+					firstVisibleColumn ??= new FieldRef("wpess", "name");
 				}
 
 
@@ -366,6 +362,8 @@ namespace GenioMVC.ViewModels.Wareh
 
 // USE /[MANUAL GQT OVERRQ ARMAZ_PSEUDPESSARMA]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -393,7 +391,7 @@ namespace GenioMVC.ViewModels.Wareh
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAwpess> listing = Models.ModelBase.Where<CSGenioAwpess>(m_userContext, false, armaz___pseudpessarmaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARMAZ___PSEUDPESSARMA", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAwpess> listing = Models.ModelBase.Where<CSGenioAwpess>(m_userContext, distinct, armaz___pseudpessarmaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARMAZ___PSEUDPESSARMA", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -473,6 +471,8 @@ namespace GenioMVC.ViewModels.Wareh
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -524,7 +524,7 @@ namespace GenioMVC.ViewModels.Wareh
 		[
 			new TableSearchColumn("ValName", CSGenioAwpess.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValSex", CSGenioAwpess.FldSex, typeof(string), array : "SEXO"),
-			new TableSearchColumn("ValNfunc", CSGenioAwpess.FldNfunc, typeof(decimal?))
+			new TableSearchColumn("ValNfunc", CSGenioAwpess.FldNfunc, typeof(decimal?)),
 		];
 	}
 }

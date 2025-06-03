@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Recei
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,13 +127,13 @@ namespace GenioMVC.ViewModels.Recei
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.LEGAL_NAME42902, 85, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldInitials, FieldType.TEXTO, Resources.Resources.INITIALS22754, 10, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldTaxnumbe, FieldType.TEXTO, Resources.Resources.VAT_NUMBER24236, 20, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldPhonenum, FieldType.TEXTO, Resources.Resources.PHONE_NUMBER20774, 20, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldContact, FieldType.TEXTO, Resources.Resources.CONTACT59247, 20, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldLanguage, FieldType.TEXTO, Resources.Resources.LANGUAGE16872, 2, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 85, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldInitials, FieldType.TEXT, Resources.Resources.INITIALS22754, 10, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldTaxnumbe, FieldType.TEXT, Resources.Resources.VAT_NUMBER24236, 20, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldPhonenum, FieldType.TEXT, Resources.Resources.PHONE_NUMBER20774, 20, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldContact, FieldType.TEXT, Resources.Resources.CONTACT59247, 20, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldLanguage, FieldType.TEXT, Resources.Resources.LANGUAGE16872, 2, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -198,9 +197,6 @@ namespace GenioMVC.ViewModels.Recei
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -344,8 +340,7 @@ namespace GenioMVC.ViewModels.Recei
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("entit", "name");
+					firstVisibleColumn ??= new FieldRef("entit", "name");
 				}
 
 
@@ -363,6 +358,8 @@ namespace GenioMVC.ViewModels.Recei
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ RECEI_ENTITNAME]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -390,7 +387,7 @@ namespace GenioMVC.ViewModels.Recei
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAentit> listing = Models.ModelBase.Where<CSGenioAentit>(m_userContext, false, recei___entitname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_RECEI___ENTITNAME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAentit> listing = Models.ModelBase.Where<CSGenioAentit>(m_userContext, distinct, recei___entitname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_RECEI___ENTITNAME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -470,6 +467,8 @@ namespace GenioMVC.ViewModels.Recei
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -525,7 +524,7 @@ namespace GenioMVC.ViewModels.Recei
 			new TableSearchColumn("ValEmail", CSGenioAentit.FldEmail, typeof(string)),
 			new TableSearchColumn("ValPhonenum", CSGenioAentit.FldPhonenum, typeof(string)),
 			new TableSearchColumn("ValContact", CSGenioAentit.FldContact, typeof(string)),
-			new TableSearchColumn("ValLanguage", CSGenioAentit.FldLanguage, typeof(string))
+			new TableSearchColumn("ValLanguage", CSGenioAentit.FldLanguage, typeof(string)),
 		];
 	}
 }

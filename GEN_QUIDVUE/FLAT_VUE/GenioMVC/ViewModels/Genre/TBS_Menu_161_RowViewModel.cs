@@ -12,22 +12,21 @@ public class TBS_Menu_161_RowViewModel : Models.Genre
 
 	public TBS_Menu_161_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public TBS_Menu_161_RowViewModel(UserContext userContext, CSGenioAgenre val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -130,12 +129,20 @@ public class TBS_Menu_161_RowViewModel : Models.Genre
 	/// Formula: iif(emptyC([GENRE->TEXTCOLO])==1,RGB(0,0,0),NCOLOUR([GENRE->TEXTCOLO]))
 	/// </summary>
 	[JsonPropertyName("foregroundColor")]
-	public string ForegroundColor => ((CSGenio.business.GlobalFunctions.emptyC(((string)this.ValTextcolo))==1)?("RGB(0,0,0)"):(((string)this.ValTextcolo)));
+	public string ForegroundColor => ((CSGenio.framework.GenFunctions.emptyC(((string)this.ValTextcolo))==1)?("RGB(0,0,0)"):(((string)this.ValTextcolo)));
 
 	/// <summary>
 	/// The background color
 	/// Formula: iif(emptyC([GENRE->BACKCOLO])==1,RGB(255,255,255),NCOLOUR([GENRE->BACKCOLO]))
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
-	public string BackgroundColor => ((CSGenio.business.GlobalFunctions.emptyC(((string)this.ValBackcolo))==1)?("RGB(255,255,255)"):(((string)this.ValBackcolo)));
+	public string BackgroundColor => ((CSGenio.framework.GenFunctions.emptyC(((string)this.ValBackcolo))==1)?("RGB(255,255,255)"):(((string)this.ValBackcolo)));
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

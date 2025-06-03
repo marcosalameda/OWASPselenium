@@ -11,11 +11,13 @@
             <template #actions="props">
               <q-button-group borderless>
                 <q-button
+                  variant="text"
                   :title="Resources.EDITAR11616"
                   @click="ManageNotif(2, props.row)">
                   <q-icon icon="pencil" />
                 </q-button>
                 <q-button
+                  variant="text"
                   :title="Resources.PROCESSAR07293"
                   @click="Send(props.row)">
                   <q-icon icon="send" />
@@ -23,17 +25,20 @@
               </q-button-group>
             </template>
             <template #sendsEmail="props">
-              <q-icon v-if="props.row.SendsEmail" icon="check" />
-              <q-icon v-else icon="close" />
+              <q-icon 
+                :icon="props.row.SendsEmail ? 'check' : 'close'"
+                :color="props.row.SendsEmail ? 'success' : 'danger'" />
             </template>
             <template #sendsToDatabase="props">
-              <q-icon v-if="props.row.SendsToDatabase" icon="check" />
-              <q-icon v-else icon="close" />
+              <q-icon 
+                :icon="props.row.SendsToDatabase ? 'check' : 'close'"
+                :color="props.row.SendsToDatabase ? 'success' : 'danger'" />
             </template>
         </qtable>
     </row>
     <row>
       <q-button
+        variant="bold"
         :label="Resources.PROCESSAR_TODAS18012"
         @click="SendAll">
         <q-icon icon="send" />

@@ -84,7 +84,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Level" Tipo: "N" Formula: + "GetLevelFromRole([S_UA->NIVEL], [S_UA->ROLE])"</summary>
 		[ShouldSerialize("S_ua.ValNivel")]
 		[NumericAttribute(0)]
-		public decimal? ValNivel { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNivel, 0)); } set { klass.ValNivel = Convert.ToDecimal(value); } }
+		public decimal? ValNivel { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNivel, 0)); } set { klass.ValNivel = Convert.ToDecimal(value); } }
 
 		[DisplayName("Created by")]
 		/// <summary>Field : "Created by" Tipo: "ON" Formula:  ""</summary>

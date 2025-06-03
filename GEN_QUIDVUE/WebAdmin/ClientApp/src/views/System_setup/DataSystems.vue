@@ -45,21 +45,21 @@
 			<template #actions="props">
 				<div class="q-table__actions-btns">
 					<q-button
+						variant="text"
 						:title="texts.CONFIGURAR09280"
-						bStyle="tertiary"
 						@click="configureDataSystem(props.row)">
 						<q-icon icon="pencil" />
 					</q-button>
 					<q-button
+						variant="text"
 						:title="texts.DUPLICAR09748"
-						bStyle="tertiary"
 						@click="duplicateDataSystem(props.row)">
 						<q-icon icon="duplicate" />
 					</q-button>
 					<q-button
+						variant="text"
 						:title="texts.APAGAR04097"
 						:disabled="props.row.Year === configDefaultDs"
-						bStyle="tertiary"
 						@click="confirmDelete(props.row)">
 						<q-icon icon="bin" />
 					</q-button>
@@ -79,7 +79,7 @@
 
 		<row>
 			<q-button 
-				b-style="primary"
+				variant="bold"
 				:label="texts.GRAVAR_CONFIGURACAO36308"
 				@click="SaveConfigDataSystems" />
 		</row>
@@ -362,7 +362,7 @@
 					{
 						id: 'create-ds-btn',
 						props: {
-							bStyle: 'primary',
+							variant: 'bold',
 							label: this.texts.CRIAR24836,
 							disabled: this.invalidNewDataSystem
 						},
@@ -371,7 +371,6 @@
 					{
 						id: 'cancel-ds-btn',
 						props: {
-							bStyle: 'secondary',
 							label: this.texts.CANCELAR49513
 						},
 						action: () => this.clearNewDataSystemInfo()
@@ -399,7 +398,7 @@
 						const dialogButtons = [{
 							id: 'close-dialog-btn',
 							props: {
-								bStyle: 'primary',
+								variant: 'bold',
 								label: this.texts.OK15819
 							},
 							action: () => {
@@ -496,7 +495,12 @@
 					}
 
 					this.updateDataSystemList()
-					this.setDefaultDialog(message, null, 'check-circle-outline', false)
+
+					const dialogIcon = {
+						icon: 'check-circle-outline',
+						color: 'success'
+					}
+					this.setDefaultDialog(message, null, dialogIcon, false)
 				})
 			},
 
@@ -517,7 +521,7 @@
 				// Change current data system to the one in the clicked row
 				this.$router.replace({ name: 'system_setup', params: { culture: this.currentLang, system: row.Year } })
 
-				this.$emit('changeTab', 'tabGroup', 'selectedTab', 'database-tab')
+				this.$emit('change-tab', 'tabGroup', 'selectedTab', 'database-tab')
 			},
 
 			updateDataSystemList() {
@@ -530,7 +534,8 @@
 					{
 						id: 'delete-btn',
 						props: {
-							bStyle: 'danger',
+							variant: 'bold',
+							color: 'danger',
 							label: this.texts.APAGAR04097
 						},
 						icon: { icon: 'bin' },
@@ -539,14 +544,17 @@
 					{
 						id: 'cancel-btn',
 						props: {
-							bStyle: 'secondary',
 							label: this.texts.CANCELAR49513
 						},
 						icon: { icon: 'cancel' }
 					},
 				]
 
-				this.setDefaultDialog(message, buttons, 'alert', false)
+				const dialogIcon = {
+					icon: 'alert',
+					color: 'warning'
+				}
+				this.setDefaultDialog(message, buttons, dialogIcon, false)
 			},
 
 			/**
@@ -573,7 +581,7 @@
 					{
 						id: 'ok-btn',
 						props: {
-							bStyle: 'primary',
+							variant: 'bold',
 							label: this.texts.OK15819
 						}
 					}
@@ -592,7 +600,7 @@
 					this.defaultDialogButtons = buttons
 
 				if (icon)
-					this.defaultDialogIcon = { icon: icon }
+					this.defaultDialogIcon = icon
 
 				this.isErrorDialog = isError
 				this.showDefaultDialog = true

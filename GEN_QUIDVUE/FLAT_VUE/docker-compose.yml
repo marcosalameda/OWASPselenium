@@ -8,29 +8,16 @@ services:
       MSSQL_PID: "Developer"
     ports:
       - "2433:1433"
-  
-  db-init:
-    build: ../WebAdmin
-    container_name: db-init
-    environment:
-      CONFIG_PATH: /app/config
     volumes:
-      - ../config:/app/config
-    depends_on:
-      - sqlserver
-    entrypoint: >
-      bash -c "
-      echo 'Waiting for SQL Server to be ready...';
-      sleep 5;
-      echo 'Running database configuration...';
-      ./AdminCLI dbconfig-write -u sa -p QuidSpark! --server sqlserver --schema GQT0 --type SQLSERVER;
-      echo 'Reindexing database...';
-      ./AdminCLI reindex -u sa -p QuidSpark!;
-      echo 'Creating QUIDGEST default user...';
-      ./AdminCLI reindex -u sa -p QuidSpark! --single-script CREATEDEFAULTUSER;
-      echo 'Database initialization complete!';
-      exit 0;"
-      
+      - ../databases/db:/var/opt/mssql/data
+      - ../databases/log:/var/opt/mssql/log
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "$$MSSQL_SA_PASSWORD" -Q "SELECT 1" -C -b -o /dev/null
+      interval: 10s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+       
   webadmin:
     build: ../WebAdmin
     container_name: webadmin
@@ -41,11 +28,8 @@ services:
     volumes:
       - ../config:/app/config
     depends_on:
-      db-init:
-        condition: service_completed_successfully
-    dns: # Add Quidgest DNS resolution
-      - "172.16.0.28"
-      - "1.1.1.1"
+      sqlserver:
+        condition: service_healthy
       
   genioapp:
     build: .
@@ -57,8 +41,5 @@ services:
     volumes:
       - ../config:/app/config
     depends_on:
-      - webadmin
-    dns: # Add Quidgest DNS resolution
-      - "172.16.0.28"
-      - "1.1.1.1"
-      
+      sqlserver:
+        condition: service_healthy

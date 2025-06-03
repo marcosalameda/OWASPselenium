@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Conta;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER CONTA]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ContaController : ControllerBase
 	{
-		public ContaController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ContaController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION CONTA]/
 
 
@@ -162,6 +171,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
 
 
 

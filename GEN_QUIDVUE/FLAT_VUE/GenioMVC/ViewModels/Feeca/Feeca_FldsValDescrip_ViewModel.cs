@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Feeca
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Feeca
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -330,8 +326,7 @@ namespace GenioMVC.ViewModels.Feeca
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("flds", "descrip");
+					firstVisibleColumn ??= new FieldRef("flds", "descrip");
 				}
 
 
@@ -349,6 +344,8 @@ namespace GenioMVC.ViewModels.Feeca
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ FEECA_FLDSDESCRIP]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -376,7 +373,7 @@ namespace GenioMVC.ViewModels.Feeca
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, false, feeca___flds_descrip_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FEECA___FLDS_DESCRIP_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, distinct, feeca___flds_descrip_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FEECA___FLDS_DESCRIP_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -456,6 +453,8 @@ namespace GenioMVC.ViewModels.Feeca
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -505,7 +504,7 @@ namespace GenioMVC.ViewModels.Feeca
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValDescrip", CSGenioAflds.FldDescrip, typeof(string))
+			new TableSearchColumn("ValDescrip", CSGenioAflds.FldDescrip, typeof(string)),
 		];
 	}
 }

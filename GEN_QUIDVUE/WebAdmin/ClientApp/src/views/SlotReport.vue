@@ -10,7 +10,14 @@
                 </div>
                 <div class="modal-body">
                     <row>
-                        <select-input v-model="Model.ValSlotid" :label="Resources.IDENTIFICADOR_DE_SLO30549" :options="slotReportIds" :isReadOnly="blockForm" :size="'xlarge'"></select-input>
+                        <q-select 
+                            v-model="Model.ValSlotid"
+                            :label="Resources.IDENTIFICADOR_DE_SLO30549"
+                            item-value="Value"
+                            item-label="Text"
+                            :items="slotReportIds"
+                            :readonly="blockForm"
+                            size="xlarge" />
                     </row>
                     <row>
                         <text-input v-model="Model.ValReport" :label="Resources.RELATORIO62426" :isReadOnly="blockForm" :size="'xlarge'"></text-input>
@@ -22,12 +29,13 @@
                 <div class="modal-footer">
                     <q-button
                         v-if="Model.FormMode == 'delete'"
-                        b-style="danger"
+                        variant="bold"
+                        color="danger"
                         :label="Resources.APAGAR04097"
                         @click="fnSubmit" />
                     <q-button
                         v-else
-                        b-style="primary"
+                        variant="bold"
                         :label="Resources.GRAVAR45301"
                         @click="fnSubmit" />
                     <q-button

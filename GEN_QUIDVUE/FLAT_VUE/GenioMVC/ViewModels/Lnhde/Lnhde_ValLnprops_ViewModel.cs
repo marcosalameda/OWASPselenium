@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Lnhde
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodlnhde { get; set; }
+		public string LnhdeValCodlnhde { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Lnhde
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Lnhde
 		/// <param name="userContext">The current user request context</param>
 		public Lnhde_ValLnprops_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodlnhde = userContext.CurrentNavigation.CurrentLevel.GetEntry("lnhde")?.ToString();
+			LnhdeValCodlnhde = userContext.CurrentNavigation.CurrentLevel.GetEntry("lnhde")?.ToString();
 		}
 
 		/// <summary>
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Lnhde
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlnhdf.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAlnhdf.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -193,10 +192,8 @@ namespace GenioMVC.ViewModels.Lnhde
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodlnhde != null)
-				crs.Equal(CSGenioAlnhdf.FldCodlnhde, this.ValCodlnhde);
-
-
+			if (this.LnhdeValCodlnhde != null)
+				crs.Equal(CSGenioAlnhdf.FldCodlnhde, this.LnhdeValCodlnhde);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -334,8 +331,7 @@ namespace GenioMVC.ViewModels.Lnhde
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("lnhdf", "name");
+					firstVisibleColumn ??= new FieldRef("lnhdf", "name");
 				}
 
 
@@ -364,6 +360,8 @@ namespace GenioMVC.ViewModels.Lnhde
 
 // USE /[MANUAL GQT OVERRQ LNHDE_PSEUDLNPROPS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -391,7 +389,7 @@ namespace GenioMVC.ViewModels.Lnhde
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlnhdf> listing = Models.ModelBase.Where<CSGenioAlnhdf>(m_userContext, false, lnhde___pseudlnprops_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHDE___PSEUDLNPROPS_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlnhdf> listing = Models.ModelBase.Where<CSGenioAlnhdf>(m_userContext, distinct, lnhde___pseudlnprops_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHDE___PSEUDLNPROPS_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -471,6 +469,8 @@ namespace GenioMVC.ViewModels.Lnhde
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -520,7 +520,7 @@ namespace GenioMVC.ViewModels.Lnhde
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValName", CSGenioAlnhdf.FldName, typeof(string), defaultSearch : true)
+			new TableSearchColumn("ValName", CSGenioAlnhdf.FldName, typeof(string), defaultSearch : true),
 		];
 	}
 }

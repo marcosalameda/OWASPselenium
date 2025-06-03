@@ -465,7 +465,7 @@ namespace GenioMVC.ViewModels.Notif
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValBegin", Resources.Resources.START00919, ViewModelConversion.ToDateTime(ValBegin), FieldType.DATAHORA.Formatting);
+			validator.Required("ValBegin", Resources.Resources.START00919, ViewModelConversion.ToDateTime(ValBegin), FieldType.DATETIME.GetFormatting());
 			validator.StringLength("ValEmail", Resources.Resources.RECEIVER_S_EMAIL60306, ValEmail, 100);
 			validator.StringLength("ValIdnotif", Resources.Resources.ID_OF_THE_NOTIFICATI28920, ValIdnotif, 50);
 			validator.StringLength("ValIdmsg", Resources.Resources.MENSAGE_ID32109, ValIdmsg, 85);
@@ -621,7 +621,7 @@ namespace GenioMVC.ViewModels.Notif
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -668,7 +668,7 @@ namespace GenioMVC.ViewModels.Notif
 				// Fill List fields
 				this.ValCodpesso = ViewModelConversion.ToString(row["pess2.codpesso"]);
 				TablePess2Name.Value = (string)row["pess2.name"];
-				if (GlobalFunctions.emptyG(this.ValCodpesso) == 1)
+				if (GenFunctions.emptyG(this.ValCodpesso) == 1)
 				{
 					this.ValCodpesso = "";
 					TablePess2Name.Value = "";

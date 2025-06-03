@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAtradu(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR TRADU]/
 		}
 
@@ -46,69 +44,62 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codtradu", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codtradu", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("referenc", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "referenc", FieldType.TEXT);
 			Qfield.FieldDescription = "Reference";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "REFERENCE28402";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codidio1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codidio1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "language";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LANGUAGE33172";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("atraduzi", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "atraduzi", FieldType.TEXT);
 			Qfield.FieldDescription = "To review";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TO_REVIEW46268";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codidio2", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codidio2", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Language";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LANGUAGE16872";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("traduzid", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "traduzid", FieldType.TEXT);
 			Qfield.FieldDescription = "Translated";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TRANSLATED03333";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -183,8 +174,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Translation";
 			info.AreaPluralDesignation="Translations";
 			info.DescriptionCav="TRANSLATION05211";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

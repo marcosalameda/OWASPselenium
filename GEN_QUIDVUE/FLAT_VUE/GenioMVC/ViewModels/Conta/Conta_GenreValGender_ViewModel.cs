@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Conta
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Conta
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXTO, Resources.Resources.GENUS37471, 20, 0, true),
+				new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXT, Resources.Resources.GENUS37471, 20, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Conta
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Conta
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("genre", "gender");
+					firstVisibleColumn ??= new FieldRef("genre", "gender");
 				}
 
 
@@ -368,6 +363,8 @@ namespace GenioMVC.ViewModels.Conta
 
 // USE /[MANUAL GQT OVERRQ CONTA_GENREGENDER]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -394,7 +391,7 @@ namespace GenioMVC.ViewModels.Conta
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAgenre> listing = Models.ModelBase.Where<CSGenioAgenre>(m_userContext, false, conta___genregender__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_CONTA___GENREGENDER__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAgenre> listing = Models.ModelBase.Where<CSGenioAgenre>(m_userContext, distinct, conta___genregender__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_CONTA___GENREGENDER__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -474,6 +471,8 @@ namespace GenioMVC.ViewModels.Conta
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -523,7 +522,7 @@ namespace GenioMVC.ViewModels.Conta
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValGender", CSGenioAgenre.FldGender, typeof(string))
+			new TableSearchColumn("ValGender", CSGenioAgenre.FldGender, typeof(string)),
 		];
 	}
 }

@@ -44,7 +44,7 @@ namespace GenioMVC.ViewModels.Outpt
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodoutpt { get; set; }
+		public string OutptValCodoutpt { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -71,7 +71,7 @@ namespace GenioMVC.ViewModels.Outpt
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
-				conds.Equal(CSGenioAoutpu.FldCodoutpt, this.ValCodoutpt ?? Navigation.GetStrValue("outpt"));
+				conds.Equal(CSGenioAoutpu.FldCodoutpt, this.OutptValCodoutpt ?? Navigation.GetStrValue("outpt"));
 
 				return conds;
 			}
@@ -99,7 +99,6 @@ namespace GenioMVC.ViewModels.Outpt
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -117,7 +116,7 @@ namespace GenioMVC.ViewModels.Outpt
 		/// <param name="userContext">The current user request context</param>
 		public Dsaid_ValSaidas_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodoutpt = userContext.CurrentNavigation.CurrentLevel.GetEntry("outpt")?.ToString();
+			OutptValCodoutpt = userContext.CurrentNavigation.CurrentLevel.GetEntry("outpt")?.ToString();
 		}
 
 		/// <summary>
@@ -135,11 +134,11 @@ namespace GenioMVC.ViewModels.Outpt
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAoutpu.FldLine, FieldType.NUMERO, Resources.Resources.LINE27983, 5, 1, true),
-				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 50, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
-				new Exports.QColumn(CSGenioAoutpu.FldExitqnty, FieldType.NUMERO, Resources.Resources.QTD_OUTPUT12876, 10, 0, true),
-				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+				new Exports.QColumn(CSGenioAoutpu.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 5, 1, true),
+				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 50, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXT, Resources.Resources.CODE49225, 15, 0, true),
+				new Exports.QColumn(CSGenioAoutpu.FldExitqnty, FieldType.NUMERIC, Resources.Resources.QTD_OUTPUT12876, 10, 0, true),
+				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -204,10 +203,8 @@ namespace GenioMVC.ViewModels.Outpt
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodoutpt != null)
-				crs.Equal(CSGenioAoutpu.FldCodoutpt, this.ValCodoutpt);
-
-
+			if (this.OutptValCodoutpt != null)
+				crs.Equal(CSGenioAoutpu.FldCodoutpt, this.OutptValCodoutpt);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -353,8 +350,7 @@ namespace GenioMVC.ViewModels.Outpt
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("outpu", "line");
+					firstVisibleColumn ??= new FieldRef("outpu", "line");
 				}
 
 
@@ -383,6 +379,8 @@ namespace GenioMVC.ViewModels.Outpt
 
 // USE /[MANUAL GQT OVERRQ DSAID_PSEUDSAIDAS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -410,7 +408,7 @@ namespace GenioMVC.ViewModels.Outpt
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAoutpu> listing = Models.ModelBase.Where<CSGenioAoutpu>(m_userContext, false, dsaid___pseudsaidas__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DSAID___PSEUDSAIDAS__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAoutpu> listing = Models.ModelBase.Where<CSGenioAoutpu>(m_userContext, distinct, dsaid___pseudsaidas__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DSAID___PSEUDSAIDAS__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -494,6 +492,8 @@ namespace GenioMVC.ViewModels.Outpt
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -557,7 +557,7 @@ namespace GenioMVC.ViewModels.Outpt
 			new TableSearchColumn("Item_ValItemdes", CSGenioAitem.FldItemdes, typeof(string)),
 			new TableSearchColumn("Item_ValItemcod", CSGenioAitem.FldItemcod, typeof(string)),
 			new TableSearchColumn("ValExitqnty", CSGenioAoutpu.FldExitqnty, typeof(decimal?)),
-			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string))
+			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string)),
 		];
 	}
 }

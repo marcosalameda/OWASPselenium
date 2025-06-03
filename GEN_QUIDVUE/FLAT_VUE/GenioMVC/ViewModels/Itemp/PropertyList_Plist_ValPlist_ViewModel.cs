@@ -73,6 +73,9 @@ public class PropertyList_Plist_ValPlist_ViewModel : PropertyList<GenioMVC.Model
 
 		foreach (var property in Fields)
 		{
+			if (!property.IsDirty)
+				continue;
+
 			var existingRow = GenioMVC.Models.Itemp.Find(property.RowId, m_userContext);
 			var model = existingRow ?? CreateNewRow();
 

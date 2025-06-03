@@ -3,7 +3,8 @@ using OpenQA.Selenium.Support.Extensions;
 
 namespace quidgest.uitests.controls;
 
-public class HorizontalMenuControl: PageObject, IMenuControl {
+public class HorizontalMenuControl : PageObject, IMenuControl
+{
 
     private IWebElement navbar => driver.FindElement(By.Id("main-header-navbar"));
 
@@ -16,7 +17,7 @@ public class HorizontalMenuControl: PageObject, IMenuControl {
 
     protected MenuTree _menuTree;
 
-    public HorizontalMenuControl(IWebDriver driver, MenuTree menuTree): base(driver) 
+    public HorizontalMenuControl(IWebDriver driver, MenuTree menuTree) : base(driver)
     {
         _menuTree = menuTree;
 
@@ -95,5 +96,10 @@ public class HorizontalMenuControl: PageObject, IMenuControl {
 
         // Convert to integer
         return counterElemText == null ? 0 : counterElemText.ToInteger(0);
+    }
+
+    public int GetBookmarkCount()
+    {
+        return bookmarks.FindElements(By.CssSelector(".bookmarks__btn--link")).Count;
     }
 }

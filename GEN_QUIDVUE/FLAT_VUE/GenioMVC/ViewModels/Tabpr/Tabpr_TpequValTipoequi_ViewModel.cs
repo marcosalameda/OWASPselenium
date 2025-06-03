@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Tabpr
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Tabpr
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Tabpr
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Tabpr
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tpequ", "tipoequi");
+					firstVisibleColumn ??= new FieldRef("tpequ", "tipoequi");
 				}
 
 
@@ -368,6 +363,8 @@ namespace GenioMVC.ViewModels.Tabpr
 
 // USE /[MANUAL GQT OVERRQ TABPR_TPEQUTIPOEQUI]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -394,7 +391,7 @@ namespace GenioMVC.ViewModels.Tabpr
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, false, tabpr___tpequtipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TABPR___TPEQUTIPOEQUI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, distinct, tabpr___tpequtipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TABPR___TPEQUTIPOEQUI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -474,6 +471,8 @@ namespace GenioMVC.ViewModels.Tabpr
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -523,7 +522,7 @@ namespace GenioMVC.ViewModels.Tabpr
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValTipoequi", CSGenioAtpequ.FldTipoequi, typeof(string))
+			new TableSearchColumn("ValTipoequi", CSGenioAtpequ.FldTipoequi, typeof(string)),
 		];
 	}
 }

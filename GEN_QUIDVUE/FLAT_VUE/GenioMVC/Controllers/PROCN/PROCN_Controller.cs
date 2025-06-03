@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Procn;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PROCN]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ProcnController : ControllerBase
 	{
-		public ProcnController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ProcnController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PROCN]/
 
 
@@ -166,6 +175,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Contac03" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -181,6 +191,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Contac06" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -194,6 +205,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Procn)
 			);
 		}
+
 
 
 		/// <summary>

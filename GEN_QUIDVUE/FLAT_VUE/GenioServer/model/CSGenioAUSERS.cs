@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAusers(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR USERS]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codusers", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codusers", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpsw", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">>LOGIN";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "__LOGIN09030";
 
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codperso", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codperso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">>PERSON";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "__PERSON30342";
 
@@ -78,9 +73,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -155,8 +149,6 @@ namespace CSGenio.business
 			info.AreaDesignation="User";
 			info.AreaPluralDesignation="Users";
 			info.DescriptionCav="USER57012";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

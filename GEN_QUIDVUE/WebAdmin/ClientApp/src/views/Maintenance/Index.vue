@@ -32,7 +32,7 @@
 
 					<br />
 
-					<div v-if="maintenanceModels.length > 1">
+					<div v-if="isMultiYearApp">
 						<q-card
 							class="q-card--admin-border-top q-card--admin-compact"
 							:title="Resources.INFORMACAO_DA_APLICA42351"
@@ -40,20 +40,20 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionApp"
-									:label="Resources.VERSAO_DA_APLICACAO45955"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DA_APLICACAO45955" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionReIdx"
-									:label="Resources.VERSAO_DOS_SCRIPTS52566"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DOS_SCRIPTS52566" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionUpgrScripts"
-									:label="Resources.VERSAO_DOS_SCRIPTS_D32532"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DOS_SCRIPTS_D32532" />
 							</q-row-container>
 						</q-card>
 
@@ -69,11 +69,28 @@
 						</div>
 
 						<qtable
-							:rows="maintenanceModels.map(model => getLiteModel(model))"
+							:rows="maintenanceModels"
 							:columns="tableConfig.columns"
 							:config="tableConfig.config"
 							:classes="tableRowClasses"
-							class="q-table--borderless" />
+							class="q-table--borderless"
+							@on-select-row="updateSelectedModels"
+							@on-unselect-row="updateSelectedModels">
+
+							<template #StartTime="props">
+								<span v-if="props.row.LastLogInfo">
+									{{ props.row.LastLogInfo.StartTime }}
+								</span>
+							</template>
+							<template #Success="props">
+								<q-icon
+									v-if="props.row.LastLogInfo"
+									:icon="props.row.LastLogInfo.Success ? 'check' : 'close'"
+									:color="props.row.LastLogInfo.Success  ?
+										'success' :
+										'danger'" />
+							</template>
+						</qtable>
 					</div>
 					<div v-else>
 						<q-card
@@ -83,15 +100,15 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									class="database-data"
 									v-model="currentModel.DBSchema"
-									:label="Resources.BASE_DE_DADOS58234"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.BASE_DE_DADOS58234" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.DBSize"
-									:label="Resources.TAMANHO_DA_BD56664"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.TAMANHO_DA_BD56664" />
 							</q-row-container>
 						</q-card>
 						<q-card
@@ -101,20 +118,19 @@
 							width="block">
 							<q-row-container>
 								<static-text
-								class="database-data"
-								v-model="currentModel.VersionDb"
-								:label="Resources.DATABASE_VERSION15344"
-								bold-label />
+									v-model="currentModel.VersionDb"
+									:label="Resources.DATABASE_VERSION15344"
+									bold-label />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionApp"
-									:label="Resources.VERSAO_DA_APLICACAO45955"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DA_APLICACAO45955" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionReIdx"
-									:label="Resources.VERSAO_DOS_SCRIPTS52566"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.VERSAO_DOS_SCRIPTS52566" />
 							</q-row-container>
 						</q-card>
 						<q-card
@@ -124,15 +140,15 @@
 							width="block">
 							<q-row-container>
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionUpgrIndx"
-									:label="Resources.DATABASE_VERSION15344"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.DATABASE_VERSION15344" />
 								<static-text
-									class="database-data"
 									v-model="currentModel.VersionUpgrScripts"
-									:label="Resources.APPLICATION_VERSION32207"
-									bold-label />
+									bold-label
+									orientation="vertical"
+									:label="Resources.APPLICATION_VERSION32207" />
 							</q-row-container>
 						</q-card>
 					</div>
@@ -153,27 +169,22 @@
 					width="block">
 					<div class="database-options__last-rdx">
 						<static-text
-							class="database-data"
 							:model-value="currentModel.LastLogInfo.Success ? Resources.SIM28552 : Resources.NAO06521"
 							:label="Resources.TAREFA_BEM_SUCEDIDA33448"
 							bold-label />
 						<static-text
-							class="database-data"
 							:model-value="`${ currentModel.LastLogInfo.Duration }ms`"
 							:label="Resources.DURATION40426"
 							bold-label />
 						<static-text
-							class="database-data"
 							v-model="currentModel.LastLogInfo.DataSystem"
 							:label="Resources.NOME_DO_SISTEMA_DE_D18974"
 							bold-label />
 						<static-text
-							class="database-data"
 							v-model="currentModel.LastLogInfo.Database"
 							:label="Resources.NOME_DA_BD63025"
 							bold-label />
 						<static-text
-							class="database-data"
 							:model-value="currentModel.LastLogInfo.StartTime"
 							:label="Resources.STARTED_AT44034"
 							bold-label />
@@ -209,14 +220,13 @@
 									@update:model-value="itemValueUpdate(group)" />
 								<q-button
 									v-if="formatDate(sqlFunc.LastRun) != '-'"
-									b-style="tertiary"
-									borderless
+									variant="text"
 									size="small"
 									:label="Resources._INFO15849"
 									:title="sqlFunc.Result"
 									@click="changeSelectedScript(sqlFunc)">
 									<q-icon
-										:class="sqlFunc.Result.length > 0 ? 'database-options__status-error' : 'database-options__status-success'"
+										:color="sqlFunc.Result.length > 0 ? 'danger' : 'success'"
 										:icon="sqlFunc.Result.length > 0 ? 'close' : 'check'" />
 								</q-button>
 							</div>
@@ -235,12 +245,9 @@
 
 		<row class="footer-btn">
 			<q-button
-				b-style="primary"
+				variant="bold"
 				:label="Resources.EXECUTAR_TAREFAS_DE_40767"
 				@click="Reindex" />
-
-			<data-system-badge
-				:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
 		</row>
 
 		<q-overlay
@@ -258,7 +265,7 @@
 						{{ selectedScript.Description }}
 					</h5>
 					<q-button
-						b-style="plain"
+						variant="text"
 						borderless
 						@click="closeOverlay">
 						<q-icon icon="close" />
@@ -266,7 +273,6 @@
 				</div>
 				<div class="modal-body">
 					<static-text
-						class="database-data"
 						v-if="selectedScript.Result != ''"
 						v-model="selectedScript.Result"
 						:label="Resources.ERRO38355"
@@ -317,6 +323,7 @@
 		<progress-bar
 			:show="dataPB.show"
 			:text="dataPB.text"
+			:subtext="dataPB.subtext"
 			:progress="dataPB.progress"
 			:with-button="true"
 			:button-text="Resources.CANCELAR49513"
@@ -324,10 +331,12 @@
 	</div>
 </template>
 
-	<script>
-	// @ is an alias to /src
+<script>
+	import { cloneDeep } from 'lodash-es'
+
 	import { reusableMixin } from '@/mixins/mainMixin'
 	import { QUtils } from '@/utils/mainUtils'
+	import { merge, shallowCopy } from '@/utils/object'
 
 	import maintenanceHistory from '@/views/Maintenance/MaintenanceHistory'
 
@@ -345,13 +354,29 @@
 			return {
 				/**
 				 * All data systems in the application, along with information needed for database maintenance tasks.
+				 * Static values, must only be used for consultation.
 				 */
 				maintenanceModels: [],
+
+				/**
+				 * Selected data systems from the data systems table. Used for multi-system maintenance.
+				 */
+				selectedModels: [],
 
 				/**
 				 * The currently selected data system.
 				 */
 				currentModel: {},
+
+				/**
+				 * Index of the data system that is currently running the maintenance tasks. Index refers to selectedModels array.
+				 */
+				currentMaintenanceIdx: 0,
+
+				/**
+				 * Selected models that have been prepared for a maintenance job. Used for multi-system maintenance.
+				 */
+				reindexModels: [],
 
 				/**
 				 * Groups of SQL routines needed for database maintenance.
@@ -399,6 +424,7 @@
 				dataPB: {
 					show: false,
 					text: '',
+					subtext: '',
 					progress: 0
 				},
 
@@ -419,12 +445,14 @@
 						highlight_row_hover: false,
 						global_search: {
 							visibility: false
-						}
+						},
+						checkbox_rows: true
 					},
 					columns: [
 						{
 							label: texts.NOME_DO_SISTEMA_DE_D18974,
 							name: 'DSName',
+							uniqueId: true,
 							sort: true,
 							initial_sort: true,
 							initial_sort_order: "asc"
@@ -445,28 +473,20 @@
 							sort: false
 						},
 						{
-							label: '',
-							name: 'VersionApp',
-							sort: false,
-							visibility: false
-						},
-						{
-							label: '',
-							name: 'VersionReIdx',
-							sort: false,
-							visibility: false
-						},
-						{
 							label: texts.VERSAO_DO_INDICE_DE_20717,
 							name: 'VersionUpgrIndx',
 							sort: false
 						},
 						{
-							label: '',
-							name: 'VersionUpgrScripts',
-							sort: false,
-							visibility: false
+							label: texts.LAST_MAINTENANCE_JOB39831,
+							name: 'StartTime',
+							sort: true
 						},
+						{
+							label: texts.TAREFA_BEM_SUCEDIDA33448,
+							name: 'Success',
+							sort: false
+						}
 					]
 				}
 			};
@@ -480,7 +500,7 @@
 				return {
 					row:
 					{
-						'q-table__row-error': (row) => row.VersionDb !== row.VersionApp || row.VersionUpgrIndx != this.currentModel.VersionUpgrScripts
+						'q-table__row-error': (row) => row.VersionDb !== row.VersionApp || row.VersionUpgrIndx != row.VersionUpgrScripts
 					}
 				}
 			},
@@ -501,14 +521,18 @@
 		},
 
 		mounted() {
-			this.fetchData()
-
+			this.$eventHub.emit('hideDataSystems', true)
 			// Check current maintenance progress
 			this.checkProgress(null, true)
+			
+			this.fetchData()
+		},
+
+		beforeUnmount() {
+			this.$eventHub.emit('hideDataSystems', false)
 		},
 
 		methods: {
-			// Server Requests
 			/**
 			* Fetches all necessary data from the server.
 			*/
@@ -521,12 +545,11 @@
 
 					if (data.length == 0) {
 						// When no data systems are found, redirect users to the system configuration menu
-						this.resetDialogVariables()
-						this.dialogText = this.Resources.NAO_FOI_POSSIVEL_DET43573
-						this.dialogButtons = [{
+						const message = this.Resources.NAO_FOI_POSSIVEL_DET43573
+						const buttons = [{
 							id: 'close-dialog-btn',
 							props: {
-								bStyle: 'primary',
+								variant: 'bold',
 								label: this.Resources.OK15819
 							},
 							action: () => {
@@ -535,15 +558,14 @@
 								})
 							}
 						}]
-						this.isErrorDialog = true
-						this.showDialog = true
 
+						this.setDialog(message, buttons, true)
 						return
 					}
 
-					this.maintenanceModels = data
-					this.setCurrentModel()
+					this.setCurrentModel(data) // must be set before maintenanceModels to ensure the currentModel has reindex details
 					this.resetFunctionGroups()
+					this.maintenanceModels = data.map(this.getLiteModel)
 
 					// After loading server info, set tab as ready and set maintenance history as outdated
 					this.isLoaded = true
@@ -552,41 +574,50 @@
 			},
 
 			/**
-			* Executes database maintenance tasks on one specific data system.
+			* Executes database maintenance tasks on the selected data systems.
 			*/
 			Reindex() {
-				const apiUrl = QUtils.apiActionURL('DbAdmin', 'Start')
-
-				QUtils.log("Request", apiUrl)
 				this.dataPB.text = "Discovering database"
-				this.dataPB.progress = 2
+				this.dataPB.progress = 0
 
-				if (this.currentModel.Items.filter(e => e.Value === true && e.Selectable === true).length === 0) {
-					this.resetDialogVariables()
-					this.dialogText = this.Resources.NAO_FOI_SELECIONADO_45963
-					this.isErrorDialog = true
-					this.showDialog = true
+				if (!this.currentModel.Items.filter(e => e.Value === true && e.Selectable === true).length) {
+					const message = this.Resources.NAO_FOI_SELECIONADO_45963
+					this.setDialog(message, null, true)
+
+					return
+				}
+
+				if (this.isMultiYearApp && !this.selectedModels.length) {
+					const message = this.Resources.NENHUM_SISTEMA_DE_DA37349
+					this.setDialog(message, null, true)
 
 					return
 				}
 
 				this.isCancelled = false
-				
-				QUtils.postData('DbAdmin', 'Start', this.getLiteModel(this.currentModel), null, (data) => {
-				QUtils.log("Response", data)
-					if(!data.Success) {
-						this.resetDialogVariables()
-						this.dialogText = data.Message
-						this.showDialog = true
+				this.prepModels()
 
+				this.startReindex(this.reindexModels)
+			},
+
+			/**
+			* Starts the database maintenance tasks on a data system.
+			*/
+			startReindex(modelsToReindex) {
+				const apiUrl = QUtils.apiActionURL('DbAdmin', 'Start')
+				QUtils.log("Request", apiUrl)
+				QUtils.postData('DbAdmin', 'Start', modelsToReindex, null, (data) => {
+					QUtils.log("Response", data)
+					if (!data.Success) {
+						this.setDialog(data.Message)
 						return
 					}
 
 					this.dataPB.show = true
+					this.dataPB.progress = 1
 					setTimeout(this.checkProgress, 250)
 				});
 			},
-
 			/**
 			* Cancels the ongoing database maintenance tasks.
 			*/
@@ -597,11 +628,9 @@
 				QUtils.FetchData(apiUrl).done((data) => {
 					QUtils.log("Request - OK (Maintenance - Cancel Reindexation)", data)
 					if(!data.Success) {						
-						this.resetDialogVariables()
-						this.dialogText = this.Resources.THERE_HAS_BEEN_AN_ER33167 + ":<br />" 
+						const message = this.Resources.THERE_HAS_BEEN_AN_ER33167 + ":<br />"
 						+ data.Message
-						this.isErrorDialog = true
-						this.showDialog = true
+						this.setDialog(message, null, true)
 
 						return
 					}
@@ -620,13 +649,18 @@
 				const apiUrl = QUtils.apiActionURL('DbAdmin', 'Progress')
 
 				QUtils.FetchData(apiUrl).done((data) => {
-					if (data.Status == 'RUNNING') {
+					const isRunning = data.Status == 'RUNNING' || // still running
+						!firstCheck && (data.Status == 'NOT_STARTED' || data.Status == 'SUCCESS') // in queue or intermediate success (e.g. success on model 1, but still needs to reindex models 2, 3)
+
+					if (isRunning) {
 						if(!this.isCancelled) {
-							this.dataPB.text = "Script: " + data.ActualScript
+							this.dataPB.text = `${this.Resources.SISTEMA_DE_DADOS12710}: ${data.ActualModel}`
+							this.dataPB.subtext = `Script: ${data.ActualScript}`
 							this.dataPB.progress = data.Count
 							this.dataPB.show = true
 						}
-						setTimeout(()=>this.checkProgress(callBack), 500)
+						
+						setTimeout(() => this.checkProgress(callBack), 500)
 						return
 					}
 
@@ -635,22 +669,20 @@
 					if(data.Status == 'CANCELLED') {
 						this.dataPB.show = false
 
-						this.resetDialogVariables()
-						this.dialogText = this.Resources.OPERATION_CANCELLED_59653
-						this.showDialog = true
+						const message = this.Resources.OPERATION_CANCELLED_59653
+						this.setDialog(message)
 
 						this.fetchData()
 						return
 					}
+
 					if (callBack) {
 						callBack()
 						return
 					}
 
 					if (data.Message) {
-						this.resetDialogVariables()
-						this.dialogText = data.Message
-						this.showDialog = true             
+						this.setDialog(data.Message)
 					}
 
 					this.dataPB = { show: false, text: '', progress: 0, inProcess: false }
@@ -662,7 +694,7 @@
 			* Retrieves a lighter version of a maintenance model, without unnecessary details.
 			*/
 			getLiteModel(model) {
-				const liteModel = { ...model }
+				const liteModel = shallowCopy(model)
 
 				// Details are very heavy and cause lag in the user interface when used in the table
 				if (liteModel.Items && Array.isArray(liteModel.Items))
@@ -672,10 +704,75 @@
 			},
 
 			/**
-			* Set the maintenance model to display according to the currently selected data system of the application.
+			* Updates the selected maintenance models array. Used for multi-system maintenance jobs.
 			*/
-			setCurrentModel() {
-				this.currentModel = this.maintenanceModels.find(dbModel => dbModel.DSName == this.currentYear)
+			updateSelectedModels(selectedRows) {
+				this.selectedModels = selectedRows.selected_items.map(row => row.DSName)
+			},
+
+			/**
+			* Set the maintenance model to display according to the latest maintenance info.
+			*/
+			setCurrentModel(modelData) {
+				let latestModel = null
+
+				if (!this.isMultiYearApp || !modelData.some(model => model.LastLogInfo))
+				{
+					latestModel = modelData.find(model => model.DSName === this.currentYear)
+				}
+				else
+				{
+					// If there is maintenance history, the interface should be related to the latest maintenance executed
+					latestModel = modelData.reduce((latest, model) => {
+						const latestRdxTime = latest.LastLogInfo?.StartTime ? new Date(latest.LastLogInfo.StartTime) : new Date(0)
+						const modelRdxTime = model.LastLogInfo?.StartTime ? new Date(model.LastLogInfo.StartTime) : new Date(0)
+
+						return modelRdxTime > latestRdxTime ? model : latest
+					})
+				}
+
+				// Current model cannot be the original array object - it must be a copy to use in the interface, since changes must not affect models
+				this.currentModel = cloneDeep(latestModel)
+			},
+
+			/**
+			* Prepares the selected models for a maintenance job.
+			*/
+			prepModels() {
+				this.resetMaintenanceVariables()
+				const liteCurrent = this.getLiteModel(this.currentModel)
+
+				if (!this.isMultiYearApp) {
+					this.reindexModels.push(liteCurrent)
+					return
+				}
+
+				// maintenance models are already "lite", done during fetchData
+				const selected = this.maintenanceModels.filter(m => this.selectedModels.includes(m.DSName))
+
+				const mergeRules = {
+					DbUser: true,
+					DbPsw: true,
+					DirFileStream: true,
+					Items: true,
+					Timeout: true,
+					Zero: true
+				}
+
+				selected.forEach(model => {
+					const prepped = merge(model, liteCurrent, mergeRules)
+					this.reindexModels.push(prepped)
+				})
+
+				this.reindexModels.sort((a, b) => a.DSName.localeCompare(b.DSName, undefined, { numeric: true, sensitivity: 'base' }))
+			},
+
+			/**
+			* Resets the maintenance variables to their defaults.
+			*/
+			resetMaintenanceVariables() {
+				this.currentMaintenanceIdx = 0
+				this.reindexModels = []
 			},
 
 			/**
@@ -780,24 +877,37 @@
 				this.dialogButtons = [{
 					id: 'ok-btn',
 					props: {
-						bStyle: 'primary',
+						variant: 'bold',
 						label: this.Resources.OK15819
 					}
 				}]
 				this.dialogText = ''
 				this.isErrorDialog = false
+			},
+
+			/**
+			* Sets the contents of the dialog window and shows it.
+			*/
+			setDialog(message, buttons = null, isError = false) {
+				this.resetDialogVariables()
+				this.dialogText = message
+
+				if (buttons)
+					this.dialogButtons = buttons
+
+				this.isErrorDialog = isError
+				this.showDialog = true
 			}
 		},
 
 		watch: {
-			$route() {
-				this.setCurrentModel()
-			},
-
+			/**
+			 * Adapts the table pagination based on the number of data systems to present
+			 */
 			showTablePagination(newValue) {
 				this.tableConfig.config.pagination = newValue
 				this.tableConfig.config.pagination_info = newValue
-			}
+			},
 		}
 	}
 </script>

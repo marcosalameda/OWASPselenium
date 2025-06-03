@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Movim
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Movim
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXTO, Resources.Resources.N_R__ROOM43805, 10, 0, true),
+				new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXT, Resources.Resources.N_R__ROOM43805, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Movim
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Movim
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("rooms", "roomnr");
+					firstVisibleColumn ??= new FieldRef("rooms", "roomnr");
 				}
 
 
@@ -368,6 +363,8 @@ namespace GenioMVC.ViewModels.Movim
 
 // USE /[MANUAL GQT OVERRQ MOVIM_ROOMSROOMNR]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -394,7 +391,7 @@ namespace GenioMVC.ViewModels.Movim
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArooms> listing = Models.ModelBase.Where<CSGenioArooms>(m_userContext, false, movim___roomsroomnr__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_MOVIM___ROOMSROOMNR__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArooms> listing = Models.ModelBase.Where<CSGenioArooms>(m_userContext, distinct, movim___roomsroomnr__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_MOVIM___ROOMSROOMNR__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -474,6 +471,8 @@ namespace GenioMVC.ViewModels.Movim
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -523,7 +522,7 @@ namespace GenioMVC.ViewModels.Movim
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValRoomnr", CSGenioArooms.FldRoomnr, typeof(string))
+			new TableSearchColumn("ValRoomnr", CSGenioArooms.FldRoomnr, typeof(string)),
 		];
 	}
 }

@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodpesso { get; set; }
+		public string PessoValCodpesso { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Pesso
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// <param name="userContext">The current user request context</param>
 		public Pesso1_ValContacto_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodpesso = userContext.CurrentNavigation.CurrentLevel.GetEntry("pesso")?.ToString();
+			PessoValCodpesso = userContext.CurrentNavigation.CurrentLevel.GetEntry("pesso")?.ToString();
 		}
 
 		/// <summary>
@@ -128,8 +127,8 @@ namespace GenioMVC.ViewModels.Pesso
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXTO, Resources.Resources.GENUS37471, 20, 0, true),
-				new Exports.QColumn(CSGenioAconta.FldContacto, FieldType.TEXTO, Resources.Resources.CONTACT59247, 30, 0, true),
+				new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXT, Resources.Resources.GENUS37471, 20, 0, true),
+				new Exports.QColumn(CSGenioAconta.FldContacto, FieldType.TEXT, Resources.Resources.CONTACT59247, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -194,10 +193,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodpesso != null)
-				crs.Equal(CSGenioAconta.FldCodpesso, this.ValCodpesso);
-
-
+			if (this.PessoValCodpesso != null)
+				crs.Equal(CSGenioAconta.FldCodpesso, this.PessoValCodpesso);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -343,8 +340,7 @@ namespace GenioMVC.ViewModels.Pesso
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tpcon", "tipocont");
+					firstVisibleColumn ??= new FieldRef("tpcon", "tipocont");
 				}
 
 
@@ -373,6 +369,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 // USE /[MANUAL GQT OVERRQ PESSO1_PSEUDCONTACTO]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -400,7 +398,7 @@ namespace GenioMVC.ViewModels.Pesso
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAconta> listing = Models.ModelBase.Where<CSGenioAconta>(m_userContext, false, pesso1__pseudcontactoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PESSO1__PSEUDCONTACTO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAconta> listing = Models.ModelBase.Where<CSGenioAconta>(m_userContext, distinct, pesso1__pseudcontactoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PESSO1__PSEUDCONTACTO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -482,6 +480,8 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -532,7 +532,7 @@ namespace GenioMVC.ViewModels.Pesso
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("Tpcon_ValTipocont", CSGenioAtpcon.FldTipocont, typeof(string)),
-			new TableSearchColumn("ValContacto", CSGenioAconta.FldContacto, typeof(string))
+			new TableSearchColumn("ValContacto", CSGenioAconta.FldContacto, typeof(string)),
 		];
 	}
 }

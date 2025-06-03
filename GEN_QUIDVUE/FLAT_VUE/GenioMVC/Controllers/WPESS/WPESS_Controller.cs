@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Wpess;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER WPESS]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class WpessController : ControllerBase
 	{
-		public WpessController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public WpessController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION WPESS]/
 
 
@@ -155,6 +164,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Armapess" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -170,6 +180,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Imgmagn" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -183,6 +194,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Wpess)
 			);
 		}
+
 
 
 		/// <summary>

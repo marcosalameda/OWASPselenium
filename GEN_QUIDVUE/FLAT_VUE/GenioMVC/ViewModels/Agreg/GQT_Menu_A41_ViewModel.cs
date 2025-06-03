@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Agreg
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,8 +147,8 @@ namespace GenioMVC.ViewModels.Agreg
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAyear.FldYear, FieldType.TEXTO, Resources.Resources.ANO33022, 4, 0, true),
-				new Exports.QColumn(CSGenioAagreg.FldValue, FieldType.VALOR, Resources.Resources.VALUE10285, 10, 0, true),
+				new Exports.QColumn(CSGenioAyear.FldYear, FieldType.TEXT, Resources.Resources.ANO33022, 4, 0, true),
+				new Exports.QColumn(CSGenioAagreg.FldValue, FieldType.CURRENCY, Resources.Resources.VALUE10285, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -213,8 +211,6 @@ namespace GenioMVC.ViewModels.Agreg
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -361,8 +357,7 @@ namespace GenioMVC.ViewModels.Agreg
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("year", "year");
+					firstVisibleColumn ??= new FieldRef("year", "year");
 				}
 
 
@@ -391,6 +386,8 @@ namespace GenioMVC.ViewModels.Agreg
 
 // USE /[MANUAL GQT OVERRQ A41]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -418,7 +415,7 @@ namespace GenioMVC.ViewModels.Agreg
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAagreg> listing = Models.ModelBase.Where<CSGenioAagreg>(m_userContext, false, gqt_menu_a41Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLA41", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAagreg> listing = Models.ModelBase.Where<CSGenioAagreg>(m_userContext, distinct, gqt_menu_a41Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLA41", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -501,6 +498,8 @@ namespace GenioMVC.ViewModels.Agreg
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -551,7 +550,7 @@ namespace GenioMVC.ViewModels.Agreg
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("Year_ValYear", CSGenioAyear.FldYear, typeof(string)),
-			new TableSearchColumn("ValValue", CSGenioAagreg.FldValue, typeof(decimal?), defaultSearch : true)
+			new TableSearchColumn("ValValue", CSGenioAagreg.FldValue, typeof(decimal?), defaultSearch : true),
 		];
 	}
 }

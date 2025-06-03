@@ -89,8 +89,6 @@ namespace GenioMVC.ViewModels.Pesso
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -162,23 +160,23 @@ namespace GenioMVC.ViewModels.Pesso
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldGender, FieldType.ARRAY_COD_TEXTO, Resources.Resources.GENUS37471, 1, 0, true, "Genero"),
-				new Exports.QColumn(CSGenioApesso.FldDtnascim, FieldType.DATA, Resources.Resources.BIRTH21799, 8, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldIdade, FieldType.NUMERO, Resources.Resources.AGE28663, 5, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldIdfuncio, FieldType.NUMERO, Resources.Resources.OFFICIAL_NO_34819, 6, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldTelephon, FieldType.TEXTO, Resources.Resources.PHONE56703, 20, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldEmail2, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioApesso.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
-				new Exports.QColumn(CSGenioApesso.FldDtultcat, FieldType.DATA, Resources.Resources.SINCE47259, 8, 0, true),
-				new Exports.QColumn(CSGenioAcateg.FldCategoria, FieldType.TEXTO, Resources.Resources.CATEGORY18978, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldExterna, FieldType.LOGICO, Resources.Resources.EXTERNAL13375, 1, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldInterna, FieldType.LOGICO, Resources.Resources.INTERNAL04894, 1, 0, true),
-				new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXTO, Resources.Resources.COUNTRY64133, 30, 0, true),
-				new Exports.QColumn(CSGenioApais1.FldCountry, FieldType.TEXTO, Resources.Resources.COUNTRY64133, 30, 0, true),
-				new Exports.QColumn(CSGenioAregi1.FldRegiao, FieldType.TEXTO, Resources.Resources.REGION12723, 30, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldGender, FieldType.ARRAY_TEXT, Resources.Resources.GENUS37471, 1, 0, true, "Genero"),
+				new Exports.QColumn(CSGenioApesso.FldDtnascim, FieldType.DATE, Resources.Resources.BIRTH21799, 8, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldIdade, FieldType.NUMERIC, Resources.Resources.AGE28663, 5, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldIdfuncio, FieldType.NUMERIC, Resources.Resources.OFFICIAL_NO_34819, 6, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldTelephon, FieldType.TEXT, Resources.Resources.PHONE56703, 20, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldEmail2, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioApesso.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioApesso.FldDtultcat, FieldType.DATE, Resources.Resources.SINCE47259, 8, 0, true),
+				new Exports.QColumn(CSGenioAcateg.FldCategoria, FieldType.TEXT, Resources.Resources.CATEGORY18978, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldExterna, FieldType.LOGIC, Resources.Resources.EXTERNAL13375, 1, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldInterna, FieldType.LOGIC, Resources.Resources.INTERNAL04894, 1, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 30, 0, true),
+				new Exports.QColumn(CSGenioApais1.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 30, 0, true),
+				new Exports.QColumn(CSGenioAregi1.FldRegiao, FieldType.TEXT, Resources.Resources.REGION12723, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -241,8 +239,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 			//DbEdit N:N Limits
 			crs.SubSets.Add(GetConditionsToNN(CSGenio.business.Area.AreaPESSO, CSGenioApesso.FldCodpesso, CSGenio.business.Area.AreaEVCAT, CSGenio.business.Area.AreaCATE1, CSGenioAcate1.FldCodcateg, (string)Navigation.GetValue("cate1"), "ML61411"));
@@ -407,8 +403,7 @@ namespace GenioMVC.ViewModels.Pesso
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("cmpny", "designat");
+					firstVisibleColumn ??= new FieldRef("cmpny", "designat");
 				}
 
 
@@ -455,6 +450,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 // USE /[MANUAL GQT OVERRQ 61411]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -482,7 +479,7 @@ namespace GenioMVC.ViewModels.Pesso
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApesso> listing = Models.ModelBase.Where<CSGenioApesso>(m_userContext, false, gqt_menu_61411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML61411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApesso> listing = Models.ModelBase.Where<CSGenioApesso>(m_userContext, distinct, gqt_menu_61411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML61411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -573,6 +570,8 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -638,7 +637,7 @@ namespace GenioMVC.ViewModels.Pesso
 			new TableSearchColumn("ValInterna", CSGenioApesso.FldInterna, typeof(bool)),
 			new TableSearchColumn("Cntry_ValCountry", CSGenioAcntry.FldCountry, typeof(string)),
 			new TableSearchColumn("Pais1_ValCountry", CSGenioApais1.FldCountry, typeof(string)),
-			new TableSearchColumn("Regi1_ValRegiao", CSGenioAregi1.FldRegiao, typeof(string))
+			new TableSearchColumn("Regi1_ValRegiao", CSGenioAregi1.FldRegiao, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Pesso row)
 		{

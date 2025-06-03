@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodcfaqs { get; set; }
+		public string CfaqsValCodcfaqs { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Cfaqs
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 		/// <param name="userContext">The current user request context</param>
 		public Cfaqs_ValExpfaqs_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodcfaqs = userContext.CurrentNavigation.CurrentLevel.GetEntry("cfaqs")?.ToString();
+			CfaqsValCodcfaqs = userContext.CurrentNavigation.CurrentLevel.GetEntry("cfaqs")?.ToString();
 		}
 
 		/// <summary>
@@ -194,10 +193,8 @@ namespace GenioMVC.ViewModels.Cfaqs
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodcfaqs != null)
-				crs.Equal(CSGenioAfaqs.FldCodcfaqs, this.ValCodcfaqs);
-
-
+			if (this.CfaqsValCodcfaqs != null)
+				crs.Equal(CSGenioAfaqs.FldCodcfaqs, this.CfaqsValCodcfaqs);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -335,8 +332,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("faqs", "question");
+					firstVisibleColumn ??= new FieldRef("faqs", "question");
 				}
 
 
@@ -365,6 +361,8 @@ namespace GenioMVC.ViewModels.Cfaqs
 
 // USE /[MANUAL GQT OVERRQ CFAQS_PSEUDEXPFAQS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -392,7 +390,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfaqs> listing = Models.ModelBase.Where<CSGenioAfaqs>(m_userContext, false, cfaqs___pseudexpfaqs_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_CFAQS___PSEUDEXPFAQS_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfaqs> listing = Models.ModelBase.Where<CSGenioAfaqs>(m_userContext, distinct, cfaqs___pseudexpfaqs_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_CFAQS___PSEUDEXPFAQS_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -472,6 +470,8 @@ namespace GenioMVC.ViewModels.Cfaqs
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -522,7 +522,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValQuestion", CSGenioAfaqs.FldQuestion, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValAnswer", CSGenioAfaqs.FldAnswer, typeof(string))
+			new TableSearchColumn("ValAnswer", CSGenioAfaqs.FldAnswer, typeof(string)),
 		];
 	}
 }

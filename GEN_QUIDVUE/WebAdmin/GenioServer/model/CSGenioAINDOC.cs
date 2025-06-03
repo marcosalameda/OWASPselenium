@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAindoc(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR INDOC]/
 		}
 
@@ -46,50 +44,45 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("coddentr", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "coddentr", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codcntry", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codempre", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codempre", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpesso", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codwareh", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "BY OMISSION";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "BY_OMISSION13050";
 
 			Qfield.Dupmsg = "";
@@ -97,10 +90,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("documenr", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "documenr", FieldType.NUMERIC);
 			Qfield.FieldDescription = "No.";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "NO_14817";
 
@@ -112,10 +104,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dhdocume", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dhdocume", FieldType.DATETIME);
 			Qfield.FieldDescription = "Date";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "DATE18475";
 
 			Qfield.Dupmsg = "";
@@ -126,24 +117,22 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("date", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "date", FieldType.DATETIME);
 			Qfield.FieldDescription = "Date";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "DATE18475";
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"codwareh","dhdocume"}, new int[] {0,1}, "indoc", "coddentr"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyG(((string)args[0]))==1)?(DateTime.MinValue):(((DateTime)args[1])));
+				return ((GenFunctions.emptyG(((string)args[0]))==1)?(DateTime.MinValue):(((DateTime)args[1])));
 			});
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -242,8 +231,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Input document";
 			info.AreaPluralDesignation="Input documents";
 			info.DescriptionCav="INPUT_DOCUMENT28194";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

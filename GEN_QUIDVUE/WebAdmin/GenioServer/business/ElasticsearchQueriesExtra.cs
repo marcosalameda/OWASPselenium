@@ -25,12 +25,15 @@ namespace CSGenio.business
         {
             if (ids.Count > 0)
             {
-                SelectQuery sql = new SelectQuery();
+                SelectQuery sql = null;
                 switch (area.ToLower())
                 {
                     default:
-                        return;
+                        break;
                 }
+
+                if (sql == null)
+                    return;
 
                 string caminho = string.Concat(AppDomain.CurrentDomain.BaseDirectory, "Content\\Elasticsearch\\img\\");
                 string extension = ".png";

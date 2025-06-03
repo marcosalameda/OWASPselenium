@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Visit;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER VISIT]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class VisitController : ControllerBase
 	{
-		public VisitController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public VisitController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION VISIT]/
 
 
@@ -155,6 +164,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Visit" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -168,6 +178,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Visit)
 			);
 		}
+
 
 
 		/// <summary>

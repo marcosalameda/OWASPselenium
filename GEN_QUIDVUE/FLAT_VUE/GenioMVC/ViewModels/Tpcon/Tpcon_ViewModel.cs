@@ -503,7 +503,7 @@ namespace GenioMVC.ViewModels.Tpcon
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -550,7 +550,7 @@ namespace GenioMVC.ViewModels.Tpcon
 				// Fill List fields
 				this.ValCodgenre = ViewModelConversion.ToString(row["genre.codgenre"]);
 				TableGenreGender.Value = (string)row["genre.gender"];
-				if (GlobalFunctions.emptyG(this.ValCodgenre) == 1)
+				if (GenFunctions.emptyG(this.ValCodgenre) == 1)
 				{
 					this.ValCodgenre = "";
 					TableGenreGender.Value = "";

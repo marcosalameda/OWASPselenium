@@ -9,17 +9,18 @@
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<select-input
+						<q-select
 							v-model="queryParamQueue"
-							:options="queuesFilter"
-							:label="Resources.QUEUE45251" />
+							:items="queuesFilter"
+							:label="Resources.QUEUE45251"
+							size="xlarge" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<q-control-wrapper>
 					<base-input-structure
 						class="i-text">
 						<q-button
-							b-style="primary"
+							variant="bold"
 							label="Arquivar"
 							@click="Arquivar" />
 					</base-input-structure>
@@ -31,18 +32,25 @@
 					@on-change-query="onChangeQuerySend"
 					:totalRows="tQueuesSend.total_rows" />
 
-				<q-control-wrapper v-if="model.LogDatabaseExists">
-					<base-input-structure
-						class="i-text">
-						<radio-input
-							:value="model.LogDatabaseSelected"
-							:options="logDatabase"
-							:label="Resources.DADOS_43180" />
+				<template v-if="model.LogDatabaseExists">
+					<q-radio-group
+						v-model="model.LogDatabaseSelected"
+						orientation="horizontal"
+						size="large"
+						:label="Resources.DADOS_43180">
+						<q-radio-button
+							v-for="(option, idx) in logDatabase"
+							:key="'log-database-opt-' + idx"
+							:label="option.Text"
+							:value="option.Value" />
+					</q-radio-group>
+
+					<row class=footer-btn>
 						<q-button
 							:label="Resources.TRANSFERIR_DADOS_PAR38484"
 							@click="exportDataToHistory" />
-					</base-input-structure>
-				</q-control-wrapper>
+					</row>
+				</template>
 
 				<qtable :rows="tQueuesHist.rows"
 					:columns="tQueuesHist.columns"

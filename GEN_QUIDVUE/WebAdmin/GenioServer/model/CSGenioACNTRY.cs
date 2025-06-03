@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAcntry(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR CNTRY]/
 		}
 
@@ -46,70 +44,63 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codcntry", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codcntry", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("country", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "country", FieldType.TEXT);
 			Qfield.FieldDescription = "Country";
 			Qfield.FieldSize =  90;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "COUNTRY64133";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("active", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "active", FieldType.LOGIC);
 			Qfield.FieldDescription = "Active";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ACTIVE03270";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codigonr", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "codigonr", FieldType.TEXT);
 			Qfield.FieldDescription = "Numeric ISO-3166";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "NUMERIC_ISO_316620341";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("alfa2", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "alfa2", FieldType.TEXT);
 			Qfield.FieldDescription = "Alphabetic 2";
 			Qfield.FieldSize =  2;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ALPHABETIC_232435";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("alfa3", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "alfa3", FieldType.TEXT);
 			Qfield.FieldDescription = "Alphabetic 3";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ALPHABETIC_316640";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("flag", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "flag", FieldType.IMAGE);
 			Qfield.FieldDescription = "Flag";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "FLAG51937";
 
@@ -117,9 +108,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -198,8 +188,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Country";
 			info.AreaPluralDesignation="Countries";
 			info.DescriptionCav="COUNTRY64133";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

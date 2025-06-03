@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Asspa;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER ASSPA]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class AsspaController : ControllerBase
 	{
-		public AsspaController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public AsspaController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION ASSPA]/
 
 
@@ -151,6 +160,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
 
 
 

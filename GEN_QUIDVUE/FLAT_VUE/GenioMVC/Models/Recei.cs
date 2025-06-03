@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Receipt number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Recei.ValNumber")]
 		[NumericAttribute(0)]
-		public decimal? ValNumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumber, 0)); } set { klass.ValNumber = Convert.ToDecimal(value); } }
+		public decimal? ValNumber { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNumber, 0)); } set { klass.ValNumber = Convert.ToDecimal(value); } }
 
 		[DisplayName("Receipt date")]
 		/// <summary>Field : "Receipt date" Tipo: "DT" Formula:  ""</summary>

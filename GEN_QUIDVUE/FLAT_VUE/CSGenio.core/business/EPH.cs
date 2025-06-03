@@ -52,15 +52,15 @@ namespace CSGenio.framework
             switch (id)
             {
                 case "COMODANTE":
-                    return new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+                    return new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
                 case "USER":
-                    return new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+                    return new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
                 case "ORGAN":
-                    return new EPHCondition("ORGAN", "GQT", "gqtpworg", "pworg", "codorgan", "pworg", "codorgan", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+                    return new EPHCondition("ORGAN", "GQT", "gqtpworg", "pworg", "codorgan", "pworg", "codorgan", FieldType.KEY_GUID, "");
                 case "USERS":
-                    return new EPHCondition("USERS", "GQT", "gqtusers", "users", "codperso", "users", "codperso", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+                    return new EPHCondition("USERS", "GQT", "gqtusers", "users", "codperso", "users", "codperso", FieldType.KEY_GUID, "");
                 case "REGIAO":
-                    return new EPHCondition("REGIAO", "GQT", "gqtpwreg", "pwreg", "codregia", "pwreg", "codregia", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+                    return new EPHCondition("REGIAO", "GQT", "gqtpwreg", "pwreg", "codregia", "pwreg", "codregia", FieldType.KEY_GUID, "");
                 default:
                     return null;
             }

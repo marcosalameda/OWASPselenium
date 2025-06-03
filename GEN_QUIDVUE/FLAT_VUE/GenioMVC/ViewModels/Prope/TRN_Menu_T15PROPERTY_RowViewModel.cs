@@ -12,22 +12,21 @@ public class TRN_Menu_T15PROPERTY_RowViewModel : Models.Prope
 
 	public TRN_Menu_T15PROPERTY_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public TRN_Menu_T15PROPERTY_RowViewModel(UserContext userContext, CSGenioAprope val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -178,4 +177,12 @@ public class TRN_Menu_T15PROPERTY_RowViewModel : Models.Prope
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
 	public string BackgroundColor => "";
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

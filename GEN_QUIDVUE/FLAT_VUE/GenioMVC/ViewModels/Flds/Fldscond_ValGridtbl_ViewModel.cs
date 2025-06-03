@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Flds
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodflds { get; set; }
+		public string FldsValCodflds { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Flds
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Flds
 		/// <param name="userContext">The current user request context</param>
 		public Fldscond_ValGridtbl_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodflds = userContext.CurrentNavigation.CurrentLevel.GetEntry("flds")?.ToString();
+			FldsValCodflds = userContext.CurrentNavigation.CurrentLevel.GetEntry("flds")?.ToString();
 		}
 
 		/// <summary>
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Flds
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfeeca.FldFeedback, FieldType.TEXTO, Resources.Resources.FEEDBACK52855, 30, 0, true),
+				new Exports.QColumn(CSGenioAfeeca.FldFeedback, FieldType.TEXT, Resources.Resources.FEEDBACK52855, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -193,10 +192,8 @@ namespace GenioMVC.ViewModels.Flds
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodflds != null)
-				crs.Equal(CSGenioAfeeca.FldCodflds, this.ValCodflds);
-
-
+			if (this.FldsValCodflds != null)
+				crs.Equal(CSGenioAfeeca.FldCodflds, this.FldsValCodflds);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -334,8 +331,7 @@ namespace GenioMVC.ViewModels.Flds
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("feeca", "feedback");
+					firstVisibleColumn ??= new FieldRef("feeca", "feedback");
 				}
 
 
@@ -364,6 +360,8 @@ namespace GenioMVC.ViewModels.Flds
 
 // USE /[MANUAL GQT OVERRQ FLDSCOND_PSEUDGRIDTBL]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -391,7 +389,7 @@ namespace GenioMVC.ViewModels.Flds
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfeeca> listing = Models.ModelBase.Where<CSGenioAfeeca>(m_userContext, false, fldscondpseudgridtbl_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FLDSCONDPSEUDGRIDTBL_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfeeca> listing = Models.ModelBase.Where<CSGenioAfeeca>(m_userContext, distinct, fldscondpseudgridtbl_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FLDSCONDPSEUDGRIDTBL_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -525,7 +523,7 @@ namespace GenioMVC.ViewModels.Flds
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValFeedback", CSGenioAfeeca.FldFeedback, typeof(string), defaultSearch : true)
+			new TableSearchColumn("ValFeedback", CSGenioAfeeca.FldFeedback, typeof(string), defaultSearch : true),
 		];
 	}
 }

@@ -30,5 +30,5 @@ public class PlistPseudPlistPropertyList(IWebDriver driver, By containerLocator,
 	/// <summary>
 	/// Enumeration Prop
 	/// </summary>
-    public EnumControl Enumprop => new EnumControl(driver, m_controlLocator, "");
+    public EnumControl Enumprop => new EnumControl(driver, m_controlLocator, "#FLD_ENUMPROP");
 }

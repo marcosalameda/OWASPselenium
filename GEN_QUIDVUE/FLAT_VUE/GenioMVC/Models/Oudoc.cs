@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Oudoc.ValNrdocsda")]
 		[NumericAttribute(0)]
-		public decimal? ValNrdocsda { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrdocsda, 0)); } set { klass.ValNrdocsda = Convert.ToDecimal(value); } }
+		public decimal? ValNrdocsda { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNrdocsda, 0)); } set { klass.ValNrdocsda = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date")]
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>

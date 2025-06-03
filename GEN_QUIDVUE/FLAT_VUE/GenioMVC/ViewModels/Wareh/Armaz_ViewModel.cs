@@ -173,7 +173,7 @@ namespace GenioMVC.ViewModels.Wareh
 				if (!isApply && !(areaWareh.klass.ValNum_employee>0))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.THERE_MUST_BE_AT_LEA43628); // Message: "There must be at least one employee working in this warehouse"
+					StatusMessage message = new(status, Resources.Resources.THERE_MUST_BE_AT_LEA43628); // Message: "There must be at least one employee working in this warehouse"
 					result.MergeStatusMessage(message);
 				}
 			}

@@ -1,46 +1,66 @@
 ﻿<template>
-    <div>
-        <a class="dropdown-item" href="" @click.prevent="handleSelect()">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" class="custom-control-input vbt-checkbox" v-model="option_selected"/>
-                <label class="custom-control-label">{{text}}</label>
-            </div>
-        </a>
-    </div>
+	<div>
+		<a
+			class="dropdown-item"
+			href=""
+			@click.prevent="handleSelect">
+			<div class="custom-control custom-checkbox">
+				<input
+					v-model="option_selected"
+					type="checkbox"
+					class="custom-control-input vbt-checkbox" />
+				<q-label
+					class="custom-control-label"
+					:label="text" />
+			</div>
+		</a>
+	</div>
 </template>
 
 <script>
-    export default {
-        name: "MultiSelectAllItem",
-        emits: ['on-select-all-option', 'on-deselect-all-option'],
-        props: {
-            isAllOptionsSelected: {
-                type: Boolean,
-                default: false
-            },
-            text: {
-                type: String,
-                default: "Any"
-            },
-        },
-        data: function() {
-            return {
-                option_selected : false
-            };
-        },
-        methods: {
-            handleSelect() {
-                if (this.option_selected) {
-                    this.$emit('on-deselect-all-option');
-                } else {
-                    this.$emit('on-select-all-option',this.index);
-                }
-            }
-        },
-        watch: {
-            isAllOptionsSelected(newVal,oldVal) {
-                this.option_selected = newVal;
-            }
-        }
-    };
+	export default {
+		name: 'MultiSelectAllItem',
+		props: {
+			/**
+			 * True if all filter options are selected, false otherwise.
+			 */
+			isAllOptionsSelected: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Filter label.
+			 */
+			text: {
+				type: String,
+				default: 'Any'
+			}
+		},
+		emits: ['on-select-all-option', 'on-deselect-all-option'],
+
+		expose: [],
+
+		data() {
+			return {
+				option_selected: false
+			}
+		},
+
+		watch: {
+			isAllOptionsSelected(newVal) {
+				this.option_selected = newVal
+			}
+		},
+
+		methods: {
+			handleSelect() {
+				if (this.option_selected) {
+					this.$emit('on-deselect-all-option')
+				} else {
+					this.$emit('on-select-all-option')
+				}
+			}
+		}
+	}
 </script>

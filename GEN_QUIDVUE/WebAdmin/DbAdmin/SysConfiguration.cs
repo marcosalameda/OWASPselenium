@@ -18,7 +18,7 @@ namespace DbAdmin
     */
     public class SysConfiguration(IConfigurationManager configManager)
     {
-        public void SaveDatabaseConfig(string username, string password, string server, string serverType, string schema, string port = "", bool encryptConn = false, bool withDomainUser = false, string year = "")
+        public void SaveDatabaseConfig(string username, string password, string server, string serverType, string schema, string port = "", bool encryptConn = false, bool withDomainUser = false, string year = "", bool dbSidePk = false)
         {
             if (!configManager.Exists())
                 configManager.CreateNewConfig();
@@ -36,7 +36,8 @@ namespace DbAdmin
                 Server = server,
                 Port = port,
                 Type = serverType,
-                Name = year
+                Name = year,
+                DatabaseSidePk = dbSidePk
             };
 
             DataXml datasystem = new DataXml

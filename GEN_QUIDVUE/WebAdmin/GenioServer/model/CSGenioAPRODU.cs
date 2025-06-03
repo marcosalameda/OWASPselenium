@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAprodu(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PRODU]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codprodu", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codprodu", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codlocat", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codlocat", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">>LOCATION";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "__LOCATION45198";
 
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codlcext", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codlcext", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">>LOCATION EXTENSION";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "__LOCATION_EXTENSION43450";
 
@@ -78,10 +73,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("product", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "product", FieldType.TEXT);
 			Qfield.FieldDescription = "Product";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PRODUCT12880";
 
@@ -90,10 +84,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("descript", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "descript", FieldType.MEMO);
 			Qfield.FieldDescription = "Description";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 3;
 			Qfield.CavDesignation = "DESCRIPTION07383";
@@ -102,10 +95,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("sku", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "sku", FieldType.TEXT);
 			Qfield.FieldDescription = "SKU";
 			Qfield.FieldSize =  20;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "SKU42303";
 
@@ -113,10 +105,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("gtin", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "gtin", FieldType.TEXT);
 			Qfield.FieldDescription = "GTIN";
 			Qfield.FieldSize =  14;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "GTIN45487";
 
@@ -124,10 +115,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("size", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "size", FieldType.TEXT);
 			Qfield.FieldDescription = "Size";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "SIZE10299";
 
@@ -135,10 +125,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("weight", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "weight", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Weight";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
@@ -148,10 +137,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("price", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "price", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Price";
 			Qfield.FieldSize =  12;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 4;
@@ -161,10 +149,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("inputs", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "inputs", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Inputs";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "INPUTS19315";
@@ -173,10 +160,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("outputs", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "outputs", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Outputs";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "OUTPUTS47833";
@@ -185,10 +171,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("stock", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "stock", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Stock";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "STOCK37618";
@@ -197,10 +182,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("image", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "image", FieldType.IMAGE);
 			Qfield.FieldDescription = "Image";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "IMAGE65174";
@@ -209,10 +193,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("in_use", FieldType.ARRAY_COD_LOGICO);
+			Qfield = new Field(info.Alias, "in_use", FieldType.ARRAY_LOGIC);
 			Qfield.FieldDescription = "In use";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "IN_USE42606";
 
@@ -222,9 +205,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -313,8 +295,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Product";
 			info.AreaPluralDesignation="Products";
 			info.DescriptionCav="PRODUCT12880";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

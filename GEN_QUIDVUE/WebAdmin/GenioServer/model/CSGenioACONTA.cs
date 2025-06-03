@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAconta(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR CONTA]/
 		}
 
@@ -46,59 +44,53 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codconta", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codconta", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpesso", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codgenre", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codgenre", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codtpcon", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codtpcon", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Contact type";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CONTACT_TYPE65233";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("contacto", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "contacto", FieldType.TEXT);
 			Qfield.FieldDescription = "Contact";
 			Qfield.FieldSize =  254;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CONTACT59247";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -132,8 +124,8 @@ namespace CSGenio.business
 			info.Pathways.Add("pesso","pesso");
 			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
-			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("cmpny","pesso");
+			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
 
@@ -180,8 +172,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Contact";
 			info.AreaPluralDesignation="Contacts";
 			info.DescriptionCav="CONTACT59247";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

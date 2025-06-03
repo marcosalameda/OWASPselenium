@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Kinde
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodkinde { get; set; }
+		public string KindeValCodkinde { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Kinde
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Kinde
 		/// <param name="userContext">The current user request context</param>
 		public Kinde_ValParamete_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodkinde = userContext.CurrentNavigation.CurrentLevel.GetEntry("kinde")?.ToString();
+			KindeValCodkinde = userContext.CurrentNavigation.CurrentLevel.GetEntry("kinde")?.ToString();
 		}
 
 		/// <summary>
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Kinde
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAparam.FldParameter, FieldType.TEXTO, Resources.Resources.PARAMETER41976, 30, 0, true),
-				new Exports.QColumn(CSGenioAparam.FldDatatype, FieldType.ARRAY_COD_TEXTO, Resources.Resources.DATA_TYPE47159, 1, 0, true, "DataType"),
-				new Exports.QColumn(CSGenioAparam.FldDecimalplaces, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.DECIMAL_PLACES62575, 2, 0, true, "DecPlace"),
+				new Exports.QColumn(CSGenioAparam.FldParameter, FieldType.TEXT, Resources.Resources.PARAMETER41976, 30, 0, true),
+				new Exports.QColumn(CSGenioAparam.FldDatatype, FieldType.ARRAY_TEXT, Resources.Resources.DATA_TYPE47159, 1, 0, true, "DataType"),
+				new Exports.QColumn(CSGenioAparam.FldDecimalplaces, FieldType.ARRAY_NUMERIC, Resources.Resources.DECIMAL_PLACES62575, 2, 0, true, "DecPlace"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -195,10 +194,8 @@ namespace GenioMVC.ViewModels.Kinde
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodkinde != null)
-				crs.Equal(CSGenioAparam.FldCodkinde, this.ValCodkinde);
-
-
+			if (this.KindeValCodkinde != null)
+				crs.Equal(CSGenioAparam.FldCodkinde, this.KindeValCodkinde);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -344,8 +341,7 @@ namespace GenioMVC.ViewModels.Kinde
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("param", "parameter");
+					firstVisibleColumn ??= new FieldRef("param", "parameter");
 				}
 
 
@@ -374,6 +370,8 @@ namespace GenioMVC.ViewModels.Kinde
 
 // USE /[MANUAL GQT OVERRQ KINDE_PSEUDPARAMETE]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -401,7 +399,7 @@ namespace GenioMVC.ViewModels.Kinde
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAparam> listing = Models.ModelBase.Where<CSGenioAparam>(m_userContext, false, kinde___pseudparameteConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_KINDE___PSEUDPARAMETE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAparam> listing = Models.ModelBase.Where<CSGenioAparam>(m_userContext, distinct, kinde___pseudparameteConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_KINDE___PSEUDPARAMETE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -481,6 +479,8 @@ namespace GenioMVC.ViewModels.Kinde
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -532,7 +532,7 @@ namespace GenioMVC.ViewModels.Kinde
 		[
 			new TableSearchColumn("ValParameter", CSGenioAparam.FldParameter, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDatatype", CSGenioAparam.FldDatatype, typeof(string), array : "DataType"),
-			new TableSearchColumn("ValDecimalplaces", CSGenioAparam.FldDecimalplaces, typeof(decimal), array : "DecPlace")
+			new TableSearchColumn("ValDecimalplaces", CSGenioAparam.FldDecimalplaces, typeof(decimal), array : "DecPlace"),
 		];
 	}
 }

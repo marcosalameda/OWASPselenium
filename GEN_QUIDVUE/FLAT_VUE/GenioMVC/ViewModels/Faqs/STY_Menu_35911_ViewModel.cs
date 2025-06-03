@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Faqs
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -217,8 +215,6 @@ namespace GenioMVC.ViewModels.Faqs
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -360,8 +356,7 @@ namespace GenioMVC.ViewModels.Faqs
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("faqs", "question");
+					firstVisibleColumn ??= new FieldRef("faqs", "question");
 				}
 
 
@@ -409,6 +404,8 @@ namespace GenioMVC.ViewModels.Faqs
 
 // USE /[MANUAL STY OVERRQ 35911]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -436,7 +433,7 @@ namespace GenioMVC.ViewModels.Faqs
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfaqs> listing = Models.ModelBase.Where<CSGenioAfaqs>(m_userContext, false, sty_menu_35911Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML35911", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfaqs> listing = Models.ModelBase.Where<CSGenioAfaqs>(m_userContext, distinct, sty_menu_35911Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML35911", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -517,6 +514,8 @@ namespace GenioMVC.ViewModels.Faqs
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -567,7 +566,7 @@ namespace GenioMVC.ViewModels.Faqs
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValQuestion", CSGenioAfaqs.FldQuestion, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValAnswer", CSGenioAfaqs.FldAnswer, typeof(string))
+			new TableSearchColumn("ValAnswer", CSGenioAfaqs.FldAnswer, typeof(string)),
 		];
 	}
 }

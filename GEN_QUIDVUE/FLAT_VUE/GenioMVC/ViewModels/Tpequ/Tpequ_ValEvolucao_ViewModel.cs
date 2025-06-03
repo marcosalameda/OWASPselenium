@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Tpequ
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodtpequ { get; set; }
+		public string TpequValCodtpequ { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Tpequ
 		/// <param name="userContext">The current user request context</param>
 		public Tpequ_ValEvolucao_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodtpequ = userContext.CurrentNavigation.CurrentLevel.GetEntry("tpequ")?.ToString();
+			TpequValCodtpequ = userContext.CurrentNavigation.CurrentLevel.GetEntry("tpequ")?.ToString();
 		}
 
 		/// <summary>
@@ -128,8 +127,8 @@ namespace GenioMVC.ViewModels.Tpequ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtabpr.FldSince, FieldType.DATAHORA, Resources.Resources.SINCE47259, 16, 0, true),
-				new Exports.QColumn(CSGenioAtabpr.FldPrecohor, FieldType.VALOR, Resources.Resources.PRICE_BY_HOUR01060, 16, 0, true),
+				new Exports.QColumn(CSGenioAtabpr.FldSince, FieldType.DATETIME, Resources.Resources.SINCE47259, 16, 0, true),
+				new Exports.QColumn(CSGenioAtabpr.FldPrecohor, FieldType.CURRENCY, Resources.Resources.PRICE_BY_HOUR01060, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -194,10 +193,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodtpequ != null)
-				crs.Equal(CSGenioAtabpr.FldCodtpeq1, this.ValCodtpequ);
-
-
+			if (this.TpequValCodtpequ != null)
+				crs.Equal(CSGenioAtabpr.FldCodtpeq1, this.TpequValCodtpequ);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -335,8 +332,7 @@ namespace GenioMVC.ViewModels.Tpequ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tabpr", "since");
+					firstVisibleColumn ??= new FieldRef("tabpr", "since");
 				}
 
 
@@ -365,6 +361,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 // USE /[MANUAL GQT OVERRQ TPEQU_PSEUDEVOLUCAO]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -392,7 +390,7 @@ namespace GenioMVC.ViewModels.Tpequ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtabpr> listing = Models.ModelBase.Where<CSGenioAtabpr>(m_userContext, false, tpequ___pseudevolucaoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPEQU___PSEUDEVOLUCAO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtabpr> listing = Models.ModelBase.Where<CSGenioAtabpr>(m_userContext, distinct, tpequ___pseudevolucaoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPEQU___PSEUDEVOLUCAO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -472,6 +470,8 @@ namespace GenioMVC.ViewModels.Tpequ
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -522,7 +522,7 @@ namespace GenioMVC.ViewModels.Tpequ
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValSince", CSGenioAtabpr.FldSince, typeof(DateTime?)),
-			new TableSearchColumn("ValPrecohor", CSGenioAtabpr.FldPrecohor, typeof(decimal?))
+			new TableSearchColumn("ValPrecohor", CSGenioAtabpr.FldPrecohor, typeof(decimal?)),
 		];
 	}
 }

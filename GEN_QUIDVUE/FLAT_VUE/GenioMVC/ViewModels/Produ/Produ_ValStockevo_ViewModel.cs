@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Produ
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodprodu { get; set; }
+		public string ProduValCodprodu { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,27 +92,6 @@ namespace GenioMVC.ViewModels.Produ
 			return crs;
 		}
 
-
-		public string ValType { get; set; }
-
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param
-		private void SetViewModelValue(string fullFieldName, object value)
-		{
-			if (string.IsNullOrEmpty(fullFieldName))
-				return;
-
-			switch (fullFieldName)
-			{
-				case "stock.type":
-					ValType = ViewModelConversion.ToString(value);
-					break;
-			}
-		}
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -130,7 +109,7 @@ namespace GenioMVC.ViewModels.Produ
 		/// <param name="userContext">The current user request context</param>
 		public Produ_ValStockevo_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodprodu = userContext.CurrentNavigation.CurrentLevel.GetEntry("produ")?.ToString();
+			ProduValCodprodu = userContext.CurrentNavigation.CurrentLevel.GetEntry("produ")?.ToString();
 		}
 
 		/// <summary>
@@ -148,12 +127,12 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAstock.FldSequence, FieldType.NUMERO, Resources.Resources.SEQUENCE42310, 6, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldDate, FieldType.DATAHORA, Resources.Resources.DATE18475, 16, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldType, FieldType.TEXTO, Resources.Resources.TYPE00312, 8, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldReferenc, FieldType.TEXTO, Resources.Resources.REFERENCE28402, 10, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldQuantity, FieldType.NUMERO, Resources.Resources.QUANTITY06415, 10, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldBalance, FieldType.NUMERO, Resources.Resources.BALANCE13297, 10, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldSequence, FieldType.NUMERIC, Resources.Resources.SEQUENCE42310, 6, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldDate, FieldType.DATETIME, Resources.Resources.DATE18475, 16, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldType, FieldType.TEXT, Resources.Resources.TYPE00312, 8, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldReferenc, FieldType.TEXT, Resources.Resources.REFERENCE28402, 10, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldQuantity, FieldType.NUMERIC, Resources.Resources.QUANTITY06415, 10, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldBalance, FieldType.NUMERIC, Resources.Resources.BALANCE13297, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -218,10 +197,8 @@ namespace GenioMVC.ViewModels.Produ
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodprodu != null)
-				crs.Equal(CSGenioAstock.FldCodprodu, this.ValCodprodu);
-
-
+			if (this.ProduValCodprodu != null)
+				crs.Equal(CSGenioAstock.FldCodprodu, this.ProduValCodprodu);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -359,8 +336,7 @@ namespace GenioMVC.ViewModels.Produ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("stock", "sequence");
+					firstVisibleColumn ??= new FieldRef("stock", "sequence");
 				}
 
 
@@ -389,6 +365,8 @@ namespace GenioMVC.ViewModels.Produ
 
 // USE /[MANUAL GQT OVERRQ PRODU_PSEUDSTOCKEVO]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -416,7 +394,7 @@ namespace GenioMVC.ViewModels.Produ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAstock> listing = Models.ModelBase.Where<CSGenioAstock>(m_userContext, false, produ___pseudstockevoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODU___PSEUDSTOCKEVO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAstock> listing = Models.ModelBase.Where<CSGenioAstock>(m_userContext, distinct, produ___pseudstockevoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODU___PSEUDSTOCKEVO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -496,6 +474,8 @@ namespace GenioMVC.ViewModels.Produ
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -523,41 +503,11 @@ namespace GenioMVC.ViewModels.Produ
 		/// <inheritdoc />
 		public override void MapFromModel(Models.Stock m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map Model (Stock) to ViewModel (Produ_ValStockevo) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				ValType = ViewModelConversion.ToString(m.ValType);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map Model (Stock) to ViewModel (Produ_ValStockevo) - Error during mapping.");
-				throw;
-			}
 		}
 
 		/// <inheritdoc />
 		public override void MapToModel(Models.Stock m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (Produ_ValStockevo) to Model (Stock) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				m.ValType = ViewModelConversion.ToString(ValType);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (Produ_ValStockevo) to Model (Stock) - Error during mapping.");
-				throw;
-			}
 		}
 
 		#endregion
@@ -580,7 +530,7 @@ namespace GenioMVC.ViewModels.Produ
 			new TableSearchColumn("ValType", CSGenioAstock.FldType, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValReferenc", CSGenioAstock.FldReferenc, typeof(string)),
 			new TableSearchColumn("ValQuantity", CSGenioAstock.FldQuantity, typeof(decimal?)),
-			new TableSearchColumn("ValBalance", CSGenioAstock.FldBalance, typeof(decimal?))
+			new TableSearchColumn("ValBalance", CSGenioAstock.FldBalance, typeof(decimal?)),
 		];
 	}
 }

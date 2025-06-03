@@ -56,6 +56,11 @@ public class ReparForm : Form
 	public BaseInputControl ReparDescript => new BaseInputControl(driver, ContainerLocator, "container-REPAR___REPARDESCRIPT", "#REPAR___REPARDESCRIPT");
 
 	/// <summary>
+	/// Categorize
+	/// </summary>
+	public ButtonControl PseudCateg_ai => new ButtonControl(driver, ContainerLocator, "#REPAR___PSEUDCATEG_AI");
+
+	/// <summary>
 	/// Spent in Hours
 	/// </summary>
 	public BaseInputControl ReparHours => new BaseInputControl(driver, ContainerLocator, "container-REPAR___REPARHOURS___", "#REPAR___REPARHOURS___");

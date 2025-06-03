@@ -9,16 +9,21 @@ namespace CSGenio.framework
     /// </summary>
     public class Field
     {
+        private readonly string _fullname;
+
         /// <summary>
         /// Constructor
         /// </summary>
+        /// <param name="alias">Area of the field</param>
         /// <param name="name">Name of the field</param>
         /// <param name="fieldType">Type of the field</param>
-        public Field(string name, FieldType fieldType)
+        public Field(string alias, string name, FieldType fieldType)
         {
+            Alias = alias;
             Name = name;
+            _fullname = Alias + "." + Name;
             FieldType = fieldType;
-            FieldFormat = fieldType.Formatting;
+            FieldFormat = fieldType.GetFormatting();
             NotNull = false;
             ZeroDuplication = false;
             NotDup = false;
@@ -60,12 +65,17 @@ namespace CSGenio.framework
         /// <summary>
         /// Field symbolic name
         /// </summary>
-        public string Name { get; set; }
+        public string Name { get; private set; }
 
         /// <summary>
 		/// Table alias
 		/// </summary>
-		public string Alias { get; set; }
+		public string Alias { get; private set; }
+
+        /// <summary>
+        /// Returns the fully qualified name of this field
+        /// </summary>
+        public string FullName { get => _fullname; }
 
         /// <summary>
         /// User description of the field
@@ -248,8 +258,6 @@ namespace CSGenio.framework
 
             switch (format)
             {
-                case FieldFormatting.ANO_MES_DIA:
-                case FieldFormatting.DIA_MES_ANO:
                 case FieldFormatting.DATA:
                 case FieldFormatting.DATAHORA:
                 case FieldFormatting.DATASEGUNDO:
@@ -310,8 +318,6 @@ namespace CSGenio.framework
         {
             switch (format)
             {
-                case FieldFormatting.ANO_MES_DIA:
-                case FieldFormatting.DIA_MES_ANO:
                 case FieldFormatting.DATA:
                 case FieldFormatting.DATAHORA:
                 case FieldFormatting.DATASEGUNDO:
@@ -353,13 +359,7 @@ namespace CSGenio.framework
 
         public bool isKey()
         {
-            return IsKey(this.FieldType);
-        }
-
-        public static bool IsKey(FieldType fieldType)
-        {
-            return fieldType == FieldType.CHAVE_PRIMARIA || fieldType == FieldType.CHAVE_ESTRANGEIRA || fieldType == FieldType.CHAVE_FALSA
-                || fieldType == FieldType.CHAVE_PRIMARIA_GUID || fieldType == FieldType.CHAVE_ESTRANGEIRA_GUID || fieldType == FieldType.CHAVE_FALSA_GUID;
+            return this.FieldType.IsKey();
         }
     }
 }

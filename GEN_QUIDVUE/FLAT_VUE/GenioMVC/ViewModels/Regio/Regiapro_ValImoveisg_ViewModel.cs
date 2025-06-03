@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Regio
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodregia { get; set; }
+		public string RegioValCodregia { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Regio
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Regio
 		/// <param name="userContext">The current user request context</param>
 		public Regiapro_ValImoveisg_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodregia = userContext.CurrentNavigation.CurrentLevel.GetEntry("regio")?.ToString();
+			RegioValCodregia = userContext.CurrentNavigation.CurrentLevel.GetEntry("regio")?.ToString();
 		}
 
 		/// <summary>
@@ -128,11 +127,11 @@ namespace GenioMVC.ViewModels.Regio
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApropr.FldName, FieldType.TEXTO, Resources.Resources.PROPERTY_NAME18934, 30, 0, true),
-				new Exports.QColumn(CSGenioApropr.FldPrecoest, FieldType.VALOR, Resources.Resources.ESTIMATED_PRICE02986, 12, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioApropr.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioApropr.FldName, FieldType.TEXT, Resources.Resources.PROPERTY_NAME18934, 30, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldPrecoest, FieldType.CURRENCY, Resources.Resources.ESTIMATED_PRICE02986, 12, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioApropr.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
 				new Exports.QColumn(CSGenioApropr.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 10, true),
-				new Exports.QColumn(CSGenioApropr.FldCoordgeo, FieldType.GEOGRAPHY, Resources.Resources.GEOGRAPHIC_COORDINAT21394, 30, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldCoordgeo, FieldType.GEOGRAPHY_POINT, Resources.Resources.GEOGRAPHIC_COORDINAT21394, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -197,10 +196,8 @@ namespace GenioMVC.ViewModels.Regio
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodregia != null)
-				crs.Equal(CSGenioApropr.FldCodregia, this.ValCodregia);
-
-
+			if (this.RegioValCodregia != null)
+				crs.Equal(CSGenioApropr.FldCodregia, this.RegioValCodregia);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +335,7 @@ namespace GenioMVC.ViewModels.Regio
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("propr", "name");
+					firstVisibleColumn ??= new FieldRef("propr", "name");
 				}
 
 
@@ -357,6 +353,8 @@ namespace GenioMVC.ViewModels.Regio
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ REGIAPRO_PSEUDIMOVEISG]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -385,7 +383,7 @@ namespace GenioMVC.ViewModels.Regio
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApropr> listing = Models.ModelBase.Where<CSGenioApropr>(m_userContext, false, regiapropseudimoveisgConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REGIAPROPSEUDIMOVEISG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApropr> listing = Models.ModelBase.Where<CSGenioApropr>(m_userContext, distinct, regiapropseudimoveisgConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REGIAPROPSEUDIMOVEISG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -465,6 +463,8 @@ namespace GenioMVC.ViewModels.Regio
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -517,7 +517,7 @@ namespace GenioMVC.ViewModels.Regio
 		[
 			new TableSearchColumn("ValName", CSGenioApropr.FldName, typeof(string)),
 			new TableSearchColumn("ValPrecoest", CSGenioApropr.FldPrecoest, typeof(decimal?)),
-			new TableSearchColumn("ValDescript", CSGenioApropr.FldDescript, typeof(string))
+			new TableSearchColumn("ValDescript", CSGenioApropr.FldDescript, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Propr row)
 		{

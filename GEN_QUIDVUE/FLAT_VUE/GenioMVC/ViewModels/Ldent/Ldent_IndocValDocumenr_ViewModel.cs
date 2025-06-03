@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Ldent
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,8 +127,8 @@ namespace GenioMVC.ViewModels.Ldent
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAindoc.FldDocumenr, FieldType.NUMERO, Resources.Resources.NO_14817, 10, 0, true),
-				new Exports.QColumn(CSGenioAindoc.FldDhdocume, FieldType.DATAHORA, Resources.Resources.DATE18475, 16, 0, true),
+				new Exports.QColumn(CSGenioAindoc.FldDocumenr, FieldType.NUMERIC, Resources.Resources.NO_14817, 10, 0, true),
+				new Exports.QColumn(CSGenioAindoc.FldDhdocume, FieldType.DATETIME, Resources.Resources.DATE18475, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -193,9 +192,6 @@ namespace GenioMVC.ViewModels.Ldent
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -339,8 +335,7 @@ namespace GenioMVC.ViewModels.Ldent
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("indoc", "documenr");
+					firstVisibleColumn ??= new FieldRef("indoc", "documenr");
 				}
 
 
@@ -369,6 +364,8 @@ namespace GenioMVC.ViewModels.Ldent
 
 // USE /[MANUAL GQT OVERRQ LDENT_INDOCDOCUMENR]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -395,7 +392,7 @@ namespace GenioMVC.ViewModels.Ldent
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAindoc> listing = Models.ModelBase.Where<CSGenioAindoc>(m_userContext, false, ldent___indocdocumenrConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LDENT___INDOCDOCUMENR", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAindoc> listing = Models.ModelBase.Where<CSGenioAindoc>(m_userContext, distinct, ldent___indocdocumenrConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LDENT___INDOCDOCUMENR", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -475,6 +472,8 @@ namespace GenioMVC.ViewModels.Ldent
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -525,7 +524,7 @@ namespace GenioMVC.ViewModels.Ldent
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValDocumenr", CSGenioAindoc.FldDocumenr, typeof(decimal?)),
-			new TableSearchColumn("ValDhdocume", CSGenioAindoc.FldDhdocume, typeof(DateTime?))
+			new TableSearchColumn("ValDhdocume", CSGenioAindoc.FldDhdocume, typeof(DateTime?)),
 		];
 	}
 }

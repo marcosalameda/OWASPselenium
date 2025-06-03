@@ -88,13 +88,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Maximum price" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Tpeq1.ValPrecomax")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecomax { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecomax, 2)); } set { klass.ValPrecomax = Convert.ToDecimal(value); } }
+		public decimal? ValPrecomax { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecomax, 2)); } set { klass.ValPrecomax = Convert.ToDecimal(value); } }
 
 		[DisplayName("Last price")]
 		/// <summary>Field : "Last price" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Tpeq1.ValPrecoult")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecoult { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecoult, 2)); } set { klass.ValPrecoult = Convert.ToDecimal(value); } }
+		public decimal? ValPrecoult { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecoult, 2)); } set { klass.ValPrecoult = Convert.ToDecimal(value); } }
 
 		[DisplayName("In")]
 		/// <summary>Field : "In" Tipo: "DT" Formula:  ""</summary>
@@ -107,7 +107,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Tpeq1.ValQtdequip")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdequip { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdequip, 0)); } set { klass.ValQtdequip = Convert.ToDecimal(value); } }
+		public decimal? ValQtdequip { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdequip, 0)); } set { klass.ValQtdequip = Convert.ToDecimal(value); } }
 
 		[DisplayName("Kit")]
 		/// <summary>Field : "Kit" Tipo: "L" Formula:  ""</summary>

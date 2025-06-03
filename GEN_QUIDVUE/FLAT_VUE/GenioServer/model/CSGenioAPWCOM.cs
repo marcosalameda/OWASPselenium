@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioApwcom(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PWCOM]/
 		}
 
@@ -46,40 +44,36 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpwcom", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codpwcom", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpsw", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpess1", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">COMOMODOR";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_COMOMODOR01469";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXT);
 			Qfield.FieldDescription = "Name";
 			Qfield.FieldSize =  100;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
@@ -88,10 +82,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("foto", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "foto", FieldType.IMAGE);
 			Qfield.FieldDescription = "Photo";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "PHOTO51874";
@@ -100,10 +93,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("nridenti", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "nridenti", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Identification";
 			Qfield.FieldSize =  6;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 6;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
@@ -113,9 +105,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -200,8 +191,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Moving access";
 			info.AreaPluralDesignation="Moving accesses";
 			info.DescriptionCav="MOVING_ACCESS62712";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

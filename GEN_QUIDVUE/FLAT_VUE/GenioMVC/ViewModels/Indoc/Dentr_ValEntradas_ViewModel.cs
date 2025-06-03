@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Indoc
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCoddentr { get; set; }
+		public string IndocValCoddentr { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -69,7 +69,7 @@ namespace GenioMVC.ViewModels.Indoc
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
-				conds.Equal(CSGenioAldent.FldCoddentr, this.ValCoddentr ?? Navigation.GetStrValue("indoc"));
+				conds.Equal(CSGenioAldent.FldCoddentr, this.IndocValCoddentr ?? Navigation.GetStrValue("indoc"));
 
 				return conds;
 			}
@@ -97,7 +97,6 @@ namespace GenioMVC.ViewModels.Indoc
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -115,7 +114,7 @@ namespace GenioMVC.ViewModels.Indoc
 		/// <param name="userContext">The current user request context</param>
 		public Dentr_ValEntradas_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCoddentr = userContext.CurrentNavigation.CurrentLevel.GetEntry("indoc")?.ToString();
+			IndocValCoddentr = userContext.CurrentNavigation.CurrentLevel.GetEntry("indoc")?.ToString();
 		}
 
 		/// <summary>
@@ -133,11 +132,11 @@ namespace GenioMVC.ViewModels.Indoc
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAldent.FldLine, FieldType.NUMERO, Resources.Resources.LINE27983, 5, 1, true),
-				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
-				new Exports.QColumn(CSGenioAldent.FldQtdentra, FieldType.NUMERO, Resources.Resources.QTD_ENTRY35144, 10, 0, true),
-				new Exports.QColumn(CSGenioAldent.FldDhentra, FieldType.DATAHORA, Resources.Resources.INSTANT_ENTRANCE27379, 16, 0, true),
+				new Exports.QColumn(CSGenioAldent.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 5, 1, true),
+				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 30, 0, true),
+				new Exports.QColumn(CSGenioAldent.FldQtdentra, FieldType.NUMERIC, Resources.Resources.QTD_ENTRY35144, 10, 0, true),
+				new Exports.QColumn(CSGenioAldent.FldDhentra, FieldType.DATETIME, Resources.Resources.INSTANT_ENTRANCE27379, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -202,10 +201,8 @@ namespace GenioMVC.ViewModels.Indoc
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCoddentr != null)
-				crs.Equal(CSGenioAldent.FldCoddentr, this.ValCoddentr);
-
-
+			if (this.IndocValCoddentr != null)
+				crs.Equal(CSGenioAldent.FldCoddentr, this.IndocValCoddentr);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -351,8 +348,7 @@ namespace GenioMVC.ViewModels.Indoc
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("ldent", "line");
+					firstVisibleColumn ??= new FieldRef("ldent", "line");
 				}
 
 
@@ -381,6 +377,8 @@ namespace GenioMVC.ViewModels.Indoc
 
 // USE /[MANUAL GQT OVERRQ DENTR_PSEUDENTRADAS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -408,7 +406,7 @@ namespace GenioMVC.ViewModels.Indoc
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAldent> listing = Models.ModelBase.Where<CSGenioAldent>(m_userContext, false, dentr___pseudentradasConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DENTR___PSEUDENTRADAS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAldent> listing = Models.ModelBase.Where<CSGenioAldent>(m_userContext, distinct, dentr___pseudentradasConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DENTR___PSEUDENTRADAS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -492,6 +490,8 @@ namespace GenioMVC.ViewModels.Indoc
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -555,7 +555,7 @@ namespace GenioMVC.ViewModels.Indoc
 			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string)),
 			new TableSearchColumn("Item_ValItemdes", CSGenioAitem.FldItemdes, typeof(string)),
 			new TableSearchColumn("ValQtdentra", CSGenioAldent.FldQtdentra, typeof(decimal?)),
-			new TableSearchColumn("ValDhentra", CSGenioAldent.FldDhentra, typeof(DateTime?))
+			new TableSearchColumn("ValDhentra", CSGenioAldent.FldDhentra, typeof(DateTime?)),
 		];
 	}
 }

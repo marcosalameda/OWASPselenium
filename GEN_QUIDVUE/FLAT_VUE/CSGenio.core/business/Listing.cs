@@ -187,8 +187,7 @@ namespace CSGenio.business
                     }
                     else
                     {
-                        FieldFormatting cFormat = campoEPH.FieldFormat;
-                        string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                        string funcaoSQL = campoEPH.FieldType.GetEPHFunction();
                         mda.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(arorigem, crorigem)), 1);
                     }
                     mda.In(arorigem, crorigem, safeValues);
@@ -225,8 +224,7 @@ namespace CSGenio.business
                     else
                     {
                         crorigem = campoEPH.Name;
-                        FieldFormatting cFormat = campoEPH.FieldFormat;
-                        string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                        string funcaoSQL = campoEPH.FieldType.GetEPHFunction();
                         
 						mda.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(myrelacao.AliasTargetTab, crorigem)), 1);
                     }
@@ -263,8 +261,7 @@ namespace CSGenio.business
                             }
                             else
                             {
-                                FieldFormatting cFormat = campoEPH.FieldFormat;
-                                string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                                string funcaoSQL = campoEPH.FieldType.GetEPHFunction();
                                 mda.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(arorigem, crorigem)), 1);
                             }
                         }
@@ -311,8 +308,7 @@ namespace CSGenio.business
                     }
                     else
                     {
-                        FieldFormatting cFormat = campoEPH.FieldFormat;
-                        string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                        string funcaoSQL = campoEPH.FieldType.GetEPHFunction();
                         mda.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(area.Alias, ephArea.Field)), 1);
                     }
                     mda.In(area.Alias, ephArea.Field, safeValues);
@@ -341,8 +337,7 @@ namespace CSGenio.business
                         }
                         else
                         {
-                            FieldFormatting cFormat = campoEPH.FieldFormat;
-                            string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                            string funcaoSQL = campoEPH.FieldType.GetEPHFunction();
                             innerConditions.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(area.Alias, ephArea.Field)), 1);
                         }
                     }
@@ -361,8 +356,7 @@ namespace CSGenio.business
                     }
                     else
                     {
-                        FieldFormatting cFormat = campoEPH.FieldFormat;
-                        string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                        string funcaoSQL = campoEPH.FieldType.GetEPHFunction();
                         innerConditions.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(area.Alias, ephArea.Field)), 1);
                     }
                     innerConditions.In(area.Alias, ephArea.Field, safeValues);
@@ -564,7 +558,7 @@ namespace CSGenio.business
                 string Qfield = tabelacampo[1];
 
                 var cp = Area.GetInfoArea(table).DBFields[Qfield];
-                dt.Columns.Add(campopedido, cp.FieldType.Type);
+                dt.Columns.Add(campopedido, cp.FieldType.GetExternalType());
             }
 
             foreach (IArea row in res)
@@ -572,7 +566,7 @@ namespace CSGenio.business
                 DataRow dr = dt.NewRow();
                 for (int col = 0; col < fieldsRequested.Length; col++)
                 {
-                    var cp = row.Fields[fieldsRequested[col]] as RequestedField;
+                    var cp = row.Fields[fieldsRequested[col]];
                     dr[col] = cp.Value;
                 }
                 dt.Rows.Add(dr);

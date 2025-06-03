@@ -93,8 +93,6 @@ namespace GenioMVC.ViewModels.Flds
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -155,7 +153,7 @@ namespace GenioMVC.ViewModels.Flds
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAflds.FldTxtfield, FieldType.TEXTO, Resources.Resources.TEXT_FIELD41810, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldTxtfield, FieldType.TEXT, Resources.Resources.TEXT_FIELD41810, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -218,8 +216,6 @@ namespace GenioMVC.ViewModels.Flds
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -359,8 +355,7 @@ namespace GenioMVC.ViewModels.Flds
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("flds", "txtfield");
+					firstVisibleColumn ??= new FieldRef("flds", "txtfield");
 				}
 
 
@@ -408,6 +403,8 @@ namespace GenioMVC.ViewModels.Flds
 
 // USE /[MANUAL STY OVERRQ TABS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -435,7 +432,7 @@ namespace GenioMVC.ViewModels.Flds
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, false, sty_menu_tabsConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLTABS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, distinct, sty_menu_tabsConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLTABS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -516,6 +513,8 @@ namespace GenioMVC.ViewModels.Flds
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -565,7 +564,7 @@ namespace GenioMVC.ViewModels.Flds
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValTxtfield", CSGenioAflds.FldTxtfield, typeof(string))
+			new TableSearchColumn("ValTxtfield", CSGenioAflds.FldTxtfield, typeof(string)),
 		];
 	}
 }

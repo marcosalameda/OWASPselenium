@@ -65,7 +65,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Price-by-hour" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Tabpr.ValPrecohor")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecohor { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDecimal(value); } }
+		public decimal? ValPrecohor { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tabpr.ValZzstate")]

@@ -553,7 +553,7 @@ namespace GenioMVC.ViewModels.Proje
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -600,7 +600,7 @@ namespace GenioMVC.ViewModels.Proje
 				// Fill List fields
 				this.ValCodyear = ViewModelConversion.ToString(row["year1.codyear"]);
 				TableYear1Year.Value = (string)row["year1.year"];
-				if (GlobalFunctions.emptyG(this.ValCodyear) == 1)
+				if (GenFunctions.emptyG(this.ValCodyear) == 1)
 				{
 					this.ValCodyear = "";
 					TableYear1Year.Value = "";

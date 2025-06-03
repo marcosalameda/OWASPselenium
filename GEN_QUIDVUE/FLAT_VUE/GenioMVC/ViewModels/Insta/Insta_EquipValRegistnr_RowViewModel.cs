@@ -12,22 +12,21 @@ public class Insta_EquipValRegistnr_RowViewModel : Models.Equip
 
 	public Insta_EquipValRegistnr_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public Insta_EquipValRegistnr_RowViewModel(UserContext userContext, CSGenioAequip val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -150,5 +149,13 @@ public class Insta_EquipValRegistnr_RowViewModel : Models.Equip
 	/// Formula: iif(emptyD([EQUIP->DTDECO])==1,RGB(255,255,255),RGB(194,24,7))
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
-	public string BackgroundColor => ((CSGenio.business.GlobalFunctions.emptyD(((DateTime)this.ValDtdeco))==1)?("RGB(255,255,255)"):("RGB(194,24,7)"));
+	public string BackgroundColor => ((CSGenio.framework.GenFunctions.emptyD(((DateTime)this.ValDtdeco))==1)?("RGB(255,255,255)"):("RGB(194,24,7)"));
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

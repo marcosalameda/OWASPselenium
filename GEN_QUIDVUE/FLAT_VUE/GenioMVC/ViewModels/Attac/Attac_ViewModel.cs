@@ -539,7 +539,7 @@ namespace GenioMVC.ViewModels.Attac
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -586,7 +586,7 @@ namespace GenioMVC.ViewModels.Attac
 				// Fill List fields
 				this.ValCodasset = ViewModelConversion.ToString(row["asset.codasset"]);
 				TableAssetName.Value = (string)row["asset.name"];
-				if (GlobalFunctions.emptyG(this.ValCodasset) == 1)
+				if (GenFunctions.emptyG(this.ValCodasset) == 1)
 				{
 					this.ValCodasset = "";
 					TableAssetName.Value = "";

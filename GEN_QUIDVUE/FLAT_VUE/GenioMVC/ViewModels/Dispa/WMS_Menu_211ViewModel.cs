@@ -22,16 +22,16 @@ public class WMS_Menu_211_ViewModel : KanbanBaseViewModel<CSGenioAdisst, CSGenio
 	public new string Identifier { get => "ML211"; }
 
 	[JsonIgnore]
-	public override FieldRef[] ColumnFields 
-	{ 
+	public override FieldRef[] ColumnFields
+	{
 		get => [
 			CSGenioAdisst.FldCoddisst, CSGenioAdisst.FldOrder, CSGenioAdisst.FldStatus, CSGenioAdisst.FldDescript, CSGenioAdisst.FldZzstate
 		];
 	}
 
 	[JsonIgnore]
-	public override FieldRef[] CardFields 
-	{ 
+	public override FieldRef[] CardFields
+	{
 		get => [
 			CSGenioAdispa.FldCoddispa, CSGenioAdispa.FldCoddisst, CSGenioAdisst.FldCoddisst, CSGenioAdispa.FldDispanr, CSGenioAdispa.FldDispadt, CSGenioAperso.FldName, CSGenioAdispa.FldCodperso, CSGenioAperso.FldCodperso, CSGenioAdisst.FldStatus, CSGenioAentit.FldName, CSGenioAdispa.FldCodentit, CSGenioAentit.FldCodentit, CSGenioAdispa.FldZzstate
 		];

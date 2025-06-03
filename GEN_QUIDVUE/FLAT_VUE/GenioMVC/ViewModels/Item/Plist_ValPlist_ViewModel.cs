@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Item
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCoditem { get; set; }
+		public string ItemValCoditem { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Item
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Item
 		/// <param name="userContext">The current user request context</param>
 		public Plist_ValPlist_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
+			ItemValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
 		}
 
 		/// <summary>
@@ -187,10 +186,8 @@ namespace GenioMVC.ViewModels.Item
 
 
 
-			if (this.ValCoditem != null)
-				crs.Equal(CSGenioAitemp.FldCoditem, this.ValCoditem);
-
-
+			if (this.ItemValCoditem != null)
+				crs.Equal(CSGenioAitemp.FldCoditem, this.ItemValCoditem);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -351,6 +348,8 @@ namespace GenioMVC.ViewModels.Item
 
 // USE /[MANUAL GQT OVERRQ PLIST_PSEUDPLIST]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -378,7 +377,7 @@ namespace GenioMVC.ViewModels.Item
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAitemp> listing = Models.ModelBase.Where<CSGenioAitemp>(m_userContext, false, plist___pseudplist___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PLIST___PSEUDPLIST___", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAitemp> listing = Models.ModelBase.Where<CSGenioAitemp>(m_userContext, distinct, plist___pseudplist___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PLIST___PSEUDPLIST___", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -458,6 +457,8 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -507,7 +508,6 @@ namespace GenioMVC.ViewModels.Item
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-
 		];
 	}
 }

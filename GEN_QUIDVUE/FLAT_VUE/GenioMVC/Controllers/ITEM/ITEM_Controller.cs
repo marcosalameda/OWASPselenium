@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Item;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER ITEM]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ItemController : ControllerBase
 	{
-		public ItemController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ItemController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION ITEM]/
 
 
@@ -254,6 +263,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Artig" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -267,6 +277,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Item)
 			);
 		}
+
 
 
 		/// <summary>
@@ -284,6 +295,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Artiginv" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -297,6 +309,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Item)
 			);
 		}
+
 
 
 		/// <summary>
@@ -314,6 +327,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Item" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -327,6 +341,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Item)
 			);
 		}
+
 
 
 		/// <summary>

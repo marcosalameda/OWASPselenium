@@ -88,33 +88,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			return crs;
 		}
 
-
-		public string ValCorletra { get; set; }
-
-		public string ValBackcolo { get; set; }
-
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param
-		private void SetViewModelValue(string fullFieldName, object value)
-		{
-			if (string.IsNullOrEmpty(fullFieldName))
-				return;
-
-			switch (fullFieldName)
-			{
-				case "tpequ.corletra":
-					ValCorletra = ViewModelConversion.ToString(value);
-					break;
-				case "tpequ.backcolo":
-					ValBackcolo = ViewModelConversion.ToString(value);
-					break;
-			}
-		}
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -174,14 +147,14 @@ namespace GenioMVC.ViewModels.Tpequ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXTO, Resources.Resources.CODE49225, 20, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTpequpai, FieldType.TEXTO, Resources.Resources.DEPENDENT_ON28321, 20, 0, false),
-				new Exports.QColumn(CSGenioAtpequ.FldNivel, FieldType.NUMERO, Resources.Resources.LEVEL06184, 3, 0, false),
-				new Exports.QColumn(CSGenioAtpequ.FldBackcolo, FieldType.TEXTO, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
-				new Exports.QColumn(CSGenioAtpequ.FldCorletra, FieldType.TEXTO, Resources.Resources.LETTER_COLOR15736, 30, 0, false),
-				new Exports.QColumn(CSGenioAtpequ.FldPrecomax, FieldType.VALOR, Resources.Resources.MAXIMUM_PRICE55489, 12, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldPrecoult, FieldType.VALOR, Resources.Resources.LAST_PRICE25852, 12, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXT, Resources.Resources.CODE49225, 20, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTpequpai, FieldType.TEXT, Resources.Resources.DEPENDENT_ON28321, 20, 0, false),
+				new Exports.QColumn(CSGenioAtpequ.FldNivel, FieldType.NUMERIC, Resources.Resources.LEVEL06184, 3, 0, false),
+				new Exports.QColumn(CSGenioAtpequ.FldBackcolo, FieldType.TEXT, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
+				new Exports.QColumn(CSGenioAtpequ.FldCorletra, FieldType.TEXT, Resources.Resources.LETTER_COLOR15736, 30, 0, false),
+				new Exports.QColumn(CSGenioAtpequ.FldPrecomax, FieldType.CURRENCY, Resources.Resources.MAXIMUM_PRICE55489, 12, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldPrecoult, FieldType.CURRENCY, Resources.Resources.LAST_PRICE25852, 12, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -244,8 +217,6 @@ namespace GenioMVC.ViewModels.Tpequ
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -392,8 +363,7 @@ namespace GenioMVC.ViewModels.Tpequ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tpequ", "tpequcod");
+					firstVisibleColumn ??= new FieldRef("tpequ", "tpequcod");
 				}
 
 
@@ -422,6 +392,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 // USE /[MANUAL GQT OVERRQ 2A1]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -449,7 +421,7 @@ namespace GenioMVC.ViewModels.Tpequ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, false, gqt_menu_2a1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2A1", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, distinct, gqt_menu_2a1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2A1", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -530,6 +502,8 @@ namespace GenioMVC.ViewModels.Tpequ
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -557,43 +531,11 @@ namespace GenioMVC.ViewModels.Tpequ
 		/// <inheritdoc />
 		public override void MapFromModel(Models.Tpequ m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map Model (Tpequ) to ViewModel (GQT_Menu_2A1) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				ValCorletra = ViewModelConversion.ToString(m.ValCorletra);
-				ValBackcolo = ViewModelConversion.ToString(m.ValBackcolo);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map Model (Tpequ) to ViewModel (GQT_Menu_2A1) - Error during mapping.");
-				throw;
-			}
 		}
 
 		/// <inheritdoc />
 		public override void MapToModel(Models.Tpequ m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (GQT_Menu_2A1) to Model (Tpequ) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				m.ValCorletra = ViewModelConversion.ToString(ValCorletra);
-				m.ValBackcolo = ViewModelConversion.ToString(ValBackcolo);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (GQT_Menu_2A1) to Model (Tpequ) - Error during mapping.");
-				throw;
-			}
 		}
 
 		#endregion
@@ -618,7 +560,7 @@ namespace GenioMVC.ViewModels.Tpequ
 			new TableSearchColumn("ValBackcolo", CSGenioAtpequ.FldBackcolo, typeof(string), visible : false),
 			new TableSearchColumn("ValCorletra", CSGenioAtpequ.FldCorletra, typeof(string), visible : false),
 			new TableSearchColumn("ValPrecomax", CSGenioAtpequ.FldPrecomax, typeof(decimal?)),
-			new TableSearchColumn("ValPrecoult", CSGenioAtpequ.FldPrecoult, typeof(decimal?))
+			new TableSearchColumn("ValPrecoult", CSGenioAtpequ.FldPrecoult, typeof(decimal?)),
 		];
 	}
 }

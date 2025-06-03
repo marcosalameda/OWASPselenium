@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodlnhpd { get; set; }
+		public string LnhpdValCodlnhpd { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 		/// <param name="userContext">The current user request context</param>
 		public Lnhpd_ValDesagreg_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodlnhpd = userContext.CurrentNavigation.CurrentLevel.GetEntry("lnhpd")?.ToString();
+			LnhpdValCodlnhpd = userContext.CurrentNavigation.CurrentLevel.GetEntry("lnhpd")?.ToString();
 		}
 
 		/// <summary>
@@ -128,12 +127,12 @@ namespace GenioMVC.ViewModels.Lnhpd
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlnhde.FldOrdem, FieldType.NUMERO, Resources.Resources.ORDER39632, 3, 0, true),
-				new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
-				new Exports.QColumn(CSGenioAlnhde.FldQuantida, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 3, 0, true),
+				new Exports.QColumn(CSGenioAlnhde.FldOrdem, FieldType.NUMERIC, Resources.Resources.ORDER39632, 3, 0, true),
+				new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
+				new Exports.QColumn(CSGenioAlnhde.FldQuantida, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 3, 0, true),
 				new Exports.QColumn(CSGenioAlnhde.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 2, true),
-				new Exports.QColumn(CSGenioAlnhde.FldCode, FieldType.TEXTO, Resources.Resources.CODE49225, 10, 0, true),
-				new Exports.QColumn(CSGenioAlnhde.FldUrl, FieldType.TEXTO, Resources.Resources.SITE06486, 30, 0, true),
+				new Exports.QColumn(CSGenioAlnhde.FldCode, FieldType.TEXT, Resources.Resources.CODE49225, 10, 0, true),
+				new Exports.QColumn(CSGenioAlnhde.FldUrl, FieldType.TEXT, Resources.Resources.SITE06486, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -198,10 +197,8 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodlnhpd != null)
-				crs.Equal(CSGenioAlnhde.FldCodlnhpd, this.ValCodlnhpd);
-
-
+			if (this.LnhpdValCodlnhpd != null)
+				crs.Equal(CSGenioAlnhde.FldCodlnhpd, this.LnhpdValCodlnhpd);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -347,8 +344,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("lnhde", "ordem");
+					firstVisibleColumn ??= new FieldRef("lnhde", "ordem");
 				}
 
 
@@ -377,6 +373,8 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 // USE /[MANUAL GQT OVERRQ LNHPD_PSEUDDESAGREG]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -404,7 +402,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlnhde> listing = Models.ModelBase.Where<CSGenioAlnhde>(m_userContext, false, lnhpd___pseuddesagregConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHPD___PSEUDDESAGREG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlnhde> listing = Models.ModelBase.Where<CSGenioAlnhde>(m_userContext, distinct, lnhpd___pseuddesagregConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHPD___PSEUDDESAGREG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -486,6 +484,8 @@ namespace GenioMVC.ViewModels.Lnhpd
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -540,7 +540,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 			new TableSearchColumn("ValQuantida", CSGenioAlnhde.FldQuantida, typeof(decimal?)),
 			new TableSearchColumn("ValDescript", CSGenioAlnhde.FldDescript, typeof(string)),
 			new TableSearchColumn("ValCode", CSGenioAlnhde.FldCode, typeof(string)),
-			new TableSearchColumn("ValUrl", CSGenioAlnhde.FldUrl, typeof(string))
+			new TableSearchColumn("ValUrl", CSGenioAlnhde.FldUrl, typeof(string)),
 		];
 	}
 }

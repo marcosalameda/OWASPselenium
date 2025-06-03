@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Propr;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PROPR]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ProprController : ControllerBase
 	{
-		public ProprController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ProprController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PROPR]/
 
 
@@ -221,6 +230,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Propr00" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -234,6 +244,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Propr)
 			);
 		}
+
 
 
 		/// <summary>

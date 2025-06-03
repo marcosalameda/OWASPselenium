@@ -21,11 +21,13 @@
               <template #actions="props">
                 <q-button-group borderless>
                   <q-button
+                    variant="text"
                     :title="Resources.EDITAR11616"
                     @click="ManageProperties(2, props.row)">
                     <q-icon icon="pencil" />
                   </q-button>
                   <q-button
+                    variant="text"
                     :title="Resources.APAGAR04097"
                     @click="ManageProperties(3, props.row)">
                     <q-icon icon="bin" />
@@ -33,12 +35,14 @@
                 </q-button-group>
               </template>
               <template #ValSsl="props">
-                  <q-icon v-if="props.row.ValSsl" icon="check" />
-                  <q-icon v-else icon="close" />
+                <q-icon 
+                  :icon="props.row.ValSsl ? 'check' : 'close'"
+                  :color="props.row.ValSsl ? 'success' : 'danger'" />
               </template>
               <template #ValAuth="props">
-                  <q-icon v-if="props.row.ValAuth" icon="check" />
-                  <q-icon v-else icon="close" />
+                <q-icon 
+                  :icon="props.row.ValAuth ? 'check' : 'close'"
+                  :color="props.row.ValAuth ? 'success' : 'danger'" />
               </template>
               <template #table-footer>
                 <tr>

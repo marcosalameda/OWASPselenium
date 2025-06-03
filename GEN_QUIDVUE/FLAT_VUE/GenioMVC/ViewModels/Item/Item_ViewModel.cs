@@ -506,10 +506,10 @@ namespace GenioMVC.ViewModels.Item
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValCodwareh", Resources.Resources.WAREHOUSE51864, ViewModelConversion.ToString(ValCodwareh), FieldType.CHAVE_ESTRANGEIRA_GUID.Formatting);
+			validator.Required("ValCodwareh", Resources.Resources.WAREHOUSE51864, ViewModelConversion.ToString(ValCodwareh), FieldType.KEY_GUID.GetFormatting());
 			validator.StringLength("ValItemdes", Resources.Resources.ARTICLE60065, ValItemdes, 85);
 
-			validator.Required("ValItemdes", Resources.Resources.ARTICLE60065, ViewModelConversion.ToString(ValItemdes), FieldType.TEXTO.Formatting);
+			validator.Required("ValItemdes", Resources.Resources.ARTICLE60065, ViewModelConversion.ToString(ValItemdes), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValItemcod", Resources.Resources.CODE49225, ValItemcod, 15);
 
 
@@ -661,7 +661,7 @@ namespace GenioMVC.ViewModels.Item
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -709,7 +709,7 @@ namespace GenioMVC.ViewModels.Item
 				// Fill List fields
 				this.ValCodgitem = ViewModelConversion.ToString(row["gitem.codgitem"]);
 				TableGitemItemdes.Value = (string)row["gitem.itemdes"];
-				if (GlobalFunctions.emptyG(this.ValCodgitem) == 1)
+				if (GenFunctions.emptyG(this.ValCodgitem) == 1)
 				{
 					this.ValCodgitem = "";
 					TableGitemItemdes.Value = "";
@@ -858,7 +858,7 @@ namespace GenioMVC.ViewModels.Item
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -905,7 +905,7 @@ namespace GenioMVC.ViewModels.Item
 				// Fill List fields
 				this.ValCodwareh = ViewModelConversion.ToString(row["wareh.codwareh"]);
 				TableWarehWarehdes.Value = (string)row["wareh.warehdes"];
-				if (GlobalFunctions.emptyG(this.ValCodwareh) == 1)
+				if (GenFunctions.emptyG(this.ValCodwareh) == 1)
 				{
 					this.ValCodwareh = "";
 					TableWarehWarehdes.Value = "";

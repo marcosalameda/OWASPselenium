@@ -75,7 +75,7 @@ namespace CSGenio.business.async
     /// Represents a work unit to be executed by the worker.
     /// Contains both the job and the process
     /// </summary>
-    public class GenioWork : IGenioWork
+    public class GenioWork : IGenioWork, IComparable<GenioWork>
     {
         public GenioWork(Process process, GenioExecutableJob job)
         {
@@ -324,6 +324,20 @@ namespace CSGenio.business.async
         public bool FulfillRequirements(PersistentSupport sp, User user)
         {
             return Job.AreRequirementsMet(sp, user);
+        }
+        
+        public int CompareTo(GenioWork other)
+        {
+            if (other == null)
+                return 1; // Treat null as lowest value
+
+            // Compare by Priority first
+            int priorityComparison = Priority.CompareTo(other.Priority);
+            if (priorityComparison != 0)
+                return priorityComparison;
+
+            // If Priority is equal, compare by Process.ValId
+            return Process.ValId.CompareTo(other.Process.ValId);
         }
     }
 }

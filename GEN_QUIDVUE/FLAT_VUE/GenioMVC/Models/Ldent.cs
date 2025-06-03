@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Ldent.ValLine")]
 		[NumericAttribute(1)]
-		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDecimal(value); } }
+		public decimal? ValLine { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDecimal(value); } }
 
 		[DisplayName(">ARMAZEM")]
 		/// <summary>Field : ">ARMAZEM" Tipo: "CE" Formula: DF "[INDOC->CODWAREH]"</summary>
@@ -104,7 +104,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Qtd entry" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Ldent.ValQtdentra")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdentra { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdentra, 0)); } set { klass.ValQtdentra = Convert.ToDecimal(value); } }
+		public decimal? ValQtdentra { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdentra, 0)); } set { klass.ValQtdentra = Convert.ToDecimal(value); } }
 
 		[DisplayName("Instant entrance")]
 		/// <summary>Field : "Instant entrance" Tipo: "DT" Formula: ++ "[INDOC->DHDOCUME]"</summary>

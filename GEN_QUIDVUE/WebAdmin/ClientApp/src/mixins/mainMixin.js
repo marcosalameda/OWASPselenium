@@ -24,8 +24,8 @@ export const reusableMixin = {
             }
 
             if (!hasSubmenu) {
-                event.currentTarget.classList.add('selected');
-                vm.currentSelected = event.currentTarget;
+                event?.currentTarget.classList.add('selected');
+                vm.currentSelected = event?.currentTarget;
             } else {
                 event.currentTarget.classList.add('selected');
                 vm.currentSelected = event.currentTarget;

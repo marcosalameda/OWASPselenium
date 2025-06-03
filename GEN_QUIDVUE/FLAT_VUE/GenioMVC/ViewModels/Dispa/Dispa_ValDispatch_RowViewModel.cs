@@ -12,22 +12,21 @@ public class Dispa_ValDispatch_RowViewModel : Models.Dilin
 
 	public Dispa_ValDispatch_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public Dispa_ValDispatch_RowViewModel(UserContext userContext, CSGenioAdilin val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -154,4 +153,12 @@ public class Dispa_ValDispatch_RowViewModel : Models.Dilin
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
 	public string BackgroundColor => "";
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

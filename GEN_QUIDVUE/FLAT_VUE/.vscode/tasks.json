@@ -77,7 +77,7 @@
         {
             "label": "vite",
             "type": "npm",
-            "script": "vite:run",
+            "script": "dev",
             "isBackground": true,
             "path": "./ClientApp",
             "problemMatcher": ["$vite"]

@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,18 +148,18 @@ namespace GenioMVC.ViewModels.Tpequ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfamil.FldFamily, FieldType.TEXTO, Resources.Resources.FAMILIA_DE_EQUIPAMEN12158, 30, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXTO, Resources.Resources.CODE49225, 20, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTpequpai, FieldType.TEXTO, Resources.Resources.DEPENDENT_ON28321, 20, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldNivel, FieldType.NUMERO, Resources.Resources.LEVEL06184, 3, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldBackcolo, FieldType.TEXTO, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldCorletra, FieldType.TEXTO, Resources.Resources.LETTER_COLOR15736, 30, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldPrecomax, FieldType.VALOR, Resources.Resources.MAXIMUM_PRICE55489, 12, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldPrecoult, FieldType.VALOR, Resources.Resources.LAST_PRICE25852, 12, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldSince, FieldType.DATAHORA, Resources.Resources.SINCE47259, 16, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldQtdequip, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 6, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldKit, FieldType.LOGICO, Resources.Resources.KIT27179, 1, 0, true),
+				new Exports.QColumn(CSGenioAfamil.FldFamily, FieldType.TEXT, Resources.Resources.FAMILIA_DE_EQUIPAMEN12158, 30, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXT, Resources.Resources.CODE49225, 20, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTpequpai, FieldType.TEXT, Resources.Resources.DEPENDENT_ON28321, 20, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldNivel, FieldType.NUMERIC, Resources.Resources.LEVEL06184, 3, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldBackcolo, FieldType.TEXT, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldCorletra, FieldType.TEXT, Resources.Resources.LETTER_COLOR15736, 30, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldPrecomax, FieldType.CURRENCY, Resources.Resources.MAXIMUM_PRICE55489, 12, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldPrecoult, FieldType.CURRENCY, Resources.Resources.LAST_PRICE25852, 12, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldSince, FieldType.DATETIME, Resources.Resources.SINCE47259, 16, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldQtdequip, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 6, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldKit, FieldType.LOGIC, Resources.Resources.KIT27179, 1, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -224,8 +222,6 @@ namespace GenioMVC.ViewModels.Tpequ
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -372,8 +368,7 @@ namespace GenioMVC.ViewModels.Tpequ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("famil", "family");
+					firstVisibleColumn ??= new FieldRef("famil", "family");
 				}
 
 
@@ -402,6 +397,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 // USE /[MANUAL GQT OVERRQ 2D21]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -429,7 +426,7 @@ namespace GenioMVC.ViewModels.Tpequ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, false, gqt_menu_2d21Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2D21", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, distinct, gqt_menu_2d21Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2D21", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -512,6 +509,8 @@ namespace GenioMVC.ViewModels.Tpequ
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -572,7 +571,7 @@ namespace GenioMVC.ViewModels.Tpequ
 			new TableSearchColumn("ValPrecoult", CSGenioAtpequ.FldPrecoult, typeof(decimal?)),
 			new TableSearchColumn("ValSince", CSGenioAtpequ.FldSince, typeof(DateTime?)),
 			new TableSearchColumn("ValQtdequip", CSGenioAtpequ.FldQtdequip, typeof(decimal?)),
-			new TableSearchColumn("ValKit", CSGenioAtpequ.FldKit, typeof(bool))
+			new TableSearchColumn("ValKit", CSGenioAtpequ.FldKit, typeof(bool)),
 		];
 	}
 }

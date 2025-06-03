@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAdispa(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR DISPA]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("coddispa", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "coddispa", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codentit", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codentit", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">>CUSTOMER";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "__CUSTOMER21546";
 
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("coddisst", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "coddisst", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">> STATUS";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "___STATUS46938";
 
@@ -78,10 +73,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("isprepar", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "isprepar", FieldType.LOGIC);
 			Qfield.FieldDescription = "Is prepared";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "IS_PREPARED16113";
 
@@ -89,10 +83,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dispadt", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dispadt", FieldType.DATETIME);
 			Qfield.FieldDescription = "Dispatch date";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "DISPATCH_DATE54413";
 
@@ -104,10 +97,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dispanr", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "dispanr", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Dispatch number";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "DISPATCH_NUMBER23616";
@@ -119,10 +111,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("prepared", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "prepared", FieldType.DATETIME);
 			Qfield.FieldDescription = "Prepared";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PREPARED38522";
 
@@ -130,16 +121,15 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"isprepar"},new int[] {0},"dispa","coddispa"));
 			Qfield.DefaultValue = new DefaultValue(new InternalOperationFormula(argumentsListByArea, 1, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return (object)(((GlobalFunctions.emptyL(((int)args[0]))==1)?(DateTime.MinValue):(DateTime.Today)));
+				return (object)(((GenFunctions.emptyL(((int)args[0]))==1)?(DateTime.MinValue):(DateTime.Today)));
 			}));
 
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codperso", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codperso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">>PERSON RESPONSIBLE";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "__PERSON_RESPONSIBLE00553";
 
@@ -147,10 +137,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("status", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "status", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Status";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "STATUS62033";
 
@@ -158,16 +147,15 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"dispadt","prepared"}, new int[] {0,1}, "dispa", "coddispa"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==0)?("D"):(((GlobalFunctions.emptyD(((DateTime)args[1]))==0)?("P"):("I"))));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==0)?("D"):(((GenFunctions.emptyD(((DateTime)args[1]))==0)?("P"):("I"))));
 			});
             Qfield.ArrayName = "dbo.GetValArrayCdispstat";
             Qfield.ArrayClassName = "Dispstat";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -263,8 +251,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Dispatch";
 			info.AreaPluralDesignation="Dispatches";
 			info.DescriptionCav="DISPATCH46310";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

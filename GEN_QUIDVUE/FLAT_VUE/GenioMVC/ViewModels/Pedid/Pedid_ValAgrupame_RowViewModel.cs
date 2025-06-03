@@ -12,22 +12,21 @@ public class Pedid_ValAgrupame_RowViewModel : Models.Lnhag
 
 	public Pedid_ValAgrupame_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public Pedid_ValAgrupame_RowViewModel(UserContext userContext, CSGenioAlnhag val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -124,4 +123,12 @@ public class Pedid_ValAgrupame_RowViewModel : Models.Lnhag
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
 	public string BackgroundColor => "";
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

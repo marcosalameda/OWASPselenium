@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Year;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER YEAR]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class YearController : ControllerBase
 	{
-		public YearController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public YearController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION YEAR]/
 
 
@@ -42,6 +51,7 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER YEAR]/
+
 
 
 

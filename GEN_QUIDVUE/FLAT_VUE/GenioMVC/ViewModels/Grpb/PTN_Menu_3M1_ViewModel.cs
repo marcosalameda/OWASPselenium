@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Grpb
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -147,7 +145,7 @@ namespace GenioMVC.ViewModels.Grpb
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAgrpb.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAgrpb.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -210,8 +208,6 @@ namespace GenioMVC.ViewModels.Grpb
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -350,8 +346,7 @@ namespace GenioMVC.ViewModels.Grpb
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("grpb", "name");
+					firstVisibleColumn ??= new FieldRef("grpb", "name");
 				}
 
 
@@ -380,6 +375,22 @@ namespace GenioMVC.ViewModels.Grpb
 
 // USE /[MANUAL PTN OVERRQ 3M1]/
 
+				List<string> listOfTablesBelow = ["tblb"];				
+
+				bool distinct = false;
+				int nDistinctSearchTables = tableConfig.SearchFilters.SelectMany(sf => 
+					sf.Conditions.Where(cond => 
+						_searchableColumnsRefs.ContainsKey(cond.Field)
+							? listOfTablesBelow.Contains(_searchableColumnsRefs[cond.Field].Area)
+							: false
+					)
+				).Distinct().Count();
+				
+				if (nDistinctSearchTables == 1)
+					distinct = true;
+				else if (nDistinctSearchTables > 1)
+					tableReload = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -407,7 +418,7 @@ namespace GenioMVC.ViewModels.Grpb
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAgrpb> listing = Models.ModelBase.Where<CSGenioAgrpb>(m_userContext, false, ptn_menu_3m1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML3M1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAgrpb> listing = Models.ModelBase.Where<CSGenioAgrpb>(m_userContext, distinct, ptn_menu_3m1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML3M1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -490,25 +501,27 @@ namespace GenioMVC.ViewModels.Grpb
 				}
 			}
 
+			model.InitRowData();
+
 			// TBLB columns
 			if ((bool)tableBelowRows?.ContainsKey("tblb"))
 			{
 				var rowsByKey = tableBelowRows["tblb"] as Dictionary<string, List<CSGenioAtblb>>;
 				if (rowsByKey?.TryGetValue(row.QPrimaryKey, out List<CSGenioAtblb> rows) == true)
 				{
-					model.TblbValBool = [.. rows.Where(r => !Field.isEmptyValue(r.ValBool, FieldType.LOGICO.Formatting)).Select(r => ViewModelConversion.ToLogic(r.ValBool))];
-					model.TblbValCurdec = [.. rows.Where(r => !Field.isEmptyValue(r.ValCurdec, FieldType.VALOR.Formatting)).Select(r => ViewModelConversion.ToNumeric(r.ValCurdec))];
-					model.TblbValCurint = [.. rows.Where(r => !Field.isEmptyValue(r.ValCurint, FieldType.VALOR.Formatting)).Select(r => ViewModelConversion.ToNumeric(r.ValCurint))];
-					model.TblbValDate = [.. rows.Where(r => !Field.isEmptyValue(r.ValDate, FieldType.DATA.Formatting)).Select(r => ViewModelConversion.ToDateTime(r.ValDate))];
-					model.TblbValDatetm = [.. rows.Where(r => !Field.isEmptyValue(r.ValDatetm, FieldType.DATAHORA.Formatting)).Select(r => ViewModelConversion.ToDateTime(r.ValDatetm))];
-					model.TblbValDatets = [.. rows.Where(r => !Field.isEmptyValue(r.ValDatets, FieldType.DATASEGUNDO.Formatting)).Select(r => ViewModelConversion.ToDateTime(r.ValDatets))];
-					model.TblbValEnumn = [.. rows.Where(r => !Field.isEmptyValue(r.ValEnumn, FieldType.ARRAY_COD_NUMERICO.Formatting)).Select(r => ViewModelConversion.ToNumeric(r.ValEnumn))];
-					model.TblbValEnumt = [.. rows.Where(r => !Field.isEmptyValue(r.ValEnumt, FieldType.ARRAY_COD_TEXTO.Formatting)).Select(r => ViewModelConversion.ToString(r.ValEnumt))];
-					model.TblbValNumdec = [.. rows.Where(r => !Field.isEmptyValue(r.ValNumdec, FieldType.NUMERO.Formatting)).Select(r => ViewModelConversion.ToNumeric(r.ValNumdec))];
-					model.TblbValNumint = [.. rows.Where(r => !Field.isEmptyValue(r.ValNumint, FieldType.NUMERO.Formatting)).Select(r => ViewModelConversion.ToNumeric(r.ValNumint))];
-					model.TblbValText = [.. rows.Where(r => !Field.isEmptyValue(r.ValText, FieldType.TEXTO.Formatting)).Select(r => ViewModelConversion.ToString(r.ValText))];
-					model.TblbValTextml = [.. rows.Where(r => !Field.isEmptyValue(r.ValTextml, FieldType.MEMO.Formatting)).Select(r => ViewModelConversion.ToString(r.ValTextml))];
-					model.TblbValTimehm = [.. rows.Where(r => !Field.isEmptyValue(r.ValTimehm, FieldType.TEMPO.Formatting)).Select(r => ViewModelConversion.ToString(r.ValTimehm))];
+					model.TblbValBool = [.. rows.Where(r => !Field.isEmptyValue(r.ValBool, FieldType.LOGIC.GetFormatting())).Select(r => ViewModelConversion.ToLogic(r.ValBool))];
+					model.TblbValCurdec = [.. rows.Where(r => !Field.isEmptyValue(r.ValCurdec, FieldType.CURRENCY.GetFormatting())).Select(r => ViewModelConversion.ToNumeric(r.ValCurdec))];
+					model.TblbValCurint = [.. rows.Where(r => !Field.isEmptyValue(r.ValCurint, FieldType.CURRENCY.GetFormatting())).Select(r => ViewModelConversion.ToNumeric(r.ValCurint))];
+					model.TblbValDate = [.. rows.Where(r => !Field.isEmptyValue(r.ValDate, FieldType.DATE.GetFormatting())).Select(r => ViewModelConversion.ToDateTime(r.ValDate))];
+					model.TblbValDatetm = [.. rows.Where(r => !Field.isEmptyValue(r.ValDatetm, FieldType.DATETIME.GetFormatting())).Select(r => ViewModelConversion.ToDateTime(r.ValDatetm))];
+					model.TblbValDatets = [.. rows.Where(r => !Field.isEmptyValue(r.ValDatets, FieldType.DATETIMESECONDS.GetFormatting())).Select(r => ViewModelConversion.ToDateTime(r.ValDatets))];
+					model.TblbValEnumn = [.. rows.Where(r => !Field.isEmptyValue(r.ValEnumn, FieldType.ARRAY_NUMERIC.GetFormatting())).Select(r => ViewModelConversion.ToNumeric(r.ValEnumn))];
+					model.TblbValEnumt = [.. rows.Where(r => !Field.isEmptyValue(r.ValEnumt, FieldType.ARRAY_TEXT.GetFormatting())).Select(r => ViewModelConversion.ToString(r.ValEnumt))];
+					model.TblbValNumdec = [.. rows.Where(r => !Field.isEmptyValue(r.ValNumdec, FieldType.NUMERIC.GetFormatting())).Select(r => ViewModelConversion.ToNumeric(r.ValNumdec))];
+					model.TblbValNumint = [.. rows.Where(r => !Field.isEmptyValue(r.ValNumint, FieldType.NUMERIC.GetFormatting())).Select(r => ViewModelConversion.ToNumeric(r.ValNumint))];
+					model.TblbValText = [.. rows.Where(r => !Field.isEmptyValue(r.ValText, FieldType.TEXT.GetFormatting())).Select(r => ViewModelConversion.ToString(r.ValText))];
+					model.TblbValTextml = [.. rows.Where(r => !Field.isEmptyValue(r.ValTextml, FieldType.MEMO.GetFormatting())).Select(r => ViewModelConversion.ToString(r.ValTextml))];
+					model.TblbValTimehm = [.. rows.Where(r => !Field.isEmptyValue(r.ValTimehm, FieldType.TIME_HOURS.GetFormatting())).Select(r => ViewModelConversion.ToString(r.ValTimehm))];
 				}
 			}
 
@@ -561,8 +574,39 @@ namespace GenioMVC.ViewModels.Grpb
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValName", CSGenioAgrpb.FldName, typeof(string), defaultSearch : true)
+			new TableSearchColumn("ValName", CSGenioAgrpb.FldName, typeof(string), defaultSearch : true),
+			new TableSearchColumn("ValBool", CSGenioAtblb.FldBool, typeof(bool)),
+			new TableSearchColumn("ValCurdec", CSGenioAtblb.FldCurdec, typeof(decimal?)),
+			new TableSearchColumn("ValCurint", CSGenioAtblb.FldCurint, typeof(decimal?)),
+			new TableSearchColumn("ValDate", CSGenioAtblb.FldDate, typeof(DateTime?)),
+			new TableSearchColumn("ValDatetm", CSGenioAtblb.FldDatetm, typeof(DateTime?)),
+			new TableSearchColumn("ValDatets", CSGenioAtblb.FldDatets, typeof(DateTime?)),
+			new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(decimal), array : "typen"),
+			new TableSearchColumn("ValEnumt", CSGenioAtblb.FldEnumt, typeof(string), array : "typet"),
+			new TableSearchColumn("ValNumdec", CSGenioAtblb.FldNumdec, typeof(decimal?)),
+			new TableSearchColumn("ValNumint", CSGenioAtblb.FldNumint, typeof(decimal?)),
+			new TableSearchColumn("ValText", CSGenioAtblb.FldText, typeof(string)),
+			new TableSearchColumn("ValTextml", CSGenioAtblb.FldTextml, typeof(string)),
+			new TableSearchColumn("ValTimehm", CSGenioAtblb.FldTimehm, typeof(string)),
 		];
+		private static readonly Dictionary<string, FieldRef> _searchableColumnsRefs = new()
+        {
+            { "GRPB.NAME", CSGenioAgrpb.FldName },
+            { "TBLB.BOOL", CSGenioAtblb.FldBool },
+            { "TBLB.CURDEC", CSGenioAtblb.FldCurdec },
+            { "TBLB.CURINT", CSGenioAtblb.FldCurint },
+            { "TBLB.DATE", CSGenioAtblb.FldDate },
+            { "TBLB.DATETM", CSGenioAtblb.FldDatetm },
+            { "TBLB.DATETS", CSGenioAtblb.FldDatets },
+            { "TBLB.ENUMN", CSGenioAtblb.FldEnumn },
+            { "TBLB.ENUMT", CSGenioAtblb.FldEnumt },
+            { "TBLB.NUMDEC", CSGenioAtblb.FldNumdec },
+            { "TBLB.NUMINT", CSGenioAtblb.FldNumint },
+            { "TBLB.TEXT", CSGenioAtblb.FldText },
+            { "TBLB.TEXTML", CSGenioAtblb.FldTextml },
+            { "TBLB.TIMEHM", CSGenioAtblb.FldTimehm },
+        };
+
 		/// <summary>
 		/// Retrieves values from the database for the related tables. Each table fetches all necessary fields required for visualization in the table
 		/// </summary>

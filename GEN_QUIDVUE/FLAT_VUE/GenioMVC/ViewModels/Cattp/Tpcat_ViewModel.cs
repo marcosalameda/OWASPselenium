@@ -503,7 +503,7 @@ namespace GenioMVC.ViewModels.Cattp
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -550,7 +550,7 @@ namespace GenioMVC.ViewModels.Cattp
 				// Fill List fields
 				this.ValCodsbcat = ViewModelConversion.ToString(row["sbcat.codsbcat"]);
 				TableSbcatSubcateg.Value = (string)row["sbcat.subcateg"];
-				if (GlobalFunctions.emptyG(this.ValCodsbcat) == 1)
+				if (GenFunctions.emptyG(this.ValCodsbcat) == 1)
 				{
 					this.ValCodsbcat = "";
 					TableSbcatSubcateg.Value = "";

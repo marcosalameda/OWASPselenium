@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Lnhde
 			return crs;
 		}
 
-
 		public string ValCodpedid { get; set; }
 
 		public override int GetCount(User user)
@@ -130,7 +129,7 @@ namespace GenioMVC.ViewModels.Lnhde
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlnhpd.FldLine, FieldType.NUMERO, Resources.Resources.LINE27983, 3, 0, true),
+				new Exports.QColumn(CSGenioAlnhpd.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 3, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -198,9 +197,6 @@ namespace GenioMVC.ViewModels.Lnhde
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -336,8 +332,7 @@ namespace GenioMVC.ViewModels.Lnhde
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("lnhpd", "line");
+					firstVisibleColumn ??= new FieldRef("lnhpd", "line");
 				}
 
 
@@ -384,6 +379,8 @@ namespace GenioMVC.ViewModels.Lnhde
 
 // USE /[MANUAL GQT OVERRQ LNHDE_LNHPDLINE]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -410,7 +407,7 @@ namespace GenioMVC.ViewModels.Lnhde
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlnhpd> listing = Models.ModelBase.Where<CSGenioAlnhpd>(m_userContext, false, lnhde___lnhpdline____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHDE___LNHPDLINE____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlnhpd> listing = Models.ModelBase.Where<CSGenioAlnhpd>(m_userContext, distinct, lnhde___lnhpdline____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHDE___LNHPDLINE____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -490,6 +487,8 @@ namespace GenioMVC.ViewModels.Lnhde
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -539,7 +538,7 @@ namespace GenioMVC.ViewModels.Lnhde
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValLine", CSGenioAlnhpd.FldLine, typeof(decimal?))
+			new TableSearchColumn("ValLine", CSGenioAlnhpd.FldLine, typeof(decimal?)),
 		];
 	}
 }

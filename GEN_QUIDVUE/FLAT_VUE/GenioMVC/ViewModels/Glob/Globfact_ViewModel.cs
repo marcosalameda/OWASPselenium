@@ -524,7 +524,7 @@ namespace GenioMVC.ViewModels.Glob
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -571,7 +571,7 @@ namespace GenioMVC.ViewModels.Glob
 				// Fill List fields
 				this.ValCodfacty = ViewModelConversion.ToString(row["facty.codfacty"]);
 				TableFactyType.Value = (string)row["facty.type"];
-				if (GlobalFunctions.emptyG(this.ValCodfacty) == 1)
+				if (GenFunctions.emptyG(this.ValCodfacty) == 1)
 				{
 					this.ValCodfacty = "";
 					TableFactyType.Value = "";

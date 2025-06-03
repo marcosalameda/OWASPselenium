@@ -376,7 +376,7 @@ namespace GenioMVC.ViewModels.Gitem
 
 			validator.StringLength("ValItemdes", Resources.Resources.GLOBAL_ITEM49586, ValItemdes, 85);
 
-			validator.Required("ValItemdes", Resources.Resources.GLOBAL_ITEM49586, ViewModelConversion.ToString(ValItemdes), FieldType.TEXTO.Formatting);
+			validator.Required("ValItemdes", Resources.Resources.GLOBAL_ITEM49586, ViewModelConversion.ToString(ValItemdes), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValItemgcod", Resources.Resources.CODE49225, ValItemgcod, 15);
 
 

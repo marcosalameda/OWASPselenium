@@ -78,7 +78,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Amount" Tipo: "N" Formula: SR "[LNHDE->QUANTIDA]"</summary>
 		[ShouldSerialize("Lnhag.ValQtdtpequ")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdtpequ { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdtpequ, 0)); } set { klass.ValQtdtpequ = Convert.ToDecimal(value); } }
+		public decimal? ValQtdtpequ { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdtpequ, 0)); } set { klass.ValQtdtpequ = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Lnhag.ValZzstate")]

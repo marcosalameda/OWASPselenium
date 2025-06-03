@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAinsta(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR INSTA]/
 		}
 
@@ -46,70 +44,63 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codinsta", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codinsta", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codtpequ", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codtpequ", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TYPE OF EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_TYPE_OF_EQUIPMENT35057";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codequip", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codequip", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">EQUIPMENT";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_EQUIPMENT12605";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("designat", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "designat", FieldType.TEXT);
 			Qfield.FieldDescription = "Scheduling";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "SCHEDULING24801";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtiniage", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtiniage", FieldType.DATETIME);
 			Qfield.FieldDescription = "Beginning";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "BEGINNING18124";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtfimage", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtfimage", FieldType.DATETIME);
 			Qfield.FieldDescription = "End";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "END47577";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("descript", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "descript", FieldType.MEMO);
 			Qfield.FieldDescription = "Description";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.Decimals = 3;
 			Qfield.CavDesignation = "DESCRIPTION07383";
 
@@ -117,40 +108,36 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("allday", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "allday", FieldType.LOGIC);
 			Qfield.FieldDescription = "All day";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ALL_DAY18496";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("since", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "since", FieldType.DATETIME);
 			Qfield.FieldDescription = "Since";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "SINCE47259";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("until", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "until", FieldType.DATETIME);
 			Qfield.FieldDescription = "Until";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "UNTIL39173";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("hours", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "hours", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Qtd hours";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "QTD_HOURS28684";
@@ -159,15 +146,14 @@ namespace CSGenio.business
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"since","until","since","until"}, new int[] {0,1,2,3}, "insta", "codinsta"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 4, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==1||GlobalFunctions.emptyD(((DateTime)args[1]))==1)?(0):(GlobalFunctions.Diferenca_entre_Datas(((DateTime)args[2]),((DateTime)args[3]),"H")));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==1||GenFunctions.emptyD(((DateTime)args[1]))==1)?(0):(GenFunctions.DateDiffPart(((DateTime)args[2]),((DateTime)args[3]),"H")));
 			});
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("precohor", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "precohor", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Hourly price";
 			Qfield.FieldSize =  12;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 9;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "HOURLY_PRICE48005";
@@ -177,10 +163,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("value", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "value", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Value";
 			Qfield.FieldSize =  12;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 9;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "VALUE10285";
@@ -194,19 +179,17 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("coordgeo", FieldType.GEOGRAPHY);
+			Qfield = new Field(info.Alias, "coordgeo", FieldType.GEOGRAPHY_POINT);
 			Qfield.FieldDescription = "Geographic coordinate";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "GEOGRAPHIC_COORDINAT21394";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -240,11 +223,11 @@ namespace CSGenio.business
 			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
 			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("cntry","equip");
+			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -303,8 +286,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Installation";
 			info.AreaPluralDesignation="Facilities";
 			info.DescriptionCav="INSTALLATION12952";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

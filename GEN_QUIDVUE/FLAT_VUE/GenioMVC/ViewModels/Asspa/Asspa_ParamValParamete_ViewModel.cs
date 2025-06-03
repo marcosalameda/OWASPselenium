@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Asspa
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Asspa
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAparam.FldParameter, FieldType.TEXTO, Resources.Resources.PARAMETER41976, 50, 0, true),
+				new Exports.QColumn(CSGenioAparam.FldParameter, FieldType.TEXT, Resources.Resources.PARAMETER41976, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Asspa
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Asspa
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("param", "parameter");
+					firstVisibleColumn ??= new FieldRef("param", "parameter");
 				}
 
 
@@ -357,6 +352,8 @@ namespace GenioMVC.ViewModels.Asspa
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ ASSPA_PARAMPARAMETE]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -384,7 +381,7 @@ namespace GenioMVC.ViewModels.Asspa
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAparam> listing = Models.ModelBase.Where<CSGenioAparam>(m_userContext, false, asspa___paramparameteConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ASSPA___PARAMPARAMETE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAparam> listing = Models.ModelBase.Where<CSGenioAparam>(m_userContext, distinct, asspa___paramparameteConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ASSPA___PARAMPARAMETE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -464,6 +461,8 @@ namespace GenioMVC.ViewModels.Asspa
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -513,7 +512,7 @@ namespace GenioMVC.ViewModels.Asspa
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValParameter", CSGenioAparam.FldParameter, typeof(string))
+			new TableSearchColumn("ValParameter", CSGenioAparam.FldParameter, typeof(string)),
 		];
 	}
 }

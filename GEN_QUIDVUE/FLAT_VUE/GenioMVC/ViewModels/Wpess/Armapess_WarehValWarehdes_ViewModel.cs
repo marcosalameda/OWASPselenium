@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Wpess
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Wpess
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 85, 0, true),
+				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 85, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Wpess
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Wpess
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("wareh", "warehdes");
+					firstVisibleColumn ??= new FieldRef("wareh", "warehdes");
 				}
 
 
@@ -357,6 +352,8 @@ namespace GenioMVC.ViewModels.Wpess
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ ARMAPESS_WAREHWAREHDES]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -384,7 +381,7 @@ namespace GenioMVC.ViewModels.Wpess
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAwareh> listing = Models.ModelBase.Where<CSGenioAwareh>(m_userContext, false, armapesswarehwarehdesConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARMAPESSWAREHWAREHDES", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAwareh> listing = Models.ModelBase.Where<CSGenioAwareh>(m_userContext, distinct, armapesswarehwarehdesConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARMAPESSWAREHWAREHDES", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -464,6 +461,8 @@ namespace GenioMVC.ViewModels.Wpess
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -513,7 +512,7 @@ namespace GenioMVC.ViewModels.Wpess
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string))
+			new TableSearchColumn("ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string)),
 		];
 	}
 }

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Administration.AuxClass;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
@@ -17,19 +18,11 @@ namespace Administration.Models
 
         public IList<UserItem> Users { get; set; } 
 
-		public IList<string> IdentityProviders { get; set; }
+		public IList<AuxFunctions.SelectlistElement> IdentityProviders { get; set; }
 
         public IList<UsersModule> Modules { get; set; }
 
         public IDictionary<int, string> Levels { get; set; }
-
-        public bool HasAdIdentityProviders
-        {
-            get
-            {
-                return CSGenio.framework.Configuration.HasLdapIdentityProvider();
-            }
-        }
     }
 
     public class UserItem

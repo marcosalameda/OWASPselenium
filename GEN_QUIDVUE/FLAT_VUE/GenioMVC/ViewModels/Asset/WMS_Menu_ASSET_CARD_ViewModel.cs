@@ -93,8 +93,6 @@ namespace GenioMVC.ViewModels.Asset
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -156,15 +154,15 @@ namespace GenioMVC.ViewModels.Asset
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAasset.FldAssetnum, FieldType.NUMERO, Resources.Resources.ASSET_NUMBER52372, 10, 0, true),
-				new Exports.QColumn(CSGenioAasset.FldName, FieldType.TEXTO, Resources.Resources.IDENTIFICATION_NAME16317, 30, 0, true),
-				new Exports.QColumn(CSGenioAkinde.FldDesignat, FieldType.TEXTO, Resources.Resources.KIND_OF_EQUIPMENT22928, 30, 0, false),
-				new Exports.QColumn(CSGenioAasset.FldIdenttyp, FieldType.ARRAY_COD_TEXTO, Resources.Resources.IDENTIFIER_TYPE60623, 1, 0, true, "IdentTyp"),
-				new Exports.QColumn(CSGenioAasset.FldGrai, FieldType.TEXTO, Resources.Resources.GRAI10374, 30, 0, true),
-				new Exports.QColumn(CSGenioAasset.FldGiai, FieldType.TEXTO, Resources.Resources.GIAI50592, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAasset.FldPhoto, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAmanuf.FldName, FieldType.TEXTO, Resources.Resources.MANUFACTURER50759, 30, 0, true),
-				new Exports.QColumn(CSGenioAmanuf.FldWebsite, FieldType.TEXTO, Resources.Resources.WEB_SITE06263, 30, 0, true),
+				new Exports.QColumn(CSGenioAasset.FldAssetnum, FieldType.NUMERIC, Resources.Resources.ASSET_NUMBER52372, 10, 0, true),
+				new Exports.QColumn(CSGenioAasset.FldName, FieldType.TEXT, Resources.Resources.IDENTIFICATION_NAME16317, 30, 0, true),
+				new Exports.QColumn(CSGenioAkinde.FldDesignat, FieldType.TEXT, Resources.Resources.KIND_OF_EQUIPMENT22928, 30, 0, false),
+				new Exports.QColumn(CSGenioAasset.FldIdenttyp, FieldType.ARRAY_TEXT, Resources.Resources.IDENTIFIER_TYPE60623, 1, 0, true, "IdentTyp"),
+				new Exports.QColumn(CSGenioAasset.FldGrai, FieldType.TEXT, Resources.Resources.GRAI10374, 30, 0, true),
+				new Exports.QColumn(CSGenioAasset.FldGiai, FieldType.TEXT, Resources.Resources.GIAI50592, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAasset.FldPhoto, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAmanuf.FldName, FieldType.TEXT, Resources.Resources.MANUFACTURER50759, 30, 0, true),
+				new Exports.QColumn(CSGenioAmanuf.FldWebsite, FieldType.TEXT, Resources.Resources.WEB_SITE06263, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -227,8 +225,6 @@ namespace GenioMVC.ViewModels.Asset
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -376,8 +372,7 @@ namespace GenioMVC.ViewModels.Asset
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("asset", "assetnum");
+					firstVisibleColumn ??= new FieldRef("asset", "assetnum");
 				}
 
 
@@ -425,6 +420,8 @@ namespace GenioMVC.ViewModels.Asset
 
 // USE /[MANUAL WMS OVERRQ ASSET_CARD]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -452,7 +449,7 @@ namespace GenioMVC.ViewModels.Asset
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAasset> listing = Models.ModelBase.Where<CSGenioAasset>(m_userContext, false, wms_menu_asset_cardConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLASSET_CARD", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAasset> listing = Models.ModelBase.Where<CSGenioAasset>(m_userContext, distinct, wms_menu_asset_cardConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLASSET_CARD", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -537,6 +534,8 @@ namespace GenioMVC.ViewModels.Asset
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -594,7 +593,7 @@ namespace GenioMVC.ViewModels.Asset
 			new TableSearchColumn("ValGrai", CSGenioAasset.FldGrai, typeof(string)),
 			new TableSearchColumn("ValGiai", CSGenioAasset.FldGiai, typeof(string)),
 			new TableSearchColumn("Manuf_ValName", CSGenioAmanuf.FldName, typeof(string)),
-			new TableSearchColumn("Manuf_ValWebsite", CSGenioAmanuf.FldWebsite, typeof(string))
+			new TableSearchColumn("Manuf_ValWebsite", CSGenioAmanuf.FldWebsite, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Asset row)
 		{

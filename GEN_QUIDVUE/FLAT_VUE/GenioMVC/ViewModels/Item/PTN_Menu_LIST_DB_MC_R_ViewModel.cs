@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Item
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,10 +147,10 @@ namespace GenioMVC.ViewModels.Item
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				!ajaxRequest ? new Exports.QColumn(CSGenioAitem.FldImage, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE65174, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAitem.FldDate, FieldType.DATA, Resources.Resources.DATE18475, 8, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldDisponib, FieldType.ARRAY_COD_TEXTO, Resources.Resources.AVAILABILITY56489, 1, 0, true, "dsiponib"),
-				new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGICO, Resources.Resources.IN_USE42606, 1, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAitem.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE65174, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAitem.FldDate, FieldType.DATE, Resources.Resources.DATE18475, 8, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldDisponib, FieldType.ARRAY_TEXT, Resources.Resources.AVAILABILITY56489, 1, 0, true, "dsiponib"),
+				new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGIC, Resources.Resources.IN_USE42606, 1, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -215,8 +213,6 @@ namespace GenioMVC.ViewModels.Item
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -355,8 +351,7 @@ namespace GenioMVC.ViewModels.Item
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("item", "image");
+					firstVisibleColumn ??= new FieldRef("item", "image");
 				}
 
 
@@ -385,6 +380,8 @@ namespace GenioMVC.ViewModels.Item
 
 // USE /[MANUAL PTN OVERRQ LIST_DB_MC_R]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -412,7 +409,7 @@ namespace GenioMVC.ViewModels.Item
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, false, ptn_menu_list_db_mc_rConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLLIST_DB_MC_R", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, distinct, ptn_menu_list_db_mc_rConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLLIST_DB_MC_R", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -493,6 +490,8 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -545,7 +544,7 @@ namespace GenioMVC.ViewModels.Item
 		[
 			new TableSearchColumn("ValDate", CSGenioAitem.FldDate, typeof(DateTime?)),
 			new TableSearchColumn("ValDisponib", CSGenioAitem.FldDisponib, typeof(string), array : "dsiponib"),
-			new TableSearchColumn("ValValid", CSGenioAitem.FldValid, typeof(bool))
+			new TableSearchColumn("ValValid", CSGenioAitem.FldValid, typeof(bool)),
 		];
 		protected void SetTicketToImageFields(Models.Item row)
 		{

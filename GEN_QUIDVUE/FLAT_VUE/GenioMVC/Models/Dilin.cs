@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValLinenumb")]
 		[NumericAttribute(0)]
-		public decimal? ValLinenumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLinenumb, 0)); } set { klass.ValLinenumb = Convert.ToDecimal(value); } }
+		public decimal? ValLinenumb { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLinenumb, 0)); } set { klass.ValLinenumb = Convert.ToDecimal(value); } }
 
 		[DisplayName(">>PRODUCT")]
 		/// <summary>Field : ">>PRODUCT" Tipo: "CE" Formula:  ""</summary>
@@ -84,19 +84,19 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Ordered" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValOrdered")]
 		[NumericAttribute(0)]
-		public decimal? ValOrdered { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrdered, 0)); } set { klass.ValOrdered = Convert.ToDecimal(value); } }
+		public decimal? ValOrdered { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOrdered, 0)); } set { klass.ValOrdered = Convert.ToDecimal(value); } }
 
 		[DisplayName("Delivered")]
 		/// <summary>Field : "Delivered" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValDelivere")]
 		[NumericAttribute(0)]
-		public decimal? ValDelivere { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDelivere, 0)); } set { klass.ValDelivere = Convert.ToDecimal(value); } }
+		public decimal? ValDelivere { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDelivere, 0)); } set { klass.ValDelivere = Convert.ToDecimal(value); } }
 
 		[DisplayName("Outstanding")]
 		/// <summary>Field : "Outstanding" Tipo: "N" Formula: + "[DILIN->ORDERED]-[DILIN->DELIVERE]"</summary>
 		[ShouldSerialize("Dilin.ValOutstand")]
 		[NumericAttribute(0)]
-		public decimal? ValOutstand { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutstand, 0)); } set { klass.ValOutstand = Convert.ToDecimal(value); } }
+		public decimal? ValOutstand { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOutstand, 0)); } set { klass.ValOutstand = Convert.ToDecimal(value); } }
 
 		[DisplayName("Instant")]
 		/// <summary>Field : "Instant" Tipo: "DT" Formula: ++ "[DISPA->DISPADT]"</summary>

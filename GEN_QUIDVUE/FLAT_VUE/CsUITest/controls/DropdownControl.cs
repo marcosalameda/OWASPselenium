@@ -3,13 +3,19 @@ using System.Linq;
 
 namespace quidgest.uitests.controls;
 
-public abstract class DropdownControl : ControlObject
+public abstract class DropdownControl : InputControl
 {
     protected IWebElement _display => m_control.FindElement(By.CssSelector("[role=combobox]"));    
     protected IWebElement _debounceElement => m_control.FindElement(ByData.Testid("debounce-container"));
     //dropdown is opened in a completely different global html location
     protected IWebElement _dropdown => driver.FindElement(ByData.Testid("combobox-dropdown"));
     protected IEnumerable<IWebElement> _rows => _dropdown.FindElements(By.CssSelector("[role=listbox] li"));
+
+    public DropdownControl(IWebDriver driver, By containerLocator, By controlLocator)
+        : base(driver, containerLocator, controlLocator)
+    {
+        WaitForLoad();
+    }
 
     public DropdownControl(IWebDriver driver, By containerLocator, string controlId) 
         : base(driver, containerLocator, By.Id(controlId))
@@ -27,9 +33,7 @@ public abstract class DropdownControl : ControlObject
         wait.Until(c => _debounceElement.GetAttribute("data-debouncing") == "false");
     }
 
-    public abstract void SetValue(string val);
-
-    public string GetValue()
+    public virtual string GetValue()
     {
         //TODO: how to I obtain the pk value from the component. I only have the text.
         WaitForLoad();

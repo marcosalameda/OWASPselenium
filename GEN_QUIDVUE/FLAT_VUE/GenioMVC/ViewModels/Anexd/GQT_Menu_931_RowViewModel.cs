@@ -12,22 +12,21 @@ public class GQT_Menu_931_RowViewModel : Models.Anexd
 
 	public GQT_Menu_931_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public GQT_Menu_931_RowViewModel(UserContext userContext, CSGenioAanexd val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -86,6 +85,15 @@ public class GQT_Menu_931_RowViewModel : Models.Anexd
 
 		using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport))
 		{
+
+			// Table ANEXD CRUD conditions.
+			// HasRole("A") && !isEmptyG([EQUIP->CODEQUIP])
+			{
+				bool formulaResult = (Logical)(CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A")&&!(((string)this.Equip.ValCodequip) == ""));
+				canInsert &= formulaResult;
+				// If Insert is blocked by CRUD condition, Duplicate should also be blocked.
+				canDuplicate &= formulaResult;
+			}
 		}
 
 		BtnPermission = new TableRowCrudButtonPermissions()
@@ -148,4 +156,12 @@ public class GQT_Menu_931_RowViewModel : Models.Anexd
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
 	public string BackgroundColor => "";
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

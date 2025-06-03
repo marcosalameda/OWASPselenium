@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Grpb
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodgrpb { get; set; }
+		public string GrpbValCodgrpb { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Grpb
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Grpb
 		/// <param name="userContext">The current user request context</param>
 		public Grpb_ValTblb_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodgrpb = userContext.CurrentNavigation.CurrentLevel.GetEntry("grpb")?.ToString();
+			GrpbValCodgrpb = userContext.CurrentNavigation.CurrentLevel.GetEntry("grpb")?.ToString();
 		}
 
 		/// <summary>
@@ -128,19 +127,19 @@ namespace GenioMVC.ViewModels.Grpb
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXTO, Resources.Resources.TEXT04938, 30, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXT, Resources.Resources.TEXT04938, 30, 0, true),
 				new Exports.QColumn(CSGenioAtblb.FldTextml, FieldType.MEMO, Resources.Resources.MULTILINE_TEXT38013, 30, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERO, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldNumdec, FieldType.NUMERO, Resources.Resources.NUMERIC__DECIMAL_36157, 10, 3, true),
-				new Exports.QColumn(CSGenioAtblb.FldCurint, FieldType.VALOR, Resources.Resources.CURRENCY__INTERGER_21437, 10, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldCurdec, FieldType.VALOR, Resources.Resources.CURRENCY__DECIMAL_11718, 10, 2, true),
-				new Exports.QColumn(CSGenioAtblb.FldBool, FieldType.LOGICO, Resources.Resources.BOOLEAN45002, 1, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldDate, FieldType.DATA, Resources.Resources.DATE18475, 8, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldDatetm, FieldType.DATAHORA, Resources.Resources.DATETIME__MINUTES_59352, 16, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldDatets, FieldType.DATASEGUNDO, Resources.Resources.DATETIME__SECONDS_49861, 19, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TEMPO, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ENUMERATION__TEXT_15855, 10, 0, true, "typet"),
-				new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.ENUMERATION__NUMERIC44708, 10, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERIC, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldNumdec, FieldType.NUMERIC, Resources.Resources.NUMERIC__DECIMAL_36157, 10, 3, true),
+				new Exports.QColumn(CSGenioAtblb.FldCurint, FieldType.CURRENCY, Resources.Resources.CURRENCY__INTERGER_21437, 10, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldCurdec, FieldType.CURRENCY, Resources.Resources.CURRENCY__DECIMAL_11718, 10, 2, true),
+				new Exports.QColumn(CSGenioAtblb.FldBool, FieldType.LOGIC, Resources.Resources.BOOLEAN45002, 1, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldDate, FieldType.DATE, Resources.Resources.DATE18475, 8, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldDatetm, FieldType.DATETIME, Resources.Resources.DATETIME__MINUTES_59352, 16, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldDatets, FieldType.DATETIMESECONDS, Resources.Resources.DATETIME__SECONDS_49861, 19, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TIME_HOURS, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_TEXT, Resources.Resources.ENUMERATION__TEXT_15855, 10, 0, true, "typet"),
+				new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_NUMERIC, Resources.Resources.ENUMERATION__NUMERIC44708, 10, 0, true, "typen"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -205,10 +204,8 @@ namespace GenioMVC.ViewModels.Grpb
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodgrpb != null)
-				crs.Equal(CSGenioAtblb.FldFkey1, this.ValCodgrpb);
-
-
+			if (this.GrpbValCodgrpb != null)
+				crs.Equal(CSGenioAtblb.FldFkey1, this.GrpbValCodgrpb);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -346,8 +343,7 @@ namespace GenioMVC.ViewModels.Grpb
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tblb", "text");
+					firstVisibleColumn ??= new FieldRef("tblb", "text");
 				}
 
 
@@ -376,6 +372,8 @@ namespace GenioMVC.ViewModels.Grpb
 
 // USE /[MANUAL GQT OVERRQ GRPB_PSEUDTBLB]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -403,7 +401,7 @@ namespace GenioMVC.ViewModels.Grpb
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtblb> listing = Models.ModelBase.Where<CSGenioAtblb>(m_userContext, false, grpb____pseudtblb____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_GRPB____PSEUDTBLB____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtblb> listing = Models.ModelBase.Where<CSGenioAtblb>(m_userContext, distinct, grpb____pseudtblb____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_GRPB____PSEUDTBLB____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -549,7 +547,7 @@ namespace GenioMVC.ViewModels.Grpb
 			new TableSearchColumn("ValDatets", CSGenioAtblb.FldDatets, typeof(DateTime?)),
 			new TableSearchColumn("ValTimehm", CSGenioAtblb.FldTimehm, typeof(string)),
 			new TableSearchColumn("ValEnumt", CSGenioAtblb.FldEnumt, typeof(string), array : "typet"),
-			new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(decimal), array : "typen")
+			new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(decimal), array : "typen"),
 		];
 	}
 }

@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Notif;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER NOTIF]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class NotifController : ControllerBase
 	{
-		public NotifController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public NotifController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION NOTIF]/
 
 
@@ -140,6 +149,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
 
 
 

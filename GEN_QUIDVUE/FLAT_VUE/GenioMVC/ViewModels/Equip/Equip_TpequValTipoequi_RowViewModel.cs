@@ -12,22 +12,21 @@ public class Equip_TpequValTipoequi_RowViewModel : Models.Tpequ
 
 	public Equip_TpequValTipoequi_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public Equip_TpequValTipoequi_RowViewModel(UserContext userContext, CSGenioAtpequ val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -142,12 +141,20 @@ public class Equip_TpequValTipoequi_RowViewModel : Models.Tpequ
 	/// Formula: iif(emptyC([TPEQU->CORLETRA])==1,RGB(0,0,0),NCOLOUR([TPEQU->CORLETRA]))
 	/// </summary>
 	[JsonPropertyName("foregroundColor")]
-	public string ForegroundColor => ((CSGenio.business.GlobalFunctions.emptyC(((string)this.ValCorletra))==1)?("RGB(0,0,0)"):(((string)this.ValCorletra)));
+	public string ForegroundColor => ((CSGenio.framework.GenFunctions.emptyC(((string)this.ValCorletra))==1)?("RGB(0,0,0)"):(((string)this.ValCorletra)));
 
 	/// <summary>
 	/// The background color
 	/// Formula: iif(emptyC([TPEQU->BACKCOLO])==1,RGB(255,255,255),NCOLOUR([TPEQU->BACKCOLO]))
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
-	public string BackgroundColor => ((CSGenio.business.GlobalFunctions.emptyC(((string)this.ValBackcolo))==1)?("RGB(255,255,255)"):(((string)this.ValBackcolo)));
+	public string BackgroundColor => ((CSGenio.framework.GenFunctions.emptyC(((string)this.ValBackcolo))==1)?("RGB(255,255,255)"):(((string)this.ValBackcolo)));
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

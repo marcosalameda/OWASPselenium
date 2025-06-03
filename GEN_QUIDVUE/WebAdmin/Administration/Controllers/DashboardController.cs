@@ -24,7 +24,7 @@ namespace Administration.Controllers
             {
                 HasConfig = false,
                 HasValidConfig = false,
-				IsBetaTestig = false,
+				IsBetaTesting = false,
                 HasEnvironment = false,
                 HasDiffVersion = false,
                 HasSGBDVersion = false,
@@ -40,7 +40,7 @@ namespace Administration.Controllers
             //Check if configuration exists
             if (!configManager.Exists())
             {
-                return Json(new { Success = false, CurentMaintenance = Maintenance.Current, model = new { ResultErrors = calculateErrors(model) } });
+                return Json(new { Success = false, CurrentMaintenance = Maintenance.Current, model = new { ResultErrors = calculateErrors(model) } });
             }
             model.HasConfig = true;
 
@@ -61,13 +61,13 @@ namespace Administration.Controllers
                 if (!PersistentSupport.TestDBConnection(CurrentYear))
                 {
                     model.ResultErrors = Resources.Resources.A_BASE_DE_DADOS_NAO_59749;
-                    return Json(new { Success = true, CurentMaintenance = Maintenance.Current, model });
+                    return Json(new { Success = true, CurrentMaintenance = Maintenance.Current, model });
                 }
             }
             catch(Exception)
             {
                 model.ResultErrors = Resources.Resources.FICHEIRO_DE_CONFIGUR13972;
-                return Json(new { Success = true, CurentMaintenance = Maintenance.Current, model });
+                return Json(new { Success = true, CurrentMaintenance = Maintenance.Current, model });
             }
 
             //leitura do configuracaoXML to colocar nas variaveis visiveis ao cliente
@@ -89,7 +89,7 @@ namespace Administration.Controllers
             bool serverConnection = true;
 			
 			if (CSGenio.framework.Configuration.QAEnvironment == 1)
-                model.IsBetaTestig = true;
+                model.IsBetaTesting = true;
 
             PersistentSupport sp = PersistentSupport.getPersistentSupport(CurrentYear);
             try
@@ -98,6 +98,8 @@ namespace Administration.Controllers
                 sp.openConnection();
                 if (tpConn == DatabaseType.ORACLE)
                     sql = "SELECT* FROM v$version WHERE banner LIKE 'Oracle%'";
+                if (tpConn == DatabaseType.POSTGRES)
+                    sql = "SELECT version();";
                 else
                     sql = "SELECT @@version";
                 model.SGBDVersion = (string)sp.executeScalar(sql);
@@ -180,7 +182,7 @@ namespace Administration.Controllers
 
             model.ResultErrors = calculateErrors(model);
 
-            return Ok(new { Success = true, CurentMaintenance = Maintenance.Current, model });
+            return Ok(new { Success = true, CurrentMaintenance = Maintenance.Current, model });
         }
 
         private string calculateErrors(Models.DashboardModel model)
@@ -221,9 +223,9 @@ namespace Administration.Controllers
         public IActionResult DisableMaintenance() {
             PersistentSupport sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(CSGenio.framework.Configuration.DefaultYear);
             if (Maintenance.DisableMaintenance(sp)) {
-                return Json(new { Success = true, CurentMaintenance = Maintenance.Current, message = "Maintenance Disabled" });
+                return Json(new { Success = true, CurrentMaintenance = Maintenance.Current, message = "Maintenance Disabled" });
             } else  {
-                return Json(new { Success = false, CurentMaintenance = Maintenance.Current, message = "Error Disabling Maintenance" });
+                return Json(new { Success = false, CurrentMaintenance = Maintenance.Current, message = "Error Disabling Maintenance" });
             }
         }
 
@@ -237,11 +239,11 @@ namespace Administration.Controllers
             PersistentSupport sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(CSGenio.framework.Configuration.DefaultYear);
             if (Maintenance.ScheduleMaintenance(sp, data.Date))
             {
-                return Json(new { Success = true, CurentMaintenance = Maintenance.Current, message = "Maintenance Disabled" });
+                return Json(new { Success = true, CurrentMaintenance = Maintenance.Current, message = "Maintenance Disabled" });
             }
             else
             {
-                return Json(new { Success = false, CurentMaintenance = Maintenance.Current, message = "Error Disabling Maintenance" });
+                return Json(new { Success = false, CurrentMaintenance = Maintenance.Current, message = "Error Disabling Maintenance" });
             }
         }
     }

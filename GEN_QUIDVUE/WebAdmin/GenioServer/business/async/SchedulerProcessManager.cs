@@ -7,6 +7,7 @@ using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 
 
 namespace CSGenio.business.async
@@ -714,8 +715,8 @@ namespace CSGenio.business.async
         private ProgressStatus status;
         private PersistentSupport sp;
         private User user;
-        private Thread thread;
-        private bool stop;
+        private Task updateTask;
+        private CancellationTokenSource cancellationTokenSource;
 
 
         public GenioProgressUpdater(Process process, ProgressStatus status, User user)
@@ -728,35 +729,36 @@ namespace CSGenio.business.async
 
         public void Start()
         {
-            if (thread == null)
+            if (updateTask == null || updateTask.IsCompleted)
             {
-                ThreadStart start = new ThreadStart(RunProgressUpdater);
-                thread = new Thread(start);
-                stop = false;
-                thread.Start();
+                cancellationTokenSource = new CancellationTokenSource();
+                updateTask = Task.Run(() => RunProgressUpdater(cancellationTokenSource.Token), cancellationTokenSource.Token);
             }
         }
 
         public void Stop()
         {
-            if (thread != null && thread.IsAlive)
+            if (updateTask != null && !updateTask.IsCompleted)
             {
-                stop = true;
-                if (!thread.Join(TimeSpan.FromSeconds(60)))
-                {
-                    thread.Abort();
-                    thread.Join();
-                }
+                cancellationTokenSource.Cancel();
 
+                try
+                {
+                    Task.WhenAny(updateTask, Task.Delay(TimeSpan.FromSeconds(60))).Wait();
+                }
+                catch (OperationCanceledException)
+                {
+                    // Expected when cancellation is requested
+                }
             }
         }
 
-        private void RunProgressUpdater()
+        private async Task RunProgressUpdater(CancellationToken token)
         {
             int sleep = 500;
             int maxAttempts = 10;
             int attempts = 0;
-            while (process.ValFinished == 0 && !stop)
+            while (process.ValFinished == 0 && !token.IsCancellationRequested)
             {
                 try
                 {
@@ -773,7 +775,15 @@ namespace CSGenio.business.async
                     if (attempts >= maxAttempts)
                         return;
                 }
-                Thread.Sleep(sleep);
+
+                try
+                {
+                    await Task.Delay(sleep, token);
+                }
+                catch (TaskCanceledException)
+                {
+                    break;
+                }
             }
 
             try
@@ -818,7 +828,7 @@ namespace CSGenio.business.async
                 foreach (string key in DBprocess.Fields.Keys)
                 {
                     //vamos buscar o Qfield que estamos a ler
-                    RequestedField Qfield = DBprocess.Fields[key] as RequestedField;
+                    RequestedField Qfield = DBprocess.Fields[key];
                     //criar um Qfield mas com o alias da area que estamos a criar
                     FieldRef campoRef = new FieldRef(process.Alias, Qfield.Name);
                     process.insertNameValueField(campoRef.FullName, Qfield.Value);

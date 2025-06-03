@@ -12,10 +12,10 @@ public class DriverFactory {
 
 	public static IWebDriver getWebDriver() {
 		var c = Configuration.Instance;
-		return getWebDriver(c.Browser, c.Headless.Value, c.ImplicitWait.Value);
+		return getWebDriver(c.Browser, c.Headless.Value, c.ImplicitWait.Value, c.WindowWidth.Value, c.WindowHeight.Value);
 	}
 
-	public static IWebDriver getWebDriver(string browser, bool headless, int ImplicitWaitMilliseconds) {
+	public static IWebDriver getWebDriver(string browser, bool headless, int ImplicitWaitMilliseconds, int windowwidth, int windowheight) {
 		IWebDriver driver;
 
 		switch(browser)
@@ -40,12 +40,22 @@ public class DriverFactory {
 				ChromeOptions chromeOptions = new ChromeOptions();
 				if(headless)
 					chromeOptions.AddArgument("--headless");
+
+				chromeOptions.AddArgument("--window-size=" + windowwidth + "," + windowheight);
+
 				chromeOptions.AddArgument("--allow-insecure-localhost");
+				
+				// Disable Chrome's built-in password manager and credential service
+				// to prevent prompts during automated tests.
+				chromeOptions.AddUserProfilePreference("credentials_enable_service", false);
+				chromeOptions.AddUserProfilePreference("profile.password_manager_enabled", false);
+				chromeOptions.AddUserProfilePreference("profile.password_manager_leak_detection", false);
+
 				driver = new ChromeDriver(chromeOptions);
 				break;
 		}
 
 		driver.Manage().Timeouts().ImplicitWait = System.TimeSpan.FromMilliseconds(ImplicitWaitMilliseconds);
 		return driver;
-    }
+	}
 }

@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Sale;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER SALE]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class SaleController : ControllerBase
 	{
-		public SaleController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public SaleController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION SALE]/
 
 
@@ -155,6 +164,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Venda" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -168,6 +178,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
+
 
 
 		/// <summary>
@@ -185,6 +196,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw02" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -198,6 +210,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
+
 
 
 		/// <summary>
@@ -215,6 +228,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw04" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -228,6 +242,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
+
 
 
 		/// <summary>
@@ -245,6 +260,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw06" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -260,6 +276,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw07" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -273,6 +290,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
+
 
 
 		/// <summary>

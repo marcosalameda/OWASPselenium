@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Insta
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,15 +147,15 @@ namespace GenioMVC.ViewModels.Insta
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAinsta.FldSince, FieldType.DATAHORA, Resources.Resources.SINCE47259, 16, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldUntil, FieldType.DATAHORA, Resources.Resources.UNTIL39173, 16, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXTO, Resources.Resources.NO__REGISTER04207, 6, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXTO, Resources.Resources.EQUIPMENT03632, 30, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE00312, 30, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldHours, FieldType.NUMERO, Resources.Resources.QTD_HOURS28684, 10, 2, true),
-				new Exports.QColumn(CSGenioAinsta.FldPrecohor, FieldType.VALOR, Resources.Resources.HOURLY_PRICE48005, 12, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldValue, FieldType.VALOR, Resources.Resources.VALUE10285, 12, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldCoordgeo, FieldType.GEOGRAPHY, Resources.Resources.GEOGRAPHIC_COORDINAT21394, 30, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldSince, FieldType.DATETIME, Resources.Resources.SINCE47259, 16, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldUntil, FieldType.DATETIME, Resources.Resources.UNTIL39173, 16, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXT, Resources.Resources.NO__REGISTER04207, 6, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXT, Resources.Resources.EQUIPMENT03632, 30, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE00312, 30, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldHours, FieldType.NUMERIC, Resources.Resources.QTD_HOURS28684, 10, 2, true),
+				new Exports.QColumn(CSGenioAinsta.FldPrecohor, FieldType.CURRENCY, Resources.Resources.HOURLY_PRICE48005, 12, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldValue, FieldType.CURRENCY, Resources.Resources.VALUE10285, 12, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldCoordgeo, FieldType.GEOGRAPHY_POINT, Resources.Resources.GEOGRAPHIC_COORDINAT21394, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -220,8 +218,6 @@ namespace GenioMVC.ViewModels.Insta
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -368,8 +364,7 @@ namespace GenioMVC.ViewModels.Insta
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("insta", "since");
+					firstVisibleColumn ??= new FieldRef("insta", "since");
 				}
 
 
@@ -398,6 +393,8 @@ namespace GenioMVC.ViewModels.Insta
 
 // USE /[MANUAL GQT OVERRQ 261]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -425,7 +422,7 @@ namespace GenioMVC.ViewModels.Insta
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAinsta> listing = Models.ModelBase.Where<CSGenioAinsta>(m_userContext, false, gqt_menu_261Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML261", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAinsta> listing = Models.ModelBase.Where<CSGenioAinsta>(m_userContext, distinct, gqt_menu_261Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML261", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -510,6 +507,8 @@ namespace GenioMVC.ViewModels.Insta
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -566,7 +565,7 @@ namespace GenioMVC.ViewModels.Insta
 			new TableSearchColumn("Tpequ_ValTipoequi", CSGenioAtpequ.FldTipoequi, typeof(string)),
 			new TableSearchColumn("ValHours", CSGenioAinsta.FldHours, typeof(decimal?)),
 			new TableSearchColumn("ValPrecohor", CSGenioAinsta.FldPrecohor, typeof(decimal?)),
-			new TableSearchColumn("ValValue", CSGenioAinsta.FldValue, typeof(decimal?))
+			new TableSearchColumn("ValValue", CSGenioAinsta.FldValue, typeof(decimal?)),
 		];
 	}
 }

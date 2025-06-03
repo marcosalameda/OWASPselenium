@@ -122,19 +122,19 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Qtd hours" Tipo: "N" Formula: + "iif(emptyD([INSTA->SINCE])==1 || emptyD([INSTA->UNTIL])==1,0,Diferenca_entre_Datas([INSTA->SINCE],[INSTA->UNTIL],"H"))"</summary>
 		[ShouldSerialize("Insta.ValHours")]
 		[NumericAttribute(2)]
-		public decimal? ValHours { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValHours, 2)); } set { klass.ValHours = Convert.ToDecimal(value); } }
+		public decimal? ValHours { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValHours, 2)); } set { klass.ValHours = Convert.ToDecimal(value); } }
 
 		[DisplayName("Hourly price")]
 		/// <summary>Field : "Hourly price" Tipo: "$D" Formula: CT "TABPR[INSTA->SINCE][TABPR->SINCE][TABPR->PRECOHOR][INSTA->CODTPEQU][TABPR->CODTPEQ1](DESC)"</summary>
 		[ShouldSerialize("Insta.ValPrecohor")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecohor { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDecimal(value); } }
+		public decimal? ValPrecohor { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecohor, 2)); } set { klass.ValPrecohor = Convert.ToDecimal(value); } }
 
 		[DisplayName("Value")]
 		/// <summary>Field : "Value" Tipo: "$D" Formula: + "[INSTA->HOURS]*[INSTA->PRECOHOR]"</summary>
 		[ShouldSerialize("Insta.ValValue")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 
 		[DisplayName("Geographic coordinate")]
 		/// <summary>Field : "Geographic coordinate" Tipo: "GG" Formula:  ""</summary>

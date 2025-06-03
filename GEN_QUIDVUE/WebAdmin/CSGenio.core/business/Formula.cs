@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using CSGenio.framework;
 using CSGenio.persistence;
@@ -29,16 +30,11 @@ namespace CSGenio.business
                             throw new BusinessException(null, "Formula.devolverValorCamposFormulaInterna", "ChavePrimaria is null.");
 
                         //descobrir que fields não estão em memória
-                        List<string> selectBD = new List<string>();
-                        for (int i = 0; i < argumentosPorArea.FieldNames.Length; i++)
-                        {
-                            object campoObj = areaField.Fields[areaField.Alias + "." + argumentosPorArea.FieldNames[i]];
-                            if (campoObj == null) //se o Qfield não está em memória
-                                selectBD.Add(argumentosPorArea.FieldNames[i]);
-                        }
+                        var selectBD = argumentosPorArea.FieldNames
+                            .Where(x => !areaField.Fields.ContainsKey(areaField.Alias + "." + x));
 
-                        //ir buscar esses Qfield to esta àrea
-                        if (selectBD.Count > 0 && (tpFunction == FunctionType.INS || tpFunction == FunctionType.DUP))
+                        //ler base de dados
+                        if (selectBD.Any() && (tpFunction == FunctionType.INS || tpFunction == FunctionType.DUP))
                             sp.getRecord(areaField, codIntValue, selectBD.ToArray()); //<----- Em que situações pode o codigo chegar aqui?
 
                         //agora já podemos assumir que os fields estão em memoria
@@ -100,16 +96,11 @@ namespace CSGenio.business
 							throw new BusinessException(null, "Formula.devolverValorCamposFormulaInterna", "ChavePrimaria is null.");
 
                         //descobrir que fields não estão em memória
-                        List<string> selectBD = new List<string>();
-                        for (int i = 0; i < argumentosPorArea.FieldNames.Length; i++)
-                        {
-                            object campoObj = areaField.Fields[areaField.Alias + "." + argumentosPorArea.FieldNames[i]];
-                            if (campoObj == null) //se o Qfield não está em memória
-                                selectBD.Add(argumentosPorArea.FieldNames[i]);
-                        }
+                        var selectBD = argumentosPorArea.FieldNames
+                            .Where(x => !areaField.Fields.ContainsKey(areaField.Alias + "." + x));
 
-                        //ir buscar esses Qfield to esta àrea
-                        if (selectBD.Count > 0 && (tpFunction == FunctionType.INS || tpFunction == FunctionType.DUP))
+                        //ler da base de dados
+                        if (selectBD.Any() && (tpFunction == FunctionType.INS || tpFunction == FunctionType.DUP))
                             sp.getRecord(areaField, codIntValue, selectBD.ToArray());
 
                         //agora já podemos assumir que os fields estão em memoria
@@ -153,7 +144,7 @@ namespace CSGenio.business
                         //primária do Qfield que estamos a procurar se não contem entao tem de se ir ler à base de dados
                         string valorChaveEst;
                         //AV(2010/06/04) Os fields que eram apagados nos forms estavam a ser sobrepostos com o Qvalue na db por isso temos que testar se o Qfield está em memória
-                        if (areaField.Fields[areaField.Alias + "." + argumentosPorArea.KeyName] == null)//se o Qvalue não está em memória ir ler à BD
+                        if (!areaField.Fields.ContainsKey(areaField.Alias + "." + argumentosPorArea.KeyName))//se o Qvalue não está em memória ir ler à BD
                         {
                             string codIntValue = areaField.QPrimaryKey;
                             valorChaveEst = DBConversion.ToKey(sp.returnField(areaField, argumentosPorArea.KeyName, codIntValue));

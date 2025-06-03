@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Langu
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,8 +147,8 @@ namespace GenioMVC.ViewModels.Langu
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlangu.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 30, 0, true),
-				new Exports.QColumn(CSGenioAlangu.FldAcron, FieldType.TEXTO, Resources.Resources.ACRONYM00872, 5, 0, true),
+				new Exports.QColumn(CSGenioAlangu.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 30, 0, true),
+				new Exports.QColumn(CSGenioAlangu.FldAcron, FieldType.TEXT, Resources.Resources.ACRONYM00872, 5, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -213,8 +211,6 @@ namespace GenioMVC.ViewModels.Langu
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -361,8 +357,7 @@ namespace GenioMVC.ViewModels.Langu
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("langu", "langua");
+					firstVisibleColumn ??= new FieldRef("langu", "langua");
 				}
 
 
@@ -391,6 +386,8 @@ namespace GenioMVC.ViewModels.Langu
 
 // USE /[MANUAL GQT OVERRQ 921]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -418,7 +415,7 @@ namespace GenioMVC.ViewModels.Langu
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlangu> listing = Models.ModelBase.Where<CSGenioAlangu>(m_userContext, false, gqt_menu_921Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML921", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlangu> listing = Models.ModelBase.Where<CSGenioAlangu>(m_userContext, distinct, gqt_menu_921Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML921", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -499,6 +496,8 @@ namespace GenioMVC.ViewModels.Langu
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -549,7 +548,7 @@ namespace GenioMVC.ViewModels.Langu
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValLangua", CSGenioAlangu.FldLangua, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValAcron", CSGenioAlangu.FldAcron, typeof(string))
+			new TableSearchColumn("ValAcron", CSGenioAlangu.FldAcron, typeof(string)),
 		];
 	}
 }

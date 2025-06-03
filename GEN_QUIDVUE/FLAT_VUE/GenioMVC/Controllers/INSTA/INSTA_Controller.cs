@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Insta;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER INSTA]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class InstaController : ControllerBase
 	{
-		public InstaController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public InstaController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION INSTA]/
 
 
@@ -177,6 +186,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Insta" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -192,6 +202,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Leafletd" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -205,6 +216,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Insta)
 			);
 		}
+
 
 
 		/// <summary>

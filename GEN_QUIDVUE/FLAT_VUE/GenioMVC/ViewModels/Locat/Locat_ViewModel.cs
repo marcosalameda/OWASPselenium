@@ -518,7 +518,7 @@ namespace GenioMVC.ViewModels.Locat
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -565,7 +565,7 @@ namespace GenioMVC.ViewModels.Locat
 				// Fill List fields
 				this.ValCodentit = ViewModelConversion.ToString(row["entit.codentit"]);
 				TableEntitName.Value = (string)row["entit.name"];
-				if (GlobalFunctions.emptyG(this.ValCodentit) == 1)
+				if (GenFunctions.emptyG(this.ValCodentit) == 1)
 				{
 					this.ValCodentit = "";
 					TableEntitName.Value = "";
@@ -715,7 +715,7 @@ namespace GenioMVC.ViewModels.Locat
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -723,7 +723,7 @@ namespace GenioMVC.ViewModels.Locat
 				object hValue = Navigation.GetValue("entit");
 				if (!(hValue is Array))
 				{
-					if (GlobalFunctions.emptyG(hValue) == 1)
+					if (GenFunctions.emptyG(hValue) == 1)
 						returnEmptyDependants = true;
 					wherecodition.Equal(CSGenioAfacil.FldCodentit, hValue);
 				}
@@ -771,7 +771,7 @@ namespace GenioMVC.ViewModels.Locat
 				// Fill List fields
 				this.ValCodfacil = ViewModelConversion.ToString(row["facil.codfacil"]);
 				TableFacilName.Value = (string)row["facil.name"];
-				if (GlobalFunctions.emptyG(this.ValCodfacil) == 1)
+				if (GenFunctions.emptyG(this.ValCodfacil) == 1)
 				{
 					this.ValCodfacil = "";
 					TableFacilName.Value = "";

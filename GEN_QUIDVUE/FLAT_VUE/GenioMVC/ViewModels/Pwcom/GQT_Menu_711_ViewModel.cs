@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Pwcom
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,10 +147,10 @@ namespace GenioMVC.ViewModels.Pwcom
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXTO, Resources.Resources.LOGIN48703, 20, 0, true),
-				new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioApwcom.FldFoto, FieldType.IMAGEM_JPEG, Resources.Resources.FOTO19492, 3, 1, true):null,
-				new Exports.QColumn(CSGenioApwcom.FldNridenti, FieldType.NUMERO, Resources.Resources.IDENTIFICATION37731, 6, 0, true),
+				new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXT, Resources.Resources.LOGIN48703, 20, 0, true),
+				new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioApwcom.FldFoto, FieldType.IMAGE, Resources.Resources.FOTO19492, 3, 1, true):null,
+				new Exports.QColumn(CSGenioApwcom.FldNridenti, FieldType.NUMERIC, Resources.Resources.IDENTIFICATION37731, 6, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -215,8 +213,6 @@ namespace GenioMVC.ViewModels.Pwcom
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -355,8 +351,7 @@ namespace GenioMVC.ViewModels.Pwcom
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("psw", "nome");
+					firstVisibleColumn ??= new FieldRef("psw", "nome");
 				}
 
 
@@ -385,6 +380,8 @@ namespace GenioMVC.ViewModels.Pwcom
 
 // USE /[MANUAL GQT OVERRQ 711]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -412,7 +409,7 @@ namespace GenioMVC.ViewModels.Pwcom
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApwcom> listing = Models.ModelBase.Where<CSGenioApwcom>(m_userContext, false, gqt_menu_711Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML711", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApwcom> listing = Models.ModelBase.Where<CSGenioApwcom>(m_userContext, distinct, gqt_menu_711Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML711", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -497,6 +494,8 @@ namespace GenioMVC.ViewModels.Pwcom
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -549,7 +548,7 @@ namespace GenioMVC.ViewModels.Pwcom
 		[
 			new TableSearchColumn("Psw_ValNome", CSGenioApsw.FldNome, typeof(string)),
 			new TableSearchColumn("Pess1_ValName", CSGenioApess1.FldName, typeof(string)),
-			new TableSearchColumn("ValNridenti", CSGenioApwcom.FldNridenti, typeof(decimal?))
+			new TableSearchColumn("ValNridenti", CSGenioApwcom.FldNridenti, typeof(decimal?)),
 		];
 		protected void SetTicketToImageFields(Models.Pwcom row)
 		{

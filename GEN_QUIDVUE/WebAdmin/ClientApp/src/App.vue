@@ -4,7 +4,7 @@
 			<nav class="main-header navbar navbar-expand c-header--sidebar">
 				<ul class="navbar-nav ml-auto n-menu__aside">
 					<li class="nav-item dropdown n-menu__aside-item">
-						<template v-if="Years && isMultiYearApp">
+						<template v-if="showDataSystems">
 							<q-select
 								id="system-years"
 								v-model="currentYear"
@@ -158,7 +158,7 @@
 </template>
 
 <script>
-import '@/assets/styles/style.scss';
+import '@/assets/styles/main.scss';
 import '@/utils/globalUtils.js';
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';
@@ -179,7 +179,8 @@ export default {
 				{ Value: 'pt-PT', Text: 'Português' },
 			],
 			Years: [],
-			DefaultYear: ''
+			DefaultYear: '',
+			hideDataSystems: false
 		}
 	},
 	computed: {
@@ -193,6 +194,9 @@ export default {
 		Cores() {
 			var vm = this;
 			return !$.isEmptyObject(vm.currentApp) && !$.isEmptyObject(vm.Model.Cores) ? (vm.Model.Cores[vm.currentApp] || null) : null;
+		},
+		showDataSystems() {
+			return this.Years && this.isMultiYearApp && !this.hideDataSystems
 		}
 	},
 	methods: {
@@ -268,6 +272,8 @@ export default {
 		this.$eventHub.off('SET_CULTURE');
 		this.$eventHub.off('SET_APPLICATIONS');
 		this.$eventHub.off('fetchSysConfig');
+		this.$eventHub.off('hideDataSystems');
+		this.$eventHub.off('SET_YEARS');
 	},
 	created() {
 		var vm = this;
@@ -281,6 +287,7 @@ export default {
 		this.$eventHub.on('SET_CULTURE', function (value) { if (vm.currentLang != value) vm.currentLang = value; });
 		this.$eventHub.on('SET_APPLICATIONS', function (value) { vm.setApplications(value); });
 		this.$eventHub.on('fetchSysConfig', this.getConfig);
+		this.$eventHub.on('hideDataSystems', (value) => { vm.hideDataSystems = value });
 		this.getConfig();
 	}
 };

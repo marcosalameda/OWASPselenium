@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "VAT Number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Inpgr.ValNumbgro")]
 		[NumericAttribute(0)]
-		public decimal? ValNumbgro { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumbgro, 0)); } set { klass.ValNumbgro = Convert.ToDecimal(value); } }
+		public decimal? ValNumbgro { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNumbgro, 0)); } set { klass.ValNumbgro = Convert.ToDecimal(value); } }
 
 		[DisplayName("Text Field")]
 		/// <summary>Field : "Text Field" Tipo: "C" Formula:  ""</summary>
@@ -95,7 +95,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Phone number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Inpgr.ValPhone")]
 		[NumericAttribute(0)]
-		public decimal? ValPhone { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPhone, 0)); } set { klass.ValPhone = Convert.ToDecimal(value); } }
+		public decimal? ValPhone { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPhone, 0)); } set { klass.ValPhone = Convert.ToDecimal(value); } }
 
 		[DisplayName("E-mail")]
 		/// <summary>Field : "E-mail" Tipo: "C" Formula:  ""</summary>

@@ -375,10 +375,10 @@ namespace GenioMVC.ViewModels.Regis
 
 			validator.StringLength("ValName", Resources.Resources.NAME31974, ValName, 85);
 
-			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXTO.Formatting);
+			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValNif", Resources.Resources.TAX_ID_NO_58377, ValNif, 20);
 
-			validator.Required("ValNif", Resources.Resources.TAX_ID_NO_58377, ViewModelConversion.ToString(ValNif), FieldType.TEXTO.Formatting);
+			validator.Required("ValNif", Resources.Resources.TAX_ID_NO_58377, ViewModelConversion.ToString(ValNif), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 15);
 			validator.StringLength("ValEmail1", Resources.Resources.EMAIL_44228, ValEmail1, 254);
 			validator.StringLength("ValEmail2", Resources.Resources.ALTERNATIVE_EMAIL17444, ValEmail2, 254);

@@ -16,6 +16,8 @@ namespace quidgest.uitests.pages.common
 
         public CardsControl Cards => new CardsControl(driver, By.Id("form-container"), "form .q-table-list");
 
+        public KanbanControl Kanban => new KanbanControl(driver, By.Id("form-container"), ".q-kanban");
+
         public MenuPage(IWebDriver driver) : base(driver) {}
     }
 }

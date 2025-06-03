@@ -78,7 +78,8 @@ namespace GenioMVC.Controllers
 				ModelState.AddModelError("Error", Resources.Resources.ENTRADA_INCORRETA__T45717);
 
 				//Increment invalid login counter
-				GenioDI.MetricsOtlp.IncrementCounter("login_counter", 1, new List<KeyValuePair<string, object>>() {
+				GenioDI.MetricsOtlp.IncrementCounter("login_counter", 1, new List<KeyValuePair<string, object>>()
+				{
 					new("User", model.UserName),
 					new("Ip", HttpContext.GetIpAddress()),
 					new("Failed", true)
@@ -88,7 +89,7 @@ namespace GenioMVC.Controllers
 			}
 
 			string loginError = ValidateLoginState(user);
-			if(!string.IsNullOrEmpty(loginError))
+			if (!string.IsNullOrEmpty(loginError))
 			{
 				ModelState.AddModelError("Error", loginError);
 
@@ -178,9 +179,9 @@ namespace GenioMVC.Controllers
 				if (!ModelState.IsValid)
 					return JsonERROR();
 
-				var CaptchaData = model.CaptchaData;
-				bool isValidCaptcha = QCaptcha.Validate(CaptchaData.UserEnteredCaptchaCode, CaptchaData.CaptchaId, HttpContext.Session);
-				QCaptcha.SetCaptcha(CaptchaData.CaptchaId, null, HttpContext.Session);
+				var captchaData = model.CaptchaData;
+				bool isValidCaptcha = QCaptcha.Validate(captchaData.UserEnteredCaptchaCode, captchaData.CaptchaId, HttpContext.Session);
+				QCaptcha.SetCaptcha(captchaData.CaptchaId, null, HttpContext.Session);
 				if (!isValidCaptcha)
 				{
 					ModelState.AddModelError("userEnteredCaptchaCode", Resources.Resources.INVALID_CAPTCHA29660);
@@ -191,12 +192,12 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = PersistentSupport.getPersistentSupport(u.Year, u.Name);
 				UserFactory userFactory = new(sp, u);
 				IPrincipal principal = HttpContext.User;
-				//Check if the user with this email exists
+				// Check if the user with this email exists
 				var user = SecurityFactory.GetUserFromEmail(principal.Identity, model.Email, u, sp);
 
 				string emailBody = "";
 				string appName = Configuration.Application.Name;
-				//TODO: this should be obtained directly from user that already has its language filled by Usercontext
+				// TODO: this should be obtained directly from user that already has its language filled by Usercontext
 				string lang = RouteData.Values["culture"]?.ToString() ?? "";
 
 				if (user != null)
@@ -220,11 +221,10 @@ namespace GenioMVC.Controllers
 				userFactory.SendPasswordRecoveryMail(model.Email, emailBody);
 				model.IsEmailSent = true;
 			}
-			catch (Exception exc)
+			catch (Exception e)
 			{
-				Log.Error(exc.Message);
-				ModelState.AddModelError("error", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
-				return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+				Log.Error(e.Message);
+				return JsonERROR(HandleException(e));
 			}
 
 			return JsonOK(model);
@@ -242,7 +242,7 @@ namespace GenioMVC.Controllers
 				ResourceUser resource = ticketContent[2] as ResourceUser;
 
 				//Check if ticket expired
-				if (GlobalFunctions.Diferenca_entre_Datas(resource.CreationDate, DateTime.UtcNow, "M") < 60)
+				if (GenFunctions.DateDiffPart(resource.CreationDate, DateTime.UtcNow, "M") < 60)
 				{
 					//Store the id in session for later use
 					HttpContext.Session.SetString("userId", resource.Name);
@@ -312,17 +312,15 @@ namespace GenioMVC.Controllers
 				HttpContext.Session.Remove("userId");
 				return JsonOK();
 			}
-			catch (InvalidPasswordException exc)
+			catch (InvalidPasswordException e)
 			{
-				Log.Error(exc.Message);
-				ModelState.AddModelError("error", exc.UserMessage);
-				return JsonERROR();
+				Log.Error(e.Message);
+				return JsonERROR(HandleException(e));
 			}
-			catch (Exception exc)
+			catch (Exception e)
 			{
-				Log.Error(exc.Message);
-				ModelState.AddModelError("error", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
-				return JsonERROR();
+				Log.Error(e.Message);
+				return JsonERROR(HandleException(e));
 			}
 		}
 
@@ -379,7 +377,7 @@ namespace GenioMVC.Controllers
 				var credential = createCredential(ip);
 				var identity = ip.Authenticate(credential);
 
-				if (identity != null) //When user authenticated successfull return to Home page
+				if (identity != null) // On authentication success, return to Home page
 				{
 					User user = new(identity.Name, "id", Configuration.DefaultYear, HttpContext.GetHostName())
 					{
@@ -403,8 +401,8 @@ namespace GenioMVC.Controllers
 				Log.Error(ex.Message);
 			}
 
-			ErrorMessage(Resources.Resources.ENTRADA_INCORRETA__T45717);
-			return RedirectToVuePage("Error", null, false); //TODO: When user authentication error then return again to Logon page
+			// TODO: When an authentication error occurs, return to Logon page and present the user with a perceptible error message.
+			return RedirectToVuePage("Error", null, false);
 		}
 
 		[HttpPost]
@@ -427,18 +425,15 @@ namespace GenioMVC.Controllers
 				var credential = createCredential(ip);
 
 				if (ip.RegisterExternalId(credential, UserContext.Current.User))
-				{
-					SuccessMessage(Resources.Resources.CONTA_FOI_CRIADA_COM31537);
 					return RedirectToVuePage("Profile");
-				}
 			}
 			catch (Exception ex)
 			{
 				Log.Error(ex.Message);
 			}
 
-			ErrorMessage(Resources.Resources.ENTRADA_INCORRETA__T45717);
-			return RedirectToVuePage(""); //TODO: When user authentication error then return again to Logon page
+			// TODO: When an authentication error occurs, return to Logon page and present the user with a perceptible error message.
+			return RedirectToVuePage("");
 		}
 
 		[HttpGet]
@@ -540,7 +535,7 @@ namespace GenioMVC.Controllers
 				CSGenio.framework.Audit.registLoginOut(user, Resources.Resources.ENTRADA31905, Resources.Resources.ENTRADA_ATRAVES_DA_P48446, HttpContext.GetHostName(), HttpContext.GetIpAddress());
 				GlobalAppSessions.Instance.AddOrUpdate(HttpContext.Session.Id, user.Name, HttpContext.GetHostName());
 
-				if (GlobalFunctions.emptyN(user.Status) == 0 && user.Status == 1 || (Configuration.Security.Mandatory2FA && !user.Auth2FA))
+				if (GenFunctions.emptyN(user.Status) == 0 && user.Status == 1 || (Configuration.Security.Mandatory2FA && !user.Auth2FA))
 				{
 					if (Val2FA)
 						return Json(new { Success = true, Redirect = Url.Action("Profile", "Home"), Val2FA = true });
@@ -713,15 +708,9 @@ namespace GenioMVC.Controllers
 				model.LoadPartial(Request.QueryNameValues());
 				model.MapFromModel();
 
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				ModelState.AddModelError("Erro", exceptionUserMessage);
-
 				CSGenio.framework.Log.Error("Regis_New - GET " + e.Message);
 
-				ErrorMessage(exceptionUserMessage);
+				HandleException(e);
 			}
 
 			return model;
@@ -741,55 +730,55 @@ namespace GenioMVC.Controllers
 		{
 			const string registrationId = "75f89df6-5f63-4719-b81a-43a2c304c7c2";
 
-			var FormData = requestModel.FormData;
-			var FormPswData = requestModel.FormPswData;
-			var CaptchaData = requestModel.CaptchaData;
+			var formData = requestModel.FormData;
+			var formPswData = requestModel.FormPswData;
+			var captchaData = requestModel.CaptchaData;
 
 			// execute the captcha validation
-			bool isValidCaptcha = QCaptcha.Validate(CaptchaData.UserEnteredCaptchaCode, CaptchaData.CaptchaId, HttpContext.Session);
-			QCaptcha.SetCaptcha(CaptchaData.CaptchaId, null, HttpContext.Session);
+			bool isValidCaptcha = QCaptcha.Validate(captchaData.UserEnteredCaptchaCode, captchaData.CaptchaId, HttpContext.Session);
+			QCaptcha.SetCaptcha(captchaData.CaptchaId, null, HttpContext.Session);
 			if (!isValidCaptcha)
 			{
 				ModelState.AddModelError("registerCaptchaUserInput", Resources.Resources.INVALID_CAPTCHA29660);
 				return JsonERROR(Resources.Resources.INVALID_CAPTCHA29660);
 			}
 
-			FormData.Init(UserContext.Current);
-			FormPswData.Init(UserContext.Current);
+			formData.Init(UserContext.Current);
+			formPswData.Init(UserContext.Current);
 
 			// TODO: if (!Config.RegisterUsers) return "ERROR UNAUTHORIZED";
 			ViewModels.RegisterViewModel returnModel = new ViewModels.RegisterViewModel();
 
 			if (!ModelState.IsValid)
 			{
-				returnModel.FormData = FormData;
+				returnModel.FormData = formData;
 				RegistrationConfig(returnModel, "Regis", registrationId);
 				var formDataModel = returnModel.FormData as ViewModels.Regis.Regis_ViewModel;
 				formDataModel.LoadPartial(Request.QueryNameValues());
 				formDataModel.MapFromModel();
 
-				returnModel.FormPswData = FormPswData;
+				returnModel.FormPswData = formPswData;
 				RegistrationConfig(returnModel, "Defaultpsw", registrationId);
 
 				return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, new { model = returnModel });
 			}
 
-			string UserName = FormPswData.ValNome;
-			string Email = FormPswData.ValEmail;
-			string Password = FormPswData.ValPassword;
-			string ConfirmPassword = FormPswData.ConfirmValPassword;
+			string userName = formPswData.ValNome;
+			string email = formPswData.ValEmail;
+			string passwordText = formPswData.ValPassword;
+			string confirmPassword = formPswData.ConfirmValPassword;
 
 			CSGenioApsw user;
 			PersistentSupport sp = UserContext.Current.PersistentSupport;
 
 			try
 			{
-				Password password = new Password(Password,ConfirmPassword);
+				Password password = new(passwordText, confirmPassword);
 				UserFactory factory = new UserFactory(sp, UserContext.Current.User);
 				sp.openTransaction();
 
 				Psw pswModel = new Psw(UserContext.Current);
-				FormPswData.MapToModel(pswModel);
+				formPswData.MapToModel(pswModel);
 				var userRecord = pswModel.klass;
 				user = userRecord;
 				user.User.Public = true;
@@ -798,15 +787,15 @@ namespace GenioMVC.Controllers
 
 				//Insert new user data into database
 				user.UserRecord = false;
-				user.User.Name = UserName;
+				user.User.Name = userName;
 				user.fillStampInsert();
 
 				try
 				{
 					UserContext.Current.User.AddModuleRole("STY", CSGenio.framework.Role.ADMINISTRATION);
 					factory.FillPsw(userPsw: user,
-						userName: UserName,
-						email: Email,
+						userName: userName,
+						email: email,
 						phone: string.Empty,
 						status: 2, //Account starts disabled
 						password: password);
@@ -828,21 +817,21 @@ namespace GenioMVC.Controllers
 
 				//Set foreign key to primary key of record in user table (USERLOGIN / PSW)
 				//Change by [TMV] (16.03.2021) -> Returns the CSGenio to be able to create eph with formula fields
-				CSGenioAregis area = Regis_New_Registration(FormData);
+				CSGenioAregis area = Regis_New_Registration(formData);
 
 				if (area is null)
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
 
-					returnModel.FormData = FormData;
+					returnModel.FormData = formData;
 					RegistrationConfig(returnModel, "Regis", registrationId);
 
 					var formDataModel = returnModel.FormData as ViewModels.Regis.Regis_ViewModel;
 					formDataModel.LoadPartial(Request.QueryNameValues());
 					formDataModel.MapFromModel();
 
-					returnModel.FormPswData = FormPswData;
+					returnModel.FormPswData = formPswData;
 					RegistrationConfig(returnModel, "Defaultpsw", registrationId);
 
 					return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, new { model = returnModel });
@@ -889,13 +878,13 @@ namespace GenioMVC.Controllers
 				Log.Error(e.Message);
 			}
 
-			returnModel.FormData = FormData;
+			returnModel.FormData = formData;
 			RegistrationConfig(returnModel, "Regis", registrationId);
 			var tempFormDataModel = returnModel.FormData as ViewModels.Regis.Regis_ViewModel;
 			tempFormDataModel.LoadPartial(Request.QueryNameValues());
 			tempFormDataModel.MapFromModel();
 
-			returnModel.FormPswData = FormPswData;
+			returnModel.FormPswData = formPswData;
 			RegistrationConfig(returnModel, "Defaultpsw", registrationId);
 
 			return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, new { Form = "Form_Regis", model = returnModel });
@@ -926,10 +915,6 @@ namespace GenioMVC.Controllers
 
 				u.RemoveModuleRole("STY", CSGenio.framework.Role.ADMINISTRATION);
 				u.CurrentModule = null;
-
-				// MH - Visualizar os warnings obtidos durante gravação. (ex: Condição de escrita que não impede gravação)
-				if (model.flashMessage != null && (model.flashMessage.Status == Status.W || model.flashMessage.Status == Status.OK_MAIS_W))
-					GetFlashMessage(model.flashMessage, Navigation.CurrentLevel.FormMode);
 
 				return Model.klass;
 			}

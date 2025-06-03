@@ -9,16 +9,22 @@
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<select-input
+						<q-select
 							v-model="statusType"
-							:options="statusTypes"
+							item-value="Value"
+							item-label="Text"
+							size="xlarge"
+							:items="statusTypes"
 							:label="Resources.STATUS62033" />
 					</base-input-structure>
 					<base-input-structure
 						class="i-text">
-						<select-input
+						<q-select
 							v-model="queueType"
-							:options="queueTypes"
+							item-value="Value"
+							item-label="Text"
+							:items="queueTypes"
+							size="xlarge"
 							:label="Resources.QUEUE45251" />
 					</base-input-structure>
 				</q-control-wrapper>

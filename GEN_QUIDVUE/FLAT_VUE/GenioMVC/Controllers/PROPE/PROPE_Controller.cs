@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Prope;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PROPE]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class PropeController : ControllerBase
 	{
-		public PropeController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public PropeController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PROPE]/
 
 
@@ -364,6 +373,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope01" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -377,6 +387,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
 
 
 		/// <summary>
@@ -394,6 +405,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope05" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -407,6 +419,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
 
 
 		/// <summary>
@@ -424,6 +437,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope07" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -437,6 +451,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
 
 
 		/// <summary>
@@ -454,6 +469,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope09" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -467,6 +483,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
 
 
 		/// <summary>
@@ -484,6 +501,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope11" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -499,6 +517,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope17" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -512,6 +531,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
 
 
 		/// <summary>

@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Regis
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,11 +147,11 @@ namespace GenioMVC.ViewModels.Regis
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAregis.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 50, 0, true),
-				new Exports.QColumn(CSGenioAregis.FldNif, FieldType.TEXTO, Resources.Resources.NIF55908, 20, 0, true),
-				new Exports.QColumn(CSGenioAregis.FldEmail1, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAregis.FldEmail2, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAregis.FldTelephon, FieldType.TEXTO, Resources.Resources.PHONE56703, 15, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 50, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldNif, FieldType.TEXT, Resources.Resources.NIF55908, 20, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldEmail1, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldEmail2, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldTelephon, FieldType.TEXT, Resources.Resources.PHONE56703, 15, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -216,8 +214,6 @@ namespace GenioMVC.ViewModels.Regis
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -364,8 +360,7 @@ namespace GenioMVC.ViewModels.Regis
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("regis", "name");
+					firstVisibleColumn ??= new FieldRef("regis", "name");
 				}
 
 
@@ -394,6 +389,8 @@ namespace GenioMVC.ViewModels.Regis
 
 // USE /[MANUAL REG OVERRQ 111]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -421,7 +418,7 @@ namespace GenioMVC.ViewModels.Regis
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAregis> listing = Models.ModelBase.Where<CSGenioAregis>(m_userContext, false, reg_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAregis> listing = Models.ModelBase.Where<CSGenioAregis>(m_userContext, distinct, reg_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -502,6 +499,8 @@ namespace GenioMVC.ViewModels.Regis
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -555,7 +554,7 @@ namespace GenioMVC.ViewModels.Regis
 			new TableSearchColumn("ValNif", CSGenioAregis.FldNif, typeof(string)),
 			new TableSearchColumn("ValEmail1", CSGenioAregis.FldEmail1, typeof(string)),
 			new TableSearchColumn("ValEmail2", CSGenioAregis.FldEmail2, typeof(string)),
-			new TableSearchColumn("ValTelephon", CSGenioAregis.FldTelephon, typeof(string))
+			new TableSearchColumn("ValTelephon", CSGenioAregis.FldTelephon, typeof(string)),
 		];
 	}
 }

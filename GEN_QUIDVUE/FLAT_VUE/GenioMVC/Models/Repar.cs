@@ -85,7 +85,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "No rumour in the Company" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Repar.ValNrrepara")]
 		[NumericAttribute(0)]
-		public decimal? ValNrrepara { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrrepara, 0)); } set { klass.ValNrrepara = Convert.ToDecimal(value); } }
+		public decimal? ValNrrepara { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNrrepara, 0)); } set { klass.ValNrrepara = Convert.ToDecimal(value); } }
 
 		[DisplayName("Technical area")]
 		/// <summary>Field : "Technical area" Tipo: "AC" Formula:  ""</summary>
@@ -165,7 +165,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Spent on hours" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Repar.ValHours")]
 		[NumericAttribute(0)]
-		public decimal? ValHours { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValHours, 0)); } set { klass.ValHours = Convert.ToDecimal(value); } }
+		public decimal? ValHours { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValHours, 0)); } set { klass.ValHours = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Repar.ValZzstate")]

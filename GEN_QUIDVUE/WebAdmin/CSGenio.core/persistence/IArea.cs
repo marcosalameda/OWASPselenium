@@ -24,7 +24,7 @@ namespace CSGenio.persistence
         //TODO: O suporte persistente não deveria de precisar desta noção
         string ShadowTabKeyName { get; }
         Dictionary<string, Field> DBFields { get; }
-        Hashtable Fields { get; }
+        Dictionary<string, RequestedField> Fields { get; }
 
         AreaInfo Information { get; }
         Dictionary<string, Relation> ParentTables { get; }

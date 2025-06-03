@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Glob;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER GLOB]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class GlobController : ControllerBase
 	{
-		public GlobController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public GlobController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION GLOB]/
 
 
@@ -144,6 +153,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Glob" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -159,6 +169,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Globfact" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -172,6 +183,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Glob)
 			);
 		}
+
 
 
 		/// <summary>

@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Hpess
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -148,11 +146,11 @@ namespace GenioMVC.ViewModels.Hpess
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAhpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAhpess.FldAuthor, FieldType.OPERCRIA, Resources.Resources.AUTHOR21241, 30, 0, true),
-				new Exports.QColumn(CSGenioAhpess.FldDate, FieldType.DATACRIA, Resources.Resources.DATE18475, 8, 0, true),
-				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAhpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAhpess.FldAuthor, FieldType.TEXT, Resources.Resources.AUTHOR21241, 30, 0, true),
+				new Exports.QColumn(CSGenioAhpess.FldDate, FieldType.DATETIMESECONDS, Resources.Resources.DATE18475, 8, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -215,8 +213,6 @@ namespace GenioMVC.ViewModels.Hpess
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -363,8 +359,7 @@ namespace GenioMVC.ViewModels.Hpess
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("hpess", "name");
+					firstVisibleColumn ??= new FieldRef("hpess", "name");
 				}
 
 
@@ -393,6 +388,8 @@ namespace GenioMVC.ViewModels.Hpess
 
 // USE /[MANUAL PTN OVERRQ 1421]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -420,7 +417,7 @@ namespace GenioMVC.ViewModels.Hpess
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAhpess> listing = Models.ModelBase.Where<CSGenioAhpess>(m_userContext, false, ptn_menu_1421Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1421", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAhpess> listing = Models.ModelBase.Where<CSGenioAhpess>(m_userContext, distinct, ptn_menu_1421Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1421", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -505,6 +502,8 @@ namespace GenioMVC.ViewModels.Hpess
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -558,7 +557,7 @@ namespace GenioMVC.ViewModels.Hpess
 			new TableSearchColumn("ValAuthor", CSGenioAhpess.FldAuthor, typeof(string)),
 			new TableSearchColumn("ValDate", CSGenioAhpess.FldDate, typeof(DateTime?)),
 			new TableSearchColumn("Cmpny_ValDesignat", CSGenioAcmpny.FldDesignat, typeof(string)),
-			new TableSearchColumn("Pesso_ValName", CSGenioApesso.FldName, typeof(string))
+			new TableSearchColumn("Pesso_ValName", CSGenioApesso.FldName, typeof(string)),
 		];
 	}
 }

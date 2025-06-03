@@ -577,7 +577,7 @@ namespace GenioMVC.ViewModels.Relin
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -626,7 +626,7 @@ namespace GenioMVC.ViewModels.Relin
 				// Fill List fields
 				this.ValCodrecei = ViewModelConversion.ToString(row["recei.codrecei"]);
 				TableReceiNumber.Value = (decimal?)row["recei.number"];
-				if (GlobalFunctions.emptyG(this.ValCodrecei) == 1)
+				if (GenFunctions.emptyG(this.ValCodrecei) == 1)
 				{
 					this.ValCodrecei = "";
 					TableReceiNumber.Value = 0m;
@@ -769,7 +769,7 @@ namespace GenioMVC.ViewModels.Relin
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -816,7 +816,7 @@ namespace GenioMVC.ViewModels.Relin
 				// Fill List fields
 				this.ValCodprodu = ViewModelConversion.ToString(row["produ.codprodu"]);
 				TableProduProduct.Value = (string)row["produ.product"];
-				if (GlobalFunctions.emptyG(this.ValCodprodu) == 1)
+				if (GenFunctions.emptyG(this.ValCodprodu) == 1)
 				{
 					this.ValCodprodu = "";
 					TableProduProduct.Value = "";

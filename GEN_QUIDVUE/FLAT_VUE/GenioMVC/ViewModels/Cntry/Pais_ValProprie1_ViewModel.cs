@@ -44,7 +44,7 @@ namespace GenioMVC.ViewModels.Cntry
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodcntry { get; set; }
+		public string CntryValCodcntry { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -94,7 +94,6 @@ namespace GenioMVC.ViewModels.Cntry
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -112,7 +111,7 @@ namespace GenioMVC.ViewModels.Cntry
 		/// <param name="userContext">The current user request context</param>
 		public Pais_ValProprie1_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodcntry = userContext.CurrentNavigation.CurrentLevel.GetEntry("cntry")?.ToString();
+			CntryValCodcntry = userContext.CurrentNavigation.CurrentLevel.GetEntry("cntry")?.ToString();
 		}
 
 		/// <summary>
@@ -130,8 +129,8 @@ namespace GenioMVC.ViewModels.Cntry
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApropr.FldName, FieldType.TEXTO, Resources.Resources.PROPERTY_NAME18934, 30, 0, true),
-				new Exports.QColumn(CSGenioApropr.FldPrecoest, FieldType.VALOR, Resources.Resources.ESTIMATED_PRICE02986, 12, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldName, FieldType.TEXT, Resources.Resources.PROPERTY_NAME18934, 30, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldPrecoest, FieldType.CURRENCY, Resources.Resources.ESTIMATED_PRICE02986, 12, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -196,10 +195,8 @@ namespace GenioMVC.ViewModels.Cntry
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodcntry != null)
-				crs.Equal(CSGenioApropr.FldCodcntry, this.ValCodcntry);
-
-
+			if (this.CntryValCodcntry != null)
+				crs.Equal(CSGenioApropr.FldCodcntry, this.CntryValCodcntry);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -345,8 +342,7 @@ namespace GenioMVC.ViewModels.Cntry
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("propr", "name");
+					firstVisibleColumn ??= new FieldRef("propr", "name");
 				}
 
 
@@ -375,6 +371,8 @@ namespace GenioMVC.ViewModels.Cntry
 
 // USE /[MANUAL GQT OVERRQ PAIS_PSEUDPROPRIE1]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -402,7 +400,7 @@ namespace GenioMVC.ViewModels.Cntry
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApropr> listing = Models.ModelBase.Where<CSGenioApropr>(m_userContext, false, pais____pseudproprie1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PAIS____PSEUDPROPRIE1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApropr> listing = Models.ModelBase.Where<CSGenioApropr>(m_userContext, distinct, pais____pseudproprie1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PAIS____PSEUDPROPRIE1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -482,6 +480,8 @@ namespace GenioMVC.ViewModels.Cntry
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -532,7 +532,7 @@ namespace GenioMVC.ViewModels.Cntry
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioApropr.FldName, typeof(string)),
-			new TableSearchColumn("ValPrecoest", CSGenioApropr.FldPrecoest, typeof(decimal?))
+			new TableSearchColumn("ValPrecoest", CSGenioApropr.FldPrecoest, typeof(decimal?)),
 		];
 	}
 }

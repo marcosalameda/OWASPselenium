@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Kinde;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER KINDE]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class KindeController : ControllerBase
 	{
-		public KindeController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public KindeController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION KINDE]/
 
 
@@ -42,6 +51,7 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER KINDE]/
+
 
 
 

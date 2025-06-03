@@ -445,7 +445,7 @@ namespace GenioMVC.ViewModels.Tpequ
 			validator.StringLength("ValTipoequi", Resources.Resources.TYPE_OF_EQUIPMENT64921, ValTipoequi, 50);
 			validator.StringLength("ValTpequcod", Resources.Resources.CODE49225, ValTpequcod, 20);
 
-			validator.Required("ValTpequcod", Resources.Resources.CODE49225, ViewModelConversion.ToString(ValTpequcod), FieldType.TEXTO.Formatting);
+			validator.Required("ValTpequcod", Resources.Resources.CODE49225, ViewModelConversion.ToString(ValTpequcod), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValBackcolo", Resources.Resources.BACKGROUND_COLOR07511, ValBackcolo, 50);
 			validator.StringLength("ValCorletra", Resources.Resources.LETTER_COLOR63305, ValCorletra, 50);
 			validator.StringLength("ValTpequpai", Resources.Resources.DEPENDENCE_ON13941, ValTpequpai, 20);
@@ -599,7 +599,7 @@ namespace GenioMVC.ViewModels.Tpequ
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -646,7 +646,7 @@ namespace GenioMVC.ViewModels.Tpequ
 				// Fill List fields
 				this.ValCodfamil = ViewModelConversion.ToString(row["famil.codfamil"]);
 				TableFamilFamily.Value = (string)row["famil.family"];
-				if (GlobalFunctions.emptyG(this.ValCodfamil) == 1)
+				if (GenFunctions.emptyG(this.ValCodfamil) == 1)
 				{
 					this.ValCodfamil = "";
 					TableFamilFamily.Value = "";

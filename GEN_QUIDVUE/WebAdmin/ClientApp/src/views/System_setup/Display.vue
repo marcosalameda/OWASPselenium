@@ -66,9 +66,9 @@
 
 		<row class="footer-btn">
 			<q-button
-				b-style="primary"
+				variant="bold"
 				:label="Resources.GRAVAR_CONFIGURACAO36308"
-				@click="SaveConfigOthers" />
+				@click="saveConfigOthers" />
 		</row>
 	</div>
 </template>
@@ -138,16 +138,15 @@ export default {
 		};
 	},
 	methods: {
-		SaveConfigOthers() {
-			var vm = this;
+		saveConfigOthers() {
 			QUtils.log("SaveConfigOthers - Request", QUtils.apiActionURL('Config', 'SaveConfigOthers'));
-			QUtils.postData('Config', 'SaveConfigOthers', vm.model, null, function (data) {
+			QUtils.postData('Config', 'SaveConfigOthers', this.model, null, (data) => {
 				QUtils.log("SaveConfigOthers - Response", data);
 				if (data.Success) {
-					vm.$emit('alert-class', { ResultMsg: vm.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
+					this.$emit('alert-class', { ResultMsg: this.Resources.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
 				}
 				else {
-					vm.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
+					this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
 				}
 			});
 		},

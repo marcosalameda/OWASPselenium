@@ -242,7 +242,7 @@ namespace GenioMVC.ViewModels
 				var areaInfo = (CSGenio.business.AreaInfo)areaType.GetMethod("GetInformation").Invoke(areaType, null);
 				var field = areaInfo.DBFields[fieldRef.Field];
 
-				if (field.FieldType == FieldType.IMAGEM_JPEG)
+				if (field.FieldType == FieldType.IMAGE)
 					return null;
 
 				t.SetSort(column, dir);
@@ -384,7 +384,7 @@ namespace GenioMVC.ViewModels
 				var field = areaInfo.DBFields[fieldRef.Field];
 
 				//Column types that are not sorted
-				if (field.FieldType == FieldType.IMAGEM_JPEG)
+				if (field.FieldType == FieldType.IMAGE)
 					continue;
 				//> Create column reference and check if sortable
 
@@ -445,7 +445,7 @@ namespace GenioMVC.ViewModels
 				SearchColumnsDic.Add(tsc.AreaField.FullName.ToUpper(), tsc);
 
 			string query = Menu.Filters.Query = Menu.Query = tableConfig.Query ?? "";
-			
+
 			List<CSGenio.framework.TableConfiguration.SearchFilter> validSearchFilters = CSGenio.framework.TableConfiguration.TableConfiguration.getValidSearchFilters(tableConfig, Menu.TableName, SearchColumnsDic.Keys.ToList());
 
 			CriteriaSet search_filters = CriteriaSet.And();
@@ -480,20 +480,13 @@ namespace GenioMVC.ViewModels
 						Field fieldInfo = CSGenio.business.Area.GetFieldInfo(sc.AreaField);
 						if (sc.FieldType.Equals(typeof(DateTime?)))
 						{
-							// Get datetime format from configuration
-							string format = Configuration.DateFormat.DateTimeSeconds;
-							if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
-								format = Configuration.DateFormat.DateTime;
-							else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA)
-								format = Configuration.DateFormat.Date;
-
 							//Parse values
 							//Values must be an array because the number of values depends on the operation
 							DateTime[] Values = new DateTime[sfc.Values.Length];
 							DateTime parsedValue = new DateTime();
 							int x = 0;
 							foreach (string value in sfc.Values)
-								if (DateTime.TryParseExact(value, format, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedValue) && CSGenio.business.GlobalFunctions.emptyD(parsedValue) == 0)
+								if (DateTime.TryParse(value, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedValue) && CSGenio.framework.GenFunctions.emptyD(parsedValue) == 0)
 									Values[x++] = parsedValue;
 
 							//Create criteria based on operator code
@@ -510,18 +503,29 @@ namespace GenioMVC.ViewModels
 								case "EQ":
 									if (x < 1)
 										continue;
-									if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
+									// The types Date, DateTime and DateTimeSeconds are all stored as full date times, including fractional seconds
+									// To account for this, comparisons for equals and not equals must use a range
+									// with the lower bound rounded down to the unit of highest precision being compared
+									// and the upper bound one unit higher than the lower bound
+									if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATASEGUNDO)
 									{
 										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute));
-										eqRange.Lesser(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute).AddMinutes(1));
+										eqRange.GreaterOrEqual(sc.AreaField, Values[0]);
+										eqRange.Lesser(sc.AreaField, Values[0].AddSeconds(1));
 										conditions.SubSets.Add(eqRange);
 									}
-									else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA)
+									else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
 									{
 										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0].Date);
-										eqRange.Lesser(sc.AreaField, Values[0].Date.AddDays(1));
+										eqRange.GreaterOrEqual(sc.AreaField, Values[0]);
+										eqRange.Lesser(sc.AreaField, Values[0].AddMinutes(1));
+										conditions.SubSets.Add(eqRange);
+									}
+									else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA)
+									{
+										CriteriaSet eqRange = CriteriaSet.And();
+										eqRange.GreaterOrEqual(sc.AreaField, Values[0]);
+										eqRange.Lesser(sc.AreaField, Values[0].AddDays(1));
 										conditions.SubSets.Add(eqRange);
 									}
 									else
@@ -530,18 +534,29 @@ namespace GenioMVC.ViewModels
 								case "NOTEQ":
 									if (x < 1)
 										continue;
-									if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
+									// The types Date, DateTime and DateTimeSeconds are all stored as full date times, including fractional seconds
+									// To account for this, comparisons for equals and not equals must use a range
+									// with the lower bound rounded down to the unit of highest precision being compared
+									// and the upper bound one unit higher than the lower bound
+									if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATASEGUNDO)
 									{
 										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.Lesser(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute));
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute).AddMinutes(1));
+										eqRange.Lesser(sc.AreaField, Values[0]);
+										eqRange.GreaterOrEqual(sc.AreaField, Values[0].AddSeconds(1));
 										conditions.SubSets.Add(eqRange);
 									}
-									else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA)
+									else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
 									{
 										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.Lesser(sc.AreaField, Values[0].Date);
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0].Date.AddDays(1));
+										eqRange.Lesser(sc.AreaField, Values[0]);
+										eqRange.GreaterOrEqual(sc.AreaField, Values[0].AddMinutes(1));
+										conditions.SubSets.Add(eqRange);
+									}
+									else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA)
+									{
+										CriteriaSet eqRange = CriteriaSet.And();
+										eqRange.Lesser(sc.AreaField, Values[0]);
+										eqRange.GreaterOrEqual(sc.AreaField, Values[0].AddDays(1));
 										conditions.SubSets.Add(eqRange);
 									}
 									else
@@ -550,22 +565,12 @@ namespace GenioMVC.ViewModels
 								case "AFT":
 									if (x < 1)
 										continue;
-									if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
-										conditions.GreaterOrEqual(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute).AddMinutes(1));
-									else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA)
-										conditions.GreaterOrEqual(sc.AreaField, Values[0].Date.AddDays(1));
-									else
-										conditions.Greater(sc.AreaField, Values[0]);
+									conditions.Greater(sc.AreaField, Values[0]);
 									break;
 								case "BEF":
 									if (x < 1)
 										continue;
-									if (fieldInfo.FieldType.Formatting == FieldFormatting.DATAHORA)
-										conditions.Lesser(sc.AreaField, Values[0].Date.AddHours(Values[0].Hour).AddMinutes(Values[0].Minute));
-									else if (fieldInfo.FieldType.Formatting == FieldFormatting.DATA)
-										conditions.Lesser(sc.AreaField, Values[0].Date);
-									else
-										conditions.Lesser(sc.AreaField, Values[0]);
+									conditions.Lesser(sc.AreaField, Values[0]);
 									break;
 								case "AFTEQ":
 									if (x < 1)
@@ -804,14 +809,14 @@ namespace GenioMVC.ViewModels
 				{
 					if (sc.FieldType.Equals(typeof(DateTime?)))
 					{
-						if (DateTime.TryParse(query, System.Threading.Thread.CurrentThread.CurrentCulture, DateTimeStyles.None, out t) && CSGenio.business.GlobalFunctions.emptyD(t) == 0)
+						if (DateTime.TryParse(query, System.Threading.Thread.CurrentThread.CurrentCulture, DateTimeStyles.None, out t) && CSGenio.framework.GenFunctions.emptyD(t) == 0)
 							search_filters.Equal(sc.AreaField, t);
 					}
 					else if (!String.IsNullOrEmpty(sc.ArrayName))
 					{
-						Type arrayType = Type.GetType("CSGenio.business.Array" + StringUtils.CapFirst(sc.ArrayName) + ", CSGenio.core");
-						MethodInfo getDictionary = arrayType.GetMethod("GetDictionary");
-						var objectDic = getDictionary.Invoke(null, null);
+						var arrayInfo = new ArrayInfo(sc.ArrayName);
+						var objectDic = arrayInfo.GetDictionaryObject();
+
 						Dictionary<string, string> dic;
 
 						//For normal enums the text exists in the resources, but for dynamic enums those texts don't exist
@@ -1129,7 +1134,7 @@ namespace GenioMVC.ViewModels
 		protected bool AddCriteriaAreaLimit(CriteriaSet crs, FieldRef fieldref, string area, string fieldValue, bool isMandatory)
 		{
 			var histValue = Navigation.GetValue(area);
-			var value = GlobalFunctions.emptyG(histValue) == 1 ? fieldValue : histValue;
+			var value = GenFunctions.emptyG(histValue) == 1 ? fieldValue : histValue;
 
 			// Add an 'In' condition if the value is an array
 			if (value is Array arrayValue)
@@ -1137,7 +1142,7 @@ namespace GenioMVC.ViewModels
 				crs.In(fieldref, arrayValue);
 			}
 			// Handle empty value based on 'isMandatory'
-			else if (GlobalFunctions.emptyG(value) == 1)
+			else if (GenFunctions.emptyG(value) == 1)
 			{
 				return isMandatory ? false : true;
 			}
@@ -1402,15 +1407,16 @@ namespace GenioMVC.ViewModels
 
 			//Tries to position area and field to a real record: if we have information about the area key, then it will be enough, otherwise, it will use a 'virtual' positioning on the first record and field variable will be manually set
 			//Model has a field with the desired value filled acting as the limit (As an example Limit type "C" (field) is expecting this to be happening on AreaLimitaN)
-			if ((field.FieldType == FieldType.CHAVE_PRIMARIA || field.FieldType == FieldType.CHAVE_PRIMARIA_GUID || field.FieldType == FieldType.CHAVE_ESTRANGEIRA || field.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) && //field a key
-				(GlobalFunctions.emptyG(this_limit_field) == 0 || GlobalFunctions.emptyG(nav_limit_area) == 0)) //and the key is present either in this_limit_field or in nav_limit_area
+			if ((field.isKey()) && //field a key
+				(GenFunctions.emptyG(this_limit_field) == 0 || GenFunctions.emptyG(nav_limit_area) == 0)) //and the key is present either in this_limit_field or in nav_limit_area
 			{
-				if (GlobalFunctions.emptyG(this_limit_field) == 0) //this will give priority to field value with key to position the record.
+				if (GenFunctions.emptyG(this_limit_field) == 0) //this will give priority to field value with key to position the record.
 					nav_limit_area = this_limit_field.ToString();
 
-				if (field.FieldType == FieldType.CHAVE_ESTRANGEIRA || field.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) //if limit_field is refering to a related area, then update model to the correct parent
+				//if limit_field is refering to a related area, then update model to the correct parent
+				string parent_table_name = model_limit_area.ParentTables.Where(x => x.Value.SourceRelField == field.Name).Select(x => x.Key).FirstOrDefault();
+				if(parent_table_name != null)
 				{//double check this case!
-					string parent_table_name = model_limit_area.ParentTables.Where(x => x.Value.SourceRelField == field.Name).FirstOrDefault().Key;
 					CSGenio.business.Area parent_area = CSGenio.business.Area.createArea(parent_table_name, m_userContext.User, m_userContext.User.CurrentModule);
 					model_limit_area = parent_area; //change model to the one being related by foreign key
 					area_info = model_limit_area.Information;
@@ -1423,7 +1429,7 @@ namespace GenioMVC.ViewModels
 				//decompose human key into fields:
 				string[] human_fields_array = area_info.HumanKeyName.Split(',');
 				human_fields_array = human_fields_array.Where(x => !string.IsNullOrEmpty(x)).ToArray();
-				if (GlobalFunctions.emptyC(area_info.HumanKeyName) == 0)
+				if (GenFunctions.emptyC(area_info.HumanKeyName) == 0)
 				{
 					foreach (string human_field in human_fields_array)
 						List_fields.Add(area_info.Alias + "." + human_field);
@@ -1440,11 +1446,11 @@ namespace GenioMVC.ViewModels
 				{
 					field = model_limit_area.DBFields[human_field];
 					field_value = ((CSGenio.framework.RequestedField)model_limit_area.Fields[model_limit_area.Alias + "." + field.Name]).Value.ToString();
-					if (GlobalFunctions.emptyC(field_value) == 0) //if has a value, exit loop
+					if (GenFunctions.emptyC(field_value) == 0) //if has a value, exit loop
 						break;
 				}
 
-				if (GlobalFunctions.emptyC(area_info.HumanKeyName) == 1 || GlobalFunctions.emptyC(field_value) == 1) //last resort: displays primary key, better check human key table definitions to avoid this
+				if (GenFunctions.emptyC(area_info.HumanKeyName) == 1 || GenFunctions.emptyC(field_value) == 1) //last resort: displays primary key, better check human key table definitions to avoid this
 				{
 					field = model_limit_area.DBFields[area_info.PrimaryKeyName];
 					field_value = ((CSGenio.framework.RequestedField)model_limit_area.Fields[model_limit_area.Alias + "." + field.Name]).Value.ToString();
@@ -1468,7 +1474,7 @@ namespace GenioMVC.ViewModels
 				{ }
 
 				field = model_limit_area.DBFields[limit_field];
-				field_value = GlobalFunctions.emptyC(this_limit_field) == 0 ? this_limit_field.ToString() : (!string.IsNullOrEmpty(Navigation.GetStrValue(limit_field_value)) ? Navigation.GetStrValue(limit_field_value) : limit_field_value);
+				field_value = GenFunctions.emptyC(this_limit_field) == 0 ? this_limit_field.ToString() : (!string.IsNullOrEmpty(Navigation.GetStrValue(limit_field_value)) ? Navigation.GetStrValue(limit_field_value) : limit_field_value);
 
 				//Get history value for fullname, on its variants (this should be consistent, but it isnt on some limit "S..." types, maybe review it later.)
 				string field_Fullname = string.Empty;
@@ -1488,8 +1494,8 @@ namespace GenioMVC.ViewModels
 				DateTime minLim = Navigation.GetDateValue("min" + StringUtils.CapFirst(model_limit_area.Alias) + "Val" + StringUtils.CapFirst(limit_field)).GetValueOrDefault();
 				DateTime maxLim = Navigation.GetDateValue("max" + StringUtils.CapFirst(model_limit_area.Alias) + "Val" + StringUtils.CapFirst(limit_field)).GetValueOrDefault();
 
-				model_limit_area.Fields.Add(model_limit_area.Alias + "." + "minLim", minLim);
-				model_limit_area.Fields.Add(model_limit_area.Alias + "." + "maxLim", maxLim);
+				model_limit_area.Fields.Add(model_limit_area.Alias + "." + "minLim", new RequestedField("minLim", "") { Value = minLim });
+				model_limit_area.Fields.Add(model_limit_area.Alias + "." + "maxLim", new RequestedField("maxLim", "") { Value = maxLim });
 			}
 
 			switch (limitAreaType)

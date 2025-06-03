@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Tpequ
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodtpequ { get; set; }
+		public string TpequValCodtpequ { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Tpequ
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Tpequ
 		/// <param name="userContext">The current user request context</param>
 		public Tpequ_ValInstalac_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodtpequ = userContext.CurrentNavigation.CurrentLevel.GetEntry("tpequ")?.ToString();
+			TpequValCodtpequ = userContext.CurrentNavigation.CurrentLevel.GetEntry("tpequ")?.ToString();
 		}
 
 		/// <summary>
@@ -128,17 +127,17 @@ namespace GenioMVC.ViewModels.Tpequ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAinsta.FldDesignat, FieldType.TEXTO, Resources.Resources.SCHEDULING24801, 30, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldDtiniage, FieldType.DATAHORA, Resources.Resources.BEGINNING18124, 16, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldDtfimage, FieldType.DATAHORA, Resources.Resources.END47577, 16, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldDesignat, FieldType.TEXT, Resources.Resources.SCHEDULING24801, 30, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldDtiniage, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldDtfimage, FieldType.DATETIME, Resources.Resources.END47577, 16, 0, true),
 				new Exports.QColumn(CSGenioAinsta.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 3, true),
-				new Exports.QColumn(CSGenioAinsta.FldAllday, FieldType.LOGICO, Resources.Resources.ALL_DAY18496, 1, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldSince, FieldType.DATAHORA, Resources.Resources.SINCE47259, 16, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldUntil, FieldType.DATAHORA, Resources.Resources.UNTIL39173, 16, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldHours, FieldType.NUMERO, Resources.Resources.QTD_HOURS28684, 10, 2, true),
-				new Exports.QColumn(CSGenioAinsta.FldPrecohor, FieldType.VALOR, Resources.Resources.HOURLY_PRICE48005, 12, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldValue, FieldType.VALOR, Resources.Resources.VALUE10285, 12, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldCoordgeo, FieldType.GEOGRAPHY, Resources.Resources.GEOGRAPHIC_COORDINAT21394, 30, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldAllday, FieldType.LOGIC, Resources.Resources.ALL_DAY18496, 1, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldSince, FieldType.DATETIME, Resources.Resources.SINCE47259, 16, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldUntil, FieldType.DATETIME, Resources.Resources.UNTIL39173, 16, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldHours, FieldType.NUMERIC, Resources.Resources.QTD_HOURS28684, 10, 2, true),
+				new Exports.QColumn(CSGenioAinsta.FldPrecohor, FieldType.CURRENCY, Resources.Resources.HOURLY_PRICE48005, 12, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldValue, FieldType.CURRENCY, Resources.Resources.VALUE10285, 12, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldCoordgeo, FieldType.GEOGRAPHY_POINT, Resources.Resources.GEOGRAPHIC_COORDINAT21394, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -203,10 +202,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodtpequ != null)
-				crs.Equal(CSGenioAinsta.FldCodtpequ, this.ValCodtpequ);
-
-
+			if (this.TpequValCodtpequ != null)
+				crs.Equal(CSGenioAinsta.FldCodtpequ, this.TpequValCodtpequ);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -344,8 +341,7 @@ namespace GenioMVC.ViewModels.Tpequ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("insta", "designat");
+					firstVisibleColumn ??= new FieldRef("insta", "designat");
 				}
 
 
@@ -374,6 +370,8 @@ namespace GenioMVC.ViewModels.Tpequ
 
 // USE /[MANUAL GQT OVERRQ TPEQU_PSEUDINSTALAC]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -401,7 +399,7 @@ namespace GenioMVC.ViewModels.Tpequ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAinsta> listing = Models.ModelBase.Where<CSGenioAinsta>(m_userContext, false, tpequ___pseudinstalacConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPEQU___PSEUDINSTALAC", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAinsta> listing = Models.ModelBase.Where<CSGenioAinsta>(m_userContext, distinct, tpequ___pseudinstalacConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPEQU___PSEUDINSTALAC", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -481,6 +479,8 @@ namespace GenioMVC.ViewModels.Tpequ
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -539,7 +539,7 @@ namespace GenioMVC.ViewModels.Tpequ
 			new TableSearchColumn("ValUntil", CSGenioAinsta.FldUntil, typeof(DateTime?)),
 			new TableSearchColumn("ValHours", CSGenioAinsta.FldHours, typeof(decimal?)),
 			new TableSearchColumn("ValPrecohor", CSGenioAinsta.FldPrecohor, typeof(decimal?)),
-			new TableSearchColumn("ValValue", CSGenioAinsta.FldValue, typeof(decimal?))
+			new TableSearchColumn("ValValue", CSGenioAinsta.FldValue, typeof(decimal?)),
 		];
 	}
 }

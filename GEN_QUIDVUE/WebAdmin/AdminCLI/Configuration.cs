@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Xml;
+using System.Reflection;
 
 namespace AdminCLI
 {
@@ -42,6 +43,9 @@ namespace AdminCLI
 
         [Option("path", HelpText = "The location of the configuration file. Creates a new one if not exists")]
         public string Path { get; set; }
+
+        [Option("is-db-pk", HelpText = "Specify if the primary keys are to be calculated on the database side")]
+        public bool IsDbPk { get; set; }
     }
 
     [Verb("dbconfig-read", HelpText = "Database Configuration")]
@@ -65,7 +69,21 @@ namespace AdminCLI
         public string RedirectPath { get; set; }
     }
 
+    [Verb("config", HelpText = "Get or set configuration properties")]
+    public class ConfigOptions
+    {
+        [Value(0, MetaName = "operation", Required = true, HelpText = "Operation to perform: 'get', 'set', or 'list'")]
+        public string Operation { get; set; }
 
+        [Value(1, MetaName = "property", Required = false, HelpText = "Property to get/set (e.g. --qa-env, --chatbot-url)")]
+        public string Property { get; set; }
+
+        [Value(2, MetaName = "value", Required = false, HelpText = "Value to set (only required for 'set' operation)")]
+        public string Value { get; set; }
+
+        [Option('p', "path", HelpText = "The location of the configuration file. Uses default if not specified")]
+        public string Path { get; set; }
+    }
 
     partial class AdminCLI
     {
@@ -131,8 +149,8 @@ namespace AdminCLI
             SysConfiguration sysConfig = sysConfiguration;
             if(!String.IsNullOrEmpty(options.Path))
             {
-                var fileManager = new FileConfigurationManager(options.Path);
-                sysConfig = new SysConfiguration(fileManager);
+                _configManager = new FileConfigurationManager(options.Path);
+                sysConfig = new SysConfiguration(_configManager);
             }
 
             try
@@ -142,7 +160,7 @@ namespace AdminCLI
                         options.Port, options.EncryptConnection, options.DomainUser);
                 else
                     sysConfig.SaveDatabaseConfig(options.Username, options.Password, options.Server, options.Type, options.Schema,
-                        options.Port, options.EncryptConnection, options.DomainUser);
+                        options.Port, options.EncryptConnection, options.DomainUser, "", options.IsDbPk);
             }
             catch (Exception e)
             {
@@ -229,6 +247,205 @@ namespace AdminCLI
             }
 
             Console.WriteLine(); //Leave a blank space as a separator
+        }
+
+        /// <summary>
+        /// Handles the config verb operations
+        /// </summary>
+        private static int HandleConfig(ConfigOptions options)
+        {
+            if (!string.IsNullOrEmpty(options.Path)) {
+                _configManager = new FileConfigurationManager(options.Path);
+            }
+            
+            switch (options.Operation.ToLower())
+            {
+                case "list":
+                    DisplayAvailableProperties();
+                    return 0;
+                case "get":
+                    if (string.IsNullOrEmpty(options.Property))
+                    {
+                        Console.WriteLine("Error: Property name is required for get operation");
+                        return 1;
+                    }
+                    return GetConfigProperty(options.Property);
+                case "set":
+                    if (string.IsNullOrEmpty(options.Property))
+                    {
+                        Console.WriteLine("Error: Property name is required for set operation");
+                        return 1;
+                    }
+                    if (string.IsNullOrEmpty(options.Value))
+                    {
+                        Console.WriteLine("Error: Value is required for set operation");
+                        return 1;
+                    }
+                    return SetConfigProperty(options.Property, options.Value);
+                default:
+                    Console.WriteLine("Error: Invalid operation. Use 'get', 'set', or 'list'");
+                    return 1;
+            }
+        }
+
+        /// <summary>
+        /// Gets all configuration types that might contain CLI-configurable properties
+        /// </summary>
+        private static HashSet<Type> GetConfigurationTypes()
+        {
+            var configTypes = new HashSet<Type>();
+
+            // Add the main configuration class
+            configTypes.Add(typeof(ConfigurationXML));
+
+            // Find all properties in ConfigurationXML that are classes and might have CLI properties
+            foreach (var prop in typeof(ConfigurationXML).GetProperties())
+            {
+                var propType = prop.PropertyType;
+                if (propType.IsClass && propType.Namespace == "CSGenio")
+                {
+                    configTypes.Add(propType);
+                }
+            }
+
+            return configTypes;
+        }
+
+        /// <summary>
+        /// Displays all available configuration properties and their descriptions
+        /// </summary>
+        private static void DisplayAvailableProperties()
+        {
+            Console.WriteLine("Available configuration properties:");
+            Console.WriteLine("=================================");
+
+            var configTypes = GetConfigurationTypes();
+
+            foreach (var type in configTypes)
+            {
+                foreach (var prop in type.GetProperties())
+                {
+                    var attr = prop.GetCustomAttribute<CliPropertyAttribute>();
+                    if (attr != null)
+                    {
+                        Console.WriteLine($"{attr.Name.PadRight(20)}{attr.Description}");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the value of a configuration property
+        /// </summary>
+        private static int GetConfigProperty(string propertyName)
+        {
+            var property = FindPropertyByCommandName(propertyName);
+            
+            if (property == null)
+            {
+                Console.WriteLine($"Error: Property '{propertyName}' not found");
+                return 1;
+            }
+
+            try
+            {
+                var config = _configManager.GetExistingConfig();
+                var instance = GetInstanceForProperty(property, config);
+                if (instance == null)
+                {
+                    Console.WriteLine($"Error: Could not find configuration instance for property '{propertyName}'");
+                    return 1;
+                }
+
+                var value = property.GetValue(instance);
+                Console.WriteLine($"{propertyName}: {value}");
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error reading property: {ex.Message}");
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// Sets the value of a configuration property
+        /// </summary>
+        private static int SetConfigProperty(string propertyName, string value)
+        {
+            var property = FindPropertyByCommandName(propertyName);
+            
+            if (property == null)
+            {
+                Console.WriteLine($"Error: Property '{propertyName}' not found");
+                return 1;
+            }
+
+            try
+            {
+                var config = _configManager.GetExistingConfig();
+                var instance = GetInstanceForProperty(property, config);
+                if (instance == null)
+                {
+                    Console.WriteLine($"Error: Could not find configuration instance for property '{propertyName}'");
+                    return 1;
+                }
+
+                var convertedValue = Convert.ChangeType(value, property.PropertyType);
+                property.SetValue(instance, convertedValue);
+                _configManager.StoreConfig(config);
+                Console.WriteLine($"Successfully set {propertyName} to {value}");
+                return 0;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error setting property: {ex.Message}");
+                return 1;
+            }
+        }
+
+        /// <summary>
+        /// Gets the appropriate configuration instance for a property
+        /// </summary>
+        private static object GetInstanceForProperty(PropertyInfo property, ConfigurationXML config)
+        {
+            var declaringType = property.DeclaringType;
+            if (declaringType == typeof(ConfigurationXML))
+            {
+                return config;
+            }
+            
+            // Find the property in ConfigurationXML that holds this type
+            var containerProp = typeof(ConfigurationXML).GetProperties()
+                .FirstOrDefault(p => p.PropertyType == declaringType);
+            
+            if (containerProp != null)
+            {
+                return containerProp.GetValue(config);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Finds a property by its CLI command name
+        /// </summary>
+        private static PropertyInfo FindPropertyByCommandName(string commandName)
+        {
+            var configTypes = GetConfigurationTypes();
+
+            foreach (var type in configTypes)
+            {
+                foreach (var prop in type.GetProperties())
+                {
+                    var attr = prop.GetCustomAttribute<CliPropertyAttribute>();
+                    if (attr != null && attr.Name == commandName)
+                    {
+                        return prop;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 }

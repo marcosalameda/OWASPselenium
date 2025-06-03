@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Produ
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodprodu { get; set; }
+		public string ProduValCodprodu { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Produ
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Produ
 		/// <param name="userContext">The current user request context</param>
 		public Produ_ValInputsre_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodprodu = userContext.CurrentNavigation.CurrentLevel.GetEntry("produ")?.ToString();
+			ProduValCodprodu = userContext.CurrentNavigation.CurrentLevel.GetEntry("produ")?.ToString();
 		}
 
 		/// <summary>
@@ -128,13 +127,13 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArelin.FldInstant, FieldType.DATAHORA, Resources.Resources.INSTANT35907, 16, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERO, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.ENTITY62049, 30, 0, true),
-				new Exports.QColumn(CSGenioArelin.FldLinenumb, FieldType.NUMERO, Resources.Resources.LINE27983, 6, 0, true),
-				new Exports.QColumn(CSGenioArelin.FldOrdered, FieldType.NUMERO, Resources.Resources.ORDERED04034, 10, 0, true),
-				new Exports.QColumn(CSGenioArelin.FldReceived, FieldType.NUMERO, Resources.Resources.RECEIVED19242, 10, 0, true),
-				new Exports.QColumn(CSGenioArelin.FldOutstand, FieldType.NUMERO, Resources.Resources.OUTSTANDING36400, 10, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldInstant, FieldType.DATETIME, Resources.Resources.INSTANT35907, 16, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERIC, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.ENTITY62049, 30, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldLinenumb, FieldType.NUMERIC, Resources.Resources.LINE27983, 6, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldOrdered, FieldType.NUMERIC, Resources.Resources.ORDERED04034, 10, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldReceived, FieldType.NUMERIC, Resources.Resources.RECEIVED19242, 10, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldOutstand, FieldType.NUMERIC, Resources.Resources.OUTSTANDING36400, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -199,10 +198,8 @@ namespace GenioMVC.ViewModels.Produ
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodprodu != null)
-				crs.Equal(CSGenioArelin.FldCodprodu, this.ValCodprodu);
-
-
+			if (this.ProduValCodprodu != null)
+				crs.Equal(CSGenioArelin.FldCodprodu, this.ProduValCodprodu);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -348,8 +345,7 @@ namespace GenioMVC.ViewModels.Produ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("relin", "instant");
+					firstVisibleColumn ??= new FieldRef("relin", "instant");
 				}
 
 
@@ -378,6 +374,8 @@ namespace GenioMVC.ViewModels.Produ
 
 // USE /[MANUAL GQT OVERRQ PRODU_PSEUDINPUTSRE]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -405,7 +403,7 @@ namespace GenioMVC.ViewModels.Produ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArelin> listing = Models.ModelBase.Where<CSGenioArelin>(m_userContext, false, produ___pseudinputsreConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODU___PSEUDINPUTSRE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArelin> listing = Models.ModelBase.Where<CSGenioArelin>(m_userContext, distinct, produ___pseudinputsreConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODU___PSEUDINPUTSRE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -489,6 +487,8 @@ namespace GenioMVC.ViewModels.Produ
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -544,7 +544,7 @@ namespace GenioMVC.ViewModels.Produ
 			new TableSearchColumn("ValLinenumb", CSGenioArelin.FldLinenumb, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("ValOrdered", CSGenioArelin.FldOrdered, typeof(decimal?)),
 			new TableSearchColumn("ValReceived", CSGenioArelin.FldReceived, typeof(decimal?)),
-			new TableSearchColumn("ValOutstand", CSGenioArelin.FldOutstand, typeof(decimal?))
+			new TableSearchColumn("ValOutstand", CSGenioArelin.FldOutstand, typeof(decimal?)),
 		];
 	}
 }

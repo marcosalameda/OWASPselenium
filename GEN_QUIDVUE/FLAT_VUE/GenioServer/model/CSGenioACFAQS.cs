@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAcfaqs(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR CFAQS]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codcfaqs", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codcfaqs", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("icon", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "icon", FieldType.IMAGE);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "";
@@ -68,10 +64,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("category", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "category", FieldType.MEMO);
 			Qfield.FieldDescription = "Category";
 			Qfield.FieldSize =  350;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 3;
 			Qfield.CavDesignation = "CATEGORY18978";
@@ -80,10 +75,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("descript", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "descript", FieldType.MEMO);
 			Qfield.FieldDescription = "Description";
 			Qfield.FieldSize =  350;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 3;
 			Qfield.CavDesignation = "DESCRIPTION07383";
@@ -92,9 +86,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -167,8 +160,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Category FAQS";
 			info.AreaPluralDesignation="Category FAQS";
 			info.DescriptionCav="CATEGORY_FAQS42471";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

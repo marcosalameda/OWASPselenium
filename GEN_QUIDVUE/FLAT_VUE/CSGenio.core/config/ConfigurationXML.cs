@@ -188,6 +188,7 @@ namespace CSGenio
             set { googlemapsKey = value; }
         }
 
+        [CliProperty("qa-env", "Quality assurance environment mode (0=production, 1=QA environments)")]
         [XmlElement("QAEnvironment")]
         public int QAEnvironment
         {
@@ -328,6 +329,7 @@ namespace CSGenio
     [XmlRoot("ChatBotCfg")]
     public class ChatBotCfg
     {
+        [CliProperty("ai-url", "Base URL for the AI service API endpoint. Should end in /api")]
         [XmlElement("apiURL")]
         public string apiURL { get; set; }
     }
@@ -453,6 +455,7 @@ namespace CSGenio
         public string Password { get; set; }
         public string Project { get; set; }
         public string Div { get; set; }
+        public bool DatabaseSidePk { get; set; } = false;
 
 		public DataSystemXml ShallowCopy() {
 

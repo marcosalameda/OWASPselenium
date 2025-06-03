@@ -78,7 +78,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Lnhde.ValOrdem")]
 		[NumericAttribute(0)]
-		public decimal? ValOrdem { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrdem, 0)); } set { klass.ValOrdem = Convert.ToDecimal(value); } }
+		public decimal? ValOrdem { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOrdem, 0)); } set { klass.ValOrdem = Convert.ToDecimal(value); } }
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -104,7 +104,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Lnhde.ValQuantida")]
 		[NumericAttribute(0)]
-		public decimal? ValQuantida { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
+		public decimal? ValQuantida { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
@@ -147,7 +147,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Amount" Tipo: "ND" Formula: DF "[LNHPD->QUANTDEC]"</summary>
 		[ShouldSerialize("Lnhde.ValQuantdec")]
 		[NumericAttribute(2)]
-		public decimal? ValQuantdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantdec, 2)); } set { klass.ValQuantdec = Convert.ToDecimal(value); } }
+		public decimal? ValQuantdec { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantdec, 2)); } set { klass.ValQuantdec = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Lnhde.ValZzstate")]

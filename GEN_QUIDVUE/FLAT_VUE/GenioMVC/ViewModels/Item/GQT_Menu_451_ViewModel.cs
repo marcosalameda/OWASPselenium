@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Item
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,14 +147,14 @@ namespace GenioMVC.ViewModels.Item
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldEntries, FieldType.NUMERO, Resources.Resources.ENTRIES32319, 10, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldExits, FieldType.NUMERO, Resources.Resources.OUTPUTS47833, 10, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldExistenc, FieldType.NUMERO, Resources.Resources.STOCKS47349, 10, 0, true),
-				new Exports.QColumn(CSGenioAgitem.FldItemdes, FieldType.TEXTO, Resources.Resources.GLOBAL_ARTICLE63861, 30, 0, true),
-				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAitem.FldImage, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE65174, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 30, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXT, Resources.Resources.CODE49225, 15, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldEntries, FieldType.NUMERIC, Resources.Resources.ENTRIES32319, 10, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldExits, FieldType.NUMERIC, Resources.Resources.OUTPUTS47833, 10, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldExistenc, FieldType.NUMERIC, Resources.Resources.STOCKS47349, 10, 0, true),
+				new Exports.QColumn(CSGenioAgitem.FldItemdes, FieldType.TEXT, Resources.Resources.GLOBAL_ARTICLE63861, 30, 0, true),
+				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAitem.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE65174, 3, 1, true):null,
 				new Exports.QColumn(CSGenioAitem.FldCategory, FieldType.MEMO, Resources.Resources.CATEGORIZATION17554, 30, 2, true),
 			};
 
@@ -220,8 +218,6 @@ namespace GenioMVC.ViewModels.Item
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -371,8 +367,7 @@ namespace GenioMVC.ViewModels.Item
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("item", "itemdes");
+					firstVisibleColumn ??= new FieldRef("item", "itemdes");
 				}
 
 
@@ -401,6 +396,8 @@ namespace GenioMVC.ViewModels.Item
 
 // USE /[MANUAL GQT OVERRQ 451]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -428,7 +425,7 @@ namespace GenioMVC.ViewModels.Item
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, false, gqt_menu_451Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML451", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, distinct, gqt_menu_451Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML451", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -513,6 +510,8 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -570,7 +569,7 @@ namespace GenioMVC.ViewModels.Item
 			new TableSearchColumn("ValExistenc", CSGenioAitem.FldExistenc, typeof(decimal?)),
 			new TableSearchColumn("Gitem_ValItemdes", CSGenioAgitem.FldItemdes, typeof(string)),
 			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string)),
-			new TableSearchColumn("ValCategory", CSGenioAitem.FldCategory, typeof(string))
+			new TableSearchColumn("ValCategory", CSGenioAitem.FldCategory, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Item row)
 		{

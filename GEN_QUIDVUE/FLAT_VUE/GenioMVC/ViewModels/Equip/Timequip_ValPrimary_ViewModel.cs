@@ -157,7 +157,7 @@ namespace GenioMVC.ViewModels.Equip
 
 				if (Qfield.FullName.Equals("pesso.name"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Name", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 
@@ -173,7 +173,7 @@ namespace GenioMVC.ViewModels.Equip
 
 				if (Qfield.FullName.Equals("repar.nrrepara"))
 				{
-					var fieldType = FieldType.NUMERO;
+					var fieldType = FieldType.NUMERIC;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "No rumour in the Company", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 
@@ -181,7 +181,7 @@ namespace GenioMVC.ViewModels.Equip
 
 				if (Qfield.FullName.Equals("speci.especial"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Specialty", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 4, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 

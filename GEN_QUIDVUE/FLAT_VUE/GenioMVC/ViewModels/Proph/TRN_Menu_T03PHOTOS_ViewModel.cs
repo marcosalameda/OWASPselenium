@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Proph
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -148,9 +146,9 @@ namespace GenioMVC.ViewModels.Proph
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				!ajaxRequest ? new Exports.QColumn(CSGenioAproph.FldPhoto, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAproph.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAproph.FldPhoto, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAproph.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -213,8 +211,6 @@ namespace GenioMVC.ViewModels.Proph
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -361,8 +357,7 @@ namespace GenioMVC.ViewModels.Proph
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("proph", "photo");
+					firstVisibleColumn ??= new FieldRef("proph", "photo");
 				}
 
 
@@ -391,6 +386,8 @@ namespace GenioMVC.ViewModels.Proph
 
 // USE /[MANUAL TRN OVERRQ T03PHOTOS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -418,7 +415,7 @@ namespace GenioMVC.ViewModels.Proph
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAproph> listing = Models.ModelBase.Where<CSGenioAproph>(m_userContext, false, trn_menu_t03photosConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT03PHOTOS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAproph> listing = Models.ModelBase.Where<CSGenioAproph>(m_userContext, distinct, trn_menu_t03photosConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT03PHOTOS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -501,6 +498,8 @@ namespace GenioMVC.ViewModels.Proph
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -552,7 +551,7 @@ namespace GenioMVC.ViewModels.Proph
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValTitle", CSGenioAproph.FldTitle, typeof(string), defaultSearch : true),
-			new TableSearchColumn("Prope_ValTitle", CSGenioAprope.FldTitle, typeof(string))
+			new TableSearchColumn("Prope_ValTitle", CSGenioAprope.FldTitle, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Proph row)
 		{

@@ -157,9 +157,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
 
@@ -270,9 +267,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
 
@@ -382,9 +376,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -489,9 +480,6 @@ namespace GenioMVC.Controllers
 			}
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -603,9 +591,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
 
@@ -715,9 +700,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -822,9 +804,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -928,9 +907,6 @@ namespace GenioMVC.Controllers
 			}
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -1037,9 +1013,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -1124,9 +1097,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -1399,9 +1369,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -1481,9 +1448,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -1631,9 +1595,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -1883,9 +1844,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -1959,9 +1917,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -2051,9 +2006,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -2142,9 +2094,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -2228,9 +2177,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -2310,9 +2256,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -2394,9 +2337,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -2477,9 +2417,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -2559,9 +2496,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -2834,9 +2768,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -2854,10 +2785,10 @@ namespace GenioMVC.Controllers
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 			string rowsPerPageOptionsString = "";
 
-			if (GlobalFunctions.emptyD(minEquipValDtaquisi) == 1 && Navigation.GetValue("minEquipValDtaquisi") != null)
+			if (GenFunctions.emptyD(minEquipValDtaquisi) == 1 && Navigation.GetValue("minEquipValDtaquisi") != null)
 				minEquipValDtaquisi = Navigation.GetDateValue("minEquipValDtaquisi").GetValueOrDefault();
 
-			if (GlobalFunctions.emptyD(maxEquipValDtaquisi) == 1 && Navigation.GetValue("maxEquipValDtaquisi") != null)
+			if (GenFunctions.emptyD(maxEquipValDtaquisi) == 1 && Navigation.GetValue("maxEquipValDtaquisi") != null)
 				maxEquipValDtaquisi = Navigation.GetDateValue("maxEquipValDtaquisi").GetValueOrDefault();
 			PTN_Menu_3G11_ViewModel model = new PTN_Menu_3G11_ViewModel(UserContext.Current);
 
@@ -2926,9 +2857,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -3009,9 +2937,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);

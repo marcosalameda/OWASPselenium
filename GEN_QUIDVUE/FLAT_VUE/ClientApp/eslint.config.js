@@ -1,13 +1,38 @@
+//@ts-check
+
 import lintJs from '@eslint/js'
+import pluginVitest from '@vitest/eslint-plugin'
+//import prettierConfig from '@vue/eslint-config-prettier'
+import { defineConfigWithVueTs /*, vueTsConfigs*/ } from '@vue/eslint-config-typescript'
+//import storybook from 'eslint-plugin-storybook'
 import lintVue from 'eslint-plugin-vue'
 import globals from 'globals'
 import vueParser from 'vue-eslint-parser'
 
-import { componentNames } from './src/components/index.js'
+export default defineConfigWithVueTs(
+	{
+		name: 'app/files-to-lint',
+		//files: ['**/*.{js,ts,vue}']
+		files: ['**/*.{js,vue}']
+	},
 
-export default [
+	{
+		name: 'app/files-to-ignore',
+		ignores: ['**/dist', '**/storybook-static', '**/coverage', '**/shims.d.ts']
+	},
+
 	lintJs.configs.recommended,
 	...lintVue.configs['flat/strongly-recommended'],
+
+	// TODO: Enable this MUCH stricter preset
+	// vueTsConfigs.recommendedTypeChecked
+	//vueTsConfigs.recommended,
+
+	pluginVitest.configs.recommended,
+	//...storybook.configs['flat/recommended'],
+
+	//prettierConfig,
+
 	{
 		languageOptions: {
 			parser: vueParser,
@@ -22,9 +47,7 @@ export default [
 			reportUnusedDisableDirectives: false
 		}
 	},
-	{
-		ignores: ['src/assets/graphics/*']
-	},
+
 	{
 		files: ['**/*.{js,vue}'],
 		rules: {
@@ -37,12 +60,14 @@ export default [
 			'no-unused-vars': 'warn'
 		}
 	},
+
 	{
 		files: ['**/*.js'],
 		rules: {
 			indent: ['warn', 'tab', { SwitchCase: 1 }]
 		}
 	},
+
 	{
 		files: ['**/*.vue'],
 		rules: {
@@ -91,17 +116,7 @@ export default [
 				}
 			],
 			'vue/singleline-html-element-content-newline': 'off',
-			'vue/valid-define-options': 'error',
-			'vue/no-undef-components': [
-				'error',
-				{
-					ignorePatterns: [
-						'RouterLink',
-						'RouterView',
-						...componentNames
-					]
-				}
-			]
+			'vue/valid-define-options': 'error'
 		}
 	}
-]
+)

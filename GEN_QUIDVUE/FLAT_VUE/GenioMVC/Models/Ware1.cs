@@ -61,7 +61,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Number of employees" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Ware1.ValNum_employee")]
 		[NumericAttribute(0)]
-		public decimal? ValNum_employee { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNum_employee, 0)); } set { klass.ValNum_employee = Convert.ToDecimal(value); } }
+		public decimal? ValNum_employee { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNum_employee, 0)); } set { klass.ValNum_employee = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Ware1.ValZzstate")]

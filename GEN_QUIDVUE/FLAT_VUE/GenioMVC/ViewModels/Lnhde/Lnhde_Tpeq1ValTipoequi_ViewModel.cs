@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Lnhde
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,8 +127,8 @@ namespace GenioMVC.ViewModels.Lnhde
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtpeq1.FldTpequcod, FieldType.TEXTO, Resources.Resources.CODE49225, 20, 0, true),
-				new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
+				new Exports.QColumn(CSGenioAtpeq1.FldTpequcod, FieldType.TEXT, Resources.Resources.CODE49225, 20, 0, true),
+				new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -193,9 +192,6 @@ namespace GenioMVC.ViewModels.Lnhde
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -342,8 +338,7 @@ namespace GenioMVC.ViewModels.Lnhde
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tpeq1", "tpequcod");
+					firstVisibleColumn ??= new FieldRef("tpeq1", "tpequcod");
 				}
 
 
@@ -372,6 +367,8 @@ namespace GenioMVC.ViewModels.Lnhde
 
 // USE /[MANUAL GQT OVERRQ LNHDE_TPEQ1TIPOEQUI]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -398,7 +395,7 @@ namespace GenioMVC.ViewModels.Lnhde
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtpeq1> listing = Models.ModelBase.Where<CSGenioAtpeq1>(m_userContext, false, lnhde___tpeq1tipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHDE___TPEQ1TIPOEQUI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtpeq1> listing = Models.ModelBase.Where<CSGenioAtpeq1>(m_userContext, distinct, lnhde___tpeq1tipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHDE___TPEQ1TIPOEQUI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -478,6 +475,8 @@ namespace GenioMVC.ViewModels.Lnhde
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -528,7 +527,7 @@ namespace GenioMVC.ViewModels.Lnhde
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValTpequcod", CSGenioAtpeq1.FldTpequcod, typeof(string)),
-			new TableSearchColumn("ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string))
+			new TableSearchColumn("ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string)),
 		];
 	}
 }

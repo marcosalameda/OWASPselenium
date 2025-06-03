@@ -556,7 +556,7 @@ namespace GenioMVC.ViewModels.Cmpki
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -603,7 +603,7 @@ namespace GenioMVC.ViewModels.Cmpki
 				// Fill List fields
 				this.ValCodtpequ = ViewModelConversion.ToString(row["tpequ.codtpequ"]);
 				TableTpequTipoequi.Value = (string)row["tpequ.tipoequi"];
-				if (GlobalFunctions.emptyG(this.ValCodtpequ) == 1)
+				if (GenFunctions.emptyG(this.ValCodtpequ) == 1)
 				{
 					this.ValCodtpequ = "";
 					TableTpequTipoequi.Value = "";
@@ -746,7 +746,7 @@ namespace GenioMVC.ViewModels.Cmpki
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -793,7 +793,7 @@ namespace GenioMVC.ViewModels.Cmpki
 				// Fill List fields
 				this.ValCodtpeq1 = ViewModelConversion.ToString(row["tpeq1.codtpequ"]);
 				TableTpeq1Tipoequi.Value = (string)row["tpeq1.tipoequi"];
-				if (GlobalFunctions.emptyG(this.ValCodtpeq1) == 1)
+				if (GenFunctions.emptyG(this.ValCodtpeq1) == 1)
 				{
 					this.ValCodtpeq1 = "";
 					TableTpeq1Tipoequi.Value = "";

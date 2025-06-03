@@ -488,5 +488,8 @@ namespace GenioMVC.ViewModels
 
 		[JsonPropertyName("type")]
 		public string Type { get; set; }
+
+		[JsonPropertyName("isRowDirty")]
+		public bool IsDirty { get; set; }
 	}
 }

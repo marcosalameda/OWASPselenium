@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioApsw(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PSW]/
 		}
 
@@ -46,10 +44,9 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpsw", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codpsw", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "";
 
@@ -57,10 +54,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("nome", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "nome", FieldType.TEXT);
 			Qfield.FieldDescription = "Name";
 			Qfield.FieldSize =  100;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "NAME31974";
 
@@ -71,10 +67,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("password", FieldType.ENCRYPTED);
+			Qfield = new Field(info.Alias, "password", FieldType.ENCRYPTED);
 			Qfield.FieldDescription = "Password";
 			Qfield.FieldSize =  150;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "PASSWORD09467";
 
@@ -87,10 +82,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("certsn", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "certsn", FieldType.TEXT);
 			Qfield.FieldDescription = "Certified Series Number";
 			Qfield.FieldSize =  32;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "CERTIFIED_SERIES_NUM14349";
 
@@ -98,10 +92,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("email", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "email", FieldType.TEXT);
 			Qfield.FieldDescription = "Email";
 			Qfield.FieldSize =  254;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "EMAIL25170";
 
@@ -109,10 +102,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("pswtype", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "pswtype", FieldType.TEXT);
 			Qfield.FieldDescription = "Password type";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "PASSWORD_TYPE03035";
 
@@ -120,10 +112,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("salt", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "salt", FieldType.TEXT);
 			Qfield.FieldDescription = "Salt";
 			Qfield.FieldSize =  32;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "SALT05277";
 
@@ -131,10 +122,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("datapsw", FieldType.DATA);
+			Qfield = new Field(info.Alias, "datapsw", FieldType.DATE);
 			Qfield.FieldDescription = "Password date";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "PASSWORD_DATE16593";
 
@@ -142,10 +132,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("userid", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "userid", FieldType.TEXT);
 			Qfield.FieldDescription = "User ID";
 			Qfield.FieldSize =  250;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "USER_ID13914";
 
@@ -153,10 +142,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("psw2favl", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "psw2favl", FieldType.TEXT);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  1000;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "";
 
@@ -164,10 +152,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("psw2fatp", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "psw2fatp", FieldType.TEXT);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "";
 
@@ -175,10 +162,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("datexp", FieldType.DATA);
+			Qfield = new Field(info.Alias, "datexp", FieldType.DATE);
 			Qfield.FieldDescription = "Expiration date";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "EXPIRATION_DATE34293";
 
@@ -186,10 +172,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("attempts", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "attempts", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Login attempts";
 			Qfield.FieldSize =  2;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 2;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "LOGIN_ATTEMPTS62337";
@@ -198,10 +183,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("phone", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "phone", FieldType.TEXT);
 			Qfield.FieldDescription = "Phone number";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "PHONE_NUMBER20774";
 
@@ -209,10 +193,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("status", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "status", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Status";
 			Qfield.FieldSize =  2;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 2;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "STATUS62033";
@@ -221,10 +204,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("associa", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "associa", FieldType.LOGIC);
 			Qfield.FieldDescription = "Has login?";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "HAS_LOGIN_58044";
 
@@ -232,10 +214,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("opercria", FieldType.OPERCRIA);
+			Qfield = new Field(info.Alias, "opercria", FieldType.TEXT);
 			Qfield.FieldDescription = "Created by";
 			Qfield.FieldSize =  128;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "CREATED_BY12292";
 
@@ -243,10 +224,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("datacria", FieldType.DATACRIA);
+			Qfield = new Field(info.Alias, "datacria", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Created on";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "CREATED_ON00051";
 
@@ -254,10 +234,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("opermuda", FieldType.OPERMUDA);
+			Qfield = new Field(info.Alias, "opermuda", FieldType.TEXT);
 			Qfield.FieldDescription = "Changed by";
 			Qfield.FieldSize =  128;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "CHANGED_BY08967";
 
@@ -265,10 +244,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("datamuda", FieldType.DATAMUDA);
+			Qfield = new Field(info.Alias, "datamuda", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Changed on";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 			Qfield.CavDesignation = "CHANGED_ON19727";
 
@@ -276,9 +254,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -362,8 +339,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Password";
 			info.AreaPluralDesignation="Passwords";
 			info.DescriptionCav="PASSWORD09467";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(0);

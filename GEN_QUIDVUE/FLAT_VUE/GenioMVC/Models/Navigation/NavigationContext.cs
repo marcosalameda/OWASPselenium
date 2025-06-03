@@ -32,6 +32,7 @@
  */
 #endregion
 
+using CSGenio.framework;
 using System;
 using System.Collections;
 using System.Collections.Concurrent;
@@ -221,7 +222,7 @@ namespace GenioMVC.Models.Navigation
 				}
 
 				// Note: the same EPH can be defined in multiple modules accessible to the user
-				if (CSGenio.framework.Field.IsKey(eph.EPHFieldType) && !history.CheckEntry(eph.EPHTable.ToLower()))
+				if (eph.EPHFieldType.IsKey() && !history.CheckEntry(eph.EPHTable.ToLower()))
 					history.SetEntry(eph.EPHTable.ToLower(), value);
 				else if (!history.CheckEntry(eph.EPHTable.ToLower() + "." + eph.EPHField.ToLower()))
 					history.SetEntry(eph.EPHTable.ToLower() + "." + eph.EPHField.ToLower(), value);

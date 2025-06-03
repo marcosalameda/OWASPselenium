@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
-
 		public string ValCorletra { get; set; }
 
 		public string ValBackcolo { get; set; }
@@ -153,12 +152,12 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXTO, Resources.Resources.CODE49225, 20, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTpequpai, FieldType.TEXTO, Resources.Resources.DEPENDENT_ON28321, 20, 0, false),
-				new Exports.QColumn(CSGenioAtpequ.FldNivel, FieldType.NUMERO, Resources.Resources.LEVEL06184, 3, 0, false),
-				new Exports.QColumn(CSGenioAtpequ.FldBackcolo, FieldType.TEXTO, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
-				new Exports.QColumn(CSGenioAtpequ.FldCorletra, FieldType.TEXTO, Resources.Resources.LETTER_COLOR15736, 30, 0, false),
+				new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXT, Resources.Resources.CODE49225, 20, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTpequpai, FieldType.TEXT, Resources.Resources.DEPENDENT_ON28321, 20, 0, false),
+				new Exports.QColumn(CSGenioAtpequ.FldNivel, FieldType.NUMERIC, Resources.Resources.LEVEL06184, 3, 0, false),
+				new Exports.QColumn(CSGenioAtpequ.FldBackcolo, FieldType.TEXT, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
+				new Exports.QColumn(CSGenioAtpequ.FldCorletra, FieldType.TEXT, Resources.Resources.LETTER_COLOR15736, 30, 0, false),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -222,9 +221,6 @@ namespace GenioMVC.ViewModels.Equip
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -368,8 +364,7 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tpequ", "tpequcod");
+					firstVisibleColumn ??= new FieldRef("tpequ", "tpequcod");
 				}
 
 
@@ -398,6 +393,8 @@ namespace GenioMVC.ViewModels.Equip
 
 // USE /[MANUAL GQT OVERRQ EQUIP_TPEQUTIPOEQUI]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -424,7 +421,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, false, equip___tpequtipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP___TPEQUTIPOEQUI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, distinct, equip___tpequtipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP___TPEQUTIPOEQUI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -503,6 +500,8 @@ namespace GenioMVC.ViewModels.Equip
 						break;
 				}
 			}
+
+			model.InitRowData();
 
 			return model;
 		}
@@ -590,7 +589,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("ValTpequpai", CSGenioAtpequ.FldTpequpai, typeof(string), visible : false),
 			new TableSearchColumn("ValNivel", CSGenioAtpequ.FldNivel, typeof(decimal), visible : false),
 			new TableSearchColumn("ValBackcolo", CSGenioAtpequ.FldBackcolo, typeof(string), visible : false),
-			new TableSearchColumn("ValCorletra", CSGenioAtpequ.FldCorletra, typeof(string), visible : false)
+			new TableSearchColumn("ValCorletra", CSGenioAtpequ.FldCorletra, typeof(string), visible : false),
 		];
 	}
 }

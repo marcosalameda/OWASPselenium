@@ -17,17 +17,17 @@ $dark: #202428 !default;
 // TODO: REMOVE
 
 $white: #fff !default;
-$gray: #7C858D !default;
-$gray-dark: #40474F !default;
-$gray-light: #C4C5CA !default;
+$gray: #7c858d !default;
+$gray-dark: #40474f !default;
+$gray-light: #c4c5ca !default;
 
 // ------------------------------------
 
 $body-bg: $white !default;
 $body-color: $dark !default;
 $container-bg-color: $white !default;
-$border-dark-color: rgba(rgb(0,0,0),0.1) !default;
-$border-light-color: rgba(rgb(255,255,255),0.2) !default;  
+$border-dark-color: rgba(rgb(0, 0, 0), 0.1) !default;
+$border-light-color: rgba(rgb(255, 255, 255), 0.2) !default;
 $disabled-bg: $gray !default;
 
 //inputs
@@ -37,8 +37,8 @@ $input-bg: $white !default;
 $input-color: $gray-dark !default;
 $input-disabled-bg: $light !default;
 
-$input-btn-padding-y: .26rem !default;
-$input-btn-padding-x: .25rem !default;
+$input-btn-padding-y: 0.26rem !default;
+$input-btn-padding-x: 0.25rem !default;
 
 //icons
 $icon-color: $primary !default;
@@ -46,11 +46,12 @@ $icon-light: $body-bg !default;
 $icon-dark: $secondary !default;
 
 $font-size-base: 0.9rem !default;
-$line-height-base:1.5 !default;
-$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !default;
+$line-height-base: 1.5 !default;
+$font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New',
+  monospace !default;
 
-$compactstyle:true !default;
-$enable-rounded:true !default;
+$compactstyle: true !default;
+$enable-rounded: true !default;
 $table-striped: false !default;
 $table-head-inverse: false !default;
 $table-vertical-border: true !default;
@@ -63,4 +64,4 @@ $hover-secondary: darken($secondary, 15%) !default;
 $hover-dropdown: #f4f5f9 !default;
 
 $header-height: 6rem !default;
-$header-bg: $white!default;
+$header-bg: $white !default;

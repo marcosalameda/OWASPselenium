@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Dilin
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Dilin
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAdispa.FldDispanr, FieldType.NUMERO, Resources.Resources.DISPATCH_NUMBER23616, 10, 0, true),
+				new Exports.QColumn(CSGenioAdispa.FldDispanr, FieldType.NUMERIC, Resources.Resources.DISPATCH_NUMBER23616, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Dilin
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -330,8 +326,7 @@ namespace GenioMVC.ViewModels.Dilin
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("dispa", "dispanr");
+					firstVisibleColumn ??= new FieldRef("dispa", "dispanr");
 				}
 
 
@@ -349,6 +344,8 @@ namespace GenioMVC.ViewModels.Dilin
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ DILIN_DISPADISPANR]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -376,7 +373,7 @@ namespace GenioMVC.ViewModels.Dilin
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAdispa> listing = Models.ModelBase.Where<CSGenioAdispa>(m_userContext, false, dilin___dispadispanr_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DILIN___DISPADISPANR_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAdispa> listing = Models.ModelBase.Where<CSGenioAdispa>(m_userContext, distinct, dilin___dispadispanr_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DILIN___DISPADISPANR_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -456,6 +453,8 @@ namespace GenioMVC.ViewModels.Dilin
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -505,7 +504,7 @@ namespace GenioMVC.ViewModels.Dilin
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValDispanr", CSGenioAdispa.FldDispanr, typeof(decimal?))
+			new TableSearchColumn("ValDispanr", CSGenioAdispa.FldDispanr, typeof(decimal?)),
 		];
 	}
 }

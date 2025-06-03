@@ -90,7 +90,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Dispatch number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dispa.ValDispanr")]
 		[NumericAttribute(0)]
-		public decimal? ValDispanr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDispanr, 0)); } set { klass.ValDispanr = Convert.ToDecimal(value); } }
+		public decimal? ValDispanr { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDispanr, 0)); } set { klass.ValDispanr = Convert.ToDecimal(value); } }
 
 		[DisplayName("Prepared")]
 		/// <summary>Field : "Prepared" Tipo: "DT" Formula: DF "iif(emptyL([DISPA->ISPREPAR])==1,[ZEROD],[Today])"</summary>

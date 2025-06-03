@@ -55,4 +55,9 @@ if %ERRORLEVEL% neq 0 (
     exit /b %ERRORLEVEL%
 )
 echo Deployment complete!
+
+::-------------------------------------------------------------------
+:: Database maintenance
+docker exec -i webadmin bash < docker_db_maintenance.sh
+
 endlocal

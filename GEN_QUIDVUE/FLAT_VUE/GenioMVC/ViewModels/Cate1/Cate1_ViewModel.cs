@@ -349,7 +349,7 @@ namespace GenioMVC.ViewModels.Cate1
 			validator.StringLength("ValAbbreviation", Resources.Resources.ABBREVIATION31267, ValAbbreviation, 10);
 			validator.StringLength("ValCategoria", Resources.Resources.CATEGORY18978, ValCategoria, 50);
 
-			validator.Required("ValCategoria", Resources.Resources.CATEGORY18978, ViewModelConversion.ToString(ValCategoria), FieldType.TEXTO.Formatting);
+			validator.Required("ValCategoria", Resources.Resources.CATEGORY18978, ViewModelConversion.ToString(ValCategoria), FieldType.TEXT.GetFormatting());
 
 
 			return validator.GetResult();

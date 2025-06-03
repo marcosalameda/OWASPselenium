@@ -49,6 +49,8 @@ namespace Administration.Models
         [Display(Name = "TIPO_DE_SERVIDOR_DE_25581", ResourceType = typeof(Resources.Resources))]
         public HardCodedLists.DBMS Log_ServerType { get; set; }
 
+        public bool DatabaseSidePk { get; set; }
+
         [Display(Name = "DB Schema")]
         [Required]
         public string Schema { get; set; }
@@ -216,8 +218,11 @@ namespace Administration.Models
             return new DataSystemXml
             {
                 Server = this.Server,
-                Password = this.DbPsw,
-                Login = this.DbUser,
+                Password = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(this.DbPsw)),
+                Login = Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(this.DbUser)),
+                Name = this.Schema,
+                Port = this.Port,
+                Type = this.ServerType.ToString(),
                 Schemas = new List<DataXml>
                 {
                     new DataXml { Schema = this.Schema }
@@ -576,19 +581,43 @@ namespace Administration.Models
         public string FormMode { get; set; }
         public int Rownum { get; set; }
 
-        public static IEnumerable<SelectListItem> PropertyList
+        public static IEnumerable<AdvancedPropertyItem> PropertyList
         {
             get
             {
-                List<SelectListItem> res = new List<SelectListItem>();
+                List<AdvancedPropertyItem> res = new List<AdvancedPropertyItem>();
                 foreach (string t in ExtraProperties.GetInitialKeys())
                 {
-                    res.Add(new SelectListItem() { Value = t, Text = t });
+                    res.Add(new AdvancedPropertyItem() { Value = t, Text = t });
                 }
-
+                
+                foreach (var t in ExtraProperties.GetAdvancedProperties())
+                {
+                    res.Add(
+                        new AdvancedPropertyItem() { 
+                            Value = t.Id,
+                            Text = t.Label,
+                            Type= t.Type,
+                            TextResourceId = t.ResourceId,
+                            TextHelpResourceId = t.HelpResourceId,
+                            TextHelpResourceVerboseId = t.HelpResourceVerboseId
+                        }
+                    );
+                }
                 return res;
             }
         }
+    }
+
+    public class AdvancedPropertyItem
+    {
+        public string Value { get; set; }
+        public string Text { get; set; }
+        public string Type { get; set; }
+        public string Default { get; set; }
+        public string TextResourceId { get; set; }
+        public string TextHelpResourceId { get; set; }
+        public string TextHelpResourceVerboseId { get; set; }
     }
 
     public class DateFormatCfg

@@ -1,10 +1,9 @@
-using System;
-using System.Collections;
-using System.Diagnostics;
-using System.Text;
 using CSGenio.framework;
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
+using System;
+using System.Collections;
+using System.Diagnostics;
 
 namespace CSGenio.business
 {
@@ -170,6 +169,110 @@ namespace CSGenio.business
         public string EndDateField
         {
             get { return campoDataEncerramento; }
+        }
+
+        public delegate void FormulaPropagationHandler(string alias, string pk, Area newrow, Area oldrow);
+
+        public void DeterminePropagation(Area newrow, Area oldrow, FormulaPropagationHandler onPropagate)
+        {
+            bool inserted = oldrow == null;
+            bool deleted = newrow == null;
+            if (inserted && deleted)
+                throw new InvalidOperationException("At least one of newrow or oldrow must be non-null");
+            AreaInfo info = deleted ? oldrow.Information : newrow.Information;
+
+            var rel = info.ParentTables[AliasRUV];
+
+            var infoargdate = info.DBFields[ConsultedDateFields];
+            var infoargkey = info.DBFields[rel.SourceRelField];
+
+            object GetArgDate(Area row) => row.returnValueField(info.Alias + "." + ConsultedDateFields);
+            object GetArgKey(Area row) => row.returnValueField(info.Alias + "." + rel.SourceRelField);
+            void PropagateChange(object key, object date)
+            {
+                if (!infoargkey.isEmptyValue(key) && !infoargdate.isEmptyValue(date))
+                    onPropagate(AliasRUV, key as string, newrow, oldrow);
+            }
+
+            if (inserted)
+            {
+                //if the new date is empty then this can never be the last value
+                PropagateChange(GetArgKey(newrow), GetArgDate(newrow));
+            }
+            else if (deleted)
+            {
+                //if the old date was empty then this was already not the last value
+                PropagateChange(GetArgKey(oldrow), GetArgDate(oldrow));
+            }
+            else //updated
+            {
+                var newargdate = GetArgDate(newrow);
+                var newargkey = GetArgKey(newrow);
+
+                var oldargdate = GetArgDate(oldrow);
+                var oldargkey = GetArgKey(oldrow);
+
+                //pseudo-new rows behave as if they have been just inserted
+                if (oldrow.Zzstate != 0)
+                {
+                    oldargdate = infoargdate.GetValorEmpty();
+                    oldargkey = infoargkey.GetValorEmpty();
+                }
+
+                if (!oldargkey.Equals(newargkey))
+                {
+                    //fk change, we need to update both records as if old was deleted and new was inserted
+                    PropagateChange(oldargkey, oldargdate);
+                    PropagateChange(newargkey, newargdate);
+                }
+                else
+                {
+                    //key stayed empty, nothing to do
+                    if (infoargkey.isEmptyValue(newargkey))
+                        return;
+
+                    //date or fields changed then propagate
+                    bool changed = false;
+                    if (!newargdate.Equals(oldargdate))
+                        changed = true;
+
+                    //date stayed empty, nothing to update regardless of field changes
+                    if (!changed && infoargdate.isEmptyValue(newargdate))
+                        return;
+
+                    //check for value field changes
+                    foreach (var uvfield in ConsultedFields)
+                    {
+                        var newargvalue = newrow.returnValueField(info.Alias + "." + uvfield);
+                        var oldargvalue = oldrow.returnValueField(info.Alias + "." + uvfield);
+
+                        if (!newargvalue.Equals(oldargvalue))
+                        {
+                            changed = true;
+                            break;
+                        }
+                    }
+
+                    //check for condition source changes
+                    if(condition != null)
+                        foreach (var criteria in condition.Criterias)
+                            if (criteria.LeftTerm is ColumnReference left)
+                            {
+                                var newargvalue = newrow.returnValueField(info.Alias + "." + left.ColumnName);
+                                var oldargvalue = oldrow.returnValueField(info.Alias + "." + left.ColumnName);
+
+                                if (!newargvalue.Equals(oldargvalue))
+                                {
+                                    changed = true;
+                                    break;
+                                }
+                            }
+
+                    //changes need to update even if the date is empty, so the last value can be cleared
+                    if(changed)
+                        onPropagate(AliasRUV, newargkey as string, newrow, oldrow);
+                }
+            }
         }
 
     }

@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodequip { get; set; }
+		public string EquipValCodequip { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,6 +92,23 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param
+		private void SetViewModelValue(string fullFieldName, object value)
+		{
+			if (string.IsNullOrEmpty(fullFieldName))
+				return;
+
+			switch (fullFieldName)
+			{
+				case "equip.codequip":
+					EquipValCodequip = ViewModelConversion.ToString(value);
+					break;
+			}
+		}
 
 		public override int GetCount(User user)
 		{
@@ -110,7 +127,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="userContext">The current user request context</param>
 		public Equdocum_ValLisanex_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+			EquipValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
 		}
 
 		/// <summary>
@@ -128,11 +145,11 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATAHORA, Resources.Resources.ATTACHED26247, 16, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.FICHEIRO_BD, Resources.Resources.DOCUMENT00695, 30, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldTittradu, FieldType.TEXTO, Resources.Resources.TRANSLATED_TITLE58577, 30, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldReferenc, FieldType.TEXTO, Resources.Resources.REFERENCE28402, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATETIME, Resources.Resources.ATTACHED26247, 16, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldTittradu, FieldType.TEXT, Resources.Resources.TRANSLATED_TITLE58577, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldReferenc, FieldType.TEXT, Resources.Resources.REFERENCE28402, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -197,10 +214,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodequip != null)
-				crs.Equal(CSGenioAanexd.FldCodequip, this.ValCodequip);
-
-
+			if (this.EquipValCodequip != null)
+				crs.Equal(CSGenioAanexd.FldCodequip, this.EquipValCodequip);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -326,7 +341,7 @@ namespace GenioMVC.ViewModels.Equip
 				List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig.ColumnOrderBy, "anexd", allSortOrders);
 
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.FldZzstate, CSGenioAanexd.FldDthranex, CSGenioAanexd.FldTitle, CSGenioAanexd.FldDocument, CSGenioAanexd.FldDocumentfk, CSGenioAanexd.FldTittradu, CSGenioAanexd.FldReferenc };
+				FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.FldZzstate, CSGenioAanexd.FldDthranex, CSGenioAanexd.FldTitle, CSGenioAanexd.FldDocument, CSGenioAanexd.FldDocumentfk, CSGenioAanexd.FldTittradu, CSGenioAanexd.FldReferenc, CSGenioAanexd.FldCodequip, CSGenioAequip.FldCodequip };
 
 
 				// Totalizers
@@ -338,8 +353,7 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("anexd", "dthranex");
+					firstVisibleColumn ??= new FieldRef("anexd", "dthranex");
 				}
 
 
@@ -368,6 +382,8 @@ namespace GenioMVC.ViewModels.Equip
 
 // USE /[MANUAL GQT OVERRQ EQUDOCUM_PSEUDLISANEX]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -395,7 +411,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAanexd> listing = Models.ModelBase.Where<CSGenioAanexd>(m_userContext, false, equdocumpseudlisanex_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUDOCUMPSEUDLISANEX_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAanexd> listing = Models.ModelBase.Where<CSGenioAanexd>(m_userContext, distinct, equdocumpseudlisanex_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUDOCUMPSEUDLISANEX_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -470,10 +486,17 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					case "anexd":
 						model.klass.insertNameValueField(Qfield.FullName, Qfield.Value); break;
+					case "equip":
+						model.Equip.klass.insertNameValueField(Qfield.FullName, Qfield.Value); break;
 					default:
 						break;
 				}
 			}
+
+			model.InitRowData();
+
+			// Use the parent context, so the formulas are calculated with the current values.
+			model.Equip = ParentCtx as Models.Equip;
 
 			return model;
 		}
@@ -523,11 +546,41 @@ namespace GenioMVC.ViewModels.Equip
 		/// <inheritdoc />
 		public override void MapFromModel(Models.Anexd m)
 		{
+			if (m == null)
+			{
+				CSGenio.framework.Log.Error("Map Model (Anexd) to ViewModel (Equdocum_ValLisanex) - Model is a null reference.");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				EquipValCodequip = ViewModelConversion.ToString(m.Equip.ValCodequip);
+			}
+			catch
+			{
+				CSGenio.framework.Log.Error("Map Model (Anexd) to ViewModel (Equdocum_ValLisanex) - Error during mapping.");
+				throw;
+			}
 		}
 
 		/// <inheritdoc />
 		public override void MapToModel(Models.Anexd m)
 		{
+			if (m == null)
+			{
+				CSGenio.framework.Log.Error("Map ViewModel (Equdocum_ValLisanex) to Model (Anexd) - Model is a null reference.");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				m.Equip.ValCodequip = ViewModelConversion.ToString(EquipValCodequip);
+			}
+			catch
+			{
+				CSGenio.framework.Log.Error("Map ViewModel (Equdocum_ValLisanex) to Model (Anexd) - Error during mapping.");
+				throw;
+			}
 		}
 
 		#endregion
@@ -540,7 +593,7 @@ namespace GenioMVC.ViewModels.Equip
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Anexd.ValTittradu", "Anexd.ValReferenc", "Anexd.ValCodequip", "Anexd.ValCodlang"
+			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Anexd.ValTittradu", "Anexd.ValReferenc", "Equip", "Equip.ValCodequip", "Anexd.ValCodequip", "Anexd.ValCodlang"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
@@ -549,7 +602,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("ValTitle", CSGenioAanexd.FldTitle, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDocument", CSGenioAanexd.FldDocument, typeof(string)),
 			new TableSearchColumn("ValTittradu", CSGenioAanexd.FldTittradu, typeof(string)),
-			new TableSearchColumn("ValReferenc", CSGenioAanexd.FldReferenc, typeof(string))
+			new TableSearchColumn("ValReferenc", CSGenioAanexd.FldReferenc, typeof(string)),
 		];
 	}
 }

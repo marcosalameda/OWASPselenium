@@ -7,11 +7,13 @@
 		<template #actions="props">
 			<q-button-group borderless>
 				<q-button
+					variant="text"
 					:title="Resources.EDITAR11616"
 					@click="ManageMessage(2, props.row)">
 					<q-icon icon="pencil" />
 				</q-button>
 				<q-button
+					variant="text"
 					:title="Resources.APAGAR04097"
 					@click="ManageMessage(3, props.row)">
 					<q-icon icon="bin" />
@@ -22,16 +24,19 @@
 			{{ props.row.ValTo }}{{ props.row.ValTomanual }}
 		</template>
 		<template #ValAtivo="props">
-			<q-icon v-if="props.row.ValAtivo" icon="check" />
-			<q-icon v-else icon="close" />
+			<q-icon 
+				:icon="props.row.ValAtivo ? 'check' : 'close'"
+				:color="props.row.ValAtivo ? 'success' : 'danger'" />
 		</template>
 		<template #ValEmail="props">
-			<q-icon v-if="props.row.ValEmail" icon="check" />
-			<q-icon v-else icon="close" />
+			<q-icon 
+				:icon="props.row.ValEmail ? 'check' : 'close'"
+				:color="props.row.ValEmail ? 'success' : 'danger'" />
 		</template>
 		<template #ValGravabd="props">
-			<q-icon v-if="props.row.ValGravabd" icon="check" />
-			<q-icon v-else icon="close" />
+			<q-icon 
+				:icon="props.row.ValGravabd ? 'check' : 'close'"
+				:color="props.row.ValGravabd ? 'success' : 'danger'" />
 		</template>
 		<template #table-footer>
 			<tr>

@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Entit
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodentit { get; set; }
+		public string EntitValCodentit { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Entit
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Entit
 		/// <param name="userContext">The current user request context</param>
 		public Entix_ValFacilite_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodentit = userContext.CurrentNavigation.CurrentLevel.GetEntry("entit")?.ToString();
+			EntitValCodentit = userContext.CurrentNavigation.CurrentLevel.GetEntry("entit")?.ToString();
 		}
 
 		/// <summary>
@@ -128,13 +127,13 @@ namespace GenioMVC.ViewModels.Entit
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfacil.FldIncorpor, FieldType.DATA, Resources.Resources.INCORPORATION10135, 8, 0, true),
-				new Exports.QColumn(CSGenioAfacil.FldName, FieldType.TEXTO, Resources.Resources.FACILITY_NAME19514, 30, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldType, FieldType.TEXTO, Resources.Resources.FACILITY_TYPE44577, 25, 0, true),
-				new Exports.QColumn(CSGenioAfacil.FldLatitude, FieldType.NUMERO, Resources.Resources.LATITUDE11291, 10, 6, true),
-				new Exports.QColumn(CSGenioAfacil.FldLongitud, FieldType.NUMERO, Resources.Resources.LONGITUDE01015, 10, 6, true),
-				new Exports.QColumn(CSGenioAfacil.FldGeocoord, FieldType.GEOGRAPHY, Resources.Resources.GEOGRAPHICAL_COORDIN45869, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAfacil.FldImage, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE65174, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAfacil.FldIncorpor, FieldType.DATE, Resources.Resources.INCORPORATION10135, 8, 0, true),
+				new Exports.QColumn(CSGenioAfacil.FldName, FieldType.TEXT, Resources.Resources.FACILITY_NAME19514, 30, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldType, FieldType.TEXT, Resources.Resources.FACILITY_TYPE44577, 25, 0, true),
+				new Exports.QColumn(CSGenioAfacil.FldLatitude, FieldType.NUMERIC, Resources.Resources.LATITUDE11291, 10, 6, true),
+				new Exports.QColumn(CSGenioAfacil.FldLongitud, FieldType.NUMERIC, Resources.Resources.LONGITUDE01015, 10, 6, true),
+				new Exports.QColumn(CSGenioAfacil.FldGeocoord, FieldType.GEOGRAPHY_POINT, Resources.Resources.GEOGRAPHICAL_COORDIN45869, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAfacil.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE65174, 3, 1, true):null,
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -199,10 +198,8 @@ namespace GenioMVC.ViewModels.Entit
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodentit != null)
-				crs.Equal(CSGenioAfacil.FldCodentit, this.ValCodentit);
-
-
+			if (this.EntitValCodentit != null)
+				crs.Equal(CSGenioAfacil.FldCodentit, this.EntitValCodentit);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -348,8 +345,7 @@ namespace GenioMVC.ViewModels.Entit
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("facil", "incorpor");
+					firstVisibleColumn ??= new FieldRef("facil", "incorpor");
 				}
 
 
@@ -378,6 +374,8 @@ namespace GenioMVC.ViewModels.Entit
 
 // USE /[MANUAL GQT OVERRQ ENTIX_PSEUDFACILITE]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -405,7 +403,7 @@ namespace GenioMVC.ViewModels.Entit
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfacil> listing = Models.ModelBase.Where<CSGenioAfacil>(m_userContext, false, entix___pseudfaciliteConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ENTIX___PSEUDFACILITE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfacil> listing = Models.ModelBase.Where<CSGenioAfacil>(m_userContext, distinct, entix___pseudfaciliteConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ENTIX___PSEUDFACILITE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -487,6 +485,8 @@ namespace GenioMVC.ViewModels.Entit
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -541,7 +541,7 @@ namespace GenioMVC.ViewModels.Entit
 			new TableSearchColumn("ValName", CSGenioAfacil.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("Facty_ValType", CSGenioAfacty.FldType, typeof(string)),
 			new TableSearchColumn("ValLatitude", CSGenioAfacil.FldLatitude, typeof(decimal?)),
-			new TableSearchColumn("ValLongitud", CSGenioAfacil.FldLongitud, typeof(decimal?))
+			new TableSearchColumn("ValLongitud", CSGenioAfacil.FldLongitud, typeof(decimal?)),
 		];
 		protected void SetTicketToImageFields(Models.Facil row)
 		{

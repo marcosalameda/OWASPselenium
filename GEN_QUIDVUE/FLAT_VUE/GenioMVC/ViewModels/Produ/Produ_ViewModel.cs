@@ -477,7 +477,7 @@ namespace GenioMVC.ViewModels.Produ
 
 			validator.StringLength("ValProduct", Resources.Resources.PRODUCT12880, ValProduct, 85);
 
-			validator.Required("ValProduct", Resources.Resources.PRODUCT12880, ViewModelConversion.ToString(ValProduct), FieldType.TEXTO.Formatting);
+			validator.Required("ValProduct", Resources.Resources.PRODUCT12880, ViewModelConversion.ToString(ValProduct), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValSku", Resources.Resources.SKU42303, ValSku, 20);
 			validator.StringLength("ValGtin", Resources.Resources.GTIN45487, ValGtin, 14);
 			validator.StringLength("ValSize", Resources.Resources.SIZE10299, ValSize, 50);
@@ -631,7 +631,7 @@ namespace GenioMVC.ViewModels.Produ
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -678,7 +678,7 @@ namespace GenioMVC.ViewModels.Produ
 				// Fill List fields
 				this.ValCodlocat = ViewModelConversion.ToString(row["locat.codlocat"]);
 				TableLocatGln.Value = (string)row["locat.gln"];
-				if (GlobalFunctions.emptyG(this.ValCodlocat) == 1)
+				if (GenFunctions.emptyG(this.ValCodlocat) == 1)
 				{
 					this.ValCodlocat = "";
 					TableLocatGln.Value = "";
@@ -828,7 +828,7 @@ namespace GenioMVC.ViewModels.Produ
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -836,7 +836,7 @@ namespace GenioMVC.ViewModels.Produ
 				object hValue = Navigation.GetValue("locat");
 				if (!(hValue is Array))
 				{
-					if (GlobalFunctions.emptyG(hValue) == 1)
+					if (GenFunctions.emptyG(hValue) == 1)
 						returnEmptyDependants = true;
 					wherecodition.Equal(CSGenioAlcext.FldCodlocat, hValue);
 				}
@@ -884,7 +884,7 @@ namespace GenioMVC.ViewModels.Produ
 				// Fill List fields
 				this.ValCodlcext = ViewModelConversion.ToString(row["lcext.codlcext"]);
 				TableLcextGlnext.Value = (string)row["lcext.glnext"];
-				if (GlobalFunctions.emptyG(this.ValCodlcext) == 1)
+				if (GenFunctions.emptyG(this.ValCodlcext) == 1)
 				{
 					this.ValCodlcext = "";
 					TableLcextGlnext.Value = "";

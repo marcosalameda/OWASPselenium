@@ -89,8 +89,6 @@ namespace GenioMVC.ViewModels.Rooms
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -161,8 +159,8 @@ namespace GenioMVC.ViewModels.Rooms
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXTO, Resources.Resources.N_R__ROOM43805, 10, 0, true),
-				new Exports.QColumn(CSGenioArooms.FldDesignat, FieldType.TEXTO, Resources.Resources.ROOM_DESIGNATION37895, 30, 0, true),
+				new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXT, Resources.Resources.N_R__ROOM43805, 10, 0, true),
+				new Exports.QColumn(CSGenioArooms.FldDesignat, FieldType.TEXT, Resources.Resources.ROOM_DESIGNATION37895, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -225,8 +223,6 @@ namespace GenioMVC.ViewModels.Rooms
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -377,8 +373,7 @@ namespace GenioMVC.ViewModels.Rooms
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("rooms", "roomnr");
+					firstVisibleColumn ??= new FieldRef("rooms", "roomnr");
 				}
 
 
@@ -411,6 +406,8 @@ namespace GenioMVC.ViewModels.Rooms
 
 // USE /[MANUAL GQT OVERRQ 2311]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -438,7 +435,7 @@ namespace GenioMVC.ViewModels.Rooms
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArooms> listing = Models.ModelBase.Where<CSGenioArooms>(m_userContext, false, gqt_menu_2311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2311", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArooms> listing = Models.ModelBase.Where<CSGenioArooms>(m_userContext, distinct, gqt_menu_2311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2311", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -519,6 +516,8 @@ namespace GenioMVC.ViewModels.Rooms
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -569,7 +568,7 @@ namespace GenioMVC.ViewModels.Rooms
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValRoomnr", CSGenioArooms.FldRoomnr, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValDesignat", CSGenioArooms.FldDesignat, typeof(string))
+			new TableSearchColumn("ValDesignat", CSGenioArooms.FldDesignat, typeof(string)),
 		];
 	}
 }

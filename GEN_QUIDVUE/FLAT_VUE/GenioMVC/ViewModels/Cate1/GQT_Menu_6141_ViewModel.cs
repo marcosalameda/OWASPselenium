@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Cate1
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,8 +148,8 @@ namespace GenioMVC.ViewModels.Cate1
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXTO, Resources.Resources.CATEGORY18978, 30, 0, true),
-				new Exports.QColumn(CSGenioAcate1.FldAbbreviation, FieldType.TEXTO, Resources.Resources.ABBREVIATION31267, 10, 0, true),
+				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXT, Resources.Resources.CATEGORY18978, 30, 0, true),
+				new Exports.QColumn(CSGenioAcate1.FldAbbreviation, FieldType.TEXT, Resources.Resources.ABBREVIATION31267, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -214,8 +212,6 @@ namespace GenioMVC.ViewModels.Cate1
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -362,8 +358,7 @@ namespace GenioMVC.ViewModels.Cate1
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("cate1", "categoria");
+					firstVisibleColumn ??= new FieldRef("cate1", "categoria");
 				}
 
 
@@ -392,6 +387,8 @@ namespace GenioMVC.ViewModels.Cate1
 
 // USE /[MANUAL GQT OVERRQ 6141]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -419,7 +416,7 @@ namespace GenioMVC.ViewModels.Cate1
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAcate1> listing = Models.ModelBase.Where<CSGenioAcate1>(m_userContext, false, gqt_menu_6141Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML6141", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAcate1> listing = Models.ModelBase.Where<CSGenioAcate1>(m_userContext, distinct, gqt_menu_6141Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML6141", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -500,6 +497,8 @@ namespace GenioMVC.ViewModels.Cate1
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -550,7 +549,7 @@ namespace GenioMVC.ViewModels.Cate1
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValCategoria", CSGenioAcate1.FldCategoria, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValAbbreviation", CSGenioAcate1.FldAbbreviation, typeof(string))
+			new TableSearchColumn("ValAbbreviation", CSGenioAcate1.FldAbbreviation, typeof(string)),
 		];
 	}
 }

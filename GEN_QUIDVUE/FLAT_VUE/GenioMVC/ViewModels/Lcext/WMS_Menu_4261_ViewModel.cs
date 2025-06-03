@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Lcext
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,10 +148,10 @@ namespace GenioMVC.ViewModels.Lcext
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXTO, Resources.Resources.GLOBAL_LOCATION_NUMB24637, 30, 0, true),
-				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXTO, Resources.Resources.GLN_EXTENSION_COMPON55869, 30, 0, true),
-				new Exports.QColumn(CSGenioAlcext.FldSpacetyp, FieldType.ARRAY_COD_TEXTO, Resources.Resources.SPACE_TYPE42493, 1, 0, true, "SpaceTyp"),
-				new Exports.QColumn(CSGenioAlcext.FldSpaceobs, FieldType.TEXTO, Resources.Resources.SPACE62433, 30, 0, true),
+				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXT, Resources.Resources.GLOBAL_LOCATION_NUMB24637, 30, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXTENSION_COMPON55869, 30, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldSpacetyp, FieldType.ARRAY_TEXT, Resources.Resources.SPACE_TYPE42493, 1, 0, true, "SpaceTyp"),
+				new Exports.QColumn(CSGenioAlcext.FldSpaceobs, FieldType.TEXT, Resources.Resources.SPACE62433, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -216,8 +214,6 @@ namespace GenioMVC.ViewModels.Lcext
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -364,8 +360,7 @@ namespace GenioMVC.ViewModels.Lcext
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("locat", "gln");
+					firstVisibleColumn ??= new FieldRef("locat", "gln");
 				}
 
 
@@ -394,6 +389,8 @@ namespace GenioMVC.ViewModels.Lcext
 
 // USE /[MANUAL WMS OVERRQ 4261]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -421,7 +418,7 @@ namespace GenioMVC.ViewModels.Lcext
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlcext> listing = Models.ModelBase.Where<CSGenioAlcext>(m_userContext, false, wms_menu_4261Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4261", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlcext> listing = Models.ModelBase.Where<CSGenioAlcext>(m_userContext, distinct, wms_menu_4261Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4261", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -504,6 +501,8 @@ namespace GenioMVC.ViewModels.Lcext
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -556,7 +555,7 @@ namespace GenioMVC.ViewModels.Lcext
 			new TableSearchColumn("Locat_ValGln", CSGenioAlocat.FldGln, typeof(string)),
 			new TableSearchColumn("ValGlnext", CSGenioAlcext.FldGlnext, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValSpacetyp", CSGenioAlcext.FldSpacetyp, typeof(string), array : "SpaceTyp"),
-			new TableSearchColumn("ValSpaceobs", CSGenioAlcext.FldSpaceobs, typeof(string))
+			new TableSearchColumn("ValSpaceobs", CSGenioAlcext.FldSpaceobs, typeof(string)),
 		];
 	}
 }

@@ -62,12 +62,6 @@
 			</q-row-container>
 		</q-card>
 	</row>
-	<row class="footer-btn">
-		<q-button
-			b-style="primary"
-			:label="Resources.GRAVAR_CONFIGURACAO36308"
-			@click="SaveConfigMessaging" />
-	</row>
 </template>
 
 <script>
@@ -135,18 +129,6 @@
 						set.push(value); //add the item
 					}
 				}
-			},
-			SaveConfigMessaging() {
-				var vm = this;
-				QUtils.log("SaveConfigMessaging - Request", QUtils.apiActionURL('Config', 'SaveConfigMessaging'));
-				QUtils.postData('Config', 'SaveConfigMessaging', vm.model, null, function (data) {
-					QUtils.log("SaveConfigMessaging - Response", data);          
-					vm.$emit('update-model');
-					vm.$emit('alert-class', { 
-						ResultMsg: data.Success ? vm.Resources.ALTERACOES_EFETUADAS10166 : data.Message, 
-						AlertType: data.Success ? 'success' : 'danger' 
-					});
-				});
 			},
 		}
 	};

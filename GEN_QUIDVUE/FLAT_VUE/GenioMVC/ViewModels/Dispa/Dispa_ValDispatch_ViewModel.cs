@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Dispa
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCoddispa { get; set; }
+		public string DispaValCoddispa { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Dispa
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Dispa
 		/// <param name="userContext">The current user request context</param>
 		public Dispa_ValDispatch_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCoddispa = userContext.CurrentNavigation.CurrentLevel.GetEntry("dispa")?.ToString();
+			DispaValCoddispa = userContext.CurrentNavigation.CurrentLevel.GetEntry("dispa")?.ToString();
 		}
 
 		/// <summary>
@@ -128,13 +127,13 @@ namespace GenioMVC.ViewModels.Dispa
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAdilin.FldLinenumb, FieldType.NUMERO, Resources.Resources.LINE27983, 6, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldSku, FieldType.TEXTO, Resources.Resources.SKU42303, 20, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldGtin, FieldType.TEXTO, Resources.Resources.GTIN45487, 14, 0, false),
-				new Exports.QColumn(CSGenioAprodu.FldProduct, FieldType.TEXTO, Resources.Resources.PRODUCT12880, 30, 0, true),
-				new Exports.QColumn(CSGenioAdilin.FldOrdered, FieldType.NUMERO, Resources.Resources.ORDERED04034, 10, 0, true),
-				new Exports.QColumn(CSGenioAdilin.FldDelivere, FieldType.NUMERO, Resources.Resources.DELIVERED26597, 10, 0, true),
-				new Exports.QColumn(CSGenioAdilin.FldOutstand, FieldType.NUMERO, Resources.Resources.OUTSTANDING36400, 10, 0, true),
+				new Exports.QColumn(CSGenioAdilin.FldLinenumb, FieldType.NUMERIC, Resources.Resources.LINE27983, 6, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldSku, FieldType.TEXT, Resources.Resources.SKU42303, 20, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldGtin, FieldType.TEXT, Resources.Resources.GTIN45487, 14, 0, false),
+				new Exports.QColumn(CSGenioAprodu.FldProduct, FieldType.TEXT, Resources.Resources.PRODUCT12880, 30, 0, true),
+				new Exports.QColumn(CSGenioAdilin.FldOrdered, FieldType.NUMERIC, Resources.Resources.ORDERED04034, 10, 0, true),
+				new Exports.QColumn(CSGenioAdilin.FldDelivere, FieldType.NUMERIC, Resources.Resources.DELIVERED26597, 10, 0, true),
+				new Exports.QColumn(CSGenioAdilin.FldOutstand, FieldType.NUMERIC, Resources.Resources.OUTSTANDING36400, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -199,10 +198,8 @@ namespace GenioMVC.ViewModels.Dispa
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCoddispa != null)
-				crs.Equal(CSGenioAdilin.FldCoddispa, this.ValCoddispa);
-
-
+			if (this.DispaValCoddispa != null)
+				crs.Equal(CSGenioAdilin.FldCoddispa, this.DispaValCoddispa);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -348,8 +345,7 @@ namespace GenioMVC.ViewModels.Dispa
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("dilin", "linenumb");
+					firstVisibleColumn ??= new FieldRef("dilin", "linenumb");
 				}
 
 
@@ -378,6 +374,8 @@ namespace GenioMVC.ViewModels.Dispa
 
 // USE /[MANUAL GQT OVERRQ DISPA_PSEUDDISPATCH]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -405,7 +403,7 @@ namespace GenioMVC.ViewModels.Dispa
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAdilin> listing = Models.ModelBase.Where<CSGenioAdilin>(m_userContext, false, dispa___pseuddispatchConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DISPA___PSEUDDISPATCH", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAdilin> listing = Models.ModelBase.Where<CSGenioAdilin>(m_userContext, distinct, dispa___pseuddispatchConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DISPA___PSEUDDISPATCH", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -487,6 +485,8 @@ namespace GenioMVC.ViewModels.Dispa
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -542,7 +542,7 @@ namespace GenioMVC.ViewModels.Dispa
 			new TableSearchColumn("Produ_ValProduct", CSGenioAprodu.FldProduct, typeof(string)),
 			new TableSearchColumn("ValOrdered", CSGenioAdilin.FldOrdered, typeof(decimal?)),
 			new TableSearchColumn("ValDelivere", CSGenioAdilin.FldDelivere, typeof(decimal?)),
-			new TableSearchColumn("ValOutstand", CSGenioAdilin.FldOutstand, typeof(decimal?))
+			new TableSearchColumn("ValOutstand", CSGenioAdilin.FldOutstand, typeof(decimal?)),
 		];
 	}
 }

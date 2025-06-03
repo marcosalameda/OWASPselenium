@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAmessa(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR MESSA]/
 		}
 
@@ -46,60 +44,54 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codmessa", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codmessa", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("idnotif", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "idnotif", FieldType.TEXT);
 			Qfield.FieldDescription = "Notification ID";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "NOTIFICATION_ID25507";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("idmsg", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "idmsg", FieldType.TEXT);
 			Qfield.FieldDescription = "Message ID";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "MESSAGE_ID37133";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("designat", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "designat", FieldType.TEXT);
 			Qfield.FieldDescription = "To whom the message was sent";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TO_WHOM_THE_MESSAGE_02337";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("email", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "email", FieldType.TEXT);
 			Qfield.FieldDescription = "E-mail to whom the message was sent";
 			Qfield.FieldSize =  254;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "E_MAIL_TO_WHOM_THE_M37668";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("message", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "message", FieldType.MEMO);
 			Qfield.FieldDescription = "Message";
 			Qfield.FieldSize =  100;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 10;
 			Qfield.CavDesignation = "MESSAGE30602";
@@ -108,10 +100,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("mailsent", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "mailsent", FieldType.LOGIC);
 			Qfield.FieldDescription = "E-mail sent?";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "E_MAIL_SENT_60490";
 
 			Qfield.Dupmsg = "";
@@ -119,50 +110,45 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("mailerr", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "mailerr", FieldType.TEXT);
 			Qfield.FieldDescription = "Error sending mail";
 			Qfield.FieldSize =  300;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ERROR_SENDING_MAIL44674";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("creatope", FieldType.OPERCRIA);
+			Qfield = new Field(info.Alias, "creatope", FieldType.TEXT);
 			Qfield.FieldDescription = "Created by";
 			Qfield.FieldSize =  128;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CREATED_BY12292";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("creatdat", FieldType.DATACRIA);
+			Qfield = new Field(info.Alias, "creatdat", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Created on";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CREATED_ON00051";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codentit", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codentit", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "'Entity'";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_ENTITY_22923";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codperso", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codperso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "'Person'";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "_PERSON_09109";
 
@@ -170,10 +156,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("docum_nr", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "docum_nr", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Document number";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "DOCUMENT_NUMBER28451";
@@ -182,9 +167,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -265,8 +249,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Message";
 			info.AreaPluralDesignation="Messages";
 			info.DescriptionCav="MESSAGE30602";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

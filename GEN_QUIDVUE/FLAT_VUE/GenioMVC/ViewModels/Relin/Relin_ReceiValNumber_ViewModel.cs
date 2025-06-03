@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Relin
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Relin
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERO, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERIC, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Relin
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -330,8 +326,7 @@ namespace GenioMVC.ViewModels.Relin
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("recei", "number");
+					firstVisibleColumn ??= new FieldRef("recei", "number");
 				}
 
 
@@ -349,6 +344,8 @@ namespace GenioMVC.ViewModels.Relin
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ RELIN_RECEINUMBER]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -376,7 +373,7 @@ namespace GenioMVC.ViewModels.Relin
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, false, relin___receinumber__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_RELIN___RECEINUMBER__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, distinct, relin___receinumber__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_RELIN___RECEINUMBER__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -456,6 +453,8 @@ namespace GenioMVC.ViewModels.Relin
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -505,7 +504,7 @@ namespace GenioMVC.ViewModels.Relin
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValNumber", CSGenioArecei.FldNumber, typeof(decimal?))
+			new TableSearchColumn("ValNumber", CSGenioArecei.FldNumber, typeof(decimal?)),
 		];
 	}
 }

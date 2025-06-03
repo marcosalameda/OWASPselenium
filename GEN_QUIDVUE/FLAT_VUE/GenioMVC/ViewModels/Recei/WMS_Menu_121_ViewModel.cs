@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Recei
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,13 +147,13 @@ namespace GenioMVC.ViewModels.Recei
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERO, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldDtreceip, FieldType.DATAHORA, Resources.Resources.RECEIPT_DATE00996, 16, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldDtcheck, FieldType.DATAHORA, Resources.Resources.RECEIPT_VERIFICATION62328, 16, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldChecked, FieldType.LOGICO, Resources.Resources.CHECKED31708, 1, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldTocheck, FieldType.LOGICO, Resources.Resources.TO_CHECK57511, 1, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldDtstorag, FieldType.DATAHORA, Resources.Resources.STORAGE_DATE59954, 16, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERIC, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldDtreceip, FieldType.DATETIME, Resources.Resources.RECEIPT_DATE00996, 16, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldDtcheck, FieldType.DATETIME, Resources.Resources.RECEIPT_VERIFICATION62328, 16, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldChecked, FieldType.LOGIC, Resources.Resources.CHECKED31708, 1, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldTocheck, FieldType.LOGIC, Resources.Resources.TO_CHECK57511, 1, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldDtstorag, FieldType.DATETIME, Resources.Resources.STORAGE_DATE59954, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -245,8 +243,6 @@ namespace GenioMVC.ViewModels.Recei
 			}
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -393,8 +389,7 @@ namespace GenioMVC.ViewModels.Recei
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("recei", "number");
+					firstVisibleColumn ??= new FieldRef("recei", "number");
 				}
 
 
@@ -423,6 +418,8 @@ namespace GenioMVC.ViewModels.Recei
 
 // USE /[MANUAL WMS OVERRQ 121]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -450,7 +447,7 @@ namespace GenioMVC.ViewModels.Recei
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, false, wms_menu_121Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML121", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, distinct, wms_menu_121Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML121", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -533,6 +530,8 @@ namespace GenioMVC.ViewModels.Recei
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -588,7 +587,7 @@ namespace GenioMVC.ViewModels.Recei
 			new TableSearchColumn("ValDtcheck", CSGenioArecei.FldDtcheck, typeof(DateTime?)),
 			new TableSearchColumn("ValChecked", CSGenioArecei.FldChecked, typeof(bool)),
 			new TableSearchColumn("ValTocheck", CSGenioArecei.FldTocheck, typeof(bool)),
-			new TableSearchColumn("ValDtstorag", CSGenioArecei.FldDtstorag, typeof(DateTime?))
+			new TableSearchColumn("ValDtstorag", CSGenioArecei.FldDtstorag, typeof(DateTime?)),
 		];
 	}
 }

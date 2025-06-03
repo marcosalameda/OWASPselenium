@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Sale
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Sale
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAorgan.FldOrganiza, FieldType.TEXTO, Resources.Resources.ORGANIZATION__NEW_OR35065, 85, 0, true),
+				new Exports.QColumn(CSGenioAorgan.FldOrganiza, FieldType.TEXT, Resources.Resources.ORGANIZATION__NEW_OR35065, 85, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Sale
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Sale
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("organ", "organiza");
+					firstVisibleColumn ??= new FieldRef("organ", "organiza");
 				}
 
 
@@ -368,6 +363,8 @@ namespace GenioMVC.ViewModels.Sale
 
 // USE /[MANUAL GQT OVERRQ VENDAW01_ORGANORGANIZA]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -394,7 +391,7 @@ namespace GenioMVC.ViewModels.Sale
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAorgan> listing = Models.ModelBase.Where<CSGenioAorgan>(m_userContext, false, vendaw01organorganizaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_VENDAW01ORGANORGANIZA", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAorgan> listing = Models.ModelBase.Where<CSGenioAorgan>(m_userContext, distinct, vendaw01organorganizaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_VENDAW01ORGANORGANIZA", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -474,6 +471,8 @@ namespace GenioMVC.ViewModels.Sale
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -523,7 +522,7 @@ namespace GenioMVC.ViewModels.Sale
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValOrganiza", CSGenioAorgan.FldOrganiza, typeof(string))
+			new TableSearchColumn("ValOrganiza", CSGenioAorgan.FldOrganiza, typeof(string)),
 		];
 	}
 }

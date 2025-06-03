@@ -574,7 +574,7 @@ namespace GenioMVC.ViewModels.Expen
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -621,7 +621,7 @@ namespace GenioMVC.ViewModels.Expen
 				// Fill List fields
 				this.ValCodproje = ViewModelConversion.ToString(row["proje.codproje"]);
 				TableProjeProjecto.Value = (string)row["proje.projecto"];
-				if (GlobalFunctions.emptyG(this.ValCodproje) == 1)
+				if (GenFunctions.emptyG(this.ValCodproje) == 1)
 				{
 					this.ValCodproje = "";
 					TableProjeProjecto.Value = "";
@@ -764,7 +764,7 @@ namespace GenioMVC.ViewModels.Expen
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -812,7 +812,7 @@ namespace GenioMVC.ViewModels.Expen
 				// Fill List fields
 				this.ValCodyear = ViewModelConversion.ToString(row["year.codyear"]);
 				TableYearYear.Value = (string)row["year.year"];
-				if (GlobalFunctions.emptyG(this.ValCodyear) == 1)
+				if (GenFunctions.emptyG(this.ValCodyear) == 1)
 				{
 					this.ValCodyear = "";
 					TableYearYear.Value = "";
@@ -967,7 +967,7 @@ namespace GenioMVC.ViewModels.Expen
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -975,7 +975,7 @@ namespace GenioMVC.ViewModels.Expen
 				object hValue = Navigation.GetValue("year");
 				if (!(hValue is Array))
 				{
-					if (GlobalFunctions.emptyG(hValue) == 1)
+					if (GenFunctions.emptyG(hValue) == 1)
 						returnEmptyDependants = true;
 					wherecodition.Equal(CSGenioAagreg.FldCodyear, hValue);
 				}
@@ -984,7 +984,7 @@ namespace GenioMVC.ViewModels.Expen
 				object hValue = Navigation.GetValue("proje");
 				if (!(hValue is Array))
 				{
-					if (GlobalFunctions.emptyG(hValue) == 1)
+					if (GenFunctions.emptyG(hValue) == 1)
 						returnEmptyDependants = true;
 					wherecodition.Equal(CSGenioAagreg.FldCodproje, hValue);
 				}
@@ -1032,7 +1032,7 @@ namespace GenioMVC.ViewModels.Expen
 				// Fill List fields
 				this.ValCodaggre = ViewModelConversion.ToString(row["agreg.codaggre"]);
 				TableAgregValue.Value = (decimal?)row["agreg.value"];
-				if (GlobalFunctions.emptyG(this.ValCodaggre) == 1)
+				if (GenFunctions.emptyG(this.ValCodaggre) == 1)
 				{
 					this.ValCodaggre = "";
 					TableAgregValue.Value = 0m;

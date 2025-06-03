@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Cntry
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodcntry { get; set; }
+		public string CntryValCodcntry { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Cntry
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Cntry
 		/// <param name="userContext">The current user request context</param>
 		public Proppais_ValPropried_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodcntry = userContext.CurrentNavigation.CurrentLevel.GetEntry("cntry")?.ToString();
+			CntryValCodcntry = userContext.CurrentNavigation.CurrentLevel.GetEntry("cntry")?.ToString();
 		}
 
 		/// <summary>
@@ -128,20 +127,20 @@ namespace GenioMVC.ViewModels.Cntry
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApropr.FldName, FieldType.TEXTO, Resources.Resources.PROPERTY_NAME18934, 30, 0, true),
-				new Exports.QColumn(CSGenioApropr.FldPrecoest, FieldType.VALOR, Resources.Resources.ESTIMATED_PRICE02986, 12, 0, true),
-				new Exports.QColumn(CSGenioAtppro.FldTppropri, FieldType.TEXTO, Resources.Resources.PROPERTY_TYPE51419, 20, 0, true),
-				new Exports.QColumn(CSGenioAregio.FldRegiao, FieldType.TEXTO, Resources.Resources.REGION12723, 30, 0, true),
-				new Exports.QColumn(CSGenioApropr.FldLocalida, FieldType.TEXTO, Resources.Resources.LOCALE34521, 30, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldName, FieldType.TEXT, Resources.Resources.PROPERTY_NAME18934, 30, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldPrecoest, FieldType.CURRENCY, Resources.Resources.ESTIMATED_PRICE02986, 12, 0, true),
+				new Exports.QColumn(CSGenioAtppro.FldTppropri, FieldType.TEXT, Resources.Resources.PROPERTY_TYPE51419, 20, 0, true),
+				new Exports.QColumn(CSGenioAregio.FldRegiao, FieldType.TEXT, Resources.Resources.REGION12723, 30, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldLocalida, FieldType.TEXT, Resources.Resources.LOCALE34521, 30, 0, true),
 				new Exports.QColumn(CSGenioApropr.FldEndereco, FieldType.MEMO, Resources.Resources.ADDRESS04342, 30, 2, false),
-				new Exports.QColumn(CSGenioApropr.FldPostalco, FieldType.TEXTO, Resources.Resources.ZIP_CODE56964, 20, 0, false),
-				new Exports.QColumn(CSGenioApropr.FldPostallo, FieldType.TEXTO, Resources.Resources.POSTAL_LOCATION08708, 30, 0, false),
-				new Exports.QColumn(CSGenioApropr.FldMobilada, FieldType.LOGICO, Resources.Resources.FURNISHED37431, 1, 0, true),
-				new Exports.QColumn(CSGenioApropr.FldQtd_wc, FieldType.NUMERO, Resources.Resources.BATHROOMS54249, 6, 0, true),
-				new Exports.QColumn(CSGenioApropr.FldQtdquart, FieldType.NUMERO, Resources.Resources.ROOMS06809, 6, 0, true),
-				new Exports.QColumn(CSGenioApropr.FldM2, FieldType.NUMERO, Resources.Resources.SQUARE_METERS28913, 6, 0, true),
-				new Exports.QColumn(CSGenioApropr.FldDtdispon, FieldType.DATA, Resources.Resources.AVAILABILITY56489, 8, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioApropr.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioApropr.FldPostalco, FieldType.TEXT, Resources.Resources.ZIP_CODE56964, 20, 0, false),
+				new Exports.QColumn(CSGenioApropr.FldPostallo, FieldType.TEXT, Resources.Resources.POSTAL_LOCATION08708, 30, 0, false),
+				new Exports.QColumn(CSGenioApropr.FldMobilada, FieldType.LOGIC, Resources.Resources.FURNISHED37431, 1, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldQtd_wc, FieldType.NUMERIC, Resources.Resources.BATHROOMS54249, 6, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldQtdquart, FieldType.NUMERIC, Resources.Resources.ROOMS06809, 6, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldM2, FieldType.NUMERIC, Resources.Resources.SQUARE_METERS28913, 6, 0, true),
+				new Exports.QColumn(CSGenioApropr.FldDtdispon, FieldType.DATE, Resources.Resources.AVAILABILITY56489, 8, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioApropr.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
 				new Exports.QColumn(CSGenioApropr.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 10, true),
 			};
 
@@ -207,10 +206,8 @@ namespace GenioMVC.ViewModels.Cntry
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodcntry != null)
-				crs.Equal(CSGenioApropr.FldCodcntry, this.ValCodcntry);
-
-
+			if (this.CntryValCodcntry != null)
+				crs.Equal(CSGenioApropr.FldCodcntry, this.CntryValCodcntry);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -348,8 +345,7 @@ namespace GenioMVC.ViewModels.Cntry
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("propr", "name");
+					firstVisibleColumn ??= new FieldRef("propr", "name");
 				}
 
 
@@ -378,6 +374,8 @@ namespace GenioMVC.ViewModels.Cntry
 
 // USE /[MANUAL GQT OVERRQ PROPPAIS_PSEUDPROPRIED]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -405,7 +403,7 @@ namespace GenioMVC.ViewModels.Cntry
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApropr> listing = Models.ModelBase.Where<CSGenioApropr>(m_userContext, false, proppaispseudpropriedConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROPPAISPSEUDPROPRIED", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApropr> listing = Models.ModelBase.Where<CSGenioApropr>(m_userContext, distinct, proppaispseudpropriedConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROPPAISPSEUDPROPRIED", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -563,8 +561,7 @@ namespace GenioMVC.ViewModels.Cntry
 			new TableSearchColumn("ValDtdispon", CSGenioApropr.FldDtdispon, typeof(DateTime?)),
 			new TableSearchColumn("ValDescript", CSGenioApropr.FldDescript, typeof(string)),
 			new TableSearchColumn("ValCoordgeo", CSGenioApropr.FldCoordgeo, typeof(string)),
-			new TableSearchColumn("ValName", CSGenioApesso.FldName, typeof(string))
-		];
+			new TableSearchColumn("ValName", CSGenioApesso.FldName, typeof(string))		];
 		protected void SetTicketToImageFields(Models.Propr row)
 		{
 			if (row == null)

@@ -39,11 +39,11 @@
 
 				<row class="footer-btn">
 					<q-button
-						b-style="primary"
+						variant="bold"
 						:label="Resources.VALIDACAO46021"
 						@click="Check" />
 					<q-button
-						b-style="primary"
+						variant="bold"
 						:label="Resources.INSTALACAO62245"
 						@click="Deploy" />
 				</row>
@@ -51,9 +51,11 @@
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<select-input
+						<q-select
 							v-model="deployForm.scope"
-							:options="deployScope"
+							item-value="Value"
+							item-label="Text"
+							:items="deployScope"
 							:size="'xlarge'" />
 					</base-input-structure>
 					<base-input-structure
@@ -79,7 +81,8 @@
 					<template #status="props">
 						<q-button
 							v-if="!isEmptyObject(props.row.Error)"
-							b-style="tertiary"
+							variant="text"
+							color="danger"
 							:title="props.row.Error"
 							@click.stop="showError(props.row)">
 							<q-icon icon="alert-circle" />
@@ -100,11 +103,13 @@
 					<template #actions="props">
 						<q-button-group borderless>
 							<q-button
+								variant="text"
 								:title="Resources.EDITAR11616"
 								@click="ManageSlotReport('edit', props.row[0])">
 								<q-icon icon="pencil" />
 							</q-button>
 							<q-button
+								variant="text"
 								:title="Resources.APAGAR04097"
 								@click="ManageSlotReport('delete', props.row[0])">
 								<q-icon icon="bin" />
@@ -381,7 +386,7 @@
 			},
 
 			showError: function (row) {
-				var _html = `<div class="i-textarea"><div class="i-textarea__field i-textarea">${row.Error}</div></div>`;
+				var _html = `<span>${row.Error}</span>`;
 				bootbox.alert(_html)
 			},
 

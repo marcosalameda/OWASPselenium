@@ -377,7 +377,7 @@ namespace GenioMVC.ViewModels.Movim
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValDhmudanc", Resources.Resources.CHANGE36355, ViewModelConversion.ToDateTime(ValDhmudanc), FieldType.DATAHORA.Formatting);
+			validator.Required("ValDhmudanc", Resources.Resources.CHANGE36355, ViewModelConversion.ToDateTime(ValDhmudanc), FieldType.DATETIME.GetFormatting());
 
 
 			return validator.GetResult();
@@ -528,7 +528,7 @@ namespace GenioMVC.ViewModels.Movim
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -575,7 +575,7 @@ namespace GenioMVC.ViewModels.Movim
 				// Fill List fields
 				this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
 				TableEquipRegistnr.Value = (string)row["equip.registnr"];
-				if (GlobalFunctions.emptyG(this.ValCodequip) == 1)
+				if (GenFunctions.emptyG(this.ValCodequip) == 1)
 				{
 					this.ValCodequip = "";
 					TableEquipRegistnr.Value = "";
@@ -718,7 +718,7 @@ namespace GenioMVC.ViewModels.Movim
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -765,7 +765,7 @@ namespace GenioMVC.ViewModels.Movim
 				// Fill List fields
 				this.ValCodrooms = ViewModelConversion.ToString(row["rooms.codrooms"]);
 				TableRoomsRoomnr.Value = (string)row["rooms.roomnr"];
-				if (GlobalFunctions.emptyG(this.ValCodrooms) == 1)
+				if (GenFunctions.emptyG(this.ValCodrooms) == 1)
 				{
 					this.ValCodrooms = "";
 					TableRoomsRoomnr.Value = "";

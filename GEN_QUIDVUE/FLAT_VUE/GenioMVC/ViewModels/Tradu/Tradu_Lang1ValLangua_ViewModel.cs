@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Tradu
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Tradu
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlang1.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 50, 0, true),
+				new Exports.QColumn(CSGenioAlang1.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Tradu
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Tradu
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("lang1", "langua");
+					firstVisibleColumn ??= new FieldRef("lang1", "langua");
 				}
 
 
@@ -357,6 +352,8 @@ namespace GenioMVC.ViewModels.Tradu
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ TRADU_LANG1LANGUA]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -384,7 +381,7 @@ namespace GenioMVC.ViewModels.Tradu
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlang1> listing = Models.ModelBase.Where<CSGenioAlang1>(m_userContext, false, tradu___lang1langua__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TRADU___LANG1LANGUA__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlang1> listing = Models.ModelBase.Where<CSGenioAlang1>(m_userContext, distinct, tradu___lang1langua__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TRADU___LANG1LANGUA__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -464,6 +461,8 @@ namespace GenioMVC.ViewModels.Tradu
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -513,7 +512,7 @@ namespace GenioMVC.ViewModels.Tradu
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValLangua", CSGenioAlang1.FldLangua, typeof(string))
+			new TableSearchColumn("ValLangua", CSGenioAlang1.FldLangua, typeof(string)),
 		];
 	}
 }

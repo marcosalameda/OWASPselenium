@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Proje
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodproje { get; set; }
+		public string ProjeValCodproje { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Proje
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Proje
 		/// <param name="userContext">The current user request context</param>
 		public Proje_ValDespesas_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodproje = userContext.CurrentNavigation.CurrentLevel.GetEntry("proje")?.ToString();
+			ProjeValCodproje = userContext.CurrentNavigation.CurrentLevel.GetEntry("proje")?.ToString();
 		}
 
 		/// <summary>
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Proje
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAexpen.FldDescript, FieldType.TEXTO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
-				new Exports.QColumn(CSGenioAexpen.FldValue, FieldType.VALOR, Resources.Resources.VALUE10285, 10, 0, true),
-				new Exports.QColumn(CSGenioAyear.FldYear, FieldType.TEXTO, Resources.Resources.ANO33022, 4, 0, true),
+				new Exports.QColumn(CSGenioAexpen.FldDescript, FieldType.TEXT, Resources.Resources.DESCRIPTION07383, 30, 0, true),
+				new Exports.QColumn(CSGenioAexpen.FldValue, FieldType.CURRENCY, Resources.Resources.VALUE10285, 10, 0, true),
+				new Exports.QColumn(CSGenioAyear.FldYear, FieldType.TEXT, Resources.Resources.ANO33022, 4, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -195,10 +194,8 @@ namespace GenioMVC.ViewModels.Proje
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodproje != null)
-				crs.Equal(CSGenioAexpen.FldCodproje, this.ValCodproje);
-
-
+			if (this.ProjeValCodproje != null)
+				crs.Equal(CSGenioAexpen.FldCodproje, this.ProjeValCodproje);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -336,8 +333,7 @@ namespace GenioMVC.ViewModels.Proje
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("expen", "descript");
+					firstVisibleColumn ??= new FieldRef("expen", "descript");
 				}
 
 
@@ -366,6 +362,8 @@ namespace GenioMVC.ViewModels.Proje
 
 // USE /[MANUAL GQT OVERRQ PROJE_PSEUDDESPESAS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -393,7 +391,7 @@ namespace GenioMVC.ViewModels.Proje
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAexpen> listing = Models.ModelBase.Where<CSGenioAexpen>(m_userContext, false, proje___pseuddespesasConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROJE___PSEUDDESPESAS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAexpen> listing = Models.ModelBase.Where<CSGenioAexpen>(m_userContext, distinct, proje___pseuddespesasConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROJE___PSEUDDESPESAS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -475,6 +473,8 @@ namespace GenioMVC.ViewModels.Proje
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -526,7 +526,7 @@ namespace GenioMVC.ViewModels.Proje
 		[
 			new TableSearchColumn("ValDescript", CSGenioAexpen.FldDescript, typeof(string)),
 			new TableSearchColumn("ValValue", CSGenioAexpen.FldValue, typeof(decimal?)),
-			new TableSearchColumn("Year_ValYear", CSGenioAyear.FldYear, typeof(string))
+			new TableSearchColumn("Year_ValYear", CSGenioAyear.FldYear, typeof(string)),
 		];
 	}
 }

@@ -281,7 +281,7 @@ namespace GenioMVC.Models
 			PersistentSupport sp = m_userContext.PersistentSupport;
 			field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
 
-			List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(baseklass.Alias).DBFields.Where(x => x.Value.FieldType.Equals(FieldType.FICHEIRO_BD)).ToList();
+			List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(baseklass.Alias).DBFields.Where(x => x.Value.FieldType.Equals(FieldType.DOCUMENT)).ToList();
 
 			if (fields.Exists(x => x.Key.ToLower() == field) && file != null)
 			{
@@ -443,7 +443,7 @@ namespace GenioMVC.Models
 				object fieldValue = baseklass.returnValueField(Qfield);
 				string strFieldValue = Conversion.internal2String(srcDbFld.GetValorEmpty(), srcDbFld.FieldType);
 
-				bool isEmptyVal = GlobalFunctions.emptyG(fieldValue) == 1;
+				bool isEmptyVal = GenFunctions.emptyG(fieldValue) == 1;
 
 				var isComputedField = false;
 				if (!allowOverrideComputed)
@@ -466,7 +466,7 @@ namespace GenioMVC.Models
 
 				//Value do Hist
 				bool hasKey = navigation.CheckKey(areaToLoad, out object hValue, level);
-				bool isEmptyHistVal = GlobalFunctions.emptyG(hValue) == 1;
+				bool isEmptyHistVal = GenFunctions.emptyG(hValue) == 1;
 
 				// skip if unable to find a single value for this key
 				if (hValue is Array)
@@ -675,9 +675,10 @@ namespace GenioMVC.Models
 			{
 				// Condition for field type added because sorting by an image field causes an error
 				if (firstVisibleColumn != null
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGEM_JPEG
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEO_SHAPE)
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGE
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_POINT
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOMETRY_SHAPE
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_SHAPE)
 				{
 					ColumnSort sortFirstVisibleColumn = new(new ColumnReference(firstVisibleColumn), SortOrder.Ascending);
 					sorts.Add(sortFirstVisibleColumn);

@@ -40,11 +40,13 @@
 		<template #actions="props">
 		<q-button-group borderless>
 			<q-button
+				variant="text"
 				:title="Resources.EDITAR11616"
 				@click="editUser(props.row)">
 				<q-icon icon="pencil" />
 			</q-button>
 			<q-button
+				variant="text"
 				:title="Resources.ELIMINAR21155"
 				@click="deleteUser(props.row)">
 				<q-icon icon="bin" />
@@ -55,6 +57,7 @@
 		<template #user-roles="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -63,6 +66,7 @@
 		<template #TBS="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'TBS' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -71,6 +75,7 @@
 		<template #WMS="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'WMS' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -79,6 +84,7 @@
 		<template #IMO="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'IMO' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -87,6 +93,7 @@
 		<template #TRN="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'TRN' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -95,6 +102,7 @@
 		<template #STY="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'STY' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -103,6 +111,7 @@
 		<template #PTN="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'PTN' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -111,6 +120,7 @@
 		<template #REG="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'REG' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -119,6 +129,7 @@
 		<template #GQT="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'GQT' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
 				{{ Resources[userRole.Designation] }}
@@ -137,20 +148,26 @@
 	</qtable>
 
 	<row v-if="hasAdIdentityProviders">
-		<select-input v-model="domainprovider" :options="identityProviders" :label="'Select the domain'"></select-input>
+		<q-select
+			v-model="domainprovider"
+			item-value="Value"
+			item-label="Text"
+			:items="identityProviders"
+			:label="'Select the domain'" />
 		<q-button
-			b-style="primary"
+			variant="bold"
 			:label="Resources.IMPORTAR_UTILIZADORE27134"
 			@click="ImportarUsersAD" />
 	</row>
 	<q-dialog
 		v-model="showConfirmDialog"
 		:text="Resources.DESEJA_ELIMINAR_ESTA24564"
+		:icon="{ icon: 'alert', color: 'warning' }"
 		:buttons="confirmBtns" />
 	<q-dialog
 		v-model="showDialog"
 		:text="Resources.UTILIZADOR_EXCLUIDO_17794"
-		:icon='{"icon":"check-circle-outline"}'
+		:icon="{ icon: 'check-circle-outline', color: 'success' }"
 		:buttons="dialogBtns" />
 </template>
 
@@ -158,6 +175,7 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
+	import bootbox from 'bootbox';
 
 	export default {
 		name: 'allUsers',
@@ -228,8 +246,7 @@
 				},
 				domainprovider: '',
 				identityProviders: [],
-				columnModules : true,
-				hasAdIdentityProviders: false
+				columnModules : true
 			};
 		},
 		computed: {
@@ -257,7 +274,10 @@
                     this.Modules.GQT.active = value;
                     return value;
                 }
-            }
+            },
+			hasAdIdentityProviders() {
+				return this.identityProviders && this.identityProviders.length > 0;
+			}
         },
 		methods: {
 			createUser() {
@@ -296,12 +316,7 @@
 				QUtils.log("Fetch data - Users");
 				QUtils.FetchData(QUtils.apiActionURL('Users', 'Index')).done(function (data) {
 					if (data.Success) {
-						// Update IdentityProviders list
-						vm.identityProviders = [];
-						$.each(data.model.IdentityProviders, function (idx, identityProvider) {
-							vm.identityProviders.push({ Value: identityProvider, Text: identityProvider });
-						});
-						vm.hasAdIdentityProviders = data.model.HasAdIdentityProviders;
+						vm.identityProviders = data.model.IdentityProviders;
 					}
 				});
 				this.GetUserList();
@@ -316,7 +331,7 @@
 						id: 'confirm-btn',
 						props: {
 							label: this.Resources.OK57387,
-							bStyle: "primary"
+							variant: 'bold'
 						},
 						action: () => {
 							if (!this.Model.Username) {
@@ -335,7 +350,8 @@
 						id: 'confirm-btn',
 						props: {
 							label: this.Resources.SIM28552,
-							bStyle: "primary"
+							variant: 'bold',
+							color: 'danger'
 						},
 						action: () => {
 							this.submit()
@@ -345,8 +361,7 @@
 					{
 						id: 'cancel-btn',
 						props: {
-							label: this.Resources.NAO06521,
-							bStyle: "secondary"
+							label: this.Resources.NAO06521
 						}
 					}
 				]
@@ -449,23 +464,11 @@
 		ImportarUsersAD() {
 			if (this.hasAdIdentityProviders === false) return
 
-			var vm = this,
-				domain = this.domainprovider;
+			var vm = this;
 
 			if ($.isEmptyObject(domain)) {
 				bootbox.alert(vm.Resources.E_NECESSARIO_ESCOLHE33714);
 				return;
-			}
-
-			var domainSplited = new Array();
-			domainSplited = domain.split('=');
-
-			if (domainSplited.length < 2 || $.isEmptyObject(domainSplited[1])) {
-				bootbox.alert(vm.Resources.DOMINIO_IVALIDO_36204);
-				return;
-			}
-			else {
-				domain = domainSplited[1];
 			}
 
 			bootbox.confirm({
@@ -482,7 +485,7 @@
 				},
 				callback(result) {
 					if (result) {
-						QUtils.postData('Users', 'ImportUsersFromAD', null, { dominio: domain }, function (data) {
+						QUtils.postData('Users', 'ImportUsersFromAD', null, { providerId: vm.domainprovider }, function (data) {
 							vm.fetchData();
 						});
 					}

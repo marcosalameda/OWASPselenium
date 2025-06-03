@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Cfaqs
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -148,7 +146,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				!ajaxRequest ? new Exports.QColumn(CSGenioAcfaqs.FldIcon, FieldType.IMAGEM_JPEG, String.Empty, 3, 1, true):null,
+				!ajaxRequest ? new Exports.QColumn(CSGenioAcfaqs.FldIcon, FieldType.IMAGE, String.Empty, 3, 1, true):null,
 				new Exports.QColumn(CSGenioAcfaqs.FldCategory, FieldType.MEMO, Resources.Resources.CATEGORY18978, 30, 3, true),
 				new Exports.QColumn(CSGenioAcfaqs.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 3, true),
 			};
@@ -213,8 +211,6 @@ namespace GenioMVC.ViewModels.Cfaqs
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -353,8 +349,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("cfaqs", "icon");
+					firstVisibleColumn ??= new FieldRef("cfaqs", "icon");
 				}
 
 
@@ -383,6 +378,8 @@ namespace GenioMVC.ViewModels.Cfaqs
 
 // USE /[MANUAL STY OVERRQ 3591]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -410,7 +407,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAcfaqs> listing = Models.ModelBase.Where<CSGenioAcfaqs>(m_userContext, false, sty_menu_3591Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML3591", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAcfaqs> listing = Models.ModelBase.Where<CSGenioAcfaqs>(m_userContext, distinct, sty_menu_3591Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML3591", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -491,6 +488,8 @@ namespace GenioMVC.ViewModels.Cfaqs
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -542,7 +541,7 @@ namespace GenioMVC.ViewModels.Cfaqs
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValCategory", CSGenioAcfaqs.FldCategory, typeof(string)),
-			new TableSearchColumn("ValDescript", CSGenioAcfaqs.FldDescript, typeof(string))
+			new TableSearchColumn("ValDescript", CSGenioAcfaqs.FldDescript, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Cfaqs row)
 		{

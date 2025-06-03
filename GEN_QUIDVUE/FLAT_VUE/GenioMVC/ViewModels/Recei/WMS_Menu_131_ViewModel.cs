@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Recei
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,9 +147,9 @@ namespace GenioMVC.ViewModels.Recei
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERO, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldDtreceip, FieldType.DATAHORA, Resources.Resources.RECEIPT_DATE00996, 16, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERIC, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldDtreceip, FieldType.DATETIME, Resources.Resources.RECEIPT_DATE00996, 16, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -214,8 +212,6 @@ namespace GenioMVC.ViewModels.Recei
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -362,8 +358,7 @@ namespace GenioMVC.ViewModels.Recei
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("recei", "number");
+					firstVisibleColumn ??= new FieldRef("recei", "number");
 				}
 
 
@@ -392,6 +387,8 @@ namespace GenioMVC.ViewModels.Recei
 
 // USE /[MANUAL WMS OVERRQ 131]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -419,7 +416,7 @@ namespace GenioMVC.ViewModels.Recei
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, false, wms_menu_131Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML131", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, distinct, wms_menu_131Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML131", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -502,6 +499,8 @@ namespace GenioMVC.ViewModels.Recei
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -553,7 +552,7 @@ namespace GenioMVC.ViewModels.Recei
 		[
 			new TableSearchColumn("ValNumber", CSGenioArecei.FldNumber, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("ValDtreceip", CSGenioArecei.FldDtreceip, typeof(DateTime?)),
-			new TableSearchColumn("Entit_ValName", CSGenioAentit.FldName, typeof(string))
+			new TableSearchColumn("Entit_ValName", CSGenioAentit.FldName, typeof(string)),
 		];
 	}
 }

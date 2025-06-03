@@ -1325,7 +1325,7 @@ namespace CSGenio.framework
             string result;
             AreaInfo areaInfo = Area.GetInfoArea(table);
 
-            FieldFormatting format = areaInfo.DBFields[field].FieldType.Formatting;
+            FieldFormatting format = areaInfo.DBFields[field].FieldType.GetFormatting();
 
             switch (format)
             {

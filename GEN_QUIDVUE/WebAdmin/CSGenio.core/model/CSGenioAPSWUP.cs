@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioApswup(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -36,7 +35,7 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 			
 			/*Information das areas*/
-			info.TableName = "UserLogin";
+			info.TableName = "userlogin";
 			info.ShadowTabName = "";
 			info.PrimaryKeyName = "codpsw";
             info.HumanKeyName = "nome";
@@ -55,19 +54,17 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field("codpsw", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codpsw"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field("nome", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "nome", FieldType.TEXT));
 			info.DBFields["nome"].FieldSize = 100;
 			
-			info.RegisterFieldDB(new Field("password", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "password", FieldType.TEXT));
 			info.DBFields["password"].FieldSize = 150;
 			
-			info.RegisterFieldDB(new Field("certsn", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "certsn", FieldType.TEXT));
 			info.DBFields["certsn"].FieldSize = 32;
 			
-			info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
 			// Relações Filhas
 			//------------------------------

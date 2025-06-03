@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "NºFuncionário" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValNfunc")]
 		[NumericAttribute(0)]
-		public decimal? ValNfunc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNfunc, 0)); } set { klass.ValNfunc = Convert.ToDecimal(value); } }
+		public decimal? ValNfunc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNfunc, 0)); } set { klass.ValNfunc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Address")]
 		/// <summary>Field : "Address" Tipo: "C" Formula:  ""</summary>
@@ -84,7 +84,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "NºTelefone" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValCellphon")]
 		[NumericAttribute(0)]
-		public decimal? ValCellphon { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCellphon, 0)); } set { klass.ValCellphon = Convert.ToDecimal(value); } }
+		public decimal? ValCellphon { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValCellphon, 0)); } set { klass.ValCellphon = Convert.ToDecimal(value); } }
 
 		[DisplayName("Naturalness")]
 		/// <summary>Field : "Naturalness" Tipo: "C" Formula:  ""</summary>

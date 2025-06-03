@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Expen;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER EXPEN]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ExpenController : ControllerBase
 	{
-		public ExpenController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ExpenController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION EXPEN]/
 
 
@@ -583,6 +592,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
 
 
 

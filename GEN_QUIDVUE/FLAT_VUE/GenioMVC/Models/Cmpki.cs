@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Cmpki.ValOrder")]
 		[NumericAttribute(1)]
-		public decimal? ValOrder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrder, 1)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
+		public decimal? ValOrder { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOrder, 1)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
 
 		[DisplayName("TYPE OF COMPONENT EQUIPMENT")]
 		/// <summary>Field : "TYPE OF COMPONENT EQUIPMENT" Tipo: "CE" Formula: DF "[CMPKI->CODTPEQU]"</summary>
@@ -84,7 +84,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Cmpki.ValQuantida")]
 		[NumericAttribute(0)]
-		public decimal? ValQuantida { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
+		public decimal? ValQuantida { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
 
 		[DisplayName("Description")]
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>

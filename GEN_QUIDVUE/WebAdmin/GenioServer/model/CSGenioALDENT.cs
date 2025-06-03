@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAldent(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR LDENT]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codldent", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codldent", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("coddentr", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "coddentr", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("line", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "line", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Line";
 			Qfield.FieldSize =  5;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "LINE27983";
@@ -83,10 +78,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codwareh", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codwareh", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ARMAZEM";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_ARMAZEM43996";
 
 			Qfield.Dupmsg = "";
@@ -99,20 +93,18 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("coditem", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "coditem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">ARTICLE";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_ARTICLE38266";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("qtdentra", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "qtdentra", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Qtd entry";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "QTD_ENTRY35144";
 
@@ -121,10 +113,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dhentra", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dhentra", FieldType.DATETIME);
 			Qfield.FieldDescription = "Instant entrance";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
@@ -132,19 +123,17 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("emuso", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "emuso", FieldType.LOGIC);
 			Qfield.FieldDescription = "Articles in use";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ARTICLES_IN_USE35156";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -245,8 +234,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Entry";
 			info.AreaPluralDesignation="Entries";
 			info.DescriptionCav="ENTRY29068";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

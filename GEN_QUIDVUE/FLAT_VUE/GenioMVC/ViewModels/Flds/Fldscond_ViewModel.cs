@@ -223,7 +223,7 @@ namespace GenioMVC.ViewModels.Flds
 					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFserver2).isEmptyValue(ViewModelConversion.ToNumeric(model.ValFserver2)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, ""); // Message: ""
+					StatusMessage message = new(status, ""); // Message: ""
 					result.MergeStatusMessage(message);
 				}
 				// (FLDSCOND form condition) !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE"
@@ -231,7 +231,7 @@ namespace GenioMVC.ViewModels.Flds
 					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFclient3).isEmptyValue(ViewModelConversion.ToString(model.ValFclient3)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, ""); // Message: ""
+					StatusMessage message = new(status, ""); // Message: ""
 					result.MergeStatusMessage(message);
 				}
 				// (FLDSCOND form condition) !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
@@ -239,7 +239,7 @@ namespace GenioMVC.ViewModels.Flds
 					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFserver3).isEmptyValue(ViewModelConversion.ToImage(model.ValFserver3)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, ""); // Message: ""
+					StatusMessage message = new(status, ""); // Message: ""
 					result.MergeStatusMessage(message);
 				}
 				// (FLDSCOND form condition) !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE"
@@ -247,7 +247,7 @@ namespace GenioMVC.ViewModels.Flds
 					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFclient2).isEmptyValue(ViewModelConversion.ToLogic(model.ValFclient2)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, ""); // Message: ""
+					StatusMessage message = new(status, ""); // Message: ""
 					result.MergeStatusMessage(message);
 				}
 			}

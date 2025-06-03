@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Facty
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,20 +148,20 @@ namespace GenioMVC.ViewModels.Facty
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfacty.FldType, FieldType.TEXTO, Resources.Resources.FACILITY_TYPE44577, 25, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldLayrname, FieldType.TEXTO, Resources.Resources.LAYER_NAME49545, 30, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconurl, FieldType.TEXTO, Resources.Resources.ICON_URL07016, 30, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadowur, FieldType.TEXTO, Resources.Resources.SHADOW_URL57805, 30, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconancx, FieldType.NUMERO, Resources.Resources.ICON_ANCHOR__X_AXIS_18664, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconancy, FieldType.NUMERO, Resources.Resources.ICON_ANCHOR__Y_AXIS_63725, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconheig, FieldType.NUMERO, Resources.Resources.ICON_HEIGHT61896, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconwid, FieldType.NUMERO, Resources.Resources.ICON_WIDTH02295, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldPopupanx, FieldType.NUMERO, Resources.Resources.POPUP_ANCHOR__X_AXIS15060, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldPopupany, FieldType.NUMERO, Resources.Resources.POPUP_ANCHOR__Y_AXIS64670, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadowax, FieldType.NUMERO, Resources.Resources.SHADOW_ANCHOR__X_AXI31230, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadoway, FieldType.NUMERO, Resources.Resources.SHADOW_ANCHOR__Y_AXI51495, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadowhe, FieldType.NUMERO, Resources.Resources.SHADOW_HEIGHT64343, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadowwi, FieldType.NUMERO, Resources.Resources.SHADOW_WIDTH01769, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldType, FieldType.TEXT, Resources.Resources.FACILITY_TYPE44577, 25, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldLayrname, FieldType.TEXT, Resources.Resources.LAYER_NAME49545, 30, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconurl, FieldType.TEXT, Resources.Resources.ICON_URL07016, 30, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadowur, FieldType.TEXT, Resources.Resources.SHADOW_URL57805, 30, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconancx, FieldType.NUMERIC, Resources.Resources.ICON_ANCHOR__X_AXIS_18664, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconancy, FieldType.NUMERIC, Resources.Resources.ICON_ANCHOR__Y_AXIS_63725, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconheig, FieldType.NUMERIC, Resources.Resources.ICON_HEIGHT61896, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconwid, FieldType.NUMERIC, Resources.Resources.ICON_WIDTH02295, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldPopupanx, FieldType.NUMERIC, Resources.Resources.POPUP_ANCHOR__X_AXIS15060, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldPopupany, FieldType.NUMERIC, Resources.Resources.POPUP_ANCHOR__Y_AXIS64670, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadowax, FieldType.NUMERIC, Resources.Resources.SHADOW_ANCHOR__X_AXI31230, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadoway, FieldType.NUMERIC, Resources.Resources.SHADOW_ANCHOR__Y_AXI51495, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadowhe, FieldType.NUMERIC, Resources.Resources.SHADOW_HEIGHT64343, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadowwi, FieldType.NUMERIC, Resources.Resources.SHADOW_WIDTH01769, 3, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -226,8 +224,6 @@ namespace GenioMVC.ViewModels.Facty
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -374,8 +370,7 @@ namespace GenioMVC.ViewModels.Facty
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("facty", "type");
+					firstVisibleColumn ??= new FieldRef("facty", "type");
 				}
 
 
@@ -404,6 +399,8 @@ namespace GenioMVC.ViewModels.Facty
 
 // USE /[MANUAL WMS OVERRQ 4231]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -431,7 +428,7 @@ namespace GenioMVC.ViewModels.Facty
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfacty> listing = Models.ModelBase.Where<CSGenioAfacty>(m_userContext, false, wms_menu_4231Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4231", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfacty> listing = Models.ModelBase.Where<CSGenioAfacty>(m_userContext, distinct, wms_menu_4231Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4231", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -512,6 +509,8 @@ namespace GenioMVC.ViewModels.Facty
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -574,7 +573,7 @@ namespace GenioMVC.ViewModels.Facty
 			new TableSearchColumn("ValShadowax", CSGenioAfacty.FldShadowax, typeof(decimal?)),
 			new TableSearchColumn("ValShadoway", CSGenioAfacty.FldShadoway, typeof(decimal?)),
 			new TableSearchColumn("ValShadowhe", CSGenioAfacty.FldShadowhe, typeof(decimal?)),
-			new TableSearchColumn("ValShadowwi", CSGenioAfacty.FldShadowwi, typeof(decimal?))
+			new TableSearchColumn("ValShadowwi", CSGenioAfacty.FldShadowwi, typeof(decimal?)),
 		];
 	}
 }

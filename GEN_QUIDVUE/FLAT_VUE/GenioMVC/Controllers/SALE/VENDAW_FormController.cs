@@ -36,37 +36,37 @@ namespace GenioMVC.Controllers
 					break;
 				case "wizard-step-FASES-1":
 					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValProspecc))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValProspecc))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW02", "FASES", 2);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValQualific))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValQualific))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW03", "FASES", 3);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValHomework))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValHomework))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW04", "FASES", 4);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApproach))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApproach))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW05", "FASES", 5);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApresent))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApresent))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW06", "FASES", 6);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW07", "FASES", 7);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW08", "FASES", 8);
 						break;
@@ -75,32 +75,32 @@ namespace GenioMVC.Controllers
 					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-2":
 					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValQualific))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValQualific))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW03", "FASES", 3);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValHomework))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValHomework))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW04", "FASES", 4);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApproach))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApproach))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW05", "FASES", 5);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApresent))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApresent))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW06", "FASES", 6);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW07", "FASES", 7);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW08", "FASES", 8);
 						break;
@@ -109,27 +109,27 @@ namespace GenioMVC.Controllers
 					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-3":
 					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValHomework))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValHomework))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW04", "FASES", 4);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApproach))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApproach))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW05", "FASES", 5);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApresent))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApresent))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW06", "FASES", 6);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW07", "FASES", 7);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW08", "FASES", 8);
 						break;
@@ -138,22 +138,22 @@ namespace GenioMVC.Controllers
 					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-4":
 					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApproach))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApproach))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW05", "FASES", 5);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApresent))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApresent))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW06", "FASES", 6);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW07", "FASES", 7);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW08", "FASES", 8);
 						break;
@@ -162,17 +162,17 @@ namespace GenioMVC.Controllers
 					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-5":
 					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-					if (CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApresent))==0)
+					if (CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApresent))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW06", "FASES", 6);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW07", "FASES", 7);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW08", "FASES", 8);
 						break;
@@ -181,12 +181,12 @@ namespace GenioMVC.Controllers
 					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-6":
 					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtsupera))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW07", "FASES", 7);
 						break;
 					}
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW08", "FASES", 8);
 						break;
@@ -195,7 +195,7 @@ namespace GenioMVC.Controllers
 					throw new Exception(errorStepMessage);
 				case "wizard-step-FASES-7":
 					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-					if (CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
+					if (CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtvenda))==0)
 					{
 						nextStep = new Models.WizardStep("VENDAW08", "FASES", 8);
 						break;
@@ -244,25 +244,25 @@ namespace GenioMVC.Controllers
 				switch (nextStep.StepId)
 				{
 					case "wizard-step-FASES-1":
-						isActive = CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValProspecc))==0&&CSGenio.business.GlobalFunctions.emptyG(((string)p.ValCodorgan))==0;
+						isActive = CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValProspecc))==0&&CSGenio.framework.GenFunctions.emptyG(((string)p.ValCodorgan))==0;
 						break;
 					case "wizard-step-FASES-2":
-						isActive = CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValQualific))==0;
+						isActive = CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValQualific))==0;
 						break;
 					case "wizard-step-FASES-3":
-						isActive = CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValHomework))==0;
+						isActive = CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValHomework))==0;
 						break;
 					case "wizard-step-FASES-4":
-						isActive = CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApproach))==0;
+						isActive = CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApproach))==0;
 						break;
 					case "wizard-step-FASES-5":
-						isActive = CSGenio.business.GlobalFunctions.emptyL(((Logical)p.ValApresent))==0;
+						isActive = CSGenio.framework.GenFunctions.emptyL(((Logical)p.ValApresent))==0;
 						break;
 					case "wizard-step-FASES-6":
-						isActive = CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtsupera))==0;
+						isActive = CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtsupera))==0;
 						break;
 					case "wizard-step-FASES-7":
-						isActive = CSGenio.business.GlobalFunctions.emptyD(((DateTime)p.ValDtvenda))==0;
+						isActive = CSGenio.framework.GenFunctions.emptyD(((DateTime)p.ValDtvenda))==0;
 						break;
 					case "wizard-step-FASES-8":
 						break;

@@ -96,19 +96,19 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Entries" Tipo: "N" Formula: SR "[LDENT->QTDENTRA]"</summary>
 		[ShouldSerialize("Item.ValEntries")]
 		[NumericAttribute(0)]
-		public decimal? ValEntries { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValEntries, 0)); } set { klass.ValEntries = Convert.ToDecimal(value); } }
+		public decimal? ValEntries { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValEntries, 0)); } set { klass.ValEntries = Convert.ToDecimal(value); } }
 
 		[DisplayName("Outputs")]
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[OUTPU->EXITQNTY]"</summary>
 		[ShouldSerialize("Item.ValExits")]
 		[NumericAttribute(0)]
-		public decimal? ValExits { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExits, 0)); } set { klass.ValExits = Convert.ToDecimal(value); } }
+		public decimal? ValExits { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValExits, 0)); } set { klass.ValExits = Convert.ToDecimal(value); } }
 
 		[DisplayName("Stocks")]
 		/// <summary>Field : "Stocks" Tipo: "N" Formula: SR "[LDENT->QTDENTRA]-[OUTPU->EXITQNTY]"</summary>
 		[ShouldSerialize("Item.ValExistenc")]
 		[NumericAttribute(0)]
-		public decimal? ValExistenc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExistenc, 0)); } set { klass.ValExistenc = Convert.ToDecimal(value); } }
+		public decimal? ValExistenc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValExistenc, 0)); } set { klass.ValExistenc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Image")]
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>

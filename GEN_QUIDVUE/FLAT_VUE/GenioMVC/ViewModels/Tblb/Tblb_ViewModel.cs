@@ -472,7 +472,7 @@ namespace GenioMVC.ViewModels.Tblb
 
 			validator.StringLength("ValText", Resources.Resources.TEXT04938, ValText, 50);
 
-			validator.Required("ValText", Resources.Resources.TEXT04938, ViewModelConversion.ToString(ValText), FieldType.TEXTO.Formatting);
+			validator.Required("ValText", Resources.Resources.TEXT04938, ViewModelConversion.ToString(ValText), FieldType.TEXT.GetFormatting());
 
 
 			return validator.GetResult();

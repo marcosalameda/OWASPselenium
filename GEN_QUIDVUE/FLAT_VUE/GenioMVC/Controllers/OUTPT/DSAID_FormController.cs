@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -533,14 +532,14 @@ namespace GenioMVC.Controllers
 		}
 
 		[ActionName("ReorderDsaid_ValSaidas")]
-		public ActionResult ReorderDsaid_ValSaidas([FromBody]RequestReorderModel requestModel)
+		public ActionResult ReorderDsaid_ValSaidas([FromBody] RequestReorderModel requestModel)
 		{
 			var id = requestModel.Id;
 			var position = requestModel.Position.ToString();
 
-			Dsaid_ValSaidas_ViewModel model = new Dsaid_ValSaidas_ViewModel(UserContext.Current);
+			Dsaid_ValSaidas_ViewModel model = new(UserContext.Current);
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodoutpt = Navigation.GetStrValue("outpt");
+			model.OutptValCodoutpt = Navigation.GetStrValue("outpt");
 			model.Reorder(id, position);
 			model.Load(-1);
 

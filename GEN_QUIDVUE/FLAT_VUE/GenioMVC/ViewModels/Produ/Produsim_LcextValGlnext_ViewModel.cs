@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Produ
 			return crs;
 		}
 
-
 		public string ValCodlocat { get; set; }
 
 		public override int GetCount(User user)
@@ -130,7 +129,7 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXTO, Resources.Resources.GLN_EXTENSION_COMPON55869, 50, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXTENSION_COMPON55869, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -198,9 +197,6 @@ namespace GenioMVC.ViewModels.Produ
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -344,8 +340,7 @@ namespace GenioMVC.ViewModels.Produ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("lcext", "glnext");
+					firstVisibleColumn ??= new FieldRef("lcext", "glnext");
 				}
 
 
@@ -363,6 +358,8 @@ namespace GenioMVC.ViewModels.Produ
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ PRODUSIM_LCEXTGLNEXT]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -390,7 +387,7 @@ namespace GenioMVC.ViewModels.Produ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlcext> listing = Models.ModelBase.Where<CSGenioAlcext>(m_userContext, false, produsimlcextglnext__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODUSIMLCEXTGLNEXT__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlcext> listing = Models.ModelBase.Where<CSGenioAlcext>(m_userContext, distinct, produsimlcextglnext__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODUSIMLCEXTGLNEXT__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -470,6 +467,8 @@ namespace GenioMVC.ViewModels.Produ
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -519,7 +518,7 @@ namespace GenioMVC.ViewModels.Produ
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValGlnext", CSGenioAlcext.FldGlnext, typeof(string))
+			new TableSearchColumn("ValGlnext", CSGenioAlcext.FldGlnext, typeof(string)),
 		];
 	}
 }

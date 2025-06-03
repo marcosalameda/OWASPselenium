@@ -25,7 +25,7 @@ namespace GenioMVC.ViewModels.Tblb
 		[JsonPropertyName("Table")]
 		public TablePartial<PTN_Menu_3131_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.NonPersistent;
 
 		/// <inheritdoc/>
 		[JsonIgnore]
@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Tblb
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -105,7 +103,7 @@ namespace GenioMVC.ViewModels.Tblb
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAtblb.FldCodtblb, CSGenioAtblb.FldZzstate, CSGenioAtblb.FldText, CSGenioAtblb.FldTextml, CSGenioAtblb.FldNumint, CSGenioAtblb.FldNumdec, CSGenioAtblb.FldCurint, CSGenioAtblb.FldCurdec, CSGenioAtblb.FldBool, CSGenioAtblb.FldDate, CSGenioAtblb.FldDatetm, CSGenioAtblb.FldDatets, CSGenioAtblb.FldTimehm, CSGenioAtblb.FldEnumt, CSGenioAtblb.FldEnumn };
 
-			ListingMVC<CSGenioAtblb> listing = new(fields, null, 1, 1, false, user, true, string.Empty, true);
+			ListingMVC<CSGenioAtblb> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
 			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
 			// Menu relations:
@@ -150,19 +148,19 @@ namespace GenioMVC.ViewModels.Tblb
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXTO, Resources.Resources.TEXT04938, 30, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXT, Resources.Resources.TEXT04938, 30, 0, true),
 				new Exports.QColumn(CSGenioAtblb.FldTextml, FieldType.MEMO, Resources.Resources.MULTILINE_TEXT38013, 30, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERO, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldNumdec, FieldType.NUMERO, Resources.Resources.NUMERIC__DECIMAL_36157, 10, 3, true),
-				new Exports.QColumn(CSGenioAtblb.FldCurint, FieldType.VALOR, Resources.Resources.CURRENCY__INTERGER_21437, 10, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldCurdec, FieldType.VALOR, Resources.Resources.CURRENCY__DECIMAL_11718, 10, 2, true),
-				new Exports.QColumn(CSGenioAtblb.FldBool, FieldType.LOGICO, Resources.Resources.BOOLEAN45002, 1, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldDate, FieldType.DATA, Resources.Resources.DATE18475, 8, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldDatetm, FieldType.DATAHORA, Resources.Resources.DATETIME__MINUTES_59352, 16, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldDatets, FieldType.DATASEGUNDO, Resources.Resources.DATETIME__SECONDS_49861, 19, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TEMPO, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true),
-				new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ENUMERATION__TEXT_15855, 1, 0, true, "typet"),
-				new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.ENUMERATION__NUMERIC44708, 1, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERIC, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldNumdec, FieldType.NUMERIC, Resources.Resources.NUMERIC__DECIMAL_36157, 10, 3, true),
+				new Exports.QColumn(CSGenioAtblb.FldCurint, FieldType.CURRENCY, Resources.Resources.CURRENCY__INTERGER_21437, 10, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldCurdec, FieldType.CURRENCY, Resources.Resources.CURRENCY__DECIMAL_11718, 10, 2, true),
+				new Exports.QColumn(CSGenioAtblb.FldBool, FieldType.LOGIC, Resources.Resources.BOOLEAN45002, 1, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldDate, FieldType.DATE, Resources.Resources.DATE18475, 8, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldDatetm, FieldType.DATETIME, Resources.Resources.DATETIME__MINUTES_59352, 16, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldDatets, FieldType.DATETIMESECONDS, Resources.Resources.DATETIME__SECONDS_49861, 19, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TIME_HOURS, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true),
+				new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_TEXT, Resources.Resources.ENUMERATION__TEXT_15855, 1, 0, true, "typet"),
+				new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_NUMERIC, Resources.Resources.ENUMERATION__NUMERIC44708, 1, 0, true, "typen"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -200,19 +198,19 @@ namespace GenioMVC.ViewModels.Tblb
 		{
 			columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXTO, Resources.Resources.TEXT04938, 50, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXT, Resources.Resources.TEXT04938, 50, 0, true, "typen"),
 				new Exports.QColumn(CSGenioAtblb.FldTextml, FieldType.MEMO, Resources.Resources.MULTILINE_TEXT38013, 50, 0, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERO, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldNumdec, FieldType.NUMERO, Resources.Resources.NUMERIC__DECIMAL_36157, 9, 3, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldCurint, FieldType.VALOR, Resources.Resources.CURRENCY__INTERGER_21437, 9, 2, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldCurdec, FieldType.VALOR, Resources.Resources.CURRENCY__DECIMAL_11718, 9, 4, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldBool, FieldType.LOGICO, Resources.Resources.BOOLEAN45002, 1, 0, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldDate, FieldType.DATA, Resources.Resources.DATE18475, 8, 0, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldDatetm, FieldType.DATAHORA, Resources.Resources.DATETIME__MINUTES_59352, 16, 0, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldDatets, FieldType.DATASEGUNDO, Resources.Resources.DATETIME__SECONDS_49861, 19, 0, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TEMPO, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ENUMERATION__TEXT_15855, 1, 0, true, "typen"),
-				new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.ENUMERATION__NUMERIC44708, 1, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERIC, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldNumdec, FieldType.NUMERIC, Resources.Resources.NUMERIC__DECIMAL_36157, 9, 3, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldCurint, FieldType.CURRENCY, Resources.Resources.CURRENCY__INTERGER_21437, 9, 2, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldCurdec, FieldType.CURRENCY, Resources.Resources.CURRENCY__DECIMAL_11718, 9, 4, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldBool, FieldType.LOGIC, Resources.Resources.BOOLEAN45002, 1, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldDate, FieldType.DATE, Resources.Resources.DATE18475, 8, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldDatetm, FieldType.DATETIME, Resources.Resources.DATETIME__MINUTES_59352, 16, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldDatets, FieldType.DATETIMESECONDS, Resources.Resources.DATETIME__SECONDS_49861, 19, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TIME_HOURS, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_TEXT, Resources.Resources.ENUMERATION__TEXT_15855, 1, 0, true, "typen"),
+				new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_NUMERIC, Resources.Resources.ENUMERATION__NUMERIC44708, 1, 0, true, "typen"),
 			};
 		}
 
@@ -249,8 +247,6 @@ namespace GenioMVC.ViewModels.Tblb
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -397,8 +393,7 @@ namespace GenioMVC.ViewModels.Tblb
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tblb", "text");
+					firstVisibleColumn ??= new FieldRef("tblb", "text");
 				}
 
 
@@ -427,6 +422,8 @@ namespace GenioMVC.ViewModels.Tblb
 
 // USE /[MANUAL PTN OVERRQ 3131]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -454,7 +451,7 @@ namespace GenioMVC.ViewModels.Tblb
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtblb> listing = Models.ModelBase.Where<CSGenioAtblb>(m_userContext, false, ptn_menu_3131Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML3131", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtblb> listing = Models.ModelBase.Where<CSGenioAtblb>(m_userContext, distinct, ptn_menu_3131Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML3131", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -535,6 +532,8 @@ namespace GenioMVC.ViewModels.Tblb
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -596,7 +595,7 @@ namespace GenioMVC.ViewModels.Tblb
 			new TableSearchColumn("ValDatets", CSGenioAtblb.FldDatets, typeof(DateTime?)),
 			new TableSearchColumn("ValTimehm", CSGenioAtblb.FldTimehm, typeof(string)),
 			new TableSearchColumn("ValEnumt", CSGenioAtblb.FldEnumt, typeof(string), array : "typet"),
-			new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(decimal), array : "typen")
+			new TableSearchColumn("ValEnumn", CSGenioAtblb.FldEnumn, typeof(decimal), array : "typen"),
 		];
 	}
 }

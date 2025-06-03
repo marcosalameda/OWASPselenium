@@ -8,13 +8,31 @@
 			<q-row-container>
 				<row>
 					<q-card
-						class="q-card--admin-border-top q-card--admin-compact"
-						:title="Resources.CRYSTAL_REPORTS15382"
+						class="q-card--admin-border-less q-card--admin-compact"
 						width="block">
-						<q-text-field
-							v-model="model.pathReports"
-							:label="Resources.CAMINHO_PARA_RELATOR05547"
-							size="xlarge" />
+						<q-row-container class="control-row-group">
+							<div class="q-help__info-banner">
+								<div class="q-help__info-banner-header">
+									<q-icon icon="information-outline" />
+									<h5>{{ Resources.CAMINHO_PARA_RELATOR05547 }}</h5>
+								</div>
+								<div class="q-help__info-banner-body">
+									<span style="white-space: pre-line">
+										{{ Resources.ESPECIFICA_O_CAMINHO51946 }}<br>
+										<b>{{ Resources.CRYSTAL_REPORTS15382 }}</b><br>
+										{{ Resources.UTILIZADO_PARA_CARRE49850 }}<br>
+										<b>{{ Resources.REPORTING_SERVICES45145 }}</b><br>
+										{{ Resources.PERMITE_VERIFICAR_NO39154 }}<br>
+									</span>
+								</div>
+							</div>
+							<q-control-wrapper class="control-row-group">
+							<q-text-field
+								v-model="model.pathReports"
+								:label="Resources.CAMINHO_PARA_RELATOR05547"
+								size="xlarge" />
+							</q-control-wrapper>
+						</q-row-container>
 					</q-card>
 				</row>
 				<row>
@@ -51,12 +69,6 @@
 						</q-row-container>
 					</q-card>
 				</row>
-				<row class="footer-btn">
-					<q-button
-						b-style="primary"
-						:label="Resources.GRAVAR_CONFIGURACAO36308"
-						@click="SaveConfigOthers" />
-				</row>
 			</q-row-container>
 		</q-card>
 	</row>
@@ -75,23 +87,6 @@
 				required: true
 			},
 		},
-
-		mixins: [reusableMixin],
-
-		emits: ['alert-class'],
-
-		methods: {
-			SaveConfigOthers() {
-				var vm = this;
-				QUtils.log("SaveConfigOthers - Request", QUtils.apiActionURL('Config', 'SaveConfigOthers'));
-				QUtils.postData('Config', 'SaveConfigOthers', vm.model, null, function (data) {
-					QUtils.log("SaveConfigOthers - Response", data);
-						this.$emit('alert-class', {
-						ResultMsg: data.Success ? this.Resources.ALTERACOES_EFETUADAS10166 : data.Message,
-						AlertType: data.Success ? 'success' : 'danger'
-					});
-				});
-			},
-		}
+		mixins: [reusableMixin]
 	};
 </script>

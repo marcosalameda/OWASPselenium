@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Fami1;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER FAMI1]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class Fami1Controller : ControllerBase
 	{
-		public Fami1Controller(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public Fami1Controller(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION FAMI1]/
 
 
@@ -42,6 +51,7 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER FAMI1]/
+
 
 
 

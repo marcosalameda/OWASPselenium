@@ -104,31 +104,31 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Weight" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Produ.ValWeight")]
 		[NumericAttribute(2)]
-		public decimal? ValWeight { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValWeight, 2)); } set { klass.ValWeight = Convert.ToDecimal(value); } }
+		public decimal? ValWeight { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValWeight, 2)); } set { klass.ValWeight = Convert.ToDecimal(value); } }
 
 		[DisplayName("Price")]
 		/// <summary>Field : "Price" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Produ.ValPrice")]
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 4)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrice, 4)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 
 		[DisplayName("Inputs")]
 		/// <summary>Field : "Inputs" Tipo: "N" Formula: SR "[RELIN->RECEIVED]"</summary>
 		[ShouldSerialize("Produ.ValInputs")]
 		[NumericAttribute(0)]
-		public decimal? ValInputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValInputs, 0)); } set { klass.ValInputs = Convert.ToDecimal(value); } }
+		public decimal? ValInputs { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValInputs, 0)); } set { klass.ValInputs = Convert.ToDecimal(value); } }
 
 		[DisplayName("Outputs")]
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[DILIN->DELIVERE]"</summary>
 		[ShouldSerialize("Produ.ValOutputs")]
 		[NumericAttribute(0)]
-		public decimal? ValOutputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutputs, 0)); } set { klass.ValOutputs = Convert.ToDecimal(value); } }
+		public decimal? ValOutputs { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOutputs, 0)); } set { klass.ValOutputs = Convert.ToDecimal(value); } }
 
 		[DisplayName("Stock")]
 		/// <summary>Field : "Stock" Tipo: "N" Formula: SR "[RELIN->RECEIVED]-[DILIN->DELIVERE]"</summary>
 		[ShouldSerialize("Produ.ValStock")]
 		[NumericAttribute(0)]
-		public decimal? ValStock { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStock, 0)); } set { klass.ValStock = Convert.ToDecimal(value); } }
+		public decimal? ValStock { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValStock, 0)); } set { klass.ValStock = Convert.ToDecimal(value); } }
 
 		[DisplayName("Image")]
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>

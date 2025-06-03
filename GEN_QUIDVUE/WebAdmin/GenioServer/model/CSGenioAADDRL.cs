@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAaddrl(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR ADDRL]/
 		}
 
@@ -46,10 +44,9 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("customeraddressid", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "customeraddressid", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Address";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ADDRESS04342";
 
@@ -57,10 +54,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("parentid", FieldType.CHAVE_FALSA_GUID);
+			Qfield = new Field(info.Alias, "parentid", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Parent";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PARENT12107";
 
@@ -68,10 +64,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("parentidtypecode", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "parentidtypecode", FieldType.TEXT);
 			Qfield.FieldDescription = "parentId Type";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PARENTID_TYPE43984";
 
@@ -80,10 +75,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addressnumber", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "addressnumber", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Address Number";
 			Qfield.FieldSize =  9;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 9;
 			Qfield.CavDesignation = "ADDRESS_NUMBER36138";
@@ -92,10 +86,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("objecttypecode", FieldType.ARRAY_COD_NUMERICO);
+			Qfield = new Field(info.Alias, "objecttypecode", FieldType.ARRAY_NUMERIC);
 			Qfield.FieldDescription = "Object Type";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "OBJECT_TYPE18115";
 
@@ -105,10 +98,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("objecttypecode_display", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "objecttypecode_display", FieldType.TEXT);
 			Qfield.FieldDescription = "objectTypeCode_display";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "OBJECTTYPECODE_DISPL38583";
 
@@ -116,10 +108,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addresstypecode", FieldType.ARRAY_COD_NUMERICO);
+			Qfield = new Field(info.Alias, "addresstypecode", FieldType.ARRAY_NUMERIC);
 			Qfield.FieldDescription = "Address Type Code";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ADDRESS_TYPE_CODE33992";
 
@@ -129,9 +120,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -217,8 +207,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Address";
 			info.AreaPluralDesignation="Address";
 			info.DescriptionCav="ADDRESS04342";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

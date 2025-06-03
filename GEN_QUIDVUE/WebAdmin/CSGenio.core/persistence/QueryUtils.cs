@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using CSGenio.business;
 using CSGenio.framework;
-using CSGenio.business;
+using CSGenio.framework.Geography;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
 
 namespace CSGenio.persistence
 {
@@ -186,29 +188,19 @@ namespace CSGenio.persistence
             return newQuery;
         }
 
-        public static void buildQueryInsert(InsertQuery query, IArea area)
+        public static void buildQueryInsert(InsertQuery query, IArea area, bool ouputsPk = false)
         {
             query.Into(area.QSystem, area.TableName);
 
-            IEnumerator enumCampos = area.Fields.Values.GetEnumerator();
-            IDictionary<string, Field> camposBD = area.DBFields;
-            while (enumCampos.MoveNext())
-            {
-                RequestedField campoPedido = (RequestedField)enumCampos.Current;
-
+            foreach(var campoPedido in area.Fields.Values)
                 // Foreign fields (EPHs) can be present in the requested fields list
-                if (!camposBD.ContainsKey(campoPedido.Name))
-                    continue;
-
-                if (camposBD[campoPedido.Name] != null)
+                if(area.DBFields.TryGetValue(campoPedido.Name, out var campoBD) && !campoBD.IsVirtual)
                 {
-                    Field campoBD = (Field)camposBD[campoPedido.Name];
-					if (campoBD.IsVirtual)
-                        continue;
-
-                    query.Value(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
+                    if(ouputsPk && campoBD.Name == area.Information.PrimaryKeyName)
+                        query.Output(campoPedido.Name);
+                    else
+                        query.Value(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
                 }
-            }
         }
 
         public static object getRandomValue(Field Qfield)
@@ -236,7 +228,7 @@ namespace CSGenio.persistence
             }
             //a conversaoBd assume (e bem) que o Qfield ja vem no tipo certo, no entanto aqui queremos transformar o inteiro
             //em diferentes tipos consoante o tipo de Qfield.
-            return convertIntegerToInterno(Qvalue, Qfield.FieldType.Formatting);
+            return convertIntegerToInterno(Qvalue, Qfield.FieldType.GetFormatting());
         }
 
         private static object convertIntegerToInterno(int Qvalue, FieldFormatting tipo)
@@ -262,20 +254,10 @@ namespace CSGenio.persistence
         {
             query.Into(area.QSystem, area.ShadowTabName);
 
-            IEnumerator enumCampos = area.Fields.Values.GetEnumerator();
-            IDictionary<string, Field> camposBD = area.DBFields;
-            while (enumCampos.MoveNext())
-            {
-                RequestedField campoPedido = (RequestedField)enumCampos.Current;
-                if (camposBD[campoPedido.Name] != null)
-                {
-                    Field campoBD = (Field)camposBD[campoPedido.Name];
-                    if (campoBD.IsVirtual)
-                        continue;
-
+            foreach (var campoPedido in area.Fields.Values)
+                // Foreign fields (EPHs) can be present in the requested fields list
+                if (area.DBFields.TryGetValue(campoPedido.Name, out var campoBD) && !campoBD.IsVirtual)
                     query.Value(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
-                }
-            }
 
             //20051207 nao esquecer de preencher o operdel e de criar operation
             //The operation is going to be hardcoded for now.
@@ -288,37 +270,27 @@ namespace CSGenio.persistence
         {
             string QtableName = area.TableName.Trim();
             query.Update(area.QSystem, QtableName);
-
-            //SO 20060919
             query.Where(CriteriaSet.And()
                 .Equal(QtableName, area.PrimaryKeyName, area.returnValueField(area.Alias + "." + area.PrimaryKeyName)));
-            Dictionary<string, Field> camposBD = area.DBFields;
-            IEnumerator enumCampos = area.Fields.Values.GetEnumerator();
-            while (enumCampos.MoveNext())
+
+            foreach (var campoPedido in area.Fields.Values)
             {
-                RequestedField campoPedido = (RequestedField)enumCampos.Current;
-                if (!campoPedido.Name.Equals(area.PrimaryKeyName) && camposBD[campoPedido.Name] != null)
+                if (!area.DBFields.TryGetValue(campoPedido.Name, out var campoBD))
+                    continue;
+
+                if (!campoPedido.Name.Equals(area.PrimaryKeyName))
                 {
-                    Field campoBD = (Field)camposBD[campoPedido.Name];
+                    //virtual vields do not support updates
 					if (campoBD.IsVirtual)
                         continue;
 
-                    if (!campoBD.FieldType.Equals(FieldType.IMAGEM_JPEG) && !campoBD.FieldType.Equals(FieldType.PATH)
-                        && !campoBD.FieldType.Equals(FieldType.DATACRIA) && !campoBD.FieldType.Equals(FieldType.OPERCRIA)
-                        && !campoBD.FieldType.Equals(FieldType.HORACRIA) && !campoBD.FieldType.Equals(FieldType.INSTANTECRIA) /*&& !campoBD.FieldType.Equals(FieldType.FICHEIRO_BD)*/)
-                    {
-						query.Set(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
-                    }
-                    else
-                    {
-                        // testa se foi feito o upload (* significa que o file não foi alterado)
-                        if (campoPedido.Value.ToString().Length != 0 && !campoPedido.Value.ToString().StartsWith("*")
-                            && !campoBD.FieldType.Equals(FieldType.DATACRIA) && !campoBD.FieldType.Equals(FieldType.OPERCRIA)
-                            && !campoBD.FieldType.Equals(FieldType.HORACRIA) && !campoBD.FieldType.Equals(FieldType.INSTANTECRIA))
-                        {
-                            query.Set(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
-                        }
-                    }
+                    //skip empty binary fields
+                    if ((campoBD.FieldType.Equals(FieldType.IMAGE) || campoBD.FieldType.Equals(FieldType.PATH)
+                        || campoBD.FieldType.Equals(FieldType.MEMO_COMP_RTF))
+                        && (campoPedido.Value.ToString().Length == 0 || campoPedido.Value.ToString().StartsWith("*")))
+                        continue;
+
+                    query.Set(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
                 }
             }
         }
@@ -516,64 +488,57 @@ namespace CSGenio.persistence
             query.Distinct(definition.Distinct);
         }
 
-        public static object ToValidDbValue(object value, Field field)
+        public static object ToValidDbValue(object value, FieldType type)
         {
+            //Empty keys and dates are represented as null in the database
+            if ((type.IsKey() || value is DateTime) && Field.isEmptyValue(value, type.GetFormatting()))
+                return DBNull.Value;
 
-			if (field.FieldType == FieldType.CHAVE_ESTRANGEIRA || field.FieldType == FieldType.CHAVE_FALSA)
+            //Convert keys into their correct database type
+            if (type.IsKey())
             {
-                if (string.IsNullOrEmpty(Convert.ToString(value)))
-                   return DBNull.Value;
-                else
+                if (type == FieldType.KEY_GUID)
+                    return new Guid(value.ToString());
+                else if (type == FieldType.KEY_INT)
+                    return int.Parse(value.ToString());
+                else if (type == FieldType.KEY_VARCHAR)
                     return value;
             }
 
-            if(field.FieldFormat == FieldFormatting.ENCRYPTED)
-            {
+            //Encrypt secure data before sending to database
+            if (type == FieldType.ENCRYPTED)
                 return (value as EncryptedDataType)?.EncryptedValue;
-            }
-			else if (value is DateTime && ((DateTime)value) == DateTime.MinValue)
-            {
-                return null;
-            }
-			else if (field.FieldFormat == FieldFormatting.GUID)
-			{
-				if (string.IsNullOrEmpty(Convert.ToString(value)))
-				{
-					return null;
-				}
-				else
-				{
-					return value.ToString();
-				}
-			}
-			else if (field.FieldType == FieldType.MEMO_COMP_RTF)
-			{
-				if (string.IsNullOrEmpty(Convert.ToString(value)))
-				{
-					return System.Text.Encoding.UTF8.GetBytes("");
-				}
-				else
-				{
-					return System.Text.Encoding.UTF8.GetBytes(value.ToString());
-				}
-			}
-			else if (field.FieldType == FieldType.GEOGRAPHY)
+
+            //Truncate time of days of date-only fields
+            if (type == FieldType.DATE)
+                return ((DateTime)value).Date;
+
+            //Convert custom type fields
+            if (type == FieldType.MEMO_COMP_RTF)
             {
                 if (string.IsNullOrEmpty(Convert.ToString(value)))
-                    return null;
-                else
-                    return value;
+                    return System.Text.Encoding.UTF8.GetBytes("");
+                return System.Text.Encoding.UTF8.GetBytes(value.ToString());
             }
-            else if (field.FieldType == FieldType.GEO_SHAPE || field.FieldType == FieldType.GEOMETRIC)
+            if (type == FieldType.GEOGRAPHY_POINT)
             {
-                return value?.ToString();
+                if (string.IsNullOrEmpty(Convert.ToString(value)))
+                    return DBNull.Value;
+                return Convert.ToString(value);
             }
-            else if (field.FieldType == FieldType.DATA)
+            if (type == FieldType.GEOGRAPHY_SHAPE || type == FieldType.GEOMETRY_SHAPE)
             {
-                return ((DateTime)value).Date;
+                if (value == null)
+                    return DBNull.Value;
+                return value.ToString();
             }
 
             return value;
+        }
+
+        public static object ToValidDbValue(object value, Field field)
+        {
+            return ToValidDbValue(value, field.FieldType);
         }
 
         // TODO: As seguintes funções devem ser revistos to poder reaproveitar...
@@ -745,5 +710,19 @@ namespace CSGenio.persistence
             return res;
         }
 
+        /// <summary>
+        /// Creates a KeyList compatible DataTable from a collection of keys
+        /// </summary>
+        /// <param name="keys">A collection of keys</param>
+        /// <returns>The configured Datatable to use in Queries</returns>
+        public static DataTable CreateKeyListType(IEnumerable<string> keys)
+        {
+            var tvp = new DataTable();
+            tvp.TableName = "KeyListType";
+            tvp.Columns.Add("item", typeof(string));
+            foreach (var pk in keys)
+                tvp.Rows.Add(pk);
+            return tvp;
+        }
     }
 }

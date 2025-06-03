@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodpesso { get; set; }
+		public string PessoValCodpesso { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Pesso
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// <param name="userContext">The current user request context</param>
 		public Pessohis_ValField001_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodpesso = userContext.CurrentNavigation.CurrentLevel.GetEntry("pesso")?.ToString();
+			PessoValCodpesso = userContext.CurrentNavigation.CurrentLevel.GetEntry("pesso")?.ToString();
 		}
 
 		/// <summary>
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Pesso
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAhpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAhpess.FldDate, FieldType.DATACRIA, Resources.Resources.DATE18475, 8, 0, true),
-				new Exports.QColumn(CSGenioAhpess.FldAuthor, FieldType.OPERCRIA, Resources.Resources.AUTHOR21241, 30, 0, true),
+				new Exports.QColumn(CSGenioAhpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAhpess.FldDate, FieldType.DATETIMESECONDS, Resources.Resources.DATE18475, 8, 0, true),
+				new Exports.QColumn(CSGenioAhpess.FldAuthor, FieldType.TEXT, Resources.Resources.AUTHOR21241, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -195,10 +194,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodpesso != null)
-				crs.Equal(CSGenioAhpess.FldCodpesso, this.ValCodpesso);
-
-
+			if (this.PessoValCodpesso != null)
+				crs.Equal(CSGenioAhpess.FldCodpesso, this.PessoValCodpesso);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -336,8 +333,7 @@ namespace GenioMVC.ViewModels.Pesso
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("hpess", "name");
+					firstVisibleColumn ??= new FieldRef("hpess", "name");
 				}
 
 
@@ -366,6 +362,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 // USE /[MANUAL GQT OVERRQ PESSOHIS_PSEUDFIELD001]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -393,7 +391,7 @@ namespace GenioMVC.ViewModels.Pesso
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAhpess> listing = Models.ModelBase.Where<CSGenioAhpess>(m_userContext, false, pessohispseudfield001Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PESSOHISPSEUDFIELD001", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAhpess> listing = Models.ModelBase.Where<CSGenioAhpess>(m_userContext, distinct, pessohispseudfield001Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PESSOHISPSEUDFIELD001", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -473,6 +471,8 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -524,7 +524,7 @@ namespace GenioMVC.ViewModels.Pesso
 		[
 			new TableSearchColumn("ValName", CSGenioAhpess.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDate", CSGenioAhpess.FldDate, typeof(DateTime?)),
-			new TableSearchColumn("ValAuthor", CSGenioAhpess.FldAuthor, typeof(string))
+			new TableSearchColumn("ValAuthor", CSGenioAhpess.FldAuthor, typeof(string)),
 		];
 	}
 }

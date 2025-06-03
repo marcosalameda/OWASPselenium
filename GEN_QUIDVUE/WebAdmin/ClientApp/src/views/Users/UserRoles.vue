@@ -37,10 +37,13 @@
                         <br>
                         <div id="roles-list" class="list-group">
                             <h3>{{Resources.FUNCOES16287}}</h3>
-                            <select id="module-list" class="i-input-group__field input-large" v-model="selectedModule">
-                            <option value="" disabled="" hidden="">{{Resources.SELECCIONAR_MODULO15000}}</option>
-                            <option v-for="module in this.modules" v-bind:value="module.Module" :key="module.Module">{{ module.ModuleName }}</option>
-                            </select>
+                            <q-select
+                                id="module-list"
+                                v-model="selectedModule"
+                                :placeholder="Resources.SELECCIONAR_MODULO15000"
+                                item-value="Module"
+								item-label="ModuleName"
+                                :items="modules" />
                             <qtable :columns="Roles.columns"
                                 :rows="modulesList"
                                 :total_rows="modulesList.length"
@@ -775,38 +778,3 @@ export default {
     }
 }
 </script>
-
-<style>
-  h1 {
-  font-size : 32px;
-  }
-
-  h2 {
-  font-size: 24px;
-  }
-
-  h3 {
-  font-size: 18px;
-  }
-  .centerdiv{
-  width: 500px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  }
-  .list-group .input-xxlarge {
-  width: 280px !important;
-  }
-  .list-group {
-  width: 100%;
-  min-height:500px;
-  }
-  #module-list {
-  height: 40px;
-  margin-bottom: 10px;
-  }
-  .input-group.col-sm-2{
-  display:none;
-  }
-</style>

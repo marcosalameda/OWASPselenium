@@ -10,7 +10,7 @@
                           <q-icon icon="send" />
                       </template>
                       <template #body>
-                          <div class="huge">{{ Model.ToSend }}</div>
+                          <h3>{{ Model.ToSend }}</h3>
                           <div>{{ Resources.POR_ENVIAR54198 }}!</div>
                       </template>
                   </card>
@@ -19,7 +19,7 @@
                           <q-icon icon="thumb-up-outline" />
                       </template>
                       <template #body>
-                          <div class="huge">{{ Model.Sended }}%</div>
+                          <h3>{{ Model.Sended }}%</h3>
                           <div>{{ Resources.ENVIADOS_COM_SUCESSO02254 }}!</div>
                       </template>
                   </card>
@@ -28,7 +28,7 @@
                           <q-icon icon="thumb-down-outline" />
                       </template>
                       <template #body>
-                          <div class="huge">{{ Model.Errors }}%</div>
+                          <h3>{{ Model.Errors }}%</h3>
                           <div>{{ Resources.ERROS27091 }}!</div>
                       </template>
                   </card>
@@ -81,12 +81,6 @@
       </row>
   </div>
 </template>
-
-<style scoped>
-.huge {
-    font-size: 40px;
-}
-</style>
 
 <script>
   // @ is an alias to /src

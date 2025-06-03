@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Inpgr
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -147,22 +145,22 @@ namespace GenioMVC.ViewModels.Inpgr
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAinpgr.FldNumbgro, FieldType.NUMERO, Resources.Resources.VAT_NUMBER24236, 9, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldTextgro, FieldType.TEXTO, Resources.Resources.TEXT_FIELD41810, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldButtngro, FieldType.TEXTO, String.Empty, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldSpangro, FieldType.TEXTO, Resources.Resources.PROFILE65433, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldLastname, FieldType.TEXTO, Resources.Resources.LAST_NAME63426, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldAdress, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ADDRESS_TYPE64627, 8, 0, true, "AddressT"),
-				new Exports.QColumn(CSGenioAinpgr.FldPrefix, FieldType.ARRAY_COD_TEXTO, Resources.Resources.PREFIX02493, 3, 0, true, "phonepre"),
-				new Exports.QColumn(CSGenioAinpgr.FldPhone, FieldType.NUMERO, Resources.Resources.PHONE_NUMBER20774, 15, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldEmail, FieldType.TEXTO, Resources.Resources.E_MAIL42251, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldWeb, FieldType.TEXTO, Resources.Resources.WEB09813, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldIban, FieldType.TEXTO, Resources.Resources.IBAN28506, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldBankacco, FieldType.TEXTO, Resources.Resources.BANKING_ACCOUNT_NUMB62548, 24, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldTextspan, FieldType.TEXTO, Resources.Resources.TEXT04938, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldDirectio, FieldType.TEXTO, Resources.Resources.ADRESS39816, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldBankcomp, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ENTITY62049, 2, 0, true, "bankComp"),
+				new Exports.QColumn(CSGenioAinpgr.FldNumbgro, FieldType.NUMERIC, Resources.Resources.VAT_NUMBER24236, 9, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldTextgro, FieldType.TEXT, Resources.Resources.TEXT_FIELD41810, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldButtngro, FieldType.TEXT, String.Empty, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldSpangro, FieldType.TEXT, Resources.Resources.PROFILE65433, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldLastname, FieldType.TEXT, Resources.Resources.LAST_NAME63426, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldAdress, FieldType.ARRAY_TEXT, Resources.Resources.ADDRESS_TYPE64627, 8, 0, true, "AddressT"),
+				new Exports.QColumn(CSGenioAinpgr.FldPrefix, FieldType.ARRAY_TEXT, Resources.Resources.PREFIX02493, 3, 0, true, "phonepre"),
+				new Exports.QColumn(CSGenioAinpgr.FldPhone, FieldType.NUMERIC, Resources.Resources.PHONE_NUMBER20774, 15, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldEmail, FieldType.TEXT, Resources.Resources.E_MAIL42251, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldWeb, FieldType.TEXT, Resources.Resources.WEB09813, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldIban, FieldType.TEXT, Resources.Resources.IBAN28506, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldBankacco, FieldType.TEXT, Resources.Resources.BANKING_ACCOUNT_NUMB62548, 24, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldTextspan, FieldType.TEXT, Resources.Resources.TEXT04938, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldDirectio, FieldType.TEXT, Resources.Resources.ADRESS39816, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldBankcomp, FieldType.ARRAY_TEXT, Resources.Resources.ENTITY62049, 2, 0, true, "bankComp"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -225,8 +223,6 @@ namespace GenioMVC.ViewModels.Inpgr
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -373,8 +369,7 @@ namespace GenioMVC.ViewModels.Inpgr
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("inpgr", "numbgro");
+					firstVisibleColumn ??= new FieldRef("inpgr", "numbgro");
 				}
 
 
@@ -403,6 +398,8 @@ namespace GenioMVC.ViewModels.Inpgr
 
 // USE /[MANUAL STY OVERRQ 361]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -430,7 +427,7 @@ namespace GenioMVC.ViewModels.Inpgr
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAinpgr> listing = Models.ModelBase.Where<CSGenioAinpgr>(m_userContext, false, sty_menu_361Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML361", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAinpgr> listing = Models.ModelBase.Where<CSGenioAinpgr>(m_userContext, distinct, sty_menu_361Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML361", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -511,6 +508,8 @@ namespace GenioMVC.ViewModels.Inpgr
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -575,7 +574,7 @@ namespace GenioMVC.ViewModels.Inpgr
 			new TableSearchColumn("ValBankacco", CSGenioAinpgr.FldBankacco, typeof(string)),
 			new TableSearchColumn("ValTextspan", CSGenioAinpgr.FldTextspan, typeof(string)),
 			new TableSearchColumn("ValDirectio", CSGenioAinpgr.FldDirectio, typeof(string)),
-			new TableSearchColumn("ValBankcomp", CSGenioAinpgr.FldBankcomp, typeof(string), array : "bankComp")
+			new TableSearchColumn("ValBankcomp", CSGenioAinpgr.FldBankcomp, typeof(string), array : "bankComp"),
 		];
 	}
 }

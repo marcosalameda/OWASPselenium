@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Messa
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,18 +147,18 @@ namespace GenioMVC.ViewModels.Messa
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAmessa.FldIdnotif, FieldType.TEXTO, Resources.Resources.NOTIFICATION_ID25507, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldIdmsg, FieldType.TEXTO, Resources.Resources.MESSAGE_ID37133, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldDesignat, FieldType.TEXTO, Resources.Resources.TO_WHOM_THE_MESSAGE_02337, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldEmail, FieldType.TEXTO, Resources.Resources.E_MAIL_TO_WHOM_THE_M37668, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldIdnotif, FieldType.TEXT, Resources.Resources.NOTIFICATION_ID25507, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldIdmsg, FieldType.TEXT, Resources.Resources.MESSAGE_ID37133, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldDesignat, FieldType.TEXT, Resources.Resources.TO_WHOM_THE_MESSAGE_02337, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldEmail, FieldType.TEXT, Resources.Resources.E_MAIL_TO_WHOM_THE_M37668, 30, 0, true),
 				new Exports.QColumn(CSGenioAmessa.FldMessage, FieldType.MEMO, Resources.Resources.MESSAGE30602, 30, 10, true),
-				new Exports.QColumn(CSGenioAmessa.FldMailsent, FieldType.LOGICO, Resources.Resources.E_MAIL_SENT_60490, 1, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldMailerr, FieldType.TEXTO, Resources.Resources.ERROR_SENDING_MAIL44674, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldCreatope, FieldType.OPERCRIA, Resources.Resources.CREATED_BY12292, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldCreatdat, FieldType.DATACRIA, Resources.Resources.CREATED_ON00051, 8, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
-				new Exports.QColumn(CSGenioAperso.FldName, FieldType.TEXTO, Resources.Resources.PERSON_NAME40980, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldDocum_nr, FieldType.NUMERO, Resources.Resources.DOCUMENT_NUMBER28451, 10, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldMailsent, FieldType.LOGIC, Resources.Resources.E_MAIL_SENT_60490, 1, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldMailerr, FieldType.TEXT, Resources.Resources.ERROR_SENDING_MAIL44674, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldCreatope, FieldType.TEXT, Resources.Resources.CREATED_BY12292, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldCreatdat, FieldType.DATETIMESECONDS, Resources.Resources.CREATED_ON00051, 8, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
+				new Exports.QColumn(CSGenioAperso.FldName, FieldType.TEXT, Resources.Resources.PERSON_NAME40980, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldDocum_nr, FieldType.NUMERIC, Resources.Resources.DOCUMENT_NUMBER28451, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -223,8 +221,6 @@ namespace GenioMVC.ViewModels.Messa
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -371,8 +367,7 @@ namespace GenioMVC.ViewModels.Messa
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("messa", "idnotif");
+					firstVisibleColumn ??= new FieldRef("messa", "idnotif");
 				}
 
 
@@ -401,6 +396,8 @@ namespace GenioMVC.ViewModels.Messa
 
 // USE /[MANUAL WMS OVERRQ 611]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -428,7 +425,7 @@ namespace GenioMVC.ViewModels.Messa
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAmessa> listing = Models.ModelBase.Where<CSGenioAmessa>(m_userContext, false, wms_menu_611Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML611", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAmessa> listing = Models.ModelBase.Where<CSGenioAmessa>(m_userContext, distinct, wms_menu_611Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML611", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -513,6 +510,8 @@ namespace GenioMVC.ViewModels.Messa
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -573,7 +572,7 @@ namespace GenioMVC.ViewModels.Messa
 			new TableSearchColumn("ValCreatdat", CSGenioAmessa.FldCreatdat, typeof(DateTime?)),
 			new TableSearchColumn("Entit_ValName", CSGenioAentit.FldName, typeof(string)),
 			new TableSearchColumn("Perso_ValName", CSGenioAperso.FldName, typeof(string)),
-			new TableSearchColumn("ValDocum_nr", CSGenioAmessa.FldDocum_nr, typeof(decimal?))
+			new TableSearchColumn("ValDocum_nr", CSGenioAmessa.FldDocum_nr, typeof(decimal?)),
 		];
 	}
 }

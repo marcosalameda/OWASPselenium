@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Kinde
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodkinde { get; set; }
+		public string KindeValCodkinde { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Kinde
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Kinde
 		/// <param name="userContext">The current user request context</param>
 		public Kinde_ValManuals_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodkinde = userContext.CurrentNavigation.CurrentLevel.GetEntry("kinde")?.ToString();
+			KindeValCodkinde = userContext.CurrentNavigation.CurrentLevel.GetEntry("kinde")?.ToString();
 		}
 
 		/// <summary>
@@ -128,8 +127,8 @@ namespace GenioMVC.ViewModels.Kinde
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAmanua.FldName, FieldType.TEXTO, Resources.Resources.MANUAL_NAME60077, 30, 0, true),
-				new Exports.QColumn(CSGenioAmanua.FldDigdocum, FieldType.FICHEIRO_BD, Resources.Resources.DIGITAL_DOCUMENT59580, 30, 0, true),
+				new Exports.QColumn(CSGenioAmanua.FldName, FieldType.TEXT, Resources.Resources.MANUAL_NAME60077, 30, 0, true),
+				new Exports.QColumn(CSGenioAmanua.FldDigdocum, FieldType.DOCUMENT, Resources.Resources.DIGITAL_DOCUMENT59580, 30, 0, true),
 				new Exports.QColumn(CSGenioAmanua.FldNotes, FieldType.MEMO, Resources.Resources.NOTES05274, 30, 5, true),
 			};
 
@@ -195,10 +194,8 @@ namespace GenioMVC.ViewModels.Kinde
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodkinde != null)
-				crs.Equal(CSGenioAmanua.FldCodkinde, this.ValCodkinde);
-
-
+			if (this.KindeValCodkinde != null)
+				crs.Equal(CSGenioAmanua.FldCodkinde, this.KindeValCodkinde);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -336,8 +333,7 @@ namespace GenioMVC.ViewModels.Kinde
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("manua", "name");
+					firstVisibleColumn ??= new FieldRef("manua", "name");
 				}
 
 
@@ -366,6 +362,8 @@ namespace GenioMVC.ViewModels.Kinde
 
 // USE /[MANUAL GQT OVERRQ KINDE_PSEUDMANUALS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -393,7 +391,7 @@ namespace GenioMVC.ViewModels.Kinde
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAmanua> listing = Models.ModelBase.Where<CSGenioAmanua>(m_userContext, false, kinde___pseudmanuals_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_KINDE___PSEUDMANUALS_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAmanua> listing = Models.ModelBase.Where<CSGenioAmanua>(m_userContext, distinct, kinde___pseudmanuals_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_KINDE___PSEUDMANUALS_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -473,6 +471,8 @@ namespace GenioMVC.ViewModels.Kinde
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -545,7 +545,7 @@ namespace GenioMVC.ViewModels.Kinde
 		[
 			new TableSearchColumn("ValName", CSGenioAmanua.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDigdocum", CSGenioAmanua.FldDigdocum, typeof(string)),
-			new TableSearchColumn("ValNotes", CSGenioAmanua.FldNotes, typeof(string))
+			new TableSearchColumn("ValNotes", CSGenioAmanua.FldNotes, typeof(string)),
 		];
 	}
 }

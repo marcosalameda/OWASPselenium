@@ -90,8 +90,6 @@ namespace GenioMVC.ViewModels.Lendi
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -152,18 +150,18 @@ namespace GenioMVC.ViewModels.Lendi
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXTO, Resources.Resources.NO__REGISTER04207, 6, 0, true),
-				new Exports.QColumn(CSGenioApess2.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAlendi.FldLendinnr, FieldType.NUMERO, Resources.Resources.NO__OF_THE_DADATO35934, 6, 0, true),
-				new Exports.QColumn(CSGenioAlendi.FldStart, FieldType.DATAHORA, Resources.Resources.BEGINNING18124, 16, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldFrequenc, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.LOAN_FREQUENCY00701, 2, 0, true, "FreqEmpr"),
-				new Exports.QColumn(CSGenioAlendi.FldWarndt, FieldType.DATAHORA, Resources.Resources.WARNING52043, 16, 0, true),
-				new Exports.QColumn(CSGenioAlendi.FldEnd, FieldType.DATAHORA, Resources.Resources.END47577, 16, 0, true),
+				new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXT, Resources.Resources.NO__REGISTER04207, 6, 0, true),
+				new Exports.QColumn(CSGenioApess2.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAlendi.FldLendinnr, FieldType.NUMERIC, Resources.Resources.NO__OF_THE_DADATO35934, 6, 0, true),
+				new Exports.QColumn(CSGenioAlendi.FldStart, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldFrequenc, FieldType.ARRAY_NUMERIC, Resources.Resources.LOAN_FREQUENCY00701, 2, 0, true, "FreqEmpr"),
+				new Exports.QColumn(CSGenioAlendi.FldWarndt, FieldType.DATETIME, Resources.Resources.WARNING52043, 16, 0, true),
+				new Exports.QColumn(CSGenioAlendi.FldEnd, FieldType.DATETIME, Resources.Resources.END47577, 16, 0, true),
 				new Exports.QColumn(CSGenioAlendi.FldObservat, FieldType.MEMO, Resources.Resources.OBSERVATIONS03729, 30, 3, true),
-				new Exports.QColumn(CSGenioAlendi.FldReturndt, FieldType.DATA, Resources.Resources.RETURN32222, 8, 0, true),
-				new Exports.QColumn(CSGenioAlendi.FldReturned, FieldType.LOGICO, Resources.Resources.RETURNED01606, 1, 0, false),
-				new Exports.QColumn(CSGenioAlendi.FldDayslimi, FieldType.NUMERO, Resources.Resources.DAYS_FOR_RETURN14598, 10, 0, true),
+				new Exports.QColumn(CSGenioAlendi.FldReturndt, FieldType.DATE, Resources.Resources.RETURN32222, 8, 0, true),
+				new Exports.QColumn(CSGenioAlendi.FldReturned, FieldType.LOGIC, Resources.Resources.RETURNED01606, 1, 0, false),
+				new Exports.QColumn(CSGenioAlendi.FldDayslimi, FieldType.NUMERIC, Resources.Resources.DAYS_FOR_RETURN14598, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -263,8 +261,6 @@ namespace GenioMVC.ViewModels.Lendi
 			}
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -418,8 +414,7 @@ namespace GenioMVC.ViewModels.Lendi
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("pess1", "name");
+					firstVisibleColumn ??= new FieldRef("pess1", "name");
 				}
 
 
@@ -457,6 +452,8 @@ namespace GenioMVC.ViewModels.Lendi
 
 // USE /[MANUAL GQT OVERRQ 1311]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -484,7 +481,7 @@ namespace GenioMVC.ViewModels.Lendi
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlendi> listing = Models.ModelBase.Where<CSGenioAlendi>(m_userContext, false, gqt_menu_1311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1311", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlendi> listing = Models.ModelBase.Where<CSGenioAlendi>(m_userContext, distinct, gqt_menu_1311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1311", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -571,6 +568,8 @@ namespace GenioMVC.ViewModels.Lendi
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -631,7 +630,7 @@ namespace GenioMVC.ViewModels.Lendi
 			new TableSearchColumn("ValObservat", CSGenioAlendi.FldObservat, typeof(string)),
 			new TableSearchColumn("ValReturndt", CSGenioAlendi.FldReturndt, typeof(DateTime?)),
 			new TableSearchColumn("ValReturned", CSGenioAlendi.FldReturned, typeof(bool), visible : false),
-			new TableSearchColumn("ValDayslimi", CSGenioAlendi.FldDayslimi, typeof(decimal?))
+			new TableSearchColumn("ValDayslimi", CSGenioAlendi.FldDayslimi, typeof(decimal?)),
 		];
 	}
 }

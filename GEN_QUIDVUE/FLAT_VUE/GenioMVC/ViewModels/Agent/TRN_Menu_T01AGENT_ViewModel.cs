@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Agent
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -148,10 +146,10 @@ namespace GenioMVC.ViewModels.Agent
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAagent.FldBirthdat, FieldType.DATA, Resources.Resources.BIRTHDATE22743, 8, 0, true),
-				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAagent.FldPhoto, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAagent.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAagent.FldBirthdat, FieldType.DATE, Resources.Resources.BIRTHDATE22743, 8, 0, true),
+				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAagent.FldPhoto, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAagent.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -214,8 +212,6 @@ namespace GenioMVC.ViewModels.Agent
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -362,8 +358,7 @@ namespace GenioMVC.ViewModels.Agent
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("agent", "birthdat");
+					firstVisibleColumn ??= new FieldRef("agent", "birthdat");
 				}
 
 
@@ -392,6 +387,8 @@ namespace GenioMVC.ViewModels.Agent
 
 // USE /[MANUAL TRN OVERRQ T01AGENT]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -419,7 +416,7 @@ namespace GenioMVC.ViewModels.Agent
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAagent> listing = Models.ModelBase.Where<CSGenioAagent>(m_userContext, false, trn_menu_t01agentConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT01AGENT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAagent> listing = Models.ModelBase.Where<CSGenioAagent>(m_userContext, distinct, trn_menu_t01agentConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT01AGENT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -500,6 +497,8 @@ namespace GenioMVC.ViewModels.Agent
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -552,7 +551,7 @@ namespace GenioMVC.ViewModels.Agent
 		[
 			new TableSearchColumn("ValBirthdat", CSGenioAagent.FldBirthdat, typeof(DateTime?)),
 			new TableSearchColumn("ValName", CSGenioAagent.FldName, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValEmail", CSGenioAagent.FldEmail, typeof(string))
+			new TableSearchColumn("ValEmail", CSGenioAagent.FldEmail, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Agent row)
 		{

@@ -23,21 +23,20 @@ namespace GenioMVC.Helpers.Cav
 
 		private readonly List<FieldType> ExcludedType = new List<FieldType>
 		{
-			FieldType.CHAVE_ESTRANGEIRA,
-			FieldType.CHAVE_ESTRANGEIRA_GUID,
-			FieldType.CHAVE_FALSA_GUID,
-			FieldType.CHAVE_PRIMARIA_GUID,
-			FieldType.CHAVE_PRIMARIA,
-			FieldType.MUITAS_LINHAS,
+			FieldType.KEY_VARCHAR,
+			FieldType.KEY_INT,
+			FieldType.KEY_GUID,
+			FieldType.MEMO,
 			FieldType.MEMO_COMP_RTF,
-			FieldType.MEMO_RTF,
-			FieldType.INSTANTECRIA,
-			FieldType.IMAGEM_JPEG,
-			FieldType.FICHEIRO_BD,
-			FieldType.FICHEIRO_BIN,
-			FieldType.GEOGRAPHY,
-			FieldType.GEO_SHAPE,
-			FieldType.GEOMETRIC,
+			FieldType.BINARY,
+			FieldType.BINARY,
+			FieldType.DATETIMESECONDS,
+			FieldType.IMAGE,
+			FieldType.DOCUMENT,
+			FieldType.BINARY,
+			FieldType.GEOGRAPHY_POINT,
+			FieldType.GEOGRAPHY_SHAPE,
+			FieldType.GEOMETRY_SHAPE,
 			FieldType.ENCRYPTED
 		};
 
@@ -45,37 +44,29 @@ namespace GenioMVC.Helpers.Cav
 		private static Dictionary<FieldType, string> GetFieldTypeMap()
 		{
 			var fieldMapList = new Dictionary<FieldType, string>();
-			fieldMapList.Add(FieldType.TEXTO, "A");
-			fieldMapList.Add(FieldType.OPERCRIA, "A");
-			fieldMapList.Add(FieldType.OPERMUDA, "A");
-			fieldMapList.Add(FieldType.CHAVE_PRIMARIA, "A");
-			fieldMapList.Add(FieldType.CHAVE_ESTRANGEIRA, "A");
-			fieldMapList.Add(FieldType.CHAVE_FALSA, "A");
-			fieldMapList.Add(FieldType.DATA, "D");
-			fieldMapList.Add(FieldType.DATAHORA, "H");
-			fieldMapList.Add(FieldType.DATASEGUNDO, "H");
-			fieldMapList.Add(FieldType.DATACRIA, "H");
-			fieldMapList.Add(FieldType.DATAMUDA, "H");
-			fieldMapList.Add(FieldType.INSTANTECRIA, "H");
-			fieldMapList.Add(FieldType.HORAMUDA, "A");
-			fieldMapList.Add(FieldType.HORACRIA, "A");
-			fieldMapList.Add(FieldType.TEMPO, "A");
-			fieldMapList.Add(FieldType.ANO, "N");
-			fieldMapList.Add(FieldType.NUMERO, "N");
-			fieldMapList.Add(FieldType.VALOR, "$");
-			fieldMapList.Add(FieldType.LOGICO, "B");
+			fieldMapList.Add(FieldType.TEXT, "A");
+			fieldMapList.Add(FieldType.KEY_GUID, "A");
+			fieldMapList.Add(FieldType.KEY_INT, "A");
+			fieldMapList.Add(FieldType.KEY_VARCHAR, "A");
+			fieldMapList.Add(FieldType.DATE, "D");
+			fieldMapList.Add(FieldType.DATETIME, "H");
+			fieldMapList.Add(FieldType.DATETIMESECONDS, "H");
+			fieldMapList.Add(FieldType.TIME_HOURS, "A");
+			fieldMapList.Add(FieldType.NUMERIC, "N");
+			fieldMapList.Add(FieldType.CURRENCY, "$");
+			fieldMapList.Add(FieldType.LOGIC, "B");
+			fieldMapList.Add(FieldType.MEMO, "A");
+			fieldMapList.Add(FieldType.BINARY, "A");
 			fieldMapList.Add(FieldType.MEMO, "A");
 			fieldMapList.Add(FieldType.MEMO_COMP_RTF, "A");
-			fieldMapList.Add(FieldType.MEMO_RTF, "A");
-			fieldMapList.Add(FieldType.MUITAS_LINHAS, "A");
-			fieldMapList.Add(FieldType.IMAGEM_JPEG, "A");
-			fieldMapList.Add(FieldType.FICHEIRO_BD, "A");
-			fieldMapList.Add(FieldType.ARRAY_COD_TEXTO, "A");
-			fieldMapList.Add(FieldType.ARRAY_COD_NUMERICO, "A");
-			fieldMapList.Add(FieldType.ARRAY_COD_LOGICO, "A");
-			fieldMapList.Add(FieldType.GEOGRAPHY, "A");
-			fieldMapList.Add(FieldType.GEO_SHAPE, "A");
-			fieldMapList.Add(FieldType.GEOMETRIC, "A");
+			fieldMapList.Add(FieldType.IMAGE, "A");
+			fieldMapList.Add(FieldType.DOCUMENT, "A");
+			fieldMapList.Add(FieldType.ARRAY_TEXT, "A");
+			fieldMapList.Add(FieldType.ARRAY_NUMERIC, "A");
+			fieldMapList.Add(FieldType.ARRAY_LOGIC, "A");
+			fieldMapList.Add(FieldType.GEOGRAPHY_POINT, "A");
+			fieldMapList.Add(FieldType.GEOGRAPHY_SHAPE, "A");
+			fieldMapList.Add(FieldType.GEOMETRY_SHAPE, "A");
 			return fieldMapList;
 		}
 
@@ -147,7 +138,7 @@ namespace GenioMVC.Helpers.Cav
 					newField.Type = type;
 
 				if (string.IsNullOrEmpty(field.CavDesignation))
-					newField.Description = CSGenio.business.GlobalFunctions.CapitalizeInitials(field.Name);
+					newField.Description = CSGenio.framework.GenFunctions.CapitalizeInitials(field.Name);
 				else
 					newField.Description = field.CavDesignation;
 

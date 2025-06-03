@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioArules(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR RULES]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codregra", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codregra", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("tipocond", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "tipocond", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Condition type";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "CONDITION_TYPE57524";
 
@@ -69,10 +65,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("descript", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "descript", FieldType.TEXT);
 			Qfield.FieldDescription = "Description";
 			Qfield.FieldSize =  100;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "DESCRIPTION07383";
 
@@ -80,10 +75,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("local", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "local", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Place where you run";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PLACE_WHERE_YOU_RUN27490";
 
@@ -93,9 +87,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -265,8 +258,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Rule";
 			info.AreaPluralDesignation="Rules";
 			info.DescriptionCav="RULE61609";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

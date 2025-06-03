@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Speci
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,8 +147,8 @@ namespace GenioMVC.ViewModels.Speci
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXTO, Resources.Resources.SPECIALTY09304, 30, 0, true),
-				new Exports.QColumn(CSGenioAspeci.FldAreatecn, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
+				new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXT, Resources.Resources.SPECIALTY09304, 30, 0, true),
+				new Exports.QColumn(CSGenioAspeci.FldAreatecn, FieldType.ARRAY_TEXT, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -213,8 +211,6 @@ namespace GenioMVC.ViewModels.Speci
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -361,8 +357,7 @@ namespace GenioMVC.ViewModels.Speci
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("speci", "especial");
+					firstVisibleColumn ??= new FieldRef("speci", "especial");
 				}
 
 
@@ -391,6 +386,8 @@ namespace GenioMVC.ViewModels.Speci
 
 // USE /[MANUAL GQT OVERRQ 331]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -418,7 +415,7 @@ namespace GenioMVC.ViewModels.Speci
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAspeci> listing = Models.ModelBase.Where<CSGenioAspeci>(m_userContext, false, gqt_menu_331Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML331", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAspeci> listing = Models.ModelBase.Where<CSGenioAspeci>(m_userContext, distinct, gqt_menu_331Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML331", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -499,6 +496,8 @@ namespace GenioMVC.ViewModels.Speci
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -549,7 +548,7 @@ namespace GenioMVC.ViewModels.Speci
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValEspecial", CSGenioAspeci.FldEspecial, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValAreatecn", CSGenioAspeci.FldAreatecn, typeof(string), array : "AreaTecn")
+			new TableSearchColumn("ValAreatecn", CSGenioAspeci.FldAreatecn, typeof(string), array : "AreaTecn"),
 		];
 	}
 }

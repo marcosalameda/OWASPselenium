@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Decom
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,8 +148,8 @@ namespace GenioMVC.ViewModels.Decom
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERO, Resources.Resources.NO_BATE21045, 10, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 8, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERIC, Resources.Resources.NO_BATE21045, 10, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATETIME, Resources.Resources.DECOMISSION14486, 8, 0, true),
 				new Exports.QColumn(CSGenioAdecom.FldNote, FieldType.MEMO, Resources.Resources.NOTES05274, 30, 3, true),
 			};
 
@@ -215,8 +213,6 @@ namespace GenioMVC.ViewModels.Decom
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -363,8 +359,7 @@ namespace GenioMVC.ViewModels.Decom
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("decom", "decomnr");
+					firstVisibleColumn ??= new FieldRef("decom", "decomnr");
 				}
 
 
@@ -393,6 +388,8 @@ namespace GenioMVC.ViewModels.Decom
 
 // USE /[MANUAL GQT OVERRQ 2C31]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -420,7 +417,7 @@ namespace GenioMVC.ViewModels.Decom
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAdecom> listing = Models.ModelBase.Where<CSGenioAdecom>(m_userContext, false, gqt_menu_2c31Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2C31", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAdecom> listing = Models.ModelBase.Where<CSGenioAdecom>(m_userContext, distinct, gqt_menu_2c31Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2C31", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -501,6 +498,8 @@ namespace GenioMVC.ViewModels.Decom
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -552,7 +551,7 @@ namespace GenioMVC.ViewModels.Decom
 		[
 			new TableSearchColumn("ValDecomnr", CSGenioAdecom.FldDecomnr, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("ValDtdeco", CSGenioAdecom.FldDtdeco, typeof(DateTime?)),
-			new TableSearchColumn("ValNote", CSGenioAdecom.FldNote, typeof(string))
+			new TableSearchColumn("ValNote", CSGenioAdecom.FldNote, typeof(string)),
 		];
 	}
 }

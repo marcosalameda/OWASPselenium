@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Aero
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,8 +148,8 @@ namespace GenioMVC.ViewModels.Aero
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAaero.FldName, FieldType.TEXTO, Resources.Resources.NOME_DA_COMPANHIA48638, 30, 0, true),
-				new Exports.QColumn(CSGenioAaero.FldCodcmaer, FieldType.NUMERO, Resources.Resources.CODE49225, 2, 0, true),
+				new Exports.QColumn(CSGenioAaero.FldName, FieldType.TEXT, Resources.Resources.NOME_DA_COMPANHIA48638, 30, 0, true),
+				new Exports.QColumn(CSGenioAaero.FldCodcmaer, FieldType.NUMERIC, Resources.Resources.CODE49225, 2, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -214,8 +212,6 @@ namespace GenioMVC.ViewModels.Aero
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -362,8 +358,7 @@ namespace GenioMVC.ViewModels.Aero
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("aero", "name");
+					firstVisibleColumn ??= new FieldRef("aero", "name");
 				}
 
 
@@ -392,6 +387,8 @@ namespace GenioMVC.ViewModels.Aero
 
 // USE /[MANUAL TBS OVERRQ 1911]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -419,7 +416,7 @@ namespace GenioMVC.ViewModels.Aero
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAaero> listing = Models.ModelBase.Where<CSGenioAaero>(m_userContext, false, tbs_menu_1911Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1911", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAaero> listing = Models.ModelBase.Where<CSGenioAaero>(m_userContext, distinct, tbs_menu_1911Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1911", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -500,6 +497,8 @@ namespace GenioMVC.ViewModels.Aero
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -550,7 +549,7 @@ namespace GenioMVC.ViewModels.Aero
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAaero.FldName, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValCodcmaer", CSGenioAaero.FldCodcmaer, typeof(decimal?))
+			new TableSearchColumn("ValCodcmaer", CSGenioAaero.FldCodcmaer, typeof(decimal?)),
 		];
 	}
 }

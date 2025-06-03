@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodpesso { get; set; }
+		public string PessoValCodpesso { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Pesso
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Pesso
 		/// <param name="userContext">The current user request context</param>
 		public Pessos01_ValEvolucao_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodpesso = userContext.CurrentNavigation.CurrentLevel.GetEntry("pesso")?.ToString();
+			PessoValCodpesso = userContext.CurrentNavigation.CurrentLevel.GetEntry("pesso")?.ToString();
 		}
 
 		/// <summary>
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Pesso
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAevcat.FldSince, FieldType.DATA, Resources.Resources.SINCE47259, 8, 0, true),
-				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXTO, Resources.Resources.CATEGORY18978, 30, 0, true),
-				new Exports.QColumn(CSGenioAevcat.FldFimperio, FieldType.DATA, Resources.Resources.END_OF_PERIOD44616, 8, 0, true),
+				new Exports.QColumn(CSGenioAevcat.FldSince, FieldType.DATE, Resources.Resources.SINCE47259, 8, 0, true),
+				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXT, Resources.Resources.CATEGORY18978, 30, 0, true),
+				new Exports.QColumn(CSGenioAevcat.FldFimperio, FieldType.DATE, Resources.Resources.END_OF_PERIOD44616, 8, 0, true),
 				new Exports.QColumn(CSGenioAevcat.FldObservat, FieldType.MEMO, Resources.Resources.OBSERVATION37880, 30, 2, true),
 			};
 
@@ -196,10 +195,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodpesso != null)
-				crs.Equal(CSGenioAevcat.FldCodpesso, this.ValCodpesso);
-
-
+			if (this.PessoValCodpesso != null)
+				crs.Equal(CSGenioAevcat.FldCodpesso, this.PessoValCodpesso);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -345,8 +342,7 @@ namespace GenioMVC.ViewModels.Pesso
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("evcat", "since");
+					firstVisibleColumn ??= new FieldRef("evcat", "since");
 				}
 
 
@@ -375,6 +371,8 @@ namespace GenioMVC.ViewModels.Pesso
 
 // USE /[MANUAL GQT OVERRQ PESSOS01_PSEUDEVOLUCAO]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -402,7 +400,7 @@ namespace GenioMVC.ViewModels.Pesso
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAevcat> listing = Models.ModelBase.Where<CSGenioAevcat>(m_userContext, false, pessos01pseudevolucaoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PESSOS01PSEUDEVOLUCAO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAevcat> listing = Models.ModelBase.Where<CSGenioAevcat>(m_userContext, distinct, pessos01pseudevolucaoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PESSOS01PSEUDEVOLUCAO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -484,6 +482,8 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -536,7 +536,7 @@ namespace GenioMVC.ViewModels.Pesso
 			new TableSearchColumn("ValSince", CSGenioAevcat.FldSince, typeof(DateTime?)),
 			new TableSearchColumn("Cate1_ValCategoria", CSGenioAcate1.FldCategoria, typeof(string)),
 			new TableSearchColumn("ValFimperio", CSGenioAevcat.FldFimperio, typeof(DateTime?)),
-			new TableSearchColumn("ValObservat", CSGenioAevcat.FldObservat, typeof(string))
+			new TableSearchColumn("ValObservat", CSGenioAevcat.FldObservat, typeof(string)),
 		];
 	}
 }

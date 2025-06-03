@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAlstcol(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -36,7 +35,7 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 			
 			/*Information das areas*/
-			info.TableName = "GQTlstcol";
+			info.TableName = "gqtlstcol";
 			info.ShadowTabName = "";
 			info.PrimaryKeyName = "codlstcol";
             info.HumanKeyName = "tabela";
@@ -55,20 +54,16 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field("codlstcol", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codlstcol"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field("codlstusr", FieldType.CHAVE_ESTRANGEIRA_GUID));
-			info.DBFields["codlstusr"].FieldSize = 36;
-
-			info.RegisterFieldDB(new Field("tabela", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("alias", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field("campo", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field("visivel", FieldType.LOGICO));
-            info.RegisterFieldDB(new Field("posicao", FieldType.NUMERO));
-            info.RegisterFieldDB(new Field("operacao", FieldType.NUMERO));
-            info.RegisterFieldDB(new Field("tipo", FieldType.NUMERO));
-            info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "codlstcol", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codlstusr", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "tabela", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "alias", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "campo", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "visivel", FieldType.LOGIC));
+            info.RegisterFieldDB(new Field(info.Alias, "posicao", FieldType.NUMERIC));
+            info.RegisterFieldDB(new Field(info.Alias, "operacao", FieldType.NUMERIC));
+            info.RegisterFieldDB(new Field(info.Alias, "tipo", FieldType.NUMERIC));
+            info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
 
 			// Relações Filhas

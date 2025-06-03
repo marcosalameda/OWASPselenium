@@ -1,22 +1,18 @@
 ﻿<template>
     <row>
 		<row>
-			<div class="control-join-group">
-				<q-text-field
+			<q-row-container>
+				<numeric-input
 					v-model="model.MQueues.Journaltimeout"
 					:label="Resources.JOURNAL_TIMEOUT__MIN38634"
-					:size="'xlarge'" />
-				<q-text-field
+					size="xlarge"
+					integer-only />
+				<numeric-input
 					v-model="model.MQueues.Maxsendnumber"
 					:label="Resources.NUMERO_MAXIMO_DE_TEN51201"
-					:size="'xlarge'" />
-			</div>
-		</row>
-		<row class="footer-btn">
-			<q-button
-				b-style="primary"
-				:label="Resources.GRAVAR45301"
-				@click="SaveConfigMessageQueue" />
+					size="xlarge"
+					integer-only />
+			</q-row-container>
 		</row>
 		<hr />
 
@@ -29,11 +25,13 @@
 				<template #actions="props">
 					<q-button-group borderless>
 					<q-button
+						variant="text"
 						:title="Resources.EDITAR11616"
 						@click="changeQueue(props.row)">
 						<q-icon icon="pencil" />
 					</q-button>
 					<q-button
+						variant="text"
 						:title="Resources.ELIMINAR21155"
 						@click="deleteQueue(props.row)">
 						<q-icon icon="bin" />
@@ -63,11 +61,13 @@
 				<template #actions="props">
 					<q-button-group borderless>
 					<q-button
+						variant="text"
 						:title="Resources.EDITAR11616"
 						@click="changeAck(props.row)">
 						<q-icon icon="pencil" />
 					</q-button>
 					<q-button
+						variant="text"
 						:title="Resources.ELIMINAR21155"
 						@click="deleteAck(props.row)">
 						<q-icon icon="bin" />
@@ -211,7 +211,7 @@
 				queuesProps: [],
 				acksProps: [],
 				dialogModeQueue: '',
-				dialogModeConfig: '',
+				dialogModeAck: '',
 				queueData: {
 					queue: '',
 					queueChannel: '',
@@ -293,8 +293,7 @@
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
-							showRefreshButton: true,
-							//searchDebounceRate: 1000
+							showRefreshButton: true
 						},
 						preservePageOnDataChange: true
 					}
@@ -333,8 +332,7 @@
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
-							showRefreshButton: true,
-							//searchDebounceRate: 1000
+							showRefreshButton: true
 						},
 						preservePageOnDataChange: true
 					}
@@ -374,21 +372,10 @@
                 return this.dialogModeQueue === 'delete';
             },
 			blockFormQueueACK() {
-                return this.dialogModeConfig === 'delete';
+                return this.dialogModeAck === 'delete';
             }
         },
 		methods: {
-			SaveConfigMessageQueue() {
-				QUtils.postData('Config', 'SaveConfigMessageQueue', this.model, null, (data) => {
-					if (data.Status == 'OK') {
-						this.$emit('update-model');
-						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'success' });
-					}
-					else {
-						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
-					}
-				});
-			},
 			clearQueueValues(){
 				this.queueData = {
 					queue: '',
@@ -431,7 +418,8 @@
 							id: 'delete-btn',
 							props: {
 								label: this.Resources.APAGAR04097,
-								bStyle: "danger"
+								variant: 'bold',
+								color: 'danger'
 							},
 							action: () => {
 								this.SaveQueue()
@@ -444,7 +432,7 @@
 							id: 'save-btn',
 							props: {
 								label: this.Resources.GRAVAR45301,
-								bStyle: "primary"
+								variant: 'bold'
 							},
 							action: () => {
 								this.SaveQueue()
@@ -484,11 +472,11 @@
 					Blocksize: '',
 					Rownum: 0
 				};
-				this.dialogModeConfig = ''
+				this.dialogModeAck = ''
 				this.buttonsConfig = []
 			},
 			showAckModal(mode) {
-				this.dialogModeConfig = mode;
+				this.dialogModeAck = mode;
 				this.getAckButtons();
 				this.showConfigDialog = true;
 			},
@@ -508,13 +496,14 @@
 				});
 			},
 			getAckButtons() {	
-				switch(this.dialogModeConfig) {
+				switch(this.dialogModeAck) {
 					case 'delete':
 						this.buttonsConfig.push({
 							id: 'delete-btn',
 							props: {
 								label: this.Resources.APAGAR04097,
-								bStyle: "danger"
+								variant: 'bold',
+								color: 'danger'
 							},
 							action: () => {
 								this.SaveQueueACK()
@@ -527,7 +516,7 @@
 							id: 'save-btn',
 							props: {
 								label: this.Resources.GRAVAR45301,
-								bStyle: "primary"
+								variant: 'bold'
 							},
 							action: () => {
 								this.SaveQueueACK()
@@ -549,7 +538,7 @@
 			SaveQueueACK() {
 				const propsQueueACKValues = {
 					...this.ackData,
-					FormMode: this.dialogModeConfig
+					FormMode: this.dialogModeAck
 				}
 				QUtils.postData('Config', 'SaveQueueACK', propsQueueACKValues, null, (data) => {
 					if (data.Success) {

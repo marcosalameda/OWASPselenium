@@ -685,7 +685,7 @@ namespace GenioMVC.ViewModels.Propr
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -732,7 +732,7 @@ namespace GenioMVC.ViewModels.Propr
 				// Fill List fields
 				this.ValCodtppro = ViewModelConversion.ToString(row["tppro.codtppro"]);
 				TableTpproTppropri.Value = (string)row["tppro.tppropri"];
-				if (GlobalFunctions.emptyG(this.ValCodtppro) == 1)
+				if (GenFunctions.emptyG(this.ValCodtppro) == 1)
 				{
 					this.ValCodtppro = "";
 					TableTpproTppropri.Value = "";
@@ -875,7 +875,7 @@ namespace GenioMVC.ViewModels.Propr
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -923,7 +923,7 @@ namespace GenioMVC.ViewModels.Propr
 				// Fill List fields
 				this.ValCodpesso = ViewModelConversion.ToString(row["pesso.codpesso"]);
 				TablePessoName.Value = (string)row["pesso.name"];
-				if (GlobalFunctions.emptyG(this.ValCodpesso) == 1)
+				if (GenFunctions.emptyG(this.ValCodpesso) == 1)
 				{
 					this.ValCodpesso = "";
 					TablePessoName.Value = "";
@@ -1066,7 +1066,7 @@ namespace GenioMVC.ViewModels.Propr
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -1113,7 +1113,7 @@ namespace GenioMVC.ViewModels.Propr
 				// Fill List fields
 				this.ValCodcntry = ViewModelConversion.ToString(row["cntry.codcntry"]);
 				TableCntryCountry.Value = (string)row["cntry.country"];
-				if (GlobalFunctions.emptyG(this.ValCodcntry) == 1)
+				if (GenFunctions.emptyG(this.ValCodcntry) == 1)
 				{
 					this.ValCodcntry = "";
 					TableCntryCountry.Value = "";
@@ -1263,7 +1263,7 @@ namespace GenioMVC.ViewModels.Propr
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -1271,7 +1271,7 @@ namespace GenioMVC.ViewModels.Propr
 				object hValue = Navigation.GetValue("cntry");
 				if (!(hValue is Array))
 				{
-					if (GlobalFunctions.emptyG(hValue) == 1)
+					if (GenFunctions.emptyG(hValue) == 1)
 						returnEmptyDependants = true;
 					wherecodition.Equal(CSGenioAregio.FldCodcntry, hValue);
 				}
@@ -1319,7 +1319,7 @@ namespace GenioMVC.ViewModels.Propr
 				// Fill List fields
 				this.ValCodregia = ViewModelConversion.ToString(row["regio.codregia"]);
 				TableRegioRegiao.Value = (string)row["regio.regiao"];
-				if (GlobalFunctions.emptyG(this.ValCodregia) == 1)
+				if (GenFunctions.emptyG(this.ValCodregia) == 1)
 				{
 					this.ValCodregia = "";
 					TableRegioRegiao.Value = "";

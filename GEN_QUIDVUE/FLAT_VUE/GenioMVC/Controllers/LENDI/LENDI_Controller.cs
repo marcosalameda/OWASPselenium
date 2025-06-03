@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lendi;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LENDI]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class LendiController : ControllerBase
 	{
-		public LendiController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public LendiController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION LENDI]/
 
 
@@ -359,6 +368,50 @@ namespace GenioMVC.Controllers
 			}
 		}
 
+
+		// POST: /Lendi/PTN_3171_Equip_Registnr_ShowWhen
+		[HttpPost]
+		public JsonResult PTN_3171_Equip_Registnr_ShowWhen([FromBody] ViewModels.Lendi.PTN_Menu_3171_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Lendi(UserContext.Current);
+
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: 1==1
+				var result = 1==1;
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Lendi/PTN_3171_Lendi_Ifoutdt__ShowWhen
+		[HttpPost]
+		public JsonResult PTN_3171_Lendi_Ifoutdt__ShowWhen([FromBody] ViewModels.Lendi.PTN_Menu_3171_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Lendi(UserContext.Current);
+
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: 1==0
+				var result = 1==0;
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
 
 
 

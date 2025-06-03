@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Tpeq1
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfami1.FldFamily, FieldType.TEXTO, Resources.Resources.FAMILIA_DE_EQUIPAMEN12158, 50, 0, true),
+				new Exports.QColumn(CSGenioAfami1.FldFamily, FieldType.TEXT, Resources.Resources.FAMILIA_DE_EQUIPAMEN12158, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("fami1", "family");
+					firstVisibleColumn ??= new FieldRef("fami1", "family");
 				}
 
 
@@ -357,6 +352,8 @@ namespace GenioMVC.ViewModels.Tpeq1
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ TPEQ1_FAMI1FAMILY]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -384,7 +381,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfami1> listing = Models.ModelBase.Where<CSGenioAfami1>(m_userContext, false, tpeq1___fami1family__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPEQ1___FAMI1FAMILY__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfami1> listing = Models.ModelBase.Where<CSGenioAfami1>(m_userContext, distinct, tpeq1___fami1family__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPEQ1___FAMI1FAMILY__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -464,6 +461,8 @@ namespace GenioMVC.ViewModels.Tpeq1
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -513,7 +512,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValFamily", CSGenioAfami1.FldFamily, typeof(string))
+			new TableSearchColumn("ValFamily", CSGenioAfami1.FldFamily, typeof(string)),
 		];
 	}
 }

@@ -623,7 +623,7 @@ namespace GenioMVC.ViewModels.Facil
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -670,7 +670,7 @@ namespace GenioMVC.ViewModels.Facil
 				// Fill List fields
 				this.ValCodentit = ViewModelConversion.ToString(row["entit.codentit"]);
 				TableEntitName.Value = (string)row["entit.name"];
-				if (GlobalFunctions.emptyG(this.ValCodentit) == 1)
+				if (GenFunctions.emptyG(this.ValCodentit) == 1)
 				{
 					this.ValCodentit = "";
 					TableEntitName.Value = "";
@@ -813,7 +813,7 @@ namespace GenioMVC.ViewModels.Facil
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -860,7 +860,7 @@ namespace GenioMVC.ViewModels.Facil
 				// Fill List fields
 				this.ValCodfacty = ViewModelConversion.ToString(row["facty.codfacty"]);
 				TableFactyType.Value = (string)row["facty.type"];
-				if (GlobalFunctions.emptyG(this.ValCodfacty) == 1)
+				if (GenFunctions.emptyG(this.ValCodfacty) == 1)
 				{
 					this.ValCodfacty = "";
 					TableFactyType.Value = "";

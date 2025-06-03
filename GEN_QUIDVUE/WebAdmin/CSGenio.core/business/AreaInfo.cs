@@ -727,14 +727,9 @@ namespace CSGenio.business
     //---------------------------------------------------------------------------------
     // Type de Key da table:
     //--------------------------------------------------------------------------------
-    private CodeType m_tipoChave;
-    /// <summary>
-    /// Type de key utilizado na table
-    /// </summary>
-    public CodeType KeyType
+    public FieldType KeyType
     {
-        get { return m_tipoChave; }
-        set { m_tipoChave = value; }
+        get { return DBFields[PrimaryKeyName].FieldType; }
     }
     }
 

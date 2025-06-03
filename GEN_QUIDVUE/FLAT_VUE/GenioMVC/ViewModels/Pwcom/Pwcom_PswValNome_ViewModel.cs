@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Pwcom
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Pwcom
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXTO, Resources.Resources.NAME31974, 20, 0, true),
+				new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXT, Resources.Resources.NAME31974, 20, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Pwcom
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Pwcom
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("psw", "nome");
+					firstVisibleColumn ??= new FieldRef("psw", "nome");
 				}
 
 
@@ -368,6 +363,8 @@ namespace GenioMVC.ViewModels.Pwcom
 
 // USE /[MANUAL GQT OVERRQ PWCOM_PSWNOME]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -394,7 +391,7 @@ namespace GenioMVC.ViewModels.Pwcom
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApsw> listing = Models.ModelBase.Where<CSGenioApsw>(m_userContext, false, pwcom___psw__nome____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PWCOM___PSW__NOME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApsw> listing = Models.ModelBase.Where<CSGenioApsw>(m_userContext, distinct, pwcom___psw__nome____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PWCOM___PSW__NOME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -474,6 +471,8 @@ namespace GenioMVC.ViewModels.Pwcom
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -523,7 +522,7 @@ namespace GenioMVC.ViewModels.Pwcom
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValNome", CSGenioApsw.FldNome, typeof(string))
+			new TableSearchColumn("ValNome", CSGenioApsw.FldNome, typeof(string)),
 		];
 	}
 }

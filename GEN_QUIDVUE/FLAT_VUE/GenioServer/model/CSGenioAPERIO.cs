@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAperio(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PERIO]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codperio", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codperio", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("periodstart", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "periodstart", FieldType.DATETIME);
 			Qfield.FieldDescription = "Period Start";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PERIOD_START07901";
 
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("periodend", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "periodend", FieldType.DATETIME);
 			Qfield.FieldDescription = "Period End";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PERIOD_END31576";
 
@@ -78,9 +73,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -132,7 +126,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"periodstart","periodend","periodstart","periodend"},new int[] {0,1,2,3},"perio","codperio"));
 			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 4, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return GlobalFunctions.emptyD(((DateTime)args[0]))==1||GlobalFunctions.emptyD(((DateTime)args[1]))==1||GlobalFunctions.CompareDates(((DateTime)args[2]),((DateTime)args[3]))<=0;
+				return GenFunctions.emptyD(((DateTime)args[0]))==1||GenFunctions.emptyD(((DateTime)args[1]))==1||GenFunctions.CompareDates(((DateTime)args[2]),((DateTime)args[3]))<=0;
 			});
 			writeCondition.ErrorWarning = "If present, Start SHALL have a lower value than End";
             writeCondition.Type =  ConditionType.ERROR;
@@ -165,8 +159,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Period";
 			info.AreaPluralDesignation="Period";
 			info.DescriptionCav="PERIOD00768";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

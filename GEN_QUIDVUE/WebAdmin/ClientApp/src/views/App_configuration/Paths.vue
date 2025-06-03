@@ -20,7 +20,7 @@
 
 		<row class="footer-btn">
 			<q-button
-				b-style="primary"
+				variant="bold"
 				:label="Resources.GRAVAR_CONFIGURACAO36308"
 				@click="SavePathCfg" />
 		</row>
@@ -32,7 +32,6 @@
 				variant="minor"
 				width="block">
 				<q-button
-					b-style="secondary"
 					label="Configurations.redirect.xml"
 					@click="goToDownloadRedirect" />
 			</q-card>

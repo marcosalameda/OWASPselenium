@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Locat
 			return crs;
 		}
 
-
 		public string ValCodentit { get; set; }
 
 		public override int GetCount(User user)
@@ -130,7 +129,7 @@ namespace GenioMVC.ViewModels.Locat
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfacil.FldName, FieldType.TEXTO, Resources.Resources.FACILITY_NAME19514, 85, 0, true),
+				new Exports.QColumn(CSGenioAfacil.FldName, FieldType.TEXT, Resources.Resources.FACILITY_NAME19514, 85, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -198,9 +197,6 @@ namespace GenioMVC.ViewModels.Locat
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -344,8 +340,7 @@ namespace GenioMVC.ViewModels.Locat
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("facil", "name");
+					firstVisibleColumn ??= new FieldRef("facil", "name");
 				}
 
 
@@ -363,6 +358,8 @@ namespace GenioMVC.ViewModels.Locat
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ LOCAT_FACILNAME]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -390,7 +387,7 @@ namespace GenioMVC.ViewModels.Locat
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfacil> listing = Models.ModelBase.Where<CSGenioAfacil>(m_userContext, false, locat___facilname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LOCAT___FACILNAME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfacil> listing = Models.ModelBase.Where<CSGenioAfacil>(m_userContext, distinct, locat___facilname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LOCAT___FACILNAME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -470,6 +467,8 @@ namespace GenioMVC.ViewModels.Locat
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -519,7 +518,7 @@ namespace GenioMVC.ViewModels.Locat
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValName", CSGenioAfacil.FldName, typeof(string))
+			new TableSearchColumn("ValName", CSGenioAfacil.FldName, typeof(string)),
 		];
 	}
 }

@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodequip { get; set; }
+		public string EquipValCodequip { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="userContext">The current user request context</param>
 		public Accordi_ValInstalag_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+			EquipValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
 		}
 
 		/// <summary>
@@ -128,11 +127,11 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAinsta.FldSince, FieldType.DATAHORA, Resources.Resources.SINCE47259, 16, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldUntil, FieldType.DATAHORA, Resources.Resources.UNTIL39173, 16, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldHours, FieldType.NUMERO, Resources.Resources.QNTY_HOURS51266, 10, 2, true),
-				new Exports.QColumn(CSGenioAinsta.FldPrecohor, FieldType.VALOR, Resources.Resources.HOURLY_PRICE48005, 12, 0, true),
-				new Exports.QColumn(CSGenioAinsta.FldValue, FieldType.VALOR, Resources.Resources.VALUE10285, 12, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldSince, FieldType.DATETIME, Resources.Resources.SINCE47259, 16, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldUntil, FieldType.DATETIME, Resources.Resources.UNTIL39173, 16, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldHours, FieldType.NUMERIC, Resources.Resources.QNTY_HOURS51266, 10, 2, true),
+				new Exports.QColumn(CSGenioAinsta.FldPrecohor, FieldType.CURRENCY, Resources.Resources.HOURLY_PRICE48005, 12, 0, true),
+				new Exports.QColumn(CSGenioAinsta.FldValue, FieldType.CURRENCY, Resources.Resources.VALUE10285, 12, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -197,10 +196,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodequip != null)
-				crs.Equal(CSGenioAinsta.FldCodequip, this.ValCodequip);
-
-
+			if (this.EquipValCodequip != null)
+				crs.Equal(CSGenioAinsta.FldCodequip, this.EquipValCodequip);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +335,7 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("insta", "since");
+					firstVisibleColumn ??= new FieldRef("insta", "since");
 				}
 
 
@@ -368,6 +364,8 @@ namespace GenioMVC.ViewModels.Equip
 
 // USE /[MANUAL GQT OVERRQ ACCORDI_PSEUDINSTALAG]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -395,7 +393,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAinsta> listing = Models.ModelBase.Where<CSGenioAinsta>(m_userContext, false, accordi_pseudinstalagConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ACCORDI_PSEUDINSTALAG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAinsta> listing = Models.ModelBase.Where<CSGenioAinsta>(m_userContext, distinct, accordi_pseudinstalagConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ACCORDI_PSEUDINSTALAG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -475,6 +473,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -528,7 +528,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("ValUntil", CSGenioAinsta.FldUntil, typeof(DateTime?)),
 			new TableSearchColumn("ValHours", CSGenioAinsta.FldHours, typeof(decimal?)),
 			new TableSearchColumn("ValPrecohor", CSGenioAinsta.FldPrecohor, typeof(decimal?)),
-			new TableSearchColumn("ValValue", CSGenioAinsta.FldValue, typeof(decimal?))
+			new TableSearchColumn("ValValue", CSGenioAinsta.FldValue, typeof(decimal?)),
 		];
 	}
 }

@@ -91,7 +91,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Number of people" Tipo: "N" Formula: SR "[PESSO->1]"</summary>
 		[ShouldSerialize("Cmpny.ValQtdpesso")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdpesso { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdpesso, 0)); } set { klass.ValQtdpesso = Convert.ToDecimal(value); } }
+		public decimal? ValQtdpesso { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdpesso, 0)); } set { klass.ValQtdpesso = Convert.ToDecimal(value); } }
 
 		[DisplayName("Headquarter location")]
 		/// <summary>Field : "Headquarter location" Tipo: "GG" Formula:  ""</summary>

@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Cattp
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Cattp
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAsbcat.FldSubcateg, FieldType.TEXTO, Resources.Resources.SUB_CATEGORIA15612, 50, 0, true),
+				new Exports.QColumn(CSGenioAsbcat.FldSubcateg, FieldType.TEXT, Resources.Resources.SUB_CATEGORIA15612, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Cattp
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Cattp
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("sbcat", "subcateg");
+					firstVisibleColumn ??= new FieldRef("sbcat", "subcateg");
 				}
 
 
@@ -368,6 +363,8 @@ namespace GenioMVC.ViewModels.Cattp
 
 // USE /[MANUAL GQT OVERRQ TPCAT_SBCATSUBCATEG]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -394,7 +391,7 @@ namespace GenioMVC.ViewModels.Cattp
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAsbcat> listing = Models.ModelBase.Where<CSGenioAsbcat>(m_userContext, false, tpcat___sbcatsubcategConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPCAT___SBCATSUBCATEG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAsbcat> listing = Models.ModelBase.Where<CSGenioAsbcat>(m_userContext, distinct, tpcat___sbcatsubcategConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPCAT___SBCATSUBCATEG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -474,6 +471,8 @@ namespace GenioMVC.ViewModels.Cattp
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -523,7 +522,7 @@ namespace GenioMVC.ViewModels.Cattp
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValSubcateg", CSGenioAsbcat.FldSubcateg, typeof(string))
+			new TableSearchColumn("ValSubcateg", CSGenioAsbcat.FldSubcateg, typeof(string)),
 		];
 	}
 }

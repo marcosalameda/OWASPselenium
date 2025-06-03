@@ -1,5 +1,6 @@
 ﻿using System;
 using CSGenio.business;
+using CSGenio.framework;
 
 namespace GenioMVC.ViewModels
 {
@@ -58,7 +59,7 @@ namespace GenioMVC.ViewModels
 			get
 			{
 				if (selectedDate.HasValue)
-					return allDay ? GlobalFunctions.DateSetTime(GlobalFunctions.DateFloorDay(selectedDate.Value), DateMin) : selectedDate.Value;
+					return allDay ? GenFunctions.DateSetTime(GenFunctions.DateFloorDay(selectedDate.Value), DateMin) : selectedDate.Value;
 				return null;
 			}
 		}
@@ -68,7 +69,7 @@ namespace GenioMVC.ViewModels
 			get
 			{
 				if (selectedDate.HasValue)
-					return allDay ? GlobalFunctions.DateSetTime(GlobalFunctions.DateFloorDay(selectedDate.Value), DateMax) : selectedDate.Value;
+					return allDay ? GenFunctions.DateSetTime(GenFunctions.DateFloorDay(selectedDate.Value), DateMax) : selectedDate.Value;
 				return null;
 			}
 		}

@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Dispa
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Dispa
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAdisst.FldStatus, FieldType.TEXTO, Resources.Resources.STATUS62033, 30, 0, true),
+				new Exports.QColumn(CSGenioAdisst.FldStatus, FieldType.TEXT, Resources.Resources.STATUS62033, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Dispa
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -330,8 +326,7 @@ namespace GenioMVC.ViewModels.Dispa
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("disst", "status");
+					firstVisibleColumn ??= new FieldRef("disst", "status");
 				}
 
 
@@ -360,6 +355,8 @@ namespace GenioMVC.ViewModels.Dispa
 
 // USE /[MANUAL GQT OVERRQ DISPA_DISSTSTATUS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -386,7 +383,7 @@ namespace GenioMVC.ViewModels.Dispa
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAdisst> listing = Models.ModelBase.Where<CSGenioAdisst>(m_userContext, false, dispa___disststatus__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DISPA___DISSTSTATUS__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAdisst> listing = Models.ModelBase.Where<CSGenioAdisst>(m_userContext, distinct, dispa___disststatus__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DISPA___DISSTSTATUS__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -466,6 +463,8 @@ namespace GenioMVC.ViewModels.Dispa
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -515,7 +514,7 @@ namespace GenioMVC.ViewModels.Dispa
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValStatus", CSGenioAdisst.FldStatus, typeof(string), defaultSearch : true)
+			new TableSearchColumn("ValStatus", CSGenioAdisst.FldStatus, typeof(string), defaultSearch : true),
 		];
 	}
 }

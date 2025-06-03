@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Prope
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -153,17 +151,17 @@ namespace GenioMVC.ViewModels.Prope
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioAprope.FldPrice, FieldType.VALOR, Resources.Resources.PRICE06900, 12, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAprope.FldPhoto, FieldType.IMAGEM_JPEG, Resources.Resources.MAIN_PHOTO18723, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAprope.FldSize, FieldType.NUMERO, Resources.Resources.SIZE__M2_57059, 15, 0, true),
-				new Exports.QColumn(CSGenioAprope.FldBathrms, FieldType.NUMERO, Resources.Resources.NUMBER_OF_BATHROOMS64857, 2, 0, true),
-				new Exports.QColumn(CSGenioAprope.FldYear, FieldType.TEXTO, Resources.Resources.YEAR_BUILT55277, 30, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldPrice, FieldType.CURRENCY, Resources.Resources.PRICE06900, 12, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAprope.FldPhoto, FieldType.IMAGE, Resources.Resources.MAIN_PHOTO18723, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldSize, FieldType.NUMERIC, Resources.Resources.SIZE__M2_57059, 15, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldBathrms, FieldType.NUMERIC, Resources.Resources.NUMBER_OF_BATHROOMS64857, 2, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldYear, FieldType.TEXT, Resources.Resources.YEAR_BUILT55277, 30, 0, true),
 				new Exports.QColumn(CSGenioAprope.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
-				new Exports.QColumn(CSGenioAcity.FldCity, FieldType.TEXTO, Resources.Resources.CITY42505, 30, 0, true),
-				new Exports.QColumn(CSGenioAprope.FldBuildtyp, FieldType.ARRAY_COD_TEXTO, Resources.Resources.BUILDING_TYPE57152, 1, 0, true, "buildtyp"),
-				new Exports.QColumn(CSGenioAprope.FldTypology, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.TYPOLOGY11991, 1, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAcity.FldCity, FieldType.TEXT, Resources.Resources.CITY42505, 30, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldBuildtyp, FieldType.ARRAY_TEXT, Resources.Resources.BUILDING_TYPE57152, 1, 0, true, "buildtyp"),
+				new Exports.QColumn(CSGenioAprope.FldTypology, FieldType.ARRAY_NUMERIC, Resources.Resources.TYPOLOGY11991, 1, 0, true, "aparttyp"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -201,20 +199,20 @@ namespace GenioMVC.ViewModels.Prope
 		{
 			columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 50, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldPrice, FieldType.VALOR, Resources.Resources.PRICE06900, 11, 2, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldPhoto, FieldType.IMAGEM_JPEG, Resources.Resources.MAIN_PHOTO18723, 3, 1, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldSize, FieldType.NUMERO, Resources.Resources.SIZE__M2_57059, 15, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldBathrms, FieldType.NUMERO, Resources.Resources.NUMBER_OF_BATHROOMS64857, 2, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldYear, FieldType.TEXTO, Resources.Resources.YEAR_BUILT55277, 50, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 50, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldPrice, FieldType.CURRENCY, Resources.Resources.PRICE06900, 11, 2, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldPhoto, FieldType.IMAGE, Resources.Resources.MAIN_PHOTO18723, 3, 1, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldSize, FieldType.NUMERIC, Resources.Resources.SIZE__M2_57059, 15, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldBathrms, FieldType.NUMERIC, Resources.Resources.NUMBER_OF_BATHROOMS64857, 2, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldYear, FieldType.TEXT, Resources.Resources.YEAR_BUILT55277, 50, 0, true, "aparttyp"),
 				new Exports.QColumn(CSGenioAprope.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 500, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldBuildtyp, FieldType.ARRAY_COD_TEXTO, Resources.Resources.BUILDING_TYPE57152, 1, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldTypology, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.TYPOLOGY11991, 1, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldOrder, FieldType.NUMERO, Resources.Resources.ORDER39632, 15, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldGrndsize, FieldType.NUMERO, Resources.Resources.GROUND_SIZE62055, 15, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAprope.FldFloornum, FieldType.NUMERO, Resources.Resources.FLOOR_NUMBER26169, 3, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true, "aparttyp"),
-				new Exports.QColumn(CSGenioAcity.FldCity, FieldType.TEXTO, Resources.Resources.CITY42505, 30, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldBuildtyp, FieldType.ARRAY_TEXT, Resources.Resources.BUILDING_TYPE57152, 1, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldTypology, FieldType.ARRAY_NUMERIC, Resources.Resources.TYPOLOGY11991, 1, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldOrder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 15, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldGrndsize, FieldType.NUMERIC, Resources.Resources.GROUND_SIZE62055, 15, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAprope.FldFloornum, FieldType.NUMERIC, Resources.Resources.FLOOR_NUMBER26169, 3, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true, "aparttyp"),
+				new Exports.QColumn(CSGenioAcity.FldCity, FieldType.TEXT, Resources.Resources.CITY42505, 30, 0, true, "aparttyp"),
 			};
 		}
 
@@ -251,8 +249,6 @@ namespace GenioMVC.ViewModels.Prope
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -402,8 +398,7 @@ namespace GenioMVC.ViewModels.Prope
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("prope", "title");
+					firstVisibleColumn ??= new FieldRef("prope", "title");
 				}
 
 
@@ -451,6 +446,8 @@ namespace GenioMVC.ViewModels.Prope
 
 // USE /[MANUAL TRN OVERRQ T15PROPERTY]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -478,7 +475,7 @@ namespace GenioMVC.ViewModels.Prope
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAprope> listing = Models.ModelBase.Where<CSGenioAprope>(m_userContext, false, trn_menu_t15propertyConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT15PROPERTY", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAprope> listing = Models.ModelBase.Where<CSGenioAprope>(m_userContext, distinct, trn_menu_t15propertyConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT15PROPERTY", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -563,6 +560,8 @@ namespace GenioMVC.ViewModels.Prope
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -622,7 +621,7 @@ namespace GenioMVC.ViewModels.Prope
 			new TableSearchColumn("ValDescript", CSGenioAprope.FldDescript, typeof(string)),
 			new TableSearchColumn("City_ValCity", CSGenioAcity.FldCity, typeof(string)),
 			new TableSearchColumn("ValBuildtyp", CSGenioAprope.FldBuildtyp, typeof(string), array : "buildtyp"),
-			new TableSearchColumn("ValTypology", CSGenioAprope.FldTypology, typeof(decimal), array : "aparttyp")
+			new TableSearchColumn("ValTypology", CSGenioAprope.FldTypology, typeof(decimal), array : "aparttyp"),
 		];
 		protected void SetTicketToImageFields(Models.Prope row)
 		{

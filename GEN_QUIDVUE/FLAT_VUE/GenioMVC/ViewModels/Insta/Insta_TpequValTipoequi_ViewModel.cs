@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Insta
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Insta
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXTO, Resources.Resources.CODE49225, 20, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldQtdequip, FieldType.NUMERO, Resources.Resources.EQUIPMENT03632, 6, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXT, Resources.Resources.CODE49225, 20, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldQtdequip, FieldType.NUMERIC, Resources.Resources.EQUIPMENT03632, 6, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -194,9 +193,6 @@ namespace GenioMVC.ViewModels.Insta
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -340,8 +336,7 @@ namespace GenioMVC.ViewModels.Insta
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tpequ", "tpequcod");
+					firstVisibleColumn ??= new FieldRef("tpequ", "tpequcod");
 				}
 
 
@@ -370,6 +365,8 @@ namespace GenioMVC.ViewModels.Insta
 
 // USE /[MANUAL GQT OVERRQ INSTA_TPEQUTIPOEQUI]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -396,7 +393,7 @@ namespace GenioMVC.ViewModels.Insta
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, false, insta___tpequtipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_INSTA___TPEQUTIPOEQUI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtpequ> listing = Models.ModelBase.Where<CSGenioAtpequ>(m_userContext, distinct, insta___tpequtipoequiConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_INSTA___TPEQUTIPOEQUI", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -476,6 +473,8 @@ namespace GenioMVC.ViewModels.Insta
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -527,7 +526,7 @@ namespace GenioMVC.ViewModels.Insta
 		[
 			new TableSearchColumn("ValTpequcod", CSGenioAtpequ.FldTpequcod, typeof(string)),
 			new TableSearchColumn("ValTipoequi", CSGenioAtpequ.FldTipoequi, typeof(string)),
-			new TableSearchColumn("ValQtdequip", CSGenioAtpequ.FldQtdequip, typeof(decimal?))
+			new TableSearchColumn("ValQtdequip", CSGenioAtpequ.FldQtdequip, typeof(decimal?)),
 		];
 	}
 }

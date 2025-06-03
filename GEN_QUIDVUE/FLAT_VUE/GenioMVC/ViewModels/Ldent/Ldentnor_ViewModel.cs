@@ -567,7 +567,7 @@ namespace GenioMVC.ViewModels.Ldent
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -615,7 +615,7 @@ namespace GenioMVC.ViewModels.Ldent
 				// Fill List fields
 				this.ValCoddentr = ViewModelConversion.ToString(row["indoc.coddentr"]);
 				TableIndocDocumenr.Value = (decimal?)row["indoc.documenr"];
-				if (GlobalFunctions.emptyG(this.ValCoddentr) == 1)
+				if (GenFunctions.emptyG(this.ValCoddentr) == 1)
 				{
 					this.ValCoddentr = "";
 					TableIndocDocumenr.Value = 0m;
@@ -758,7 +758,7 @@ namespace GenioMVC.ViewModels.Ldent
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -805,7 +805,7 @@ namespace GenioMVC.ViewModels.Ldent
 				// Fill List fields
 				this.ValCodwareh = ViewModelConversion.ToString(row["wareh.codwareh"]);
 				TableWarehWarehdes.Value = (string)row["wareh.warehdes"];
-				if (GlobalFunctions.emptyG(this.ValCodwareh) == 1)
+				if (GenFunctions.emptyG(this.ValCodwareh) == 1)
 				{
 					this.ValCodwareh = "";
 					TableWarehWarehdes.Value = "";
@@ -955,7 +955,7 @@ namespace GenioMVC.ViewModels.Ldent
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -963,7 +963,7 @@ namespace GenioMVC.ViewModels.Ldent
 				object hValue = Navigation.GetValue("wareh");
 				if (!(hValue is Array))
 				{
-					if (GlobalFunctions.emptyG(hValue) == 1)
+					if (GenFunctions.emptyG(hValue) == 1)
 						returnEmptyDependants = true;
 					wherecodition.Equal(CSGenioAitem.FldCodwareh, hValue);
 				}
@@ -1011,7 +1011,7 @@ namespace GenioMVC.ViewModels.Ldent
 				// Fill List fields
 				this.ValCoditem = ViewModelConversion.ToString(row["item.coditem"]);
 				TableItemItemdes.Value = (string)row["item.itemdes"];
-				if (GlobalFunctions.emptyG(this.ValCoditem) == 1)
+				if (GenFunctions.emptyG(this.ValCoditem) == 1)
 				{
 					this.ValCoditem = "";
 					TableItemItemdes.Value = "";

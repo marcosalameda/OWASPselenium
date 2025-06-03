@@ -90,8 +90,6 @@ namespace GenioMVC.ViewModels.Roigi
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -154,9 +152,9 @@ namespace GenioMVC.ViewModels.Roigi
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAroigi.FldOrder, FieldType.NUMERO, Resources.Resources.ORDER39632, 10, 0, true),
-				new Exports.QColumn(CSGenioAroigi.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioArogl1.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAroigi.FldOrder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 10, 0, true),
+				new Exports.QColumn(CSGenioAroigi.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioArogl1.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -219,8 +217,6 @@ namespace GenioMVC.ViewModels.Roigi
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -370,8 +366,7 @@ namespace GenioMVC.ViewModels.Roigi
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("roigi", "order");
+					firstVisibleColumn ??= new FieldRef("roigi", "order");
 				}
 
 
@@ -419,6 +414,8 @@ namespace GenioMVC.ViewModels.Roigi
 
 // USE /[MANUAL PTN OVERRQ 4411]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -446,7 +443,7 @@ namespace GenioMVC.ViewModels.Roigi
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAroigi> listing = Models.ModelBase.Where<CSGenioAroigi>(m_userContext, false, ptn_menu_4411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAroigi> listing = Models.ModelBase.Where<CSGenioAroigi>(m_userContext, distinct, ptn_menu_4411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -529,6 +526,8 @@ namespace GenioMVC.ViewModels.Roigi
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -596,7 +595,7 @@ namespace GenioMVC.ViewModels.Roigi
 		[
 			new TableSearchColumn("ValOrder", CSGenioAroigi.FldOrder, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("ValTitle", CSGenioAroigi.FldTitle, typeof(string)),
-			new TableSearchColumn("Rogl1_ValTitle", CSGenioArogl1.FldTitle, typeof(string))
+			new TableSearchColumn("Rogl1_ValTitle", CSGenioArogl1.FldTitle, typeof(string)),
 		];
 	}
 }

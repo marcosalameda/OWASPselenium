@@ -368,10 +368,10 @@ namespace GenioMVC.ViewModels.Agent
 
 			validator.StringLength("ValName", Resources.Resources.NAME31974, ValName, 50);
 
-			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXTO.Formatting);
+			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL25170, ValEmail, 50);
 
-			validator.Required("ValEmail", Resources.Resources.EMAIL25170, ViewModelConversion.ToString(ValEmail), FieldType.TEXTO.Formatting);
+			validator.Required("ValEmail", Resources.Resources.EMAIL25170, ViewModelConversion.ToString(ValEmail), FieldType.TEXT.GetFormatting());
 
 
 			return validator.GetResult();

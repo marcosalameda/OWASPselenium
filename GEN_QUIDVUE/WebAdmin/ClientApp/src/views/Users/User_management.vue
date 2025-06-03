@@ -13,109 +13,113 @@
 			:icon="alert.icon"
 			@message-dismissed="handleAlertDismissed" />
 		<br v-if="alert.isVisible">
-		<div class="container-group">
-			<row>
-				<q-card
-					class="q-card--admin-default"
-					:title="Resources.CONFIGURACAO_DO_UTIL56540"
-					width="block">
-					<q-row-container>
-						<q-checkbox
-							v-model="Model.StatusDisableLogin"
-							:label="Resources.DESACTIVAR_CONTA37602"
-							:readonly="lockControls" />
-						<text-input
-							ref="username"
-							v-model="Model.Username"
-							is-required
-							:label="Resources.NOME__48276"
-							:isReadOnly="Model.ModForm != '1'" />
-						<text-input
-							v-model="Model.Email"
-							:label="Resources.EMAIL25170"
-							:isReadOnly="lockControls" />
-						<text-input
-							v-model="Model.Phone"
-							:label="Resources.TELEFONE37757"
-							:isReadOnly="lockControls" />
-						<q-checkbox
-							v-model="Model.StatusFirstLogin"
-							:label="Resources.O_UTILIZADOR_TEM_QUE05121"
-							:readonly="lockControls" />
-						<q-checkbox
-							v-if="Model.ShowInvalidate2FA"
-							v-model="Model.Invalidate2FA"
-							:label="Resources.INVALIDAR_AUTENTICAC21095"
-							:readonly="lockControls || Model.BlockInvalidate2FA" />
-						<q-checkbox
-							v-model="Model.PasswordChange"
-							:label="Resources.ALTERAR_A_PALAVRA_CH54014"
-							:readonly="lockControls || !hasQuidgestIDProvider" />
-						<password-input
-							v-model="Model.PasswordNew"
-							:label="Resources.NOVA_15272"
-							:isReadOnly="lockControls || !Model.PasswordChange"
-							:style='{ "opacity": (!Model.PasswordChange) ? "0.5" : "1" }'
-							:disabled="!Model.PasswordChange" />
-						<password-input
-							v-model="Model.PasswordConfirm"
-							:label="Resources.CONFIRMAR_64824"
-							:isReadOnly="lockControls  || !Model.PasswordChange"
-							:style='{ "opacity": (!Model.PasswordChange) ? "0.5" : "1" }'
-							:disabled="!Model.PasswordChange" />
-						<div
-							v-if="Model.PasswordChange"
-							ref="PassMeter"
-							id="passMeter">
-							<meter
-								ref="pswStrengthMeter"
-								max="4" id="password-strength-meter"
-								value="0" />
-							<p
-								ref="pswStrengthText"
-								id="password-strength-text" />
-						</div>
-					</q-row-container>
-				</q-card>
-			</row>
-			<row>
-				<qtable
-					id="PrivilegeTable"
-					:rows="Model.Modules"
-					:columns="tPrivileges.columns"
-					:config="tPrivileges.config"
-					:totalRows="totalPrivileges"
-					@on-change-query="onChangeQuery"
-					class="q-table--borderless">
-					<template #permission="props">
-						<multiselect
-							v-model="Model.AssignedRoles[props.row.Cod]"
-							:options="Model.AvaiableRoles[props.row.Cod]"
-							:multiple="!Model.OnlyLevels"
-							:taggable="true"
-							:max="props.row.OnlyLevels?1:999"
-							:custom-label="roleName"
-							label="Designation"
-							trackBy="Role" />
-					</template>
-				</qtable>
-			</row>
+		<q-card
+			class="q-card--admin-default"
+			width="block">
+			<q-row-container>
+				<row>
+					<q-card
+						class="q-card--admin-default"
+						:title="Resources.CONFIGURACAO_DO_UTIL56540"
+						width="block">
+						<q-row-container>
+							<q-checkbox
+								v-model="Model.StatusDisableLogin"
+								:label="Resources.DESACTIVAR_CONTA37602"
+								:readonly="lockControls" />
+							<text-input
+								ref="username"
+								v-model="Model.Username"
+								is-required
+								:label="Resources.NOME__48276"
+								:isReadOnly="Model.ModForm != '1'" />
+							<text-input
+								v-model="Model.Email"
+								:label="Resources.EMAIL25170"
+								:isReadOnly="lockControls" />
+							<text-input
+								v-model="Model.Phone"
+								:label="Resources.TELEFONE37757"
+								:isReadOnly="lockControls" />
+							<q-checkbox
+								v-model="Model.StatusFirstLogin"
+								:label="Resources.O_UTILIZADOR_TEM_QUE05121"
+								:readonly="lockControls" />
+							<q-checkbox
+								v-if="Model.ShowInvalidate2FA"
+								v-model="Model.Invalidate2FA"
+								:label="Resources.INVALIDAR_AUTENTICAC21095"
+								:readonly="lockControls || Model.BlockInvalidate2FA" />
+							<q-checkbox
+								v-model="Model.PasswordChange"
+								:label="Resources.ALTERAR_A_PALAVRA_CH54014"
+								:readonly="lockControls || !hasQuidgestIDProvider" />
+							<password-input
+								v-model="Model.PasswordNew"
+								:label="Resources.NOVA_15272"
+								:isReadOnly="lockControls || !Model.PasswordChange"
+								:style='{ "opacity": (!Model.PasswordChange) ? "0.5" : "1" }'
+								:disabled="!Model.PasswordChange" />
+							<password-input
+								v-model="Model.PasswordConfirm"
+								:label="Resources.CONFIRMAR_64824"
+								:isReadOnly="lockControls  || !Model.PasswordChange"
+								:style='{ "opacity": (!Model.PasswordChange) ? "0.5" : "1" }'
+								:disabled="!Model.PasswordChange" />
+							<div
+								v-if="Model.PasswordChange"
+								ref="PassMeter"
+								id="passMeter">
+								<meter
+									ref="pswStrengthMeter"
+									max="4" id="password-strength-meter"
+									value="0" />
+								<p
+									ref="pswStrengthText"
+									id="password-strength-text" />
+							</div>
+						</q-row-container>
+					</q-card>
+				</row>
+				<row>
+					<qtable
+						id="PrivilegeTable"
+						:rows="Model.Modules"
+						:columns="tPrivileges.columns"
+						:config="tPrivileges.config"
+						:totalRows="totalPrivileges"
+						@on-change-query="onChangeQuery"
+						class="q-table--borderless">
+						<template #permission="props">
+							<multiselect
+								v-model="Model.AssignedRoles[props.row.Cod]"
+								:options="Model.AvaiableRoles[props.row.Cod]"
+								:multiple="!Model.OnlyLevels"
+								taggable
+								:max="props.row.OnlyLevels?1:999"
+								:custom-label="roleName"
+								label="Designation"
+								trackBy="Role" />
+						</template>
+					</qtable>
+				</row>
 
-			<row>
-				<div class="q-button-container">
-					<q-button
-						ref="submitBtn"
-						b-style="primary"
-						:label="Resources[Model.SubmitValue]"
-						:disabled="submitBtnLock"
-						@click="showDialog('confirm')" />
-					<q-button
-						:label="Resources.CANCELAR49513"
-						@click="showDialog('cancel')" />
-				</div>
-			</row>
-		</div>
-
+				<row>
+					<div class="q-button-container">
+						<q-button
+							ref="submitBtn"
+							variant="bold"
+							:label="Resources[Model.SubmitValue]"
+							:disabled="submitBtnLock"
+							@click="showDialog('confirm')" />
+						<q-button
+							:label="Resources.CANCELAR49513"
+							@click="showDialog('cancel')" />
+					</div>
+				</row>
+			</q-row-container>
+		</q-card>
+		
 		<q-dialog
 			class="alert-dialog"
 			v-model="dialog.visible"
@@ -261,21 +265,23 @@
 				switch (type) {
 					case 'confirm':
 						this.dialog.text = this.Resources.DESEJA_GRAVAR_ESTA_F03881;
-						this.dialog.icon = { icon: 'alert' };
+						this.dialog.icon = { 
+							icon: 'alert',
+							color: 'warning'
+						};
 						this.dialog.buttons = [
 							{
 								id: 'confirm-btn',
 								props: {
 									label: this.Resources.SIM28552,
-									bStyle: 'primary',
+									variant: 'bold'
 								},
 								action: this.submit
 							},
 							{
 								id: 'cancel-btn',
 								props: {
-									label: this.Resources.NAO06521,
-									bStyle: 'secondary',
+									label: this.Resources.NAO06521
 								},
 							},
 						];
@@ -283,21 +289,23 @@
 
 					case 'cancel':
 						this.dialog.text = this.Resources.ATENCAO__AS_ALTERACO04365;
-						this.dialog.icon = { icon: 'alert' };
+						this.dialog.icon = { 
+							icon: 'alert',
+							color: 'warning'
+						};
 						this.dialog.buttons = [
 							{
 								id: 'confirm-btn',
 								props: {
 									label: this.Resources.SIM28552,
-									bStyle: 'primary',
+									variant: 'bold'
 								},
 								action: this.redirectToAllUsers
 							},
 							{
 								id: 'cancel-btn',
 								props: {
-									label: this.Resources.NAO06521,
-									bStyle: 'secondary',
+									label: this.Resources.NAO06521
 								},
 							},
 						];
@@ -305,13 +313,16 @@
 
 					case 'info':
 						this.dialog.text = this.Resources.UTILIZADOR_ALTERADO_42131;
-						this.dialog.icon = { icon: 'check-circle-outline' };
+						this.dialog.icon = {
+							icon: "check-circle-outline",
+							color: 'success'
+						};
 						this.dialog.buttons = [
 							{
 								id: 'ok-btn',
 								props: {
 									label: this.Resources.OK57387,
-									bStyle: 'primary',
+									variant: 'bold'
 								},
 								action: this.redirectToAllUsers
 							},
@@ -418,10 +429,16 @@
 							let message = this.Resources.ATENCAO__UTILIZADOR_05890 + "<br>";
 							message += ignoredRolesList.join("<br>") + ".";
 							this.dialog.text = message;
-							this.dialog.icon = { icon: "alert" };
+							this.dialog.icon = { 
+								icon: 'alert',
+								color: 'warning'
+							};
 						}
 						else {
-							this.dialog.icon = { icon: "check-circle-outline" };
+							this.dialog.icon = {
+								icon: "check-circle-outline",
+								color: 'success'
+							};
 							this.dialog.text = this.dialogText;
 						}
 
@@ -430,7 +447,7 @@
 								id: 'ok-btn',
 								props: {
 									label: this.Resources.OK57387,
-									bStyle: "primary"
+									variant: 'bold'
 								},
 								action: () => {
 									this.redirectToAllUsers()
@@ -538,75 +555,3 @@
 		}
 	};
 </script>
-<style>
-    /*Permissions table must be fixed, since the content will be changed */
-    #PrivilegeTable .c-table {
-        table-layout : fixed;
-    }
-    #PrivilegeTable th:nth-child(1) {
-        width: 10%;
-    }
-    #PrivilegeTable th:nth-child(2) {
-        width: 30%;
-    }
-</style>
-<style scoped>
-	meter {
-		width: 100%;
-		height: 10px;
-	}
-
-    /* WebKit */
-    meter::-webkit-meter-bar {
-		background: #EEE;
-		box-shadow: 0 2px 3px rgba(0,0,0,0.2) inset;
-		border-radius: 3px;
-    }
-
-    /* Webkit based browsers */
-    meter::-webkit-meter-optimum-value {
-		transition: width .4s linear;
-    }
-
-    meter[value="0"]::-webkit-meter-optimum-value {
-		background: grey;
-    }
-
-    meter[value="1"]::-webkit-meter-optimum-value {
-		background: red;
-    }
-
-    meter[value="2"]::-webkit-meter-optimum-value {
-		background: orange;
-    }
-
-    meter[value="3"]::-webkit-meter-optimum-value {
-		background: yellow;
-    }
-
-    meter[value="4"]::-webkit-meter-optimum-value {
-		background: green;
-    }
-
-    /* Gecko based browsers */
-    meter[value="0"]::-moz-meter-bar {
-		background: grey;
-    }
-
-    meter[value="1"]::-moz-meter-bar {
-		background: red;
-    }
-
-    meter[value="2"]::-moz-meter-bar {
-		background: orange;
-    }
-
-    meter[value="3"]::-moz-meter-bar {
-		background: yellow;
-    }
-
-    meter[value="4"]::-moz-meter-bar {
-		background: green;
-    }
-
-</style>

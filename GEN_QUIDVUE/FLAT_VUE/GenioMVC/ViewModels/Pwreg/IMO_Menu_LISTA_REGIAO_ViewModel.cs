@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Pwreg
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -148,8 +146,8 @@ namespace GenioMVC.ViewModels.Pwreg
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXTO, Resources.Resources.LOGIN48703, 20, 0, true),
-				new Exports.QColumn(CSGenioAregio.FldRegiao, FieldType.TEXTO, Resources.Resources.REGION12723, 30, 0, true),
+				new Exports.QColumn(CSGenioApsw.FldNome, FieldType.TEXT, Resources.Resources.LOGIN48703, 20, 0, true),
+				new Exports.QColumn(CSGenioAregio.FldRegiao, FieldType.TEXT, Resources.Resources.REGION12723, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -212,8 +210,6 @@ namespace GenioMVC.ViewModels.Pwreg
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -352,8 +348,7 @@ namespace GenioMVC.ViewModels.Pwreg
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("psw", "nome");
+					firstVisibleColumn ??= new FieldRef("psw", "nome");
 				}
 
 
@@ -382,6 +377,8 @@ namespace GenioMVC.ViewModels.Pwreg
 
 // USE /[MANUAL IMO OVERRQ LISTA_REGIAO]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -409,7 +406,7 @@ namespace GenioMVC.ViewModels.Pwreg
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApwreg> listing = Models.ModelBase.Where<CSGenioApwreg>(m_userContext, false, imo_menu_lista_regiaoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLLISTA_REGIAO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApwreg> listing = Models.ModelBase.Where<CSGenioApwreg>(m_userContext, distinct, imo_menu_lista_regiaoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLLISTA_REGIAO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -494,6 +491,8 @@ namespace GenioMVC.ViewModels.Pwreg
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -544,7 +543,7 @@ namespace GenioMVC.ViewModels.Pwreg
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("Psw_ValNome", CSGenioApsw.FldNome, typeof(string)),
-			new TableSearchColumn("Regio_ValRegiao", CSGenioAregio.FldRegiao, typeof(string))
+			new TableSearchColumn("Regio_ValRegiao", CSGenioAregio.FldRegiao, typeof(string)),
 		];
 	}
 }

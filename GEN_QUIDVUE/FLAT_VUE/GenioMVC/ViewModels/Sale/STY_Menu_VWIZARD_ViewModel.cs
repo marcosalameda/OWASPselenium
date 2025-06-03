@@ -93,8 +93,6 @@ namespace GenioMVC.ViewModels.Sale
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -156,26 +154,26 @@ namespace GenioMVC.ViewModels.Sale
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAsale.FldNrlide, FieldType.NUMERO, Resources.Resources.N_O_DA_LIDE50722, 10, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldStartdt, FieldType.DATAHORA, Resources.Resources.BEGINNING18124, 16, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldIdentifi, FieldType.TEXTO, Resources.Resources.IDENTIFICACAO_DA_OPO05341, 30, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldPotcompr, FieldType.TEXTO, Resources.Resources.POTENCIAIS_COMPRADOR25099, 30, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldProspecc, FieldType.LOGICO, Resources.Resources.PROSPECCAO_EFECTUADA42558, 1, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldInteress, FieldType.LOGICO, Resources.Resources.INTERESSADO26080, 1, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldSemrfina, FieldType.LOGICO, Resources.Resources.SEM_RECURSOS_FINANCE28439, 1, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldSemcapac, FieldType.LOGICO, Resources.Resources.SEM_CAPACIDADE_DE_DE07701, 1, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldDtqualif, FieldType.DATAHORA, Resources.Resources.QUALIFICACAO07026, 16, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldQualific, FieldType.LOGICO, Resources.Resources.QUALIFICACAO_EFECTUA30983, 1, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldPreabord, FieldType.DATAHORA, Resources.Resources.PRE_ABORDAGEM30870, 16, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldHomework, FieldType.LOGICO, Resources.Resources.TRABALHO_DE_CASA_EFE54337, 1, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldDtaborda, FieldType.DATAHORA, Resources.Resources.ABORDAGEM05839, 16, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldApproach, FieldType.LOGICO, Resources.Resources.ABORDAGEM_EFECTUADA60152, 1, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldApresent, FieldType.LOGICO, Resources.Resources.APRESENTACAO15975, 1, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldDtaprese, FieldType.DATAHORA, Resources.Resources.APRESENTACAO_EFECTUA37455, 16, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldDtsupera, FieldType.DATAHORA, Resources.Resources.SUPERAR_OBJECOES02243, 16, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldTentfech, FieldType.DATAHORA, Resources.Resources.TENTATIVAS_DE_FECHO20342, 16, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldDtvenda, FieldType.DATAHORA, Resources.Resources.FECHO_DA_VENDA48081, 16, 0, true),
-				new Exports.QColumn(CSGenioAsale.FldDtacompa, FieldType.DATAHORA, Resources.Resources.ACOMPANHAMENTO53507, 16, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldNrlide, FieldType.NUMERIC, Resources.Resources.N_O_DA_LIDE50722, 10, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldStartdt, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldIdentifi, FieldType.TEXT, Resources.Resources.IDENTIFICACAO_DA_OPO05341, 30, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldPotcompr, FieldType.TEXT, Resources.Resources.POTENCIAIS_COMPRADOR25099, 30, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldProspecc, FieldType.LOGIC, Resources.Resources.PROSPECCAO_EFECTUADA42558, 1, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldInteress, FieldType.LOGIC, Resources.Resources.INTERESSADO26080, 1, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldSemrfina, FieldType.LOGIC, Resources.Resources.SEM_RECURSOS_FINANCE28439, 1, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldSemcapac, FieldType.LOGIC, Resources.Resources.SEM_CAPACIDADE_DE_DE07701, 1, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldDtqualif, FieldType.DATETIME, Resources.Resources.QUALIFICACAO07026, 16, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldQualific, FieldType.LOGIC, Resources.Resources.QUALIFICACAO_EFECTUA30983, 1, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldPreabord, FieldType.DATETIME, Resources.Resources.PRE_ABORDAGEM30870, 16, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldHomework, FieldType.LOGIC, Resources.Resources.TRABALHO_DE_CASA_EFE54337, 1, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldDtaborda, FieldType.DATETIME, Resources.Resources.ABORDAGEM05839, 16, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldApproach, FieldType.LOGIC, Resources.Resources.ABORDAGEM_EFECTUADA60152, 1, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldApresent, FieldType.LOGIC, Resources.Resources.APRESENTACAO15975, 1, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldDtaprese, FieldType.DATETIME, Resources.Resources.APRESENTACAO_EFECTUA37455, 16, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldDtsupera, FieldType.DATETIME, Resources.Resources.SUPERAR_OBJECOES02243, 16, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldTentfech, FieldType.DATETIME, Resources.Resources.TENTATIVAS_DE_FECHO20342, 16, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldDtvenda, FieldType.DATETIME, Resources.Resources.FECHO_DA_VENDA48081, 16, 0, true),
+				new Exports.QColumn(CSGenioAsale.FldDtacompa, FieldType.DATETIME, Resources.Resources.ACOMPANHAMENTO53507, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -238,8 +236,6 @@ namespace GenioMVC.ViewModels.Sale
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -387,8 +383,7 @@ namespace GenioMVC.ViewModels.Sale
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("sale", "nrlide");
+					firstVisibleColumn ??= new FieldRef("sale", "nrlide");
 				}
 
 
@@ -436,6 +431,8 @@ namespace GenioMVC.ViewModels.Sale
 
 // USE /[MANUAL STY OVERRQ VWIZARD]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -463,7 +460,7 @@ namespace GenioMVC.ViewModels.Sale
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAsale> listing = Models.ModelBase.Where<CSGenioAsale>(m_userContext, false, sty_menu_vwizardConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLVWIZARD", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAsale> listing = Models.ModelBase.Where<CSGenioAsale>(m_userContext, distinct, sty_menu_vwizardConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLVWIZARD", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -544,6 +541,8 @@ namespace GenioMVC.ViewModels.Sale
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -612,7 +611,7 @@ namespace GenioMVC.ViewModels.Sale
 			new TableSearchColumn("ValDtsupera", CSGenioAsale.FldDtsupera, typeof(DateTime?)),
 			new TableSearchColumn("ValTentfech", CSGenioAsale.FldTentfech, typeof(DateTime?)),
 			new TableSearchColumn("ValDtvenda", CSGenioAsale.FldDtvenda, typeof(DateTime?)),
-			new TableSearchColumn("ValDtacompa", CSGenioAsale.FldDtacompa, typeof(DateTime?))
+			new TableSearchColumn("ValDtacompa", CSGenioAsale.FldDtacompa, typeof(DateTime?)),
 		];
 	}
 }

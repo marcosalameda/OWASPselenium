@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Roigi.ValOrder")]
 		[NumericAttribute(0)]
-		public decimal? ValOrder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrder, 0)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
+		public decimal? ValOrder { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOrder, 0)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
 
 		[DisplayName("Title")]
 		/// <summary>Field : "Title" Tipo: "C" Formula:  ""</summary>

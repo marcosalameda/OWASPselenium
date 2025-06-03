@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApedid.FldNrpedido, FieldType.NUMERO, Resources.Resources.NO_14817, 6, 0, true),
+				new Exports.QColumn(CSGenioApedid.FldNrpedido, FieldType.NUMERIC, Resources.Resources.NO_14817, 6, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -330,8 +326,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("pedid", "nrpedido");
+					firstVisibleColumn ??= new FieldRef("pedid", "nrpedido");
 				}
 
 
@@ -360,6 +355,8 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 // USE /[MANUAL GQT OVERRQ LNHPD_PEDIDNRPEDIDO]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -386,7 +383,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApedid> listing = Models.ModelBase.Where<CSGenioApedid>(m_userContext, false, lnhpd___pedidnrpedidoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHPD___PEDIDNRPEDIDO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApedid> listing = Models.ModelBase.Where<CSGenioApedid>(m_userContext, distinct, lnhpd___pedidnrpedidoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LNHPD___PEDIDNRPEDIDO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -466,6 +463,8 @@ namespace GenioMVC.ViewModels.Lnhpd
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -515,7 +514,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValNrpedido", CSGenioApedid.FldNrpedido, typeof(decimal?))
+			new TableSearchColumn("ValNrpedido", CSGenioApedid.FldNrpedido, typeof(decimal?)),
 		];
 	}
 }

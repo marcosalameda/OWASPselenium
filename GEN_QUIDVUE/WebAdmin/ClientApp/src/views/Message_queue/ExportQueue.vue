@@ -19,10 +19,22 @@
                     <hr />
                     <section>{{Resources.CONDICAO44011}}</section>
                     <row>
-                        <select-input v-model="conditionField" :options="fields" :label="Resources.CAMPO46284" :size="'xlarge'"></select-input>
+                        <q-select
+                            v-model="conditionField"
+                            item-value="Value"
+                            item-label="Text"
+                            :items="fields"
+                            :label="Resources.CAMPO46284"
+                            size="xlarge" />
                     </row>
                     <row>
-                        <select-input v-model="conditionOp" :options="ops" :label="Resources.OPERACAO29482" :size="'xlarge'"></select-input>
+                        <q-select
+                            v-model="conditionOp"
+                            item-value="Value"
+                            item-label="Text"
+                            :items="ops"
+                            :label="Resources.OPERACAO29482"
+                            size="xlarge" />
                     </row>
                     <row>
                         <text-input v-model="conditionValue" :label="Resources.VALOR32448" :size="'xlarge'"></text-input>
@@ -30,7 +42,7 @@
                     <p>{{Resources.MENSAGENS_A_SER_EXPO34711}}: {{count}}</p>
 
                     <row v-if="progressModel.Active">
-                        <label>{{ Resources.PROGRESSO52692 }}</label>
+                        <q-label :label="Resources.PROGRESSO52692" />
                         <div class="progress">
                             <div class="progress-bar progress-bar-striped progress-bar-animated" :style="{ width: progressModel.Count + '%' }">
                                 {{ progressModel.Count }}%
@@ -45,7 +57,7 @@
                         @click="close" />
                     <q-button
                         ref="export"
-                        b-style="primary"
+                        variant="bold"
                         :label="Resources.EXPORTAR35632"
                         @click="exportQueue" />
                 </div>

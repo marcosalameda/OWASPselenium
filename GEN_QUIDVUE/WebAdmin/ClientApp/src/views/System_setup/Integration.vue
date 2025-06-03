@@ -24,10 +24,16 @@
 				<q-row-container>
 					<queue
 						:model="model"
-						@update-model="$emit('update-model')"
+						@update-model="forwardUpdate"
 						@alert-class="forwardAlert" />
 				</q-row-container>
 			</q-card>
+		</row>
+		<row class="footer-btn">
+			<q-button
+				variant="bold"
+				:label="Resources.GRAVAR_CONFIGURACAO36308"
+				@click="SaveIntegrationConfig" />
 		</row>
 	</div>
 </template>
@@ -78,8 +84,26 @@
 		
 		methods: {
 			forwardAlert(alertData) {
-				this.$emit('alert-class', alertData);
-			}
+				this.$emit('alert-class', alertData)
+			},
+			forwardUpdate() {
+				this.$emit('update-model')
+			},
+			SaveIntegrationConfig() {
+				this.model.MQueues.Journaltimeout = this.model.MQueues.Journaltimeout.toString()
+				this.model.MQueues.Maxsendnumber = this.model.MQueues.Maxsendnumber.toString()
+				QUtils.log("SaveIntegrationConfig - Request", QUtils.apiActionURL('Config', 'SaveIntegrationConfig'))
+				QUtils.postData('Config', 'SaveIntegrationConfig', this.model, null, (data) => {
+					QUtils.log("SaveIntegrationConfig - Response", data)
+					this.$emit('update-model')
+					if (data.Status === 'OK') {
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: data.AlertType })
+					}
+					else {
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: data.AlertType })
+					}
+				});
+			},
 		}
 	};
 </script>

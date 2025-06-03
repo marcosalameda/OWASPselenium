@@ -365,7 +365,7 @@ namespace GenioMVC.ViewModels.Cmpny
 
 			validator.StringLength("ValDesignat", Resources.Resources.DESIGNATION35876, ValDesignat, 85);
 
-			validator.Required("ValDesignat", Resources.Resources.DESIGNATION35876, ViewModelConversion.ToString(ValDesignat), FieldType.TEXTO.Formatting);
+			validator.Required("ValDesignat", Resources.Resources.DESIGNATION35876, ViewModelConversion.ToString(ValDesignat), FieldType.TEXT.GetFormatting());
 
 
 			return validator.GetResult();

@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Scale ID" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Fltsc.ValScaleid")]
 		[NumericAttribute(0)]
-		public decimal? ValScaleid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValScaleid, 0)); } set { klass.ValScaleid = Convert.ToDecimal(value); } }
+		public decimal? ValScaleid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValScaleid, 0)); } set { klass.ValScaleid = Convert.ToDecimal(value); } }
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>

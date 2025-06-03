@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Glob
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,7 +148,7 @@ namespace GenioMVC.ViewModels.Glob
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfacty.FldType, FieldType.TEXTO, Resources.Resources.FACILITY_TYPE44577, 25, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldType, FieldType.TEXT, Resources.Resources.FACILITY_TYPE44577, 25, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -213,8 +211,6 @@ namespace GenioMVC.ViewModels.Glob
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -353,8 +349,7 @@ namespace GenioMVC.ViewModels.Glob
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("facty", "type");
+					firstVisibleColumn ??= new FieldRef("facty", "type");
 				}
 
 
@@ -383,6 +378,8 @@ namespace GenioMVC.ViewModels.Glob
 
 // USE /[MANUAL WMS OVERRQ 4241]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -410,7 +407,7 @@ namespace GenioMVC.ViewModels.Glob
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAglob> listing = Models.ModelBase.Where<CSGenioAglob>(m_userContext, false, wms_menu_4241Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4241", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAglob> listing = Models.ModelBase.Where<CSGenioAglob>(m_userContext, distinct, wms_menu_4241Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4241", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -493,6 +490,8 @@ namespace GenioMVC.ViewModels.Glob
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -542,7 +541,7 @@ namespace GenioMVC.ViewModels.Glob
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("Facty_ValType", CSGenioAfacty.FldType, typeof(string))
+			new TableSearchColumn("Facty_ValType", CSGenioAfacty.FldType, typeof(string)),
 		];
 	}
 }

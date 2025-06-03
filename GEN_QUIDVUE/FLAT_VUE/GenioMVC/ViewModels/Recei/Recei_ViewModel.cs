@@ -560,7 +560,7 @@ namespace GenioMVC.ViewModels.Recei
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -607,7 +607,7 @@ namespace GenioMVC.ViewModels.Recei
 				// Fill List fields
 				this.ValCodentit = ViewModelConversion.ToString(row["entit.codentit"]);
 				TableEntitName.Value = (string)row["entit.name"];
-				if (GlobalFunctions.emptyG(this.ValCodentit) == 1)
+				if (GenFunctions.emptyG(this.ValCodentit) == 1)
 				{
 					this.ValCodentit = "";
 					TableEntitName.Value = "";

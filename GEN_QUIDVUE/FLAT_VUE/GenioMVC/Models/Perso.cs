@@ -69,7 +69,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Perso.ValYear")]
 		[NumericAttribute(0)]
-		public decimal? ValYear { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDecimal(value); } }
+		public decimal? ValYear { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDecimal(value); } }
 
 		[DisplayName("Month")]
 		/// <summary>Field : "Month" Tipo: "AN" Formula:  ""</summary>

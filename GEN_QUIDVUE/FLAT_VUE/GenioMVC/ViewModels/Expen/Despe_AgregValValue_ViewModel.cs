@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Expen
 			return crs;
 		}
 
-
 		public string ValCodyear { get; set; }
 		public string ValCodproje { get; set; }
 
@@ -131,7 +130,7 @@ namespace GenioMVC.ViewModels.Expen
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAagreg.FldValue, FieldType.VALOR, Resources.Resources.VALUE10285, 10, 0, true),
+				new Exports.QColumn(CSGenioAagreg.FldValue, FieldType.CURRENCY, Resources.Resources.VALUE10285, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -202,9 +201,6 @@ namespace GenioMVC.ViewModels.Expen
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -348,8 +344,7 @@ namespace GenioMVC.ViewModels.Expen
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("agreg", "value");
+					firstVisibleColumn ??= new FieldRef("agreg", "value");
 				}
 
 
@@ -367,6 +362,8 @@ namespace GenioMVC.ViewModels.Expen
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ DESPE_AGREGVALUE]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -394,7 +391,7 @@ namespace GenioMVC.ViewModels.Expen
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAagreg> listing = Models.ModelBase.Where<CSGenioAagreg>(m_userContext, false, despe___agregvalue___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DESPE___AGREGVALUE___", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAagreg> listing = Models.ModelBase.Where<CSGenioAagreg>(m_userContext, distinct, despe___agregvalue___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DESPE___AGREGVALUE___", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -474,6 +471,8 @@ namespace GenioMVC.ViewModels.Expen
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -523,7 +522,7 @@ namespace GenioMVC.ViewModels.Expen
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValValue", CSGenioAagreg.FldValue, typeof(decimal?))
+			new TableSearchColumn("ValValue", CSGenioAagreg.FldValue, typeof(decimal?)),
 		];
 	}
 }

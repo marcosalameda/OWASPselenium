@@ -362,7 +362,7 @@ namespace GenioMVC.ViewModels.Outpt
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValCodwareh", Resources.Resources.WAREHOUSE51864, ViewModelConversion.ToString(ValCodwareh), FieldType.CHAVE_ESTRANGEIRA_GUID.Formatting);
+			validator.Required("ValCodwareh", Resources.Resources.WAREHOUSE51864, ViewModelConversion.ToString(ValCodwareh), FieldType.KEY_GUID.GetFormatting());
 
 
 			return validator.GetResult();
@@ -513,7 +513,7 @@ namespace GenioMVC.ViewModels.Outpt
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -560,7 +560,7 @@ namespace GenioMVC.ViewModels.Outpt
 				// Fill List fields
 				this.ValCodwareh = ViewModelConversion.ToString(row["ware1.codwareh"]);
 				TableWare1Warehdes.Value = (string)row["ware1.warehdes"];
-				if (GlobalFunctions.emptyG(this.ValCodwareh) == 1)
+				if (GenFunctions.emptyG(this.ValCodwareh) == 1)
 				{
 					this.ValCodwareh = "";
 					TableWare1Warehdes.Value = "";

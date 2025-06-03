@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Dttyp
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,30 +148,30 @@ namespace GenioMVC.ViewModels.Dttyp
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAdttyp.FldString, FieldType.TEXTO, Resources.Resources.STRING29433, 30, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldUppercas, FieldType.TEXTO, Resources.Resources.UPPER_CASE31324, 30, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldQrcode, FieldType.TEXTO, Resources.Resources.QR_CODE12259, 30, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldString, FieldType.TEXT, Resources.Resources.STRING29433, 30, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldUppercas, FieldType.TEXT, Resources.Resources.UPPER_CASE31324, 30, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldQrcode, FieldType.TEXT, Resources.Resources.QR_CODE12259, 30, 0, true),
 				new Exports.QColumn(CSGenioAdttyp.FldMultilin, FieldType.MEMO, Resources.Resources.SIMPLE_MULTILINE_TEX04460, 30, 3, true),
 				new Exports.QColumn(CSGenioAdttyp.FldMultili3, FieldType.MEMO, Resources.Resources.EDITOR_MULTILINE_TEX05556, 30, 3, true),
-				new Exports.QColumn(CSGenioAdttyp.FldBoolean, FieldType.LOGICO, Resources.Resources.BOOLEAN__TINYINT___S57956, 1, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldBoolean2, FieldType.NUMERO, Resources.Resources.CONDITIONAL__BOOLEAN08919, 1, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldSmallint, FieldType.NUMERO, Resources.Resources.SMALL_INTEGER__STORA54196, 4, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldInteger, FieldType.NUMERO, Resources.Resources.INTEGER__STORAGE__4_49578, 9, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldBigint, FieldType.NUMERO, Resources.Resources.BIG_INTEGER__STORAGE28249, 15, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldReal, FieldType.NUMERO, Resources.Resources.REAL_FLOAT_24___PREC46659, 8, 2, true),
-				new Exports.QColumn(CSGenioAdttyp.FldFloat, FieldType.NUMERO, Resources.Resources.DOUBLE___FLOAT_53___07951, 15, 2, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDecimal, FieldType.NUMERO, Resources.Resources.DECIMAL__1_10___STOR26677, 10, 4, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDecimal9, FieldType.NUMERO, Resources.Resources.DECIMAL__11_15___STO49382, 15, 4, true),
-				new Exports.QColumn(CSGenioAdttyp.FldMoney, FieldType.VALOR, Resources.Resources.MONEY___DECIMAL__1_124403, 10, 2, true),
-				new Exports.QColumn(CSGenioAdttyp.FldMoney9, FieldType.VALOR, Resources.Resources.MONEY___DECIMAL__11_02101, 15, 2, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDate, FieldType.DATA, Resources.Resources.DATE02091, 8, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDatetime, FieldType.DATAHORA, Resources.Resources.DATETIME62630, 16, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDtsesond, FieldType.DATASEGUNDO, Resources.Resources.DATE_TIME_SECOND__IN55990, 19, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldTime, FieldType.TEMPO, Resources.Resources.TIME50904, 5, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldUuid, FieldType.TEXTO, Resources.Resources.UUID__AKA_GUID_13998, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAdttyp.FldImage, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE__BINARY_46903, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAdttyp.FldStart, FieldType.DATAHORA, Resources.Resources.STARTING_TIME_WITH_I44217, 16, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldEnd, FieldType.DATAHORA, Resources.Resources.END_TIME_WITH_INCLUS19241, 16, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldBoolean, FieldType.LOGIC, Resources.Resources.BOOLEAN__TINYINT___S57956, 1, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldBoolean2, FieldType.NUMERIC, Resources.Resources.CONDITIONAL__BOOLEAN08919, 1, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldSmallint, FieldType.NUMERIC, Resources.Resources.SMALL_INTEGER__STORA54196, 4, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldInteger, FieldType.NUMERIC, Resources.Resources.INTEGER__STORAGE__4_49578, 9, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldBigint, FieldType.NUMERIC, Resources.Resources.BIG_INTEGER__STORAGE28249, 15, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldReal, FieldType.NUMERIC, Resources.Resources.REAL_FLOAT_24___PREC46659, 8, 2, true),
+				new Exports.QColumn(CSGenioAdttyp.FldFloat, FieldType.NUMERIC, Resources.Resources.DOUBLE___FLOAT_53___07951, 15, 2, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDecimal, FieldType.NUMERIC, Resources.Resources.DECIMAL__1_10___STOR26677, 10, 4, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDecimal9, FieldType.NUMERIC, Resources.Resources.DECIMAL__11_15___STO49382, 15, 4, true),
+				new Exports.QColumn(CSGenioAdttyp.FldMoney, FieldType.CURRENCY, Resources.Resources.MONEY___DECIMAL__1_124403, 10, 2, true),
+				new Exports.QColumn(CSGenioAdttyp.FldMoney9, FieldType.CURRENCY, Resources.Resources.MONEY___DECIMAL__11_02101, 15, 2, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDate, FieldType.DATE, Resources.Resources.DATE02091, 8, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDatetime, FieldType.DATETIME, Resources.Resources.DATETIME62630, 16, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDtsesond, FieldType.DATETIMESECONDS, Resources.Resources.DATE_TIME_SECOND__IN55990, 19, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldTime, FieldType.TIME_HOURS, Resources.Resources.TIME50904, 5, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldUuid, FieldType.TEXT, Resources.Resources.UUID__AKA_GUID_13998, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAdttyp.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE__BINARY_46903, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAdttyp.FldStart, FieldType.DATETIME, Resources.Resources.STARTING_TIME_WITH_I44217, 16, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldEnd, FieldType.DATETIME, Resources.Resources.END_TIME_WITH_INCLUS19241, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -236,8 +234,6 @@ namespace GenioMVC.ViewModels.Dttyp
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -384,8 +380,7 @@ namespace GenioMVC.ViewModels.Dttyp
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("dttyp", "string");
+					firstVisibleColumn ??= new FieldRef("dttyp", "string");
 				}
 
 
@@ -414,6 +409,8 @@ namespace GenioMVC.ViewModels.Dttyp
 
 // USE /[MANUAL WMS OVERRQ 7111]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -441,7 +438,7 @@ namespace GenioMVC.ViewModels.Dttyp
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAdttyp> listing = Models.ModelBase.Where<CSGenioAdttyp>(m_userContext, false, wms_menu_7111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML7111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAdttyp> listing = Models.ModelBase.Where<CSGenioAdttyp>(m_userContext, distinct, wms_menu_7111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML7111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -522,6 +519,8 @@ namespace GenioMVC.ViewModels.Dttyp
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -594,7 +593,7 @@ namespace GenioMVC.ViewModels.Dttyp
 			new TableSearchColumn("ValTime", CSGenioAdttyp.FldTime, typeof(string)),
 			new TableSearchColumn("ValUuid", CSGenioAdttyp.FldUuid, typeof(string)),
 			new TableSearchColumn("ValStart", CSGenioAdttyp.FldStart, typeof(DateTime?)),
-			new TableSearchColumn("ValEnd", CSGenioAdttyp.FldEnd, typeof(DateTime?))
+			new TableSearchColumn("ValEnd", CSGenioAdttyp.FldEnd, typeof(DateTime?)),
 		];
 		protected void SetTicketToImageFields(Models.Dttyp row)
 		{

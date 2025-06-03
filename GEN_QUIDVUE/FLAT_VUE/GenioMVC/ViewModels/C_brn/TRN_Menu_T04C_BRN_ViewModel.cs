@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.C_brn
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -148,7 +146,7 @@ namespace GenioMVC.ViewModels.C_brn
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAc_brn.FldCountry, FieldType.TEXTO, Resources.Resources.COUNTRY64133, 30, 0, true),
+				new Exports.QColumn(CSGenioAc_brn.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -211,8 +209,6 @@ namespace GenioMVC.ViewModels.C_brn
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -359,8 +355,7 @@ namespace GenioMVC.ViewModels.C_brn
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("c_brn", "country");
+					firstVisibleColumn ??= new FieldRef("c_brn", "country");
 				}
 
 
@@ -389,6 +384,8 @@ namespace GenioMVC.ViewModels.C_brn
 
 // USE /[MANUAL TRN OVERRQ T04C_BRN]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -416,7 +413,7 @@ namespace GenioMVC.ViewModels.C_brn
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAc_brn> listing = Models.ModelBase.Where<CSGenioAc_brn>(m_userContext, false, trn_menu_t04c_brnConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT04C_BRN", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAc_brn> listing = Models.ModelBase.Where<CSGenioAc_brn>(m_userContext, distinct, trn_menu_t04c_brnConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT04C_BRN", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -497,6 +494,8 @@ namespace GenioMVC.ViewModels.C_brn
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -546,7 +545,7 @@ namespace GenioMVC.ViewModels.C_brn
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValCountry", CSGenioAc_brn.FldCountry, typeof(string), defaultSearch : true)
+			new TableSearchColumn("ValCountry", CSGenioAc_brn.FldCountry, typeof(string), defaultSearch : true),
 		];
 	}
 }

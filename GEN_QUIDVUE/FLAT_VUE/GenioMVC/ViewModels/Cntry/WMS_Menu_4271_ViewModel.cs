@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Cntry
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -148,12 +146,12 @@ namespace GenioMVC.ViewModels.Cntry
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXTO, String.Empty, 90, 0, true),
-				new Exports.QColumn(CSGenioAcntry.FldActive, FieldType.LOGICO, String.Empty, 1, 0, true),
-				new Exports.QColumn(CSGenioAcntry.FldCodigonr, FieldType.TEXTO, String.Empty, 3, 0, true),
-				new Exports.QColumn(CSGenioAcntry.FldAlfa2, FieldType.TEXTO, String.Empty, 2, 0, true),
-				new Exports.QColumn(CSGenioAcntry.FldAlfa3, FieldType.TEXTO, String.Empty, 3, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAcntry.FldFlag, FieldType.IMAGEM_JPEG, String.Empty, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXT, String.Empty, 90, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldActive, FieldType.LOGIC, String.Empty, 1, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldCodigonr, FieldType.TEXT, String.Empty, 3, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldAlfa2, FieldType.TEXT, String.Empty, 2, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldAlfa3, FieldType.TEXT, String.Empty, 3, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAcntry.FldFlag, FieldType.IMAGE, String.Empty, 3, 1, true):null,
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -216,8 +214,6 @@ namespace GenioMVC.ViewModels.Cntry
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -364,8 +360,7 @@ namespace GenioMVC.ViewModels.Cntry
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("cntry", "country");
+					firstVisibleColumn ??= new FieldRef("cntry", "country");
 				}
 
 
@@ -394,6 +389,8 @@ namespace GenioMVC.ViewModels.Cntry
 
 // USE /[MANUAL WMS OVERRQ 4271]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -421,7 +418,7 @@ namespace GenioMVC.ViewModels.Cntry
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAcntry> listing = Models.ModelBase.Where<CSGenioAcntry>(m_userContext, false, wms_menu_4271Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4271", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAcntry> listing = Models.ModelBase.Where<CSGenioAcntry>(m_userContext, distinct, wms_menu_4271Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4271", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -502,6 +499,8 @@ namespace GenioMVC.ViewModels.Cntry
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -556,7 +555,7 @@ namespace GenioMVC.ViewModels.Cntry
 			new TableSearchColumn("ValActive", CSGenioAcntry.FldActive, typeof(bool)),
 			new TableSearchColumn("ValCodigonr", CSGenioAcntry.FldCodigonr, typeof(string)),
 			new TableSearchColumn("ValAlfa2", CSGenioAcntry.FldAlfa2, typeof(string)),
-			new TableSearchColumn("ValAlfa3", CSGenioAcntry.FldAlfa3, typeof(string))
+			new TableSearchColumn("ValAlfa3", CSGenioAcntry.FldAlfa3, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Cntry row)
 		{

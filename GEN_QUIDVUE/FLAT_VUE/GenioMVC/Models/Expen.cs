@@ -78,13 +78,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Year" Tipo: "N" Formula: + "[YEAR->YEARNUM]"</summary>
 		[ShouldSerialize("Expen.ValYearnumb")]
 		[NumericAttribute(0)]
-		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
+		public decimal? ValYearnumb { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
 
 		[DisplayName("Previous year")]
 		/// <summary>Field : "Previous year" Tipo: "N" Formula: + "[YEAR->YEARNUM]-1"</summary>
 		[ShouldSerialize("Expen.ValYearprev")]
 		[NumericAttribute(0)]
-		public decimal? ValYearprev { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDecimal(value); } }
+		public decimal? ValYearprev { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDecimal(value); } }
 
 		[DisplayName(">AGREGADOR")]
 		/// <summary>Field : ">AGREGADOR" Tipo: "CE" Formula:  ""</summary>
@@ -115,13 +115,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Value" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Expen.ValValue")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 
 		[DisplayName("Previous Value")]
 		/// <summary>Field : "Previous Value" Tipo: "$D" Formula: CT "EXPE1[EXPEN->YEARPREV][EXPE1->YEARNUMB][EXPE1->VALUE](DESC)"</summary>
 		[ShouldSerialize("Expen.ValPrevval")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrevval { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDecimal(value); } }
+		public decimal? ValPrevval { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Expen.ValZzstate")]

@@ -1,6 +1,6 @@
 namespace quidgest.uitests.controls;
 
-public class BaseInputControl(IWebDriver driver, By containerLocator, string controlId, string inputId) : ControlObject(driver, containerLocator, By.CssSelector(inputId))
+public class BaseInputControl(IWebDriver driver, By containerLocator, string controlId, string inputId) : InputControl(driver, containerLocator, By.CssSelector(inputId))
 {
     /// <summary>
     /// True if the control is blocked, false otherwise
@@ -18,7 +18,7 @@ public class BaseInputControl(IWebDriver driver, By containerLocator, string con
     /// <summary>
     /// Set the input's value
     /// </summary>
-    public void SetValue(string val)
+    public override void SetValue(string val)
     {
         ClearValue();
         m_control.SendKeys(val);

@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAgitem(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR GITEM]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codgitem", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codgitem", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("itemdes", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "itemdes", FieldType.TEXT);
 			Qfield.FieldDescription = "Global article";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "GLOBAL_ARTICLE63861";
 
             Qfield.NotNull = true;
@@ -67,34 +63,30 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("itemgcod", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "itemgcod", FieldType.TEXT);
 			Qfield.FieldDescription = "Code";
 			Qfield.FieldSize =  15;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CODE49225";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("document", FieldType.FICHEIRO_BD);
+			Qfield = new Field(info.Alias, "document", FieldType.DOCUMENT);
 			Qfield.FieldDescription = "Document";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "DOCUMENT00695";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
- 			Qfield = new Field("documentfk", FieldType.CHAVE_ESTRANGEIRA_GUID);
+ 			Qfield = new Field(info.Alias, "documentfk", FieldType.KEY_GUID);
 			Qfield.FieldSize = 16;
 			Qfield.FieldDescription = "Chave estrangeira para o documento";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -167,8 +159,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Global article";
 			info.AreaPluralDesignation="Global articles";
 			info.DescriptionCav="GLOBAL_ARTICLE63861";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

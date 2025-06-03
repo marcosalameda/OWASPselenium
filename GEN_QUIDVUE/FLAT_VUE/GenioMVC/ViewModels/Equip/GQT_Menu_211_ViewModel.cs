@@ -88,7 +88,6 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
-
 		private DateTime? _dataRef = null;
 
 		/// <summary>
@@ -97,7 +96,6 @@ namespace GenioMVC.ViewModels.Equip
 		[System.ComponentModel.DataAnnotations.Display(Name = "DATA18071", ResourceType = typeof(Resources.Resources))]
 		[Helpers.DateAttribute("D")]
 		public DateTime? DataRef { get { return _dataRef; } }
-
 
 		public override int GetCount(User user)
 		{
@@ -141,7 +139,7 @@ namespace GenioMVC.ViewModels.Equip
 		public GQT_Menu_211_ViewModel(UserContext userContext) : base(userContext)
 		{
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
-			this._dataRef = GlobalFunctions.Today();
+			this._dataRef = GenFunctions.Today();
 		}
 
 		/// <summary>
@@ -159,14 +157,14 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldSequennr, FieldType.NUMERO, Resources.Resources.SEQUENTIAL_NO_38590, 6, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXTO, Resources.Resources.NO__REGISTER04207, 6, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDtaquisi, FieldType.DATA, Resources.Resources.ACQUISITION44180, 8, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 8, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldSitefabr, FieldType.TEXTO, Resources.Resources.SITIO_FABRICANTE26458, 30, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldSequennr, FieldType.NUMERIC, Resources.Resources.SEQUENTIAL_NO_38590, 6, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXT, Resources.Resources.NO__REGISTER04207, 6, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDtaquisi, FieldType.DATE, Resources.Resources.ACQUISITION44180, 8, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATETIME, Resources.Resources.DECOMISSION14486, 8, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldSitefabr, FieldType.TEXT, Resources.Resources.SITIO_FABRICANTE26458, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -233,8 +231,6 @@ namespace GenioMVC.ViewModels.Equip
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -381,8 +377,7 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("cmpny", "designat");
+					firstVisibleColumn ??= new FieldRef("cmpny", "designat");
 				}
 
 
@@ -411,6 +406,8 @@ namespace GenioMVC.ViewModels.Equip
 
 // USE /[MANUAL GQT OVERRQ 211]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -438,7 +435,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAequip> listing = Models.ModelBase.Where<CSGenioAequip>(m_userContext, false, gqt_menu_211Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML211", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAequip> listing = Models.ModelBase.Where<CSGenioAequip>(m_userContext, distinct, gqt_menu_211Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML211", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -523,6 +520,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -579,7 +578,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("ValDesignat", CSGenioAequip.FldDesignat, typeof(string)),
 			new TableSearchColumn("ValDtaquisi", CSGenioAequip.FldDtaquisi, typeof(DateTime?)),
 			new TableSearchColumn("ValDtdeco", CSGenioAequip.FldDtdeco, typeof(DateTime?)),
-			new TableSearchColumn("ValSitefabr", CSGenioAequip.FldSitefabr, typeof(string))
+			new TableSearchColumn("ValSitefabr", CSGenioAequip.FldSitefabr, typeof(string)),
 		];
 	}
 }

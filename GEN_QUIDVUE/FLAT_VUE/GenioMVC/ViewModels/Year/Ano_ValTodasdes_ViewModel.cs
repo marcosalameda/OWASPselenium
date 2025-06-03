@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Year
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodyear { get; set; }
+		public string YearValCodyear { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Year
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Year
 		/// <param name="userContext">The current user request context</param>
 		public Ano_ValTodasdes_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodyear = userContext.CurrentNavigation.CurrentLevel.GetEntry("year")?.ToString();
+			YearValCodyear = userContext.CurrentNavigation.CurrentLevel.GetEntry("year")?.ToString();
 		}
 
 		/// <summary>
@@ -128,8 +127,8 @@ namespace GenioMVC.ViewModels.Year
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAexpen.FldDescript, FieldType.TEXTO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
-				new Exports.QColumn(CSGenioAexpen.FldValue, FieldType.VALOR, Resources.Resources.VALUE10285, 10, 0, true),
+				new Exports.QColumn(CSGenioAexpen.FldDescript, FieldType.TEXT, Resources.Resources.DESCRIPTION07383, 30, 0, true),
+				new Exports.QColumn(CSGenioAexpen.FldValue, FieldType.CURRENCY, Resources.Resources.VALUE10285, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -194,10 +193,8 @@ namespace GenioMVC.ViewModels.Year
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodyear != null)
-				crs.Equal(CSGenioAexpen.FldCodyear, this.ValCodyear);
-
-
+			if (this.YearValCodyear != null)
+				crs.Equal(CSGenioAexpen.FldCodyear, this.YearValCodyear);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -335,8 +332,7 @@ namespace GenioMVC.ViewModels.Year
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("expen", "descript");
+					firstVisibleColumn ??= new FieldRef("expen", "descript");
 				}
 
 
@@ -365,6 +361,8 @@ namespace GenioMVC.ViewModels.Year
 
 // USE /[MANUAL GQT OVERRQ ANO_PSEUDTODASDES]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -392,7 +390,7 @@ namespace GenioMVC.ViewModels.Year
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAexpen> listing = Models.ModelBase.Where<CSGenioAexpen>(m_userContext, false, ano_____pseudtodasdesConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ANO_____PSEUDTODASDES", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAexpen> listing = Models.ModelBase.Where<CSGenioAexpen>(m_userContext, distinct, ano_____pseudtodasdesConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ANO_____PSEUDTODASDES", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -472,6 +470,8 @@ namespace GenioMVC.ViewModels.Year
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -522,7 +522,7 @@ namespace GenioMVC.ViewModels.Year
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValDescript", CSGenioAexpen.FldDescript, typeof(string)),
-			new TableSearchColumn("ValValue", CSGenioAexpen.FldValue, typeof(decimal?))
+			new TableSearchColumn("ValValue", CSGenioAexpen.FldValue, typeof(decimal?)),
 		];
 	}
 }

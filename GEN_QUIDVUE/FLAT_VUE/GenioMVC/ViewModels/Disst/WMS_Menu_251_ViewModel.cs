@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Disst
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -147,9 +145,9 @@ namespace GenioMVC.ViewModels.Disst
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAdisst.FldStatus, FieldType.TEXTO, String.Empty, 50, 0, true),
-				new Exports.QColumn(CSGenioAdisst.FldOrder, FieldType.NUMERO, String.Empty, 3, 0, true),
-				new Exports.QColumn(CSGenioAdisst.FldDescript, FieldType.TEXTO, String.Empty, 50, 0, true),
+				new Exports.QColumn(CSGenioAdisst.FldStatus, FieldType.TEXT, String.Empty, 50, 0, true),
+				new Exports.QColumn(CSGenioAdisst.FldOrder, FieldType.NUMERIC, String.Empty, 3, 0, true),
+				new Exports.QColumn(CSGenioAdisst.FldDescript, FieldType.TEXT, String.Empty, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -212,8 +210,6 @@ namespace GenioMVC.ViewModels.Disst
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -360,8 +356,7 @@ namespace GenioMVC.ViewModels.Disst
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("disst", "status");
+					firstVisibleColumn ??= new FieldRef("disst", "status");
 				}
 
 
@@ -390,6 +385,8 @@ namespace GenioMVC.ViewModels.Disst
 
 // USE /[MANUAL WMS OVERRQ 251]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -417,7 +414,7 @@ namespace GenioMVC.ViewModels.Disst
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAdisst> listing = Models.ModelBase.Where<CSGenioAdisst>(m_userContext, false, wms_menu_251Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML251", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAdisst> listing = Models.ModelBase.Where<CSGenioAdisst>(m_userContext, distinct, wms_menu_251Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML251", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -498,6 +495,8 @@ namespace GenioMVC.ViewModels.Disst
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -549,7 +548,7 @@ namespace GenioMVC.ViewModels.Disst
 		[
 			new TableSearchColumn("ValStatus", CSGenioAdisst.FldStatus, typeof(string)),
 			new TableSearchColumn("ValOrder", CSGenioAdisst.FldOrder, typeof(decimal?)),
-			new TableSearchColumn("ValDescript", CSGenioAdisst.FldDescript, typeof(string))
+			new TableSearchColumn("ValDescript", CSGenioAdisst.FldDescript, typeof(string)),
 		];
 	}
 }

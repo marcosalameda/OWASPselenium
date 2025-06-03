@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Asset number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Asset.ValAssetnum")]
 		[NumericAttribute(0)]
-		public decimal? ValAssetnum { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAssetnum, 0)); } set { klass.ValAssetnum = Convert.ToDecimal(value); } }
+		public decimal? ValAssetnum { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAssetnum, 0)); } set { klass.ValAssetnum = Convert.ToDecimal(value); } }
 
 		[DisplayName("Asset type")]
 		/// <summary>Field : "Asset type" Tipo: "AC" Formula:  ""</summary>

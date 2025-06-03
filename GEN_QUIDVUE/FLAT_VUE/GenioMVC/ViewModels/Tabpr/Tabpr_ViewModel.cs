@@ -511,7 +511,7 @@ namespace GenioMVC.ViewModels.Tabpr
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -558,7 +558,7 @@ namespace GenioMVC.ViewModels.Tabpr
 				// Fill List fields
 				this.ValCodtpeq1 = ViewModelConversion.ToString(row["tpequ.codtpequ"]);
 				TableTpequTipoequi.Value = (string)row["tpequ.tipoequi"];
-				if (GlobalFunctions.emptyG(this.ValCodtpeq1) == 1)
+				if (GenFunctions.emptyG(this.ValCodtpeq1) == 1)
 				{
 					this.ValCodtpeq1 = "";
 					TableTpequTipoequi.Value = "";

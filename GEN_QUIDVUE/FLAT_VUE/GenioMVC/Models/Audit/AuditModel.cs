@@ -287,17 +287,17 @@ namespace GenioMVC.Models
 			// The first 4 columns are predefined.
 			List<Exports.QColumn> columnDefs = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "date"), FieldType.DATASEGUNDO, Resources.Resources.DATA18071, 19, 0, true),
-				new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "who"), FieldType.TEXTO, Resources.Resources.NOME_DE_UTILIZADOR58858, 50, 0, true),
-				new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "op"), FieldType.TEXTO, Resources.Resources.OPERACAO29482, 1, 0, true), // TODO: Add array rule to export
-				new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "cod"), FieldType.CHAVE_PRIMARIA, Resources.Resources.CHAVE_PRIMARIA03485, 38, 0, true)
+				new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "date"), FieldType.DATETIMESECONDS, Resources.Resources.DATA18071, 19, 0, true),
+				new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "who"), FieldType.TEXT, Resources.Resources.NOME_DE_UTILIZADOR58858, 50, 0, true),
+				new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "op"), FieldType.TEXT, Resources.Resources.OPERACAO29482, 1, 0, true), // TODO: Add array rule to export
+				new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "cod"), FieldType.KEY_VARCHAR, Resources.Resources.CHAVE_PRIMARIA03485, 38, 0, true)
 			};
 
 			// Other columns vary by view
 			if (LogTable == AuditModel.LogTables.logGQTall)
 			{
-				columnDefs.Add(new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "logtable"), FieldType.TEXTO, Resources.Resources.TABELA44049, 50, 0, true));
-				columnDefs.Add(new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "logfield"), FieldType.TEXTO, Resources.Resources.CAMPO46284, 50, 0, true));
+				columnDefs.Add(new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "logtable"), FieldType.TEXT, Resources.Resources.TABELA44049, 50, 0, true));
+				columnDefs.Add(new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "logfield"), FieldType.TEXT, Resources.Resources.CAMPO46284, 50, 0, true));
 				columnDefs.Add(new Exports.QColumn(new Quidgest.Persistence.FieldRef(viewName, "val"), FieldType.MEMO, Resources.Resources.VALOR32448, 50, 0, true));
 			}
 			else
@@ -365,8 +365,7 @@ namespace GenioMVC.Models
 		/// <returns>Human value</returns>
 		public static string GetHumanValue(PersistentSupport sp, AreaInfo area, CSGenio.framework.Field field, string text, string language)
 		{
-			if ((field.FieldType == FieldType.CHAVE_ESTRANGEIRA ||
-				field.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) && GlobalFunctions.emptyG(text) == 0)
+			if (field.isKey() && GenFunctions.emptyG(text) == 0)
 			{
 				// Foreign keys are replaced by referenced tables' human key
 				Relation relation = area.ParentTables.Values.First(x => x.SourceRelField == field.Name);
@@ -394,16 +393,16 @@ namespace GenioMVC.Models
 
 				text = humanKeyText;
 			}
-			else if ((field.FieldType == FieldType.ARRAY_COD_TEXTO ||
-					field.FieldType == FieldType.ARRAY_COD_NUMERICO ||
-					field.FieldType == FieldType.ARRAY_COD_LOGICO) &&
+			else if ((field.FieldType == FieldType.ARRAY_TEXT ||
+					field.FieldType == FieldType.ARRAY_NUMERIC ||
+					field.FieldType == FieldType.ARRAY_LOGIC) &&
 					!string.IsNullOrEmpty(field.ArrayName) && !string.IsNullOrEmpty(text))
 			{
 				// Convert array name
 				string arrayPrefix = string.Empty;
-				if (field.FieldType == FieldType.ARRAY_COD_NUMERICO)
+				if (field.FieldType == FieldType.ARRAY_NUMERIC)
 					arrayPrefix = "dbo.GetValArrayN";
-				else if (field.FieldType == FieldType.ARRAY_COD_LOGICO)
+				else if (field.FieldType == FieldType.ARRAY_LOGIC)
 					arrayPrefix = "dbo.GetValArrayL";
 				else
 					arrayPrefix = "dbo.GetValArrayC";
@@ -422,7 +421,7 @@ namespace GenioMVC.Models
 					// If unable to get array description, value remains unchanged
 				}
 			}
-			else if (field.FieldType == FieldType.DATA)
+			else if (field.FieldType == FieldType.DATE)
 			{
 				if (!string.IsNullOrEmpty(text))
 					text = (Convert.ToDateTime(text)).ToString(Configuration.DateFormat.Date, CultureInfo.InvariantCulture); //standard convertion across platforms. OLD=> text = text.Replace("-", "/").Substring(0, 10);

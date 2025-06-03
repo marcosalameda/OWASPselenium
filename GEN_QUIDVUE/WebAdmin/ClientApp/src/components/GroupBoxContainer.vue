@@ -1,15 +1,17 @@
 <template>
-	<div :id="id" :style="style" :class="['c-groupbox', { 'zone-no-border': noBorder },  $attrs.class]" v-show="isVisible">
-		<div class="c-groupbox__title" :help-id="id" :label-id="id" v-if="label">
-			<div v-if="labelAlign === 'center'" style="text-align: center;">
-                {{ label }}
-            </div>
-            <div v-else-if="labelAlign === 'right'" style="text-align: right;">
-                {{ label }}
-            </div>
-            <template v-else>
-                {{ label }}
-            </template>
+	<div
+		v-show="isVisible"
+		:id="id"
+		:style="style"
+		:class="['c-groupbox', { 'zone-no-border': noBorder }, $attrs.class]">
+		<div
+			v-if="label"
+			class="c-groupbox__title"
+			:help-id="id"
+			:label-id="id">
+			<div :style="labelStyle">
+				{{ label }}
+			</div>
 		</div>
 		<div class="form-flow">
 			<slot></slot>
@@ -24,38 +26,62 @@
 		inheritAttrs: false,
 
 		props: {
+			/**
+			 * Component id.
+			 */
 			id: {
 				type: String,
 				default: null
 			},
 
+			/**
+			 * Container label.
+			 */
 			label: {
 				type: String,
 				default: null
 			},
 
-            /* Either "left", "center" or "right"*/
-            labelAlign: {
-                type: String,
-                default: "left"
-            },
+			/**
+			 * Groupbox label alignment. Either "left", "center" or "right".
+			 */
+			labelAlign: {
+				type: String,
+				default: 'left'
+			},
 
+			/**
+			 * Custom style attributes.
+			 */
 			style: {
 				type: String,
 				default: null
 			},
 
 			/**
-			 * Visible property to hide and show group
+			 * The if the container is visible, false otherwise.
 			 */
 			isVisible: {
 				type: Boolean,
 				default: true
 			},
 
+			/**
+			 * True if the container shuld be borderless, false otherwise.
+			 */
 			noBorder: {
 				type: Boolean,
 				default: false
+			}
+		},
+
+		expose: [],
+
+		computed: {
+			labelStyle() {
+				return {
+					'text-align': this.labelAlign
+				}
 			}
 		}
 	}

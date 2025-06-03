@@ -12,22 +12,21 @@ public class GQT_Menu_2911_RowViewModel : Models.Tpequ
 
 	public GQT_Menu_2911_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public GQT_Menu_2911_RowViewModel(UserContext userContext, CSGenioAtpequ val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -39,8 +38,8 @@ public class GQT_Menu_2911_RowViewModel : Models.Tpequ
 				Order = 1,
 				Area = "TPEQU",
 				Field = "TPEQUCOD",
-				TextColorFormula = () => ((CSGenio.business.GlobalFunctions.emptyC(((string)this.ValCorletra))==1)?("RGB(0,0,0)"):(((string)this.ValCorletra))),
-				BackColorFormula = () => ((CSGenio.business.GlobalFunctions.emptyC(((string)this.ValBackcolo))==1)?("RGB(255,255,255)"):(((string)this.ValBackcolo))),
+				TextColorFormula = () => ((CSGenio.framework.GenFunctions.emptyC(((string)this.ValCorletra))==1)?("RGB(0,0,0)"):(((string)this.ValCorletra))),
+				BackColorFormula = () => ((CSGenio.framework.GenFunctions.emptyC(((string)this.ValBackcolo))==1)?("RGB(255,255,255)"):(((string)this.ValBackcolo))),
 			},
 			new ListColumn()
 			{
@@ -186,4 +185,12 @@ public class GQT_Menu_2911_RowViewModel : Models.Tpequ
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
 	public string BackgroundColor => "";
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

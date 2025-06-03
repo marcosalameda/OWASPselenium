@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Agreg
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Agreg
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAproje.FldProjecto, FieldType.TEXTO, Resources.Resources.PROJECTO50142, 50, 0, true),
+				new Exports.QColumn(CSGenioAproje.FldProjecto, FieldType.TEXT, Resources.Resources.PROJECTO50142, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Agreg
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Agreg
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("proje", "projecto");
+					firstVisibleColumn ??= new FieldRef("proje", "projecto");
 				}
 
 
@@ -357,6 +352,8 @@ namespace GenioMVC.ViewModels.Agreg
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ AGREG_PROJEPROJECTO]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -384,7 +381,7 @@ namespace GenioMVC.ViewModels.Agreg
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAproje> listing = Models.ModelBase.Where<CSGenioAproje>(m_userContext, false, agreg___projeprojectoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_AGREG___PROJEPROJECTO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAproje> listing = Models.ModelBase.Where<CSGenioAproje>(m_userContext, distinct, agreg___projeprojectoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_AGREG___PROJEPROJECTO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -464,6 +461,8 @@ namespace GenioMVC.ViewModels.Agreg
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -513,7 +512,7 @@ namespace GenioMVC.ViewModels.Agreg
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValProjecto", CSGenioAproje.FldProjecto, typeof(string))
+			new TableSearchColumn("ValProjecto", CSGenioAproje.FldProjecto, typeof(string)),
 		];
 	}
 }

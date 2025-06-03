@@ -58,13 +58,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Ticket ID" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Tickt.ValTktid")]
 		[NumericAttribute(0)]
-		public decimal? ValTktid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValTktid, 0)); } set { klass.ValTktid = Convert.ToDecimal(value); } }
+		public decimal? ValTktid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValTktid, 0)); } set { klass.ValTktid = Convert.ToDecimal(value); } }
 
 		[DisplayName("Price")]
 		/// <summary>Field : "Price" Tipo: "$" Formula:  ""</summary>
 		[ShouldSerialize("Tickt.ValPrice")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tickt.ValZzstate")]

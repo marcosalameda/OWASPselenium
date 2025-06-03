@@ -778,7 +778,7 @@ namespace GenioMVC.Controllers
 
 				if (user.Codpsw != model.ValCodpsw)
 				{
-					var errorMessage = Resources.Resources.NAO_PODE_ALTERAR_A_P42871;
+					string errorMessage = Resources.Resources.NAO_PODE_ALTERAR_A_P42871;
 					ModelState.AddModelError(errorMessage, errorMessage);
 				}
 
@@ -792,22 +792,15 @@ namespace GenioMVC.Controllers
 				model.Save(UserContext.Current);
 				sp.closeTransaction();
 
-				SuccessMessage(Resources.Resources.A_SUA_PASSWORD_FOI_A50177);
-
-				//recriar user logado, caso contrário
-				if (GlobalFunctions.emptyN(UserContext.Current.User.Status) == 0 && UserContext.Current.User.Status == 1)
+				// Otherwise, recreate logged user.
+				if (UserContext.Current.User.Status == 1)
 					RecreateUser();
 
 				return JsonOK(new { Message = Resources.Resources.A_SUA_PASSWORD_FOI_A50177 });
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
-				var errorMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-
-				if (ex is BusinessException businessEx && !string.IsNullOrEmpty(ex.Message))
-					errorMessage = businessEx.UserMessage;
-
-				ModelState.AddModelError("Erro", errorMessage);
+				HandleException(e);
 				return JsonERROR(null, model);
 			}
 			finally
@@ -1202,7 +1195,7 @@ namespace GenioMVC.Controllers
 										RequestedField field = new(baseklass.Alias + "." + baseklass.PrimaryKeyName, baseklass.Alias)
 										{
 											Value = codtabela,
-											FieldType = FieldType.CHAVE_PRIMARIA
+											FieldType = FieldType.KEY_VARCHAR
 										};
 										baseklass.Fields.Add(baseklass.Alias + "." + baseklass.PrimaryKeyName, field);
 										nomedoc = postedFile.FileName.Replace("Sign", "");

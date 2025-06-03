@@ -541,7 +541,7 @@ namespace GenioMVC.ViewModels.Procn
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -588,7 +588,7 @@ namespace GenioMVC.ViewModels.Procn
 				// Fill List fields
 				this.ValCodprope = ViewModelConversion.ToString(row["prope.codprope"]);
 				TablePropeTitle.Value = (string)row["prope.title"];
-				if (GlobalFunctions.emptyG(this.ValCodprope) == 1)
+				if (GenFunctions.emptyG(this.ValCodprope) == 1)
 				{
 					this.ValCodprope = "";
 					TablePropeTitle.Value = "";

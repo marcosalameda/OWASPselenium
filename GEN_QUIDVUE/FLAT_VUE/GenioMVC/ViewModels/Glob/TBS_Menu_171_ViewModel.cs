@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Glob
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -212,8 +210,6 @@ namespace GenioMVC.ViewModels.Glob
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -352,8 +348,7 @@ namespace GenioMVC.ViewModels.Glob
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("glob", "home");
+					firstVisibleColumn ??= new FieldRef("glob", "home");
 				}
 
 
@@ -382,6 +377,8 @@ namespace GenioMVC.ViewModels.Glob
 
 // USE /[MANUAL TBS OVERRQ 171]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -409,7 +406,7 @@ namespace GenioMVC.ViewModels.Glob
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAglob> listing = Models.ModelBase.Where<CSGenioAglob>(m_userContext, false, tbs_menu_171Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML171", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAglob> listing = Models.ModelBase.Where<CSGenioAglob>(m_userContext, distinct, tbs_menu_171Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML171", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -490,6 +487,8 @@ namespace GenioMVC.ViewModels.Glob
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -539,7 +538,7 @@ namespace GenioMVC.ViewModels.Glob
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValHome", CSGenioAglob.FldHome, typeof(string))
+			new TableSearchColumn("ValHome", CSGenioAglob.FldHome, typeof(string)),
 		];
 	}
 }

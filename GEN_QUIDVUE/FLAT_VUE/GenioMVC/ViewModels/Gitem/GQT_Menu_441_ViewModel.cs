@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Gitem
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,8 +147,8 @@ namespace GenioMVC.ViewModels.Gitem
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAgitem.FldItemdes, FieldType.TEXTO, Resources.Resources.GLOBAL_ARTICLE63861, 30, 0, true),
-				new Exports.QColumn(CSGenioAgitem.FldItemgcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
+				new Exports.QColumn(CSGenioAgitem.FldItemdes, FieldType.TEXT, Resources.Resources.GLOBAL_ARTICLE63861, 30, 0, true),
+				new Exports.QColumn(CSGenioAgitem.FldItemgcod, FieldType.TEXT, Resources.Resources.CODE49225, 15, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -213,8 +211,6 @@ namespace GenioMVC.ViewModels.Gitem
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -364,8 +360,7 @@ namespace GenioMVC.ViewModels.Gitem
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("gitem", "itemdes");
+					firstVisibleColumn ??= new FieldRef("gitem", "itemdes");
 				}
 
 
@@ -394,6 +389,8 @@ namespace GenioMVC.ViewModels.Gitem
 
 // USE /[MANUAL GQT OVERRQ 441]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -421,7 +418,7 @@ namespace GenioMVC.ViewModels.Gitem
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAgitem> listing = Models.ModelBase.Where<CSGenioAgitem>(m_userContext, false, gqt_menu_441Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML441", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAgitem> listing = Models.ModelBase.Where<CSGenioAgitem>(m_userContext, distinct, gqt_menu_441Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML441", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -502,6 +499,8 @@ namespace GenioMVC.ViewModels.Gitem
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -552,7 +551,7 @@ namespace GenioMVC.ViewModels.Gitem
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValItemdes", CSGenioAgitem.FldItemdes, typeof(string), defaultSearch : true),
-			new TableSearchColumn("ValItemgcod", CSGenioAgitem.FldItemgcod, typeof(string))
+			new TableSearchColumn("ValItemgcod", CSGenioAgitem.FldItemgcod, typeof(string)),
 		];
 	}
 }

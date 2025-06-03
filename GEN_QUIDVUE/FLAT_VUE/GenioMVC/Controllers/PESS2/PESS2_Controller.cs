@@ -21,6 +21,8 @@ using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PESS2]/
@@ -29,7 +31,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class Pess2Controller : ControllerBase
 	{
-		public Pess2Controller(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public Pess2Controller(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PESS2]/
 
 
@@ -73,6 +82,37 @@ namespace GenioMVC.Controllers
 			}
 
 			return Json(new { Success = false, Message = "Error" });
+		}
+
+		public ActionResult GetDocumsTickets([FromBody]RequestDocumGetTicketsModel requestModel)
+		{
+			return base.GetDocumsTickets(requestModel.TableName, requestModel.FieldName, requestModel.KeyValue);
+		}
+
+		public ActionResult GetFileVersions([FromBody]RequestDocumGetModel requestModel)
+		{
+			return base.GetFileVersions(requestModel.Ticket);
+		}
+
+		public ActionResult GetFileProperties([FromBody]RequestDocumGetModel requestModel)
+		{
+			return base.GetFileProperties(requestModel.Ticket);
+		}
+
+		public ActionResult GetFile([FromBody]RequestDocumGetModel requestModel)
+		{
+			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
+		}
+
+		[DisableRequestSizeLimit]
+		public new ActionResult SetFile([FromForm] string ticket, [FromForm] VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
+		{
+			return base.SetFile(ticket, mode, version);
+		}
+
+		public ActionResult SetFilesState([FromBody]RequestDocumsChangeModel requestModel)
+		{
+			return base.SetFilesState(requestModel.Documents);
 		}
 	}
 }

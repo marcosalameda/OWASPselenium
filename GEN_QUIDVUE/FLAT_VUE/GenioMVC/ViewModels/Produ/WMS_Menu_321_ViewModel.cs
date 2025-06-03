@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Produ
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,14 +147,14 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAprodu.FldProduct, FieldType.TEXTO, Resources.Resources.PRODUCT12880, 30, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldSku, FieldType.TEXTO, Resources.Resources.SKU42303, 20, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldGtin, FieldType.TEXTO, Resources.Resources.GTIN45487, 14, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldProduct, FieldType.TEXT, Resources.Resources.PRODUCT12880, 30, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldSku, FieldType.TEXT, Resources.Resources.SKU42303, 20, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldGtin, FieldType.TEXT, Resources.Resources.GTIN45487, 14, 0, true),
 				new Exports.QColumn(CSGenioAprodu.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 3, true),
-				new Exports.QColumn(CSGenioAprodu.FldSize, FieldType.TEXTO, Resources.Resources.SIZE10299, 30, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldWeight, FieldType.NUMERO, Resources.Resources.WEIGHT36329, 10, 2, true),
-				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXTO, Resources.Resources.GLN35528, 30, 0, true),
-				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXTO, Resources.Resources.GLN_EXT31913, 30, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldSize, FieldType.TEXT, Resources.Resources.SIZE10299, 30, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldWeight, FieldType.NUMERIC, Resources.Resources.WEIGHT36329, 10, 2, true),
+				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXT, Resources.Resources.GLN35528, 30, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXT31913, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -194,17 +192,17 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAprodu.FldProduct, FieldType.TEXTO, Resources.Resources.PRODUCT12880, 85, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldProduct, FieldType.TEXT, Resources.Resources.PRODUCT12880, 85, 0, true),
 				new Exports.QColumn(CSGenioAprodu.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 85, 3, true),
-				new Exports.QColumn(CSGenioAprodu.FldSku, FieldType.TEXTO, Resources.Resources.SKU42303, 20, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldGtin, FieldType.TEXTO, Resources.Resources.GTIN45487, 14, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldSize, FieldType.TEXTO, Resources.Resources.SIZE10299, 50, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldWeight, FieldType.NUMERO, Resources.Resources.WEIGHT36329, 9, 2, true),
-				new Exports.QColumn(CSGenioAprodu.FldPrice, FieldType.VALOR, Resources.Resources.PRICE06900, 11, 4, true),
-				new Exports.QColumn(CSGenioAprodu.FldImage, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE65174, 3, 1, true),
-				new Exports.QColumn(CSGenioAprodu.FldIn_use, FieldType.ARRAY_COD_LOGICO, Resources.Resources.IN_USE42606, 1, 0, true),
-				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXTO, Resources.Resources.GLN35528, 30, 0, true),
-				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXTO, Resources.Resources.GLN_EXT31913, 30, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldSku, FieldType.TEXT, Resources.Resources.SKU42303, 20, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldGtin, FieldType.TEXT, Resources.Resources.GTIN45487, 14, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldSize, FieldType.TEXT, Resources.Resources.SIZE10299, 50, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldWeight, FieldType.NUMERIC, Resources.Resources.WEIGHT36329, 9, 2, true),
+				new Exports.QColumn(CSGenioAprodu.FldPrice, FieldType.CURRENCY, Resources.Resources.PRICE06900, 11, 4, true),
+				new Exports.QColumn(CSGenioAprodu.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE65174, 3, 1, true),
+				new Exports.QColumn(CSGenioAprodu.FldIn_use, FieldType.ARRAY_LOGIC, Resources.Resources.IN_USE42606, 1, 0, true),
+				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXT, Resources.Resources.GLN35528, 30, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXT31913, 30, 0, true),
 			};
 		}
 
@@ -241,8 +239,6 @@ namespace GenioMVC.ViewModels.Produ
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -389,8 +385,7 @@ namespace GenioMVC.ViewModels.Produ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("produ", "product");
+					firstVisibleColumn ??= new FieldRef("produ", "product");
 				}
 
 
@@ -419,6 +414,8 @@ namespace GenioMVC.ViewModels.Produ
 
 // USE /[MANUAL WMS OVERRQ 321]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -446,7 +443,7 @@ namespace GenioMVC.ViewModels.Produ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAprodu> listing = Models.ModelBase.Where<CSGenioAprodu>(m_userContext, false, wms_menu_321Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAprodu> listing = Models.ModelBase.Where<CSGenioAprodu>(m_userContext, distinct, wms_menu_321Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -531,6 +528,8 @@ namespace GenioMVC.ViewModels.Produ
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -587,7 +586,7 @@ namespace GenioMVC.ViewModels.Produ
 			new TableSearchColumn("ValSize", CSGenioAprodu.FldSize, typeof(string)),
 			new TableSearchColumn("ValWeight", CSGenioAprodu.FldWeight, typeof(decimal?)),
 			new TableSearchColumn("Locat_ValGln", CSGenioAlocat.FldGln, typeof(string)),
-			new TableSearchColumn("Lcext_ValGlnext", CSGenioAlcext.FldGlnext, typeof(string))
+			new TableSearchColumn("Lcext_ValGlnext", CSGenioAlcext.FldGlnext, typeof(string)),
 		];
 	}
 }

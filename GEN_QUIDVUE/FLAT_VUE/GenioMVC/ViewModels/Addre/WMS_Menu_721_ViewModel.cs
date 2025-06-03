@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Addre
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,16 +147,16 @@ namespace GenioMVC.ViewModels.Addre
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAaddre.FldAddressuse, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ADDRESS_USE16014, 7, 0, true, "AddressU"),
-				new Exports.QColumn(CSGenioAaddre.FldAddresstype, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ADDRESS_TYPE12455, 8, 0, true, "AddressT"),
+				new Exports.QColumn(CSGenioAaddre.FldAddressuse, FieldType.ARRAY_TEXT, Resources.Resources.ADDRESS_USE16014, 7, 0, true, "AddressU"),
+				new Exports.QColumn(CSGenioAaddre.FldAddresstype, FieldType.ARRAY_TEXT, Resources.Resources.ADDRESS_TYPE12455, 8, 0, true, "AddressT"),
 				new Exports.QColumn(CSGenioAaddre.FldAddresstext, FieldType.MEMO, Resources.Resources.ENTIRE_ADDRESS64248, 30, 10, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddresscity, FieldType.TEXTO, Resources.Resources.ADDRESS_CITY41109, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddressdistrict, FieldType.TEXTO, Resources.Resources.ADDRESS_DISTRICT48524, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddressstate, FieldType.TEXTO, Resources.Resources.ADDRESS_STATE16863, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddresspostalcode, FieldType.TEXTO, Resources.Resources.ADDRESS_POSTAL_CODE41631, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddresscountry, FieldType.TEXTO, Resources.Resources.ADDRESS_COUNTRY56159, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldPeriodstart, FieldType.DATAHORA, Resources.Resources.PERIOD_START07901, 16, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldPeriodend, FieldType.DATAHORA, Resources.Resources.PERIOD_END31576, 16, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddresscity, FieldType.TEXT, Resources.Resources.ADDRESS_CITY41109, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddressdistrict, FieldType.TEXT, Resources.Resources.ADDRESS_DISTRICT48524, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddressstate, FieldType.TEXT, Resources.Resources.ADDRESS_STATE16863, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddresspostalcode, FieldType.TEXT, Resources.Resources.ADDRESS_POSTAL_CODE41631, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddresscountry, FieldType.TEXT, Resources.Resources.ADDRESS_COUNTRY56159, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldPeriodstart, FieldType.DATETIME, Resources.Resources.PERIOD_START07901, 16, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldPeriodend, FieldType.DATETIME, Resources.Resources.PERIOD_END31576, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -221,8 +219,6 @@ namespace GenioMVC.ViewModels.Addre
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -369,8 +365,7 @@ namespace GenioMVC.ViewModels.Addre
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("addre", "addressuse");
+					firstVisibleColumn ??= new FieldRef("addre", "addressuse");
 				}
 
 
@@ -399,6 +394,8 @@ namespace GenioMVC.ViewModels.Addre
 
 // USE /[MANUAL WMS OVERRQ 721]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -426,7 +423,7 @@ namespace GenioMVC.ViewModels.Addre
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAaddre> listing = Models.ModelBase.Where<CSGenioAaddre>(m_userContext, false, wms_menu_721Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML721", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAaddre> listing = Models.ModelBase.Where<CSGenioAaddre>(m_userContext, distinct, wms_menu_721Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML721", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -507,6 +504,8 @@ namespace GenioMVC.ViewModels.Addre
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -565,7 +564,7 @@ namespace GenioMVC.ViewModels.Addre
 			new TableSearchColumn("ValAddresspostalcode", CSGenioAaddre.FldAddresspostalcode, typeof(string)),
 			new TableSearchColumn("ValAddresscountry", CSGenioAaddre.FldAddresscountry, typeof(string)),
 			new TableSearchColumn("ValPeriodstart", CSGenioAaddre.FldPeriodstart, typeof(DateTime?)),
-			new TableSearchColumn("ValPeriodend", CSGenioAaddre.FldPeriodend, typeof(DateTime?))
+			new TableSearchColumn("ValPeriodend", CSGenioAaddre.FldPeriodend, typeof(DateTime?)),
 		];
 	}
 }

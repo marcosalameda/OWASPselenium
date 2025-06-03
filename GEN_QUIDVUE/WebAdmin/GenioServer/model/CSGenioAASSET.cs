@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAasset(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR ASSET]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codasset", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codasset", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXT);
 			Qfield.FieldDescription = "Identification name";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "IDENTIFICATION_NAME16317";
 
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("assetnum", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "assetnum", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Asset number";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 10;
 			Qfield.CriaLog = true;
@@ -83,10 +78,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("assettyp", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "assettyp", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Asset type";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ASSET_TYPE02033";
 
@@ -97,10 +91,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("identtyp", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "identtyp", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Identifier type";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "IDENTIFIER_TYPE60623";
 
@@ -110,10 +103,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("grai", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "grai", FieldType.TEXT);
 			Qfield.FieldDescription = "GRAI – Global Returnable Asset Identifier";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "GRAI___GLOBAL_RETURN06821";
 
@@ -131,10 +123,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("giai", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "giai", FieldType.TEXT);
 			Qfield.FieldDescription = "GIAI – Global Individual Asset Identifier";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "GIAI___GLOBAL_INDIVI63214";
 
@@ -152,10 +143,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("photo", FieldType.IMAGEM_JPEG);
+			Qfield = new Field(info.Alias, "photo", FieldType.IMAGE);
 			Qfield.FieldDescription = "Photo";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 1;
 			Qfield.CavDesignation = "PHOTO51874";
@@ -164,10 +154,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codkinde", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codkinde", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">>Kind of equipment";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "__KIND_OF_EQUIPMENT01899";
 
@@ -175,10 +164,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codmanuf", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codmanuf", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "";
 
@@ -186,9 +174,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -270,8 +257,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Asset";
 			info.AreaPluralDesignation="Assets";
 			info.DescriptionCav="ASSET37028";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);
@@ -556,6 +541,9 @@ namespace CSGenio.business
 			int offset = 0;
 			int numberOfRecords = -1;
 			List<ColumnSort> sorts = null;
+			
+			if (GenFunctions.emptyG(codkinde) == 1)
+				return StatusMessage.Error();
 
 			FieldRef[] fields = new FieldRef[]
 			{
@@ -586,6 +574,9 @@ namespace CSGenio.business
 			int offset = 0;
 			int numberOfRecords = -1;
 			List<ColumnSort> sorts = null;
+			
+			if (GenFunctions.emptyG(codkinde) == 1)
+				return StatusMessage.Error();
 
 			FieldRef[] fields = new FieldRef[]
 			{

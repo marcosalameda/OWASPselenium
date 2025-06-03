@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Sequence" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Stock.ValSequence")]
 		[NumericAttribute(0)]
-		public decimal? ValSequence { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSequence, 0)); } set { klass.ValSequence = Convert.ToDecimal(value); } }
+		public decimal? ValSequence { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSequence, 0)); } set { klass.ValSequence = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date")]
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>
@@ -116,13 +116,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Stock.ValQuantity")]
 		[NumericAttribute(0)]
-		public decimal? ValQuantity { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantity, 0)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
+		public decimal? ValQuantity { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantity, 0)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
 
 		[DisplayName("Balance")]
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Stock.ValBalance")]
 		[NumericAttribute(0)]
-		public decimal? ValBalance { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDecimal(value); } }
+		public decimal? ValBalance { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDecimal(value); } }
 
 		[DisplayName("Reference")]
 		/// <summary>Field : "Reference" Tipo: "C" Formula:  ""</summary>

@@ -98,6 +98,15 @@ namespace GenioMVC.ViewModels.Anexd
 
 		#region Fields for formulas
 
+		// Field for formula
+		/// <summary>Used only for lazy loading of the EquipValCodequip field</summary>
+		[JsonIgnore]
+		[ValidateSetAccess]
+		public Func<string> funcEquipValCodequip { get; set; }
+		private string _auxEquipValCodequip { get; set; }
+		/// <summary>Field: "" Tipo: "+"</summary>
+		[ValidateSetAccess]
+		public string EquipValCodequip { get { return funcEquipValCodequip != null ? funcEquipValCodequip() : _auxEquipValCodequip; } private set { funcEquipValCodequip = () => value; } }
 
 		#endregion
 
@@ -220,6 +229,7 @@ namespace GenioMVC.ViewModels.Anexd
 				ValTittradu = ViewModelConversion.ToString(m.ValTittradu);
 				ValDocument = ViewModelConversion.ToString(m.ValDocument);
 				ValDocumentfk = ViewModelConversion.ToString(m.ValDocumentfk);
+				funcEquipValCodequip = () => ViewModelConversion.ToString(m.Equip.ValCodequip);
 				ValCodanexd = ViewModelConversion.ToString(m.ValCodanexd);
 			}
 			catch (Exception)
@@ -581,7 +591,7 @@ namespace GenioMVC.ViewModels.Anexd
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -624,11 +634,12 @@ namespace GenioMVC.ViewModels.Anexd
 			var row = GetDependant_AnexdTableEquipRegistnr(this.ValCodequip);
 			try
 			{
+				this.funcEquipValCodequip = () => (string)row["equip.codequip"];
 
 				// Fill List fields
 				this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
 				TableEquipRegistnr.Value = (string)row["equip.registnr"];
-				if (GlobalFunctions.emptyG(this.ValCodequip) == 1)
+				if (GenFunctions.emptyG(this.ValCodequip) == 1)
 				{
 					this.ValCodequip = "";
 					TableEquipRegistnr.Value = "";
@@ -771,7 +782,7 @@ namespace GenioMVC.ViewModels.Anexd
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -818,7 +829,7 @@ namespace GenioMVC.ViewModels.Anexd
 				// Fill List fields
 				this.ValCodlang = ViewModelConversion.ToString(row["langu.codlang"]);
 				TableLanguLangua.Value = (string)row["langu.langua"];
-				if (GlobalFunctions.emptyG(this.ValCodlang) == 1)
+				if (GenFunctions.emptyG(this.ValCodlang) == 1)
 				{
 					this.ValCodlang = "";
 					TableLanguLangua.Value = "";
@@ -859,8 +870,8 @@ namespace GenioMVC.ViewModels.Anexd
 				"anexd.title" => ViewModelConversion.ToString(modelValue),
 				"anexd.tittradu" => ViewModelConversion.ToString(modelValue),
 				"anexd.document" => ViewModelConversion.ToString(modelValue),
-				"anexd.codanexd" => ViewModelConversion.ToString(modelValue),
 				"equip.codequip" => ViewModelConversion.ToString(modelValue),
+				"anexd.codanexd" => ViewModelConversion.ToString(modelValue),
 				"equip.registnr" => ViewModelConversion.ToString(modelValue),
 				"langu.codlang" => ViewModelConversion.ToString(modelValue),
 				"langu.langua" => ViewModelConversion.ToString(modelValue),

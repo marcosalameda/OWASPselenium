@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Decom;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER DECOM]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class DecomController : ControllerBase
 	{
-		public DecomController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public DecomController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION DECOM]/
 
 
@@ -42,6 +51,7 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER DECOM]/
+
 
 
 
@@ -59,6 +69,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Decom)
 			);
 		}
+
 
 
 		/// <summary>

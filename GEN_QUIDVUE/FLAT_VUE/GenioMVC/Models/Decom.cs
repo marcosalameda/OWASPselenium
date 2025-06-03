@@ -45,7 +45,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "No bate" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Decom.ValDecomnr")]
 		[NumericAttribute(0)]
-		public decimal? ValDecomnr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDecomnr, 0)); } set { klass.ValDecomnr = Convert.ToDecimal(value); } }
+		public decimal? ValDecomnr { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDecomnr, 0)); } set { klass.ValDecomnr = Convert.ToDecimal(value); } }
 
 		[DisplayName("Notes")]
 		/// <summary>Field : "Notes" Tipo: "MO" Formula:  ""</summary>

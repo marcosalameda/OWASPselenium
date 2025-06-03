@@ -35,6 +35,7 @@
                         <template #actions="props">
                             <q-button-group borderless>
                                 <q-button
+                                    variant="text"
                                     :title="Resources.ELIMINAR21155"
                                     @click="deleteUser(props.row)">
                                     <q-icon icon="bin" />
@@ -49,8 +50,8 @@
                         </template>
                     </qtable>
                     <q-button
+                        variant="bold"
                         :label="Resources.ATRIBUIR_UTILIZADORE53600"
-                        b-style="primary"
                         @click="assignUsers" />
                 </q-row-container>
                 <q-card
@@ -193,7 +194,8 @@
 							placeholder : this.$t('PESQUISAR_UTILIZADOR60804'),
 							searchOnPressEnter: true,
 							showRefreshButton: true,
-							searchDebounceRate: 1000
+							searchDebounceRate: 1000,
+                            size: 'large'
                         },
                         checkbox_rows: true
                     }
@@ -265,7 +267,7 @@
                     id: 'confirm-btn',
                     props: {
                         label: this.Resources.ASSOCIAR58485,
-                        bStyle: "primary"
+                        variant: 'bold'
                     },
                     action: () => {
                         this.submit()
@@ -275,8 +277,7 @@
                 {
                     id: 'cancel-btn',
                     props: {
-                        label: this.Resources.CANCELAR49513,
-                        bStyle: "secondary"
+                        label: this.Resources.CANCELAR49513
                     }
                 }
             ]
@@ -318,7 +319,7 @@
                     id: 'confirm-btn',
                     props: {
                         label: this.Resources.OK57387,
-                        bStyle: "primary"
+                        variant: 'bold'
                     },
                     action: () => {
                         if (!this.Model.Username) {
@@ -508,84 +509,3 @@
     }
   };
 </script>
-
-<style>
-  h1 {
-  font-size : 32px;
-  }
-
-  h2 {
-  font-size: 24px;
-  }
-
-  h3 {
-  font-size: 18px;
-  }
-  .graph .node rect,
-  .graph .node circle,
-  .graph .node ellipse {
-  stroke: #333;
-  fill: #fff;
-  stroke-width: 1px;
-  opacity: 1;
-  transition: opacity 0.5s;
-  }
-  .graph text{
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  font-family: sans-serif;
-  opacity: 1;
-  transition: opacity 0.5s;
-  }
-  .graph .edgePath path {
-  stroke: #666;
-  fill: #666;
-  stroke-width: 1.5px;
-  opacity: 1;
-  transition: opacity 0.5s;
-  }
-  .graph .node.hidden rect,
-  .graph .node.hidden text,
-  .graph .edgePath.hidden path {
-  opacity: 0.2;
-  transition: opacity 0.5s;
-  }
-  .graph .node.dests rect {
-  fill: #e1f5fd;
-  /*stroke: #3fc0f3;*/
-  stroke: #b5eaff;
-  }
-  .graph .node.dests text {
-  fill: #308fb5;
-  }
-
-  .graph .node.sources rect {
-  fill: #e7fde2;
-  /*stroke: #2dc00c;*/
-  stroke: #b2f1a4;
-  }
-  .graph .node.sources text {
-  fill: #29a20e;
-  }
-
-  .graph .node:hover rect {
-  stroke-width: 2px;
-  stroke: #333;
-  opacity: 0.8;
-  transition: opacity 0.1s;
-  }
-
-  .graph {
-  width: 100%;
-  }
-
-  #row-description {
-  padding-left:2rem;
-  }
-  #title-parag {
-  font-size:16px;
-  font-weight: bolder;
-  }
-</style>

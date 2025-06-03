@@ -27,6 +27,10 @@ namespace Administration.AuxClass
                 {
                     qs = "SELECT ROUND(SUM(data_length + index_length) / 1024 / 1024, 1) SizeMB FROM information_schema.tables where table_schema = '" + Schema + "' GROUP BY table_schema";
                 }
+                else if (sp.DatabaseType == DatabaseType.POSTGRES)
+                {
+                    qs = "select pg_database_size('" + Schema + "')/ 1024 / 1024 SizeMB;";
+                }
                 else
                 {
                     qs = "SELECT (size * 8) / 1024 SizeMB FROM sys.master_files WHERE database_id = DB_ID('" + Schema + "')";

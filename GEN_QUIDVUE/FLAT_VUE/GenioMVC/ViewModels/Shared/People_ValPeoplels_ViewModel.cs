@@ -86,7 +86,6 @@ namespace GenioMVC.ViewModels
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -121,10 +120,10 @@ namespace GenioMVC.ViewModels
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioApesso.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
-				new Exports.QColumn(CSGenioApesso.FldGender, FieldType.ARRAY_COD_TEXTO, Resources.Resources.GENUS37471, 1, 0, true, "Genero"),
-				new Exports.QColumn(CSGenioApesso.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioApesso.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioApesso.FldGender, FieldType.ARRAY_TEXT, Resources.Resources.GENUS37471, 1, 0, true, "Genero"),
+				new Exports.QColumn(CSGenioApesso.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -188,9 +187,6 @@ namespace GenioMVC.ViewModels
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -328,8 +324,7 @@ namespace GenioMVC.ViewModels
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("pesso", "name");
+					firstVisibleColumn ??= new FieldRef("pesso", "name");
 				}
 
 
@@ -358,6 +353,8 @@ namespace GenioMVC.ViewModels
 
 // USE /[MANUAL GQT OVERRQ PEOPLE_PSEUDPEOPLELS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -385,7 +382,7 @@ namespace GenioMVC.ViewModels
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApesso> listing = Models.ModelBase.Where<CSGenioApesso>(m_userContext, false, people__pseudpeoplelsConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PEOPLE__PSEUDPEOPLELS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApesso> listing = Models.ModelBase.Where<CSGenioApesso>(m_userContext, distinct, people__pseudpeoplelsConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PEOPLE__PSEUDPEOPLELS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -465,6 +462,8 @@ namespace GenioMVC.ViewModels
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -517,7 +516,7 @@ namespace GenioMVC.ViewModels
 		[
 			new TableSearchColumn("ValName", CSGenioApesso.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValGender", CSGenioApesso.FldGender, typeof(string), array : "Genero"),
-			new TableSearchColumn("ValEmail", CSGenioApesso.FldEmail, typeof(string))
+			new TableSearchColumn("ValEmail", CSGenioApesso.FldEmail, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Pesso row)
 		{

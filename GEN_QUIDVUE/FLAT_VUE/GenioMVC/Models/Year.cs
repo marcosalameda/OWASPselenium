@@ -43,13 +43,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Value" Tipo: "$D" Formula: SR "[AGREG->VALUE]"</summary>
 		[ShouldSerialize("Year.ValValue")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 
 		[DisplayName("Year (numbers)")]
 		/// <summary>Field : "Year (numbers)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Year.ValYearnum")]
 		[NumericAttribute(0)]
-		public decimal? ValYearnum { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnum, 0)); } set { klass.ValYearnum = Convert.ToDecimal(value); } }
+		public decimal? ValYearnum { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearnum, 0)); } set { klass.ValYearnum = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Year.ValZzstate")]

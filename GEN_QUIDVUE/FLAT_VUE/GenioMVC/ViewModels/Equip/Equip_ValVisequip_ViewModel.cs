@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodequip { get; set; }
+		public string EquipValCodequip { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="userContext">The current user request context</param>
 		public Equip_ValVisequip_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+			EquipValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
 		}
 
 		/// <summary>
@@ -128,13 +127,13 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAvisit.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioAvisit.FldStartdt, FieldType.DATAHORA, Resources.Resources.BEGINNING18124, 16, 0, true),
-				new Exports.QColumn(CSGenioAvisit.FldDtfim, FieldType.DATAHORA, Resources.Resources.END47577, 16, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldStartdt, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldDtfim, FieldType.DATETIME, Resources.Resources.END47577, 16, 0, true),
 				new Exports.QColumn(CSGenioAvisit.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 3, true),
-				new Exports.QColumn(CSGenioAvisit.FldTodoodia, FieldType.LOGICO, Resources.Resources.DAY27593, 1, 0, true),
-				new Exports.QColumn(CSGenioAvisit.FldColor, FieldType.TEXTO, Resources.Resources.COLOR55628, 30, 0, true),
-				new Exports.QColumn(CSGenioAvisit.FldBack, FieldType.LOGICO, Resources.Resources.BACKGROUND45121, 1, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldTodoodia, FieldType.LOGIC, Resources.Resources.DAY27593, 1, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldColor, FieldType.TEXT, Resources.Resources.COLOR55628, 30, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldBack, FieldType.LOGIC, Resources.Resources.BACKGROUND45121, 1, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -199,10 +198,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodequip != null)
-				crs.Equal(CSGenioAvisit.FldCodequip, this.ValCodequip);
-
-
+			if (this.EquipValCodequip != null)
+				crs.Equal(CSGenioAvisit.FldCodequip, this.EquipValCodequip);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -357,8 +354,7 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("visit", "title");
+					firstVisibleColumn ??= new FieldRef("visit", "title");
 				}
 
 
@@ -387,6 +383,8 @@ namespace GenioMVC.ViewModels.Equip
 
 // USE /[MANUAL GQT OVERRQ EQUIP_PSEUDVISEQUIP]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -414,7 +412,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAvisit> listing = Models.ModelBase.Where<CSGenioAvisit>(m_userContext, false, equip___pseudvisequipConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP___PSEUDVISEQUIP", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAvisit> listing = Models.ModelBase.Where<CSGenioAvisit>(m_userContext, distinct, equip___pseudvisequipConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP___PSEUDVISEQUIP", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -494,6 +492,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -549,7 +549,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("ValDescript", CSGenioAvisit.FldDescript, typeof(string)),
 			new TableSearchColumn("ValTodoodia", CSGenioAvisit.FldTodoodia, typeof(bool)),
 			new TableSearchColumn("ValColor", CSGenioAvisit.FldColor, typeof(string)),
-			new TableSearchColumn("ValBack", CSGenioAvisit.FldBack, typeof(bool))
+			new TableSearchColumn("ValBack", CSGenioAvisit.FldBack, typeof(bool)),
 		];
 	}
 }

@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Asset
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -184,9 +183,6 @@ namespace GenioMVC.ViewModels.Asset
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
-
-
-
 
 
 
@@ -349,6 +345,8 @@ namespace GenioMVC.ViewModels.Asset
 
 // USE /[MANUAL GQT OVERRQ EQUIP04_PSEUDPARAMLOA]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -376,7 +374,7 @@ namespace GenioMVC.ViewModels.Asset
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAkinde> listing = Models.ModelBase.Where<CSGenioAkinde>(m_userContext, false, equip04_pseudparamloaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP04_PSEUDPARAMLOA", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAkinde> listing = Models.ModelBase.Where<CSGenioAkinde>(m_userContext, distinct, equip04_pseudparamloaConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP04_PSEUDPARAMLOA", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -456,6 +454,8 @@ namespace GenioMVC.ViewModels.Asset
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -505,7 +505,6 @@ namespace GenioMVC.ViewModels.Asset
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-
 		];
 	}
 }

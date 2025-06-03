@@ -169,4 +169,13 @@ app.MapControllerRoute("default",
         }
     );
 
+app.MapControllerRoute("defaultWithoutSystem",
+    "api/{controller}/{action}/{id?}",
+    new
+    {
+        culture = Administration.AuxClass.Culture.CultureManager.DefaultCulture.Name,
+        system = defaultSystem
+    }
+    );
+
 app.Run();

@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Procn
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -148,12 +146,12 @@ namespace GenioMVC.ViewModels.Procn
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAprocn.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAprocn.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAprocn.FldTelephon, FieldType.TEXTO, Resources.Resources.TELEPHONE28697, 30, 0, true),
+				new Exports.QColumn(CSGenioAprocn.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAprocn.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAprocn.FldTelephon, FieldType.TEXT, Resources.Resources.TELEPHONE28697, 30, 0, true),
 				new Exports.QColumn(CSGenioAprocn.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
-				new Exports.QColumn(CSGenioAprocn.FldDate, FieldType.DATA, Resources.Resources.DATE18475, 8, 0, true),
-				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAprocn.FldDate, FieldType.DATE, Resources.Resources.DATE18475, 8, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -216,8 +214,6 @@ namespace GenioMVC.ViewModels.Procn
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -364,8 +360,7 @@ namespace GenioMVC.ViewModels.Procn
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("procn", "name");
+					firstVisibleColumn ??= new FieldRef("procn", "name");
 				}
 
 
@@ -394,6 +389,8 @@ namespace GenioMVC.ViewModels.Procn
 
 // USE /[MANUAL TRN OVERRQ T03CONTACTS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -421,7 +418,7 @@ namespace GenioMVC.ViewModels.Procn
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAprocn> listing = Models.ModelBase.Where<CSGenioAprocn>(m_userContext, false, trn_menu_t03contactsConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT03CONTACTS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAprocn> listing = Models.ModelBase.Where<CSGenioAprocn>(m_userContext, distinct, trn_menu_t03contactsConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT03CONTACTS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -504,6 +501,8 @@ namespace GenioMVC.ViewModels.Procn
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -558,7 +557,7 @@ namespace GenioMVC.ViewModels.Procn
 			new TableSearchColumn("ValTelephon", CSGenioAprocn.FldTelephon, typeof(string)),
 			new TableSearchColumn("ValDescript", CSGenioAprocn.FldDescript, typeof(string)),
 			new TableSearchColumn("ValDate", CSGenioAprocn.FldDate, typeof(DateTime?)),
-			new TableSearchColumn("Prope_ValTitle", CSGenioAprope.FldTitle, typeof(string))
+			new TableSearchColumn("Prope_ValTitle", CSGenioAprope.FldTitle, typeof(string)),
 		];
 	}
 }

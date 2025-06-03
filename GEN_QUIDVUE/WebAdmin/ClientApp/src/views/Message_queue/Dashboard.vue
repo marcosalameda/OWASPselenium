@@ -3,9 +3,7 @@
 	<row>
 		<br />
 		<div class="title-container--with-badge">
-			<label for="dashchart">
-				{{ Resources.MENSAGENS53948 }}
-			</label>
+			<q-label for="dashchart" :label="Resources.MENSAGENS53948" />
 			<data-system-badge
 				:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
 		</div>

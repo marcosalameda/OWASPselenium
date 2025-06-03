@@ -892,7 +892,7 @@ namespace GenioMVC.ViewModels.Flds
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -939,7 +939,7 @@ namespace GenioMVC.ViewModels.Flds
 				// Fill List fields
 				this.ValCodaero = ViewModelConversion.ToString(row["aero.codaero"]);
 				TableAeroName.Value = (string)row["aero.name"];
-				if (GlobalFunctions.emptyG(this.ValCodaero) == 1)
+				if (GenFunctions.emptyG(this.ValCodaero) == 1)
 				{
 					this.ValCodaero = "";
 					TableAeroName.Value = "";

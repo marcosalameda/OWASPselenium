@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Dispa;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER DISPA]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class DispaController : ControllerBase
 	{
-		public DispaController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public DispaController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION DISPA]/
 
 
@@ -162,6 +171,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
 
 
 

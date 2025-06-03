@@ -22,7 +22,7 @@
 			</div>
 			<br>
 
-			<div v-if="Model.IsBetaTestig" class="alert alert-warning">
+			<div v-if="Model.IsBetaTesting" class="alert alert-warning">
 				<p></p>
 				<p><b>{{ Resources.AMBIENTE_DE_QUALIDAD42119 }}</b></p>
 			</div>

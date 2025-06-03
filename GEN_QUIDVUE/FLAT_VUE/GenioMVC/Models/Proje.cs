@@ -68,37 +68,37 @@ namespace GenioMVC.Models
 		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		[ShouldSerialize("Proje.ValPrimeiro")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrimeiro { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrimeiro, 2)); } set { klass.ValPrimeiro = Convert.ToDecimal(value); } }
+		public decimal? ValPrimeiro { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrimeiro, 2)); } set { klass.ValPrimeiro = Convert.ToDecimal(value); } }
 
 		[DisplayName("Before")]
 		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		[ShouldSerialize("Proje.ValBefore")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValBefore { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBefore, 2)); } set { klass.ValBefore = Convert.ToDecimal(value); } }
+		public decimal? ValBefore { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBefore, 2)); } set { klass.ValBefore = Convert.ToDecimal(value); } }
 
 		[DisplayName("Following")]
 		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		[ShouldSerialize("Proje.ValFollowin")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValFollowin { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFollowin, 2)); } set { klass.ValFollowin = Convert.ToDecimal(value); } }
+		public decimal? ValFollowin { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValFollowin, 2)); } set { klass.ValFollowin = Convert.ToDecimal(value); } }
 
 		[DisplayName("Last")]
 		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		[ShouldSerialize("Proje.ValUltimo")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValUltimo { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValUltimo, 2)); } set { klass.ValUltimo = Convert.ToDecimal(value); } }
+		public decimal? ValUltimo { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValUltimo, 2)); } set { klass.ValUltimo = Convert.ToDecimal(value); } }
 
 		[DisplayName("Next - Previous =")]
 		/// <summary>Field : "Next - Previous =" Tipo: "$D" Formula: + "[PROJE->FOLLOWIN]-[PROJE->BEFORE]"</summary>
 		[ShouldSerialize("Proje.ValSaldo1")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValSaldo1 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSaldo1, 2)); } set { klass.ValSaldo1 = Convert.ToDecimal(value); } }
+		public decimal? ValSaldo1 { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSaldo1, 2)); } set { klass.ValSaldo1 = Convert.ToDecimal(value); } }
 
 		[DisplayName("Last - First =")]
 		/// <summary>Field : "Last - First =" Tipo: "$D" Formula: + "[PROJE->ULTIMO]-[PROJE->PRIMEIRO]"</summary>
 		[ShouldSerialize("Proje.ValSaldo2")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValSaldo2 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSaldo2, 2)); } set { klass.ValSaldo2 = Convert.ToDecimal(value); } }
+		public decimal? ValSaldo2 { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSaldo2, 2)); } set { klass.ValSaldo2 = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Proje.ValZzstate")]

@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Proje
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,7 +127,7 @@ namespace GenioMVC.ViewModels.Proje
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAyear1.FldYear, FieldType.TEXTO, Resources.Resources.ANO33022, 4, 0, true),
+				new Exports.QColumn(CSGenioAyear1.FldYear, FieldType.TEXT, Resources.Resources.ANO33022, 4, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -192,9 +191,6 @@ namespace GenioMVC.ViewModels.Proje
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +334,7 @@ namespace GenioMVC.ViewModels.Proje
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("year1", "year");
+					firstVisibleColumn ??= new FieldRef("year1", "year");
 				}
 
 
@@ -357,6 +352,8 @@ namespace GenioMVC.ViewModels.Proje
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ PROJE_YEAR1YEAR]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -384,7 +381,7 @@ namespace GenioMVC.ViewModels.Proje
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAyear1> listing = Models.ModelBase.Where<CSGenioAyear1>(m_userContext, false, proje___year1year____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROJE___YEAR1YEAR____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAyear1> listing = Models.ModelBase.Where<CSGenioAyear1>(m_userContext, distinct, proje___year1year____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PROJE___YEAR1YEAR____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -464,6 +461,8 @@ namespace GenioMVC.ViewModels.Proje
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -513,7 +512,7 @@ namespace GenioMVC.ViewModels.Proje
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValYear", CSGenioAyear1.FldYear, typeof(string))
+			new TableSearchColumn("ValYear", CSGenioAyear1.FldYear, typeof(string)),
 		];
 	}
 }

@@ -10,7 +10,7 @@
     <row>
       <h4>{{ Model.FileCount + " " }}{{ Resources.FILES_TO_MIGRATE44223 }}</h4>
       <q-button
-        b-style="primary"
+        variant="bold"
         :label="Resources.MIGRATE24124"
         @click="startMigration" />
     </row>

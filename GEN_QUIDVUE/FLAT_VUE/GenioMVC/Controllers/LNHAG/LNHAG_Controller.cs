@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lnhag;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LNHAG]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class LnhagController : ControllerBase
 	{
-		public LnhagController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public LnhagController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION LNHAG]/
 
 
@@ -151,6 +160,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
 
 
 

@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Mechanografic number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Prpin.ValNummecan")]
 		[NumericAttribute(0)]
-		public decimal? ValNummecan { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNummecan, 0)); } set { klass.ValNummecan = Convert.ToDecimal(value); } }
+		public decimal? ValNummecan { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNummecan, 0)); } set { klass.ValNummecan = Convert.ToDecimal(value); } }
 
 		[DisplayName("Name")]
 		/// <summary>Field : "Name" Tipo: "C" Formula:  ""</summary>

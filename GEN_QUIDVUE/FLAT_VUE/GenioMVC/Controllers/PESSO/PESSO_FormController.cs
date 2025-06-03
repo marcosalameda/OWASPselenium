@@ -376,7 +376,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)

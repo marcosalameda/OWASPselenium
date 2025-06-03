@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -409,11 +408,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lendi")))
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pess1")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
 			{
-				Navigation.DestroyEntry("ForcePrimaryRead_lendi");
+				Navigation.DestroyEntry("ForcePrimaryRead_pess1");
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 

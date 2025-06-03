@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAnotificationmessage(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -55,43 +54,37 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-            info.RegisterFieldDB(new Field("codmesgs", FieldType.CHAVE_PRIMARIA_GUID));
-            info.DBFields["codmesgs"].FieldSize = 36;
-            info.RegisterFieldDB(new Field("codsigna", FieldType.CHAVE_ESTRANGEIRA_GUID));
-            info.DBFields["codsigna"].FieldSize = 36;
-            info.RegisterFieldDB(new Field("codpmail", FieldType.CHAVE_ESTRANGEIRA_GUID));
-            info.DBFields["codpmail"].FieldSize = 36;
-            info.RegisterFieldDB(new Field("codtpnot", FieldType.CHAVE_ESTRANGEIRA_GUID));
-            info.DBFields["codtpnot"].FieldSize = 36;
-            info.RegisterFieldDB(new Field("coddestn", FieldType.CHAVE_ESTRANGEIRA_GUID));
-            info.DBFields["coddestn"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
+            info.RegisterFieldDB(new Field(info.Alias, "codmesgs", FieldType.KEY_GUID));
+            info.RegisterFieldDB(new Field(info.Alias, "codsigna", FieldType.KEY_GUID));
+            info.RegisterFieldDB(new Field(info.Alias, "codpmail", FieldType.KEY_GUID));
+            info.RegisterFieldDB(new Field(info.Alias, "codtpnot", FieldType.KEY_GUID));
+            info.RegisterFieldDB(new Field(info.Alias, "coddestn", FieldType.KEY_GUID));
 
-			info.RegisterFieldDB(new Field("from", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field("to", FieldType.TEXTO));
-	        info.RegisterFieldDB(new Field("destnman", FieldType.LOGICO));
-            info.RegisterFieldDB(new Field("tomanual", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field("cc", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field("bcc", FieldType.TEXTO));
+			info.RegisterFieldDB(new Field(info.Alias, "from", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "to", FieldType.TEXT));
+	        info.RegisterFieldDB(new Field(info.Alias, "destnman", FieldType.LOGIC));
+            info.RegisterFieldDB(new Field(info.Alias, "tomanual", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "cc", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "bcc", FieldType.TEXT));
 
-			info.RegisterFieldDB(new Field("idnotif", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("notifica", FieldType.LOGICO));
-            info.RegisterFieldDB(new Field("email", FieldType.LOGICO));
-			info.RegisterFieldDB(new Field("assunto", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("agregado", FieldType.LOGICO));
-			info.RegisterFieldDB(new Field("anexo", FieldType.LOGICO));
+			info.RegisterFieldDB(new Field(info.Alias, "idnotif", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "notifica", FieldType.LOGIC));
+            info.RegisterFieldDB(new Field(info.Alias, "email", FieldType.LOGIC));
+			info.RegisterFieldDB(new Field(info.Alias, "assunto", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "agregado", FieldType.LOGIC));
+			info.RegisterFieldDB(new Field(info.Alias, "anexo", FieldType.LOGIC));
 			
-			info.RegisterFieldDB(new Field("ativo", FieldType.LOGICO));
-			info.RegisterFieldDB(new Field("designac", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("mensagem", FieldType.MEMO));
-			info.RegisterFieldDB(new Field("gravabd", FieldType.LOGICO));
-			info.RegisterFieldDB(new Field("html", FieldType.LOGICO));
+			info.RegisterFieldDB(new Field(info.Alias, "ativo", FieldType.LOGIC));
+			info.RegisterFieldDB(new Field(info.Alias, "designac", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "mensagem", FieldType.MEMO));
+			info.RegisterFieldDB(new Field(info.Alias, "gravabd", FieldType.LOGIC));
+			info.RegisterFieldDB(new Field(info.Alias, "html", FieldType.LOGIC));
 			
-			info.RegisterFieldDB(new Field("opercria", FieldType.OPERCRIA));
-			info.RegisterFieldDB(new Field("datacria", FieldType.DATACRIA));
-            info.RegisterFieldDB(new Field("opermuda", FieldType.OPERMUDA));
-            info.RegisterFieldDB(new Field("datamuda", FieldType.DATAMUDA));
-			info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATETIMESECONDS));
+            info.RegisterFieldDB(new Field(info.Alias, "opermuda", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "datamuda", FieldType.DATETIMESECONDS));
+			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
             // Carimbos automáticos na BD
             //------------------------------

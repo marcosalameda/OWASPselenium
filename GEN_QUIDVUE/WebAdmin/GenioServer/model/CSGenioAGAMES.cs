@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAgames(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR GAMES]/
 		}
 
@@ -46,49 +44,44 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codgames", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codgames", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("gamedt", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "gamedt", FieldType.DATETIME);
 			Qfield.FieldDescription = "Game date";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "GAME_DATE09550";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codeqjgc", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codeqjgc", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TEAM PLAYING AT HOME";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_TEAM_PLAYING_AT_HOM03863";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codeqjgf", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codeqjgf", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">TEAM PLAYING AWAY";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_TEAM_PLAYING_AWAY39234";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -163,8 +156,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Game";
 			info.AreaPluralDesignation="Games";
 			info.DescriptionCav="GAME57681";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

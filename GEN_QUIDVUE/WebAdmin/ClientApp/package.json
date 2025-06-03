@@ -16,7 +16,8 @@
     "vite:preview": "set NODE_OPTIONS=--max_old_space_size=10240 && vite preview"
   },
   "dependencies": {
-    "@quidgest/ui": "0.14.12",
+    "@quidgest/ui": "0.15.9",
+    "@r2rka/vue3-treeselect": "0.2.4",
     "@vuepic/vue-datepicker": "3.0.0",
     "bootbox": "5.5.2",
     "bootstrap": "4.6.1",
@@ -33,16 +34,22 @@
     "vue": "3.4.20",
     "vue-i18n": "9.9.1",
     "vue-router": "4.2.2",
-    "vuex": "4.1.0",
-    "@r2rka/vue3-treeselect": "0.2.4"
+    "vuex": "4.1.0"
   },
   "devDependencies": {
+    "@types/node": "^22.13.14",
+    "@typescript-eslint/eslint-plugin": "^8.28.0",
+    "@typescript-eslint/parser": "^8.28.0",
     "@vitejs/plugin-vue": "^5.0.4",
-    "eslint": "^8.57.0",
-    "eslint-plugin-vue": "^9.22.0",
+    "@vue/eslint-config-prettier": "^10.2.0",
+    "@vue/eslint-config-typescript": "^14.5.0",
+    "@vue/tsconfig": "^0.7.0",
+    "eslint": "^9.19.0",
+    "eslint-plugin-vue": "^9.33.0",
     "prettier": "^3.2.5",
     "sass": "^1.77.6",
     "svgstore": "3.0.1",
+    "typescript": "^5.8.2",
     "vite": "^5.1.4"
   }
 }

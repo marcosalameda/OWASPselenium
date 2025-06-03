@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Flight ID" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Fligh.ValFlightid")]
 		[NumericAttribute(0)]
-		public decimal? ValFlightid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFlightid, 0)); } set { klass.ValFlightid = Convert.ToDecimal(value); } }
+		public decimal? ValFlightid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValFlightid, 0)); } set { klass.ValFlightid = Convert.ToDecimal(value); } }
 
 		[DisplayName("Departure Date")]
 		/// <summary>Field : "Departure Date" Tipo: "D" Formula:  ""</summary>

@@ -22,27 +22,22 @@
 					:title="Resources.RESUMO13953"
 					width="block">
 					<static-text
-						class="database-data"
 						:model-value="generalInfo.Success ? Resources.SIM28552 : Resources.NAO06521"
 						:label="Resources.TAREFA_BEM_SUCEDIDA33448"
 						bold-label />
 					<static-text
-						class="database-data"
 						:model-value="parseActionDuration(generalInfo)"
 						:label="Resources.DURATION40426"
 						bold-label />
 					<static-text
-						class="database-data"
 						v-model="generalInfo.DataSystem"
 						:label="Resources.NOME_DO_SISTEMA_DE_D18974"
 						bold-label />
 					<static-text
-						class="database-data"
 						v-model="generalInfo.Database"
 						:label="Resources.NOME_DA_BD63025"
 						bold-label />
 					<static-text
-						class="database-data"
 						:model-value="generalInfo.StartTime"
 						:label="Resources.STARTED_AT44034"
 						bold-label />
@@ -70,18 +65,18 @@
 									width="block">
 									<q-button
 										v-for="task in getGroupTasks(group)"
-										class="q-btn--admin-start"
-										b-style="plain"
+										class="q-button--admin-start"
+										variant="text"
 										borderless
-										size="block"
+										block
 										:label="task.Description"
 										:active="task === selectedTask"
 										@click="selectTask(task)">
 										<q-icon
 											:icon="isSuccessfulTask(task) ? 'check' : 'close'"
-											:class="isSuccessfulTask(task) ?
-												'database-options__status-success' :
-												'database-options__status-error'"/>
+											:color="isSuccessfulTask(task) ?
+												'success' :
+												'danger'"/>
 									</q-button>
 								</q-collapsible>
 							</q-accordion>
@@ -97,7 +92,7 @@
 							v-if="!noSelectedTask"
 							#[`header.content.append`]>
 							<q-button
-								b-style="plain"
+								variant="text"
 								borderless
 								@click="clearTaskSelection">
 								<q-icon icon="close" />
@@ -116,7 +111,6 @@
 								v-if="errorMessage">
 								<br />
 								<q-button
-									b-style="secondary"
 									:label="Resources.VOLTAR01353"
 									@click="goBack">
 									<q-icon icon="arrow-left-bold" />
@@ -130,7 +124,6 @@
 							<template
 								v-if="selectedTask.Result != ''">
 								<static-text
-									class="database-data"
 									v-model="selectedTask.Result"
 									:label="Resources.ERRO38355"
 									bold-label />
@@ -140,6 +133,7 @@
 
 							<q-collapsible
 								v-for="script in selectedTask.Details"
+								class="q-collapsible--admin-plain"
 								:key="script.ScriptId"
 								variant="border-bottom"
 								spacing="compact"
@@ -173,7 +167,6 @@
 				
 				<row class="footer-btn">
 					<q-button
-						b-style="secondary"
 						:label="Resources.VOLTAR01353"
 						@click="goBack">
 						<q-icon icon="arrow-left-bold" />

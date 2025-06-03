@@ -146,7 +146,7 @@ namespace Administration.Controllers
                         if (RdxItem.Progress.State == RdxProgressStatus.RUNNING)
                             return Json(new { Success = true });
                     }
-                    RdxItem = dbAdminController.startReindexation(model, Year, cToken);    
+                    RdxItem = dbAdminController.startReindexation([model], Year, cToken);    
 
                     if (timer != null)
                         timer.Dispose();

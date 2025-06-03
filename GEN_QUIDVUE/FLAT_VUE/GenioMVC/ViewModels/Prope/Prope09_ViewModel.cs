@@ -639,7 +639,7 @@ namespace GenioMVC.ViewModels.Prope
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -687,7 +687,7 @@ namespace GenioMVC.ViewModels.Prope
 				// Fill List fields
 				this.ValCodcity = ViewModelConversion.ToString(row["city.codcity"]);
 				TableCityCity.Value = (string)row["city.city"];
-				if (GlobalFunctions.emptyG(this.ValCodcity) == 1)
+				if (GenFunctions.emptyG(this.ValCodcity) == 1)
 				{
 					this.ValCodcity = "";
 					TableCityCity.Value = "";
@@ -830,7 +830,7 @@ namespace GenioMVC.ViewModels.Prope
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -879,7 +879,7 @@ namespace GenioMVC.ViewModels.Prope
 				// Fill List fields
 				this.ValCodagent = ViewModelConversion.ToString(row["agent.codagent"]);
 				TableAgentName.Value = (string)row["agent.name"];
-				if (GlobalFunctions.emptyG(this.ValCodagent) == 1)
+				if (GenFunctions.emptyG(this.ValCodagent) == 1)
 				{
 					this.ValCodagent = "";
 					TableAgentName.Value = "";

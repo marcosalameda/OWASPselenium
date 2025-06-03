@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodequip { get; set; }
+		public string EquipValCodequip { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="userContext">The current user request context</param>
 		public Equip_ValMovimels_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+			EquipValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
 		}
 
 		/// <summary>
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAmovim.FldDhmudanc, FieldType.DATAHORA, Resources.Resources.CHANGE36355, 16, 0, true),
-				new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXTO, Resources.Resources.N_R__ROOM43805, 10, 0, true),
-				new Exports.QColumn(CSGenioArooms.FldDesignat, FieldType.TEXTO, Resources.Resources.ROOM_DESIGNATION37895, 30, 0, true),
+				new Exports.QColumn(CSGenioAmovim.FldDhmudanc, FieldType.DATETIME, Resources.Resources.CHANGE36355, 16, 0, true),
+				new Exports.QColumn(CSGenioArooms.FldRoomnr, FieldType.TEXT, Resources.Resources.N_R__ROOM43805, 10, 0, true),
+				new Exports.QColumn(CSGenioArooms.FldDesignat, FieldType.TEXT, Resources.Resources.ROOM_DESIGNATION37895, 30, 0, true),
 				new Exports.QColumn(CSGenioAmovim.FldObservat, FieldType.MEMO, Resources.Resources.OBSERVATION37880, 30, 2, true),
 			};
 
@@ -196,10 +195,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodequip != null)
-				crs.Equal(CSGenioAmovim.FldCodequip, this.ValCodequip);
-
-
+			if (this.EquipValCodequip != null)
+				crs.Equal(CSGenioAmovim.FldCodequip, this.EquipValCodequip);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -345,8 +342,7 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("movim", "dhmudanc");
+					firstVisibleColumn ??= new FieldRef("movim", "dhmudanc");
 				}
 
 
@@ -375,6 +371,8 @@ namespace GenioMVC.ViewModels.Equip
 
 // USE /[MANUAL GQT OVERRQ EQUIP_PSEUDMOVIMELS]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -402,7 +400,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAmovim> listing = Models.ModelBase.Where<CSGenioAmovim>(m_userContext, false, equip___pseudmovimelsConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP___PSEUDMOVIMELS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAmovim> listing = Models.ModelBase.Where<CSGenioAmovim>(m_userContext, distinct, equip___pseudmovimelsConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP___PSEUDMOVIMELS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -484,6 +482,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -536,7 +536,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("ValDhmudanc", CSGenioAmovim.FldDhmudanc, typeof(DateTime?)),
 			new TableSearchColumn("Rooms_ValRoomnr", CSGenioArooms.FldRoomnr, typeof(string)),
 			new TableSearchColumn("Rooms_ValDesignat", CSGenioArooms.FldDesignat, typeof(string)),
-			new TableSearchColumn("ValObservat", CSGenioAmovim.FldObservat, typeof(string))
+			new TableSearchColumn("ValObservat", CSGenioAmovim.FldObservat, typeof(string)),
 		];
 	}
 }

@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Passenger ID" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Psngr.ValPsngrid")]
 		[NumericAttribute(0)]
-		public decimal? ValPsngrid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPsngrid, 0)); } set { klass.ValPsngrid = Convert.ToDecimal(value); } }
+		public decimal? ValPsngrid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPsngrid, 0)); } set { klass.ValPsngrid = Convert.ToDecimal(value); } }
 
 		[DisplayName("First Name")]
 		/// <summary>Field : "First Name" Tipo: "C" Formula:  ""</summary>

@@ -4,8 +4,8 @@
 		:class="[$attrs.class, 'tab-group-container']">
 		<div
 			v-show="tabsList.length > 0"
-			role="tablist"
 			:id="controlId"
+			role="tablist"
 			:class="containerClasses"
 			:aria-labelledby="labelId">
 			<template
@@ -13,9 +13,9 @@
 				:key="`${controlId}_${tab.id}`">
 				<q-button
 					v-if="tab.isVisible"
+					:id="getTabComponentId(tab)"
 					ref="tabButtons"
 					borderless
-					:id="getTabComponentId(tab)"
 					:data-testid="getTabComponentId(tab)"
 					:disabled="tab.isBlocked"
 					:class="[{ active: selectedTab === tab.id }, 'nav-item']"
@@ -24,15 +24,14 @@
 					role="tab"
 					:aria-selected="tab.id === selectedTab"
 					:aria-controls="tab.id"
-					@click="changeActiveTab(tab)"
+					@click="() => changeActiveTab(tab)"
 					@keydown.stop.prevent.left="selectPrevTab"
 					@keydown.stop.prevent.right="selectNextTab"
-					@keydown.stop.prevent.home="selectTabIndex(0)"
-					@keydown.stop.prevent.end="selectTabIndex(selectableTabs.length - 1)">
+					@keydown.stop.prevent.home="selectFirstTab"
+					@keydown.stop.prevent.end="selectLastTab">
 					<span
 						:id="`tab_link_${tab.id}`"
 						:data-testid="`tab_link_${tab.id}`"
-						:data-val-required="tab.isRequired"
 						:class="[
 							{
 								active: selectedTab === tab.id,
@@ -59,14 +58,10 @@
 </template>
 
 <script>
+	import { getCurrentInstance } from 'vue'
+
 	export default {
 		name: 'QTabs',
-
-		emits: [
-			'tab-changed',
-			'mounted',
-			'before-unmount'
-		],
 
 		inheritAttrs: false,
 
@@ -74,17 +69,26 @@
 			/**
 			 * Unique identifier for the control.
 			 */
-			id: String,
+			id: {
+				type: String,
+				default: ''
+			},
 
 			/**
 			 * Selected tab property to define which tab should be currently selected.
 			 */
-			selectedTab: [String, Number],
+			selectedTab: {
+				type: [String, Number],
+				default: ''
+			},
 
 			/**
 			 * Tabs list array contains object of tabs property.
 			 */
-			tabsList: Array,
+			tabsList: {
+				type: Array,
+				default: () => []
+			},
 
 			/**
 			 * Align property to define the alignment of tabs (possible values: center, left, right, justify).
@@ -111,55 +115,44 @@
 			}
 		},
 
+		emits: ['tab-changed', 'mounted', 'before-unmount'],
+
 		expose: [],
 
-		data()
-		{
+		data() {
 			return {
-				controlId: this.id || `tab-container-${this._.uid}`
+				controlId: this.id || `tab-container-${getCurrentInstance().uid}`
 			}
-		},
-
-		mounted()
-		{
-			this.$emit('mounted')
-		},
-
-		beforeUnmount()
-		{
-			this.$emit('before-unmount')
 		},
 
 		computed: {
 			/**
 			 * The id of the component's label.
 			 */
-			labelId()
-			{
+			labelId() {
 				return `label_${this.controlId}`
 			},
 
 			/**
 			 * The selectable tabs.
 			 */
-			selectableTabs()
-			{
-				return this.tabsList.filter((tab) => tab.isVisible !== false && tab.isBlocked !== true)
+			selectableTabs() {
+				return this.tabsList.filter(
+					(tab) => tab.isVisible !== false && tab.isBlocked !== true
+				)
 			},
 
 			/**
 			 * The index of the active tab.
 			 */
-			activeTabIndex()
-			{
+			activeTabIndex() {
 				return this.selectableTabs.findIndex((tab) => tab.id === this.selectedTab)
 			},
 
 			/**
 			 * The classes to apply to the tabs container.
 			 */
-			containerClasses()
-			{
+			containerClasses() {
 				return [
 					this.alignTabs === 'center'
 						? 'justify-content-center'
@@ -179,10 +172,17 @@
 			/**
 			 * The tab object of the active tab for use in components in a simplified form.
 			 */
-			activeTab()
-			{
+			activeTab() {
 				return this.tabsList[this.activeTabIndex]
 			}
+		},
+
+		mounted() {
+			this.$emit('mounted')
+		},
+
+		beforeUnmount() {
+			this.$emit('before-unmount')
 		},
 
 		methods: {
@@ -190,8 +190,7 @@
 			 * The id of the tab component.
 			 * @param {Object} tab The selected tab
 			 */
-			getTabComponentId(tab)
-			{
+			getTabComponentId(tab) {
 				return `tab-container-${tab.id}`
 			},
 
@@ -199,39 +198,33 @@
 			 * Get reference to a tab's button component.
 			 * @param {Object} tab The selected tab
 			 */
-			getTabComponentRef(tab)
-			{
-				return this.$refs?.tabButtons?.find((btnRef) => btnRef.$el.id === this.getTabComponentId(tab))
+			getTabComponentRef(tab) {
+				return this.$refs?.tabButtons?.find(
+					(btnRef) => btnRef.$el.id === this.getTabComponentId(tab)
+				)
 			},
 
 			/**
 			 * Changes the active tab.
 			 * @param {Object} tab The selected tab
 			 */
-			changeActiveTab(tab)
-			{
-				if (tab === undefined || tab === null)
-					return
-				if (this.selectedTab !== tab.id)
-					this.$emit('tab-changed', tab.id)
+			changeActiveTab(tab) {
+				if (tab === undefined || tab === null) return
+				if (this.selectedTab !== tab.id) this.$emit('tab-changed', tab.id)
 
 				// Get reference to the tab's button component and focus on it
-				let buttonRef = this.getTabComponentRef(tab)
-				if (typeof buttonRef?.$el.focus !== 'function')
-					return
+				const buttonRef = this.getTabComponentRef(tab)
+				if (typeof buttonRef?.$el.focus !== 'function') return
 				buttonRef.$el.focus()
 			},
 
 			/**
 			 * Changes the active tab to the previous one.
 			 */
-			selectPrevTab()
-			{
+			selectPrevTab() {
 				let newActiveTabIndex = this.activeTabIndex
-				if (this.activeTabIndex <= 0)
-					newActiveTabIndex = this.selectableTabs.length - 1
-				else
-					newActiveTabIndex--
+				if (this.activeTabIndex <= 0) newActiveTabIndex = this.selectableTabs.length - 1
+				else newActiveTabIndex--
 
 				this.selectTabIndex(newActiveTabIndex)
 			},
@@ -239,24 +232,34 @@
 			/**
 			 * Changes the active tab to the next one.
 			 */
-			selectNextTab()
-			{
+			selectNextTab() {
 				let newActiveTabIndex = this.activeTabIndex
-				if (this.activeTabIndex >= this.selectableTabs.length - 1)
-					newActiveTabIndex = 0
-				else
-					newActiveTabIndex++
+				if (this.activeTabIndex >= this.selectableTabs.length - 1) newActiveTabIndex = 0
+				else newActiveTabIndex++
 
 				this.selectTabIndex(newActiveTabIndex)
+			},
+
+			/**
+			 * Changes the active tab to the first one.
+			 */
+			selectFirstTab() {
+				this.selectTabIndex(0)
+			},
+
+			/**
+			 * Changes the active tab to the last one.
+			 */
+			selectLastTab() {
+				this.selectTabIndex(this.selectableTabs.length - 1)
 			},
 
 			/**
 			 * Changes the active tab to the previous one.
 			 * @param {Number} idx Index in the array of selectable tabs
 			 */
-			selectTabIndex(idx)
-			{
-				let tab = this.selectableTabs[idx]
+			selectTabIndex(idx) {
+				const tab = this.selectableTabs[idx]
 				this.changeActiveTab(tab)
 			}
 		}

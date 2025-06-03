@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Outpt
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,9 +147,9 @@ namespace GenioMVC.ViewModels.Outpt
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAoutpt.FldDocumenr, FieldType.NUMERO, Resources.Resources.NO_14817, 10, 0, true),
-				new Exports.QColumn(CSGenioAoutpt.FldDhdocume, FieldType.DATAHORA, Resources.Resources.DATE18475, 16, 0, true),
-				new Exports.QColumn(CSGenioAware1.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+				new Exports.QColumn(CSGenioAoutpt.FldDocumenr, FieldType.NUMERIC, Resources.Resources.NO_14817, 10, 0, true),
+				new Exports.QColumn(CSGenioAoutpt.FldDhdocume, FieldType.DATETIME, Resources.Resources.DATE18475, 16, 0, true),
+				new Exports.QColumn(CSGenioAware1.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -214,8 +212,6 @@ namespace GenioMVC.ViewModels.Outpt
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -362,8 +358,7 @@ namespace GenioMVC.ViewModels.Outpt
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("outpt", "documenr");
+					firstVisibleColumn ??= new FieldRef("outpt", "documenr");
 				}
 
 
@@ -392,6 +387,8 @@ namespace GenioMVC.ViewModels.Outpt
 
 // USE /[MANUAL GQT OVERRQ 411]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -419,7 +416,7 @@ namespace GenioMVC.ViewModels.Outpt
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAoutpt> listing = Models.ModelBase.Where<CSGenioAoutpt>(m_userContext, false, gqt_menu_411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAoutpt> listing = Models.ModelBase.Where<CSGenioAoutpt>(m_userContext, distinct, gqt_menu_411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -502,6 +499,8 @@ namespace GenioMVC.ViewModels.Outpt
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -553,7 +552,7 @@ namespace GenioMVC.ViewModels.Outpt
 		[
 			new TableSearchColumn("ValDocumenr", CSGenioAoutpt.FldDocumenr, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("ValDhdocume", CSGenioAoutpt.FldDhdocume, typeof(DateTime?)),
-			new TableSearchColumn("Ware1_ValWarehdes", CSGenioAware1.FldWarehdes, typeof(string))
+			new TableSearchColumn("Ware1_ValWarehdes", CSGenioAware1.FldWarehdes, typeof(string)),
 		];
 	}
 }

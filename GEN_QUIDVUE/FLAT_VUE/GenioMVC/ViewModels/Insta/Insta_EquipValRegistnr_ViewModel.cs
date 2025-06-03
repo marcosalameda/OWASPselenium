@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Insta
 			return crs;
 		}
 
-
 		public DateTime? ValDtdeco { get; set; }
 
 		public string ValCodtpequ { get; set; }
@@ -150,13 +149,13 @@ namespace GenioMVC.ViewModels.Insta
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 50, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXTO, Resources.Resources.NO__REGISTER04207, 6, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldSequennr, FieldType.NUMERO, Resources.Resources.SEQUENTIAL_NO_38590, 6, 0, false),
-				new Exports.QColumn(CSGenioAequip.FldDtaquisi, FieldType.DATA, Resources.Resources.ACQUISITION44180, 8, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 8, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAequip.FldValortot, FieldType.VALOR, Resources.Resources.TOTAL_VALUE30570, 12, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 50, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXT, Resources.Resources.NO__REGISTER04207, 6, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldSequennr, FieldType.NUMERIC, Resources.Resources.SEQUENTIAL_NO_38590, 6, 0, false),
+				new Exports.QColumn(CSGenioAequip.FldDtaquisi, FieldType.DATE, Resources.Resources.ACQUISITION44180, 8, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATETIME, Resources.Resources.DECOMISSION14486, 8, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAequip.FldValortot, FieldType.CURRENCY, Resources.Resources.TOTAL_VALUE30570, 12, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -224,9 +223,6 @@ namespace GenioMVC.ViewModels.Insta
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -370,8 +366,7 @@ namespace GenioMVC.ViewModels.Insta
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("equip", "designat");
+					firstVisibleColumn ??= new FieldRef("equip", "designat");
 				}
 
 
@@ -418,6 +413,8 @@ namespace GenioMVC.ViewModels.Insta
 
 // USE /[MANUAL GQT OVERRQ INSTA_EQUIPREGISTNR]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -444,7 +441,7 @@ namespace GenioMVC.ViewModels.Insta
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAequip> listing = Models.ModelBase.Where<CSGenioAequip>(m_userContext, false, insta___equipregistnrConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_INSTA___EQUIPREGISTNR", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAequip> listing = Models.ModelBase.Where<CSGenioAequip>(m_userContext, distinct, insta___equipregistnrConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_INSTA___EQUIPREGISTNR", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -523,6 +520,8 @@ namespace GenioMVC.ViewModels.Insta
 						break;
 				}
 			}
+
+			model.InitRowData();
 
 			SetTicketToImageFields(model);
 			return model;
@@ -609,7 +608,7 @@ namespace GenioMVC.ViewModels.Insta
 			new TableSearchColumn("ValSequennr", CSGenioAequip.FldSequennr, typeof(decimal?), visible : false),
 			new TableSearchColumn("ValDtaquisi", CSGenioAequip.FldDtaquisi, typeof(DateTime?)),
 			new TableSearchColumn("ValDtdeco", CSGenioAequip.FldDtdeco, typeof(DateTime?)),
-			new TableSearchColumn("ValValortot", CSGenioAequip.FldValortot, typeof(decimal?))
+			new TableSearchColumn("ValValortot", CSGenioAequip.FldValortot, typeof(decimal?)),
 		];
 		protected void SetTicketToImageFields(Models.Equip row)
 		{

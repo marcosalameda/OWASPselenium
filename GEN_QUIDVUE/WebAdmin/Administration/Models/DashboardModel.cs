@@ -9,7 +9,7 @@ namespace Administration.Models
     {
         public bool HasConfig { get; set; }
 		public bool HasValidConfig { get; set; }
-		public bool IsBetaTestig { get; set; }
+		public bool IsBetaTesting { get; set; }
         public bool HasEnvironment { get; set; }
         public bool HasDiffVersion { get; set; }
         public bool HasDiffIdxVersion { get; set; }
@@ -36,6 +36,6 @@ namespace Administration.Models
 		
 		public string ResultErrors { get; set; }
 
-        public CSGenio.framework.MaintenanceStatus CurentMaintenance { get { return CSGenio.framework.Maintenance.Current; } }
+        public CSGenio.framework.MaintenanceStatus CurrentMaintenance { get { return CSGenio.framework.Maintenance.Current; } }
     }
 }

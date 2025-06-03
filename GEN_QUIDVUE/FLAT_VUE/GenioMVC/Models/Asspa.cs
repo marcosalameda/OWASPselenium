@@ -91,7 +91,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Decimal places" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Asspa.ValDecimalplaces")]
 		[NumericAttribute(0)]
-		public decimal? ValDecimalplaces { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDecimalplaces, 0)); } set { klass.ValDecimalplaces = Convert.ToDecimal(value); } }
+		public decimal? ValDecimalplaces { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDecimalplaces, 0)); } set { klass.ValDecimalplaces = Convert.ToDecimal(value); } }
 
 		[DisplayName("Text")]
 		/// <summary>Field : "Text" Tipo: "C" Formula:  ""</summary>
@@ -102,7 +102,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Asspa.ValQuantity")]
 		[NumericAttribute(4)]
-		public decimal? ValQuantity { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantity, 4)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
+		public decimal? ValQuantity { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantity, 4)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date")]
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>

@@ -30,6 +30,7 @@ namespace Administration
         public static readonly string LANGUAGE = "LANGUAGE";
         public static readonly string ZEROTRUE = "ZEROTRUE";
 		public static readonly string FILESTREAM = "FILESTREAM";
+        public static readonly string NOCONNECTION = "NOCONNECTION";
     }
 
     public class WebAPI(IConfigurationManager configManager) : IAdminService
@@ -58,20 +59,42 @@ namespace Administration
 
             string yearApp = args.Find(x => x.Key == ChannelArgs.YEARAPP).Value;
 
+            bool noConnection = false;
+            if (args.Exists(x => x.Key == ChannelArgs.NOCONNECTION))
+            {
+                noConnection = bool.TryParse(
+                    args.Find(x => x.Key == ChannelArgs.NOCONNECTION).Value,
+                    out noConnection
+                );
+            }
+
             CSGenio.persistence.PersistentSupport sp = null;
             CSGenio.framework.User user = null;
 
             try
             {
                 user = SysConfiguration.CreateWebAdminUser(yearApp);
-                user.Language = GlobalFunctions.emptyC(language) == 1 ? DEFAULTLANGUAGE.Replace("-", "").ToUpper() : language;
+                user.Language = string.IsNullOrEmpty(language)
+                    ? DEFAULTLANGUAGE.Replace("-", "").ToUpper()
+                    : language;
+
                 Log.SetContext("utilizador", "WebAPI_QApi");
 
-                sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-                sp.openTransaction();
+                if (!noConnection)
+                {
+                    sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+                    sp.openTransaction();
+                }
+
                 SchedulerCallFunctions fcaller = new SchedulerCallFunctions(user, user.CurrentModule, sp);
-                qResponse = fcaller.CallFunction(function, args.ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value));
-                sp.closeTransaction();
+                qResponse = fcaller.CallFunction(
+                    function,
+                    args.ToDictionary((keyItem) => keyItem.Key, (valueItem) => valueItem.Value)
+                );
+                
+                if (!noConnection && sp != null)
+                    sp.closeTransaction();
+
 				//Return the same value as the inner function
                 if(qResponse != null)
                 {
@@ -83,7 +106,10 @@ namespace Administration
             {
                 response.Desc = ex.Message;
                 response.Ack = CallAck.Failed;
-                sp.rollbackTransaction();
+
+                if (!noConnection && sp != null)
+                    sp.rollbackTransaction();
+
                 Log.Error($"Error handling WebApi call: {ex.Message}");
                 return response;
             }
@@ -129,7 +155,7 @@ namespace Administration
                 IsAckResponse isACKTest = mqproc.IsACKQueue();
                 if (isACKTest.IsACK)
                 {
-                    if(GlobalFunctions.emptyG(isACKTest.QueueKey)==1)
+                    if(GenFunctions.emptyG(isACKTest.QueueKey)==1)
                         throw new BusinessException("Não existe a queue original da ACK - " + queueName, "WebAPI.ProcessMessage", "Não existe a queue original da ACK - " + queueName);
 
 					sp.openTransaction();

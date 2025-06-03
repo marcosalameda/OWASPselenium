@@ -21,7 +21,7 @@
 
 					<row class="footer-btn">
 						<q-button
-							b-style="primary"
+							variant="bold"
 							:label="Resources.EXECUTAR_BACKUP43010"
 							@click="startBackup" />
 
@@ -43,11 +43,13 @@
 				<template #actions="props">
 					<q-button-group borderless>
 						<q-button
+							variant="text"
 							:title="Resources.RESTAURAR57043"
 							@click="restoreBackupFile(props.row)">
 							<q-icon icon="restore" />
 						</q-button>
 						<q-button
+							variant="text"
 							:title="Resources.ELIMINAR21155"
 							@click="deleteBackupFile(props.row)">
 							<q-icon icon="bin" />

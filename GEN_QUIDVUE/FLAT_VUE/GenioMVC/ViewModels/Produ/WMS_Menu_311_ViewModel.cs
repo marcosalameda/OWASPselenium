@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Produ
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,20 +147,20 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAprodu.FldProduct, FieldType.TEXTO, Resources.Resources.PRODUCT12880, 30, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldSku, FieldType.TEXTO, Resources.Resources.SKU42303, 20, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldProduct, FieldType.TEXT, Resources.Resources.PRODUCT12880, 30, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldSku, FieldType.TEXT, Resources.Resources.SKU42303, 20, 0, true),
 				new Exports.QColumn(CSGenioAprodu.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 3, false),
-				new Exports.QColumn(CSGenioAprodu.FldGtin, FieldType.TEXTO, Resources.Resources.GTIN45487, 14, 0, false),
-				new Exports.QColumn(CSGenioAprodu.FldSize, FieldType.TEXTO, Resources.Resources.SIZE10299, 30, 0, false),
-				new Exports.QColumn(CSGenioAprodu.FldWeight, FieldType.NUMERO, Resources.Resources.WEIGHT36329, 10, 2, false),
-				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXTO, Resources.Resources.GLN35528, 30, 0, true),
-				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXTO, Resources.Resources.GLN_EXT31913, 30, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldInputs, FieldType.NUMERO, Resources.Resources.INPUTS19315, 10, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldOutputs, FieldType.NUMERO, Resources.Resources.OUTPUTS47833, 10, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldStock, FieldType.NUMERO, Resources.Resources.STOCK37618, 10, 0, true),
-				new Exports.QColumn(CSGenioAprodu.FldPrice, FieldType.VALOR, Resources.Resources.PRICE06900, 12, 2, true),
-				new Exports.QColumn(CSGenioAprodu.FldIn_use, FieldType.ARRAY_COD_LOGICO, Resources.Resources.IN_USE42606, 1, 0, true, "YesNo"),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAprodu.FldImage, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE65174, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAprodu.FldGtin, FieldType.TEXT, Resources.Resources.GTIN45487, 14, 0, false),
+				new Exports.QColumn(CSGenioAprodu.FldSize, FieldType.TEXT, Resources.Resources.SIZE10299, 30, 0, false),
+				new Exports.QColumn(CSGenioAprodu.FldWeight, FieldType.NUMERIC, Resources.Resources.WEIGHT36329, 10, 2, false),
+				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXT, Resources.Resources.GLN35528, 30, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXT31913, 30, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldInputs, FieldType.NUMERIC, Resources.Resources.INPUTS19315, 10, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldOutputs, FieldType.NUMERIC, Resources.Resources.OUTPUTS47833, 10, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldStock, FieldType.NUMERIC, Resources.Resources.STOCK37618, 10, 0, true),
+				new Exports.QColumn(CSGenioAprodu.FldPrice, FieldType.CURRENCY, Resources.Resources.PRICE06900, 12, 2, true),
+				new Exports.QColumn(CSGenioAprodu.FldIn_use, FieldType.ARRAY_LOGIC, Resources.Resources.IN_USE42606, 1, 0, true, "YesNo"),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAprodu.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE65174, 3, 1, true):null,
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -225,8 +223,6 @@ namespace GenioMVC.ViewModels.Produ
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -373,8 +369,7 @@ namespace GenioMVC.ViewModels.Produ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("produ", "product");
+					firstVisibleColumn ??= new FieldRef("produ", "product");
 				}
 
 
@@ -403,6 +398,8 @@ namespace GenioMVC.ViewModels.Produ
 
 // USE /[MANUAL WMS OVERRQ 311]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -430,7 +427,7 @@ namespace GenioMVC.ViewModels.Produ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAprodu> listing = Models.ModelBase.Where<CSGenioAprodu>(m_userContext, false, wms_menu_311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML311", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAprodu> listing = Models.ModelBase.Where<CSGenioAprodu>(m_userContext, distinct, wms_menu_311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML311", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -515,6 +512,8 @@ namespace GenioMVC.ViewModels.Produ
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -577,7 +576,7 @@ namespace GenioMVC.ViewModels.Produ
 			new TableSearchColumn("ValOutputs", CSGenioAprodu.FldOutputs, typeof(decimal?)),
 			new TableSearchColumn("ValStock", CSGenioAprodu.FldStock, typeof(decimal?)),
 			new TableSearchColumn("ValPrice", CSGenioAprodu.FldPrice, typeof(decimal?)),
-			new TableSearchColumn("ValIn_use", CSGenioAprodu.FldIn_use, typeof(int), array : "YesNo")
+			new TableSearchColumn("ValIn_use", CSGenioAprodu.FldIn_use, typeof(int), array : "YesNo"),
 		];
 		protected void SetTicketToImageFields(Models.Produ row)
 		{

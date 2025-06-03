@@ -80,55 +80,55 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Numeric  4.0 - small integer (storage: 2 byte)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dttyp.ValSmallint")]
 		[NumericAttribute(0)]
-		public decimal? ValSmallint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSmallint, 0)); } set { klass.ValSmallint = Convert.ToDecimal(value); } }
+		public decimal? ValSmallint { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSmallint, 0)); } set { klass.ValSmallint = Convert.ToDecimal(value); } }
 
 		[DisplayName("Numeric  9.0 - integer (storage: 4 byte)")]
 		/// <summary>Field : "Numeric  9.0 - integer (storage: 4 byte)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dttyp.ValInteger")]
 		[NumericAttribute(0)]
-		public decimal? ValInteger { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValInteger, 0)); } set { klass.ValInteger = Convert.ToDecimal(value); } }
+		public decimal? ValInteger { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValInteger, 0)); } set { klass.ValInteger = Convert.ToDecimal(value); } }
 
 		[DisplayName("Numeric 15.0 - big integer (storage: 8 byte)")]
 		/// <summary>Field : "Numeric 15.0 - big integer (storage: 8 byte)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dttyp.ValBigint")]
 		[NumericAttribute(0)]
-		public decimal? ValBigint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBigint, 0)); } set { klass.ValBigint = Convert.ToDecimal(value); } }
+		public decimal? ValBigint { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBigint, 0)); } set { klass.ValBigint = Convert.ToDecimal(value); } }
 
 		[DisplayName("Numeric  8.2 real=float(24) (precision 7 digits) (storage: 4 byte)")]
 		/// <summary>Field : "Numeric  8.2 real=float(24) (precision 7 digits) (storage: 4 byte)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dttyp.ValReal")]
 		[NumericAttribute(2)]
-		public decimal? ValReal { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValReal, 2)); } set { klass.ValReal = Convert.ToDecimal(value); } }
+		public decimal? ValReal { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValReal, 2)); } set { klass.ValReal = Convert.ToDecimal(value); } }
 
 		[DisplayName("Numeric 15.2 double = float(53) (precision 15 digits) (storage: 8 byte)")]
 		/// <summary>Field : "Numeric 15.2 double = float(53) (precision 15 digits) (storage: 8 byte)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dttyp.ValFloat")]
 		[NumericAttribute(2)]
-		public decimal? ValFloat { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFloat, 2)); } set { klass.ValFloat = Convert.ToDecimal(value); } }
+		public decimal? ValFloat { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValFloat, 2)); } set { klass.ValFloat = Convert.ToDecimal(value); } }
 
 		[DisplayName("Decimal (1-10) (storage: 5 byte)")]
 		/// <summary>Field : "Decimal (1-10) (storage: 5 byte)" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Dttyp.ValDecimal")]
 		[NumericAttribute(4)]
-		public decimal? ValDecimal { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDecimal, 4)); } set { klass.ValDecimal = Convert.ToDecimal(value); } }
+		public decimal? ValDecimal { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDecimal, 4)); } set { klass.ValDecimal = Convert.ToDecimal(value); } }
 
 		[DisplayName("Decimal (11-15) (storage: 9 byte)")]
 		/// <summary>Field : "Decimal (11-15) (storage: 9 byte)" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Dttyp.ValDecimal9")]
 		[NumericAttribute(4)]
-		public decimal? ValDecimal9 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDecimal9, 4)); } set { klass.ValDecimal9 = Convert.ToDecimal(value); } }
+		public decimal? ValDecimal9 { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDecimal9, 4)); } set { klass.ValDecimal9 = Convert.ToDecimal(value); } }
 
 		[DisplayName("Money - decimal (1-10) (storage: 5 byte)")]
 		/// <summary>Field : "Money - decimal (1-10) (storage: 5 byte)" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Dttyp.ValMoney")]
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValMoney { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValMoney, 4)); } set { klass.ValMoney = Convert.ToDecimal(value); } }
+		public decimal? ValMoney { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValMoney, 4)); } set { klass.ValMoney = Convert.ToDecimal(value); } }
 
 		[DisplayName("Money - decimal (11-15) (storage: 9 byte)")]
 		/// <summary>Field : "Money - decimal (11-15) (storage: 9 byte)" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Dttyp.ValMoney9")]
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValMoney9 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValMoney9, 4)); } set { klass.ValMoney9 = Convert.ToDecimal(value); } }
+		public decimal? ValMoney9 { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValMoney9, 4)); } set { klass.ValMoney9 = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date")]
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>

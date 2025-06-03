@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodequip { get; set; }
+		public string EquipValCodequip { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="userContext">The current user request context</param>
 		public Accordi_ValReparaco_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+			EquipValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
 		}
 
 		/// <summary>
@@ -128,12 +127,12 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArepar.FldNrrepara, FieldType.NUMERO, Resources.Resources.NO_RUMOUR_IN_THE_COM15248, 10, 0, true),
-				new Exports.QColumn(CSGenioArepar.FldDtrepara, FieldType.DATAHORA, Resources.Resources.FIXED_IN00179, 16, 0, true),
-				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXTO, Resources.Resources.SPECIALTY09304, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.EXPERT27393, 30, 0, true),
+				new Exports.QColumn(CSGenioArepar.FldNrrepara, FieldType.NUMERIC, Resources.Resources.NO_RUMOUR_IN_THE_COM15248, 10, 0, true),
+				new Exports.QColumn(CSGenioArepar.FldDtrepara, FieldType.DATETIME, Resources.Resources.FIXED_IN00179, 16, 0, true),
+				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXT, Resources.Resources.SPECIALTY09304, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXT, Resources.Resources.EXPERT27393, 30, 0, true),
 				new Exports.QColumn(CSGenioArepar.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION_OF_THE_R26085, 30, 3, true),
-				new Exports.QColumn(CSGenioArepar.FldHours, FieldType.NUMERO, Resources.Resources.SPENT_ON_HOURS19285, 10, 0, true),
+				new Exports.QColumn(CSGenioArepar.FldHours, FieldType.NUMERIC, Resources.Resources.SPENT_ON_HOURS19285, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -198,10 +197,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodequip != null)
-				crs.Equal(CSGenioArepar.FldCodequip, this.ValCodequip);
-
-
+			if (this.EquipValCodequip != null)
+				crs.Equal(CSGenioArepar.FldCodequip, this.EquipValCodequip);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -347,8 +344,7 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("repar", "nrrepara");
+					firstVisibleColumn ??= new FieldRef("repar", "nrrepara");
 				}
 
 
@@ -377,6 +373,8 @@ namespace GenioMVC.ViewModels.Equip
 
 // USE /[MANUAL GQT OVERRQ ACCORDI_PSEUDREPARACO]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -404,7 +402,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArepar> listing = Models.ModelBase.Where<CSGenioArepar>(m_userContext, false, accordi_pseudreparacoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ACCORDI_PSEUDREPARACO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArepar> listing = Models.ModelBase.Where<CSGenioArepar>(m_userContext, distinct, accordi_pseudreparacoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ACCORDI_PSEUDREPARACO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -488,6 +486,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -542,7 +542,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("Cate1_ValCategoria", CSGenioAcate1.FldCategoria, typeof(string)),
 			new TableSearchColumn("Pesso_ValName", CSGenioApesso.FldName, typeof(string)),
 			new TableSearchColumn("ValDescript", CSGenioArepar.FldDescript, typeof(string)),
-			new TableSearchColumn("ValHours", CSGenioArepar.FldHours, typeof(decimal?))
+			new TableSearchColumn("ValHours", CSGenioArepar.FldHours, typeof(decimal?)),
 		];
 	}
 }

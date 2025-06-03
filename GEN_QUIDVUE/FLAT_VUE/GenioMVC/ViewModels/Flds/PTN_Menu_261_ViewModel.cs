@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Flds
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,44 +147,44 @@ namespace GenioMVC.ViewModels.Flds
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAaero.FldName, FieldType.TEXTO, Resources.Resources.AIRLINE_NAME55130, 30, 0, true),
+				new Exports.QColumn(CSGenioAaero.FldName, FieldType.TEXT, Resources.Resources.AIRLINE_NAME55130, 30, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldDescrip, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldNpassage, FieldType.NUMERO, Resources.Resources.NUMERIC19292, 3, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldDuration, FieldType.NUMERO, Resources.Resources.NUMERIC_DECIMAL37352, 5, 2, true),
-				new Exports.QColumn(CSGenioAflds.FldPrice, FieldType.VALOR, Resources.Resources.CURRENCY13881, 6, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldPrecobil, FieldType.VALOR, Resources.Resources.CURRENCY_DECIMAL48296, 6, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldDate, FieldType.DATA, Resources.Resources.DATE__DD_MM_YY_57869, 8, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldDatetime, FieldType.DATAHORA, Resources.Resources.DATETIME61308, 16, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldDateseco, FieldType.DATASEGUNDO, Resources.Resources.DATESECOND44557, 19, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldTime, FieldType.TEMPO, Resources.Resources.TIME15328, 5, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldYear, FieldType.NUMERO, Resources.Resources.YEAR61794, 4, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldPrimviag, FieldType.LOGICO, Resources.Resources.LOGICAL47485, 1, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldConditio, FieldType.NUMERO, Resources.Resources.CONDITIONAL01431, 1, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldClass, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TEXT_ENUMERATION45668, 2, 0, true, "CLASS"),
-				new Exports.QColumn(CSGenioAflds.FldClassnum, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.NUMERIC_ENUMERATION19068, 1, 0, true, "CLASSNUM"),
-				new Exports.QColumn(CSGenioAflds.FldLogicenu, FieldType.ARRAY_COD_LOGICO, Resources.Resources.LOGICAL_ENUMERATION30276, 1, 0, true, "PRIMVIAG"),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAflds.FldLogo, FieldType.IMAGEM_JPEG, Resources.Resources.LOGO62483, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAflds.FldAttach, FieldType.FICHEIRO_BD, Resources.Resources.DOCUMENT00695, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldNpassage, FieldType.NUMERIC, Resources.Resources.NUMERIC19292, 3, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldDuration, FieldType.NUMERIC, Resources.Resources.NUMERIC_DECIMAL37352, 5, 2, true),
+				new Exports.QColumn(CSGenioAflds.FldPrice, FieldType.CURRENCY, Resources.Resources.CURRENCY13881, 6, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldPrecobil, FieldType.CURRENCY, Resources.Resources.CURRENCY_DECIMAL48296, 6, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldDate, FieldType.DATE, Resources.Resources.DATE__DD_MM_YY_57869, 8, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldDatetime, FieldType.DATETIME, Resources.Resources.DATETIME61308, 16, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldDateseco, FieldType.DATETIMESECONDS, Resources.Resources.DATESECOND44557, 19, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldTime, FieldType.TIME_HOURS, Resources.Resources.TIME15328, 5, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldYear, FieldType.NUMERIC, Resources.Resources.YEAR61794, 4, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldPrimviag, FieldType.LOGIC, Resources.Resources.LOGICAL47485, 1, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldConditio, FieldType.NUMERIC, Resources.Resources.CONDITIONAL01431, 1, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldClass, FieldType.ARRAY_TEXT, Resources.Resources.TEXT_ENUMERATION45668, 2, 0, true, "CLASS"),
+				new Exports.QColumn(CSGenioAflds.FldClassnum, FieldType.ARRAY_NUMERIC, Resources.Resources.NUMERIC_ENUMERATION19068, 1, 0, true, "CLASSNUM"),
+				new Exports.QColumn(CSGenioAflds.FldLogicenu, FieldType.ARRAY_LOGIC, Resources.Resources.LOGICAL_ENUMERATION30276, 1, 0, true, "PRIMVIAG"),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAflds.FldLogo, FieldType.IMAGE, Resources.Resources.LOGO62483, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAflds.FldAttach, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldLogoexte, FieldType.PATH, Resources.Resources.LOGO__EXTERNAL_FILE_58162, 3, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldCreatuse, FieldType.OPERCRIA, Resources.Resources.CREATED_BY12292, 20, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldCreatdat, FieldType.DATACRIA, Resources.Resources.DATE_OF_CREATION__DD02208, 8, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldCreathou, FieldType.HORACRIA, Resources.Resources.HOUR_OF_CREATION33629, 5, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldCreatins, FieldType.INSTANTECRIA, Resources.Resources.COMPLETE_DATE_OF_CRE57046, 15, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXTO, Resources.Resources.NO__REGISTER04207, 6, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldTxtfield, FieldType.TEXTO, Resources.Resources.TEXT_FIELD41810, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldEmailfld, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldZipfield, FieldType.TEXTO, Resources.Resources.ZIPCODE21021, 8, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldIbanfiel, FieldType.TEXTO, Resources.Resources.IBAN28506, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldSsnumber, FieldType.TEXTO, Resources.Resources.SOCIAL_SECURITY_NO48150, 11, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldLicplate, FieldType.TEXTO, Resources.Resources.LICENCE_PLATE07627, 8, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldVatnumbr, FieldType.TEXTO, Resources.Resources.VAT_NUMBER24236, 9, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldBanknmbr, FieldType.TEXTO, Resources.Resources.BANKING_ACCOUNT_NUMB62548, 24, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldNrcntry, FieldType.NUMERO, Resources.Resources.NUMERIC19292, 3, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldUpprtext, FieldType.TEXTO, Resources.Resources.UPPERCASE48238, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldPassfld, FieldType.TEXTO, Resources.Resources.PASSWORD09467, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldClrpicke, FieldType.TEXTO, Resources.Resources.COLORPICKER39653, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldShwrc, FieldType.LOGICO, Resources.Resources.SHOW_RECORD53851, 1, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldRadiob, FieldType.ARRAY_COD_TEXTO, Resources.Resources.RADIO_BTN20980, 5, 0, true, "RADIOBTN"),
+				new Exports.QColumn(CSGenioAflds.FldCreatuse, FieldType.TEXT, Resources.Resources.CREATED_BY12292, 20, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldCreatdat, FieldType.DATETIMESECONDS, Resources.Resources.DATE_OF_CREATION__DD02208, 8, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldCreathou, FieldType.TIME_HOURS, Resources.Resources.HOUR_OF_CREATION33629, 5, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldCreatins, FieldType.DATETIMESECONDS, Resources.Resources.COMPLETE_DATE_OF_CRE57046, 15, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXT, Resources.Resources.NO__REGISTER04207, 6, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldTxtfield, FieldType.TEXT, Resources.Resources.TEXT_FIELD41810, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldEmailfld, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldZipfield, FieldType.TEXT, Resources.Resources.ZIPCODE21021, 8, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldIbanfiel, FieldType.TEXT, Resources.Resources.IBAN28506, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldSsnumber, FieldType.TEXT, Resources.Resources.SOCIAL_SECURITY_NO48150, 11, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldLicplate, FieldType.TEXT, Resources.Resources.LICENCE_PLATE07627, 8, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldVatnumbr, FieldType.TEXT, Resources.Resources.VAT_NUMBER24236, 9, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldBanknmbr, FieldType.TEXT, Resources.Resources.BANKING_ACCOUNT_NUMB62548, 24, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldNrcntry, FieldType.NUMERIC, Resources.Resources.NUMERIC19292, 3, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldUpprtext, FieldType.TEXT, Resources.Resources.UPPERCASE48238, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldPassfld, FieldType.TEXT, Resources.Resources.PASSWORD09467, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldClrpicke, FieldType.TEXT, Resources.Resources.COLORPICKER39653, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldShwrc, FieldType.LOGIC, Resources.Resources.SHOW_RECORD53851, 1, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldRadiob, FieldType.ARRAY_TEXT, Resources.Resources.RADIO_BTN20980, 5, 0, true, "RADIOBTN"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -249,8 +247,6 @@ namespace GenioMVC.ViewModels.Flds
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -397,8 +393,7 @@ namespace GenioMVC.ViewModels.Flds
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("aero", "name");
+					firstVisibleColumn ??= new FieldRef("aero", "name");
 				}
 
 
@@ -427,6 +422,8 @@ namespace GenioMVC.ViewModels.Flds
 
 // USE /[MANUAL PTN OVERRQ 261]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -454,7 +451,7 @@ namespace GenioMVC.ViewModels.Flds
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, false, ptn_menu_261Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML261", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, distinct, ptn_menu_261Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML261", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -538,6 +535,8 @@ namespace GenioMVC.ViewModels.Flds
 						break;
 				}
 			}
+
+			model.InitRowData();
 
 			SetTicketToImageFields(model);
 			return model;
@@ -645,7 +644,7 @@ namespace GenioMVC.ViewModels.Flds
 			new TableSearchColumn("ValPassfld", CSGenioAflds.FldPassfld, typeof(string)),
 			new TableSearchColumn("ValClrpicke", CSGenioAflds.FldClrpicke, typeof(string)),
 			new TableSearchColumn("ValShwrc", CSGenioAflds.FldShwrc, typeof(bool)),
-			new TableSearchColumn("ValRadiob", CSGenioAflds.FldRadiob, typeof(string), array : "RADIOBTN")
+			new TableSearchColumn("ValRadiob", CSGenioAflds.FldRadiob, typeof(string), array : "RADIOBTN"),
 		];
 		protected void SetTicketToImageFields(Models.Flds row)
 		{

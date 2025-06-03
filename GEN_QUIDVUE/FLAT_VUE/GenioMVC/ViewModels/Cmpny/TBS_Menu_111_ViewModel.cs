@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Cmpny
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,12 +147,12 @@ namespace GenioMVC.ViewModels.Cmpny
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				new Exports.QColumn(CSGenioAcmpny.FldAcronym, FieldType.TEXTO, Resources.Resources.ACRONYM00872, 15, 0, true),
-				new Exports.QColumn(CSGenioAcmpny.FldNif, FieldType.TEXTO, Resources.Resources.TAX_IDENTIFICATION51190, 15, 0, true),
-				new Exports.QColumn(CSGenioAcmpny.FldTelephon, FieldType.TEXTO, Resources.Resources.PHONE56703, 30, 0, true),
-				new Exports.QColumn(CSGenioAcmpny.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAcmpny.FldLogo, FieldType.IMAGEM_JPEG, Resources.Resources.LOGO62483, 30, 1, true):null,
+				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldAcronym, FieldType.TEXT, Resources.Resources.ACRONYM00872, 15, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldNif, FieldType.TEXT, Resources.Resources.TAX_IDENTIFICATION51190, 15, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldTelephon, FieldType.TEXT, Resources.Resources.PHONE56703, 30, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAcmpny.FldLogo, FieldType.IMAGE, Resources.Resources.LOGO62483, 30, 1, true):null,
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -217,8 +215,6 @@ namespace GenioMVC.ViewModels.Cmpny
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -377,8 +373,7 @@ namespace GenioMVC.ViewModels.Cmpny
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("cmpny", "designat");
+					firstVisibleColumn ??= new FieldRef("cmpny", "designat");
 				}
 
 
@@ -407,6 +402,8 @@ namespace GenioMVC.ViewModels.Cmpny
 
 // USE /[MANUAL TBS OVERRQ 111]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -434,7 +431,7 @@ namespace GenioMVC.ViewModels.Cmpny
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAcmpny> listing = Models.ModelBase.Where<CSGenioAcmpny>(m_userContext, false, tbs_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAcmpny> listing = Models.ModelBase.Where<CSGenioAcmpny>(m_userContext, distinct, tbs_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -515,6 +512,8 @@ namespace GenioMVC.ViewModels.Cmpny
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -569,7 +568,7 @@ namespace GenioMVC.ViewModels.Cmpny
 			new TableSearchColumn("ValAcronym", CSGenioAcmpny.FldAcronym, typeof(string)),
 			new TableSearchColumn("ValNif", CSGenioAcmpny.FldNif, typeof(string)),
 			new TableSearchColumn("ValTelephon", CSGenioAcmpny.FldTelephon, typeof(string)),
-			new TableSearchColumn("ValEmail", CSGenioAcmpny.FldEmail, typeof(string))
+			new TableSearchColumn("ValEmail", CSGenioAcmpny.FldEmail, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Cmpny row)
 		{

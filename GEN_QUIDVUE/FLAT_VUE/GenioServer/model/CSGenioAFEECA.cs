@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAfeeca(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR FEECA]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codfeeca", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codfeeca", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codflds", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codflds", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "";
 
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("feedback", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "feedback", FieldType.TEXT);
 			Qfield.FieldDescription = "Feedback";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "FEEDBACK52855";
 
@@ -78,9 +73,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -114,12 +108,12 @@ namespace CSGenio.business
 			info.Pathways.Add("wareh","flds");
 			info.Pathways.Add("tpequ","flds");
 			info.Pathways.Add("room1","flds");
-			info.Pathways.Add("item","flds");
 			info.Pathways.Add("cmpny","flds");
+			info.Pathways.Add("item","flds");
 			info.Pathways.Add("pess1","flds");
 			info.Pathways.Add("famil","flds");
-			info.Pathways.Add("gitem","flds");
 			info.Pathways.Add("cntry","flds");
+			info.Pathways.Add("gitem","flds");
 			info.Pathways.Add("stake","flds");
 			info.Pathways.Add("cate2","flds");
 		}
@@ -167,8 +161,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Field feedback";
 			info.AreaPluralDesignation="Field feedback";
 			info.DescriptionCav="FIELD_FEEDBACK53085";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

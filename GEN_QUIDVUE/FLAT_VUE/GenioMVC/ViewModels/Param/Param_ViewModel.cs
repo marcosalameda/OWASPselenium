@@ -531,7 +531,7 @@ namespace GenioMVC.ViewModels.Param
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -578,7 +578,7 @@ namespace GenioMVC.ViewModels.Param
 				// Fill List fields
 				this.ValCodkinde = ViewModelConversion.ToString(row["kinde.codkinde"]);
 				TableKindeDesignat.Value = (string)row["kinde.designat"];
-				if (GlobalFunctions.emptyG(this.ValCodkinde) == 1)
+				if (GenFunctions.emptyG(this.ValCodkinde) == 1)
 				{
 					this.ValCodkinde = "";
 					TableKindeDesignat.Value = "";

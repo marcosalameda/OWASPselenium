@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Tradu
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,11 +147,11 @@ namespace GenioMVC.ViewModels.Tradu
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtradu.FldReferenc, FieldType.TEXTO, Resources.Resources.REF_A30225, 30, 0, true),
-				new Exports.QColumn(CSGenioAlang1.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 30, 0, true),
-				new Exports.QColumn(CSGenioAtradu.FldAtraduzi, FieldType.TEXTO, Resources.Resources.A_TRADUZIR48203, 30, 0, true),
-				new Exports.QColumn(CSGenioAlang2.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 30, 0, true),
-				new Exports.QColumn(CSGenioAtradu.FldTraduzid, FieldType.TEXTO, Resources.Resources.TRADUZIDO46556, 30, 0, true),
+				new Exports.QColumn(CSGenioAtradu.FldReferenc, FieldType.TEXT, Resources.Resources.REF_A30225, 30, 0, true),
+				new Exports.QColumn(CSGenioAlang1.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 30, 0, true),
+				new Exports.QColumn(CSGenioAtradu.FldAtraduzi, FieldType.TEXT, Resources.Resources.A_TRADUZIR48203, 30, 0, true),
+				new Exports.QColumn(CSGenioAlang2.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 30, 0, true),
+				new Exports.QColumn(CSGenioAtradu.FldTraduzid, FieldType.TEXT, Resources.Resources.TRADUZIDO46556, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -216,8 +214,6 @@ namespace GenioMVC.ViewModels.Tradu
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -364,8 +360,7 @@ namespace GenioMVC.ViewModels.Tradu
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tradu", "referenc");
+					firstVisibleColumn ??= new FieldRef("tradu", "referenc");
 				}
 
 
@@ -394,6 +389,8 @@ namespace GenioMVC.ViewModels.Tradu
 
 // USE /[MANUAL GQT OVERRQ 911]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -421,7 +418,7 @@ namespace GenioMVC.ViewModels.Tradu
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtradu> listing = Models.ModelBase.Where<CSGenioAtradu>(m_userContext, false, gqt_menu_911Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML911", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtradu> listing = Models.ModelBase.Where<CSGenioAtradu>(m_userContext, distinct, gqt_menu_911Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML911", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -506,6 +503,8 @@ namespace GenioMVC.ViewModels.Tradu
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -559,7 +558,7 @@ namespace GenioMVC.ViewModels.Tradu
 			new TableSearchColumn("Lang1_ValLangua", CSGenioAlang1.FldLangua, typeof(string)),
 			new TableSearchColumn("ValAtraduzi", CSGenioAtradu.FldAtraduzi, typeof(string)),
 			new TableSearchColumn("Lang2_ValLangua", CSGenioAlang2.FldLangua, typeof(string)),
-			new TableSearchColumn("ValTraduzid", CSGenioAtradu.FldTraduzid, typeof(string))
+			new TableSearchColumn("ValTraduzid", CSGenioAtradu.FldTraduzid, typeof(string)),
 		];
 	}
 }

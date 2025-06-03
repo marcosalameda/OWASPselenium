@@ -1047,7 +1047,7 @@ namespace GenioMVC.ViewModels.Equip
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -1055,7 +1055,7 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("cmpny");
 				if (!(hValue is Array))
 				{
-					if (GlobalFunctions.emptyG(hValue) == 1)
+					if (GenFunctions.emptyG(hValue) == 1)
 						returnEmptyDependants = true;
 					wherecodition.Equal(CSGenioApess1.FldCodempre, hValue);
 				}
@@ -1118,7 +1118,7 @@ namespace GenioMVC.ViewModels.Equip
 				// Fill List fields
 				this.ValCodpess1 = ViewModelConversion.ToString(row["pess1.codpesso"]);
 				TablePess1Name.Value = (string)row["pess1.name"];
-				if (GlobalFunctions.emptyG(this.ValCodpess1) == 1)
+				if (GenFunctions.emptyG(this.ValCodpess1) == 1)
 				{
 					this.ValCodpess1 = "";
 					TablePess1Name.Value = "";
@@ -1260,7 +1260,7 @@ namespace GenioMVC.ViewModels.Equip
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -1313,7 +1313,7 @@ namespace GenioMVC.ViewModels.Equip
 				// Fill List fields
 				this.ValCodtpequ = ViewModelConversion.ToString(row["tpequ.codtpequ"]);
 				TableTpequTipoequi.Value = (string)row["tpequ.tipoequi"];
-				if (GlobalFunctions.emptyG(this.ValCodtpequ) == 1)
+				if (GenFunctions.emptyG(this.ValCodtpequ) == 1)
 				{
 					this.ValCodtpequ = "";
 					TableTpequTipoequi.Value = "";

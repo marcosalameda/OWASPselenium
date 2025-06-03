@@ -93,8 +93,6 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -156,32 +154,32 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldSequennr, FieldType.NUMERO, Resources.Resources.SEQUENTIAL_NO_38590, 6, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXTO, Resources.Resources.NO__REGISTER04207, 6, 0, true),
-				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
-				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDtaquisi, FieldType.DATA, Resources.Resources.ACQUISITION44180, 8, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERO, Resources.Resources.NO_BATE21045, 10, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 8, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldIfabatif, FieldType.LOGICO, Resources.Resources.DOWNED_EQUIPMENT43331, 1, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAequip.FldValortot, FieldType.VALOR, Resources.Resources.TOTAL_VALUE30570, 12, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldFrequenc, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.LOAN_FREQUENCY00701, 1, 0, true, "FreqEmpr"),
-				new Exports.QColumn(CSGenioAequip.FldBought, FieldType.LOGICO, Resources.Resources.BOUGHT32044, 1, 0, true),
-				new Exports.QColumn(CSGenioAroom1.FldRoomnr, FieldType.TEXTO, Resources.Resources.N_R__ROOM43805, 10, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDtrefere, FieldType.DATAHORA, Resources.Resources.REFERENCE28402, 16, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldFirst, FieldType.TEXTO, Resources.Resources.FIRST42972, 10, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldBefore, FieldType.TEXTO, Resources.Resources.BEFORE60156, 10, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldFollowin, FieldType.TEXTO, Resources.Resources.FOLLOWING22170, 10, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldLast, FieldType.TEXTO, Resources.Resources.LAST49207, 10, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldSitefabr, FieldType.TEXTO, Resources.Resources.MANUFACTURER_S_WEBSI11084, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldLastpho, FieldType.IMAGEM_JPEG, Resources.Resources.LAST_PHOTO_ATTACHED43884, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldSequennr, FieldType.NUMERIC, Resources.Resources.SEQUENTIAL_NO_38590, 6, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXT, Resources.Resources.NO__REGISTER04207, 6, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
+				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 30, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDtaquisi, FieldType.DATE, Resources.Resources.ACQUISITION44180, 8, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERIC, Resources.Resources.NO_BATE21045, 10, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDtdeco, FieldType.DATETIME, Resources.Resources.DECOMISSION14486, 8, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldIfabatif, FieldType.LOGIC, Resources.Resources.DOWNED_EQUIPMENT43331, 1, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAequip.FldValortot, FieldType.CURRENCY, Resources.Resources.TOTAL_VALUE30570, 12, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldFrequenc, FieldType.ARRAY_NUMERIC, Resources.Resources.LOAN_FREQUENCY00701, 1, 0, true, "FreqEmpr"),
+				new Exports.QColumn(CSGenioAequip.FldBought, FieldType.LOGIC, Resources.Resources.BOUGHT32044, 1, 0, true),
+				new Exports.QColumn(CSGenioAroom1.FldRoomnr, FieldType.TEXT, Resources.Resources.N_R__ROOM43805, 10, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDtrefere, FieldType.DATETIME, Resources.Resources.REFERENCE28402, 16, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldFirst, FieldType.TEXT, Resources.Resources.FIRST42972, 10, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldBefore, FieldType.TEXT, Resources.Resources.BEFORE60156, 10, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldFollowin, FieldType.TEXT, Resources.Resources.FOLLOWING22170, 10, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldLast, FieldType.TEXT, Resources.Resources.LAST49207, 10, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldSitefabr, FieldType.TEXT, Resources.Resources.MANUFACTURER_S_WEBSI11084, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldLastpho, FieldType.IMAGE, Resources.Resources.LAST_PHOTO_ATTACHED43884, 3, 1, true):null,
 				new Exports.QColumn(CSGenioAequip.FldMoviment, FieldType.MEMO, Resources.Resources.DRIVES34119, 30, 2, true),
-				new Exports.QColumn(CSGenioAequip.FldQtdmovim, FieldType.NUMERO, Resources.Resources.QTD__MOVIMENTACOES28400, 10, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldQtdmovim, FieldType.NUMERIC, Resources.Resources.QTD__MOVIMENTACOES28400, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -244,8 +242,6 @@ namespace GenioMVC.ViewModels.Equip
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -393,8 +389,7 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("cmpny", "designat");
+					firstVisibleColumn ??= new FieldRef("cmpny", "designat");
 				}
 
 
@@ -442,6 +437,8 @@ namespace GenioMVC.ViewModels.Equip
 
 // USE /[MANUAL STY OVERRQ FULLCALENDAR]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -469,7 +466,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAequip> listing = Models.ModelBase.Where<CSGenioAequip>(m_userContext, false, sty_menu_fullcalendarConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLFULLCALENDAR", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAequip> listing = Models.ModelBase.Where<CSGenioAequip>(m_userContext, distinct, sty_menu_fullcalendarConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLFULLCALENDAR", true, true, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -564,6 +561,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -637,7 +636,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("ValLast", CSGenioAequip.FldLast, typeof(string)),
 			new TableSearchColumn("ValSitefabr", CSGenioAequip.FldSitefabr, typeof(string)),
 			new TableSearchColumn("ValMoviment", CSGenioAequip.FldMoviment, typeof(string)),
-			new TableSearchColumn("ValQtdmovim", CSGenioAequip.FldQtdmovim, typeof(decimal?))
+			new TableSearchColumn("ValQtdmovim", CSGenioAequip.FldQtdmovim, typeof(decimal?)),
 		];
 		protected void SetTicketToImageFields(Models.Equip row)
 		{

@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Regio;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER REGIO]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class RegioController : ControllerBase
 	{
-		public RegioController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public RegioController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION REGIO]/
 
 
@@ -210,6 +219,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Regia" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -223,6 +233,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Regio)
 			);
 		}
+
 
 
 		/// <summary>
@@ -240,6 +251,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Regia_on" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -253,6 +265,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Regio)
 			);
 		}
+
 
 
 		/// <summary>

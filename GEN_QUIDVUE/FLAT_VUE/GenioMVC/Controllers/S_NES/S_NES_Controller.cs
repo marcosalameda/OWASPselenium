@@ -21,6 +21,8 @@ using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER S_NES]/
@@ -29,7 +31,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class S_nesController : ControllerBase
 	{
-		public S_nesController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public S_nesController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION S_NES]/
 
 

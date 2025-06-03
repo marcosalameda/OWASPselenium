@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lcext;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LCEXT]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class LcextController : ControllerBase
 	{
-		public LcextController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public LcextController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION LCEXT]/
 
 
@@ -140,6 +149,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
 
 
 

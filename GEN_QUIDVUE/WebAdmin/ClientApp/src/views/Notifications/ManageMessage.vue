@@ -41,12 +41,14 @@
 					<q-control-wrapper class="row-line-group">
 						<base-input-structure
 							class="i-text">
-							<select-input
+							<q-select
 								v-if="Model"
 								v-model="Model.ValCodpmail"
-								:options="Model.TableEmailProperties"
+								item-value="Value"
+								item-label="Text"
+								:items="Model.TableEmailProperties"
 								:label="Resources.REMETENTE47685"
-								:isReadOnly="blockForm" />
+								:readonly="blockForm" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper class="row-line-group">
@@ -61,12 +63,14 @@
 					<q-control-wrapper class="row-line-group">
 						<base-input-structure
 							class="i-text">
-							<select-input
+							<q-select
 								v-if="Model"
 								v-model="Model.ValCoddestn"
-								:options="Model.TableAllowedDestinations"
+								item-value="Value"
+								item-label="Text"
+								:items="Model.TableAllowedDestinations"
 								:label="Resources.DESTINATARIO22298"
-								:isReadOnly="blockForm" />
+								:readonly="blockForm" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper class="row-line-group">
@@ -114,22 +118,26 @@
 					<q-control-wrapper class="row-line-group">
 						<base-input-structure
 							class="i-text">
-							<textarea-input
+							<q-text-area
 								v-model="Model.ValMensagem"
 								:label="Resources.MENSAGEM32641"
-								:isReadOnly="blockForm"
-								:rows="5" />
+								:readonly="blockForm"
+								:rows="5"
+								size="xxlarge"
+								autosize />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper class="row-line-group">
 						<base-input-structure
 							class="i-text">
-							<select-input
+							<q-select
 								v-if="Model"
 								v-model="Model.ValSelectedTag"
-								:options="Model.TableAllowedTags"
+								item-value="Value"
+								item-label="Text"
+								:items="Model.TableAllowedTags"
 								:label="Resources.TAGS54909"
-								:isReadOnly="blockForm" />
+								:readonly="blockForm" />
 							<q-button
 								:label="Resources.ADICIONAR17177"
 								:disabled="blockForm"
@@ -139,12 +147,14 @@
 					<q-control-wrapper class="row-line-group">
 						<base-input-structure
 							class="i-text">
-							<select-input
+							<q-select
 								v-if="Model"
 								v-model="Model.ValCodsigna"
-								:options="Model.TableEmailSignatures"
+								item-value="Value"
+								item-label="Text"
+								:items="Model.TableEmailSignatures"
 								:label="Resources.ASSINATURA_DE_EMAIL58979"
-								:isReadOnly="blockForm" />
+								:readonly="blockForm" />
 						</base-input-structure>
 					</q-control-wrapper>
 					<q-control-wrapper class="row-line-group">
@@ -190,12 +200,13 @@
 		<row class="footer-btn">
 			<q-button
 				v-if="Model.FormMode !== 3"
-				b-style="primary"
+				variant="bold"
 				:label="Resources.GRAVAR_CONFIGURACAO36308"
 				@click="SaveMessage" />
 			<q-button
 				v-else
-				b-style="danger"
+				variant="bold"
+				color="danger"
 				:label="Resources.APAGAR04097"
 				@click="SaveMessage" />
 			<q-button

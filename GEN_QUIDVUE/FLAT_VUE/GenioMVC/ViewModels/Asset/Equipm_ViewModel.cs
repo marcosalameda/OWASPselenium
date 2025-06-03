@@ -435,7 +435,7 @@ namespace GenioMVC.ViewModels.Asset
 
 			validator.StringLength("ValName", Resources.Resources.IDENTIFICATION_NAME16317, ValName, 85);
 
-			validator.Required("ValAssettyp", Resources.Resources.ASSET_TYPE02033, ViewModelConversion.ToString(ValAssettyp), FieldType.ARRAY_COD_TEXTO.Formatting);
+			validator.Required("ValAssettyp", Resources.Resources.ASSET_TYPE02033, ViewModelConversion.ToString(ValAssettyp), FieldType.ARRAY_TEXT.GetFormatting());
 			validator.StringLength("ValGrai", Resources.Resources.GRAI___GLOBAL_RETURN06821, ValGrai, 50);
 			validator.StringLength("ValGiai", Resources.Resources.GIAI___GLOBAL_INDIVI63214, ValGiai, 50);
 
@@ -594,7 +594,7 @@ namespace GenioMVC.ViewModels.Asset
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -641,7 +641,7 @@ namespace GenioMVC.ViewModels.Asset
 				// Fill List fields
 				this.ValCodmanuf = ViewModelConversion.ToString(row["manuf.codentit"]);
 				TableManufName.Value = (string)row["manuf.name"];
-				if (GlobalFunctions.emptyG(this.ValCodmanuf) == 1)
+				if (GenFunctions.emptyG(this.ValCodmanuf) == 1)
 				{
 					this.ValCodmanuf = "";
 					TableManufName.Value = "";
@@ -784,7 +784,7 @@ namespace GenioMVC.ViewModels.Asset
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -831,7 +831,7 @@ namespace GenioMVC.ViewModels.Asset
 				// Fill List fields
 				this.ValCodkinde = ViewModelConversion.ToString(row["kinde.codkinde"]);
 				TableKindeDesignat.Value = (string)row["kinde.designat"];
-				if (GlobalFunctions.emptyG(this.ValCodkinde) == 1)
+				if (GenFunctions.emptyG(this.ValCodkinde) == 1)
 				{
 					this.ValCodkinde = "";
 					TableKindeDesignat.Value = "";

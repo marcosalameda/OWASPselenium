@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAsale(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR SALE]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codvenda", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codvenda", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codorgan", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codorgan", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "";
 
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("nrlide", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "nrlide", FieldType.NUMERIC);
 			Qfield.FieldDescription = "leadership numb";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 10;
 			Qfield.CavDesignation = "LEADERSHIP_NUMB16426";
 
@@ -78,200 +73,180 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("startdt", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "startdt", FieldType.DATETIME);
 			Qfield.FieldDescription = "Beginning";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "BEGINNING18124";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("identifi", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "identifi", FieldType.TEXT);
 			Qfield.FieldDescription = "Identification of business opportunity";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "IDENTIFICATION_OF_BU58085";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("potcompr", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "potcompr", FieldType.TEXT);
 			Qfield.FieldDescription = "Potential Buyers";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "POTENTIAL_BUYERS56564";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("prospecc", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "prospecc", FieldType.LOGIC);
 			Qfield.FieldDescription = "Prospecting carried out";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "PROSPECTING_CARRIED_08979";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("interess", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "interess", FieldType.LOGIC);
 			Qfield.FieldDescription = "Interested";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "INTERESTED34576";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("semrfina", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "semrfina", FieldType.LOGIC);
 			Qfield.FieldDescription = "Without financial resources";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "WITHOUT_FINANCIAL_RE07914";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("semcapac", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "semcapac", FieldType.LOGIC);
 			Qfield.FieldDescription = "No decision-making power";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "NO_DECISION_MAKING_P36615";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtqualif", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtqualif", FieldType.DATETIME);
 			Qfield.FieldDescription = "Qualification";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "QUALIFICATION64257";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("qualific", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "qualific", FieldType.LOGIC);
 			Qfield.FieldDescription = "Qualification carried out";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "QUALIFICATION_CARRIE05255";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("preabord", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "preabord", FieldType.DATETIME);
 			Qfield.FieldDescription = "Pre-approach";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "PRE_APPROACH58979";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("homework", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "homework", FieldType.LOGIC);
 			Qfield.FieldDescription = "Homework done";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "HOMEWORK_DONE45166";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtaborda", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtaborda", FieldType.DATETIME);
 			Qfield.FieldDescription = "Approach";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "APPROACH06577";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("approach", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "approach", FieldType.LOGIC);
 			Qfield.FieldDescription = "Abordagem efectuada";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ABORDAGEM_EFECTUADA60152";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("apresent", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "apresent", FieldType.LOGIC);
 			Qfield.FieldDescription = "Presentation";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "PRESENTATION64246";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtaprese", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtaprese", FieldType.DATETIME);
 			Qfield.FieldDescription = "Presentation made";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "PRESENTATION_MADE15117";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtsupera", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtsupera", FieldType.DATETIME);
 			Qfield.FieldDescription = "Overcome objections";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "OVERCOME_OBJECTIONS61930";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("tentfech", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "tentfech", FieldType.DATETIME);
 			Qfield.FieldDescription = "Closing attempts";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CLOSING_ATTEMPTS40059";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtvenda", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtvenda", FieldType.DATETIME);
 			Qfield.FieldDescription = "Closing of the sale";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CLOSING_OF_THE_SALE05493";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("dtacompa", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "dtacompa", FieldType.DATETIME);
 			Qfield.FieldDescription = "Follow-up";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "FOLLOW_UP22119";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("showrcrd", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "showrcrd", FieldType.LOGIC);
 			Qfield.FieldDescription = "Show Record";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "SHOW_RECORD11620";
 
@@ -279,9 +254,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -354,8 +328,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Sale";
 			info.AreaPluralDesignation="Sales";
 			info.DescriptionCav="SALE02786";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

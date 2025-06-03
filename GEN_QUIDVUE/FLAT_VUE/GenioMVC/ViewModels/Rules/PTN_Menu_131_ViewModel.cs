@@ -88,33 +88,6 @@ namespace GenioMVC.ViewModels.Rules
 			return crs;
 		}
 
-
-		public string ValTipocond { get; set; }
-
-		public string ValLocal { get; set; }
-
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param
-		private void SetViewModelValue(string fullFieldName, object value)
-		{
-			if (string.IsNullOrEmpty(fullFieldName))
-				return;
-
-			switch (fullFieldName)
-			{
-				case "rules.tipocond":
-					ValTipocond = ViewModelConversion.ToString(value);
-					break;
-				case "rules.local":
-					ValLocal = ViewModelConversion.ToString(value);
-					break;
-			}
-		}
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -174,9 +147,9 @@ namespace GenioMVC.ViewModels.Rules
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArules.FldTipocond, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TIPO_DE_CONDICAO09986, 1, 0, true, "tipoCond"),
-				new Exports.QColumn(CSGenioArules.FldDescript, FieldType.TEXTO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
-				new Exports.QColumn(CSGenioArules.FldLocal, FieldType.ARRAY_COD_TEXTO, Resources.Resources.LOCAL_ONDE_EXECUTA12798, 1, 0, true, "aLocRegr"),
+				new Exports.QColumn(CSGenioArules.FldTipocond, FieldType.ARRAY_TEXT, Resources.Resources.TIPO_DE_CONDICAO09986, 1, 0, true, "tipoCond"),
+				new Exports.QColumn(CSGenioArules.FldDescript, FieldType.TEXT, Resources.Resources.DESCRIPTION07383, 30, 0, true),
+				new Exports.QColumn(CSGenioArules.FldLocal, FieldType.ARRAY_TEXT, Resources.Resources.LOCAL_ONDE_EXECUTA12798, 1, 0, true, "aLocRegr"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -239,8 +212,6 @@ namespace GenioMVC.ViewModels.Rules
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -379,8 +350,7 @@ namespace GenioMVC.ViewModels.Rules
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("rules", "tipocond");
+					firstVisibleColumn ??= new FieldRef("rules", "tipocond");
 				}
 
 
@@ -409,6 +379,8 @@ namespace GenioMVC.ViewModels.Rules
 
 // USE /[MANUAL PTN OVERRQ 131]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -436,7 +408,7 @@ namespace GenioMVC.ViewModels.Rules
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArules> listing = Models.ModelBase.Where<CSGenioArules>(m_userContext, false, ptn_menu_131Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML131", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArules> listing = Models.ModelBase.Where<CSGenioArules>(m_userContext, distinct, ptn_menu_131Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML131", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -517,6 +489,8 @@ namespace GenioMVC.ViewModels.Rules
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -544,43 +518,11 @@ namespace GenioMVC.ViewModels.Rules
 		/// <inheritdoc />
 		public override void MapFromModel(Models.Rules m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map Model (Rules) to ViewModel (PTN_Menu_131) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				ValTipocond = ViewModelConversion.ToString(m.ValTipocond);
-				ValLocal = ViewModelConversion.ToString(m.ValLocal);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map Model (Rules) to ViewModel (PTN_Menu_131) - Error during mapping.");
-				throw;
-			}
 		}
 
 		/// <inheritdoc />
 		public override void MapToModel(Models.Rules m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (PTN_Menu_131) to Model (Rules) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				m.ValTipocond = ViewModelConversion.ToString(ValTipocond);
-				m.ValLocal = ViewModelConversion.ToString(ValLocal);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (PTN_Menu_131) to Model (Rules) - Error during mapping.");
-				throw;
-			}
 		}
 
 		#endregion
@@ -600,7 +542,7 @@ namespace GenioMVC.ViewModels.Rules
 		[
 			new TableSearchColumn("ValTipocond", CSGenioArules.FldTipocond, typeof(string), array : "tipoCond"),
 			new TableSearchColumn("ValDescript", CSGenioArules.FldDescript, typeof(string)),
-			new TableSearchColumn("ValLocal", CSGenioArules.FldLocal, typeof(string), array : "aLocRegr")
+			new TableSearchColumn("ValLocal", CSGenioArules.FldLocal, typeof(string), array : "aLocRegr"),
 		];
 	}
 }

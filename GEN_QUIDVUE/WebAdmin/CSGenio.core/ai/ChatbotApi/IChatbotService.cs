@@ -1,6 +1,7 @@
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace CSGenio.core.ai
 {
@@ -16,6 +17,18 @@ namespace CSGenio.core.ai
         /// Gets a stream response from the chatbot service
         /// </summary>
         Task<Stream> GetChatbotStreamAsync(Stream requestData);
+		
+		/// <summary>
+        /// Gets a stream response from the chatbot service(formdata handling)
+        /// </summary
+        Task<Stream> GetChatbotStreamAsync(
+            IEnumerable<KeyValuePair<string, string>> fields,
+            IEnumerable<(string FileName, string ContentType, Stream Content)> files);
+			
+        /// <summary>
+        /// Gets the respective file from the chatbot server
+        /// </summary
+        Task<Stream> GetChatbotFileAsync(string fileName, HttpMethod method);
 		
         /// <summary>
         /// Makes a function call to the chatbot service and returns the result of type T

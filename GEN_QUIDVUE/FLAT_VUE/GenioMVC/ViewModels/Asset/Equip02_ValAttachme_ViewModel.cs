@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Asset
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodasset { get; set; }
+		public string AssetValCodasset { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Asset
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Asset
 		/// <param name="userContext">The current user request context</param>
 		public Equip02_ValAttachme_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodasset = userContext.CurrentNavigation.CurrentLevel.GetEntry("asset")?.ToString();
+			AssetValCodasset = userContext.CurrentNavigation.CurrentLevel.GetEntry("asset")?.ToString();
 		}
 
 		/// <summary>
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Asset
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAattac.FldAttached, FieldType.DATAHORA, Resources.Resources.ATTACHED26247, 16, 0, true),
+				new Exports.QColumn(CSGenioAattac.FldAttached, FieldType.DATETIME, Resources.Resources.ATTACHED26247, 16, 0, true),
 				new Exports.QColumn(CSGenioAattac.FldNote, FieldType.MEMO, Resources.Resources.NOTE54557, 30, 2, true),
-				new Exports.QColumn(CSGenioAattac.FldDocument, FieldType.FICHEIRO_BD, Resources.Resources.DOCUMENT00695, 30, 0, true),
+				new Exports.QColumn(CSGenioAattac.FldDocument, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -195,10 +194,8 @@ namespace GenioMVC.ViewModels.Asset
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodasset != null)
-				crs.Equal(CSGenioAattac.FldCodasset, this.ValCodasset);
-
-
+			if (this.AssetValCodasset != null)
+				crs.Equal(CSGenioAattac.FldCodasset, this.AssetValCodasset);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -344,8 +341,7 @@ namespace GenioMVC.ViewModels.Asset
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("attac", "attached");
+					firstVisibleColumn ??= new FieldRef("attac", "attached");
 				}
 
 
@@ -374,6 +370,8 @@ namespace GenioMVC.ViewModels.Asset
 
 // USE /[MANUAL GQT OVERRQ EQUIP02_PSEUDATTACHME]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -401,7 +399,7 @@ namespace GenioMVC.ViewModels.Asset
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAattac> listing = Models.ModelBase.Where<CSGenioAattac>(m_userContext, false, equip02_pseudattachmeConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP02_PSEUDATTACHME", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAattac> listing = Models.ModelBase.Where<CSGenioAattac>(m_userContext, distinct, equip02_pseudattachmeConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP02_PSEUDATTACHME", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -481,6 +479,8 @@ namespace GenioMVC.ViewModels.Asset
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -553,7 +553,7 @@ namespace GenioMVC.ViewModels.Asset
 		[
 			new TableSearchColumn("ValAttached", CSGenioAattac.FldAttached, typeof(DateTime?), defaultSearch : true),
 			new TableSearchColumn("ValNote", CSGenioAattac.FldNote, typeof(string)),
-			new TableSearchColumn("ValDocument", CSGenioAattac.FldDocument, typeof(string))
+			new TableSearchColumn("ValDocument", CSGenioAattac.FldDocument, typeof(string)),
 		];
 	}
 }

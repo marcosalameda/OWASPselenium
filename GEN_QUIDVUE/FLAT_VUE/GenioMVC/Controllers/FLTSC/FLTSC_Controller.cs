@@ -21,6 +21,8 @@ using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER FLTSC]/
@@ -29,7 +31,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class FltscController : ControllerBase
 	{
-		public FltscController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public FltscController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION FLTSC]/
 
 

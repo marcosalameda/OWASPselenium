@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.City
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,8 +147,8 @@ namespace GenioMVC.ViewModels.City
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAcity.FldCity, FieldType.TEXTO, Resources.Resources.CITY42505, 30, 0, true),
-				new Exports.QColumn(CSGenioActry.FldCountry, FieldType.TEXTO, Resources.Resources.COUNTRY64133, 30, 0, true),
+				new Exports.QColumn(CSGenioAcity.FldCity, FieldType.TEXT, Resources.Resources.CITY42505, 30, 0, true),
+				new Exports.QColumn(CSGenioActry.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -213,8 +211,6 @@ namespace GenioMVC.ViewModels.City
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -361,8 +357,7 @@ namespace GenioMVC.ViewModels.City
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("city", "city");
+					firstVisibleColumn ??= new FieldRef("city", "city");
 				}
 
 
@@ -391,6 +386,8 @@ namespace GenioMVC.ViewModels.City
 
 // USE /[MANUAL TRN OVERRQ T12CITY]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -418,7 +415,7 @@ namespace GenioMVC.ViewModels.City
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAcity> listing = Models.ModelBase.Where<CSGenioAcity>(m_userContext, false, trn_menu_t12cityConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT12CITY", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAcity> listing = Models.ModelBase.Where<CSGenioAcity>(m_userContext, distinct, trn_menu_t12cityConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT12CITY", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -501,6 +498,8 @@ namespace GenioMVC.ViewModels.City
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -551,7 +550,7 @@ namespace GenioMVC.ViewModels.City
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValCity", CSGenioAcity.FldCity, typeof(string), defaultSearch : true),
-			new TableSearchColumn("Ctry_ValCountry", CSGenioActry.FldCountry, typeof(string))
+			new TableSearchColumn("Ctry_ValCountry", CSGenioActry.FldCountry, typeof(string)),
 		];
 	}
 }

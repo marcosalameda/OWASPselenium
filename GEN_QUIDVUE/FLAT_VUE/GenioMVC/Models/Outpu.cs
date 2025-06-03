@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Outpu.ValLine")]
 		[NumericAttribute(1)]
-		public decimal? ValLine { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDecimal(value); } }
+		public decimal? ValLine { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLine, 1)); } set { klass.ValLine = Convert.ToDecimal(value); } }
 
 		[DisplayName(">WAREHOUSE")]
 		/// <summary>Field : ">WAREHOUSE" Tipo: "CE" Formula: DF "[OUTPT->CODWAREH]"</summary>
@@ -131,7 +131,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Qtd output" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Outpu.ValExitqnty")]
 		[NumericAttribute(0)]
-		public decimal? ValExitqnty { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExitqnty, 0)); } set { klass.ValExitqnty = Convert.ToDecimal(value); } }
+		public decimal? ValExitqnty { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValExitqnty, 0)); } set { klass.ValExitqnty = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Outpu.ValZzstate")]

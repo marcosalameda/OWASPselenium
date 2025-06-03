@@ -598,7 +598,7 @@ namespace GenioMVC.ViewModels.Entit
 
 			validator.StringLength("ValName", Resources.Resources.LEGAL_NAME42902, ValName, 85);
 
-			validator.Required("ValName", Resources.Resources.LEGAL_NAME42902, ViewModelConversion.ToString(ValName), FieldType.TEXTO.Formatting);
+			validator.Required("ValName", Resources.Resources.LEGAL_NAME42902, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValInitials", Resources.Resources.COMPANY_INITIALS56204, ValInitials, 10);
 			validator.StringLength("ValRegistra", Resources.Resources.LEGAL_REGISTRATION04413, ValRegistra, 30);
 			validator.StringLength("ValTaxnumbe", Resources.Resources.VAT_NUMBER24236, ValTaxnumbe, 30);
@@ -771,7 +771,7 @@ namespace GenioMVC.ViewModels.Entit
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -818,7 +818,7 @@ namespace GenioMVC.ViewModels.Entit
 				// Fill List fields
 				this.ValFirstfacilitie = ViewModelConversion.ToString(row["faci1.codfacil"]);
 				TableFaci1Name.Value = (string)row["faci1.name"];
-				if (GlobalFunctions.emptyG(this.ValFirstfacilitie) == 1)
+				if (GenFunctions.emptyG(this.ValFirstfacilitie) == 1)
 				{
 					this.ValFirstfacilitie = "";
 					TableFaci1Name.Value = "";
@@ -961,7 +961,7 @@ namespace GenioMVC.ViewModels.Entit
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -1008,7 +1008,7 @@ namespace GenioMVC.ViewModels.Entit
 				// Fill List fields
 				this.ValLastfacilitie = ViewModelConversion.ToString(row["faci2.codfacil"]);
 				TableFaci2Name.Value = (string)row["faci2.name"];
-				if (GlobalFunctions.emptyG(this.ValLastfacilitie) == 1)
+				if (GenFunctions.emptyG(this.ValLastfacilitie) == 1)
 				{
 					this.ValLastfacilitie = "";
 					TableFaci2Name.Value = "";

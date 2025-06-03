@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Pess1
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,14 +148,14 @@ namespace GenioMVC.ViewModels.Pess1
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioApess1.FldGender, FieldType.ARRAY_COD_TEXTO, Resources.Resources.GENUS37471, 1, 0, true, "Genero"),
-				new Exports.QColumn(CSGenioApess1.FldDtnascim, FieldType.DATA, Resources.Resources.BIRTH21799, 8, 0, true),
-				new Exports.QColumn(CSGenioApess1.FldIdade, FieldType.NUMERO, Resources.Resources.AGE28663, 5, 0, true),
-				new Exports.QColumn(CSGenioApess1.FldIdfuncio, FieldType.NUMERO, Resources.Resources.OFFICIAL_NO_34819, 6, 0, true),
-				new Exports.QColumn(CSGenioApess1.FldTelephon, FieldType.TEXTO, Resources.Resources.PHONE56703, 20, 0, true),
-				new Exports.QColumn(CSGenioApess1.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioApess1.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioApess1.FldGender, FieldType.ARRAY_TEXT, Resources.Resources.GENUS37471, 1, 0, true, "Genero"),
+				new Exports.QColumn(CSGenioApess1.FldDtnascim, FieldType.DATE, Resources.Resources.BIRTH21799, 8, 0, true),
+				new Exports.QColumn(CSGenioApess1.FldIdade, FieldType.NUMERIC, Resources.Resources.AGE28663, 5, 0, true),
+				new Exports.QColumn(CSGenioApess1.FldIdfuncio, FieldType.NUMERIC, Resources.Resources.OFFICIAL_NO_34819, 6, 0, true),
+				new Exports.QColumn(CSGenioApess1.FldTelephon, FieldType.TEXT, Resources.Resources.PHONE56703, 20, 0, true),
+				new Exports.QColumn(CSGenioApess1.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioApess1.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -220,8 +218,6 @@ namespace GenioMVC.ViewModels.Pess1
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -368,8 +364,7 @@ namespace GenioMVC.ViewModels.Pess1
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("pess1", "name");
+					firstVisibleColumn ??= new FieldRef("pess1", "name");
 				}
 
 
@@ -398,6 +393,8 @@ namespace GenioMVC.ViewModels.Pess1
 
 // USE /[MANUAL PTN OVERRQ 5211]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -425,7 +422,7 @@ namespace GenioMVC.ViewModels.Pess1
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApess1> listing = Models.ModelBase.Where<CSGenioApess1>(m_userContext, false, ptn_menu_5211Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML5211", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApess1> listing = Models.ModelBase.Where<CSGenioApess1>(m_userContext, distinct, ptn_menu_5211Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML5211", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -506,6 +503,8 @@ namespace GenioMVC.ViewModels.Pess1
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -562,7 +561,7 @@ namespace GenioMVC.ViewModels.Pess1
 			new TableSearchColumn("ValIdade", CSGenioApess1.FldIdade, typeof(decimal?)),
 			new TableSearchColumn("ValIdfuncio", CSGenioApess1.FldIdfuncio, typeof(decimal?)),
 			new TableSearchColumn("ValTelephon", CSGenioApess1.FldTelephon, typeof(string)),
-			new TableSearchColumn("ValEmail", CSGenioApess1.FldEmail, typeof(string))
+			new TableSearchColumn("ValEmail", CSGenioApess1.FldEmail, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Pess1 row)
 		{

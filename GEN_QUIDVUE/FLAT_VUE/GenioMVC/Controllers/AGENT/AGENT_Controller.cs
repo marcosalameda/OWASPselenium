@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Agent;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER AGENT]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class AgentController : ControllerBase
 	{
-		public AgentController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public AgentController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION AGENT]/
 
 
@@ -42,6 +51,7 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER AGENT]/
+
 
 
 
@@ -61,6 +71,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Agent02" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -74,6 +85,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Agent)
 			);
 		}
+
 
 
 		/// <summary>

@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Rordf
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,8 +147,8 @@ namespace GenioMVC.ViewModels.Rordf
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArordf.FldOrder, FieldType.NUMERO, Resources.Resources.ORDER39632, 10, 1, true),
-				new Exports.QColumn(CSGenioArordf.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioArordf.FldOrder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 10, 1, true),
+				new Exports.QColumn(CSGenioArordf.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -213,8 +211,6 @@ namespace GenioMVC.ViewModels.Rordf
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -361,8 +357,7 @@ namespace GenioMVC.ViewModels.Rordf
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("rordf", "order");
+					firstVisibleColumn ??= new FieldRef("rordf", "order");
 				}
 
 
@@ -391,6 +386,8 @@ namespace GenioMVC.ViewModels.Rordf
 
 // USE /[MANUAL PTN OVERRQ 411]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -418,7 +415,7 @@ namespace GenioMVC.ViewModels.Rordf
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArordf> listing = Models.ModelBase.Where<CSGenioArordf>(m_userContext, false, ptn_menu_411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArordf> listing = Models.ModelBase.Where<CSGenioArordf>(m_userContext, distinct, ptn_menu_411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -499,6 +496,8 @@ namespace GenioMVC.ViewModels.Rordf
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -565,7 +564,7 @@ namespace GenioMVC.ViewModels.Rordf
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValOrder", CSGenioArordf.FldOrder, typeof(decimal?)),
-			new TableSearchColumn("ValTitle", CSGenioArordf.FldTitle, typeof(string))
+			new TableSearchColumn("ValTitle", CSGenioArordf.FldTitle, typeof(string)),
 		];
 	}
 }

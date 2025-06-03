@@ -83,13 +83,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Age" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess3.ValIdade")]
 		[NumericAttribute(0)]
-		public decimal? ValIdade { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdade, 0)); } set { klass.ValIdade = Convert.ToDecimal(value); } }
+		public decimal? ValIdade { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValIdade, 0)); } set { klass.ValIdade = Convert.ToDecimal(value); } }
 
 		[DisplayName("Official No.")]
 		/// <summary>Field : "Official No." Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess3.ValIdfuncio")]
 		[NumericAttribute(0)]
-		public decimal? ValIdfuncio { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIdfuncio, 0)); } set { klass.ValIdfuncio = Convert.ToDecimal(value); } }
+		public decimal? ValIdfuncio { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValIdfuncio, 0)); } set { klass.ValIdfuncio = Convert.ToDecimal(value); } }
 
 		[DisplayName("Phone")]
 		/// <summary>Field : "Phone" Tipo: "C" Formula:  ""</summary>
@@ -171,7 +171,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Minimum zoom to load features" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess3.ValExtminzm")]
 		[NumericAttribute(0)]
-		public decimal? ValExtminzm { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValExtminzm, 0)); } set { klass.ValExtminzm = Convert.ToDecimal(value); } }
+		public decimal? ValExtminzm { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValExtminzm, 0)); } set { klass.ValExtminzm = Convert.ToDecimal(value); } }
 
 		[DisplayName("Map height")]
 		/// <summary>Field : "Map height" Tipo: "C" Formula:  ""</summary>
@@ -182,13 +182,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Zoom level" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess3.ValZoomlvl")]
 		[NumericAttribute(0)]
-		public decimal? ValZoomlvl { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValZoomlvl, 0)); } set { klass.ValZoomlvl = Convert.ToDecimal(value); } }
+		public decimal? ValZoomlvl { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValZoomlvl, 0)); } set { klass.ValZoomlvl = Convert.ToDecimal(value); } }
 
 		[DisplayName("Outline weight")]
 		/// <summary>Field : "Outline weight" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Pess3.ValOutweigh")]
 		[NumericAttribute(0)]
-		public decimal? ValOutweigh { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutweigh, 0)); } set { klass.ValOutweigh = Convert.ToDecimal(value); } }
+		public decimal? ValOutweigh { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOutweigh, 0)); } set { klass.ValOutweigh = Convert.ToDecimal(value); } }
 
 		[DisplayName("Polyline color")]
 		/// <summary>Field : "Polyline color" Tipo: "C" Formula:  ""</summary>
@@ -249,6 +249,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Allow exporting map" Tipo: "L" Formula:  ""</summary>
 		[ShouldSerialize("Pess3.ValCanexpor")]
 		public bool ValCanexpor { get { return Convert.ToBoolean(klass.ValCanexpor); } set { klass.ValCanexpor = Convert.ToInt32(value); } }
+
+		[DisplayName("Resume")]
+		/// <summary>Field : "Curriculum" Tipo: "IB" Formula:  ""</summary>
+		[ShouldSerialize("Pess3.ValCurricul")]
+		[Document("ValCurricul", true, false, false)]
+		public string ValCurricul { get { return klass.ValCurricul; } set { klass.ValCurricul = value; } }
+		public string ValCurriculfk { get { return klass.ValCurriculfk; } set { klass.ValCurriculfk = value; } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Pess3.ValZzstate")]

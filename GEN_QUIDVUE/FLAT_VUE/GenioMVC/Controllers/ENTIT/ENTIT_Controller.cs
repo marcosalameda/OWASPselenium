@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Entit;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER ENTIT]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class EntitController : ControllerBase
 	{
-		public EntitController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public EntitController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION ENTIT]/
 
 
@@ -177,6 +186,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Entit" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -190,6 +200,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Entit)
 			);
 		}
+
 
 
 		/// <summary>

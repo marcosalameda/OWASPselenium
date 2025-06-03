@@ -247,7 +247,7 @@ namespace GenioMVC.Controllers
 				var properties = from p in queryParameters.GetType().GetProperties()
 								 where p.GetValue(queryParameters, null) != null
 								 select p.Name + "=" + System.Web.HttpUtility.UrlEncode(p.GetValue(queryParameters, null).ToString());
-				queryString = String.Join("&", properties.ToArray());
+				queryString = string.Join("&", properties.ToArray());
 			}
 
 			return AbsoluteUrlUtils.RelativeToAbsolute(Request, $"{Request.PathBase}/#/{culture}{systemAndModule}{page}?{queryString}");
@@ -278,14 +278,14 @@ namespace GenioMVC.Controllers
 
 		protected ActionResult ClientSideRedirect(string endpoint, bool captureHash = false)
 		{
-            endpoint = AbsoluteUrlUtils.RelativeToAbsolute(Request, endpoint);
-            endpoint = System.Web.HttpUtility.JavaScriptStringEncode(endpoint);
+			endpoint = AbsoluteUrlUtils.RelativeToAbsolute(Request, endpoint);
+			endpoint = System.Web.HttpUtility.JavaScriptStringEncode(endpoint);
 			string hashscript = "'";
-			if(captureHash)
+			if (captureHash)
 				hashscript = "?' + window.location.hash.substring(1);";
-            return Content("<script>window.location='" + endpoint + hashscript + "</script>", "text/html");
-        }
-    }
+			return Content("<script>window.location='" + endpoint + hashscript + "</script>", "text/html");
+		}
+	}
 
 	/// <summary>
 	/// Base class for the controllers
@@ -350,9 +350,9 @@ namespace GenioMVC.Controllers
 					ModelState.AddModelError(field, errorMessage);
 		}
 
-		private string HandleException(Exception e)
+		protected string HandleException(Exception e, string defaultMsg = null)
 		{
-			//JGF 2020.12.10 Added multi exception check for multiple write condition errors
+			// JGF 2020.12.10 Added multi exception check for multiple write condition errors
 			if (e is FieldValidationException fvExc)
 			{
 				foreach (var message in fvExc.StatusMessage.GetErrorList())
@@ -361,11 +361,9 @@ namespace GenioMVC.Controllers
 				return fvExc.UserMessage;
 			}
 
-			string exceptionUserMessage;
+			string exceptionUserMessage = defaultMsg ?? Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 			if (e is GenioException gExc && gExc.UserMessage != null)
 				exceptionUserMessage = Translations.Get(gExc.UserMessage, UserContext.Current.User.Language);
-			else
-				exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 
 			ModelState.AddModelError("Erro", exceptionUserMessage);
 			return exceptionUserMessage;
@@ -411,6 +409,92 @@ namespace GenioMVC.Controllers
 				Navigation.CurrentLevel.ClearEntries();
 		}
 
+		private StatusMessage Validate(ICrudViewModel model, EventSink sink, FormMode mode, Func<StatusMessage> checkFormConds, string id = null, bool loadModel = true, bool validateModel = true)
+		{
+			var sp = UserContext.Current.PersistentSupport;
+			bool connWasClosed = sp.ConnectionIsClosed;
+
+			try
+			{
+				// Check table permissions.
+				StatusMessage permission = model.CheckPermissions(mode);
+
+				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
+				if (permission.HasError)
+					return permission;
+
+				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
+				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
+				// In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping also
+				// allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
+				if (loadModel)
+				{
+					model.LoadModel(id);
+
+					if (validateModel)
+					{
+						// Recalculation of the formulas may need the connection to the database to be open (for example, in formulas that use functions that have SQL queries).
+						// Therefore, we must open the connection before the 'executeModelFormulas' call.
+						if (connWasClosed)
+							sp.openConnection();
+
+						model.MapToModel();
+						model.ExecuteModelFormulas();
+
+						if (connWasClosed)
+							sp.closeConnection();
+					}
+				}
+
+				// Check form conditions.
+				permission.MergeStatusMessage(checkFormConds?.Invoke());
+
+				if (permission.HasError)
+					return permission;
+
+				if (loadModel && validateModel)
+				{
+					ValidateModel(model);
+
+					if (!ModelState.IsValid)
+						throw new BusinessException(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182, sink.MethodName, "The model isn't valid.");
+				}
+
+				return permission;
+			}
+			catch
+			{
+				if (connWasClosed)
+					sp.closeConnection();
+				throw;
+			}
+		}
+
+		protected StatusMessage ValidateView(ICrudViewModel model, EventSink sink, string id = null)
+		{
+			return Validate(model, sink, FormMode.Show, model.ViewConditions, id, validateModel: false);
+		}
+
+		protected StatusMessage ValidateEdit(ICrudViewModel model, EventSink sink, string id = null)
+		{
+			return Validate(model, sink, FormMode.Edit, model.UpdateConditions, id);
+		}
+
+		protected StatusMessage ValidateDelete(ICrudViewModel model, EventSink sink, string id = null)
+		{
+			return Validate(model, sink, FormMode.Delete, model.DeleteConditions, id, validateModel: false);
+		}
+
+		protected StatusMessage ValidateDuplicate(ICrudViewModel model, EventSink sink, string id = null, bool loadModel = true)
+		{
+			return Validate(model, sink, FormMode.Duplicate, model.InsertConditions, id, loadModel);
+		}
+
+		protected StatusMessage ValidateInsert(ICrudViewModel model, EventSink sink, string id = null, bool loadModel = true)
+		{
+			return Validate(model, sink, FormMode.New, model.InsertConditions, id, loadModel);
+		}
+
 		protected JsonNetResult GenericHandleGetFormShow(EventSink sink, ICrudViewModel model, string id)
 		{
 			SanitizeHistoryEntries(id, sink.AreaName);
@@ -422,20 +506,8 @@ namespace GenioMVC.Controllers
 
 			model.setModes(Request.Query["m"]);
 
-			// Check table permissions
-			var permission = model.CheckPermissions(FormMode.Show);
-
-			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
-				return PermissionError(permission.Message);
-
-			// Read the model from the database
-			model.LoadModel(id);
-
-			// Check form conditions
-			permission.MergeStatusMessage(model.ViewConditions());
-
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			StatusMessage permission = ValidateView(model, sink, id);
+			if (permission.HasError)
 				return PermissionError(permission.Message);
 
 			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + Navigation.CurrentLevel.Location.ShortDescription());
@@ -489,17 +561,8 @@ namespace GenioMVC.Controllers
 
 			model.setModes(Request.Query["m"]);
 
-			// Check table permissions
-			var permission = model.CheckPermissions(FormMode.New);
-
-			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
-				return PermissionError(permission.Message);
-
-			// Check form conditions
-			permission.MergeStatusMessage(model.InsertConditions());
-
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			StatusMessage permission = ValidateInsert(model, sink, id, false);
+			if (permission.HasError)
 				return PermissionError(permission.Message);
 
 			//FOR: OVERRIDE SKIP IF JUST ONE
@@ -561,14 +624,9 @@ namespace GenioMVC.Controllers
 				sp.rollbackTransaction();
 				sp.closeConnection();
 
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
+				CSGenio.framework.Log.Error(sink.MethodName + " - " + e.Message);
 
-				ErrorMessage(exceptionUserMessage);
-				CSGenio.framework.Log.Error( sink.MethodName + " - " + e.Message);
-
-				return JsonERROR(exceptionUserMessage);
+				return JsonERROR(HandleException(e));
 			}
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
@@ -589,10 +647,10 @@ namespace GenioMVC.Controllers
 			model.setModes(Request.Query["m"]);
 
 			// Check table permissions
-			var permission = model.CheckPermissions(FormMode.Edit);
+			StatusMessage permission = model.CheckPermissions(FormMode.Edit);
 
 			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			if (permission.HasError)
 				return PermissionError(permission.Message);
 
 			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + Navigation.CurrentLevel.Location.ShortDescription());
@@ -637,7 +695,7 @@ namespace GenioMVC.Controllers
 			// Check form conditions
 			permission.MergeStatusMessage(model.UpdateConditions());
 
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			if (permission.HasError)
 				return PermissionError(permission.Message);
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
@@ -658,10 +716,10 @@ namespace GenioMVC.Controllers
 			model.setModes(Request.Query["m"]);
 
 			// Check table permissions
-			var permission = model.CheckPermissions(FormMode.Delete);
+			StatusMessage permission = model.CheckPermissions(FormMode.Delete);
 
 			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			if (permission.HasError)
 				return PermissionError(permission.Message);
 
 			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + Navigation.CurrentLevel.Location.ShortDescription());
@@ -695,7 +753,7 @@ namespace GenioMVC.Controllers
 			// Check form conditions
 			permission.MergeStatusMessage(model.DeleteConditions());
 
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			if (permission.HasError)
 				return PermissionError(permission.Message);
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
@@ -715,17 +773,8 @@ namespace GenioMVC.Controllers
 
 			model.setModes(Request.Query["m"]);
 
-			// Check table permissions
-			var permission = model.CheckPermissions(FormMode.Duplicate);
-
-			// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
-				return PermissionError(permission.Message);
-
-			// Check form conditions
-			permission.MergeStatusMessage(model.InsertConditions());
-
-			if (permission.Status.Equals(CSGenio.framework.Status.E))
+			StatusMessage permission = ValidateDuplicate(model, sink, id, false);
+			if (permission.HasError)
 				return PermissionError(permission.Message);
 
 			CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + Navigation.CurrentLevel.Location.ShortDescription());
@@ -773,13 +822,7 @@ namespace GenioMVC.Controllers
 				sp.rollbackTransaction();
 				sp.closeConnection();
 
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				ErrorMessage(exceptionUserMessage);
-
-				return JsonOK(model);
+				return JsonERROR(HandleException(e));
 			}
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
@@ -793,42 +836,15 @@ namespace GenioMVC.Controllers
 			long st = DateTime.Now.Ticks;
 			var sp = UserContext.Current.PersistentSupport;
 
-			sink.BeforeAll?.Invoke(sink, sp);
-
 			try
 			{
-				// Check table permissions
-				var permission = model.CheckPermissions(FormMode.Edit);
+				sink.BeforeAll?.Invoke(sink, sp);
 
-				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
+				StatusMessage permission = ValidateEdit(model, sink);
+				if (permission.HasError)
 					return PermissionError(permission.Message);
 
-				// Recalculation of the formulas may need the connection to the database to be open (for example, in formulas that use functions that have SQL queries). Therefore,
-				// we must open the transaction before the 'executeModelFormulas' call
 				sp.openTransaction();
-
-				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
-				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
-				// In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
-				//	also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
-				model.LoadModel();
-				model.MapToModel();
-				model.ExecuteModelFormulas();
-
-				// Check form conditions
-				permission.MergeStatusMessage(model.UpdateConditions());
-
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
-				{
-					sp.closeTransaction();
-					return PermissionError(permission.Message);
-				}
-
-				ValidateModel(model);
-
-				if (!ModelState.IsValid)
-					throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_GRAVA23775, sink.MethodName, "Erro");
 
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_SAVE_EDIT]/
@@ -876,24 +892,13 @@ namespace GenioMVC.Controllers
 				sink.AfterException?.Invoke(sink, sp);
 				//---------------------------------------------
 
-				HandleException(e);
-
-				return JsonERROR(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182);
+				return JsonERROR(HandleException(e, Resources.Resources.ERRO_AO_GUARDAR_O_RE65182));
 			}
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
 				CSGenio.framework.Log.Debug("Controller success " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
 
-			IList<string> warningMsgs = new List<string>();
-			// MH - Visualizar os warnings obtidos durante gravação. (ex: Condição de escrita que não impede gravação)
-			if (model.flashMessage != null)
-			{
-				warningMsgs = model.flashMessage.WarningMessages;
-				TempData.SetObject("NEW_WARNINGS_LIST", warningMsgs); // Save the warnings list, so it can be retrieved during the redirect.
-				if (model.flashMessage.Status == Status.W || model.flashMessage.Status == Status.OK_MAIS_W)
-					GetFlashMessage(model.flashMessage, FormMode.Edit);
-			}
-
+			IList<string> warningMsgs = model.flashMessage?.WarningMessages ?? [];
 			return Json(new { Success = true, Operation = "Edit", Message = Resources.Resources.ALTERACOES_EFETUADAS10166, Warnings = warningMsgs, currentNavigationLevel = Navigation.CurrentLevel.Level });
 		}
 
@@ -906,38 +911,11 @@ namespace GenioMVC.Controllers
 			{
 				sink.BeforeAll?.Invoke(sink, sp);
 
-				// Check table permissions
-				var permission = model.CheckPermissions(FormMode.Edit);
-
-				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
+				StatusMessage permission = ValidateEdit(model, sink);
+				if (permission.HasError)
 					return PermissionError(permission.Message);
 
-				// Recalculation of the formulas may need the connection to the database to be open (for example, in formulas that use functions that have SQL queries). Therefore,
-				// we must open the transaction before the 'executeModelFormulas' call
 				sp.openTransaction();
-
-				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
-				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
-				// In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
-				//	also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
-				model.LoadModel();
-				model.MapToModel();
-				model.ExecuteModelFormulas();
-
-				// Check form conditions
-				permission.MergeStatusMessage(model.UpdateConditions());
-
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
-				{
-					sp.closeTransaction();
-					return PermissionError(permission.Message);
-				}
-
-				ValidateModel(model);
-
-				if (!ModelState.IsValid)
-					throw new BusinessException(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182, sink.MethodName, "The ModelState is not valid.");
 
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_APPLY_EDIT]/
@@ -955,23 +933,12 @@ namespace GenioMVC.Controllers
 
 				if (CSGenio.framework.Log.IsDebugEnabled)
 					CSGenio.framework.Log.Debug("Controller success " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
-
-				if (!Request.IsAjaxRequest())
-					GetFlashMessage(model.flashMessage, Navigation.CurrentLevel.FormMode);
 			}
-			catch (Exception ex)
+			catch (Exception e)
 			{
 				sp.rollbackTransaction();
-
-				var exceptionUserMessage = HandleException(ex);
-
-				return JsonERROR(exceptionUserMessage);
+				return JsonERROR(HandleException(e));
 			}
-
-			if (model.flashMessage != null && !string.IsNullOrEmpty(model.flashMessage.Message) && model.flashMessage.Status == Status.OK)
-				TempData.SetObject("NEW_SAVE_LIST", model.flashMessage.Message); // Add the save messages so they can be retrived later
-			else
-				TempData.SetObject("NEW_SAVE_LIST", ""); //Make sure that no custom message is displayed when the flashMessage is empty
 
 			return Json(new { Success = true, Operation = "Apply", Message = Resources.Resources.ALTERACOES_EFETUADAS10166 });
 		}
@@ -985,21 +952,8 @@ namespace GenioMVC.Controllers
 			{
 				sink.BeforeAll?.Invoke(sink, sp);
 
-				// Check table permissions
-				var permission = model.CheckPermissions(FormMode.Delete);
-
-				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
-					return PermissionError(permission.Message);
-
-				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
-				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
-				model.LoadModel();
-
-				// Check form conditions
-				permission.MergeStatusMessage(model.DeleteConditions());
-
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
+				StatusMessage permission = ValidateDelete(model, sink);
+				if (permission.HasError)
 					return PermissionError(permission.Message);
 
 				sp.openTransaction();
@@ -1018,8 +972,6 @@ namespace GenioMVC.Controllers
 
 				sp.closeTransaction();
 
-				GetFlashMessage(model.flashMessage, FormMode.Delete);
-
 				Navigation.SetValue("PreviouslyRemovedRowKey_" + sink.AreaName, model.QPrimaryKey, true);
 				Navigation.SetValue("ForcePrimaryRead_" + sink.AreaName, "true", true);
 			}
@@ -1028,12 +980,7 @@ namespace GenioMVC.Controllers
 				sp.rollbackTransaction();
 				sp.closeConnection();
 
-				var exceptionUserMessage = HandleException(e);
-
-				ClearMessages();
-				ErrorMessage(exceptionUserMessage);
-
-				return JsonERROR(exceptionUserMessage);
+				return JsonERROR(HandleException(e));
 			}
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
@@ -1051,38 +998,11 @@ namespace GenioMVC.Controllers
 			{
 				sink.BeforeAll?.Invoke(sink, sp);
 
-				// Check table permissions
-				var permission = model.CheckPermissions(FormMode.Duplicate);
-
-				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
+				StatusMessage permission = ValidateDuplicate(model, sink);
+				if (permission.HasError)
 					return PermissionError(permission.Message);
 
-				// Recalculation of the formulas may need the connection to the database to be open (for example, in formulas that use functions that have SQL queries). Therefore,
-				// we must open the transaction before the 'executeModelFormulas' call
 				sp.openTransaction();
-
-				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
-				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
-				// In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
-				//	also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
-				model.LoadModel();
-				model.MapToModel();
-				model.ExecuteModelFormulas();
-
-				// Check form conditions
-				permission.MergeStatusMessage(model.InsertConditions());
-
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
-				{
-					sp.closeTransaction();
-					return PermissionError(permission.Message);
-				}
-
-				ValidateModel(model);
-
-				if (!ModelState.IsValid)
-					throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_GRAVA23775, sink.MethodName, "Erro");
 
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_SAVE_DUPLICATE]/
@@ -1097,9 +1017,6 @@ namespace GenioMVC.Controllers
 				//---------------------------------------------
 
 				sp.closeTransaction();
-
-				if (!Request.IsAjaxRequest())
-					GetFlashMessage(model.flashMessage, FormMode.Duplicate);
 
 				if (Navigation.PreviousLevel != null)
 				{
@@ -1128,24 +1045,13 @@ namespace GenioMVC.Controllers
 				sink.AfterException?.Invoke(sink, sp);
 				//---------------------------------------------
 
-				HandleException(e);
-
-				return JsonERROR();
+				return JsonERROR(HandleException(e));
 			}
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
 				CSGenio.framework.Log.Debug("Controller success " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
 
-			IList<string> warningMsgs = new List<string>();
-			// MH - Visualizar os warnings obtidos durante gravação. (ex: Condição de escrita que não impede gravação)
-			if (model.flashMessage != null)
-			{
-				warningMsgs = model.flashMessage.WarningMessages;
-				TempData.SetObject("DUP_WARNINGS_LIST", warningMsgs); // Save the warnings list, so it can be retrieved during the redirect.
-				if (model.flashMessage.Status == Status.W || model.flashMessage.Status == Status.OK_MAIS_W)
-					GetFlashMessage(model.flashMessage, FormMode.Duplicate);
-			}
-
+			IList<string> warningMsgs = model.flashMessage?.WarningMessages ?? [];
 			return Json(new { Success = true, Operation = "Dup", Message = Resources.Resources.REGISTO_CRIADO_COM_S18746, Warnings = warningMsgs, currentNavigationLevel = Navigation.CurrentLevel.Level });
 		}
 
@@ -1154,39 +1060,15 @@ namespace GenioMVC.Controllers
 			long st = DateTime.Now.Ticks;
 			var sp = UserContext.Current.PersistentSupport;
 
-			sink.BeforeAll?.Invoke(sink, sp);
-
 			try
 			{
-				// Check table permissions
-				var permission = model.CheckPermissions(FormMode.New);
+				sink.BeforeAll?.Invoke(sink, sp);
 
-				// If the user does not have basic permissions, we will not proceed with validations that position the record, which in turn can make multiple unnecessary requests to the database.
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
+				StatusMessage permission = ValidateInsert(model, sink);
+				if (permission.HasError)
 					return PermissionError(permission.Message);
 
-				// Check form conditions
-				permission.MergeStatusMessage(model.InsertConditions());
-
-				if (permission.Status.Equals(CSGenio.framework.Status.E))
-					return PermissionError(permission.Message);
-
-				ValidateModel(model);
-
-				if (!ModelState.IsValid)
-					throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_GRAVA23775, sink.MethodName, "Erro");
-
-				// Recalculation of the formulas may need the connection to the database to be open (for example, in formulas that use functions that have SQL queries). Therefore,
-				// we must open the transaction before the 'executeModelFormulas' call
 				sp.openTransaction();
-
-				// Read the model from the database, ensuring that the read-only fields have not been changed in the ViewModel.
-				// The validation of CRUD conditions should not and cannot trust on values coming from the interface.
-				// In addition to making the values of the calculated fields valid, invoking the recalculation of the formulas after mapping
-				//	also allows for protecting the fields that could not be filled due to the Fill When condition, but came in the ViewModel with a value.
-				model.LoadModel();
-				model.MapToModel();
-				model.ExecuteModelFormulas();
 
 				//---------------------------------------------
 				// USE /[MANUAL BEFORE_SAVE_NEW]/
@@ -1201,9 +1083,6 @@ namespace GenioMVC.Controllers
 				//---------------------------------------------
 
 				sp.closeTransaction();
-
-				if (!Request.IsAjaxRequest())
-					GetFlashMessage(model.flashMessage, FormMode.New);
 
 				if (Navigation.PreviousLevel != null)
 				{
@@ -1236,142 +1115,14 @@ namespace GenioMVC.Controllers
 				sink.AfterException?.Invoke(sink, sp);
 				//---------------------------------------------
 
-				HandleException(e);
-
-				return JsonERROR(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182);
+				return JsonERROR(HandleException(e, Resources.Resources.ERRO_AO_GUARDAR_O_RE65182));
 			}
 
 			if (CSGenio.framework.Log.IsDebugEnabled)
 				CSGenio.framework.Log.Debug("Controller success " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
 
-			if (model.flashMessage != null && !string.IsNullOrEmpty(model.flashMessage.Message) && model.flashMessage.Status == Status.OK)
-				TempData.SetObject("NEW_SAVE_LIST", model.flashMessage.Message); // Add the save messages so they can be retrived later
-			else
-				TempData.SetObject("NEW_SAVE_LIST", ""); //Make sure that no custom message is displayed when the flashMessage is empty
-
-			IList<string> warningMsgs = new List<string>();
-			// MH - Visualizar os warnings obtidos durante gravação. (ex: Condição de escrita que não impede gravação)
-			if (model.flashMessage != null)
-			{
-				warningMsgs = model.flashMessage.WarningMessages;
-				TempData.SetObject("NEW_WARNINGS_LIST", warningMsgs); // Save the warnings list, so it can be retrieved during the redirect.
-				if (model.flashMessage.Status == Status.W || model.flashMessage.Status == Status.OK_MAIS_W)
-					GetFlashMessage(model.flashMessage, FormMode.New);
-			}
-
+			IList<string> warningMsgs = model.flashMessage?.WarningMessages ?? [];
 			return Json(new { Success = true, Operation = "New", Message = Resources.Resources.REGISTO_CRIADO_COM_S18746, Warnings = warningMsgs, currentNavigationLevel = Navigation.CurrentLevel.Level });
-		}
-
-		/// <summary>
-		/// Creates Erros message
-		/// </summary>
-		/// <param name="content">Mesage to Show</param>
-		/// <param name="containsHTML>"Indicates whether the message to show contains HTML</param>
-		protected void ErrorMessage(string content, bool containsHTML = false)
-		{
-			Message message = new(content, CSGenio.framework.Status.E,containsHTML);
-			AddMessage(message);
-		}
-
-		/// <summary>
-		/// Creates Success message
-		/// </summary>
-		/// <param name="content">Mesage to Show</param>
-		/// <param name="containsHTML>"Indicates whether the message to show contains HTML</param>
-		protected void SuccessMessage(string content, bool containsHTML = false)
-		{
-			Message message = new(content, CSGenio.framework.Status.OK,containsHTML);
-			AddMessage(message);
-		}
-
-		/// <summary>
-		/// Creates  Warning message
-		/// </summary>
-		/// <param name="content">Mesage to Show</param>
-		/// <param name="containsHTML>"Indicates whether the message to show contains HTML</param>
-		protected void WarningMessage(string content, bool containsHTML = false)
-		{
-			Message message = new(content, CSGenio.framework.Status.W, containsHTML);
-			AddMessage(message);
-		}
-
-		/// <summary>
-		/// Creates Info message
-		/// </summary>
-		/// <param name="content">Mesage to Show</param>
-		/// <param name="containsHTML>"Indicates whether the message to show contains HTML</param>
-		protected void InfoMessage(string content, bool containsHTML = false)
-		{
-			Message message = new(content, CSGenio.framework.Status.OK_MAIS_W, containsHTML);
-			AddMessage(message);
-		}
-
-		/// <summary>
-		/// Creates Generic message
-		/// </summary>
-		/// <param name="content">Mesage to Show</param>
-		/// <param name="content">Status of the message</param>
-		protected void Message(string content, Status status)
-		{
-			Message message = new(content, status);
-			AddMessage(message);
-		}
-
-		/// <summary>
-		/// Clears any message in TemData
-		/// </summary>
-		protected void ClearMessages()
-		{
-			string id = Messages.getID(Navigation.NavigationId);
-			//JFG 11/05/2017 This assumes that the Navigation ID is unique per thread, if not, this needs to be protected by lock
-			TempData.Remove(id);
-		}
-
-		/// <summary>
-		/// Adds Message to TempDate to be shown on next http response
-		/// </summary>
-		/// <param name="content">Mesage to Show</param>
-		private void AddMessage(Message message)
-		{
-			string Id = Messages.getID(Navigation.NavigationId);
-
-			var messageList = TempData.GetObject<List<Message>>(Id) ?? new List<Message> { message };
-
-			//JFG 11/05/2017 This assumes that the Navigation ID is unique per thread, if not, this needs to be protected by lock
-			TempData.SetObject(Id, messageList);
-		}
-
-		internal void GetFlashMessage(StatusMessage flashMessage, FormMode formMode)
-		{
-			if (flashMessage != null)
-			{
-				if (flashMessage.Status.Equals(Status.E) || flashMessage.Status.Equals(Status.EW))
-					ErrorMessage(flashMessage.Message);
-				else if (flashMessage.Status.Equals(Status.W))
-					WarningMessage(flashMessage.Message);
-				else if (flashMessage.Status.Equals(Status.OK))
-				{
-					string msg = string.Empty;
-					switch (formMode)
-					{
-						case FormMode.New:
-						case FormMode.Duplicate:
-							msg = Resources.Resources.REGISTO_CRIADO_COM_S18746;
-							break;
-						case FormMode.Edit:
-							msg = Resources.Resources.ALTERACOES_EFETUADAS10166;
-							break;
-						case FormMode.Delete:
-							msg = Resources.Resources.REGISTO_APAGADO_COM_64671;
-							break;
-					}
-
-					if (!string.IsNullOrEmpty(msg))
-						SuccessMessage(msg);
-				}
-				else if (flashMessage.Status.Equals(Status.OK_MAIS_W))
-					InfoMessage(flashMessage.Message);
-			}
 		}
 
 		/// <summary>
@@ -2021,7 +1772,7 @@ namespace GenioMVC.Controllers
 		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
 		private Resource GetResourceFromTicket(string ticket)
 		{
-			if(string.IsNullOrEmpty(ticket))
+			if (string.IsNullOrEmpty(ticket))
 				return null;
 
 			object[] objs = QResources.DecryptTicketBase64(ticket);
@@ -2316,6 +2067,10 @@ namespace GenioMVC.Controllers
 			return Json(new { Success = true, Operation = "IsFeatureActive", Value = value });
 		}
 
+		/*
+		TODO: Implement this feature in Vue applications.
+		For now the code is commented.
+
 		// GET /GetMsqInfo/
 		// Action for returning the MessageQueues info for a given model
 		[HttpGet]
@@ -2386,7 +2141,7 @@ namespace GenioMVC.Controllers
 				{
 					sp.openTransaction();
 					sp.getRecord(area, id);
-					//passamos o oldvalues a null to forçar o reenvio
+					// Pass oldValues as null to force re-sending.
 					area.insertQueue(sp, "U", null, null);
 					sp.closeTransaction();
 				}
@@ -2398,23 +2153,7 @@ namespace GenioMVC.Controllers
 			}
 			return Json(new { Success = true, Operation = "SendMsqUpdate", Message = Resources.Resources.FICHA_REENVIADA_PARA21165 });
 		}
-
-		/// <summary>
-		/// Gets URL to be used in the client-side
-		/// </summary>
-		/// <returns></returns>
-		[HttpPost]
-		public JsonNetResult GetUrlToAction(string controllerName, string actionName, IDictionary<string, string> additionalValues = null)
-		{
-			var routeValues = new RouteValueDictionary();
-
-			if (additionalValues != null)
-				foreach (var kv in additionalValues)
-					routeValues.Add(kv.Key, kv.Value);
-
-			var url = Url.Action(actionName, controllerName, routeValues);
-			return Json(new { url });
-		}
+		*/
 
 		/// <summary>
 		/// Created by [CHN] at [2018.12.13]
@@ -2430,7 +2169,7 @@ namespace GenioMVC.Controllers
 				{
 					foreach (var file in all_files)
 					{
-						//fix filename (replaces everything to "_" except letters, numbers and "-")
+						//Fix filename (replaces everything to "_" except letters, numbers and "-")
 						string filename = System.Text.RegularExpressions.Regex.Replace(file.Key, "[^\\w\\.-]", "_");
 						//Create a zip entry for each attachment
 						var zipEntry = zipArchive.CreateEntry(filename);
@@ -2540,7 +2279,7 @@ namespace GenioMVC.Controllers
 				RequestReflectHeader("RecalculateFormulasRequestNumber");
 
 				var primaryKey = Navigation.GetStrValue(area);
-				if (form_data == null || GlobalFunctions.emptyG(primaryKey) == 1)
+				if (form_data == null || GenFunctions.emptyG(primaryKey) == 1)
 					return JsonERROR();
 
 				var model = find(primaryKey);

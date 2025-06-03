@@ -93,8 +93,6 @@ namespace GenioMVC.ViewModels.Wpess
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -156,22 +154,22 @@ namespace GenioMVC.ViewModels.Wpess
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATA, Resources.Resources.DATA_DE_NASCIMENTO48110, 8, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_COD_TEXTO, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
-				new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldAdress, FieldType.TEXTO, Resources.Resources.ADDRESS04342, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldZipcode, FieldType.TEXTO, Resources.Resources.ZIP_CODE56964, 8, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldCountry, FieldType.TEXTO, Resources.Resources.PAIS04637, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldCellphon, FieldType.NUMERO, Resources.Resources.NOTELEFONE56747, 9, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldNaturali, FieldType.TEXTO, Resources.Resources.NATURALNESS33189, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldNacional, FieldType.TEXTO, Resources.Resources.NACIONALIDADE23735, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldPfoto, FieldType.IMAGEM_JPEG, Resources.Resources.FOTO_DE_PERFIL03502, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtimgtop, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE_TOP34930, 3, 1, true):null,
-				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtthumb, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE_THUMBNAIL01682, 3, 1, true):null,
-				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtbackgr, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE_BACKGROUND07216, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATE, Resources.Resources.DATA_DE_NASCIMENTO48110, 8, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_TEXT, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
+				new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERIC, Resources.Resources.NOFUNCIONARIO21429, 6, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldAdress, FieldType.TEXT, Resources.Resources.ADDRESS04342, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldZipcode, FieldType.TEXT, Resources.Resources.ZIP_CODE56964, 8, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldCountry, FieldType.TEXT, Resources.Resources.PAIS04637, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldCellphon, FieldType.NUMERIC, Resources.Resources.NOTELEFONE56747, 9, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldNaturali, FieldType.TEXT, Resources.Resources.NATURALNESS33189, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldNacional, FieldType.TEXT, Resources.Resources.NACIONALIDADE23735, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldPfoto, FieldType.IMAGE, Resources.Resources.FOTO_DE_PERFIL03502, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtimgtop, FieldType.IMAGE, Resources.Resources.IMAGE_TOP34930, 3, 1, true):null,
+				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtthumb, FieldType.IMAGE, Resources.Resources.IMAGE_THUMBNAIL01682, 3, 1, true):null,
+				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldFtbackgr, FieldType.IMAGE, Resources.Resources.IMAGE_BACKGROUND07216, 3, 1, true):null,
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -234,8 +232,6 @@ namespace GenioMVC.ViewModels.Wpess
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -383,8 +379,7 @@ namespace GenioMVC.ViewModels.Wpess
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("wpess", "name");
+					firstVisibleColumn ??= new FieldRef("wpess", "name");
 				}
 
 
@@ -432,6 +427,8 @@ namespace GenioMVC.ViewModels.Wpess
 
 // USE /[MANUAL STY OVERRQ IMAGEMAGNIFIER]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -459,7 +456,7 @@ namespace GenioMVC.ViewModels.Wpess
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAwpess> listing = Models.ModelBase.Where<CSGenioAwpess>(m_userContext, false, sty_menu_imagemagnifierConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLIMAGEMAGNIFIER", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAwpess> listing = Models.ModelBase.Where<CSGenioAwpess>(m_userContext, distinct, sty_menu_imagemagnifierConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLIMAGEMAGNIFIER", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -542,6 +539,8 @@ namespace GenioMVC.ViewModels.Wpess
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -603,7 +602,7 @@ namespace GenioMVC.ViewModels.Wpess
 			new TableSearchColumn("ValCellphon", CSGenioAwpess.FldCellphon, typeof(decimal?)),
 			new TableSearchColumn("ValNaturali", CSGenioAwpess.FldNaturali, typeof(string)),
 			new TableSearchColumn("ValNacional", CSGenioAwpess.FldNacional, typeof(string)),
-			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string))
+			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Wpess row)
 		{

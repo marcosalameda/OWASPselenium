@@ -1,4 +1,5 @@
-﻿using CSGenio.framework;
+﻿using CSGenio.core.ai;
+using CSGenio.framework;
 using CSGenio.persistence;
 using System;
 using System.Collections.Generic;
@@ -240,6 +241,7 @@ namespace CSGenio.business.Triggers
 		/// </value>
 		public Dictionary<string, Dictionary<string, DbArea>> DirtyRows { get; }
 			= new Dictionary<string, Dictionary<string, DbArea>>();
+
 	}
 
 	/// <summary>
@@ -417,6 +419,26 @@ namespace CSGenio.business.Triggers
 			});
 
 			AddAction(1, new UpdateFieldValueAction(context, "expen", "descript", formula, false));
+		}
+	}
+
+	/// <summary>
+	/// Trigger REPAIR_AGENT
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerRepairAgent : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerRepairAgent" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerRepairAgent(TriggerContext context) : base(context)
+		{
+			_id = "REPAIR_AGENT";
+
+			// Actions
+			var agent = new GenioServer.ai.RepairsCategorizerAgent(core.di.GenioDI.GetService<IChatbotService>());
+			AddAction(1, new CallAiAgentAction(context, agent));
 		}
 	}
 

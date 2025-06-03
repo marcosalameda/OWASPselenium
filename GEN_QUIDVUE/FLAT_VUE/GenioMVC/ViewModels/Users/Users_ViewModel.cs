@@ -508,7 +508,7 @@ namespace GenioMVC.ViewModels.Users
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -555,7 +555,7 @@ namespace GenioMVC.ViewModels.Users
 				// Fill List fields
 				this.ValCodpsw = ViewModelConversion.ToString(row["psw.codpsw"]);
 				TablePswNome.Value = (string)row["psw.nome"];
-				if (GlobalFunctions.emptyG(this.ValCodpsw) == 1)
+				if (GenFunctions.emptyG(this.ValCodpsw) == 1)
 				{
 					this.ValCodpsw = "";
 					TablePswNome.Value = "";
@@ -698,7 +698,7 @@ namespace GenioMVC.ViewModels.Users
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -745,7 +745,7 @@ namespace GenioMVC.ViewModels.Users
 				// Fill List fields
 				this.ValCodperso = ViewModelConversion.ToString(row["perso.codperso"]);
 				TablePersoName.Value = (string)row["perso.name"];
-				if (GlobalFunctions.emptyG(this.ValCodperso) == 1)
+				if (GenFunctions.emptyG(this.ValCodperso) == 1)
 				{
 					this.ValCodperso = "";
 					TablePersoName.Value = "";

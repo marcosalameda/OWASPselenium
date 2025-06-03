@@ -90,7 +90,6 @@ namespace GenioMVC.ViewModels.Item
 			return crs;
 		}
 
-
 		public string WarehValWarehdes { get; set; }
 
 		/// <summary>
@@ -112,21 +111,21 @@ namespace GenioMVC.ViewModels.Item
 		}
 
 		/// <summary>
-		/// Loads from the database the values of fields used in the menu title or columns show when and populates them in the ViewModel.
+		/// Loads from the database the values of fields used in the menu title, columns show when, etc and populates them in the ViewModel.
 		/// </summary>
 		public void LoadAdditionalFields()
 		{
-			string[] titleFields = ["wareh.warehdes"];
-			FieldRef[] refTitleFields = [CSGenioAwareh.FldWarehdes];
+			string[] additionalFields = ["wareh.warehdes"];
+			FieldRef[] refAdditionalFields = [CSGenioAwareh.FldWarehdes];
 
 			var sp = m_userContext.PersistentSupport;
 			User u = m_userContext.User;
-			var tempEmptyArea = new CSGenioAwareh(u);
+			CSGenioAwareh tempEmptyArea = new(u);
 
 			// Fields to select
 			SelectQuery querySelect = new SelectQuery();
 			querySelect.PageSize(1);
-			foreach (FieldRef field in refTitleFields)
+			foreach (FieldRef field in refAdditionalFields)
 				querySelect.Select(field);
 
 			var args = CriteriaSet.And()
@@ -135,7 +134,7 @@ namespace GenioMVC.ViewModels.Item
 
 			args = Models.Wareh.AddEPH<CSGenioAwareh>(ref u, args, "ML461");
 			querySelect.From(tempEmptyArea.QSystem, tempEmptyArea.TableName, tempEmptyArea.Alias).Where(args);
-			CSGenio.persistence.QueryUtils.SetInnerJoins(titleFields, args, tempEmptyArea, querySelect);
+			CSGenio.persistence.QueryUtils.SetInnerJoins(additionalFields, args, tempEmptyArea, querySelect);
 
 			var dbValues = sp.executeReaderOneRow(querySelect);
 			for (int i = 0; i < dbValues.Count; i++)
@@ -204,13 +203,13 @@ namespace GenioMVC.ViewModels.Item
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldEntries, FieldType.NUMERO, Resources.Resources.ENTRIES32319, 10, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldExits, FieldType.NUMERO, Resources.Resources.OUTPUTS47833, 10, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldExistenc, FieldType.NUMERO, Resources.Resources.STOCKS47349, 10, 0, true),
-				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, false),
-				new Exports.QColumn(CSGenioAgitem.FldItemdes, FieldType.TEXTO, Resources.Resources.GLOBAL_ARTICLE63861, 30, 0, false),
+				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 30, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXT, Resources.Resources.CODE49225, 15, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldEntries, FieldType.NUMERIC, Resources.Resources.ENTRIES32319, 10, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldExits, FieldType.NUMERIC, Resources.Resources.OUTPUTS47833, 10, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldExistenc, FieldType.NUMERIC, Resources.Resources.STOCKS47349, 10, 0, true),
+				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, false),
+				new Exports.QColumn(CSGenioAgitem.FldItemdes, FieldType.TEXT, Resources.Resources.GLOBAL_ARTICLE63861, 30, 0, false),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -273,8 +272,6 @@ namespace GenioMVC.ViewModels.Item
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -430,8 +427,7 @@ namespace GenioMVC.ViewModels.Item
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("item", "itemdes");
+					firstVisibleColumn ??= new FieldRef("item", "itemdes");
 				}
 
 
@@ -479,6 +475,8 @@ namespace GenioMVC.ViewModels.Item
 
 // USE /[MANUAL GQT OVERRQ 4611]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -506,7 +504,7 @@ namespace GenioMVC.ViewModels.Item
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, false, gqt_menu_4611Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4611", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, distinct, gqt_menu_4611Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4611", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -590,6 +588,8 @@ namespace GenioMVC.ViewModels.Item
 						break;
 				}
 			}
+
+			model.InitRowData();
 
 			return model;
 		}
@@ -676,7 +676,7 @@ namespace GenioMVC.ViewModels.Item
 			new TableSearchColumn("ValExits", CSGenioAitem.FldExits, typeof(decimal?)),
 			new TableSearchColumn("ValExistenc", CSGenioAitem.FldExistenc, typeof(decimal?)),
 			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string), visible : false),
-			new TableSearchColumn("Gitem_ValItemdes", CSGenioAgitem.FldItemdes, typeof(string), visible : false)
+			new TableSearchColumn("Gitem_ValItemdes", CSGenioAgitem.FldItemdes, typeof(string), visible : false),
 		];
 	}
 }

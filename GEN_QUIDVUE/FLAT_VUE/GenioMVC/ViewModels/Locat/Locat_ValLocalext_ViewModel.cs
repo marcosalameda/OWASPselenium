@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Locat
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodlocat { get; set; }
+		public string LocatValCodlocat { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Locat
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Locat
 		/// <param name="userContext">The current user request context</param>
 		public Locat_ValLocalext_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodlocat = userContext.CurrentNavigation.CurrentLevel.GetEntry("locat")?.ToString();
+			LocatValCodlocat = userContext.CurrentNavigation.CurrentLevel.GetEntry("locat")?.ToString();
 		}
 
 		/// <summary>
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Locat
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXTO, Resources.Resources.GLN_EXTENSION_COMPON55869, 30, 0, true),
-				new Exports.QColumn(CSGenioAlcext.FldSpacetyp, FieldType.ARRAY_COD_TEXTO, Resources.Resources.SPACE_TYPE42493, 1, 0, true, "SpaceTyp"),
-				new Exports.QColumn(CSGenioAlcext.FldSpaceobs, FieldType.TEXTO, Resources.Resources.SPACE62433, 30, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXTENSION_COMPON55869, 30, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldSpacetyp, FieldType.ARRAY_TEXT, Resources.Resources.SPACE_TYPE42493, 1, 0, true, "SpaceTyp"),
+				new Exports.QColumn(CSGenioAlcext.FldSpaceobs, FieldType.TEXT, Resources.Resources.SPACE62433, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -195,10 +194,8 @@ namespace GenioMVC.ViewModels.Locat
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodlocat != null)
-				crs.Equal(CSGenioAlcext.FldCodlocat, this.ValCodlocat);
-
-
+			if (this.LocatValCodlocat != null)
+				crs.Equal(CSGenioAlcext.FldCodlocat, this.LocatValCodlocat);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -344,8 +341,7 @@ namespace GenioMVC.ViewModels.Locat
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("lcext", "glnext");
+					firstVisibleColumn ??= new FieldRef("lcext", "glnext");
 				}
 
 
@@ -374,6 +370,8 @@ namespace GenioMVC.ViewModels.Locat
 
 // USE /[MANUAL GQT OVERRQ LOCAT_PSEUDLOCALEXT]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -401,7 +399,7 @@ namespace GenioMVC.ViewModels.Locat
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlcext> listing = Models.ModelBase.Where<CSGenioAlcext>(m_userContext, false, locat___pseudlocalextConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LOCAT___PSEUDLOCALEXT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlcext> listing = Models.ModelBase.Where<CSGenioAlcext>(m_userContext, distinct, locat___pseudlocalextConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LOCAT___PSEUDLOCALEXT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -481,6 +479,8 @@ namespace GenioMVC.ViewModels.Locat
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -532,7 +532,7 @@ namespace GenioMVC.ViewModels.Locat
 		[
 			new TableSearchColumn("ValGlnext", CSGenioAlcext.FldGlnext, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValSpacetyp", CSGenioAlcext.FldSpacetyp, typeof(string), array : "SpaceTyp"),
-			new TableSearchColumn("ValSpaceobs", CSGenioAlcext.FldSpaceobs, typeof(string))
+			new TableSearchColumn("ValSpaceobs", CSGenioAlcext.FldSpaceobs, typeof(string)),
 		];
 	}
 }

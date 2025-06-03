@@ -85,7 +85,6 @@
 						:label="Resources.USE_PASSWORD_BLACKLI22314" />
 					<q-button
 						v-if="Security.UsePasswordBlacklist"
-						b-style="secondary"
 						:label="Resources.MANAGE_PASSWORD_BLAC01612"
 						@click="showManageBlacklist" />
 				</q-row-container>
@@ -94,7 +93,7 @@
 		
 		<row class="footer-btn">
 			<q-button
-				b-style="primary"
+				variant="bold"
 				:label="Resources.GRAVAR_CONFIGURACAO36308"
 				@click="SaveConfigSecurity" />
 		</row>
@@ -112,11 +111,13 @@
 				<template #actions="props">
 					<q-button-group borderless>
 						<q-button
+							variant="text"
 							:title="Resources.EDITAR11616"
 							@click="changeIdentityProvider(props.row)">
 							<q-icon icon="pencil" />
 						</q-button>
 						<q-button
+							variant="text"
 							:title="Resources.ELIMINAR21155"
 							@click="deleteIdentityProvider(props.row)">
 							<q-icon icon="bin" />
@@ -148,11 +149,13 @@
 				<template #actions="props">
 					<q-button-group borderless>
 						<q-button
+							variant="text"
 							:title="Resources.EDITAR11616"
 							@click="changeRoleProvider(props.row)">
 							<q-icon icon="pencil" />
 						</q-button>
 						<q-button
+							variant="text"
 							:title="Resources.ELIMINAR21155"
 							@click="deleteRoleProvider(props.row)">
 							<q-icon icon="bin" />
@@ -186,11 +189,13 @@
 				<template #actions="props">
 					<q-button-group borderless>
 						<q-button
+							variant="text"
 							:title="Resources.EDITAR11616"
 							@click="changeUser(props.row)">
 							<q-icon icon="pencil" />
 						</q-button>
 						<q-button
+							variant="text"
 							:title="Resources.ELIMINAR21155"
 							@click="deleteUser(props.row)">
 							<q-icon icon="bin" />
@@ -249,11 +254,11 @@
 								accept=".txt"
 								style="position:absolute;height: 0;width: 0;" />
 							<q-button
-								b-style="primary"
+								variant="bold"
 								:label="Resources.IMPORTAR64751"
 								@click="clickImport" />
 							<q-button
-								b-style="primary"
+								variant="bold"
 								:label="Resources.EXPORTAR35632"
 								@click="exportB" />
 						</div>
@@ -261,8 +266,9 @@
 					<div>{{ Resources.DELETE_ALL_BLACKLIST01597 }}</div>
 					<row>
 						<q-button
+							variant="bold"
+							color="danger"
 							:label="Resources.APAGAR04097"
-							b-style="danger"
 							@click="deleteAll">
 							<q-icon icon="bin" />
 						</q-button>
@@ -274,11 +280,10 @@
 							:label="Resources.PASSWORD09467" />
 						<div class="control-row-group q-button-container">
 							<q-button
-								b-style="primary"
+								variant="bold"
 								:label="Resources.VALIDACAO46021"
 								@click="passCheck" />
 							<q-button
-								b-style="secondary"
 								:label="Resources.ADICIONAR14072"
 								@click="passAdd" />
 						</div>
@@ -288,7 +293,7 @@
 						<div>Validate service passwords</div>
 						<div class="control-row-group q-button-container">
 							<q-button
-								b-style="primary"
+								variant="bold"
 								:label="Resources.VALIDACAO46021"
 								@click="servicePassCheck" />
 						</div>
@@ -855,7 +860,8 @@
 							id: 'delete-btn',
 							props: {
 								label: this.Resources.APAGAR04097,
-								bStyle: "danger"
+								variant: 'bold',
+								color: "danger"
 							},
 							action: () => {
 								if (dialogType === 'userDialog') {
@@ -874,7 +880,7 @@
 							id: 'save-btn',
 							props: {
 								label: this.Resources.GRAVAR45301,
-								bStyle: "primary",
+								variant: 'bold',
 								disabled: isDisabled
 							},
 							action: () => {

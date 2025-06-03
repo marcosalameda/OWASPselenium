@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Decom
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,13 +147,13 @@ namespace GenioMVC.ViewModels.Decom
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 16, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERO, Resources.Resources.NO_BATE21045, 10, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATETIME, Resources.Resources.DECOMISSION14486, 16, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERIC, Resources.Resources.NO_BATE21045, 10, 0, true),
 				new Exports.QColumn(CSGenioAdecom.FldNote, FieldType.MEMO, Resources.Resources.NOTES05274, 30, 3, true),
-				new Exports.QColumn(CSGenioAdecom.FldCreatdat, FieldType.DATACRIA, Resources.Resources.CRIADO_EM61283, 8, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldCreatope, FieldType.OPERCRIA, Resources.Resources.CRIADO_POR17895, 20, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldChngdate, FieldType.DATAMUDA, Resources.Resources.ALTERADO_EM23573, 8, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldOperchng, FieldType.OPERMUDA, Resources.Resources.ALTERADO_POR39254, 20, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldCreatdat, FieldType.DATETIMESECONDS, Resources.Resources.CRIADO_EM61283, 8, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldCreatope, FieldType.TEXT, Resources.Resources.CRIADO_POR17895, 20, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldChngdate, FieldType.DATETIMESECONDS, Resources.Resources.ALTERADO_EM23573, 8, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldOperchng, FieldType.TEXT, Resources.Resources.ALTERADO_POR39254, 20, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -218,8 +216,6 @@ namespace GenioMVC.ViewModels.Decom
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -366,8 +362,7 @@ namespace GenioMVC.ViewModels.Decom
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("decom", "dtdeco");
+					firstVisibleColumn ??= new FieldRef("decom", "dtdeco");
 				}
 
 
@@ -396,6 +391,8 @@ namespace GenioMVC.ViewModels.Decom
 
 // USE /[MANUAL PTN OVERRQ 111]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -423,7 +420,7 @@ namespace GenioMVC.ViewModels.Decom
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAdecom> listing = Models.ModelBase.Where<CSGenioAdecom>(m_userContext, false, ptn_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAdecom> listing = Models.ModelBase.Where<CSGenioAdecom>(m_userContext, distinct, ptn_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -504,6 +501,8 @@ namespace GenioMVC.ViewModels.Decom
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -559,7 +558,7 @@ namespace GenioMVC.ViewModels.Decom
 			new TableSearchColumn("ValCreatdat", CSGenioAdecom.FldCreatdat, typeof(DateTime?)),
 			new TableSearchColumn("ValCreatope", CSGenioAdecom.FldCreatope, typeof(string)),
 			new TableSearchColumn("ValChngdate", CSGenioAdecom.FldChngdate, typeof(DateTime?)),
-			new TableSearchColumn("ValOperchng", CSGenioAdecom.FldOperchng, typeof(string))
+			new TableSearchColumn("ValOperchng", CSGenioAdecom.FldOperchng, typeof(string)),
 		];
 	}
 }

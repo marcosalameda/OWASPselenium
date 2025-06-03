@@ -27,6 +27,12 @@
         <reports
             :model="model"
             @alert-class="forwardAlert" />
+		<row class="footer-btn">
+			<q-button
+				variant="bold"
+				:label="Resources.GRAVAR_CONFIGURACAO36308"
+				@click="saveConfigOthers" />
+		</row>
 	</div>
 </template>
 
@@ -34,13 +40,12 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
-	import QAlert from '@/components/QAlert.vue';
 	import elasticsearch from './Elasticsearch';
 	import reports from './Reports';
 
 	export default {
 		name: 'externalservices',
-		components: { QAlert, elasticsearch, reports },
+		components: { elasticsearch, reports },
 		props: {
 			model: {
 				required: true
@@ -58,8 +63,15 @@
 		emits: ['update-model', 'alert-class'],
 
 		methods: {
-			forwardAlert(alertData) {
-				this.$emit('alert-class', alertData);
+			saveConfigOthers() {
+				QUtils.log("SaveConfigOthers - Request", QUtils.apiActionURL('Config', 'SaveConfigOthers'));
+				QUtils.postData('Config', 'SaveConfigOthers', this.model, null, (data) => {
+					QUtils.log("SaveConfigOthers - Response", data);
+						this.$emit('alert-class', {
+						ResultMsg: data.Success ? this.Resources.ALTERACOES_EFETUADAS10166 : data.Message,
+						AlertType: data.Success ? 'success' : 'danger'
+					});
+				});
 			},
 		}
 	};

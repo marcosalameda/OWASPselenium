@@ -126,7 +126,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Document number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Messa.ValDocum_nr")]
 		[NumericAttribute(0)]
-		public decimal? ValDocum_nr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDocum_nr, 0)); } set { klass.ValDocum_nr = Convert.ToDecimal(value); } }
+		public decimal? ValDocum_nr { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDocum_nr, 0)); } set { klass.ValDocum_nr = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Messa.ValZzstate")]

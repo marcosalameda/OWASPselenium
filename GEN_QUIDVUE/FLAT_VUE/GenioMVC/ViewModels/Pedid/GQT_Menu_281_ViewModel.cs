@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Pedid
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,8 +147,8 @@ namespace GenioMVC.ViewModels.Pedid
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApedid.FldDtpedido, FieldType.DATA, Resources.Resources.DATE18475, 8, 0, true),
-				new Exports.QColumn(CSGenioApedid.FldNrpedido, FieldType.NUMERO, Resources.Resources.NO_14817, 6, 0, true),
+				new Exports.QColumn(CSGenioApedid.FldDtpedido, FieldType.DATE, Resources.Resources.DATE18475, 8, 0, true),
+				new Exports.QColumn(CSGenioApedid.FldNrpedido, FieldType.NUMERIC, Resources.Resources.NO_14817, 6, 0, true),
 				new Exports.QColumn(CSGenioApedid.FldMotivo, FieldType.MEMO, Resources.Resources.REASON00008, 30, 3, true),
 			};
 
@@ -214,8 +212,6 @@ namespace GenioMVC.ViewModels.Pedid
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -362,8 +358,7 @@ namespace GenioMVC.ViewModels.Pedid
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("pedid", "dtpedido");
+					firstVisibleColumn ??= new FieldRef("pedid", "dtpedido");
 				}
 
 
@@ -392,6 +387,8 @@ namespace GenioMVC.ViewModels.Pedid
 
 // USE /[MANUAL GQT OVERRQ 281]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -419,7 +416,7 @@ namespace GenioMVC.ViewModels.Pedid
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApedid> listing = Models.ModelBase.Where<CSGenioApedid>(m_userContext, false, gqt_menu_281Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML281", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApedid> listing = Models.ModelBase.Where<CSGenioApedid>(m_userContext, distinct, gqt_menu_281Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML281", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -500,6 +497,8 @@ namespace GenioMVC.ViewModels.Pedid
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -551,7 +550,7 @@ namespace GenioMVC.ViewModels.Pedid
 		[
 			new TableSearchColumn("ValDtpedido", CSGenioApedid.FldDtpedido, typeof(DateTime?)),
 			new TableSearchColumn("ValNrpedido", CSGenioApedid.FldNrpedido, typeof(decimal?), defaultSearch : true),
-			new TableSearchColumn("ValMotivo", CSGenioApedid.FldMotivo, typeof(string))
+			new TableSearchColumn("ValMotivo", CSGenioApedid.FldMotivo, typeof(string)),
 		];
 	}
 }

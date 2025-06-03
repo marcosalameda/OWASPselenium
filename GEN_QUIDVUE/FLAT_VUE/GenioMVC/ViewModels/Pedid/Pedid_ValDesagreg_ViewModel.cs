@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Pedid
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodpedid { get; set; }
+		public string PedidValCodpedid { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Pedid
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Pedid
 		/// <param name="userContext">The current user request context</param>
 		public Pedid_ValDesagreg_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodpedid = userContext.CurrentNavigation.CurrentLevel.GetEntry("pedid")?.ToString();
+			PedidValCodpedid = userContext.CurrentNavigation.CurrentLevel.GetEntry("pedid")?.ToString();
 		}
 
 		/// <summary>
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Pedid
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlnhde.FldOrdem, FieldType.NUMERO, Resources.Resources.ORDER39632, 3, 0, true),
-				new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
-				new Exports.QColumn(CSGenioAlnhde.FldQuantida, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 3, 0, true),
+				new Exports.QColumn(CSGenioAlnhde.FldOrdem, FieldType.NUMERIC, Resources.Resources.ORDER39632, 3, 0, true),
+				new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 50, 0, true),
+				new Exports.QColumn(CSGenioAlnhde.FldQuantida, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 3, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -195,10 +194,8 @@ namespace GenioMVC.ViewModels.Pedid
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodpedid != null)
-				crs.Equal(CSGenioAlnhde.FldCodpedid, this.ValCodpedid);
-
-
+			if (this.PedidValCodpedid != null)
+				crs.Equal(CSGenioAlnhde.FldCodpedid, this.PedidValCodpedid);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -344,8 +341,7 @@ namespace GenioMVC.ViewModels.Pedid
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("lnhde", "ordem");
+					firstVisibleColumn ??= new FieldRef("lnhde", "ordem");
 				}
 
 
@@ -374,6 +370,8 @@ namespace GenioMVC.ViewModels.Pedid
 
 // USE /[MANUAL GQT OVERRQ PEDID_PSEUDDESAGREG]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -401,7 +399,7 @@ namespace GenioMVC.ViewModels.Pedid
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlnhde> listing = Models.ModelBase.Where<CSGenioAlnhde>(m_userContext, false, pedid___pseuddesagregConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PEDID___PSEUDDESAGREG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlnhde> listing = Models.ModelBase.Where<CSGenioAlnhde>(m_userContext, distinct, pedid___pseuddesagregConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PEDID___PSEUDDESAGREG", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -483,6 +481,8 @@ namespace GenioMVC.ViewModels.Pedid
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -534,7 +534,7 @@ namespace GenioMVC.ViewModels.Pedid
 		[
 			new TableSearchColumn("ValOrdem", CSGenioAlnhde.FldOrdem, typeof(decimal?)),
 			new TableSearchColumn("Tpeq1_ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string)),
-			new TableSearchColumn("ValQuantida", CSGenioAlnhde.FldQuantida, typeof(decimal?))
+			new TableSearchColumn("ValQuantida", CSGenioAlnhde.FldQuantida, typeof(decimal?)),
 		];
 	}
 }

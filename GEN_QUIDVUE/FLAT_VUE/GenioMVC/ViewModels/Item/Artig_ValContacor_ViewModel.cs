@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Item
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCoditem { get; set; }
+		public string ItemValCoditem { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,27 +92,6 @@ namespace GenioMVC.ViewModels.Item
 			return crs;
 		}
 
-
-		public string ValType { get; set; }
-
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param
-		private void SetViewModelValue(string fullFieldName, object value)
-		{
-			if (string.IsNullOrEmpty(fullFieldName))
-				return;
-
-			switch (fullFieldName)
-			{
-				case "ccorr.type":
-					ValType = ViewModelConversion.ToString(value);
-					break;
-			}
-		}
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -130,7 +109,7 @@ namespace GenioMVC.ViewModels.Item
 		/// <param name="userContext">The current user request context</param>
 		public Artig_ValContacor_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
+			ItemValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
 		}
 
 		/// <summary>
@@ -148,12 +127,12 @@ namespace GenioMVC.ViewModels.Item
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAccorr.FldNorder, FieldType.NUMERO, Resources.Resources.ORDER39632, 6, 0, true),
-				new Exports.QColumn(CSGenioAccorr.FldDate, FieldType.DATAHORA, Resources.Resources.INSTANT35907, 16, 0, true),
-				new Exports.QColumn(CSGenioAccorr.FldType, FieldType.TEXTO, Resources.Resources.TYPE00312, 8, 0, true),
-				new Exports.QColumn(CSGenioAccorr.FldReferenc, FieldType.TEXTO, Resources.Resources.REF_A30225, 10, 0, true),
-				new Exports.QColumn(CSGenioAccorr.FldQnty, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 10, 0, true),
-				new Exports.QColumn(CSGenioAccorr.FldBalance, FieldType.NUMERO, Resources.Resources.BALANCE13297, 10, 0, true),
+				new Exports.QColumn(CSGenioAccorr.FldNorder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 6, 0, true),
+				new Exports.QColumn(CSGenioAccorr.FldDate, FieldType.DATETIME, Resources.Resources.INSTANT35907, 16, 0, true),
+				new Exports.QColumn(CSGenioAccorr.FldType, FieldType.TEXT, Resources.Resources.TYPE00312, 8, 0, true),
+				new Exports.QColumn(CSGenioAccorr.FldReferenc, FieldType.TEXT, Resources.Resources.REF_A30225, 10, 0, true),
+				new Exports.QColumn(CSGenioAccorr.FldQnty, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 10, 0, true),
+				new Exports.QColumn(CSGenioAccorr.FldBalance, FieldType.NUMERIC, Resources.Resources.BALANCE13297, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -218,10 +197,8 @@ namespace GenioMVC.ViewModels.Item
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCoditem != null)
-				crs.Equal(CSGenioAccorr.FldCoditem, this.ValCoditem);
-
-
+			if (this.ItemValCoditem != null)
+				crs.Equal(CSGenioAccorr.FldCoditem, this.ItemValCoditem);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -367,8 +344,7 @@ namespace GenioMVC.ViewModels.Item
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("ccorr", "norder");
+					firstVisibleColumn ??= new FieldRef("ccorr", "norder");
 				}
 
 
@@ -397,6 +373,8 @@ namespace GenioMVC.ViewModels.Item
 
 // USE /[MANUAL GQT OVERRQ ARTIG_PSEUDCONTACOR]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -424,7 +402,7 @@ namespace GenioMVC.ViewModels.Item
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAccorr> listing = Models.ModelBase.Where<CSGenioAccorr>(m_userContext, false, artig___pseudcontacorConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARTIG___PSEUDCONTACOR", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAccorr> listing = Models.ModelBase.Where<CSGenioAccorr>(m_userContext, distinct, artig___pseudcontacorConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_ARTIG___PSEUDCONTACOR", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -504,6 +482,8 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -531,41 +511,11 @@ namespace GenioMVC.ViewModels.Item
 		/// <inheritdoc />
 		public override void MapFromModel(Models.Ccorr m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map Model (Ccorr) to ViewModel (Artig_ValContacor) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				ValType = ViewModelConversion.ToString(m.ValType);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map Model (Ccorr) to ViewModel (Artig_ValContacor) - Error during mapping.");
-				throw;
-			}
 		}
 
 		/// <inheritdoc />
 		public override void MapToModel(Models.Ccorr m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (Artig_ValContacor) to Model (Ccorr) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				m.ValType = ViewModelConversion.ToString(ValType);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (Artig_ValContacor) to Model (Ccorr) - Error during mapping.");
-				throw;
-			}
 		}
 
 		#endregion
@@ -588,7 +538,7 @@ namespace GenioMVC.ViewModels.Item
 			new TableSearchColumn("ValType", CSGenioAccorr.FldType, typeof(string)),
 			new TableSearchColumn("ValReferenc", CSGenioAccorr.FldReferenc, typeof(string)),
 			new TableSearchColumn("ValQnty", CSGenioAccorr.FldQnty, typeof(decimal?)),
-			new TableSearchColumn("ValBalance", CSGenioAccorr.FldBalance, typeof(decimal?))
+			new TableSearchColumn("ValBalance", CSGenioAccorr.FldBalance, typeof(decimal?)),
 		];
 	}
 }

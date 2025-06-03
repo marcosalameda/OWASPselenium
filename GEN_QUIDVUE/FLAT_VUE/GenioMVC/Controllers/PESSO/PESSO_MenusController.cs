@@ -118,9 +118,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -233,9 +230,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -318,9 +312,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -406,9 +397,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -493,9 +481,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -577,9 +562,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -660,9 +642,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -747,9 +726,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -829,9 +805,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -914,9 +887,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -998,9 +968,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -1080,9 +1047,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);

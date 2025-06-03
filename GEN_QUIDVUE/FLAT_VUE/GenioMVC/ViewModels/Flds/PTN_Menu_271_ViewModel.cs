@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Flds
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,13 +147,13 @@ namespace GenioMVC.ViewModels.Flds
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAflds.FldCond, FieldType.ARRAY_COD_TEXTO, Resources.Resources.FIELD_STATE03599, 8, 0, true, "aCondTst"),
-				new Exports.QColumn(CSGenioAflds.FldFclient1, FieldType.TEXTO, Resources.Resources.FIELD_WITH_CLIENT_SI60452, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldFserver1, FieldType.DATAHORA, Resources.Resources.FIELD_WITH_SERVER_SI13554, 16, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldFclient2, FieldType.LOGICO, Resources.Resources.FIELD_WITH_CLIENT_SI60452, 1, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldFserver2, FieldType.NUMERO, Resources.Resources.FIELD_WITH_SERVER_SI13554, 8, 2, true),
-				new Exports.QColumn(CSGenioAflds.FldFclient3, FieldType.FICHEIRO_BD, Resources.Resources.FIELD_WITH_CLIENT_SI60452, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAflds.FldFserver3, FieldType.IMAGEM_JPEG, Resources.Resources.FIELD_WITH_SERVER_SI13554, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAflds.FldCond, FieldType.ARRAY_TEXT, Resources.Resources.FIELD_STATE03599, 8, 0, true, "aCondTst"),
+				new Exports.QColumn(CSGenioAflds.FldFclient1, FieldType.TEXT, Resources.Resources.FIELD_WITH_CLIENT_SI60452, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldFserver1, FieldType.DATETIME, Resources.Resources.FIELD_WITH_SERVER_SI13554, 16, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldFclient2, FieldType.LOGIC, Resources.Resources.FIELD_WITH_CLIENT_SI60452, 1, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldFserver2, FieldType.NUMERIC, Resources.Resources.FIELD_WITH_SERVER_SI13554, 8, 2, true),
+				new Exports.QColumn(CSGenioAflds.FldFclient3, FieldType.DOCUMENT, Resources.Resources.FIELD_WITH_CLIENT_SI60452, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAflds.FldFserver3, FieldType.IMAGE, Resources.Resources.FIELD_WITH_SERVER_SI13554, 3, 1, true):null,
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -218,8 +216,6 @@ namespace GenioMVC.ViewModels.Flds
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -358,8 +354,7 @@ namespace GenioMVC.ViewModels.Flds
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("flds", "cond");
+					firstVisibleColumn ??= new FieldRef("flds", "cond");
 				}
 
 
@@ -388,6 +383,8 @@ namespace GenioMVC.ViewModels.Flds
 
 // USE /[MANUAL PTN OVERRQ 271]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -415,7 +412,7 @@ namespace GenioMVC.ViewModels.Flds
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, false, ptn_menu_271Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML271", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, distinct, ptn_menu_271Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML271", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -496,6 +493,8 @@ namespace GenioMVC.ViewModels.Flds
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -572,7 +571,7 @@ namespace GenioMVC.ViewModels.Flds
 			new TableSearchColumn("ValFserver1", CSGenioAflds.FldFserver1, typeof(DateTime?)),
 			new TableSearchColumn("ValFclient2", CSGenioAflds.FldFclient2, typeof(bool)),
 			new TableSearchColumn("ValFserver2", CSGenioAflds.FldFserver2, typeof(decimal?)),
-			new TableSearchColumn("ValFclient3", CSGenioAflds.FldFclient3, typeof(string))
+			new TableSearchColumn("ValFclient3", CSGenioAflds.FldFclient3, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Flds row)
 		{

@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Evcat
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,8 +127,8 @@ namespace GenioMVC.ViewModels.Evcat
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXTO, Resources.Resources.CATEGORY18978, 50, 0, true),
-				new Exports.QColumn(CSGenioAcate1.FldAbbreviation, FieldType.TEXTO, Resources.Resources.ABBREVIATION31267, 10, 0, true),
+				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXT, Resources.Resources.CATEGORY18978, 50, 0, true),
+				new Exports.QColumn(CSGenioAcate1.FldAbbreviation, FieldType.TEXT, Resources.Resources.ABBREVIATION31267, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -193,9 +192,6 @@ namespace GenioMVC.ViewModels.Evcat
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -339,8 +335,7 @@ namespace GenioMVC.ViewModels.Evcat
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("cate1", "categoria");
+					firstVisibleColumn ??= new FieldRef("cate1", "categoria");
 				}
 
 
@@ -369,6 +364,8 @@ namespace GenioMVC.ViewModels.Evcat
 
 // USE /[MANUAL GQT OVERRQ EVCAT_CATE1CATEGORY]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -395,7 +392,7 @@ namespace GenioMVC.ViewModels.Evcat
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAcate1> listing = Models.ModelBase.Where<CSGenioAcate1>(m_userContext, false, evcat___cate1categoryConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EVCAT___CATE1CATEGORY", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAcate1> listing = Models.ModelBase.Where<CSGenioAcate1>(m_userContext, distinct, evcat___cate1categoryConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EVCAT___CATE1CATEGORY", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -475,6 +472,8 @@ namespace GenioMVC.ViewModels.Evcat
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -525,7 +524,7 @@ namespace GenioMVC.ViewModels.Evcat
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValCategoria", CSGenioAcate1.FldCategoria, typeof(string)),
-			new TableSearchColumn("ValAbbreviation", CSGenioAcate1.FldAbbreviation, typeof(string))
+			new TableSearchColumn("ValAbbreviation", CSGenioAcate1.FldAbbreviation, typeof(string)),
 		];
 	}
 }

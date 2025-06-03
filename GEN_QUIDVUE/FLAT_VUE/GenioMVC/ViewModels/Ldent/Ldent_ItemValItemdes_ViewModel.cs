@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Ldent
 			return crs;
 		}
 
-
 		public string ValCodwareh { get; set; }
 
 		public override int GetCount(User user)
@@ -130,10 +129,10 @@ namespace GenioMVC.ViewModels.Ldent
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGICO, Resources.Resources.IN_USE42606, 1, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemtype, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TYPE00312, 1, 0, true, "TipoArti"),
+				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 30, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXT, Resources.Resources.CODE49225, 15, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGIC, Resources.Resources.IN_USE42606, 1, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemtype, FieldType.ARRAY_TEXT, Resources.Resources.TYPE00312, 1, 0, true, "TipoArti"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -201,9 +200,6 @@ namespace GenioMVC.ViewModels.Ldent
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -347,8 +343,7 @@ namespace GenioMVC.ViewModels.Ldent
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("item", "itemdes");
+					firstVisibleColumn ??= new FieldRef("item", "itemdes");
 				}
 
 
@@ -395,6 +390,8 @@ namespace GenioMVC.ViewModels.Ldent
 
 // USE /[MANUAL GQT OVERRQ LDENT_ITEMITEMDES]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -421,7 +418,7 @@ namespace GenioMVC.ViewModels.Ldent
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, false, ldent___item_itemdes_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LDENT___ITEM_ITEMDES_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, distinct, ldent___item_itemdes_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LDENT___ITEM_ITEMDES_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -501,6 +498,8 @@ namespace GenioMVC.ViewModels.Ldent
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -553,7 +552,7 @@ namespace GenioMVC.ViewModels.Ldent
 			new TableSearchColumn("ValItemdes", CSGenioAitem.FldItemdes, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValItemcod", CSGenioAitem.FldItemcod, typeof(string)),
 			new TableSearchColumn("ValValid", CSGenioAitem.FldValid, typeof(bool)),
-			new TableSearchColumn("ValItemtype", CSGenioAitem.FldItemtype, typeof(string), array : "TipoArti")
+			new TableSearchColumn("ValItemtype", CSGenioAitem.FldItemtype, typeof(string), array : "TipoArti"),
 		];
 	}
 }

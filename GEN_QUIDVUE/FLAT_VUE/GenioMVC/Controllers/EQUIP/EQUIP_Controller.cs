@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Equip;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER EQUIP]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class EquipController : ControllerBase
 	{
-		public EquipController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public EquipController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION EQUIP]/
 
 
@@ -320,6 +329,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Accordi" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -333,6 +343,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
+
 
 
 		/// <summary>
@@ -350,6 +361,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Equigrou" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -363,6 +375,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
+
 
 
 		/// <summary>
@@ -380,6 +393,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Fullcale" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -393,6 +407,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
+
 
 
 		/// <summary>
@@ -410,6 +425,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Groupbx" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -425,6 +441,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Timequip" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -438,6 +455,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
+
 
 
 		/// <summary>

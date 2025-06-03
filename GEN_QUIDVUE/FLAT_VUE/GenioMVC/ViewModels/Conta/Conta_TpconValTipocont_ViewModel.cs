@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Conta
 			return crs;
 		}
 
-
 		public string ValCodgenre { get; set; }
 
 		public override int GetCount(User user)
@@ -130,7 +129,7 @@ namespace GenioMVC.ViewModels.Conta
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 50, 0, true),
+				new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -198,9 +197,6 @@ namespace GenioMVC.ViewModels.Conta
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -344,8 +340,7 @@ namespace GenioMVC.ViewModels.Conta
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tpcon", "tipocont");
+					firstVisibleColumn ??= new FieldRef("tpcon", "tipocont");
 				}
 
 
@@ -392,6 +387,8 @@ namespace GenioMVC.ViewModels.Conta
 
 // USE /[MANUAL GQT OVERRQ CONTA_TPCONTIPOCONT]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -418,7 +415,7 @@ namespace GenioMVC.ViewModels.Conta
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAtpcon> listing = Models.ModelBase.Where<CSGenioAtpcon>(m_userContext, false, conta___tpcontipocontConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_CONTA___TPCONTIPOCONT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAtpcon> listing = Models.ModelBase.Where<CSGenioAtpcon>(m_userContext, distinct, conta___tpcontipocontConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_CONTA___TPCONTIPOCONT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -498,6 +495,8 @@ namespace GenioMVC.ViewModels.Conta
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -547,7 +546,7 @@ namespace GenioMVC.ViewModels.Conta
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValTipocont", CSGenioAtpcon.FldTipocont, typeof(string))
+			new TableSearchColumn("ValTipocont", CSGenioAtpcon.FldTipocont, typeof(string)),
 		];
 	}
 }

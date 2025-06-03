@@ -490,7 +490,7 @@ namespace GenioMVC.ViewModels.Pess1
 
 			validator.StringLength("ValName", Resources.Resources.NAME31974, ValName, 85);
 
-			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXTO.Formatting);
+			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL25170, ValEmail, 254);
 			validator.StringLength("ValEmail2", Resources.Resources.EMAIL__CONFIRM_56391, ValEmail2, 254);
@@ -644,7 +644,7 @@ namespace GenioMVC.ViewModels.Pess1
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -691,7 +691,7 @@ namespace GenioMVC.ViewModels.Pess1
 				// Fill List fields
 				this.ValCodempre = ViewModelConversion.ToString(row["cmpny.codempre"]);
 				TableCmpnyDesignat.Value = (string)row["cmpny.designat"];
-				if (GlobalFunctions.emptyG(this.ValCodempre) == 1)
+				if (GenFunctions.emptyG(this.ValCodempre) == 1)
 				{
 					this.ValCodempre = "";
 					TableCmpnyDesignat.Value = "";
@@ -834,7 +834,7 @@ namespace GenioMVC.ViewModels.Pess1
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -881,7 +881,7 @@ namespace GenioMVC.ViewModels.Pess1
 				// Fill List fields
 				this.ValCodparte = ViewModelConversion.ToString(row["stake.codparte"]);
 				TableStakeDesignat.Value = (string)row["stake.designat"];
-				if (GlobalFunctions.emptyG(this.ValCodparte) == 1)
+				if (GenFunctions.emptyG(this.ValCodparte) == 1)
 				{
 					this.ValCodparte = "";
 					TableStakeDesignat.Value = "";

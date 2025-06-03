@@ -403,7 +403,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 			validator.StringLength("ValName", Resources.Resources.NAME31974, ValName, 85);
 
-			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXTO.Formatting);
+			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 
 
 			return validator.GetResult();

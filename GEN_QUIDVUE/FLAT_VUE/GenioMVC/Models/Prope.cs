@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Price" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValPrice")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 
 		[DisplayName("Main Photo")]
 		/// <summary>Field : "Main Photo" Tipo: "IJ" Formula:  ""</summary>
@@ -77,13 +77,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Size (m2)" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValSize")]
 		[NumericAttribute(0)]
-		public decimal? ValSize { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSize, 0)); } set { klass.ValSize = Convert.ToDecimal(value); } }
+		public decimal? ValSize { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSize, 0)); } set { klass.ValSize = Convert.ToDecimal(value); } }
 
 		[DisplayName("Number of Bathrooms")]
 		/// <summary>Field : "Number of Bathrooms" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValBathrms")]
 		[NumericAttribute(0)]
-		public decimal? ValBathrms { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBathrms, 0)); } set { klass.ValBathrms = Convert.ToDecimal(value); } }
+		public decimal? ValBathrms { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBathrms, 0)); } set { klass.ValBathrms = Convert.ToDecimal(value); } }
 
 		[DisplayName("Year Built")]
 		/// <summary>Field : "Year Built" Tipo: "C" Formula:  ""</summary>
@@ -136,25 +136,25 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValOrder")]
 		[NumericAttribute(0)]
-		public decimal? ValOrder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrder, 0)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
+		public decimal? ValOrder { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOrder, 0)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
 
 		[DisplayName("Building age")]
 		/// <summary>Field : "Building age" Tipo: "N" Formula: + "Year([Today])-Year(DateAddYears([ZEROD],StringToInt([PROPE->YEAR])))"</summary>
 		[ShouldSerialize("Prope.ValBuildage")]
 		[NumericAttribute(0)]
-		public decimal? ValBuildage { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBuildage, 0)); } set { klass.ValBuildage = Convert.ToDecimal(value); } }
+		public decimal? ValBuildage { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBuildage, 0)); } set { klass.ValBuildage = Convert.ToDecimal(value); } }
 
 		[DisplayName("Ground Size")]
 		/// <summary>Field : "Ground Size" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValGrndsize")]
 		[NumericAttribute(0)]
-		public decimal? ValGrndsize { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValGrndsize, 0)); } set { klass.ValGrndsize = Convert.ToDecimal(value); } }
+		public decimal? ValGrndsize { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValGrndsize, 0)); } set { klass.ValGrndsize = Convert.ToDecimal(value); } }
 
 		[DisplayName("Floor number")]
 		/// <summary>Field : "Floor number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValFloornum")]
 		[NumericAttribute(0)]
-		public decimal? ValFloornum { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFloornum, 0)); } set { klass.ValFloornum = Convert.ToDecimal(value); } }
+		public decimal? ValFloornum { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValFloornum, 0)); } set { klass.ValFloornum = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Prope.ValZzstate")]

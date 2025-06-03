@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Perso
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -150,15 +148,15 @@ namespace GenioMVC.ViewModels.Perso
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAperso.FldName, FieldType.TEXTO, Resources.Resources.PERSON_NAME40980, 30, 0, true),
-				new Exports.QColumn(CSGenioAperso.FldGender, FieldType.ARRAY_COD_TEXTO, Resources.Resources.GENDER44172, 1, 0, true, "Gender"),
-				new Exports.QColumn(CSGenioAperso.FldIdentifi, FieldType.TEXTO, Resources.Resources.IDENTIFICATION_NUMBE11999, 10, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAperso.FldPhoto, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAperso.FldDob, FieldType.DATA, Resources.Resources.DATE_OF_BIRTH63058, 8, 0, true),
-				new Exports.QColumn(CSGenioAperso.FldEmail, FieldType.TEXTO, Resources.Resources.E_MAIL42251, 30, 0, true),
-				new Exports.QColumn(CSGenioAperso.FldYear, FieldType.NUMERO, Resources.Resources.YEAR61794, 4, 0, false),
-				new Exports.QColumn(CSGenioAperso.FldMonth, FieldType.ARRAY_COD_NUMERICO, Resources.Resources.MONTH46035, 2, 0, false, "Months"),
-				new Exports.QColumn(CSGenioAperso.FldTob, FieldType.TEMPO, Resources.Resources.TIME_OF_BIRTH04797, 5, 0, false),
+				new Exports.QColumn(CSGenioAperso.FldName, FieldType.TEXT, Resources.Resources.PERSON_NAME40980, 30, 0, true),
+				new Exports.QColumn(CSGenioAperso.FldGender, FieldType.ARRAY_TEXT, Resources.Resources.GENDER44172, 1, 0, true, "Gender"),
+				new Exports.QColumn(CSGenioAperso.FldIdentifi, FieldType.TEXT, Resources.Resources.IDENTIFICATION_NUMBE11999, 10, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAperso.FldPhoto, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAperso.FldDob, FieldType.DATE, Resources.Resources.DATE_OF_BIRTH63058, 8, 0, true),
+				new Exports.QColumn(CSGenioAperso.FldEmail, FieldType.TEXT, Resources.Resources.E_MAIL42251, 30, 0, true),
+				new Exports.QColumn(CSGenioAperso.FldYear, FieldType.NUMERIC, Resources.Resources.YEAR61794, 4, 0, false),
+				new Exports.QColumn(CSGenioAperso.FldMonth, FieldType.ARRAY_NUMERIC, Resources.Resources.MONTH46035, 2, 0, false, "Months"),
+				new Exports.QColumn(CSGenioAperso.FldTob, FieldType.TIME_HOURS, Resources.Resources.TIME_OF_BIRTH04797, 5, 0, false),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -221,8 +219,6 @@ namespace GenioMVC.ViewModels.Perso
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -369,8 +365,7 @@ namespace GenioMVC.ViewModels.Perso
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("perso", "name");
+					firstVisibleColumn ??= new FieldRef("perso", "name");
 				}
 
 
@@ -399,6 +394,8 @@ namespace GenioMVC.ViewModels.Perso
 
 // USE /[MANUAL WMS OVERRQ 4311]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -426,7 +423,7 @@ namespace GenioMVC.ViewModels.Perso
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAperso> listing = Models.ModelBase.Where<CSGenioAperso>(m_userContext, false, wms_menu_4311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4311", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAperso> listing = Models.ModelBase.Where<CSGenioAperso>(m_userContext, distinct, wms_menu_4311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4311", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -507,6 +504,8 @@ namespace GenioMVC.ViewModels.Perso
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -564,7 +563,7 @@ namespace GenioMVC.ViewModels.Perso
 			new TableSearchColumn("ValEmail", CSGenioAperso.FldEmail, typeof(string)),
 			new TableSearchColumn("ValYear", CSGenioAperso.FldYear, typeof(decimal?), visible : false),
 			new TableSearchColumn("ValMonth", CSGenioAperso.FldMonth, typeof(decimal), visible : false, array : "Months"),
-			new TableSearchColumn("ValTob", CSGenioAperso.FldTob, typeof(string), visible : false)
+			new TableSearchColumn("ValTob", CSGenioAperso.FldTob, typeof(string), visible : false),
 		];
 		protected void SetTicketToImageFields(Models.Perso row)
 		{

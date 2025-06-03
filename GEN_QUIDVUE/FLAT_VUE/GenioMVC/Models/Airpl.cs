@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Airplane ID" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Airpl.ValAirplid")]
 		[NumericAttribute(0)]
-		public decimal? ValAirplid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAirplid, 0)); } set { klass.ValAirplid = Convert.ToDecimal(value); } }
+		public decimal? ValAirplid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAirplid, 0)); } set { klass.ValAirplid = Convert.ToDecimal(value); } }
 
 		[DisplayName("Airplane Name")]
 		/// <summary>Field : "Airplane Name" Tipo: "C" Formula:  ""</summary>
@@ -55,7 +55,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Seating Capacity" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Airpl.ValSeatcap")]
 		[NumericAttribute(0)]
-		public decimal? ValSeatcap { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSeatcap, 0)); } set { klass.ValSeatcap = Convert.ToDecimal(value); } }
+		public decimal? ValSeatcap { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSeatcap, 0)); } set { klass.ValSeatcap = Convert.ToDecimal(value); } }
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>

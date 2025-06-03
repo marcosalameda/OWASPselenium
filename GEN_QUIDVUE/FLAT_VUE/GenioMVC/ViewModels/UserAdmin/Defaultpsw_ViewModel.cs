@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
+using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
 using CSGenio.framework;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
-using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
 namespace GenioMVC.ViewModels.Psw
 {
@@ -87,6 +87,7 @@ namespace GenioMVC.ViewModels.Psw
 				CSGenio.framework.Log.Error("Map Model (Psw) to ViewModel (Pswnew) - Model is a null reference");
 				throw new ModelNotFoundException("Model not found");
 			}
+
 			try
 			{
 				ValNome = ViewModelConversion.ToString(m.ValNome);
@@ -114,6 +115,7 @@ namespace GenioMVC.ViewModels.Psw
 				CSGenio.framework.Log.Error("Map ViewModel (Pswnew) to Model (Psw) - Model is a null reference");
 				throw new ModelNotFoundException("Model not found");
 			}
+
 			try
 			{
 				m.ValNome = ViewModelConversion.ToString(ValNome);

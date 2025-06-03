@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAuserauthorization(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -36,7 +35,7 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 			
 			/*Information das areas*/
-			info.TableName = "UserAuthorization";
+			info.TableName = "userauthorization";
 			info.ShadowTabName = "";
 			info.PrimaryKeyName = "codua";
             info.HumanKeyName = "codua";
@@ -55,20 +54,18 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field("codua", FieldType.CHAVE_PRIMARIA_GUID));
-			info.DBFields["codua"].FieldSize = 36;
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field("codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID));
-			info.DBFields["codpsw"].FieldSize = 36;
-			info.RegisterFieldDB(new Field("sistema", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("modulo", FieldType.TEXTO));
-            info.RegisterFieldDB(new Field("role", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("nivel", FieldType.NUMERO));
-            info.RegisterFieldDB(new Field("opercria", FieldType.OPERCRIA));
-            info.RegisterFieldDB(new Field("datacria", FieldType.DATACRIA));
-            info.RegisterFieldDB(new Field("opermuda", FieldType.OPERMUDA));
-            info.RegisterFieldDB(new Field("datamuda", FieldType.DATAMUDA));
-			info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+			info.RegisterFieldDB(new Field(info.Alias, "codua", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "sistema", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "modulo", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "naodupli", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "role", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "nivel", FieldType.NUMERIC));
+            info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATETIMESECONDS));
+            info.RegisterFieldDB(new Field(info.Alias, "opermuda", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "datamuda", FieldType.DATETIMESECONDS));
+			info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
             // Carimbos automáticos na BD
             //------------------------------
@@ -85,7 +82,7 @@ namespace CSGenio.business
 			// Relações Mãe
 			//------------------------------
 			info.ParentTables = new Dictionary<string, Relation>();
-			info.ParentTables.Add("psw", new Relation("GQT", "userauthorization", "userauthorization", "codua", "codpsw", "$mae.TabelaDestino.TabelaDominio.Schema.ToUpper()", "userlogin", "psw", "codpsw", "codpsw"));
+			info.ParentTables.Add("psw", new Relation("GQT", "userauthorization", "userauthorization", "codua", "codpsw", "GQT", "userlogin", "psw", "codpsw", "codpsw"));
 
 			// Pathways
 			//------------------------------
@@ -196,7 +193,16 @@ namespace CSGenio.business
             get { return (string)returnValueField(FldModulo); }
             set { insertNameValueField(FldModulo, value); }
         }
-        
+
+        public static FieldRef FldNaodupli { get { return m_FldNaodupli; } }
+        private static FieldRef m_FldNaodupli = new FieldRef("userauthorization", "naodupli");
+
+        public string ValNaodupli
+        {
+            get { return (string)returnValueField(FldNaodupli); }
+            set { insertNameValueField(FldNaodupli, value); }
+        }
+
         public static FieldRef FldNivel { get { return m_FldNivel; } }
         private static FieldRef m_FldNivel = new FieldRef("userauthorization", "nivel");
 
@@ -254,7 +260,7 @@ namespace CSGenio.business
             if (!Fields.ContainsKey(FldRole.FullName) && Fields.ContainsKey(FldNivel.FullName))
             {
                 var field = new RequestedField(FldRole.FullName, Alias);
-                field.Value = (Fields[FldNivel.FullName]as RequestedField).Value.ToString();                
+                field.Value = Fields[FldNivel.FullName].Value.ToString();
                 Fields[FldRole.FullName] = field;
             }
             return base.change(sp, condition);
@@ -336,13 +342,11 @@ namespace CSGenio.business
             CSGenioAuserauthorization userauth = new CSGenioAuserauthorization(user, module);
             userauth.ValSistema = "GQT";
             userauth.ValModulo = module;
+            userauth.ValNaodupli = codpsw.Replace("{", "").Replace("}", "").Replace("-", "").ToUpper() + module;
             userauth.ValRole = role.Id;
             if (role.Type != RoleType.ROLE)
                 userauth.ValNivel = role.GetLevelInt();
             userauth.ValCodpsw = codpsw;
-            userauth.Information.StampFieldsIns = new string[] { "opercria", "datacria" };
-            userauth.Information.DBFields["opercria"].FieldType = FieldType.OPERCRIA;
-            userauth.Information.DBFields["datacria"].FieldType = FieldType.DATACRIA;
             userauth.insert(sp);
         }
 

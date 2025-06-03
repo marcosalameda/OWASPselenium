@@ -538,7 +538,7 @@ namespace GenioMVC.ViewModels.Tradu
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -585,7 +585,7 @@ namespace GenioMVC.ViewModels.Tradu
 				// Fill List fields
 				this.ValCodidio1 = ViewModelConversion.ToString(row["lang1.codlang"]);
 				TableLang1Langua.Value = (string)row["lang1.langua"];
-				if (GlobalFunctions.emptyG(this.ValCodidio1) == 1)
+				if (GenFunctions.emptyG(this.ValCodidio1) == 1)
 				{
 					this.ValCodidio1 = "";
 					TableLang1Langua.Value = "";
@@ -728,7 +728,7 @@ namespace GenioMVC.ViewModels.Tradu
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -775,7 +775,7 @@ namespace GenioMVC.ViewModels.Tradu
 				// Fill List fields
 				this.ValCodidio2 = ViewModelConversion.ToString(row["lang2.codlang"]);
 				TableLang2Langua.Value = (string)row["lang2.langua"];
-				if (GlobalFunctions.emptyG(this.ValCodidio2) == 1)
+				if (GenFunctions.emptyG(this.ValCodidio2) == 1)
 				{
 					this.ValCodidio2 = "";
 					TableLang2Langua.Value = "";

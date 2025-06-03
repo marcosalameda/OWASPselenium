@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Flds;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER FLDS]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class FldsController : ControllerBase
 	{
-		public FldsController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public FldsController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION FLDS]/
 
 
@@ -166,6 +175,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Campo" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -179,6 +189,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Flds)
 			);
 		}
+
 
 
 		/// <summary>
@@ -502,6 +513,7 @@ namespace GenioMVC.Controllers
 			{
 				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
+
 				// Map client-side form data into the model
 				formData.MapToModel(p);
 
@@ -525,6 +537,7 @@ namespace GenioMVC.Controllers
 			{
 				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
+
 				// Map client-side form data into the model
 				formData.MapToModel(p);
 
@@ -548,6 +561,7 @@ namespace GenioMVC.Controllers
 			{
 				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
+
 				// Map client-side form data into the model
 				formData.MapToModel(p);
 
@@ -566,6 +580,7 @@ namespace GenioMVC.Controllers
 			}
 		}
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Fldscond" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -579,6 +594,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Flds)
 			);
 		}
+
 
 
 		/// <summary>
@@ -596,6 +612,7 @@ namespace GenioMVC.Controllers
 		}
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Infields" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -609,6 +626,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Flds)
 			);
 		}
+
 
 
 		/// <summary>

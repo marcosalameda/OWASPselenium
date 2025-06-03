@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Repar
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,9 +127,9 @@ namespace GenioMVC.ViewModels.Repar
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXTO, Resources.Resources.NO__REGISTER04207, 6, 0, true),
-				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXT, Resources.Resources.NO__REGISTER04207, 6, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAequip.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -194,9 +193,6 @@ namespace GenioMVC.ViewModels.Repar
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -340,8 +336,7 @@ namespace GenioMVC.ViewModels.Repar
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("equip", "registnr");
+					firstVisibleColumn ??= new FieldRef("equip", "registnr");
 				}
 
 
@@ -370,6 +365,8 @@ namespace GenioMVC.ViewModels.Repar
 
 // USE /[MANUAL GQT OVERRQ REPAR_EQUIPREGISTNR]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -396,7 +393,7 @@ namespace GenioMVC.ViewModels.Repar
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAequip> listing = Models.ModelBase.Where<CSGenioAequip>(m_userContext, false, repar___equipregistnrConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___EQUIPREGISTNR", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAequip> listing = Models.ModelBase.Where<CSGenioAequip>(m_userContext, distinct, repar___equipregistnrConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___EQUIPREGISTNR", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -476,6 +473,8 @@ namespace GenioMVC.ViewModels.Repar
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -527,7 +526,7 @@ namespace GenioMVC.ViewModels.Repar
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValRegistnr", CSGenioAequip.FldRegistnr, typeof(string)),
-			new TableSearchColumn("ValDesignat", CSGenioAequip.FldDesignat, typeof(string))
+			new TableSearchColumn("ValDesignat", CSGenioAequip.FldDesignat, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Equip row)
 		{

@@ -86,8 +86,6 @@ namespace GenioMVC.ViewModels.Prope
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -148,10 +146,10 @@ namespace GenioMVC.ViewModels.Prope
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioAprope.FldPrice, FieldType.VALOR, Resources.Resources.PRICE06900, 12, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAprope.FldPhoto, FieldType.IMAGEM_JPEG, Resources.Resources.MAIN_PHOTO18723, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldPrice, FieldType.CURRENCY, Resources.Resources.PRICE06900, 12, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAprope.FldPhoto, FieldType.IMAGE, Resources.Resources.MAIN_PHOTO18723, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAagent.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -214,8 +212,6 @@ namespace GenioMVC.ViewModels.Prope
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -362,8 +358,7 @@ namespace GenioMVC.ViewModels.Prope
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("prope", "title");
+					firstVisibleColumn ??= new FieldRef("prope", "title");
 				}
 
 
@@ -392,6 +387,8 @@ namespace GenioMVC.ViewModels.Prope
 
 // USE /[MANUAL TRN OVERRQ T02PROPERTY]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -419,7 +416,7 @@ namespace GenioMVC.ViewModels.Prope
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAprope> listing = Models.ModelBase.Where<CSGenioAprope>(m_userContext, false, trn_menu_t02propertyConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT02PROPERTY", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAprope> listing = Models.ModelBase.Where<CSGenioAprope>(m_userContext, distinct, trn_menu_t02propertyConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLT02PROPERTY", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -502,6 +499,8 @@ namespace GenioMVC.ViewModels.Prope
 				}
 			}
 
+			model.InitRowData();
+
 			SetTicketToImageFields(model);
 			return model;
 		}
@@ -554,7 +553,7 @@ namespace GenioMVC.ViewModels.Prope
 		[
 			new TableSearchColumn("ValTitle", CSGenioAprope.FldTitle, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValPrice", CSGenioAprope.FldPrice, typeof(decimal?)),
-			new TableSearchColumn("Agent_ValName", CSGenioAagent.FldName, typeof(string))
+			new TableSearchColumn("Agent_ValName", CSGenioAagent.FldName, typeof(string)),
 		];
 		protected void SetTicketToImageFields(Models.Prope row)
 		{

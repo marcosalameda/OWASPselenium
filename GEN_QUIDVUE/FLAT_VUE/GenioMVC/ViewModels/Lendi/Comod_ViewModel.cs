@@ -480,10 +480,10 @@ namespace GenioMVC.ViewModels.Lendi
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValCodequip", Resources.Resources.REGISTRATION_NO_06209, ViewModelConversion.ToString(ValCodequip), FieldType.CHAVE_ESTRANGEIRA_GUID.Formatting);
+			validator.Required("ValCodequip", Resources.Resources.REGISTRATION_NO_06209, ViewModelConversion.ToString(ValCodequip), FieldType.KEY_GUID.GetFormatting());
 			validator.StringLength("EquipValDesignat", Resources.Resources.EQUIPMENT03632, EquipValDesignat, 85);
 
-			validator.Required("ValStart", Resources.Resources.START_59353, ViewModelConversion.ToDateTime(ValStart), FieldType.DATAHORA.Formatting);
+			validator.Required("ValStart", Resources.Resources.START_59353, ViewModelConversion.ToDateTime(ValStart), FieldType.DATETIME.GetFormatting());
 
 
 			return validator.GetResult();
@@ -634,7 +634,7 @@ namespace GenioMVC.ViewModels.Lendi
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -681,7 +681,7 @@ namespace GenioMVC.ViewModels.Lendi
 				// Fill List fields
 				this.ValCodpess1 = ViewModelConversion.ToString(row["pess1.codpesso"]);
 				TablePess1Name.Value = (string)row["pess1.name"];
-				if (GlobalFunctions.emptyG(this.ValCodpess1) == 1)
+				if (GenFunctions.emptyG(this.ValCodpess1) == 1)
 				{
 					this.ValCodpess1 = "";
 					TablePess1Name.Value = "";
@@ -824,7 +824,7 @@ namespace GenioMVC.ViewModels.Lendi
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -871,7 +871,7 @@ namespace GenioMVC.ViewModels.Lendi
 				// Fill List fields
 				this.ValCodpess2 = ViewModelConversion.ToString(row["pess2.codpesso"]);
 				TablePess2Name.Value = (string)row["pess2.name"];
-				if (GlobalFunctions.emptyG(this.ValCodpess2) == 1)
+				if (GenFunctions.emptyG(this.ValCodpess2) == 1)
 				{
 					this.ValCodpess2 = "";
 					TablePess2Name.Value = "";
@@ -1021,7 +1021,7 @@ namespace GenioMVC.ViewModels.Lendi
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -1029,7 +1029,7 @@ namespace GenioMVC.ViewModels.Lendi
 				object hValue = Navigation.GetValue("pess1");
 				if (!(hValue is Array))
 				{
-					if (GlobalFunctions.emptyG(hValue) == 1)
+					if (GenFunctions.emptyG(hValue) == 1)
 						returnEmptyDependants = true;
 					wherecodition.Equal(CSGenioAequip.FldCodpess1, hValue);
 				}
@@ -1079,7 +1079,7 @@ namespace GenioMVC.ViewModels.Lendi
 				// Fill List fields
 				this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
 				TableEquipRegistnr.Value = (string)row["equip.registnr"];
-				if (GlobalFunctions.emptyG(this.ValCodequip) == 1)
+				if (GenFunctions.emptyG(this.ValCodequip) == 1)
 				{
 					this.ValCodequip = "";
 					TableEquipRegistnr.Value = "";

@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAmqqueues(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -36,7 +35,7 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 			
 			/*Information das areas*/
-			info.TableName = "GQTmqqueues";
+			info.TableName = "gqtmqqueues";
 			info.ShadowTabName = "";
 			info.PrimaryKeyName = "codmqqueues";
             info.HumanKeyName = "codmqqueues";
@@ -55,23 +54,22 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-       info.RegisterFieldDB(new Field("codmqqueues", FieldType.CHAVE_PRIMARIA_GUID));
-	  info.KeyType = CodeType.GUID_KEY;
-	  info.RegisterFieldDB(new Field("queueid", FieldType.TEXTO));
-      info.RegisterFieldDB(new Field("channelid", FieldType.TEXTO));
-	  info.RegisterFieldDB(new Field("ano", FieldType.TEXTO));
-	  info.RegisterFieldDB(new Field("username", FieldType.TEXTO));
- 	  info.RegisterFieldDB(new Field("tabela", FieldType.TEXTO));
-	  info.RegisterFieldDB(new Field("tabelacod", FieldType.TEXTO));
-	  info.RegisterFieldDB(new Field("queuekey", FieldType.TEXTO));
-	  info.RegisterFieldDB(new Field("queue", FieldType.IMAGEM_JPEG));
-	  info.RegisterFieldDB(new Field("mqstatus", FieldType.TEXTO));	
-	  info.RegisterFieldDB(new Field("datastatus", FieldType.DATAHORA));
-	  info.RegisterFieldDB(new Field("datacria", FieldType.DATACRIA));	  
-	  info.RegisterFieldDB(new Field("operacao", FieldType.TEXTO));
-	  info.RegisterFieldDB(new Field("resposta", FieldType.TEXTO));
-	  info.RegisterFieldDB(new Field("sendnumber", FieldType.INTEIRO));
-	  info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
+       info.RegisterFieldDB(new Field(info.Alias, "codmqqueues", FieldType.KEY_GUID));
+	  info.RegisterFieldDB(new Field(info.Alias, "queueid", FieldType.TEXT));
+      info.RegisterFieldDB(new Field(info.Alias, "channelid", FieldType.TEXT));
+	  info.RegisterFieldDB(new Field(info.Alias, "ano", FieldType.TEXT));
+	  info.RegisterFieldDB(new Field(info.Alias, "username", FieldType.TEXT));
+ 	  info.RegisterFieldDB(new Field(info.Alias, "tabela", FieldType.TEXT));
+	  info.RegisterFieldDB(new Field(info.Alias, "tabelacod", FieldType.TEXT));
+	  info.RegisterFieldDB(new Field(info.Alias, "queuekey", FieldType.TEXT));
+	  info.RegisterFieldDB(new Field(info.Alias, "queue", FieldType.IMAGE));
+	  info.RegisterFieldDB(new Field(info.Alias, "mqstatus", FieldType.TEXT));	
+	  info.RegisterFieldDB(new Field(info.Alias, "datastatus", FieldType.DATETIME));
+	  info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATETIMESECONDS));
+	  info.RegisterFieldDB(new Field(info.Alias, "operacao", FieldType.TEXT));
+	  info.RegisterFieldDB(new Field(info.Alias, "resposta", FieldType.TEXT));
+	  info.RegisterFieldDB(new Field(info.Alias, "sendnumber", FieldType.INTEGER));
+	  info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
 			// Relações Filhas
 			//------------------------------

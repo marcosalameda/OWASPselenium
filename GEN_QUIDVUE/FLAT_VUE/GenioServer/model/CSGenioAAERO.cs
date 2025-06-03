@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAaero(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR AERO]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codaero", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codaero", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXT);
 			Qfield.FieldDescription = "Airline name";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "AIRLINE_NAME55130";
 
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codcmaer", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "codcmaer", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Code";
 			Qfield.FieldSize =  2;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 2;
 			Qfield.CavDesignation = "CODE49225";
@@ -80,9 +75,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -158,8 +152,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Airline";
 			info.AreaPluralDesignation="Airlines";
 			info.DescriptionCav="AIRLINE57868";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Cmpki
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,10 +147,10 @@ namespace GenioMVC.ViewModels.Cmpki
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
-				new Exports.QColumn(CSGenioAcmpki.FldOrder, FieldType.NUMERO, Resources.Resources.ORDER39632, 5, 1, true),
-				new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXTO, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
-				new Exports.QColumn(CSGenioAcmpki.FldQuantida, FieldType.NUMERO, Resources.Resources.AMOUNT46885, 3, 0, true),
+				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
+				new Exports.QColumn(CSGenioAcmpki.FldOrder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 5, 1, true),
+				new Exports.QColumn(CSGenioAtpeq1.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
+				new Exports.QColumn(CSGenioAcmpki.FldQuantida, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 3, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -215,8 +213,6 @@ namespace GenioMVC.ViewModels.Cmpki
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -363,8 +359,7 @@ namespace GenioMVC.ViewModels.Cmpki
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("tpequ", "tipoequi");
+					firstVisibleColumn ??= new FieldRef("tpequ", "tipoequi");
 				}
 
 
@@ -393,6 +388,8 @@ namespace GenioMVC.ViewModels.Cmpki
 
 // USE /[MANUAL GQT OVERRQ 2B1]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -420,7 +417,7 @@ namespace GenioMVC.ViewModels.Cmpki
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAcmpki> listing = Models.ModelBase.Where<CSGenioAcmpki>(m_userContext, false, gqt_menu_2b1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2B1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAcmpki> listing = Models.ModelBase.Where<CSGenioAcmpki>(m_userContext, distinct, gqt_menu_2b1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML2B1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -505,6 +502,8 @@ namespace GenioMVC.ViewModels.Cmpki
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -557,7 +556,7 @@ namespace GenioMVC.ViewModels.Cmpki
 			new TableSearchColumn("Tpequ_ValTipoequi", CSGenioAtpequ.FldTipoequi, typeof(string)),
 			new TableSearchColumn("ValOrder", CSGenioAcmpki.FldOrder, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("Tpeq1_ValTipoequi", CSGenioAtpeq1.FldTipoequi, typeof(string)),
-			new TableSearchColumn("ValQuantida", CSGenioAcmpki.FldQuantida, typeof(decimal?))
+			new TableSearchColumn("ValQuantida", CSGenioAcmpki.FldQuantida, typeof(decimal?)),
 		];
 	}
 }

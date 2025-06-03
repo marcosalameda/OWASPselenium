@@ -357,7 +357,7 @@ namespace GenioMVC.ViewModels.Disst
 
 			validator.StringLength("ValStatus", Resources.Resources.STATUS62033, ValStatus, 50);
 
-			validator.Required("ValStatus", Resources.Resources.STATUS62033, ViewModelConversion.ToString(ValStatus), FieldType.TEXTO.Formatting);
+			validator.Required("ValStatus", Resources.Resources.STATUS62033, ViewModelConversion.ToString(ValStatus), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValDescript", Resources.Resources.DESCRIPTION07383, ValDescript, 50);
 
 

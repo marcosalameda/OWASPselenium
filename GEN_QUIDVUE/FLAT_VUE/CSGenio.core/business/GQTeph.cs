@@ -29,17 +29,17 @@ namespace CSGenio.framework
 			//Esta a obter os do cliente e nao os do modulo
 			//PHE in role Query
 			EPHCondition[] eph1 = new EPHCondition[2];
-			eph1[0] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
-			eph1[1] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+			eph1[0] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
+			eph1[1] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
 			ephsPorModulo.Add("1", eph1);
 			//PHE in role Vendedor
 			EPHCondition[] eph2 = new EPHCondition[1];
-			eph2[0] = new EPHCondition("ORGAN", "GQT", "gqtpworg", "pworg", "codorgan", "pworg", "codorgan", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+			eph2[0] = new EPHCondition("ORGAN", "GQT", "gqtpworg", "pworg", "codorgan", "pworg", "codorgan", FieldType.KEY_GUID, "");
 			ephsPorModulo.Add("2", eph2);
 			//PHE in role Manager
 			EPHCondition[] eph20 = new EPHCondition[2];
-			eph20[0] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
-			eph20[1] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+			eph20[0] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
+			eph20[1] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
 			ephsPorModulo.Add("20", eph20);
 			niveis = new string[]{ "1","2","20" };
 		}

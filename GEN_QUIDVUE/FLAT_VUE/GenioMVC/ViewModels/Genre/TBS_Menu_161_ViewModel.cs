@@ -88,33 +88,6 @@ namespace GenioMVC.ViewModels.Genre
 			return crs;
 		}
 
-
-		public string ValTextcolo { get; set; }
-
-		public string ValBackcolo { get; set; }
-
-		/// <summary>
-		/// Sets the value of a single property of the view model based on the provided table and field names.
-		/// </summary>
-		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
-		/// <param name="value">The field value.</param
-		private void SetViewModelValue(string fullFieldName, object value)
-		{
-			if (string.IsNullOrEmpty(fullFieldName))
-				return;
-
-			switch (fullFieldName)
-			{
-				case "genre.textcolo":
-					ValTextcolo = ViewModelConversion.ToString(value);
-					break;
-				case "genre.backcolo":
-					ValBackcolo = ViewModelConversion.ToString(value);
-					break;
-			}
-		}
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -174,10 +147,10 @@ namespace GenioMVC.ViewModels.Genre
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXTO, Resources.Resources.GENUS37471, 20, 0, true),
-				new Exports.QColumn(CSGenioAgenre.FldAgencont, FieldType.ARRAY_COD_TEXTO, Resources.Resources.GENDER_CONTACT17830, 1, 0, true, "GenConta"),
-				new Exports.QColumn(CSGenioAgenre.FldBackcolo, FieldType.TEXTO, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
-				new Exports.QColumn(CSGenioAgenre.FldTextcolo, FieldType.TEXTO, Resources.Resources.TEXT_COLOR24820, 30, 0, false),
+				new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXT, Resources.Resources.GENUS37471, 20, 0, true),
+				new Exports.QColumn(CSGenioAgenre.FldAgencont, FieldType.ARRAY_TEXT, Resources.Resources.GENDER_CONTACT17830, 1, 0, true, "GenConta"),
+				new Exports.QColumn(CSGenioAgenre.FldBackcolo, FieldType.TEXT, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
+				new Exports.QColumn(CSGenioAgenre.FldTextcolo, FieldType.TEXT, Resources.Resources.TEXT_COLOR24820, 30, 0, false),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -240,8 +213,6 @@ namespace GenioMVC.ViewModels.Genre
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -388,8 +359,7 @@ namespace GenioMVC.ViewModels.Genre
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("genre", "gender");
+					firstVisibleColumn ??= new FieldRef("genre", "gender");
 				}
 
 
@@ -418,6 +388,8 @@ namespace GenioMVC.ViewModels.Genre
 
 // USE /[MANUAL TBS OVERRQ 161]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -445,7 +417,7 @@ namespace GenioMVC.ViewModels.Genre
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAgenre> listing = Models.ModelBase.Where<CSGenioAgenre>(m_userContext, false, tbs_menu_161Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML161", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAgenre> listing = Models.ModelBase.Where<CSGenioAgenre>(m_userContext, distinct, tbs_menu_161Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML161", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -526,6 +498,8 @@ namespace GenioMVC.ViewModels.Genre
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -553,43 +527,11 @@ namespace GenioMVC.ViewModels.Genre
 		/// <inheritdoc />
 		public override void MapFromModel(Models.Genre m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map Model (Genre) to ViewModel (TBS_Menu_161) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				ValTextcolo = ViewModelConversion.ToString(m.ValTextcolo);
-				ValBackcolo = ViewModelConversion.ToString(m.ValBackcolo);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map Model (Genre) to ViewModel (TBS_Menu_161) - Error during mapping.");
-				throw;
-			}
 		}
 
 		/// <inheritdoc />
 		public override void MapToModel(Models.Genre m)
 		{
-			if (m == null)
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (TBS_Menu_161) to Model (Genre) - Model is a null reference.");
-				throw new ModelNotFoundException("Model not found");
-			}
-
-			try
-			{
-				m.ValTextcolo = ViewModelConversion.ToString(ValTextcolo);
-				m.ValBackcolo = ViewModelConversion.ToString(ValBackcolo);
-			}
-			catch
-			{
-				CSGenio.framework.Log.Error("Map ViewModel (TBS_Menu_161) to Model (Genre) - Error during mapping.");
-				throw;
-			}
 		}
 
 		#endregion
@@ -610,7 +552,7 @@ namespace GenioMVC.ViewModels.Genre
 			new TableSearchColumn("ValGender", CSGenioAgenre.FldGender, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValAgencont", CSGenioAgenre.FldAgencont, typeof(string), array : "GenConta"),
 			new TableSearchColumn("ValBackcolo", CSGenioAgenre.FldBackcolo, typeof(string), visible : false),
-			new TableSearchColumn("ValTextcolo", CSGenioAgenre.FldTextcolo, typeof(string), visible : false)
+			new TableSearchColumn("ValTextcolo", CSGenioAgenre.FldTextcolo, typeof(string), visible : false),
 		];
 	}
 }

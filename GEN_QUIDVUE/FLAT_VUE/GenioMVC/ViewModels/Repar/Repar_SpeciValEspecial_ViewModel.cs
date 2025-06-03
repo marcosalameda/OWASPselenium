@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Repar
 			return crs;
 		}
 
-
 		public string ValTipoarea { get; set; }
 
 		public override int GetCount(User user)
@@ -130,8 +129,8 @@ namespace GenioMVC.ViewModels.Repar
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXTO, Resources.Resources.SPECIALTY09304, 50, 0, true),
-				new Exports.QColumn(CSGenioAspeci.FldAreatecn, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
+				new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXT, Resources.Resources.SPECIALTY09304, 50, 0, true),
+				new Exports.QColumn(CSGenioAspeci.FldAreatecn, FieldType.ARRAY_TEXT, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -201,9 +200,6 @@ namespace GenioMVC.ViewModels.Repar
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -347,8 +343,7 @@ namespace GenioMVC.ViewModels.Repar
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("speci", "especial");
+					firstVisibleColumn ??= new FieldRef("speci", "especial");
 				}
 
 
@@ -402,6 +397,8 @@ namespace GenioMVC.ViewModels.Repar
 
 // USE /[MANUAL GQT OVERRQ REPAR_SPECIESPECIAL]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -428,7 +425,7 @@ namespace GenioMVC.ViewModels.Repar
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAspeci> listing = Models.ModelBase.Where<CSGenioAspeci>(m_userContext, false, repar___speciespecialConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___SPECIESPECIAL", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAspeci> listing = Models.ModelBase.Where<CSGenioAspeci>(m_userContext, distinct, repar___speciespecialConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___SPECIESPECIAL", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -508,6 +505,8 @@ namespace GenioMVC.ViewModels.Repar
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -558,7 +557,7 @@ namespace GenioMVC.ViewModels.Repar
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValEspecial", CSGenioAspeci.FldEspecial, typeof(string)),
-			new TableSearchColumn("ValAreatecn", CSGenioAspeci.FldAreatecn, typeof(string), array : "AreaTecn")
+			new TableSearchColumn("ValAreatecn", CSGenioAspeci.FldAreatecn, typeof(string), array : "AreaTecn"),
 		];
 	}
 }

@@ -1,0 +1,354 @@
+﻿<template>
+	<teleport
+		v-if="isReady"
+		to="#q-modal-see-more-cmpki-tpequtipoequi-body">
+		<q-row-container>
+			<q-table
+				v-bind="listCtrl"
+				v-on="listCtrl.handlers" />
+		</q-row-container>
+	</teleport>
+</template>
+
+<script>
+	/* eslint-disable no-unused-vars */
+	import { computed } from 'vue'
+	import { mapActions } from 'pinia'
+	import _merge from 'lodash-es/merge'
+
+	import { useGenericDataStore } from '@/stores/genericData.js'
+	import { useNavDataStore } from '@/stores/navData.js'
+	import VueNavigation from '@/mixins/vueNavigation.js'
+	import ListHandlers from '@/mixins/listHandlers.js'
+	import { navigationProperties } from '@/mixins/navHandlers.js'
+	import { TableListControl } from '@/mixins/fieldControl.js'
+	import listFunctions from '@/mixins/listFunctions.js'
+	import listColumnTypes from '@/mixins/listColumnTypes.js'
+
+	import { loadResources } from '@/plugins/i18n.js'
+	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+
+	import netAPI from '@/api/network'
+	import qApi from '@/api/genio/quidgestFunctions.js'
+	import qFunctions from '@/api/genio/projectFunctions.js'
+	import qProjArrays from '@/api/genio/projectArrays.js'
+	import genericFunctions from '@/mixins/genericFunctions.js'
+	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	/* eslint-enable no-unused-vars */
+
+	import ViewModelBase from '@/mixins/viewModelBase.js'
+
+	const requiredTextResources = ['CMPKI___TPEQUTIPOEQUI_SeeMore', 'hardcoded', 'messages']
+
+	export default {
+		name: 'CmpkiTpequtipoequiSeeMore',
+
+		inheritAttrs: false,
+
+		emits: [
+			'close',
+			'see-more-choice'
+		],
+
+		mixins: [
+			navigationProperties,
+			VueNavigation,
+			ListHandlers
+		],
+
+		props: {
+			/**
+			 * Unique identifier for the control.
+			 */
+			id: String,
+
+			/**
+			 * The limits to which this "See more" control is subjected.
+			 */
+			limits: {
+				type: Object,
+				default: () => ({})
+			},
+
+			/**
+			 * The id of the current navigation.
+			 */
+			navigationId: {
+				type: String,
+				default: ''
+			}
+		},
+
+		expose: [],
+
+		data()
+		{
+			return {
+				isReady: false,
+
+				componentOnLoadProc: asyncProcM.getProcListMonitor('CMPKI___TPEQUTIPOEQUI_SeeMore', false),
+
+				interfaceMetadata: {
+					id: 'CMPKI___TPEQUTIPOEQUI_SeeMore', // Used for resources
+					requiredTextResources
+				},
+
+				menuInfo: {
+					acronym: 'CMPKI___TPEQUTIPOEQUI_SeeMore',
+					name: 'CMPKI___TPEQUTIPOEQUI_SeeMore',
+					controller: 'CMPKI',
+					action: 'CMPKI_TpequValTipoequi'
+				},
+
+				listCtrl: new TableListControl(this.getListConfig(), this),
+
+				// Basic view model to handle access to GLOB, if necessary.
+				model: new ViewModelBase(this),
+			}
+		},
+
+		created()
+		{
+			this.componentOnLoadProc.addImmediateBusy(loadResources(this, requiredTextResources))
+
+			this.listCtrl.init()
+			this.onTableDBDataChanged()
+
+			this.componentOnLoadProc.once(() => {
+				this.isReady = true
+				this.listCtrl.initData()
+			}, this)
+		},
+
+		mounted()
+		{
+			// Listens for changes to the DB and updates the list accordingly.
+			this.$eventHub.onMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
+
+			const modalProps = {
+				id: 'see-more-cmpki-tpequtipoequi',
+				headerTitle: computed(() => this.Resources.TYPES_OF_EQUIPMENT61264),
+				closeButtonEnable: true,
+				hideFooter: true,
+				dismissWithEsc: true,
+				dismissAction: this.close,
+				isActive: true,
+				returnElement: 'CMPKI___TPEQUTIPOEQUI_see-more_button'
+			}
+			this.setModal(modalProps)
+		},
+
+		beforeUnmount()
+		{
+			// Removes the listeners.
+			this.$eventHub.offMany(this.listCtrl.globalEvents, this.onTableDBDataChanged)
+			this.listCtrl.destroy()
+			this.componentOnLoadProc.destroy()
+
+			genericFunctions.removeModal('see-more-cmpki-tpequtipoequi')
+		},
+
+		methods: {
+			...mapActions(useGenericDataStore, [
+				'setModal'
+			]),
+
+			...mapActions(useNavDataStore, [
+				'setParamValue',
+				'setEntryValue'
+			]),
+
+			close()
+			{
+				this.$emit('close')
+			},
+
+			onTableDBDataChanged()
+			{
+				const params = {
+					id: this.id || null,
+					limits: this.limits,
+					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
+				}
+
+				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+			},
+
+			handleRowAction(eventData)
+			{
+				if (eventData.id === 'see-more-choice')
+				{
+					let rowKey = eventData?.rowKeyPath
+					if (Array.isArray(eventData?.rowKeyPath) && eventData?.rowKeyPath.length > 0)
+						rowKey = eventData?.rowKeyPath[eventData?.rowKeyPath.length - 1]
+
+					this.$emit('see-more-choice', rowKey)
+				}
+				else
+					this.onTableListExecuteAction(this.listCtrl, eventData)
+			},
+
+			getListConfig()
+			{
+				const vm = this
+				const listProps = {
+					configuration: {
+						controller: 'CMPKI',
+						action: 'Cmpki_TpequValTipoequi',
+						hasDependencies: false,
+						isInCollapsible: false,
+						columnsOriginal: [
+							new listColumnTypes.TextColumn({
+								order: 1,
+								name: 'ValTipoequi',
+								area: 'TPEQU',
+								field: 'TIPOEQUI',
+								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
+								dataLength: 50,
+								scrollData: 50,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+						],
+						config: {
+							name: 'Cmpki_TpequValTipoequi',
+							serverMode: true,
+							pkColumn: 'ValCodtpequ',
+							tableAlias: 'TPEQU',
+							tableNamePlural: computed(() => this.Resources.TYPES_OF_EQUIPMENT61264),
+							viewManagement: '',
+							showLimitsInfo: true,
+							tableTitle: '',
+							showAlternatePagination: true,
+							permissions: {
+							},
+							searchBarConfig: {
+								visibility: true,
+								searchOnPressEnter: true
+							},
+							filtersVisible: true,
+							allowColumnFilters: true,
+							allowColumnSort: true,
+							crudActions: [
+								{
+									id: 'show',
+									name: 'show',
+									title: computed(() => this.Resources.CONSULTAR57388),
+									icon: {
+										icon: 'view'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'TPEQU',
+										mode: 'SHOW',
+										isControlled: true
+									}
+								},
+								{
+									id: 'edit',
+									name: 'edit',
+									title: computed(() => this.Resources.EDITAR11616),
+									icon: {
+										icon: 'pencil'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'TPEQU',
+										mode: 'EDIT',
+										isControlled: true
+									}
+								},
+								{
+									id: 'duplicate',
+									name: 'duplicate',
+									title: computed(() => this.Resources.DUPLICAR09748),
+									icon: {
+										icon: 'duplicate'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'TPEQU',
+										mode: 'DUPLICATE',
+										isControlled: true
+									}
+								},
+								{
+									id: 'delete',
+									name: 'delete',
+									title: computed(() => this.Resources.ELIMINAR21155),
+									icon: {
+										icon: 'delete'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'TPEQU',
+										mode: 'DELETE',
+										isControlled: true
+									}
+								}
+							],
+							generalActions: [
+								{
+									id: 'insert',
+									name: 'insert',
+									title: computed(() => this.Resources.INSERIR43365),
+									icon: {
+										icon: 'add'
+									},
+									isInReadOnly: false,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'TPEQU',
+										mode: 'NEW',
+										repeatInsertion: false,
+										isControlled: true
+									}
+								},
+							],
+							generalCustomActions: [
+							],
+							groupActions: [
+							],
+							customActions: [
+							],
+							MCActions: [
+							],
+							rowClickAction: {
+								id: 'see-more-choice',
+								name: 'see-more-choice',
+							},
+							formsDefinition: {
+								'TPEQU': {
+									fnKeySelector: (row) => row.Fields.ValCodtpequ,
+									isPopup: false
+								},
+							},
+							defaultSearchColumnName: '',
+							defaultSearchColumnNameOriginal: '',
+							defaultColumnSorting: {
+								columnName: 'ValTipoequi',
+								sortOrder: 'asc'
+							}
+						},
+						globalEvents: ['changed-FAMIL', 'changed-TPEQU'],
+						uuid: 'Cmpki_Cmpki_TpequValTipoequi',
+						allSelectedRows: 'false',
+						handlers: {
+							rowAction: vm.handleRowAction
+						},
+						fixedControlLimits: vm.limits
+					}
+				}
+
+				return listProps.configuration
+			}
+		}
+	}
+</script>

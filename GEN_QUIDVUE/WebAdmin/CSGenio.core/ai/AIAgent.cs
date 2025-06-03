@@ -12,7 +12,7 @@ namespace CSGenio.core.ai;
 /// Abstract class representing an AI Agent that interacts with a chatbot service.
 /// </summary>
 /// <typeparam name="OutData">The type of data expected as the response from the chatbot.</typeparam>
-public abstract class AiAgent<OutData>
+public abstract class AiAgent
 {
     /// <summary>
     /// Protected field holding the chatbot service instance.
@@ -33,7 +33,13 @@ public abstract class AiAgent<OutData>
     /// Gets the system prompt that defines the behavior of the AI agent.
     /// Must be implemented by derived classes.
     /// </summary>
-    public abstract string SystemPrompt { get; }
+    public abstract string BuildSystemPrompt();
+
+    /// <summary>
+    /// Builds the user prompt sent to the AI agent
+    /// Must be implemented by derived classes.
+    /// </summary>
+    public abstract string BuildUserPrompt();
 
     /// <summary>
     /// Gets the JSON schema used to format the chatbot's response.
@@ -49,7 +55,7 @@ public abstract class AiAgent<OutData>
     /// <param name="prompt">The input message sent to the chatbot.</param>
     /// <param name="prompt">The user sending the request</param>
     /// <returns>A task representing the asynchronous operation, returning an instance of OutData.</returns>
-    public async Task<OutData> GetResponseAsync(string prompt, User user)
+    public async Task<OutData> GetResponseAsync<OutData>(User user)
     {
 
         try
@@ -65,8 +71,8 @@ public abstract class AiAgent<OutData>
                 var requestData = new
                 {
                     jsonSchema = JsonSchema,
-                    prompt,
-                    systemPrompt = SystemPrompt,
+                    prompt = BuildUserPrompt(),
+                    systemPrompt = BuildSystemPrompt(),
                     project = Configuration.Program // Static app identifier
                 };
                 Log.Info($"User ${user.Name} called {AGENT_ID}"); 
@@ -88,9 +94,9 @@ public abstract class AiAgent<OutData>
     /// <param name="prompt">The input message sent to the chatbot.</param>
     /// <param name="prompt">The user sending the request</param>
     /// <returns>An instance of OutData, parsed from the returned data</returns>
-    public OutData GetResponse(string prompt, User user)
+    public OutData GetResponse<OutData>(User user)
     {
-        return GetResponseAsync(prompt,user)
+        return GetResponseAsync<OutData>(user)
             .GetAwaiter()
             .GetResult();
     }

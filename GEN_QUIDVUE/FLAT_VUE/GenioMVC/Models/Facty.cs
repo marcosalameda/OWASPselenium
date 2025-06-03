@@ -58,61 +58,61 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Icon anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValIconancx")]
 		[NumericAttribute(0)]
-		public decimal? ValIconancx { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIconancx, 0)); } set { klass.ValIconancx = Convert.ToDecimal(value); } }
+		public decimal? ValIconancx { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValIconancx, 0)); } set { klass.ValIconancx = Convert.ToDecimal(value); } }
 
 		[DisplayName("Icon anchor (y-axis)")]
 		/// <summary>Field : "Icon anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValIconancy")]
 		[NumericAttribute(0)]
-		public decimal? ValIconancy { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIconancy, 0)); } set { klass.ValIconancy = Convert.ToDecimal(value); } }
+		public decimal? ValIconancy { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValIconancy, 0)); } set { klass.ValIconancy = Convert.ToDecimal(value); } }
 
 		[DisplayName("Icon height")]
 		/// <summary>Field : "Icon height" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValIconheig")]
 		[NumericAttribute(0)]
-		public decimal? ValIconheig { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIconheig, 0)); } set { klass.ValIconheig = Convert.ToDecimal(value); } }
+		public decimal? ValIconheig { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValIconheig, 0)); } set { klass.ValIconheig = Convert.ToDecimal(value); } }
 
 		[DisplayName("Icon width")]
 		/// <summary>Field : "Icon width" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValIconwid")]
 		[NumericAttribute(0)]
-		public decimal? ValIconwid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValIconwid, 0)); } set { klass.ValIconwid = Convert.ToDecimal(value); } }
+		public decimal? ValIconwid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValIconwid, 0)); } set { klass.ValIconwid = Convert.ToDecimal(value); } }
 
 		[DisplayName("Popup anchor (x-axis)")]
 		/// <summary>Field : "Popup anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValPopupanx")]
 		[NumericAttribute(0)]
-		public decimal? ValPopupanx { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPopupanx, 0)); } set { klass.ValPopupanx = Convert.ToDecimal(value); } }
+		public decimal? ValPopupanx { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPopupanx, 0)); } set { klass.ValPopupanx = Convert.ToDecimal(value); } }
 
 		[DisplayName("Popup anchor (y-axis)")]
 		/// <summary>Field : "Popup anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValPopupany")]
 		[NumericAttribute(0)]
-		public decimal? ValPopupany { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPopupany, 0)); } set { klass.ValPopupany = Convert.ToDecimal(value); } }
+		public decimal? ValPopupany { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPopupany, 0)); } set { klass.ValPopupany = Convert.ToDecimal(value); } }
 
 		[DisplayName("Shadow anchor (x-axis)")]
 		/// <summary>Field : "Shadow anchor (x-axis)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValShadowax")]
 		[NumericAttribute(0)]
-		public decimal? ValShadowax { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValShadowax, 0)); } set { klass.ValShadowax = Convert.ToDecimal(value); } }
+		public decimal? ValShadowax { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValShadowax, 0)); } set { klass.ValShadowax = Convert.ToDecimal(value); } }
 
 		[DisplayName("Shadow anchor (y-axis)")]
 		/// <summary>Field : "Shadow anchor (y-axis)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValShadoway")]
 		[NumericAttribute(0)]
-		public decimal? ValShadoway { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValShadoway, 0)); } set { klass.ValShadoway = Convert.ToDecimal(value); } }
+		public decimal? ValShadoway { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValShadoway, 0)); } set { klass.ValShadoway = Convert.ToDecimal(value); } }
 
 		[DisplayName("Shadow height")]
 		/// <summary>Field : "Shadow height" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValShadowhe")]
 		[NumericAttribute(0)]
-		public decimal? ValShadowhe { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValShadowhe, 0)); } set { klass.ValShadowhe = Convert.ToDecimal(value); } }
+		public decimal? ValShadowhe { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValShadowhe, 0)); } set { klass.ValShadowhe = Convert.ToDecimal(value); } }
 
 		[DisplayName("Shadow width")]
 		/// <summary>Field : "Shadow width" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Facty.ValShadowwi")]
 		[NumericAttribute(0)]
-		public decimal? ValShadowwi { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValShadowwi, 0)); } set { klass.ValShadowwi = Convert.ToDecimal(value); } }
+		public decimal? ValShadowwi { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValShadowwi, 0)); } set { klass.ValShadowwi = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Facty.ValZzstate")]

@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Messa
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -128,8 +127,8 @@ namespace GenioMVC.ViewModels.Messa
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.LEGAL_NAME42902, 85, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldInitials, FieldType.TEXTO, Resources.Resources.COMPANY_INITIALS56204, 10, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 85, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldInitials, FieldType.TEXT, Resources.Resources.COMPANY_INITIALS56204, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -193,9 +192,6 @@ namespace GenioMVC.ViewModels.Messa
 
 
 			crs.SubSets.Add(subfilters);
-
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -339,8 +335,7 @@ namespace GenioMVC.ViewModels.Messa
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("entit", "name");
+					firstVisibleColumn ??= new FieldRef("entit", "name");
 				}
 
 
@@ -358,6 +353,8 @@ namespace GenioMVC.ViewModels.Messa
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ MESSA_ENTITNAME]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -385,7 +382,7 @@ namespace GenioMVC.ViewModels.Messa
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAentit> listing = Models.ModelBase.Where<CSGenioAentit>(m_userContext, false, messa___entitname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_MESSA___ENTITNAME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAentit> listing = Models.ModelBase.Where<CSGenioAentit>(m_userContext, distinct, messa___entitname____Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_MESSA___ENTITNAME____", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -465,6 +462,8 @@ namespace GenioMVC.ViewModels.Messa
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -515,7 +514,7 @@ namespace GenioMVC.ViewModels.Messa
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAentit.FldName, typeof(string)),
-			new TableSearchColumn("ValInitials", CSGenioAentit.FldInitials, typeof(string))
+			new TableSearchColumn("ValInitials", CSGenioAentit.FldInitials, typeof(string)),
 		];
 	}
 }

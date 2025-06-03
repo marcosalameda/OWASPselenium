@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Conta
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,9 +147,9 @@ namespace GenioMVC.ViewModels.Conta
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXTO, Resources.Resources.TYPE00312, 30, 0, true),
-				new Exports.QColumn(CSGenioAconta.FldContacto, FieldType.TEXTO, Resources.Resources.CONTACT59247, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAtpcon.FldTipocont, FieldType.TEXT, Resources.Resources.TYPE00312, 30, 0, true),
+				new Exports.QColumn(CSGenioAconta.FldContacto, FieldType.TEXT, Resources.Resources.CONTACT59247, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -214,8 +212,6 @@ namespace GenioMVC.ViewModels.Conta
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -362,8 +358,7 @@ namespace GenioMVC.ViewModels.Conta
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("pesso", "name");
+					firstVisibleColumn ??= new FieldRef("pesso", "name");
 				}
 
 
@@ -392,6 +387,8 @@ namespace GenioMVC.ViewModels.Conta
 
 // USE /[MANUAL TBS OVERRQ 141]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -419,7 +416,7 @@ namespace GenioMVC.ViewModels.Conta
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAconta> listing = Models.ModelBase.Where<CSGenioAconta>(m_userContext, false, tbs_menu_141Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML141", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAconta> listing = Models.ModelBase.Where<CSGenioAconta>(m_userContext, distinct, tbs_menu_141Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML141", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -504,6 +501,8 @@ namespace GenioMVC.ViewModels.Conta
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -555,7 +554,7 @@ namespace GenioMVC.ViewModels.Conta
 		[
 			new TableSearchColumn("Pesso_ValName", CSGenioApesso.FldName, typeof(string)),
 			new TableSearchColumn("Tpcon_ValTipocont", CSGenioAtpcon.FldTipocont, typeof(string)),
-			new TableSearchColumn("ValContacto", CSGenioAconta.FldContacto, typeof(string), defaultSearch : true)
+			new TableSearchColumn("ValContacto", CSGenioAconta.FldContacto, typeof(string), defaultSearch : true),
 		];
 	}
 }

@@ -508,7 +508,7 @@ namespace GenioMVC.ViewModels.Pworg
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -555,7 +555,7 @@ namespace GenioMVC.ViewModels.Pworg
 				// Fill List fields
 				this.ValCodpsw = ViewModelConversion.ToString(row["psw.codpsw"]);
 				TablePswNome.Value = (string)row["psw.nome"];
-				if (GlobalFunctions.emptyG(this.ValCodpsw) == 1)
+				if (GenFunctions.emptyG(this.ValCodpsw) == 1)
 				{
 					this.ValCodpsw = "";
 					TablePswNome.Value = "";
@@ -698,7 +698,7 @@ namespace GenioMVC.ViewModels.Pworg
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -745,7 +745,7 @@ namespace GenioMVC.ViewModels.Pworg
 				// Fill List fields
 				this.ValCodorgan = ViewModelConversion.ToString(row["organ.codorgan"]);
 				TableOrganOrganiza.Value = (string)row["organ.organiza"];
-				if (GlobalFunctions.emptyG(this.ValCodorgan) == 1)
+				if (GenFunctions.emptyG(this.ValCodorgan) == 1)
 				{
 					this.ValCodorgan = "";
 					TableOrganOrganiza.Value = "";

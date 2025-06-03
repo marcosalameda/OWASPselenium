@@ -88,8 +88,6 @@ namespace GenioMVC.ViewModels.Anexd
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -149,12 +147,12 @@ namespace GenioMVC.ViewModels.Anexd
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXTO, Resources.Resources.NO__REGISTER04207, 6, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATAHORA, Resources.Resources.ATTACHED26247, 16, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.FICHEIRO_BD, Resources.Resources.DOCUMENT00695, 30, 0, true),
-				new Exports.QColumn(CSGenioAlangu.FldLangua, FieldType.TEXTO, Resources.Resources.IDIOMA44057, 30, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldTittradu, FieldType.TEXTO, Resources.Resources.TITULO_TRADUZIDO52244, 30, 0, true),
+				new Exports.QColumn(CSGenioAequip.FldRegistnr, FieldType.TEXT, Resources.Resources.NO__REGISTER04207, 6, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATETIME, Resources.Resources.ATTACHED26247, 16, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
+				new Exports.QColumn(CSGenioAlangu.FldLangua, FieldType.TEXT, Resources.Resources.IDIOMA44057, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldTittradu, FieldType.TEXT, Resources.Resources.TITULO_TRADUZIDO52244, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -217,8 +215,6 @@ namespace GenioMVC.ViewModels.Anexd
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -365,8 +361,7 @@ namespace GenioMVC.ViewModels.Anexd
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("equip", "registnr");
+					firstVisibleColumn ??= new FieldRef("equip", "registnr");
 				}
 
 
@@ -395,6 +390,8 @@ namespace GenioMVC.ViewModels.Anexd
 
 // USE /[MANUAL GQT OVERRQ 931]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -422,7 +419,7 @@ namespace GenioMVC.ViewModels.Anexd
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAanexd> listing = Models.ModelBase.Where<CSGenioAanexd>(m_userContext, false, gqt_menu_931Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML931", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAanexd> listing = Models.ModelBase.Where<CSGenioAanexd>(m_userContext, distinct, gqt_menu_931Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML931", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -507,6 +504,8 @@ namespace GenioMVC.ViewModels.Anexd
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -572,7 +571,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Equip", "Equip.ValRegistnr", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Langu", "Langu.ValLangua", "Anexd.ValTittradu", "Anexd.ValCodequip", "Anexd.ValCodlang"
+			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Equip", "Equip.ValRegistnr", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Langu", "Langu.ValLangua", "Anexd.ValTittradu", "Equip.ValCodequip", "Anexd.ValCodequip", "Anexd.ValCodlang"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
@@ -582,7 +581,7 @@ namespace GenioMVC.ViewModels.Anexd
 			new TableSearchColumn("ValTitle", CSGenioAanexd.FldTitle, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDocument", CSGenioAanexd.FldDocument, typeof(string)),
 			new TableSearchColumn("Langu_ValLangua", CSGenioAlangu.FldLangua, typeof(string)),
-			new TableSearchColumn("ValTittradu", CSGenioAanexd.FldTittradu, typeof(string))
+			new TableSearchColumn("ValTittradu", CSGenioAanexd.FldTittradu, typeof(string)),
 		];
 	}
 }

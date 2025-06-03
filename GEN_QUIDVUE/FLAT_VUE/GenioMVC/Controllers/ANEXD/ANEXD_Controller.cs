@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Anexd;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER ANEXD]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class AnexdController : ControllerBase
 	{
-		public AnexdController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public AnexdController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION ANEXD]/
 
 
@@ -153,6 +162,27 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+		// POST: /Anexd/ANEXD_InsertCondition
+		[HttpPost]
+		public JsonResult ANEXD_InsertCondition()
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Anexd(UserContext.Current);
+
+				// Formula: HasRole("A") && !isEmptyG([EQUIP->CODEQUIP])
+				if (!((Logical)(CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A")&&!(((string)p.Equip.ValCodequip) == ""))))
+					return JsonOK(false);
+
+				return JsonOK(true);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
 
 
 		/// <summary>

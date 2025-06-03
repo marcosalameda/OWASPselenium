@@ -272,6 +272,7 @@ namespace DbAdmin
                 }
                 catch (GenioException e)
                 {
+                    RdxItem.Progress.State = RdxProgressStatus.ERROR;
                     RdxItem.Progress.Message = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()) + ": " + e.Message;
                 }
                 catch (OperationCanceledException)
@@ -280,6 +281,7 @@ namespace DbAdmin
                 }
                 catch (Exception e)
                 {
+                    RdxItem.Progress.State = RdxProgressStatus.ERROR;
                     RdxItem.Progress.Message = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
                 }
             });  

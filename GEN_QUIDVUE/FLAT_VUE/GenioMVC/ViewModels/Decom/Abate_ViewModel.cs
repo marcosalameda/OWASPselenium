@@ -347,9 +347,9 @@ namespace GenioMVC.ViewModels.Decom
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValDecomnr", Resources.Resources.NO_DECOMISSION13045, ViewModelConversion.ToNumeric(ValDecomnr), FieldType.NUMERO.Formatting);
+			validator.Required("ValDecomnr", Resources.Resources.NO_DECOMISSION13045, ViewModelConversion.ToNumeric(ValDecomnr), FieldType.NUMERIC.GetFormatting());
 
-			validator.Required("ValDtdeco", Resources.Resources.DECOMISSION14486, ViewModelConversion.ToDateTime(ValDtdeco), FieldType.DATAHORA.Formatting);
+			validator.Required("ValDtdeco", Resources.Resources.DECOMISSION14486, ViewModelConversion.ToDateTime(ValDtdeco), FieldType.DATETIME.GetFormatting());
 
 
 			return validator.GetResult();

@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Feeca;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER FEECA]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class FeecaController : ControllerBase
 	{
-		public FeecaController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public FeecaController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION FEECA]/
 
 
@@ -144,6 +153,7 @@ namespace GenioMVC.Controllers
 
 
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Feeca" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -157,6 +167,7 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Feeca)
 			);
 		}
+
 
 
 		/// <summary>

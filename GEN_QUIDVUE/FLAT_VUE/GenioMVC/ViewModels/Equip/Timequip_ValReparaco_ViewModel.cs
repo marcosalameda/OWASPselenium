@@ -42,7 +42,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// The primary key field.
 		/// </summary>
 		[JsonIgnore]
-		public string ValCodequip { get; set; }
+		public string EquipValCodequip { get; set; }
 
 		/// <summary>
 		/// The context of the parent.
@@ -92,7 +92,6 @@ namespace GenioMVC.ViewModels.Equip
 			return crs;
 		}
 
-
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -110,7 +109,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="userContext">The current user request context</param>
 		public Timequip_ValReparaco_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+			EquipValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
 		}
 
 		/// <summary>
@@ -128,11 +127,11 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArepar.FldDtrepara, FieldType.DATAHORA, Resources.Resources.FIXED_IN00179, 16, 0, true),
-				new Exports.QColumn(CSGenioArepar.FldNrrepara, FieldType.NUMERO, Resources.Resources.NO_RUMOUR_IN_THE_COM15248, 10, 0, true),
-				new Exports.QColumn(CSGenioArepar.FldTipoarea, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
+				new Exports.QColumn(CSGenioArepar.FldDtrepara, FieldType.DATETIME, Resources.Resources.FIXED_IN00179, 16, 0, true),
+				new Exports.QColumn(CSGenioArepar.FldNrrepara, FieldType.NUMERIC, Resources.Resources.NO_RUMOUR_IN_THE_COM15248, 10, 0, true),
+				new Exports.QColumn(CSGenioArepar.FldTipoarea, FieldType.ARRAY_TEXT, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
 				new Exports.QColumn(CSGenioArepar.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION_OF_THE_R26085, 30, 3, true),
-				new Exports.QColumn(CSGenioArepar.FldHours, FieldType.NUMERO, Resources.Resources.SPENT_ON_HOURS19285, 10, 0, true),
+				new Exports.QColumn(CSGenioArepar.FldHours, FieldType.NUMERIC, Resources.Resources.SPENT_ON_HOURS19285, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -197,10 +196,8 @@ namespace GenioMVC.ViewModels.Equip
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodequip != null)
-				crs.Equal(CSGenioArepar.FldCodequip, this.ValCodequip);
-
-
+			if (this.EquipValCodequip != null)
+				crs.Equal(CSGenioArepar.FldCodequip, this.EquipValCodequip);
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -338,8 +335,7 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("repar", "dtrepara");
+					firstVisibleColumn ??= new FieldRef("repar", "dtrepara");
 				}
 
 
@@ -368,6 +364,8 @@ namespace GenioMVC.ViewModels.Equip
 
 // USE /[MANUAL GQT OVERRQ TIMEQUIP_PSEUDREPARACO]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -395,7 +393,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArepar> listing = Models.ModelBase.Where<CSGenioArepar>(m_userContext, false, timequippseudreparacoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TIMEQUIPPSEUDREPARACO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArepar> listing = Models.ModelBase.Where<CSGenioArepar>(m_userContext, distinct, timequippseudreparacoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TIMEQUIPPSEUDREPARACO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -475,6 +473,8 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -528,7 +528,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("ValNrrepara", CSGenioArepar.FldNrrepara, typeof(decimal?)),
 			new TableSearchColumn("ValTipoarea", CSGenioArepar.FldTipoarea, typeof(string), array : "AreaTecn"),
 			new TableSearchColumn("ValDescript", CSGenioArepar.FldDescript, typeof(string)),
-			new TableSearchColumn("ValHours", CSGenioArepar.FldHours, typeof(decimal?))
+			new TableSearchColumn("ValHours", CSGenioArepar.FldHours, typeof(decimal?)),
 		];
 	}
 }

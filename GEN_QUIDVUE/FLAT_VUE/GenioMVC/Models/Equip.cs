@@ -78,7 +78,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Sequential no." Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Equip.ValSequennr")]
 		[NumericAttribute(0)]
-		public decimal? ValSequennr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSequennr, 0)); } set { klass.ValSequennr = Convert.ToDecimal(value); } }
+		public decimal? ValSequennr { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSequennr, 0)); } set { klass.ValSequennr = Convert.ToDecimal(value); } }
 
 		[DisplayName("No. register")]
 		/// <summary>Field : "No. register" Tipo: "C" Formula: + "RIGHT("000000"+NumericToString([EQUIP->SEQUENNR],0),6)"</summary>
@@ -201,7 +201,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Total value" Tipo: "$D" Formula: SR "[INSTA->VALUE]"</summary>
 		[ShouldSerialize("Equip.ValValortot")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValortot { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValortot, 2)); } set { klass.ValValortot = Convert.ToDecimal(value); } }
+		public decimal? ValValortot { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValortot, 2)); } set { klass.ValValortot = Convert.ToDecimal(value); } }
 
 		[DisplayName("Loan frequency")]
 		/// <summary>Field : "Loan frequency" Tipo: "AN" Formula:  ""</summary>
@@ -287,7 +287,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Qtd. movimentações" Tipo: "N" Formula: SR "[MOVIM->1]"</summary>
 		[ShouldSerialize("Equip.ValQtdmovim")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdmovim { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdmovim, 0)); } set { klass.ValQtdmovim = Convert.ToDecimal(value); } }
+		public decimal? ValQtdmovim { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdmovim, 0)); } set { klass.ValQtdmovim = Convert.ToDecimal(value); } }
 
 		[DisplayName("Show record")]
 		/// <summary>Field : "Show record" Tipo: "L" Formula:  ""</summary>

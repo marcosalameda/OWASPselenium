@@ -93,8 +93,6 @@ namespace GenioMVC.ViewModels.Entit
 			return crs;
 		}
 
-
-
 		public override int GetCount(User user)
 		{
 			CSGenio.persistence.PersistentSupport sp = m_userContext.PersistentSupport;
@@ -155,34 +153,34 @@ namespace GenioMVC.ViewModels.Entit
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldInitials, FieldType.TEXTO, Resources.Resources.COMPANY_INITIALS56204, 10, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldRegistra, FieldType.TEXTO, Resources.Resources.LEGAL_REGISTRATION04413, 20, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldTaxnumbe, FieldType.TEXTO, Resources.Resources.VAT_NUMBER24236, 20, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldPhonenum, FieldType.TEXTO, Resources.Resources.PHONE_NUMBER20774, 20, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldIban, FieldType.TEXTO, Resources.Resources.IBAN__INTERNATIONAL_45066, 25, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldBuilding, FieldType.TEXTO, Resources.Resources.BUILDING_HOUSE_NUMBE20738, 10, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldStreet, FieldType.TEXTO, Resources.Resources.STREET44324, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldTown, FieldType.TEXTO, Resources.Resources.TOWN_CITY16259, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldCounty, FieldType.TEXTO, Resources.Resources.COUNTY_PROVINCE34285, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldState, FieldType.TEXTO, Resources.Resources.STATE_PROVINCE28516, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldPobox, FieldType.TEXTO, Resources.Resources.POST_OFFICE_BOX06223, 5, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldPostalco, FieldType.TEXTO, Resources.Resources.ZIP_POSTAL_CODE55613, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldTelephon, FieldType.TEXTO, Resources.Resources.TELEPHONE28697, 20, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldFax, FieldType.TEXTO, Resources.Resources.FAX08532, 20, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldWebsite, FieldType.TEXTO, Resources.Resources.WEB_SITE06263, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldPerson, FieldType.TEXTO, Resources.Resources.PERSON_DEPARTMENT_TO28777, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldContact, FieldType.TEXTO, Resources.Resources.CONTACT_TELEPHONE_NU12694, 20, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldManufact, FieldType.LOGICO, Resources.Resources.MANUFACTURER50759, 1, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldFounded, FieldType.DATA, Resources.Resources.FOUNDED_IN54120, 8, 0, false),
-				new Exports.QColumn(CSGenioAfaci1.FldName, FieldType.TEXTO, Resources.Resources.FACILITY_NAME19514, 30, 0, false),
-				new Exports.QColumn(CSGenioAfaci2.FldName, FieldType.TEXTO, Resources.Resources.FACILITY_NAME19514, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldLanguage, FieldType.TEXTO, Resources.Resources.LANGUAGE16872, 2, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldCurrency, FieldType.TEXTO, Resources.Resources.CURRENCY13881, 3, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldOwner, FieldType.TEXTO, Resources.Resources.OWNER09558, 1, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldCarrier, FieldType.LOGICO, Resources.Resources.CARRIER64855, 1, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldSupplier, FieldType.LOGICO, Resources.Resources.SUPPLIER17230, 1, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldInitials, FieldType.TEXT, Resources.Resources.COMPANY_INITIALS56204, 10, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldRegistra, FieldType.TEXT, Resources.Resources.LEGAL_REGISTRATION04413, 20, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldTaxnumbe, FieldType.TEXT, Resources.Resources.VAT_NUMBER24236, 20, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldPhonenum, FieldType.TEXT, Resources.Resources.PHONE_NUMBER20774, 20, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldIban, FieldType.TEXT, Resources.Resources.IBAN__INTERNATIONAL_45066, 25, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldBuilding, FieldType.TEXT, Resources.Resources.BUILDING_HOUSE_NUMBE20738, 10, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldStreet, FieldType.TEXT, Resources.Resources.STREET44324, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldTown, FieldType.TEXT, Resources.Resources.TOWN_CITY16259, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldCounty, FieldType.TEXT, Resources.Resources.COUNTY_PROVINCE34285, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldState, FieldType.TEXT, Resources.Resources.STATE_PROVINCE28516, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldPobox, FieldType.TEXT, Resources.Resources.POST_OFFICE_BOX06223, 5, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldPostalco, FieldType.TEXT, Resources.Resources.ZIP_POSTAL_CODE55613, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldTelephon, FieldType.TEXT, Resources.Resources.TELEPHONE28697, 20, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldFax, FieldType.TEXT, Resources.Resources.FAX08532, 20, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldWebsite, FieldType.TEXT, Resources.Resources.WEB_SITE06263, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldPerson, FieldType.TEXT, Resources.Resources.PERSON_DEPARTMENT_TO28777, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldContact, FieldType.TEXT, Resources.Resources.CONTACT_TELEPHONE_NU12694, 20, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldManufact, FieldType.LOGIC, Resources.Resources.MANUFACTURER50759, 1, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldFounded, FieldType.DATE, Resources.Resources.FOUNDED_IN54120, 8, 0, false),
+				new Exports.QColumn(CSGenioAfaci1.FldName, FieldType.TEXT, Resources.Resources.FACILITY_NAME19514, 30, 0, false),
+				new Exports.QColumn(CSGenioAfaci2.FldName, FieldType.TEXT, Resources.Resources.FACILITY_NAME19514, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldLanguage, FieldType.TEXT, Resources.Resources.LANGUAGE16872, 2, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldCurrency, FieldType.TEXT, Resources.Resources.CURRENCY13881, 3, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldOwner, FieldType.TEXT, Resources.Resources.OWNER09558, 1, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldCarrier, FieldType.LOGIC, Resources.Resources.CARRIER64855, 1, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldSupplier, FieldType.LOGIC, Resources.Resources.SUPPLIER17230, 1, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -245,8 +243,6 @@ namespace GenioMVC.ViewModels.Entit
 
 
 			crs.SubSets.Add(subfilters);
-
-
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -394,8 +390,7 @@ namespace GenioMVC.ViewModels.Entit
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("entit", "name");
+					firstVisibleColumn ??= new FieldRef("entit", "name");
 				}
 
 
@@ -443,6 +438,8 @@ namespace GenioMVC.ViewModels.Entit
 
 // USE /[MANUAL WMS OVERRQ 5211]/
 
+				bool distinct = false;
+
 				if (isToExport)
 				{
 					if (!tableReload)
@@ -470,7 +467,7 @@ namespace GenioMVC.ViewModels.Entit
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAentit> listing = Models.ModelBase.Where<CSGenioAentit>(m_userContext, false, wms_menu_5211Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML5211", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAentit> listing = Models.ModelBase.Where<CSGenioAentit>(m_userContext, distinct, wms_menu_5211Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML5211", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -555,6 +552,8 @@ namespace GenioMVC.ViewModels.Entit
 				}
 			}
 
+			model.InitRowData();
+
 			return model;
 		}
 
@@ -631,7 +630,7 @@ namespace GenioMVC.ViewModels.Entit
 			new TableSearchColumn("ValCurrency", CSGenioAentit.FldCurrency, typeof(string), visible : false),
 			new TableSearchColumn("ValOwner", CSGenioAentit.FldOwner, typeof(string)),
 			new TableSearchColumn("ValCarrier", CSGenioAentit.FldCarrier, typeof(bool)),
-			new TableSearchColumn("ValSupplier", CSGenioAentit.FldSupplier, typeof(bool))
+			new TableSearchColumn("ValSupplier", CSGenioAentit.FldSupplier, typeof(bool)),
 		];
 	}
 }

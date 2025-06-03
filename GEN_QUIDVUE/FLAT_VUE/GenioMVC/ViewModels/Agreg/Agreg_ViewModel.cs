@@ -519,7 +519,7 @@ namespace GenioMVC.ViewModels.Agreg
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -566,7 +566,7 @@ namespace GenioMVC.ViewModels.Agreg
 				// Fill List fields
 				this.ValCodproje = ViewModelConversion.ToString(row["proje.codproje"]);
 				TableProjeProjecto.Value = (string)row["proje.projecto"];
-				if (GlobalFunctions.emptyG(this.ValCodproje) == 1)
+				if (GenFunctions.emptyG(this.ValCodproje) == 1)
 				{
 					this.ValCodproje = "";
 					TableProjeProjecto.Value = "";
@@ -709,7 +709,7 @@ namespace GenioMVC.ViewModels.Agreg
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -756,7 +756,7 @@ namespace GenioMVC.ViewModels.Agreg
 				// Fill List fields
 				this.ValCodyear = ViewModelConversion.ToString(row["year.codyear"]);
 				TableYearYear.Value = (string)row["year.year"];
-				if (GlobalFunctions.emptyG(this.ValCodyear) == 1)
+				if (GenFunctions.emptyG(this.ValCodyear) == 1)
 				{
 					this.ValCodyear = "";
 					TableYearYear.Value = "";

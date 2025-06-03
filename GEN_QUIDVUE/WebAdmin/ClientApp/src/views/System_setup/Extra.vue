@@ -14,13 +14,15 @@
 							<template #actions="props">
 								<q-button-group borderless>
 									<q-button
-									:title="Resources.EDITAR11616"
-									@click="changeAdvancedProperty(props.row)">
-									<q-icon icon="pencil" />
+										variant="text"
+										:title="Resources.EDITAR11616"
+										@click="changeAdvancedProperty(props.row)">
+										<q-icon icon="pencil" />
 									</q-button>
 									<q-button
-									:title="Resources.ELIMINAR21155"
-									@click="deleteAdvancedProperty(props.row)">
+										variant="text"
+										:title="Resources.ELIMINAR21155"
+										@click="deleteAdvancedProperty(props.row)">
 									<q-icon icon="bin" />
 									</q-button>
 								</q-button-group>
@@ -48,49 +50,63 @@
 			:buttons="buttonsAdvanced">
 			<template #body.content>
 				<div class="q-dialog-container">
-					<div v-if="hasInitProperties && !showNewKeyInput && !(inEditMode || inDeleteMode)">
+					<div v-if="hasInitProperties && !showNewKeyInput">
+						<div id="help_container"  v-if="help">
+							<div class="q-help__info-banner">
+								<div class="q-help__info-banner-header">
+									<q-icon icon="information-outline" />									
+								</div>
+								<div class="q-help__info-banner-body">
+									<span style="white-space: pre-line">
+										{{ help }}<br>
+									</span>
+								</div>
+							</div>
+							<br />
+						</div>
+						<q-button v-if="!inDeleteModeAdvanced"
+							@click="showNewKeyInput=true"
+							:label="Resources.INSERT_NEW_KEY15186">
+								<q-icon icon="pencil" />
+						</q-button>
 						<q-select
 							v-model="rowKey"
 							v-if="SelectLists"
 							:label="Resources.KEY01046"
 							:items="SelectLists.PropertyList"
-							size="medium"
-							:readonly="inEditMode || inDeleteMode"
+							size="large"
+							:readonly="inDeleteModeAdvanced"
 							item-value="Value"
-							item-label="Text" />
-						<q-button
-							b-style="secondary"
-							@click="showNewKeyInput=true"
-							:label="Resources.INSERT_NEW_KEY15186">
-								<q-icon icon="pencil" />
-						</q-button>
+							item-label="translatedLabel">
+						</q-select>
 					</div>
 					<div v-else>
+						<q-button
+							@click="showNewKeyInput=false"
+							:label="Resources.LIST_DEFAULT_KEYS58194"
+							v-if="hasInitProperties && !inDeleteModeAdvanced">
+								<q-icon icon="list" />
+						</q-button>
 						<q-text-field
 							v-model="rowKey"
 							:class="{ 'input-error' : isSameKey }"
 							:label="Resources.KEY01046"
-							:readonly="inEditMode || inDeleteMode"
+							:readonly="inDeleteModeAdvanced"
 							required
 							size="large">
 							<template #extras v-if="isSameKey">
 								<q-icon icon="information-outline" />
 								{{ Resources.THIS_KEY_ALREADY_EXI09944 }}
 							</template>
-						</q-text-field>
-						<q-button
-							b-style="secondary"
-							@click="showNewKeyInput=false"
-							:label="Resources.LIST_DEFAULT_KEYS58194"
-							v-show="hasInitProperties && !(inEditMode || inDeleteMode)">
-								<q-icon icon="list" />
-						</q-button>
+						</q-text-field>						
 					</div>
 					<div>
-						<q-text-field
+						<component
+							:is="valueComponent"
 							v-model="rowValue"
 							:label="Resources.VALUE10285"
-							:readonly="inDeleteMode"
+							:readonly="inDeleteModeAdvanced"
+							:isReadOnly="inDeleteModeAdvanced"
 							required
 							size="large" />
 					</div>
@@ -105,13 +121,18 @@
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import QAlert from '@/components/QAlert.vue';
-
+	import { QTextField, QCheckbox, QPasswordField} from '@quidgest/ui/components';
+	import numeric_input from '@/components/Numeric_input.vue';
 
 	export default {
 		name: 'extra',
 
 		components: {
-			QAlert
+			QAlert,
+			QTextField,
+			QCheckbox,
+			QPasswordField,
+			numeric_input
 		},
 
 		mixins: [reusableMixin],
@@ -167,6 +188,9 @@
 						table_title: this.$t('PROPRIEDADES_AVANCAD23972')
 					}
 				},
+				valueComponent: QTextField,
+				showNewKeyInput : false,
+				help:'',				
 				tRepor: {
 					rows: [
 						{Rep:this.model.pathReports  + '\\' + 'en-US',Lang: 'English'},
@@ -224,7 +248,8 @@
 							id: 'delete-btn',
 							props: {
 								label: this.Resources.APAGAR04097,
-								bStyle: "danger"
+								variant: 'bold',
+								color: "danger"
 							},
 							action: () => {
 								this.SaveMoreProperty()
@@ -237,7 +262,7 @@
 							id: 'save-btn',
 							props: {
 								label: this.Resources.GRAVAR45301,
-								bStyle: "primary",
+								variant: 'bold',
 								disabled: this.invalidProps
 							},
 							action: () => {
@@ -260,7 +285,7 @@
 			SaveMoreProperty() {
 				const propsValues = {
 					Key: this.rowKey,
-					Val: this.rowValue,
+					Val: this.rowValue.toString(),
 					FormMode: this.dialogModeAdvanced,
 				}
 				QUtils.postData('Config', 'SaveMoreProperty', propsValues, { appId: this.$store.state.currentApp }, (data) => {
@@ -281,13 +306,8 @@
 							const newPropIndex = this.advancedProps.findIndex(value => value.Key == this.rowKey)
 							this.advancedProps[newPropIndex].Val = this.rowValue;
 							break;
-						case 'delete':
-							if (data.initProp) {
-								eventData.moreProperty = data.moreProperty;
-								this.$emit('alert-class', { ResultMsg: this.Resources.CANNOT_DELETE_THIS_P45050, AlertType: 'danger' });
-							} else {
-								this.advancedProps = this.advancedProps.filter(prop => prop.Key != this.rowKey);
-							}
+						case 'delete':							
+							this.advancedProps = this.advancedProps.filter(prop => prop.Key != this.rowKey);							
 							break;
 						default:
 							break;
@@ -303,6 +323,8 @@
 				this.rowValue = ''
 				this.dialogModeAdvanced = ''
 				this.buttonsAdvanced = []
+				this.valueComponent = QTextField
+				this.help = ''
 			},
 			showAdvancedPropertyModal(mode) {
 				this.dialogModeAdvanced = mode;
@@ -334,6 +356,35 @@
 			invalidProps(newValue) {
 				if (this.buttonsAdvanced.length > 0)
 					this.buttonsAdvanced[0].props.disabled = newValue
+			},
+			rowKey(newValue) {
+				let advancedItem = this.SelectLists.PropertyList.find(item => item.Value === newValue);
+				if (advancedItem?.Type) {
+					switch (advancedItem.Type) {
+						case 'C':
+							this.valueComponent = QTextField							
+							break;
+						case 'N':
+							this.valueComponent = numeric_input
+							break;
+						case 'L':
+							this.valueComponent = QCheckbox							
+							break;
+						case 'P':
+							this.valueComponent = QPasswordField
+							break;
+						default:
+							this.valueComponent = QTextField
+					}
+					//Set default value if exists (Only for new properties).
+					if (this.dialogModeAdvanced ==='new' && advancedItem.Default) {
+						if (advancedItem.Type == 'L')
+							this.rowValue = advancedItem.Default.toLowerCase() === "true"
+						else
+							this.rowValue = advancedItem.Default
+					}
+					this.help = advancedItem.translatedHelpVerbose || advancedItem.translatedHelp
+				}
 			}
 		}
 	};

@@ -55,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 3989;
+        public static int Version { get; } = 4086;
 
         /// <summary>
         /// System id
@@ -85,12 +85,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 3989;
+        public const int VersionDbGen = 4086;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1658;
+        public const int VersionIdxDbGen = 1756;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -105,12 +105,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "362.39";
+        public const string GenioVersion = "369.55";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2907;
+        public const int BuildVersionGen = 2930;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -131,6 +131,8 @@ namespace CSGenio.framework
         /// Should documents be saved on disk. False to save on the database
         /// </summary>
         public static bool Files2Disk { get; private set; } =  false;
+
+
         //----------------------------------------------
         // ChatBot
         //----------------------------------------------
@@ -553,6 +555,8 @@ namespace CSGenio.framework
                 throw new FrameworkException("Erro nas configurações.", "Configuration.GetProperty", "Property not found: " + name);
             return maisPropriedades[name];
         }
+
+
 
         /// <summary>
         /// Retrieve a property using its key.

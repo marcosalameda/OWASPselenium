@@ -12,22 +12,21 @@ public class Artig_ValContacor_RowViewModel : Models.Ccorr
 
 	public Artig_ValContacor_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	public Artig_ValContacor_RowViewModel(UserContext userContext, CSGenioAccorr val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
 	{
-		InitRowData();
+		InitRowProperties();
 	}
 
 	#endregion
 
 	#region Private methods
 
-	private void InitRowData()
+	private void InitRowProperties()
 	{
 		SetColumns();
-		SetButtonPermissions();
 		SetCustomActions();
 	}
 
@@ -145,4 +144,12 @@ public class Artig_ValContacor_RowViewModel : Models.Ccorr
 	/// </summary>
 	[JsonPropertyName("backgroundColor")]
 	public string BackgroundColor => ((((string)this.ValType)=="Entrada")?("RGB(207,255,158)"):(((((string)this.ValType)=="Saída")?("RGB(255,190,158)"):("RGB(255,255,255)"))));
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

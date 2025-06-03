@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Repar;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER REPAR]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ReparController : ControllerBase
 	{
-		public ReparController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ReparController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION REPAR]/
 
 
@@ -166,6 +175,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
 
 
 

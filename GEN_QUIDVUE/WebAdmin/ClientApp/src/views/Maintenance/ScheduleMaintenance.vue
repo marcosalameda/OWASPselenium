@@ -13,7 +13,7 @@
 
 				<row class="footer-btn">
 					<q-button
-						b-style="primary"
+						variant="bold"
 						:label="Resources.CONFIRMAR09808"
 						@click="ScheduleMaintenance" />
 				</row>
@@ -37,15 +37,15 @@
 			return {
 				showScheduleDT: true,
 				scheduleDT: moment(),
-				CurentMaintenance: {},
+				CurrentMaintenance: {},
 			}
 		},
 
 		computed: {
 			maintenanceTitleText() {
 				var vm = this;
-				return vm.CurentMaintenance.IsActive ? vm.Resources.DESACTIVAR_MANUTENCA45568 :
-					(vm.CurentMaintenance.IsScheduled ? vm.Resources.MUDAR_AGENDAMENTO_DE08195 : vm.Resources.AGENDAR_MANUTENCAO19112);
+				return vm.CurrentMaintenance.IsActive ? vm.Resources.DESACTIVAR_MANUTENCA45568 :
+					(vm.CurrentMaintenance.IsScheduled ? vm.Resources.MUDAR_AGENDAMENTO_DE08195 : vm.Resources.AGENDAR_MANUTENCAO19112);
 			}
 		},
 
@@ -55,14 +55,14 @@
 				if (!vm.scheduleDT || vm.scheduleDT === '' || vm.scheduleDT === null || vm.scheduleDT === undefined) {
 					QUtils.postData('Dashboard', 'DisableMaintenance', null, null, function (data) {
 						QUtils.log("DisableMaintenance - Response", data);
-						$.each(data.CurentMaintenance, function (propName, value) { vm.CurentMaintenance[propName] = value; });
+						$.each(data.CurrentMaintenance, function (propName, value) { vm.CurrentMaintenance[propName] = value; });
 						vm.$emit('alert-class', { ResultMsg: vm.Resources.MANUTENCAO_DESATIVAD51873, AlertType: 'success' });
 					});
 				}
 				else {
 					QUtils.postData('Dashboard', 'ScheduleMaintenance', { date: vm.scheduleDT }, null, function (data) {
 						QUtils.log("ScheduleMaintenance - Response", data);
-						$.each(data.CurentMaintenance, function (propName, value) { vm.CurentMaintenance[propName] = value; });
+						$.each(data.CurrentMaintenance, function (propName, value) { vm.CurrentMaintenance[propName] = value; });
 						vm.$emit('alert-class', { ResultMsg: vm.Resources.MANUTENCAO_CONFIGURA28227, AlertType: 'success' });
 					});
 				}

@@ -112,9 +112,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -194,9 +191,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);
@@ -278,9 +272,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -297,11 +288,11 @@ namespace GenioMVC.Controllers
 
 			Models.Expen expen = Models.Expen.Find(id, UserContext.Current, "MLLIST_DB_MC_T");
 			Navigation.SetValue("expen", id);
-			if (expen != null && (CSGenio.business.GlobalFunctions.emptyC(((string)expen.ValDescript))==0))
+			if (expen != null && (CSGenio.framework.GenFunctions.emptyC(((string)expen.ValDescript))==0))
 			{
 				return JsonOK(new { actionName = "MC_3B11", id = id });
 			}
-			if (expen != null && (CSGenio.business.GlobalFunctions.emptyC(((string)expen.ValDescript))==1))
+			if (expen != null && (CSGenio.framework.GenFunctions.emptyC(((string)expen.ValDescript))==1))
 			{
 				return JsonOK(new { actionName = "MC_3B12", id = id });
 			}
@@ -389,9 +380,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -408,11 +396,11 @@ namespace GenioMVC.Controllers
 
 			Models.Expen expen = Models.Expen.Find(id, UserContext.Current, "MLLIST_DB_MB_MC_T");
 			Navigation.SetValue("expen", id);
-			if (expen != null && (CSGenio.business.GlobalFunctions.emptyC(((string)expen.ValDescript))==0))
+			if (expen != null && (CSGenio.framework.GenFunctions.emptyC(((string)expen.ValDescript))==0))
 			{
 				return JsonOK(new { actionName = "MC_3C111", id = id });
 			}
-			if (expen != null && (CSGenio.business.GlobalFunctions.emptyC(((string)expen.ValDescript))==1))
+			if (expen != null && (CSGenio.framework.GenFunctions.emptyC(((string)expen.ValDescript))==1))
 			{
 				return JsonOK(new { actionName = "MC_3C112", id = id });
 			}
@@ -500,9 +488,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -582,9 +567,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);

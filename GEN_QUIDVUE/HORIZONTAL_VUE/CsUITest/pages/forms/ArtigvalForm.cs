@@ -10,7 +10,7 @@ public class ArtigvalForm : PopupForm
 	/// <summary>
 	/// Image
 	/// </summary>
-	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "#ARTIGVALITEM_IMAGE___");
+	public BaseInputControl ItemImage => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_IMAGE___", "#ARTIGVALITEM_IMAGE___");
 
 	/// <summary>
 	/// Global Item
@@ -32,12 +32,12 @@ public class ArtigvalForm : PopupForm
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "#ARTIGVALITEM_ITEMCOD_");
+	public BaseInputControl ItemItemcod => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_ITEMCOD_", "#ARTIGVALITEM_ITEMCOD_");
 
 	/// <summary>
 	/// Item
 	/// </summary>
-	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "#ARTIGVALITEM_ITEMDES_");
+	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_ITEMDES_", "#ARTIGVALITEM_ITEMDES_");
 
 	/// <summary>
 	/// Date
@@ -47,27 +47,27 @@ public class ArtigvalForm : PopupForm
 	/// <summary>
 	/// Entries
 	/// </summary>
-	public BaseInputControl ItemEntries => new BaseInputControl(driver, ContainerLocator, "#ARTIGVALITEM_ENTRIES_");
+	public BaseInputControl ItemEntries => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_ENTRIES_", "#ARTIGVALITEM_ENTRIES_");
 
 	/// <summary>
 	/// Output:
 	/// </summary>
-	public BaseInputControl ItemExits => new BaseInputControl(driver, ContainerLocator, "#ARTIGVALITEM_EXITS___");
+	public BaseInputControl ItemExits => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_EXITS___", "#ARTIGVALITEM_EXITS___");
 
 	/// <summary>
 	/// Existence
 	/// </summary>
-	public BaseInputControl ItemExistenc => new BaseInputControl(driver, ContainerLocator, "#ARTIGVALITEM_EXISTENC");
+	public BaseInputControl ItemExistenc => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_EXISTENC", "#ARTIGVALITEM_EXISTENC");
 
 	/// <summary>
 	/// Categorization
 	/// </summary>
-	public BaseInputControl ItemCategory => new BaseInputControl(driver, ContainerLocator, "#ARTIGVALITEM_CATEGORY");
+	public BaseInputControl ItemCategory => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_CATEGORY", "#ARTIGVALITEM_CATEGORY");
 
 	/// <summary>
 	/// Availability
 	/// </summary>
-	public BaseInputControl ItemDisponib => new BaseInputControl(driver, ContainerLocator, "#ARTIGVALITEM_DISPONIB");
+	public BaseInputControl ItemDisponib => new BaseInputControl(driver, ContainerLocator, "container-ARTIGVALITEM_DISPONIB", "#ARTIGVALITEM_DISPONIB");
 
 	public ArtigvalForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ARTIGVAL") { }

@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Oudoc.ValNrdocsda")]
 		[NumericAttribute(0)]
-		public decimal? ValNrdocsda { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrdocsda, 0)); } set { klass.ValNrdocsda = Convert.ToDecimal(value); } }
+		public decimal? ValNrdocsda { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNrdocsda, 0)); } set { klass.ValNrdocsda = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date")]
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>
@@ -54,8 +54,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Oudoc.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Oudoc(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -73,7 +73,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioAoudoc csgenioa)
 		{

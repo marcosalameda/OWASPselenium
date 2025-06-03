@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Produ_LocatValGlnModel : RequestLookupModel
+		{
+			public Produ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Produ/Produ_LocatValGln
 		// POST: /Produ/Produ_LocatValGln
 		[ActionName("Produ_LocatValGln")]
-		public ActionResult Produ_LocatValGln([FromBody]RequestLookupModel requestModel)
+		public ActionResult Produ_LocatValGln([FromBody] Produ_LocatValGlnModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Produ_LocatValGln_ViewModel model = new Produ_LocatValGln_ViewModel(UserContext.Current);
-			
+
+			Models.Produ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Produ_LocatValGln_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Produ_LcextValGlnextModel : RequestLookupModel
+		{
+			public Produ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Produ/Produ_LcextValGlnext
 		// POST: /Produ/Produ_LcextValGlnext
 		[ActionName("Produ_LcextValGlnext")]
-		public ActionResult Produ_LcextValGlnext([FromBody]RequestLookupModel requestModel)
+		public ActionResult Produ_LcextValGlnext([FromBody] Produ_LcextValGlnextModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Produ_LcextValGlnext_ViewModel model = new Produ_LcextValGlnext_ViewModel(UserContext.Current);
-			
+
+			Models.Produ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Produ_LcextValGlnext_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +533,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Produ_ValStockevoModel : RequestLookupModel
+		{
+			public Produ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Produ/Produ_ValStockevo
 		// POST: /Produ/Produ_ValStockevo
 		[ActionName("Produ_ValStockevo")]
-		public ActionResult Produ_ValStockevo([FromBody]RequestLookupModel requestModel)
+		public ActionResult Produ_ValStockevo([FromBody] Produ_ValStockevoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -546,16 +566,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Produ_ValStockevo_ViewModel model = new Produ_ValStockevo_ViewModel(UserContext.Current);
-			
+			Models.Produ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Produ_ValStockevo_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -580,11 +602,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Produ_ValInputsreModel : RequestLookupModel
+		{
+			public Produ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Produ/Produ_ValInputsre
 		// POST: /Produ/Produ_ValInputsre
 		[ActionName("Produ_ValInputsre")]
-		public ActionResult Produ_ValInputsre([FromBody]RequestLookupModel requestModel)
+		public ActionResult Produ_ValInputsre([FromBody] Produ_ValInputsreModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -608,16 +635,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Produ_ValInputsre_ViewModel model = new Produ_ValInputsre_ViewModel(UserContext.Current);
-			
+			Models.Produ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Produ_ValInputsre_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -642,11 +671,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Produ_ValOutputsdModel : RequestLookupModel
+		{
+			public Produ_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Produ/Produ_ValOutputsd
 		// POST: /Produ/Produ_ValOutputsd
 		[ActionName("Produ_ValOutputsd")]
-		public ActionResult Produ_ValOutputsd([FromBody]RequestLookupModel requestModel)
+		public ActionResult Produ_ValOutputsd([FromBody] Produ_ValOutputsdModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -670,16 +704,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Produ_ValOutputsd_ViewModel model = new Produ_ValOutputsd_ViewModel(UserContext.Current);
-			
+			Models.Produ parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Produ_ValOutputsd_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

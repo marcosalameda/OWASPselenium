@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Equip
 {
-	public class Equdocum_ValLisanex_ViewModel : ListViewModel
+	public class Equdocum_ValLisanex_ViewModel : MenuListViewModel<Models.Anexd>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Equdocum_ValLisanex_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "anexd"; }
+		[JsonIgnore]
+		public override string TableAlias => "anexd";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Equdocum_ValLisanex"; }
+		public override string Uuid => "Equdocum_ValLisanex";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCodequip { get; set; }
+		[JsonIgnore]
+		public string EquipValCodequip { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,42 @@ namespace GenioMVC.ViewModels.Equip
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS EQUDOCUM_PSEUDLISANEX]/
+
+			return crs;
+		}
+
+		/// <summary>
+		/// Sets the value of a single property of the view model based on the provided table and field names.
+		/// </summary>
+		/// <param name="fullFieldName">The full field name in the format "table.field".</param>
+		/// <param name="value">The field value.</param
+		private void SetViewModelValue(string fullFieldName, object value)
+		{
+			if (string.IsNullOrEmpty(fullFieldName))
+				return;
+
+			switch (fullFieldName)
+			{
+				case "equip.codequip":
+					EquipValCodequip = ViewModelConversion.ToString(value);
+					break;
+			}
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Equdocum_ValLisanex_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Equdocum_ValLisanex_ViewModel" /> class.
@@ -70,7 +127,17 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="userContext">The current user request context</param>
 		public Equdocum_ValLisanex_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+			EquipValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Equdocum_ValLisanex_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Equdocum_ValLisanex_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -78,11 +145,11 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATAHORA, Resources.Resources.ATTACHED26247, 16, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.FICHEIRO_BD, Resources.Resources.DOCUMENT00695, 30, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldTittradu, FieldType.TEXTO, Resources.Resources.TRANSLATED_TITLE58577, 30, 0, true),
-				new Exports.QColumn(CSGenioAanexd.FldReferenc, FieldType.TEXTO, Resources.Resources.REFERENCE28402, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATETIME, Resources.Resources.ATTACHED26247, 16, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldTittradu, FieldType.TEXT, Resources.Resources.TRANSLATED_TITLE58577, 30, 0, true),
+				new Exports.QColumn(CSGenioAanexd.FldReferenc, FieldType.TEXT, Resources.Resources.REFERENCE28402, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -132,11 +199,10 @@ namespace GenioMVC.ViewModels.Equip
 
 			if (Menu == null)
 				Menu = new TablePartial<Equdocum_ValLisanex_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -148,12 +214,11 @@ namespace GenioMVC.ViewModels.Equip
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodequip != null)
-				crs.Equal(CSGenioAanexd.FldCodequip, this.ValCodequip);
+			if (this.EquipValCodequip != null)
+				crs.Equal(CSGenioAanexd.FldCodequip, this.EquipValCodequip);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -250,20 +315,19 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAanexd> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "EQUDOCUM")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Equdocum_ValLisanex_RowViewModel>();
 
 				CriteriaSet equdocumpseudlisanex_Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -277,7 +341,7 @@ namespace GenioMVC.ViewModels.Equip
 				List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig.ColumnOrderBy, "anexd", allSortOrders);
 
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.FldZzstate, CSGenioAanexd.FldDthranex, CSGenioAanexd.FldTitle, CSGenioAanexd.FldDocument, CSGenioAanexd.FldDocumentfk, CSGenioAanexd.FldTittradu, CSGenioAanexd.FldReferenc };
+				FieldRef[] fields = new FieldRef[] { CSGenioAanexd.FldCodanexd, CSGenioAanexd.FldZzstate, CSGenioAanexd.FldDthranex, CSGenioAanexd.FldTitle, CSGenioAanexd.FldDocument, CSGenioAanexd.FldDocumentfk, CSGenioAanexd.FldTittradu, CSGenioAanexd.FldReferenc, CSGenioAanexd.FldCodequip, CSGenioAequip.FldCodequip };
 
 
 				// Totalizers
@@ -289,26 +353,24 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("anexd", "dthranex");
+					firstVisibleColumn ??= new FieldRef("anexd", "dthranex");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAanexd model_limit_area = new CSGenioAanexd(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_EQUDOCUMPSEUDLISANEX_");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAanexd model_limit_area = new CSGenioAanexd(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_EQUDOCUMPSEUDLISANEX_");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -319,6 +381,8 @@ namespace GenioMVC.ViewModels.Equip
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ EQUDOCUM_PSEUDLISANEX]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -347,7 +411,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAanexd> listing = Models.ModelBase.Where<CSGenioAanexd>(m_userContext, false, equdocumpseudlisanex_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUDOCUMPSEUDLISANEX_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAanexd> listing = Models.ModelBase.Where<CSGenioAanexd>(m_userContext, distinct, equdocumpseudlisanex_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUDOCUMPSEUDLISANEX_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -355,7 +419,6 @@ namespace GenioMVC.ViewModels.Equip
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -376,18 +439,12 @@ namespace GenioMVC.ViewModels.Equip
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -395,7 +452,7 @@ namespace GenioMVC.ViewModels.Equip
 
 		private List<Equdocum_ValLisanex_RowViewModel> MapEqudocum_ValLisanex(ListingMVC<CSGenioAanexd> Qlisting)
 		{
-			var Elements = new List<Equdocum_ValLisanex_RowViewModel>();
+			List<Equdocum_ValLisanex_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -412,7 +469,6 @@ namespace GenioMVC.ViewModels.Equip
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAanexd row
 		/// to a Equdocum_ValLisanex_RowViewModel object.
@@ -421,44 +477,28 @@ namespace GenioMVC.ViewModels.Equip
 		private Equdocum_ValLisanex_RowViewModel MapEqudocum_ValLisanex(CSGenioAanexd row)
 		{
 			var model = new Equdocum_ValLisanex_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
 				{
 					case "anexd":
 						model.klass.insertNameValueField(Qfield.FullName, Qfield.Value); break;
+					case "equip":
+						model.Equip.klass.insertNameValueField(Qfield.FullName, Qfield.Value); break;
 					default:
 						break;
 				}
 			}
 
-			CalculateButtonPermissions(model);
+			model.InitRowData();
 
+			// Use the parent context, so the formulas are calculated with the current values.
+			model.Equip = ParentCtx as Models.Equip;
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Equdocum_ValLisanex_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -472,11 +512,10 @@ namespace GenioMVC.ViewModels.Equip
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAanexd> listing)
 		{
 			if (listing.Rows == null)
@@ -485,8 +524,9 @@ namespace GenioMVC.ViewModels.Equip
 			foreach (CSGenioAanexd row in listing.Rows)
 			{
 				{
-					if (!string.IsNullOrEmpty((string)row.returnValueField("anexd.documentfk"))){
-						ResourceQuery resource = new ResourceQuery("Anexd", "ValDocument", "ValDocumentfk", row.ValCodanexd);
+					if (!string.IsNullOrEmpty((string)row.returnValueField("anexd.documentfk")))
+					{
+						ResourceQuery resource = new("Anexd", "ValDocument", "ValDocumentfk", row.ValCodanexd);
 						string ticket = QResources.CreateTicketEncryptedBase64(m_userContext.User.Name, m_userContext.User.Location, resource);
 
 						row.insertNameValueField("anexd.document", Newtonsoft.Json.JsonConvert.SerializeObject(new
@@ -501,25 +541,68 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Anexd m)
+		{
+			if (m == null)
+			{
+				CSGenio.framework.Log.Error("Map Model (Anexd) to ViewModel (Equdocum_ValLisanex) - Model is a null reference.");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				EquipValCodequip = ViewModelConversion.ToString(m.Equip.ValCodequip);
+			}
+			catch
+			{
+				CSGenio.framework.Log.Error("Map Model (Anexd) to ViewModel (Equdocum_ValLisanex) - Error during mapping.");
+				throw;
+			}
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Anexd m)
+		{
+			if (m == null)
+			{
+				CSGenio.framework.Log.Error("Map ViewModel (Equdocum_ValLisanex) to Model (Anexd) - Model is a null reference.");
+				throw new ModelNotFoundException("Model not found");
+			}
+
+			try
+			{
+				m.Equip.ValCodequip = ViewModelConversion.ToString(EquipValCodequip);
+			}
+			catch
+			{
+				CSGenio.framework.Log.Error("Map ViewModel (Equdocum_ValLisanex) to Model (Anexd) - Error during mapping.");
+				throw;
+			}
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM EQUDOCUM_VALLISANEX]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Anexd.ValTittradu", "Anexd.ValReferenc", "Anexd.ValCodequip", "Anexd.ValCodlang", "BtnPermission"
+			"Anexd", "Anexd.ValCodanexd", "Anexd.ValZzstate", "Anexd.ValDthranex", "Anexd.ValTitle", "Anexd.ValDocument", "Anexd.ValTittradu", "Anexd.ValReferenc", "Equip", "Equip.ValCodequip", "Anexd.ValCodequip", "Anexd.ValCodlang"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValDthranex", CSGenioAanexd.FldDthranex, typeof(DateTime?)),
 			new TableSearchColumn("ValTitle", CSGenioAanexd.FldTitle, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDocument", CSGenioAanexd.FldDocument, typeof(string)),
 			new TableSearchColumn("ValTittradu", CSGenioAanexd.FldTittradu, typeof(string)),
-			new TableSearchColumn("ValReferenc", CSGenioAanexd.FldReferenc, typeof(string))
+			new TableSearchColumn("ValReferenc", CSGenioAanexd.FldReferenc, typeof(string)),
 		];
-
-
-
 	}
 }

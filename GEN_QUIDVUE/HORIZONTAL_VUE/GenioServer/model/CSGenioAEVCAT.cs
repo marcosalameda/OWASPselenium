@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAevcat(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR EVCAT]/
 		}
 
@@ -46,81 +44,74 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codprogr", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codprogr", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpesso", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">PERSON";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_PERSON28337";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codcateg", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codcateg", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">CATEGORy";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "_CATEGORY37591";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("since", FieldType.DATA);
+			Qfield = new Field(info.Alias, "since", FieldType.DATE);
 			Qfield.FieldDescription = "Since";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "SINCE47259";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("untilman", FieldType.DATA);
+			Qfield = new Field(info.Alias, "untilman", FieldType.DATE);
 			Qfield.FieldDescription = "Up manual";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "UP_MANUAL46500";
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"until"}, new int[] {0}, "evcat", "codprogr"));
 			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.emptyD(((DateTime)args[0]))==1;
+				return GenFunctions.emptyD(((DateTime)args[0]))==1;
 			});
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("until", FieldType.DATA);
+			Qfield = new Field(info.Alias, "until", FieldType.DATE);
 			Qfield.FieldDescription = "Until";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "UNTIL39173";
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"untilman","until"}, new int[] {0,1}, "evcat", "codprogr"));
 			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return GlobalFunctions.emptyD(((DateTime)args[0]))==1&&GlobalFunctions.emptyD(((DateTime)args[1]))==0;
+				return GenFunctions.emptyD(((DateTime)args[0]))==1&&GenFunctions.emptyD(((DateTime)args[1]))==0;
 			});
       Qfield.Formula = new EndPeriodFormula("since", "codpesso");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("observat", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "observat", FieldType.MEMO);
 			Qfield.FieldDescription = "Observation";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "OBSERVATION37880";
 
@@ -128,24 +119,22 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("fimperio", FieldType.DATA);
+			Qfield = new Field(info.Alias, "fimperio", FieldType.DATE);
 			Qfield.FieldDescription = "End-of-period";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "END_OF_PERIOD44616";
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"untilman","untilman","until"}, new int[] {0,1,2}, "evcat", "codprogr"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 3, delegate(object[] args, User user, string module, PersistentSupport sp) {
-				return ((GlobalFunctions.emptyD(((DateTime)args[0]))==0)?(((DateTime)args[1])):(((DateTime)args[2])));
+				return ((GenFunctions.emptyD(((DateTime)args[0]))==0)?(((DateTime)args[1])):(((DateTime)args[2])));
 			});
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -244,8 +233,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Evolution in the category";
 			info.AreaPluralDesignation="Evolution in categories";
 			info.DescriptionCav="EVOLUTION_IN_THE_CAT03122";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

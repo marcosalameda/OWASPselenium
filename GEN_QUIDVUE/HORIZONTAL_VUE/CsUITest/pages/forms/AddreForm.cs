@@ -20,12 +20,12 @@ public class AddreForm : Form
 	/// <summary>
 	/// Entire address
 	/// </summary>
-	public BaseInputControl AddreAddrtext => new BaseInputControl(driver, ContainerLocator, "#ADDRE___ADDREADDRTEXT");
+	public BaseInputControl AddreAddrtext => new BaseInputControl(driver, ContainerLocator, "container-ADDRE___ADDREADDRTEXT", "#ADDRE___ADDREADDRTEXT");
 
 	/// <summary>
 	/// Address City
 	/// </summary>
-	public BaseInputControl AddreAddrcity => new BaseInputControl(driver, ContainerLocator, "#ADDRE___ADDREADDRCITY");
+	public BaseInputControl AddreAddrcity => new BaseInputControl(driver, ContainerLocator, "container-ADDRE___ADDREADDRCITY", "#ADDRE___ADDREADDRCITY");
 
 	public AddreForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ADDRE", containerLocator: containerLocator) { }

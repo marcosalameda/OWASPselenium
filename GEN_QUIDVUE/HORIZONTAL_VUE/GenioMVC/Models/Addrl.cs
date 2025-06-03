@@ -48,7 +48,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Address Number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Addrl.ValAddressnumber")]
 		[NumericAttribute(0)]
-		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDecimal(value); } }
+		public decimal? ValAddressnumber { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAddressnumber, 0)); } set { klass.ValAddressnumber = Convert.ToDecimal(value); } }
 
 		[DisplayName("Object Type")]
 		/// <summary>Field : "Object Type" Tipo: "AN" Formula:  ""</summary>
@@ -73,8 +73,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Addrl.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Addrl(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -92,7 +92,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioAaddrl csgenioa)
 		{

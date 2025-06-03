@@ -188,6 +188,7 @@ namespace GenioMVC.ViewModels.Dilin
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Dilin m)
 		{
 			if (m == null)
@@ -213,20 +214,13 @@ namespace GenioMVC.ViewModels.Dilin
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Dilin m)
 		{
 			if (m == null)
@@ -407,7 +401,7 @@ namespace GenioMVC.ViewModels.Dilin
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValCodprodu", Resources.Resources.PRODUCT12880, ViewModelConversion.ToString(ValCodprodu), FieldType.CHAVE_ESTRANGEIRA_GUID.Formatting);
+			validator.Required("ValCodprodu", Resources.Resources.PRODUCT12880, ViewModelConversion.ToString(ValCodprodu), FieldType.KEY_GUID.GetFormatting());
 
 
 			return validator.GetResult();
@@ -557,7 +551,7 @@ namespace GenioMVC.ViewModels.Dilin
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -604,7 +598,7 @@ namespace GenioMVC.ViewModels.Dilin
 				// Fill List fields
 				this.ValCoddispa = ViewModelConversion.ToString(row["dispa.coddispa"]);
 				TableDispaDispanr.Value = (decimal?)row["dispa.dispanr"];
-				if (GlobalFunctions.emptyG(this.ValCoddispa) == 1)
+				if (GenFunctions.emptyG(this.ValCoddispa) == 1)
 				{
 					this.ValCoddispa = "";
 					TableDispaDispanr.Value = 0m;
@@ -753,7 +747,7 @@ namespace GenioMVC.ViewModels.Dilin
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -800,7 +794,7 @@ namespace GenioMVC.ViewModels.Dilin
 				// Fill List fields
 				this.ValCodprodu = ViewModelConversion.ToString(row["produ.codprodu"]);
 				TableProduProduct.Value = (string)row["produ.product"];
-				if (GlobalFunctions.emptyG(this.ValCodprodu) == 1)
+				if (GenFunctions.emptyG(this.ValCodprodu) == 1)
 				{
 					this.ValCodprodu = "";
 					TableProduProduct.Value = "";
@@ -848,8 +842,6 @@ namespace GenioMVC.ViewModels.Dilin
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

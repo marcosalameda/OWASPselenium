@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Kinde
 {
-	public class Kinde_ValManuals_ViewModel : ListViewModel
+	public class Kinde_ValManuals_ViewModel : MenuListViewModel<Models.Manua>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Kinde_ValManuals_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "manua"; }
+		[JsonIgnore]
+		public override string TableAlias => "manua";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Kinde_ValManuals"; }
+		public override string Uuid => "Kinde_ValManuals";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCodkinde { get; set; }
+		[JsonIgnore]
+		public string KindeValCodkinde { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Kinde
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS KINDE_PSEUDMANUALS]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Kinde_ValManuals_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Kinde_ValManuals_ViewModel" /> class.
@@ -70,7 +109,17 @@ namespace GenioMVC.ViewModels.Kinde
 		/// <param name="userContext">The current user request context</param>
 		public Kinde_ValManuals_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodkinde = userContext.CurrentNavigation.CurrentLevel.GetEntry("kinde")?.ToString();
+			KindeValCodkinde = userContext.CurrentNavigation.CurrentLevel.GetEntry("kinde")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Kinde_ValManuals_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Kinde_ValManuals_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -78,8 +127,8 @@ namespace GenioMVC.ViewModels.Kinde
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAmanua.FldName, FieldType.TEXTO, Resources.Resources.MANUAL_NAME60077, 30, 0, true),
-				new Exports.QColumn(CSGenioAmanua.FldDigdocum, FieldType.FICHEIRO_BD, Resources.Resources.DIGITAL_DOCUMENT59580, 30, 0, true),
+				new Exports.QColumn(CSGenioAmanua.FldName, FieldType.TEXT, Resources.Resources.MANUAL_NAME60077, 30, 0, true),
+				new Exports.QColumn(CSGenioAmanua.FldDigdocum, FieldType.DOCUMENT, Resources.Resources.DIGITAL_DOCUMENT59580, 30, 0, true),
 				new Exports.QColumn(CSGenioAmanua.FldNotes, FieldType.MEMO, Resources.Resources.NOTES05274, 30, 5, true),
 			};
 
@@ -130,11 +179,10 @@ namespace GenioMVC.ViewModels.Kinde
 
 			if (Menu == null)
 				Menu = new TablePartial<Kinde_ValManuals_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -146,12 +194,11 @@ namespace GenioMVC.ViewModels.Kinde
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodkinde != null)
-				crs.Equal(CSGenioAmanua.FldCodkinde, this.ValCodkinde);
+			if (this.KindeValCodkinde != null)
+				crs.Equal(CSGenioAmanua.FldCodkinde, this.KindeValCodkinde);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -248,20 +295,19 @@ namespace GenioMVC.ViewModels.Kinde
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAmanua> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "KINDE")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Kinde_ValManuals_RowViewModel>();
 
 				CriteriaSet kinde___pseudmanuals_Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -287,26 +333,24 @@ namespace GenioMVC.ViewModels.Kinde
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("manua", "name");
+					firstVisibleColumn ??= new FieldRef("manua", "name");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAmanua model_limit_area = new CSGenioAmanua(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_KINDE___PSEUDMANUALS_");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAmanua model_limit_area = new CSGenioAmanua(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_KINDE___PSEUDMANUALS_");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -317,6 +361,8 @@ namespace GenioMVC.ViewModels.Kinde
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ KINDE_PSEUDMANUALS]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -345,7 +391,7 @@ namespace GenioMVC.ViewModels.Kinde
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAmanua> listing = Models.ModelBase.Where<CSGenioAmanua>(m_userContext, false, kinde___pseudmanuals_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_KINDE___PSEUDMANUALS_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAmanua> listing = Models.ModelBase.Where<CSGenioAmanua>(m_userContext, distinct, kinde___pseudmanuals_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_KINDE___PSEUDMANUALS_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -353,7 +399,6 @@ namespace GenioMVC.ViewModels.Kinde
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -374,18 +419,12 @@ namespace GenioMVC.ViewModels.Kinde
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -393,7 +432,7 @@ namespace GenioMVC.ViewModels.Kinde
 
 		private List<Kinde_ValManuals_RowViewModel> MapKinde_ValManuals(ListingMVC<CSGenioAmanua> Qlisting)
 		{
-			var Elements = new List<Kinde_ValManuals_RowViewModel>();
+			List<Kinde_ValManuals_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -410,7 +449,6 @@ namespace GenioMVC.ViewModels.Kinde
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAmanua row
 		/// to a Kinde_ValManuals_RowViewModel object.
@@ -419,7 +457,9 @@ namespace GenioMVC.ViewModels.Kinde
 		private Kinde_ValManuals_RowViewModel MapKinde_ValManuals(CSGenioAmanua row)
 		{
 			var model = new Kinde_ValManuals_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -431,32 +471,9 @@ namespace GenioMVC.ViewModels.Kinde
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Kinde_ValManuals_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -470,11 +487,10 @@ namespace GenioMVC.ViewModels.Kinde
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAmanua> listing)
 		{
 			if (listing.Rows == null)
@@ -483,8 +499,9 @@ namespace GenioMVC.ViewModels.Kinde
 			foreach (CSGenioAmanua row in listing.Rows)
 			{
 				{
-					if (!string.IsNullOrEmpty((string)row.returnValueField("manua.digdocumfk"))){
-						ResourceQuery resource = new ResourceQuery("Manua", "ValDigdocum", "ValDigdocumfk", row.ValCodmanua);
+					if (!string.IsNullOrEmpty((string)row.returnValueField("manua.digdocumfk")))
+					{
+						ResourceQuery resource = new("Manua", "ValDigdocum", "ValDigdocumfk", row.ValCodmanua);
 						string ticket = QResources.CreateTicketEncryptedBase64(m_userContext.User.Name, m_userContext.User.Location, resource);
 
 						row.insertNameValueField("manua.digdocum", Newtonsoft.Json.JsonConvert.SerializeObject(new
@@ -499,23 +516,36 @@ namespace GenioMVC.ViewModels.Kinde
 			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Manua m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Manua m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM KINDE_VALMANUALS]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Manua", "Manua.ValCodmanua", "Manua.ValZzstate", "Manua.ValName", "Manua.ValDigdocum", "Manua.ValNotes", "Manua.ValCodkinde", "BtnPermission"
+			"Manua", "Manua.ValCodmanua", "Manua.ValZzstate", "Manua.ValName", "Manua.ValDigdocum", "Manua.ValNotes", "Manua.ValCodkinde"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAmanua.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDigdocum", CSGenioAmanua.FldDigdocum, typeof(string)),
-			new TableSearchColumn("ValNotes", CSGenioAmanua.FldNotes, typeof(string))
+			new TableSearchColumn("ValNotes", CSGenioAmanua.FldNotes, typeof(string)),
 		];
-
-
-
 	}
 }

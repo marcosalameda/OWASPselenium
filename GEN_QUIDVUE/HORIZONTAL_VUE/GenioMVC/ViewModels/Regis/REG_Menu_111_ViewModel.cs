@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Regis
 {
-	public class REG_Menu_111_ViewModel : ListViewModel
+	public class REG_Menu_111_ViewModel : MenuListViewModel<Models.Regis>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<REG_Menu_111_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "regis"; }
+		[JsonIgnore]
+		public override string TableAlias => "regis";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "9cd10358-e74c-413f-9913-baa3ad3afa58"; }
+		public override string Uuid => "9cd10358-e74c-413f-9913-baa3ad3afa58";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodregis { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Regis
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL REG LIST_LIMITS 111]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,34 @@ namespace GenioMVC.ViewModels.Regis
 			var areaBase = CSGenio.business.Area.createArea("regis", user, "REG");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet reg_menu_111Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML111");
-			reg_menu_111Conds.Equal(CSGenioAregis.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML111");
+			conditions.Equal(CSGenioAregis.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL REG OVERRQ 111]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAregis.FldCodregis, CSGenioAregis.FldZzstate, CSGenioAregis.FldName, CSGenioAregis.FldNif, CSGenioAregis.FldEmail1, CSGenioAregis.FldEmail2, CSGenioAregis.FldTelephon };
 
-			ListingMVC<CSGenioAregis> listing = new ListingMVC<CSGenioAregis>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(reg_menu_111Conds, listing);
+			ListingMVC<CSGenioAregis> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public REG_Menu_111_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="REG_Menu_111_ViewModel" /> class.
@@ -102,16 +132,26 @@ namespace GenioMVC.ViewModels.Regis
 			this.RoleToShow = CSGenio.framework.Role.UNAUTHORIZED;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="REG_Menu_111_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public REG_Menu_111_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAregis.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 50, 0, true),
-				new Exports.QColumn(CSGenioAregis.FldNif, FieldType.TEXTO, Resources.Resources.NIF55908, 20, 0, true),
-				new Exports.QColumn(CSGenioAregis.FldEmail1, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAregis.FldEmail2, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAregis.FldTelephon, FieldType.TEXTO, Resources.Resources.PHONE56703, 15, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 50, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldNif, FieldType.TEXT, Resources.Resources.NIF55908, 20, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldEmail1, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldEmail2, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAregis.FldTelephon, FieldType.TEXT, Resources.Resources.PHONE56703, 15, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -160,13 +200,10 @@ namespace GenioMVC.ViewModels.Regis
 
 			if (Menu == null)
 				Menu = new TablePartial<REG_Menu_111_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("REGIS.NAME", new OrderedDictionary());
-			allSortOrders["REGIS.NAME"].Add("REGIS.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -179,8 +216,7 @@ namespace GenioMVC.ViewModels.Regis
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -277,23 +313,22 @@ namespace GenioMVC.ViewModels.Regis
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAregis> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "111"),
 				new("Module", "REG")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<REG_Menu_111_RowViewModel>();
 
 				CriteriaSet reg_menu_111Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("REGIS.NAME", new OrderedDictionary());
 				allSortOrders["REGIS.NAME"].Add("REGIS.NAME", "A");
-
 
 
 
@@ -325,26 +360,24 @@ namespace GenioMVC.ViewModels.Regis
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("regis", "name");
+					firstVisibleColumn ??= new FieldRef("regis", "name");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAregis model_limit_area = new CSGenioAregis(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML111");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAregis model_limit_area = new CSGenioAregis(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML111");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -355,6 +388,8 @@ namespace GenioMVC.ViewModels.Regis
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL REG OVERRQ 111]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -383,7 +418,7 @@ namespace GenioMVC.ViewModels.Regis
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAregis> listing = Models.ModelBase.Where<CSGenioAregis>(m_userContext, false, reg_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAregis> listing = Models.ModelBase.Where<CSGenioAregis>(m_userContext, distinct, reg_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -391,7 +426,6 @@ namespace GenioMVC.ViewModels.Regis
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -413,18 +447,12 @@ namespace GenioMVC.ViewModels.Regis
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -432,7 +460,7 @@ namespace GenioMVC.ViewModels.Regis
 
 		private List<REG_Menu_111_RowViewModel> MapREG_Menu_111(ListingMVC<CSGenioAregis> Qlisting)
 		{
-			var Elements = new List<REG_Menu_111_RowViewModel>();
+			List<REG_Menu_111_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -449,7 +477,6 @@ namespace GenioMVC.ViewModels.Regis
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAregis row
 		/// to a REG_Menu_111_RowViewModel object.
@@ -458,7 +485,9 @@ namespace GenioMVC.ViewModels.Regis
 		private REG_Menu_111_RowViewModel MapREG_Menu_111(CSGenioAregis row)
 		{
 			var model = new REG_Menu_111_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -470,34 +499,9 @@ namespace GenioMVC.ViewModels.Regis
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(REG_Menu_111_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-
-				// Table CRUD conditions
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -511,40 +515,46 @@ namespace GenioMVC.ViewModels.Regis
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAregis> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAregis row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Regis m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Regis m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM REG_MENU_111]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Regis", "Regis.ValCodregis", "Regis.ValZzstate", "Regis.ValName", "Regis.ValNif", "Regis.ValEmail1", "Regis.ValEmail2", "Regis.ValTelephon", "BtnPermission"
+			"Regis", "Regis.ValCodregis", "Regis.ValZzstate", "Regis.ValName", "Regis.ValNif", "Regis.ValEmail1", "Regis.ValEmail2", "Regis.ValTelephon"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAregis.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValNif", CSGenioAregis.FldNif, typeof(string)),
 			new TableSearchColumn("ValEmail1", CSGenioAregis.FldEmail1, typeof(string)),
 			new TableSearchColumn("ValEmail2", CSGenioAregis.FldEmail2, typeof(string)),
-			new TableSearchColumn("ValTelephon", CSGenioAregis.FldTelephon, typeof(string))
+			new TableSearchColumn("ValTelephon", CSGenioAregis.FldTelephon, typeof(string)),
 		];
-
-
-
 	}
 }

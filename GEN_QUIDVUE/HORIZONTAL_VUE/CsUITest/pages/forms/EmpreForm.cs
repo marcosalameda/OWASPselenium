@@ -15,7 +15,7 @@ public class EmpreForm : PopupForm
 	/// <summary>
 	/// Logo
 	/// </summary>
-	public BaseInputControl CmpnyLogo => new BaseInputControl(driver, ContainerLocator, "#EMPRE___CMPNYLOGO____");
+	public BaseInputControl CmpnyLogo => new BaseInputControl(driver, ContainerLocator, "container-EMPRE___CMPNYLOGO____", "#EMPRE___CMPNYLOGO____");
 
 	/// <summary>
 	/// Company
@@ -25,27 +25,27 @@ public class EmpreForm : PopupForm
 	/// <summary>
 	/// Designation
 	/// </summary>
-	public BaseInputControl CmpnyDesignat => new BaseInputControl(driver, ContainerLocator, "#EMPRE___CMPNYDESIGNAT");
+	public BaseInputControl CmpnyDesignat => new BaseInputControl(driver, ContainerLocator, "container-EMPRE___CMPNYDESIGNAT", "#EMPRE___CMPNYDESIGNAT");
 
 	/// <summary>
 	/// Acronym
 	/// </summary>
-	public BaseInputControl CmpnyAcronym => new BaseInputControl(driver, ContainerLocator, "#EMPRE___CMPNYACRONYM_");
+	public BaseInputControl CmpnyAcronym => new BaseInputControl(driver, ContainerLocator, "container-EMPRE___CMPNYACRONYM_", "#EMPRE___CMPNYACRONYM_");
 
 	/// <summary>
 	/// Tax identification:
 	/// </summary>
-	public BaseInputControl CmpnyNif => new BaseInputControl(driver, ContainerLocator, "#EMPRE___CMPNYNIF_____");
+	public BaseInputControl CmpnyNif => new BaseInputControl(driver, ContainerLocator, "container-EMPRE___CMPNYNIF_____", "#EMPRE___CMPNYNIF_____");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl CmpnyTelephon => new BaseInputControl(driver, ContainerLocator, "#EMPRE___CMPNYTELEPHON");
+	public BaseInputControl CmpnyTelephon => new BaseInputControl(driver, ContainerLocator, "container-EMPRE___CMPNYTELEPHON", "#EMPRE___CMPNYTELEPHON");
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl CmpnyEmail => new BaseInputControl(driver, ContainerLocator, "#EMPRE___CMPNYEMAIL___");
+	public BaseInputControl CmpnyEmail => new BaseInputControl(driver, ContainerLocator, "container-EMPRE___CMPNYEMAIL___", "#EMPRE___CMPNYEMAIL___");
 
 	/// <summary>
 	/// Origin
@@ -61,12 +61,12 @@ public class EmpreForm : PopupForm
 	/// <summary>
 	/// Quantity of people
 	/// </summary>
-	public BaseInputControl CmpnyQtdpesso => new BaseInputControl(driver, ContainerLocator, "#EMPRE___CMPNYQTDPESSO");
+	public BaseInputControl CmpnyQtdpesso => new BaseInputControl(driver, ContainerLocator, "container-EMPRE___CMPNYQTDPESSO", "#EMPRE___CMPNYQTDPESSO");
 
 	/// <summary>
 	/// Headquarter location
 	/// </summary>
-	public BaseInputControl CmpnyHeadloc => new BaseInputControl(driver, ContainerLocator, "#EMPRE___CMPNYHEADLOC_");
+	public BaseInputControl CmpnyHeadloc => new BaseInputControl(driver, ContainerLocator, "container-EMPRE___CMPNYHEADLOC_", "#EMPRE___CMPNYHEADLOC_");
 
 	public EmpreForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "EMPRE") { }

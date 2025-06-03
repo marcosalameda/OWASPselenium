@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tpequ.ValCodfamil")]
 		public string ValCodfamil { get { return klass.ValCodfamil; } set { klass.ValCodfamil = value; } }
+
 		private Famil _famil;
 		[DisplayName("Famil")]
 		[ShouldSerialize("Famil")]
-		public virtual Famil Famil {
-			get {
-				if (!this.isEmptyModel && (_famil == null || (!string.IsNullOrEmpty(ValCodfamil) && (_famil.isEmptyModel || _famil.klass.QPrimaryKey != ValCodfamil))))
+		public virtual Famil Famil
+		{
+			get
+			{
+				if (!isEmptyModel && (_famil == null || (!string.IsNullOrEmpty(ValCodfamil) && (_famil.isEmptyModel || _famil.klass.QPrimaryKey != ValCodfamil))))
 					_famil = Models.Famil.Find(ValCodfamil, m_userContext, Identifier, _fieldsToSerialize);
-				if (_famil == null)
-					_famil = new Models.Famil(m_userContext, true, _fieldsToSerialize);
+				_famil ??= new Models.Famil(m_userContext, true, _fieldsToSerialize);
 				return _famil;
 			}
 			set { _famil = value; }
 		}
-
 
 		[DisplayName("TYPE OF EQUIPMENT")]
 		/// <summary>Field : "TYPE OF EQUIPMENT" Tipo: "C" Formula:  ""</summary>
@@ -87,13 +88,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Maximum price" Tipo: "$D" Formula: U1 "TABPR[TABPR->PRECOHOR][TABPR->PRECOHOR]"</summary>
 		[ShouldSerialize("Tpequ.ValPrecomax")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecomax { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecomax, 2)); } set { klass.ValPrecomax = Convert.ToDecimal(value); } }
+		public decimal? ValPrecomax { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecomax, 2)); } set { klass.ValPrecomax = Convert.ToDecimal(value); } }
 
 		[DisplayName("Last price")]
 		/// <summary>Field : "Last price" Tipo: "$D" Formula: U1 "TABPR[TABPR->SINCE][TABPR->PRECOHOR][Today]"</summary>
 		[ShouldSerialize("Tpequ.ValPrecoult")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecoult { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecoult, 2)); } set { klass.ValPrecoult = Convert.ToDecimal(value); } }
+		public decimal? ValPrecoult { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecoult, 2)); } set { klass.ValPrecoult = Convert.ToDecimal(value); } }
 
 		[DisplayName("Since")]
 		/// <summary>Field : "Since" Tipo: "DT" Formula: U1 "TABPR[TABPR->SINCE][TABPR->SINCE][Today]"</summary>
@@ -106,7 +107,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Amount" Tipo: "N" Formula: SR "[EQUIP->1]"</summary>
 		[ShouldSerialize("Tpequ.ValQtdequip")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdequip { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdequip, 0)); } set { klass.ValQtdequip = Convert.ToDecimal(value); } }
+		public decimal? ValQtdequip { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdequip, 0)); } set { klass.ValQtdequip = Convert.ToDecimal(value); } }
 
 		[DisplayName("Kit")]
 		/// <summary>Field : "Kit" Tipo: "L" Formula:  ""</summary>
@@ -115,8 +116,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tpequ.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Tpequ(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -135,7 +136,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAtpequ csgenioa)
 		{
 			if (csgenioa == null)
@@ -146,8 +146,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "famil":
-						if (_famil == null)
-							_famil = new Famil(m_userContext, true, _fieldsToSerialize);
+						_famil ??= new Famil(m_userContext, true, _fieldsToSerialize);
 						_famil.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

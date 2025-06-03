@@ -1,37 +1,147 @@
-﻿
+﻿using System.Text.Json.Serialization;
+
 using CSGenio.business;
 using CSGenio.framework;
 using GenioMVC.Models.Navigation;
-using System.Text.Json.Serialization;
 
-namespace GenioMVC.ViewModels.Item
+namespace GenioMVC.ViewModels.Item;
+
+public class Artig_ValLentrada_RowViewModel : Models.Ldent
 {
-    public class Artig_ValLentrada_RowViewModel : Models.Ldent
-    {
-		#region constructors
-		public Artig_ValLentrada_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize) { }
-		public Artig_ValLentrada_RowViewModel(UserContext userContext, CSGenioAldent val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize) { }
-		#endregion
+	#region Constructors
 
-		[JsonPropertyName("btnPermission")]
-		public TableRowCrudButtonPermissions BtnPermission { get; set; } = null;
+	public Artig_ValLentrada_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
+	{
+		InitRowProperties();
+	}
 
+	public Artig_ValLentrada_RowViewModel(UserContext userContext, CSGenioAldent val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
+	{
+		InitRowProperties();
+	}
 
-		///// <summary>
-		///// Foreground color formula 
-		///// RGB(207,255,158)
-		///// </summary> 
-		//[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		//public string? ForegroundColor => "RGB(207,255,158)";
+	#endregion
 
-		///// <summary>
-		///// Background color formula 
-		///// 
-		///// </summary> 
-		////[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		////public string? BackgroundColor => null;
+	#region Private methods
 
+	private void InitRowProperties()
+	{
+		SetColumns();
+		SetCustomActions();
+	}
 
+	private void SetColumns()
+	{
+		Columns ??= [
+			new ListColumn()
+			{
+				Order = 1,
+				Area = "LDENT",
+				Field = "DHENTRA",
+			},
+			new ListColumn()
+			{
+				Order = 2,
+				Area = "INDOC",
+				Field = "DOCUMENR",
+			},
+			new ListColumn()
+			{
+				Order = 3,
+				Area = "LDENT",
+				Field = "LINE",
+			},
+			new ListColumn()
+			{
+				Order = 4,
+				Area = "LDENT",
+				Field = "QTDENTRA",
+			},
+		];
+	}
 
-    }
+	private void SetButtonPermissions()
+	{
+		if (BtnPermission != null)
+			return;
+
+		bool canView = true;
+		bool canEdit = true;
+		bool canDelete = true;
+		bool canDuplicate = true;
+		bool canInsert = true;
+
+		using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport))
+		{
+		}
+
+		BtnPermission = new TableRowCrudButtonPermissions()
+		{
+			ViewBtnDisabled = !canView,
+			EditBtnDisabled = !canEdit,
+			DeleteBtnDisabled = !canDelete,
+			DuplicateBtnDisabled = !canDuplicate,
+			InsertBtnDisabled = !canInsert
+		};
+	}
+
+	private void SetCustomActions()
+	{
+		CustomActions ??= new()
+		{
+		};
+	}
+
+	#endregion
+
+	/// <summary>
+	/// The state of the row (it's an internal value, therefore it shouldn't be sent to the client-side)
+	/// </summary>
+	[JsonIgnore]
+	public override int ValZzstate => base.ValZzstate;
+
+	/// <summary>
+	/// Whether the row is in a valid state
+	/// </summary>
+	[JsonPropertyName("isValid")]
+	public bool IsValid => ValZzstate == 0;
+
+	/// <summary>
+	/// The list columns
+	/// </summary>
+	[JsonPropertyName("columns")]
+	public List<ListColumn> Columns { get; private set; }
+
+	/// <summary>
+	/// The button permissions
+	/// </summary>
+	[JsonPropertyName("btnPermission")]
+	public TableRowCrudButtonPermissions BtnPermission { get; private set; }
+
+	/// <summary>
+	/// The custom action buttons
+	/// </summary>
+	[JsonPropertyName("customActions")]
+	public Dictionary<string, ListCustomAction> CustomActions { get; private set; }
+
+	/// <summary>
+	/// The foreground color
+	/// Formula: RGB(207,255,158)
+	/// </summary>
+	[JsonPropertyName("foregroundColor")]
+	public string ForegroundColor => "RGB(207,255,158)";
+
+	/// <summary>
+	/// The background color
+	/// </summary>
+	[JsonPropertyName("backgroundColor")]
+	public string BackgroundColor => "";
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

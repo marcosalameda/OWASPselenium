@@ -32,6 +32,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaFEECA = new AreaRef("GQT", "gqtfeeca", "feeca");
         public static AreaRef AreaNOTIF { get { return m_AreaNOTIF; } }
         private static AreaRef m_AreaNOTIF = new AreaRef("GQT", "gqtnotif", "notif");
+        public static AreaRef AreaDISST { get { return m_AreaDISST; } }
+        private static AreaRef m_AreaDISST = new AreaRef("GQT", "gqtdisst", "disst");
         public static AreaRef AreaASSET { get { return m_AreaASSET; } }
         private static AreaRef m_AreaASSET = new AreaRef("GQT", "gqtasset", "asset");
         public static AreaRef AreaLANG2 { get { return m_AreaLANG2; } }
@@ -392,6 +394,7 @@ namespace CSGenio.business
             "genre",
             "feeca",
             "notif",
+            "disst",
             "asset",
             "lang2",
             "lendi",
@@ -564,12 +567,8 @@ namespace CSGenio.business
         /// <summary>
         /// fields da table
         /// </summary>
-        protected Hashtable fields;
+        protected Hashtable fields = new Hashtable();
 
-        /// <summary>
-        /// Type de Key Primária
-        /// </summary>
-        protected CodeType KeyType;
 
         //Static class accessed a lot during startup, must have concurrency concerns
         private static ConcurrentDictionary<string, Type> m_areaRegistry = new ConcurrentDictionary<string, Type>();
@@ -761,65 +760,19 @@ namespace CSGenio.business
             if (Alias != other.Alias)
                 throw new InvalidOperationException($"Alias mismatch: Unable to clone from the provided Area instance. Expected alias '{Alias}', but received '{other.Alias}'.");
 
-            foreach (string field in other.Fields.Keys)
-                insertNameValueField(field, ((RequestedField)other.Fields[field]).Value);
+            foreach(var kvp in other.Fields)
+                insertNameValueField(kvp.Key, kvp.Value.Value);
         }
 
         /// <summary>
-        /// Insere os nomes dos fields na area
-        /// Usa o name do Qfield "alias+nomecampo" como key
+        /// Initializes the requested fields with a new list
         /// </summary>
-        /// <param name="nomeCamposList">Lista de fields separados por vírgulas</param>
+        /// <param name="fieldNames">The fields being requested</param>
         public void insertNamesFields(string[] fieldNames)
         {
-            try
-            {
-                FieldType fieldType;
-                RequestedField campoPedido;
-                fields = new Hashtable();//inicializar a variável que tem os fields
-
-                for (int i = 0; i < fieldNames.Length; i++)
-                {
-                    campoPedido = new RequestedField(fieldNames[i], Alias);
-
-                    if (campoPedido.BelongsArea)//se pertence a esta area
-                    {
-                        //SO 20060816 nos camposBD não está alias.nomecampo
-                        fieldType = ((Field)DBFields[campoPedido.Name]).FieldType;
-                        campoPedido.FieldType = fieldType;
-                    }
-                    else
-                    {
-                        //----------------------------------------------------------------
-                        //Este código só é executado na sequancia de um pedido GET1.
-                        //TODO: Convinha tentar fazer de outra forma. Não faz muito sentido
-                        //  uma area guardar fields de outra area
-                        //System.Diagnostics.Debug.Assert(false);
-
-                        if (!campoPedido.WithoutArea)//se tem área mas é outra
-                        {
-                            //SO 2007.05.29
-                            Area areaAux = Area.createArea(campoPedido.Area, User, Module);
-                            fieldType = ((Field)areaAux.DBFields[campoPedido.Name]).FieldType;
-                            campoPedido.FieldType = fieldType;
-                        }
-
-                        //----------------------------------------------------------------
-                    }
-
-                    if (!fields.ContainsKey(fieldNames[i]))
-                        fields.Add(fieldNames[i], campoPedido);
-
-                }
-            }
-            catch (GenioException ex)
-            {
-                throw new BusinessException(ex.UserMessage, "Area.inserirNomesCampos", "Error inserting field names: " + ex.Message, ex);
-            }
-            catch (Exception ex)
-            {
-                throw new BusinessException(null, "Area.inserirNomesCampos", "Error inserting field names: " + ex.Message, ex);
-            }
+            Fields.Clear();
+            foreach (string name in fieldNames)
+                insertNameValueField(name, null);
         }
 
         /// <summary>
@@ -833,79 +786,65 @@ namespace CSGenio.business
         {
             string function;
             if (introduce)
-                function = "Area.acrescentarNomesValoresCampos";
+                function = "Area.addNamesValuesFields";
             else if (acrescentar)
-                function = "Area.inserirNomesValoresCampos";
+                function = "Area.insertNamesValuesFields";
             else
                 throw new BusinessException(null, "Area.AuxNomesValoresCampos", "Arguments [inserir] and [acrescentar] are both false.");
             try
             {
-                // se não há fields
                 if ((introduce && (fieldNames.Length == 0 || fieldsvalues.Length == 0)) || fieldNames.Length != fieldsvalues.Length)
                     throw new BusinessException(null, "Area.AuxNomesValoresCampos", "Lengths of nomeCampos and valoresCampos don't match or one of these parameters has length 0.");
-                else
+
+                if (introduce)
+                    Fields.Clear();
+
+                for (int i = 0; i < fieldNames.Length; i++)
                 {
-                    RequestedField campoPedido;
-                    if(introduce)
-                        fields = new Hashtable(); // inicializar a variável que tem os fields
+                    string fieldName = fieldNames[i];
 
-                    for (int i = 0; i < fieldNames.Length; i++)
+                    //support for non-fully-qualified names
+                    Field Qfield;
+                    if (!fieldName.Contains("."))
                     {
-                            campoPedido = new RequestedField(fieldNames[i], Alias);
-
-                            if (campoPedido.BelongsArea)//se pertence a esta area
-                            {
-                                if (acrescentar && PrimaryKeyName.Equals(campoPedido.Name))
-                                    continue;
-                                Field Qfield = (Field)DBFields[campoPedido.Name];
-                                //SO 20061207 validação dos fields não nulos
-                                if (Qfield.NotNull && Qfield.DefaultValue == null)
-                                {
-                                    if (fieldsvalues[i].Equals(""))
-                                        throw new BusinessException("O campo " + Qfield.FieldDescription + " (" + Qfield.Alias + "." + Qfield.Name + ")  é obrigatório mas não está preenchido.", function, "The field " + Qfield.FieldDescription + " (" + Qfield.Alias + "." + Qfield.Name + ")  is mandatory but is not filled.");
-                                }
-
-                                if (Qfield.FieldSize < 0 && Qfield.FieldType == FieldType.TEXTO && Qfield.FieldSize < fieldsvalues[i].ToString().Length)
-                                    throw new BusinessException("O campo " + Qfield.FieldDescription + " excede a dimensão máxima permitida.", "Area.AuxNomesValoresCampos", "The field " + Qfield.FieldDescription + " exceeds the maximum length allowed.");
-
-                                campoPedido.FieldType = Qfield.FieldType;
-                                if (campoPedido.FieldType.Equals(FieldType.IMAGEM_JPEG))
-                                    throw new BusinessException("Erro ao gravar a imagem.", "Area.AuxNomesValoresCampos", "The field type JPEG image is not supported by function " + function);
-                                else
-                                    // RR 01-04-2011 - os fields tipo path e file db não são geridos a este nível, mas sim a um nível superior
-                                    campoPedido.Value = Conversion.string2TypeInternal(fieldsvalues[i], Qfield.FieldType.Formatting);
-                            }
-                            else
-                            {
-                                //----------------------------------------------------------------
-                                //Este código só é executado na sequancia de um pedido GET1.
-                                //TODO: Convinha tentar fazer de outra forma. Não faz muito sentido
-                                //  uma area guardar fields de outra area
-                                //System.Diagnostics.Debug.Assert(false);
-
-                                if (!campoPedido.WithoutArea)//se tem área mas é outra
-                                {
-                                    //SO 2007.05.29
-                                    Area areaAux = Area.createArea(campoPedido.Area, User, Module);
-                                    //SO 20060816 na variavel camposBD o name do Qfield não tem o alias antes
-                                    Field Qfield = (Field)areaAux.DBFields[campoPedido.Name];
-                                    //SO 20061207 validação dos fields não nulos
-                                    if (Qfield.NotNull && Qfield.DefaultValue == null)
-                                    {
-                                        if (fieldsvalues[i].Equals(""))
-                                            throw new BusinessException("O campo " + Qfield.FieldDescription + " (" + Qfield.Alias + "." + Qfield.Name + ")  é obrigatório mas não está preenchido.", "Area.AuxNomesValoresCampos", "The field " + Qfield.FieldDescription + " (" + Qfield.Alias + "." + Qfield.Name + ")  is mandatory but is not filled.");
-                                    }
-                                    campoPedido.FieldType = Qfield.FieldType;
-                                    if (Qfield.FieldSize < 0 && Qfield.FieldType == FieldType.TEXTO && Qfield.FieldSize < fieldsvalues[i].ToString().Length)
-                                        throw new BusinessException("O campo " + Qfield.FieldDescription + " excede a dimensão máxima permitida.", "Area.AuxNomesValoresCampos", "The field " + Qfield.FieldDescription + " exceeds the maximum length allowed.");
-                                    campoPedido.Value = Conversion.string2TypeInternal(fieldsvalues[i], Qfield.FieldType.Formatting);
-                                }
-                            }
-                            if (!fields.ContainsKey(fieldNames[i]))
-                                fields.Add(fieldNames[i], campoPedido);
-                            else if (acrescentar)
-                                fields[fieldNames[i]] = campoPedido;
+                        Qfield = DBFields[fieldName];
+                        fieldName = Qfield.FullName;
                     }
+
+                    RequestedField campoPedido = new RequestedField(fieldName, Alias);
+
+                    if (campoPedido.BelongsArea && acrescentar && PrimaryKeyName.Equals(campoPedido.Name))
+                        continue;
+
+                    if (!campoPedido.WithoutArea)
+                    {
+                        if(campoPedido.BelongsArea)
+                            Qfield = DBFields[campoPedido.Name];
+                        else
+                            Qfield = Area.GetInfoArea(campoPedido.Area).DBFields[campoPedido.Name];
+
+                        //SO 20061207 validação dos fields não nulos
+                        if (Qfield.NotNull && Qfield.DefaultValue == null)
+                        {
+                            if (fieldsvalues[i].Equals(""))
+                                throw new BusinessException("O campo " + Qfield.FieldDescription + " (" + Qfield.Alias + "." + Qfield.Name + ")  é obrigatório mas não está preenchido.", function, "The field " + Qfield.FieldDescription + " (" + Qfield.Alias + "." + Qfield.Name + ")  is mandatory but is not filled.");
+                        }
+
+                        if (Qfield.FieldSize < 0 && Qfield.FieldType == FieldType.TEXT && Qfield.FieldSize < fieldsvalues[i].ToString().Length)
+                            throw new BusinessException("O campo " + Qfield.FieldDescription + " excede a dimensão máxima permitida.", "Area.AuxNomesValoresCampos", "The field " + Qfield.FieldDescription + " exceeds the maximum length allowed.");
+
+                        campoPedido.FieldType = Qfield.FieldType;
+                        if (campoPedido.FieldType.Equals(FieldType.IMAGE))
+                            throw new BusinessException("Erro ao gravar a imagem.", "Area.AuxNomesValoresCampos", "The field type JPEG image is not supported by function " + function);
+
+                        // RR 01-04-2011 - os fields tipo path e file db não são geridos a este nível, mas sim a um nível superior
+                        campoPedido.Value = Conversion.string2TypeInternal(fieldsvalues[i], Qfield.FieldType.GetFormatting());
+                    }
+
+                    if (!Fields.ContainsKey(fieldName))
+                        Fields.Add(fieldName, campoPedido);
+                    else if (acrescentar)
+                        Fields[fieldName] = campoPedido;
                 }
             }
             catch (GenioException ex)
@@ -941,25 +880,18 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// Insere na area todos os fields a vazio
+        /// Initializes all the non-requested fields with empty value
         /// </summary>
         public void createEmptyFields()
         {
-            Dictionary<string, Field> camposBD = this.DBFields;
-            IEnumerator enumCampos = camposBD.Values.GetEnumerator();
-            Field Qfield;
-            RequestedField campoPedido;
-
-            while (enumCampos.MoveNext())
+            foreach(Field fieldInfo in DBFields.Values)
             {
-                Qfield = (Field)enumCampos.Current;
-                if (Qfield.FieldType != FieldType.DATACRIA && Qfield.FieldType != FieldType.OPERCRIA && Qfield.FieldType != FieldType.HORACRIA)
+                if (!Fields.ContainsKey(fieldInfo.FullName))
                 {
-                campoPedido = new RequestedField(this.Alias + "." + Qfield.Name, this.Alias);
-                campoPedido.FieldType = Qfield.FieldType;
-                campoPedido.Value = Qfield.GetValorEmpty();
-                if (!this.Fields.ContainsKey(campoPedido.FullName))
-                    this.Fields.Add(campoPedido.FullName,campoPedido);
+                    var campoPedido = new RequestedField(fieldInfo.FullName, Alias);
+                    campoPedido.FieldType = fieldInfo.FieldType;
+                    campoPedido.Value = fieldInfo.GetValorEmpty();
+                    Fields.Add(campoPedido.FullName, campoPedido);
                 }
             }
         }
@@ -973,23 +905,33 @@ namespace CSGenio.business
         {
             try
             {
-                RequestedField campoPedido;
                 FieldType fieldType;
+                Field fieldInfo = null;
 
-                if (fields.Contains(fieldName))
-                    //SO 20060816
-                    campoPedido = (RequestedField)fields[fieldName];
-                else
-                    campoPedido = new RequestedField(fieldName, Alias);
-
-                if (campoPedido.BelongsArea)//se pertence a esta area
+                //support for non-fully-qualified names
+                if(!fieldName.Contains("."))
                 {
-                    //SO 20060816 alteração, os fields da BD só levam o name do Qfield, não o alias
-                    fieldType = ((Field)DBFields[campoPedido.Name]).FieldType;
+                    fieldInfo = DBFields[fieldName];
+                    fieldName = fieldInfo.FullName;
+                }
+
+                //if we haven't requested the field yet, then request it
+                if(!Fields.TryGetValue(fieldName, out RequestedField campoPedido))
+                {
+                    campoPedido = new RequestedField(fieldName, Alias);
+                    Fields.Add(fieldName, campoPedido);
+                }
+
+                //field belongs to this area
+                if (campoPedido.BelongsArea)
+                {
+                    fieldInfo ??= DBFields[campoPedido.Name];
+                    fieldType = fieldInfo.FieldType;
                     campoPedido.FieldType = fieldType;
-                    campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.Formatting);
+                    campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.GetFormatting());
                     trimPrecision(campoPedido);
                 }
+                //field belongs to another area
                 else
                 {
                     //----------------------------------------------------------------
@@ -998,18 +940,16 @@ namespace CSGenio.business
                     //  uma area guardar fields de outra area
                     //System.Diagnostics.Debug.Assert(false);
 
-                    if (!campoPedido.WithoutArea)//se tem área mas é outra
+                    if (!campoPedido.WithoutArea)
                     {
                         //SO 2007.05.29
-                        Area areaAux = Area.createArea(campoPedido.Area, User, Module);
-                        fieldType = ((Field)areaAux.DBFields[campoPedido.Name]).FieldType;
+                        fieldInfo = Area.GetInfoArea(campoPedido.Area).DBFields[campoPedido.Name];
+                        fieldType = fieldInfo.FieldType;
                         campoPedido.FieldType = fieldType;
-                        campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.Formatting);
+                        campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.GetFormatting());
                     }
                     //----------------------------------------------------------------
                 }
-                if (!fields.ContainsKey(fieldName))
-                    fields.Add(fieldName, campoPedido);
 
             }
             catch (GenioException ex)
@@ -1039,7 +979,7 @@ namespace CSGenio.business
         /// </remarks>
         private void trimPrecision(RequestedField field)
         {
-            if(field.FieldType.Formatting == FieldFormatting.FLOAT)
+            if(field.FieldType.GetFormatting() == FieldFormatting.FLOAT)
             {
                 var dec = DBFields[field.Name].Decimals;
                 field.Value = Math.Round((decimal)field.Value, dec, MidpointRounding.AwayFromZero);
@@ -1047,17 +987,29 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// Devolve o Qvalue do Qfield através do name do Qfield
+        /// Obtains the internal value set for the requested field
         /// </summary>
-        /// <param name="nomeCampo">Name do Qfield</param>
-        /// <returns>Value do Qfield</returns>
+        /// <param name="fieldName">Name of the field</param>
+        /// <returns>Value of the field</returns>
         public object returnValueField(string fieldName)
         {
             try
             {
-                var fieldSplit = fieldName.Split('.');
-                var area = fieldSplit[0];
-                var name = fieldSplit[1];
+                string area;
+                string name;
+                //support for non-fully-qualified names
+                var ix = fieldName.IndexOf('.');
+                if(ix == -1)
+                {
+                    area = Alias;
+                    name = fieldName;
+                    fieldName = DBFields[name].FullName;
+                }
+                else
+                {
+                    area = fieldName.Substring(0, ix);
+                    name = fieldName.Substring(ix + 1);
+                }
 
                 if (Alias == area)
                 {
@@ -1071,20 +1023,19 @@ namespace CSGenio.business
                     }
                 }
 
-                if (fields[fieldName] == null)
-                    return DBFields[name].GetValorEmpty();
+                if(Fields.TryGetValue(fieldName, out RequestedField requested))
+                    return requested.Value;
                 else
-                    return ((RequestedField)fields[fieldName]).Value;
+                    return DBFields[name].GetValorEmpty();
             }
             catch (GenioException ex)
             {
-                throw new BusinessException(ex.UserMessage, "Area.devolverValorCampo", "Error returning the field's value: " + ex.Message, ex);
+                throw new BusinessException(ex.UserMessage, "Area.returnValueField", "Error returning the field's value: " + ex.Message, ex);
             }
             catch (Exception ex)
             {
-                throw new BusinessException(null, "Area.devolverValorCampo", "Error returning the field's value: " + ex.Message, ex);
+                throw new BusinessException(null, "Area.returnValueField", "Error returning the field's value: " + ex.Message, ex);
             }
-
         }
 
 
@@ -1097,13 +1048,17 @@ namespace CSGenio.business
         {
             try
             {
-                var dbField = DBFields[fieldName.Split('.')[1]];
+                //support for non-fully-qualified names
+                var ix = fieldName.IndexOf('.');
+                var dbField = ix == -1 
+                    ? DBFields[fieldName]
+                    : DBFields[fieldName.Substring(ix+1)];
 
-                if (fields[fieldName] == null)
+                if(!Fields.TryGetValue(dbField.FullName, out var reqField))
                     return dbField.GetValorEmpty();
                 else
                 {
-                    var encData = (EncryptedDataType)((RequestedField)fields[fieldName]).Value;
+                    var encData = (EncryptedDataType)reqField.Value;
                     if(encData?.IsEmpty() ?? true)
                         return dbField.GetValorEmpty();
 
@@ -1111,6 +1066,7 @@ namespace CSGenio.business
 
                     return encData.DecryptedValue;
                 } 
+
             }
             catch (GenioException ex)
             {
@@ -1129,13 +1085,12 @@ namespace CSGenio.business
         /// <returns>True se foi removido false caso contrário</returns>
         public bool removeFieldValue(string fieldName)
         {
-            if (fields.Contains(fieldName))
-            {
-                fields.Remove(fieldName);
-                return true;
-            }
-            else
-                return false;
+            //support for non-fully-qualified names
+            var ix = fieldName.IndexOf('.');
+            if (ix == -1)
+                fieldName = DBFields[fieldName]?.FullName ?? fieldName;
+
+            return Fields.Remove(fieldName);
         }
 
         /// <summary>
@@ -1143,24 +1098,8 @@ namespace CSGenio.business
         /// </summary>
         public void removeFieldsOtherAreas()
         {
-            IEnumerator camposPreenchidos = this.Fields.Values.GetEnumerator();
-            String[] fieldsList = new string[fields.Count];
-            int i = 0;
-            while (camposPreenchidos.MoveNext())
-            {
-                RequestedField campoPedido = (RequestedField)camposPreenchidos.Current;
-
-                if (!campoPedido.BelongsArea)
-                {
-                    fieldsList[i] = campoPedido.FullName;
-                    i++;
-                }
-            };
-            for (int j = 0; j < i; j++)
-            {
-                this.removeFieldValue(fieldsList[j]);
-            }
-
+            foreach (var elem in Fields.Values.Where(x => !x.BelongsArea).ToList())
+                Fields.Remove(elem.FullName);
         }
 
         /// <summary>
@@ -1173,10 +1112,17 @@ namespace CSGenio.business
         {
             try
             {
+                //support for non-fully-qualified names
+                if (!fieldName.Contains("."))
+                {
+                    var fieldInfo = DBFields[fieldName];
+                    fieldName = fieldInfo.FullName;
+                }
+
                 RequestedField campoPedido;
                 // Check if the field exists in the current table
-                if (fields.Contains(fieldName))
-                    campoPedido = (RequestedField)fields[fieldName];
+                if (Fields.ContainsKey(fieldName))
+                    campoPedido = Fields[fieldName];
                 else
                     campoPedido = new RequestedField(fieldName, Alias);
 
@@ -1357,20 +1303,19 @@ namespace CSGenio.business
         {
             try
             {
-                if (this.StampFieldsIns != null && this.StampFieldsIns.Length != 0)
+                if (StampFieldsIns == null)
+                    return;
+
+                DateTime now = DateTime.Now;
+                foreach(string stamp in StampFieldsIns) 
                 {
-                    string[] camposCarimbo = Information.StampFieldsIns;
-                    for (int i = 0; i < camposCarimbo.Length; i++)
-                    {
-                        Field campoCarimbo = (Field)DBFields[camposCarimbo[i]];
-                        DateTime dataHoje = DateTime.Now;
-                        if (campoCarimbo.FieldType == FieldType.DATACRIA || campoCarimbo.FieldType == FieldType.INSTANTECRIA)//preenche o datacria se existir
-                            insertNameValueField(this.Alias +"." +campoCarimbo.Name, dataHoje);
-                        if (campoCarimbo.FieldType == FieldType.OPERCRIA)//preenche o opercria se existir
-                            insertNameValueField(this.Alias +"." +campoCarimbo.Name, user.Name);
-                        if (campoCarimbo.FieldType == FieldType.HORACRIA)//preenche o horacria se existir
-                            insertNameValueField(this.Alias + "." + campoCarimbo.Name, string.Format("{0:00}:{1:00}", dataHoje.Hour, dataHoje.Minute));
-                    }
+                    Field info = DBFields[stamp];
+                    if(info.FieldType == FieldType.DATETIMESECONDS)
+                        insertNameValueField(info.FullName, now);
+                    else if (info.FieldType == FieldType.TEXT)
+                        insertNameValueField(info.FullName, user.Name);
+                    else if (info.FieldType == FieldType.TIME_HOURS)
+                        insertNameValueField(info.FullName, string.Format("{0:00}:{1:00}", now.Hour, now.Minute));
                 }
             }
             catch (GenioException ex)
@@ -1390,20 +1335,19 @@ namespace CSGenio.business
         {
             try
             {
-                if (StampFieldsAlt != null && StampFieldsAlt.Length != 0)
+                if (StampFieldsAlt == null)
+                    return;
+
+                DateTime now = DateTime.Now;
+                foreach (string stamp in StampFieldsAlt)
                 {
-                    string[] camposCarimbo = StampFieldsAlt;
-                    for (int i = 0; i < camposCarimbo.Length; i++)
-                    {
-                        Field campoCarimbo = (Field)DBFields[camposCarimbo[i]];
-                        DateTime dataHoje = DateTime.Now;
-                        if (campoCarimbo.FieldType == FieldType.DATAMUDA)//preenche o datamuda se existir
-                            insertNameValueField(this.Alias +"." +campoCarimbo.Name, dataHoje);
-                        if (campoCarimbo.FieldType == FieldType.OPERMUDA)//preenche o operChange se existir
-                            insertNameValueField(this.Alias +"." +campoCarimbo.Name, user.Name);
-                        if (campoCarimbo.FieldType == FieldType.HORAMUDA)//preenche o horamuda se existir
-                            insertNameValueField(this.Alias + "." + campoCarimbo.Name, string.Format("{0}:{1}", dataHoje.Hour, dataHoje.Minute));
-                    }
+                    Field info = DBFields[stamp];
+                    if (info.FieldType == FieldType.DATETIMESECONDS)
+                        insertNameValueField(info.FullName, now);
+                    else if (info.FieldType == FieldType.TEXT)
+                        insertNameValueField(info.FullName, user.Name);
+                    else if (info.FieldType == FieldType.TIME_HOURS)
+                        insertNameValueField(info.FullName, string.Format("{0:00}:{1:00}", now.Hour, now.Minute));
                 }
             }
             catch (GenioException ex)
@@ -1612,18 +1556,13 @@ namespace CSGenio.business
         private RequestedField AuxAdicionaCondicaoOutraArea(PersistentSupport sp, EPHField ephArea, string[] listaValores, Relation myrelacao)
         {
             AreaInfo tabelaEPH = Area.GetInfoArea(ephArea.Table);
-            RequestedField campoPedido;
-            string crorigem = myrelacao.SourceRelField;
-            string crorigem_full = Alias + "." + crorigem;
 
-            if (ephArea.Propagate)
-            {
-                crorigem = myrelacao.TargetRelField;
-                crorigem_full = tabelaEPH.Alias + "." + crorigem;
-            }
+            var crorigem = ephArea.Propagate
+                ? tabelaEPH.DBFields[myrelacao.TargetRelField]
+                : DBFields[myrelacao.SourceRelField];
 
-            campoPedido = new RequestedField(crorigem_full, Alias);
-            Field QPrimaryKeyField = (Field)tabelaEPH.DBFields[tabelaEPH.PrimaryKeyName];
+            Field QPrimaryKeyField = tabelaEPH.DBFields[tabelaEPH.PrimaryKeyName];
+            RequestedField campoPedido = new RequestedField(crorigem.FullName, Alias);
             campoPedido.FieldType = QPrimaryKeyField.FieldType;
 
             object Qvalue = null;
@@ -1671,8 +1610,7 @@ namespace CSGenio.business
                         }
                         else
                         {
-                            FieldFormatting cFormat = campoLN.FieldFormat;
-                            string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                            string funcaoSQL = campoLN.FieldType.GetEPHFunction();
                             auxWhere.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(tabelaEPH.TableName, ephArea.Field)), 1);
                         }
                         auxWhere.Like(tabelaEPH.TableName, ephArea.Field, listaValores[0] + "%"); // TODO: Use LEFT. BackOffice: (LEFT(%s,%d)=
@@ -1682,7 +1620,7 @@ namespace CSGenio.business
                         where.Equal(tabelaEPH.TableName, ephArea.Field, null);
                         break;
                     case "EN":
-						Field Qfield = (Field)tabelaEPH.DBFields[ephArea.Field];
+						Field Qfield = tabelaEPH.DBFields[ephArea.Field];
                         CriteriaSet lim = new CriteriaSet(CriteriaSetOperator.Or);
                         if(Qfield.isKey())
                         {
@@ -1690,8 +1628,7 @@ namespace CSGenio.business
                         }
                         else
                         {
-                            FieldFormatting cFormat = Qfield.FieldFormat;
-                            string funcaoSQL = FieldType.getEPHFunction(cFormat);
+                            string funcaoSQL = Qfield.FieldType.GetEPHFunction();
                             lim.Equal(SqlFunctions.Custom(funcaoSQL, new ColumnReference(tabelaEPH.TableName, ephArea.Field)), 1);
                         }
                         lim.Equal(tabelaEPH.TableName, ephArea.Field, listaValores[0]);
@@ -1718,42 +1655,35 @@ namespace CSGenio.business
 
             // Do not add a repeated field to the query
             // The request already includes the requested field needed for the EPH
-            if (fields.ContainsKey(Alias + "." + crorigem))
+            if (ephArea.Propagate && Fields.ContainsKey(Alias + "." + crorigem.Name))
                 return campoPedido;
 
-            if (!fields.ContainsKey(crorigem_full))
-                fields.Add(crorigem_full, campoPedido);
-            else
-                fields[crorigem_full] = campoPedido;
+            Fields[crorigem.FullName] = campoPedido;
             return campoPedido;
         }
 
 
         private RequestedField AuxAdicionaCondicaoMesmaArea(EPHField ephArea, string[] listaValores)
         {
-            RequestedField campoPedido;
-            campoPedido = new RequestedField(Alias + "." + ephArea.Field, Alias);
-            Field Qfield = (Field)DBFields[campoPedido.Name];
+            Field Qfield = DBFields[ephArea.Field];
+            RequestedField campoPedido = new RequestedField(Qfield.FullName, Alias);
             campoPedido.FieldType = Qfield.FieldType;
             campoPedido.Value = listaValores[0];
 
-            if (!fields.ContainsKey(Alias + "." + ephArea.Field))
-                fields.Add(Alias + "." + ephArea.Field, campoPedido);
-            else
-                fields[Alias + "." + ephArea.Field] = campoPedido;
+            Fields[Qfield.FullName] = campoPedido;
             return campoPedido;
         }
 
         public int Zzstate
         {
-            get { return (int)returnValueField(Alias + "." + "zzstate"); }
-            set { insertNameValueField(Alias + "." + "zzstate", value); }
+            get { return (int)returnValueField("zzstate"); }
+            set { insertNameValueField("zzstate", value); }
         }
 
         public string QPrimaryKey
         {
-            get { return (string)returnValueField(Alias + "." + PrimaryKeyName); }
-            set { insertNameValueField(Alias + "." + PrimaryKeyName, value); }
+            get { return (string)returnValueField(PrimaryKeyName); }
+            set { insertNameValueField(PrimaryKeyName, value); }
         }
 
         /// <summary>
@@ -2068,11 +1998,10 @@ namespace CSGenio.business
             return relatedArea;
         }
 
-        public Hashtable Fields
-        {
-            get { return fields; }
-            set { fields = value; }
-        }
+        /// <summary>
+        /// Fields that have been requested to be read or written
+        /// </summary>
+        public Dictionary<string, RequestedField> Fields { get; set; } = new Dictionary<string, RequestedField>();
 
         public abstract AreaInfo Information
         {
@@ -2302,8 +2231,7 @@ namespace CSGenio.business
                 }
                 else if (condition.Type == ConditionType.MANDATORY)
                 {
-                    var fieldName = condition.Field.Alias + "." + condition.Field.Name;
-                    var value = ((RequestedField)Fields[fieldName]).Value;
+                    var value = returnValueField(condition.Field.FullName);
                     if (condition.Field.isEmptyValue(value))
                     {
                         status = StatusMessage.Error(Translations.Get(condition.ErrorWarning, user.Language));
@@ -2332,7 +2260,7 @@ namespace CSGenio.business
                     continue;
 
                 // Encrypt the fields before save in the database
-                if (dbField.FieldFormat == FieldFormatting.ENCRYPTED && dbField.EncryptFieldValueFormula != null)
+                if (dbField.FieldType == FieldType.ENCRYPTED && dbField.EncryptFieldValueFormula != null)
                 {
                     // The encrypted field, if it does not have the value, will not change what is in the database.
                     if (!dbField.isEmptyValue(requestedField.Value))
@@ -2348,5 +2276,27 @@ namespace CSGenio.business
                 }
             }
         }
+
+
+        /// <summary>
+        /// Adds a message to the queue corresponding to the current row
+        /// Uses the old Quidserver based mechanism
+        /// </summary>
+        /// <param name="sp">Persistent support</param>
+        /// <param name="operation">Type of crud operation, C - Create, U - Update, D - Delete</param>
+        /// <param name="oldValues">Previous values of this row, send null for insertions</param>
+        /// <param name="queueId">Only send a specific queue, or null to send all queues associated with the row</param>
+        public abstract void insertQueue(PersistentSupport sp, string operation, Area oldValues, string queueId);
+
+        /// <summary>
+        /// Adds a message to the queue corresponding to the current row
+        /// Uses the new RabbitMq based mechanism
+        /// </summary>
+        /// <param name="sp">Persistent support</param>
+        /// <param name="operation">Type of crud operation, C - Create, U - Update, D - Delete</param>
+        /// <param name="oldValues">Previous values of this row, send null for insertions</param>
+        /// <param name="queueId">Only send a specific queue, or null to send all queues associated with the row</param>
+        public abstract void MessageQueue(PersistentSupport sp, string operation, Area oldValues);
+
     }
 }

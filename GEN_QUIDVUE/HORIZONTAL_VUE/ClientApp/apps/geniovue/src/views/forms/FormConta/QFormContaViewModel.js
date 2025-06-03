@@ -1,0 +1,143 @@
+﻿/* eslint-disable no-unused-vars */
+import { computed, reactive, watch } from 'vue'
+import _merge from 'lodash-es/merge'
+
+import ViewModelBase from '@/mixins/formViewModelBase.js'
+import genericFunctions from '@/mixins/genericFunctions.js'
+import modelFieldType from '@/mixins/formModelFieldTypes.js'
+
+import hardcodedTexts from '@/hardcodedTexts.js'
+import netAPI from '@/api/network'
+import qApi from '@/api/genio/quidgestFunctions.js'
+import qFunctions from '@/api/genio/projectFunctions.js'
+import qProjArrays from '@/api/genio/projectArrays.js'
+/* eslint-enable no-unused-vars */
+
+/**
+ * Represents a ViewModel class.
+ * @extends ViewModelBase
+ */
+export default class ViewModel extends ViewModelBase
+{
+	/**
+	 * Creates a new instance of the ViewModel.
+	 * @param {object} vueContext - The Vue context
+	 * @param {object} options - The options for the ViewModel
+	 * @param {object} values - A ViewModel instance to copy values from
+	 */
+	// eslint-disable-next-line no-unused-vars
+	constructor(vueContext, options, values)
+	{
+		super(vueContext, options)
+		// eslint-disable-next-line no-unused-vars
+		const vm = this.vueContext
+
+		/** The view model metadata */
+		_merge(this.modelInfo, {
+			name: 'CONTA',
+			area: 'CONTA',
+			actions: {
+				recalculateFormulas: 'RecalculateFormulas_CONTA'
+			}
+		})
+
+		/** The primary key. */
+		this.ValCodconta = reactive(new modelFieldType.PrimaryKey({
+			id: 'ValCodconta',
+			originId: 'ValCodconta',
+			area: 'CONTA',
+			field: 'CODCONTA',
+			description: '',
+		}).cloneFrom(values?.ValCodconta))
+		watch(() => this.ValCodconta.value, (newValue, oldValue) => this.onUpdate('conta.codconta', this.ValCodconta, newValue, oldValue))
+
+		/** The used foreign keys. */
+		this.ValCodpesso = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodpesso',
+			originId: 'ValCodpesso',
+			area: 'CONTA',
+			field: 'CODPESSO',
+			relatedArea: 'PESSO',
+			description: '',
+		}).cloneFrom(values?.ValCodpesso))
+		watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('conta.codpesso', this.ValCodpesso, newValue, oldValue))
+
+		this.ValCodgenre = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodgenre',
+			originId: 'ValCodgenre',
+			area: 'CONTA',
+			field: 'CODGENRE',
+			relatedArea: 'GENRE',
+			description: '',
+		}).cloneFrom(values?.ValCodgenre))
+		watch(() => this.ValCodgenre.value, (newValue, oldValue) => this.onUpdate('conta.codgenre', this.ValCodgenre, newValue, oldValue))
+
+		this.ValCodtpcon = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodtpcon',
+			originId: 'ValCodtpcon',
+			area: 'CONTA',
+			field: 'CODTPCON',
+			relatedArea: 'TPCON',
+			description: computed(() => this.Resources.CONTACT_TYPE65233),
+		}).cloneFrom(values?.ValCodtpcon))
+		watch(() => this.ValCodtpcon.value, (newValue, oldValue) => this.onUpdate('conta.codtpcon', this.ValCodtpcon, newValue, oldValue))
+
+		/** The remaining form fields. */
+		this.TablePessoName = reactive(new modelFieldType.String({
+			type: 'Lookup',
+			id: 'TablePessoName',
+			originId: 'ValName',
+			area: 'PESSO',
+			field: 'NAME',
+			maxLength: 85,
+			description: computed(() => this.Resources.NAME31974),
+		}).cloneFrom(values?.TablePessoName))
+		watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue))
+
+		this.TableGenreGender = reactive(new modelFieldType.String({
+			type: 'Lookup',
+			id: 'TableGenreGender',
+			originId: 'ValGender',
+			area: 'GENRE',
+			field: 'GENDER',
+			maxLength: 20,
+			description: computed(() => this.Resources.GENRE63303),
+		}).cloneFrom(values?.TableGenreGender))
+		watch(() => this.TableGenreGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.TableGenreGender, newValue, oldValue))
+
+		this.TableTpconTipocont = reactive(new modelFieldType.String({
+			type: 'Lookup',
+			id: 'TableTpconTipocont',
+			originId: 'ValTipocont',
+			area: 'TPCON',
+			field: 'TIPOCONT',
+			maxLength: 50,
+			description: computed(() => this.Resources.DESIGNATION35876),
+		}).cloneFrom(values?.TableTpconTipocont))
+		watch(() => this.TableTpconTipocont.value, (newValue, oldValue) => this.onUpdate('tpcon.tipocont', this.TableTpconTipocont, newValue, oldValue))
+
+		this.ValContacto = reactive(new modelFieldType.String({
+			id: 'ValContacto',
+			originId: 'ValContacto',
+			area: 'CONTA',
+			field: 'CONTACTO',
+			maxLength: 254,
+			description: computed(() => this.Resources.CONTACT59247),
+		}).cloneFrom(values?.ValContacto))
+		watch(() => this.ValContacto.value, (newValue, oldValue) => this.onUpdate('conta.contacto', this.ValContacto, newValue, oldValue))
+	}
+
+	/**
+	 * Creates a clone of the current QFormContaViewModel instance.
+	 * @returns {QFormContaViewModel} A new instance of QFormContaViewModel
+	 */
+	clone()
+	{
+		return new ViewModel(this.vueContext, { callbacks: this.externalCallbacks }, this)
+	}
+
+	static QPrimaryKeyName = 'ValCodconta'
+
+	get QPrimaryKey() { return this.ValCodconta.value }
+	set QPrimaryKey(value) { this.ValCodconta.updateValue(value) }
+}

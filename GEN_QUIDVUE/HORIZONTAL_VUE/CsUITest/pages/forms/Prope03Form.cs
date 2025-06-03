@@ -10,17 +10,17 @@ public class Prope03Form : Form
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "#PROPE03_PROPETITLE___");
+	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE03_PROPETITLE___", "#PROPE03_PROPETITLE___");
 
 	/// <summary>
 	/// Price
 	/// </summary>
-	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "#PROPE03_PROPEPRICE___");
+	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE03_PROPEPRICE___", "#PROPE03_PROPEPRICE___");
 
 	/// <summary>
 	/// Foto principal
 	/// </summary>
-	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "#PROPE03_PROPEPHOTO___");
+	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE03_PROPEPHOTO___", "#PROPE03_PROPEPHOTO___");
 
 	/// <summary>
 	/// Name
@@ -31,17 +31,17 @@ public class Prope03Form : Form
 	/// <summary>
 	/// Tamanho (m2)
 	/// </summary>
-	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "#PROPE03_PROPESIZE____");
+	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "container-PROPE03_PROPESIZE____", "#PROPE03_PROPESIZE____");
 
 	/// <summary>
 	/// Numero de Casa de banhos
 	/// </summary>
-	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "#PROPE03_PROPEBATHRMS_");
+	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "container-PROPE03_PROPEBATHRMS_", "#PROPE03_PROPEBATHRMS_");
 
 	/// <summary>
 	/// Ano construído
 	/// </summary>
-	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "#PROPE03_PROPEYEAR____");
+	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "container-PROPE03_PROPEYEAR____", "#PROPE03_PROPEYEAR____");
 
 	/// <summary>
 	/// Cidade
@@ -52,7 +52,7 @@ public class Prope03Form : Form
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "#PROPE03_PROPEDESCRIPT");
+	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "container-PROPE03_PROPEDESCRIPT", "#PROPE03_PROPEDESCRIPT");
 
 	/// <summary>
 	/// Contacts

@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Notif
 {
-	public class GQT_Menu_81_ViewModel : ListViewModel
+	public class GQT_Menu_81_ViewModel : MenuListViewModel<Models.Notif>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<GQT_Menu_81_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "notif"; }
+		[JsonIgnore]
+		public override string TableAlias => "notif";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "8a24817a-f3db-4158-821e-86bf9df25ea0"; }
+		public override string Uuid => "8a24817a-f3db-4158-821e-86bf9df25ea0";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodnotif { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Notif
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 81]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,33 @@ namespace GenioMVC.ViewModels.Notif
 			var areaBase = CSGenio.business.Area.createArea("notif", user, "GQT");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet gqt_menu_81Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML81");
-			gqt_menu_81Conds.Equal(CSGenioAnotif.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML81");
+			conditions.Equal(CSGenioAnotif.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL GQT OVERRQ 81]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAnotif.FldCodnotif, CSGenioAnotif.FldZzstate, CSGenioAnotif.FldNrcomoda, CSGenioAnotif.FldBegin, CSGenioAnotif.FldEnd, CSGenioAnotif.FldEmail, CSGenioAnotif.FldIdnotif, CSGenioAnotif.FldIdmsg, CSGenioAnotif.FldMessage, CSGenioAnotif.FldMailerr, CSGenioAnotif.FldDesignat, CSGenioAnotif.FldCreatdat, CSGenioAnotif.FldCreatope, CSGenioAnotif.FldReturned, CSGenioAnotif.FldDtdevolu, CSGenioAnotif.FldCodpesso, CSGenioApess2.FldCodpesso, CSGenioApess2.FldName };
 
-			ListingMVC<CSGenioAnotif> listing = new ListingMVC<CSGenioAnotif>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(gqt_menu_81Conds, listing);
+			ListingMVC<CSGenioAnotif> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public GQT_Menu_81_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GQT_Menu_81_ViewModel" /> class.
@@ -102,25 +131,35 @@ namespace GenioMVC.ViewModels.Notif
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GQT_Menu_81_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public GQT_Menu_81_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAnotif.FldNrcomoda, FieldType.NUMERO, Resources.Resources.NO__OF_THE_DADATO35934, 6, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldBegin, FieldType.DATAHORA, Resources.Resources.BEGINNING18124, 16, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldEnd, FieldType.DATAHORA, Resources.Resources.END47577, 16, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldEmail, FieldType.TEXTO, Resources.Resources.RECIPIENT_S_EMAIL43894, 30, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldIdnotif, FieldType.TEXTO, Resources.Resources.NOTIFICATION_ID_THAT61751, 30, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldIdmsg, FieldType.TEXTO, Resources.Resources.MESSAGE_ID37133, 30, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldNrcomoda, FieldType.NUMERIC, Resources.Resources.NO__OF_THE_DADATO35934, 6, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldBegin, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldEnd, FieldType.DATETIME, Resources.Resources.END47577, 16, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldEmail, FieldType.TEXT, Resources.Resources.RECIPIENT_S_EMAIL43894, 30, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldIdnotif, FieldType.TEXT, Resources.Resources.NOTIFICATION_ID_THAT61751, 30, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldIdmsg, FieldType.TEXT, Resources.Resources.MESSAGE_ID37133, 30, 0, true),
 				new Exports.QColumn(CSGenioAnotif.FldMessage, FieldType.MEMO, Resources.Resources.TEXT_OF_THE_SENT_MES52307, 30, 15, true),
-				new Exports.QColumn(CSGenioAnotif.FldMailerr, FieldType.TEXTO, Resources.Resources.ERROR_SENDING_EMAIL53846, 30, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldDesignat, FieldType.TEXTO, Resources.Resources.RECIPIENT65165, 30, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldCreatdat, FieldType.DATACRIA, Resources.Resources.CREATION__DATE13180, 8, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldCreatope, FieldType.OPERCRIA, Resources.Resources.CREATION__OPERATOR50535, 20, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldReturned, FieldType.LOGICO, Resources.Resources.RETURNED01606, 1, 0, true),
-				new Exports.QColumn(CSGenioAnotif.FldDtdevolu, FieldType.DATA, Resources.Resources.RETURN32222, 8, 0, true),
-				new Exports.QColumn(CSGenioApess2.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldMailerr, FieldType.TEXT, Resources.Resources.ERROR_SENDING_EMAIL53846, 30, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldDesignat, FieldType.TEXT, Resources.Resources.RECIPIENT65165, 30, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldCreatdat, FieldType.DATETIMESECONDS, Resources.Resources.CREATION__DATE13180, 8, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldCreatope, FieldType.TEXT, Resources.Resources.CREATION__OPERATOR50535, 20, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldReturned, FieldType.LOGIC, Resources.Resources.RETURNED01606, 1, 0, true),
+				new Exports.QColumn(CSGenioAnotif.FldDtdevolu, FieldType.DATE, Resources.Resources.RETURN32222, 8, 0, true),
+				new Exports.QColumn(CSGenioApess2.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -169,29 +208,10 @@ namespace GenioMVC.ViewModels.Notif
 
 			if (Menu == null)
 				Menu = new TablePartial<GQT_Menu_81_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("NOTIF.BEGIN", new OrderedDictionary());
-			allSortOrders["NOTIF.BEGIN"].Add("NOTIF.BEGIN", "A");
-			allSortOrders.Add("NOTIF.END", new OrderedDictionary());
-			allSortOrders["NOTIF.END"].Add("NOTIF.END", "A");
-			allSortOrders.Add("NOTIF.EMAIL", new OrderedDictionary());
-			allSortOrders["NOTIF.EMAIL"].Add("NOTIF.EMAIL", "A");
-			allSortOrders.Add("NOTIF.IDNOTIF", new OrderedDictionary());
-			allSortOrders["NOTIF.IDNOTIF"].Add("NOTIF.IDNOTIF", "A");
-			allSortOrders.Add("NOTIF.IDMSG", new OrderedDictionary());
-			allSortOrders["NOTIF.IDMSG"].Add("NOTIF.IDMSG", "A");
-			allSortOrders.Add("NOTIF.MAILERR", new OrderedDictionary());
-			allSortOrders["NOTIF.MAILERR"].Add("NOTIF.MAILERR", "A");
-			allSortOrders.Add("NOTIF.DESIGNAT", new OrderedDictionary());
-			allSortOrders["NOTIF.DESIGNAT"].Add("NOTIF.DESIGNAT", "A");
-			allSortOrders.Add("NOTIF.CREATDAT", new OrderedDictionary());
-			allSortOrders["NOTIF.CREATDAT"].Add("NOTIF.CREATDAT", "A");
-			allSortOrders.Add("NOTIF.CREATOPE", new OrderedDictionary());
-			allSortOrders["NOTIF.CREATOPE"].Add("NOTIF.CREATOPE", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -204,8 +224,7 @@ namespace GenioMVC.ViewModels.Notif
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -302,16 +321,16 @@ namespace GenioMVC.ViewModels.Notif
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAnotif> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "81"),
 				new("Module", "GQT")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<GQT_Menu_81_RowViewModel>();
 
 				CriteriaSet gqt_menu_81Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
@@ -334,7 +353,6 @@ namespace GenioMVC.ViewModels.Notif
 				allSortOrders["NOTIF.CREATDAT"].Add("NOTIF.CREATDAT", "A");
 				allSortOrders.Add("NOTIF.CREATOPE", new OrderedDictionary());
 				allSortOrders["NOTIF.CREATOPE"].Add("NOTIF.CREATOPE", "A");
-
 
 
 
@@ -374,26 +392,24 @@ namespace GenioMVC.ViewModels.Notif
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("notif", "nrcomoda");
+					firstVisibleColumn ??= new FieldRef("notif", "nrcomoda");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAnotif model_limit_area = new CSGenioAnotif(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML81");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAnotif model_limit_area = new CSGenioAnotif(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML81");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -404,6 +420,8 @@ namespace GenioMVC.ViewModels.Notif
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ 81]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -432,7 +450,7 @@ namespace GenioMVC.ViewModels.Notif
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAnotif> listing = Models.ModelBase.Where<CSGenioAnotif>(m_userContext, false, gqt_menu_81Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML81", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAnotif> listing = Models.ModelBase.Where<CSGenioAnotif>(m_userContext, distinct, gqt_menu_81Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML81", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -440,7 +458,6 @@ namespace GenioMVC.ViewModels.Notif
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -462,18 +479,12 @@ namespace GenioMVC.ViewModels.Notif
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -481,7 +492,7 @@ namespace GenioMVC.ViewModels.Notif
 
 		private List<GQT_Menu_81_RowViewModel> MapGQT_Menu_81(ListingMVC<CSGenioAnotif> Qlisting)
 		{
-			var Elements = new List<GQT_Menu_81_RowViewModel>();
+			List<GQT_Menu_81_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -498,7 +509,6 @@ namespace GenioMVC.ViewModels.Notif
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAnotif row
 		/// to a GQT_Menu_81_RowViewModel object.
@@ -507,7 +517,9 @@ namespace GenioMVC.ViewModels.Notif
 		private GQT_Menu_81_RowViewModel MapGQT_Menu_81(CSGenioAnotif row)
 		{
 			var model = new GQT_Menu_81_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -521,32 +533,9 @@ namespace GenioMVC.ViewModels.Notif
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(GQT_Menu_81_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -560,31 +549,40 @@ namespace GenioMVC.ViewModels.Notif
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAnotif> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAnotif row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Notif m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Notif m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM GQT_MENU_81]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Notif", "Notif.ValCodnotif", "Notif.ValZzstate", "Notif.ValNrcomoda", "Notif.ValBegin", "Notif.ValEnd", "Notif.ValEmail", "Notif.ValIdnotif", "Notif.ValIdmsg", "Notif.ValMessage", "Notif.ValMailerr", "Notif.ValDesignat", "Notif.ValCreatdat", "Notif.ValCreatope", "Notif.ValReturned", "Notif.ValDtdevolu", "Pess2", "Pess2.ValName", "Notif.ValCodpesso", "BtnPermission"
+			"Notif", "Notif.ValCodnotif", "Notif.ValZzstate", "Notif.ValNrcomoda", "Notif.ValBegin", "Notif.ValEnd", "Notif.ValEmail", "Notif.ValIdnotif", "Notif.ValIdmsg", "Notif.ValMessage", "Notif.ValMailerr", "Notif.ValDesignat", "Notif.ValCreatdat", "Notif.ValCreatope", "Notif.ValReturned", "Notif.ValDtdevolu", "Pess2", "Pess2.ValName", "Notif.ValCodpesso"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValNrcomoda", CSGenioAnotif.FldNrcomoda, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("ValBegin", CSGenioAnotif.FldBegin, typeof(DateTime?)),
@@ -599,10 +597,7 @@ namespace GenioMVC.ViewModels.Notif
 			new TableSearchColumn("ValCreatope", CSGenioAnotif.FldCreatope, typeof(string)),
 			new TableSearchColumn("ValReturned", CSGenioAnotif.FldReturned, typeof(bool)),
 			new TableSearchColumn("ValDtdevolu", CSGenioAnotif.FldDtdevolu, typeof(DateTime?)),
-			new TableSearchColumn("Pess2_ValName", CSGenioApess2.FldName, typeof(string))
+			new TableSearchColumn("Pess2_ValName", CSGenioApess2.FldName, typeof(string)),
 		];
-
-
-
 	}
 }

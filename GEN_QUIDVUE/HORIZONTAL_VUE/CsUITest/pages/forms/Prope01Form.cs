@@ -10,17 +10,17 @@ public class Prope01Form : Form
 	/// <summary>
 	/// Foto principal
 	/// </summary>
-	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "#PROPE01_PROPEPHOTO___");
+	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE01_PROPEPHOTO___", "#PROPE01_PROPEPHOTO___");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "#PROPE01_PROPETITLE___");
+	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE01_PROPETITLE___", "#PROPE01_PROPETITLE___");
 
 	/// <summary>
 	/// Price
 	/// </summary>
-	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "#PROPE01_PROPEPRICE___");
+	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE01_PROPEPRICE___", "#PROPE01_PROPEPRICE___");
 
 	/// <summary>
 	/// Name

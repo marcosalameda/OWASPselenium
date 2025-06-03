@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Dispa;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER DISPA]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class DispaController : ControllerBase
 	{
-		public DispaController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public DispaController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION DISPA]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER DISPA]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Dispa row = null;
-
-			if (row == null)
-			{
-				row = new Models.Dispa(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("dispa");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Dispa row = new Models.Dispa(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("dispa");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -73,10 +82,17 @@ namespace GenioMVC.Controllers
 			{
 				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
 				{
+					case "DISPA___DISSTSTATUS__":	// Field (DB)
+						{
+							var model = new Dispa_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Dispa___disststatus__(qs);
+							result = model.TableDisstStatus;
+						}
+						break;
 					case "DISPA___ENTITNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Dispa_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Dispa_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Dispa___entitname____(qs);
 							result = model.TableEntitName;
@@ -84,8 +100,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "DISPA___PERSONAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Dispa_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Dispa_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Dispa___personame____(qs);
 							result = model.TablePersoName;
@@ -124,6 +139,9 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.openConnection();
 				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
 				{
+					case "DISPA___DISSTSTATUS__":	// Field (DB)
+						values = new Dispa_ViewModel(UserContext.Current).GetDependant_DispaTableDisstStatus(Selected);
+						break;
 					case "DISPA___ENTITNAME____":	// Field (DB)
 						values = new Dispa_ViewModel(UserContext.Current).GetDependant_DispaTableEntitName(Selected);
 						break;
@@ -153,6 +171,9 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
+
 
 
 		/// <summary>

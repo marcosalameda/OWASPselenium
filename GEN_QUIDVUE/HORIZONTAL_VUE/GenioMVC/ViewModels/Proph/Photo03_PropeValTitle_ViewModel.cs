@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Proph
 {
-	public class Photo03_PropeValTitle_ViewModel : ListViewModel
+	public class Photo03_PropeValTitle_ViewModel : MenuListViewModel<Models.Prope>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Photo03_PropeValTitle_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "prope"; }
+		[JsonIgnore]
+		public override string TableAlias => "prope";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Photo03_PropeValTitle"; }
+		public override string Uuid => "Photo03_PropeValTitle";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodproph { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Proph
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PHOTO03_PROPETITLE]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Photo03_PropeValTitle_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Photo03_PropeValTitle_ViewModel" /> class.
@@ -73,12 +112,22 @@ namespace GenioMVC.ViewModels.Proph
 			ValCodproph = userContext.CurrentNavigation.CurrentLevel.GetEntry("proph")?.ToString();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Photo03_PropeValTitle_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Photo03_PropeValTitle_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 50, 0, true),
+				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -128,13 +177,10 @@ namespace GenioMVC.ViewModels.Proph
 
 			if (Menu == null)
 				Menu = new TablePartial<Photo03_PropeValTitle_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PROPE.TITLE", new OrderedDictionary());
-			allSortOrders["PROPE.TITLE"].Add("PROPE.TITLE", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -147,9 +193,7 @@ namespace GenioMVC.ViewModels.Proph
 			crs.SubSets.Add(subfilters);
 
 
-
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -244,22 +288,21 @@ namespace GenioMVC.ViewModels.Proph
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAprope> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "PHOTO03")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Photo03_PropeValTitle_RowViewModel>();
 
 				CriteriaSet photo03_propetitle___Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("PROPE.TITLE", new OrderedDictionary());
 				allSortOrders["PROPE.TITLE"].Add("PROPE.TITLE", "A");
-
 
 
 
@@ -291,16 +334,14 @@ namespace GenioMVC.ViewModels.Proph
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("prope", "title");
+					firstVisibleColumn ??= new FieldRef("prope", "title");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
 
 				if (conditions == null)
@@ -310,7 +351,9 @@ namespace GenioMVC.ViewModels.Proph
 				photo03_propetitle___Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ PHOTO03_TITLE]/
+// USE /[MANUAL GQT OVERRQ PHOTO03_PROPETITLE]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -319,14 +362,14 @@ namespace GenioMVC.ViewModels.Proph
 
 					Qlisting = Models.ModelBase.Where<CSGenioAprope>(m_userContext, false, photo03_propetitle___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PHOTO03_PROPETITLE___", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP PHOTO03_TITLE]/
+// USE /[MANUAL GQT OVERRQLSTEXP PHOTO03_PROPETITLE]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST PHOTO03_TITLE]/
+// USE /[MANUAL GQT OVERRQLIST PHOTO03_PROPETITLE]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_prope"];
 					CriteriaSet m_PagingPosEPHs = null;
@@ -338,7 +381,7 @@ namespace GenioMVC.ViewModels.Proph
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAprope> listing = Models.ModelBase.Where<CSGenioAprope>(m_userContext, false, photo03_propetitle___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PHOTO03_PROPETITLE___", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAprope> listing = Models.ModelBase.Where<CSGenioAprope>(m_userContext, distinct, photo03_propetitle___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PHOTO03_PROPETITLE___", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -346,7 +389,6 @@ namespace GenioMVC.ViewModels.Proph
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -367,18 +409,12 @@ namespace GenioMVC.ViewModels.Proph
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -386,7 +422,7 @@ namespace GenioMVC.ViewModels.Proph
 
 		private List<Photo03_PropeValTitle_RowViewModel> MapPhoto03_PropeValTitle(ListingMVC<CSGenioAprope> Qlisting)
 		{
-			var Elements = new List<Photo03_PropeValTitle_RowViewModel>();
+			List<Photo03_PropeValTitle_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -403,7 +439,6 @@ namespace GenioMVC.ViewModels.Proph
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAprope row
 		/// to a Photo03_PropeValTitle_RowViewModel object.
@@ -412,7 +447,9 @@ namespace GenioMVC.ViewModels.Proph
 		private Photo03_PropeValTitle_RowViewModel MapPhoto03_PropeValTitle(CSGenioAprope row)
 		{
 			var model = new Photo03_PropeValTitle_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -424,32 +461,9 @@ namespace GenioMVC.ViewModels.Proph
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Photo03_PropeValTitle_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -463,36 +477,42 @@ namespace GenioMVC.ViewModels.Proph
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAprope> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAprope row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Prope m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Prope m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PHOTO03_PROPEVALTITLE]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Prope", "Prope.ValCodprope", "Prope.ValZzstate", "Prope.ValTitle", "Prope.ValCodagent", "Prope.ValCodcity", "BtnPermission"
+			"Prope", "Prope.ValCodprope", "Prope.ValZzstate", "Prope.ValTitle", "Prope.ValCodagent", "Prope.ValCodcity"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValTitle", CSGenioAprope.FldTitle, typeof(string))
+			new TableSearchColumn("ValTitle", CSGenioAprope.FldTitle, typeof(string)),
 		];
-
-
-
 	}
 }

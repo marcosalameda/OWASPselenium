@@ -16,12 +16,12 @@ public class PlistForm : Form
 	/// <summary>
 	/// Article
 	/// </summary>
-	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "#PLIST___ITEM_ITEMDES_");
+	public BaseInputControl ItemItemdes => new BaseInputControl(driver, ContainerLocator, "container-PLIST___ITEM_ITEMDES_", "#PLIST___ITEM_ITEMDES_");
 
 	/// <summary>
 	/// Property List
 	/// </summary>
-	public IWebElement PseudPlist => throw new NotImplementedException();
+	public PlistPseudPlistPropertyList PseudPlist => new PlistPseudPlistPropertyList(driver, ContainerLocator, "container-PLIST___PSEUDPLIST___");
 
 	public PlistForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "PLIST", containerLocator: containerLocator) { }

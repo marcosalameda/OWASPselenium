@@ -15,7 +15,7 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// VAT Number
 	/// </summary>
-	public BaseInputControl InpgrNumbgro => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGRNUMBGRO_");
+	public BaseInputControl InpgrNumbgro => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRNUMBGRO_", "#INGROUPSINPGRNUMBGRO_");
 
 	/// <summary>
 	/// Profile
@@ -30,12 +30,12 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// First name
 	/// </summary>
-	public BaseInputControl InpgrName => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGRNAME____");
+	public BaseInputControl InpgrName => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRNAME____", "#INGROUPSINPGRNAME____");
 
 	/// <summary>
 	/// Last name
 	/// </summary>
-	public BaseInputControl InpgrLastname => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGRLASTNAME");
+	public BaseInputControl InpgrLastname => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRLASTNAME", "#INGROUPSINPGRLASTNAME");
 
 	/// <summary>
 	/// Prefix
@@ -75,7 +75,7 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// Phone number
 	/// </summary>
-	public BaseInputControl InpgrPhone => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGRPHONE___");
+	public BaseInputControl InpgrPhone => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRPHONE___", "#INGROUPSINPGRPHONE___");
 
 	/// <summary>
 	/// Contact Data
@@ -95,12 +95,12 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// E-mail
 	/// </summary>
-	public BaseInputControl InpgrEmail => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGREMAIL___");
+	public BaseInputControl InpgrEmail => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGREMAIL___", "#INGROUPSINPGREMAIL___");
 
 	/// <summary>
 	/// Web
 	/// </summary>
-	public BaseInputControl InpgrWeb => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGRWEB_____");
+	public BaseInputControl InpgrWeb => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRWEB_____", "#INGROUPSINPGRWEB_____");
 
 	/// <summary>
 	/// Entity
@@ -110,22 +110,22 @@ public class IngroupsForm : Form
 	/// <summary>
 	/// IBAN
 	/// </summary>
-	public BaseInputControl InpgrIban => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGRIBAN____");
+	public BaseInputControl InpgrIban => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRIBAN____", "#INGROUPSINPGRIBAN____");
 
 	/// <summary>
 	/// Text Field
 	/// </summary>
-	public BaseInputControl InpgrTextgro => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGRTEXTGRO_");
+	public BaseInputControl InpgrTextgro => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRTEXTGRO_", "#INGROUPSINPGRTEXTGRO_");
 
 	/// <summary>
 	/// Banking Account Number
 	/// </summary>
-	public BaseInputControl InpgrBankacco => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGRBANKACCO");
+	public BaseInputControl InpgrBankacco => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRBANKACCO", "#INGROUPSINPGRBANKACCO");
 
 	/// <summary>
 	/// Adress
 	/// </summary>
-	public BaseInputControl InpgrDirectio => new BaseInputControl(driver, ContainerLocator, "#INGROUPSINPGRDIRECTIO");
+	public BaseInputControl InpgrDirectio => new BaseInputControl(driver, ContainerLocator, "container-INGROUPSINPGRDIRECTIO", "#INGROUPSINPGRDIRECTIO");
 
 	/// <summary>
 	/// View

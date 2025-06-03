@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Prope06_CityValCityModel : RequestLookupModel
+		{
+			public Prope06_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Prope/Prope06_CityValCity
 		// POST: /Prope/Prope06_CityValCity
 		[ActionName("Prope06_CityValCity")]
-		public ActionResult Prope06_CityValCity([FromBody]RequestLookupModel requestModel)
+		public ActionResult Prope06_CityValCity([FromBody] Prope06_CityValCityModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Prope06_CityValCity_ViewModel model = new Prope06_CityValCity_ViewModel(UserContext.Current);
-			
+
+			Models.Prope parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Prope06_CityValCity_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Prope06_AgentValNameModel : RequestLookupModel
+		{
+			public Prope06_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Prope/Prope06_AgentValName
 		// POST: /Prope/Prope06_AgentValName
 		[ActionName("Prope06_AgentValName")]
-		public ActionResult Prope06_AgentValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Prope06_AgentValName([FromBody] Prope06_AgentValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Prope06_AgentValName_ViewModel model = new Prope06_AgentValName_ViewModel(UserContext.Current);
-			
+
+			Models.Prope parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Prope06_AgentValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +533,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Prope06_ValPropcontModel : RequestLookupModel
+		{
+			public Prope06_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Prope/Prope06_ValPropcont
 		// POST: /Prope/Prope06_ValPropcont
 		[ActionName("Prope06_ValPropcont")]
-		public ActionResult Prope06_ValPropcont([FromBody]RequestLookupModel requestModel)
+		public ActionResult Prope06_ValPropcont([FromBody] Prope06_ValPropcontModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -546,16 +566,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Prope06_ValPropcont_ViewModel model = new Prope06_ValPropcont_ViewModel(UserContext.Current);
-			
+			Models.Prope parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Prope06_ValPropcont_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

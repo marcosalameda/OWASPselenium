@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Equdocum_ValLisanexModel : RequestLookupModel
+		{
+			public Equdocum_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equdocum_ValLisanex
 		// POST: /Equip/Equdocum_ValLisanex
 		[ActionName("Equdocum_ValLisanex")]
-		public ActionResult Equdocum_ValLisanex([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equdocum_ValLisanex([FromBody] Equdocum_ValLisanexModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +424,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equdocum_ValLisanex_ViewModel model = new Equdocum_ValLisanex_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equdocum_ValLisanex_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

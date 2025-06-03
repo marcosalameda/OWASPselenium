@@ -21,7 +21,7 @@ public class FacilfexForm : Form
 	/// <summary>
 	/// Facility name
 	/// </summary>
-	public BaseInputControl FacilName => new BaseInputControl(driver, ContainerLocator, "#FACILFEXFACILNAME____");
+	public BaseInputControl FacilName => new BaseInputControl(driver, ContainerLocator, "container-FACILFEXFACILNAME____", "#FACILFEXFACILNAME____");
 
 	/// <summary>
 	/// Facility type
@@ -37,17 +37,17 @@ public class FacilfexForm : Form
 	/// <summary>
 	/// Latitude
 	/// </summary>
-	public BaseInputControl FacilLatitude => new BaseInputControl(driver, ContainerLocator, "#FACILFEXFACILLATITUDE");
+	public BaseInputControl FacilLatitude => new BaseInputControl(driver, ContainerLocator, "container-FACILFEXFACILLATITUDE", "#FACILFEXFACILLATITUDE");
 
 	/// <summary>
 	/// Longitude
 	/// </summary>
-	public BaseInputControl FacilLongitud => new BaseInputControl(driver, ContainerLocator, "#FACILFEXFACILLONGITUD");
+	public BaseInputControl FacilLongitud => new BaseInputControl(driver, ContainerLocator, "container-FACILFEXFACILLONGITUD", "#FACILFEXFACILLONGITUD");
 
 	/// <summary>
 	/// Address
 	/// </summary>
-	public BaseInputControl FacilAddress => new BaseInputControl(driver, ContainerLocator, "#FACILFEXFACILADDRESS_");
+	public BaseInputControl FacilAddress => new BaseInputControl(driver, ContainerLocator, "container-FACILFEXFACILADDRESS_", "#FACILFEXFACILADDRESS_");
 
 	public FacilfexForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "FACILFEX", containerLocator: containerLocator) { }

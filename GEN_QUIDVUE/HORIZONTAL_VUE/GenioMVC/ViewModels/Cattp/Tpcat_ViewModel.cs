@@ -166,6 +166,7 @@ namespace GenioMVC.ViewModels.Cattp
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Cattp m)
 		{
 			if (m == null)
@@ -187,20 +188,13 @@ namespace GenioMVC.ViewModels.Cattp
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Cattp m)
 		{
 			if (m == null)
@@ -509,7 +503,7 @@ namespace GenioMVC.ViewModels.Cattp
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -556,7 +550,7 @@ namespace GenioMVC.ViewModels.Cattp
 				// Fill List fields
 				this.ValCodsbcat = ViewModelConversion.ToString(row["sbcat.codsbcat"]);
 				TableSbcatSubcateg.Value = (string)row["sbcat.subcateg"];
-				if (GlobalFunctions.emptyG(this.ValCodsbcat) == 1)
+				if (GenFunctions.emptyG(this.ValCodsbcat) == 1)
 				{
 					this.ValCodsbcat = "";
 					TableSbcatSubcateg.Value = "";
@@ -598,8 +592,6 @@ namespace GenioMVC.ViewModels.Cattp
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

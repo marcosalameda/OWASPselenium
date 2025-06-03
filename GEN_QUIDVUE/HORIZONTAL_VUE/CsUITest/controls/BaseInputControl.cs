@@ -1,11 +1,11 @@
 namespace quidgest.uitests.controls;
 
-public class BaseInputControl : ControlObject
+public class BaseInputControl(IWebDriver driver, By containerLocator, string controlId, string inputId) : InputControl(driver, containerLocator, By.CssSelector(inputId))
 {
-    public BaseInputControl(IWebDriver driver, By containerLocator, string css) 
-        : base(driver, containerLocator, By.CssSelector(css))
-    {
-    }
+    /// <summary>
+    /// True if the control is blocked, false otherwise
+    /// </summary>
+    public bool IsBlocked => m_container.FindElement(By.CssSelector($"#{controlId} > div.q-field")).GetAttribute("class").Contains("q-field--readonly");
 
     /// <summary>
     /// Get the input's value
@@ -18,7 +18,7 @@ public class BaseInputControl : ControlObject
     /// <summary>
     /// Set the input's value
     /// </summary>
-    public void SetValue(string val)
+    public override void SetValue(string val)
     {
         ClearValue();
         m_control.SendKeys(val);

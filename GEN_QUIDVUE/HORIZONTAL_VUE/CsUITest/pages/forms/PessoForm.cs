@@ -20,7 +20,7 @@ public class PessoForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOPHOTOGRA");
+	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOPHOTOGRA", "#PESSO___PESSOPHOTOGRA");
 
 	/// <summary>
 	/// IDENTIFICATION
@@ -30,12 +30,12 @@ public class PessoForm : Form
 	/// <summary>
 	/// Employee No.
 	/// </summary>
-	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOIDFUNCIO");
+	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOIDFUNCIO", "#PESSO___PESSOIDFUNCIO");
 
 	/// <summary>
 	/// Name:
 	/// </summary>
-	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSONAME____");
+	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSONAME____", "#PESSO___PESSONAME____");
 
 	/// <summary>
 	/// Gender
@@ -50,7 +50,7 @@ public class PessoForm : Form
 	/// <summary>
 	/// Age
 	/// </summary>
-	public BaseInputControl PessoIdade => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOIDADE___");
+	public BaseInputControl PessoIdade => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOIDADE___", "#PESSO___PESSOIDADE___");
 
 	/// <summary>
 	/// Intern
@@ -107,12 +107,12 @@ public class PessoForm : Form
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOTELEPHON");
+	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOTELEPHON", "#PESSO___PESSOTELEPHON");
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOEMAIL___");
+	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOEMAIL___", "#PESSO___PESSOEMAIL___");
 
 	/// <summary>
 	/// ALL CONTACTS
@@ -184,7 +184,7 @@ public class PessoForm : Form
 	/// <summary>
 	/// Alternative Email
 	/// </summary>
-	public BaseInputControl PessoEmail2 => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOEMAIL2__");
+	public BaseInputControl PessoEmail2 => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOEMAIL2__", "#PESSO___PESSOEMAIL2__");
 
 	/// <summary>
 	/// Terrain
@@ -194,37 +194,37 @@ public class PessoForm : Form
 	/// <summary>
 	/// Query for external API
 	/// </summary>
-	public BaseInputControl PessoExtquery => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOEXTQUERY");
+	public BaseInputControl PessoExtquery => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOEXTQUERY", "#PESSO___PESSOEXTQUERY");
 
 	/// <summary>
 	/// Zoom level
 	/// </summary>
-	public BaseInputControl PessoZoomlvl => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOZOOMLVL_");
+	public BaseInputControl PessoZoomlvl => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOZOOMLVL_", "#PESSO___PESSOZOOMLVL_");
 
 	/// <summary>
 	/// Minimum zoom to load features
 	/// </summary>
-	public BaseInputControl PessoExtminzm => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOEXTMINZM");
+	public BaseInputControl PessoExtminzm => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOEXTMINZM", "#PESSO___PESSOEXTMINZM");
 
 	/// <summary>
 	/// Map height
 	/// </summary>
-	public BaseInputControl PessoMapheigh => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOMAPHEIGH");
+	public BaseInputControl PessoMapheigh => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOMAPHEIGH", "#PESSO___PESSOMAPHEIGH");
 
 	/// <summary>
 	/// Outline weight
 	/// </summary>
-	public BaseInputControl PessoOutweigh => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOOUTWEIGH");
+	public BaseInputControl PessoOutweigh => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOOUTWEIGH", "#PESSO___PESSOOUTWEIGH");
 
 	/// <summary>
 	/// Polyline color
 	/// </summary>
-	public BaseInputControl PessoLineclr => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOLINECLR_");
+	public BaseInputControl PessoLineclr => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOLINECLR_", "#PESSO___PESSOLINECLR_");
 
 	/// <summary>
 	/// Polygon color
 	/// </summary>
-	public BaseInputControl PessoPolyclr => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOPOLYCLR_");
+	public BaseInputControl PessoPolyclr => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOPOLYCLR_", "#PESSO___PESSOPOLYCLR_");
 
 	/// <summary>
 	/// Allow drawing markers
@@ -279,7 +279,7 @@ public class PessoForm : Form
 	/// <summary>
 	/// Terrain
 	/// </summary>
-	public BaseInputControl PessoTerrain => new BaseInputControl(driver, ContainerLocator, "#PESSO___PESSOTERRAIN_");
+	public BaseInputControl PessoTerrain => new BaseInputControl(driver, ContainerLocator, "container-PESSO___PESSOTERRAIN_", "#PESSO___PESSOTERRAIN_");
 
 	public PessoForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "PESSO", containerLocator: containerLocator) { }

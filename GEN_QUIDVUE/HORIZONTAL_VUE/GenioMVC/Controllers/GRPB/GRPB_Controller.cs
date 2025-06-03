@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Grpb;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER GRPB]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class GrpbController : ControllerBase
 	{
-		public GrpbController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public GrpbController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION GRPB]/
 
 
@@ -42,6 +51,9 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER GRPB]/
+
+
+
 
 
 		/// <summary>

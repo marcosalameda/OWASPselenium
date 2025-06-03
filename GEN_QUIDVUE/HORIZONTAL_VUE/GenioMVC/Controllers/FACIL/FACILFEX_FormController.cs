@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Facilfex_EntitValNameModel : RequestLookupModel
+		{
+			public Facilfex_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Facil/Facilfex_EntitValName
 		// POST: /Facil/Facilfex_EntitValName
 		[ActionName("Facilfex_EntitValName")]
-		public ActionResult Facilfex_EntitValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Facilfex_EntitValName([FromBody] Facilfex_EntitValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Facilfex_EntitValName_ViewModel model = new Facilfex_EntitValName_ViewModel(UserContext.Current);
-			
+
+			Models.Facil parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Facilfex_EntitValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Facilfex_FactyValTypeModel : RequestLookupModel
+		{
+			public Facilfex_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Facil/Facilfex_FactyValType
 		// POST: /Facil/Facilfex_FactyValType
 		[ActionName("Facilfex_FactyValType")]
-		public ActionResult Facilfex_FactyValType([FromBody]RequestLookupModel requestModel)
+		public ActionResult Facilfex_FactyValType([FromBody] Facilfex_FactyValTypeModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Facilfex_FactyValType_ViewModel model = new Facilfex_FactyValType_ViewModel(UserContext.Current);
-			
+
+			Models.Facil parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Facilfex_FactyValType_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

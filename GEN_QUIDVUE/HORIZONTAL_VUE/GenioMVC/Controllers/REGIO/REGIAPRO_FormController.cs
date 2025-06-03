@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Regiapro_CntryValCountryModel : RequestLookupModel
+		{
+			public Regiapro_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Regio/Regiapro_CntryValCountry
 		// POST: /Regio/Regiapro_CntryValCountry
 		[ActionName("Regiapro_CntryValCountry")]
-		public ActionResult Regiapro_CntryValCountry([FromBody]RequestLookupModel requestModel)
+		public ActionResult Regiapro_CntryValCountry([FromBody] Regiapro_CntryValCountryModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Regiapro_CntryValCountry_ViewModel model = new Regiapro_CntryValCountry_ViewModel(UserContext.Current);
-			
+
+			Models.Regio parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Regiapro_CntryValCountry_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Regiapro_Pais1ValCountryModel : RequestLookupModel
+		{
+			public Regiapro_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Regio/Regiapro_Pais1ValCountry
 		// POST: /Regio/Regiapro_Pais1ValCountry
 		[ActionName("Regiapro_Pais1ValCountry")]
-		public ActionResult Regiapro_Pais1ValCountry([FromBody]RequestLookupModel requestModel)
+		public ActionResult Regiapro_Pais1ValCountry([FromBody] Regiapro_Pais1ValCountryModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Regiapro_Pais1ValCountry_ViewModel model = new Regiapro_Pais1ValCountry_ViewModel(UserContext.Current);
-			
+
+			Models.Regio parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Regiapro_Pais1ValCountry_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -516,13 +531,18 @@ namespace GenioMVC.Controllers
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
+		}
+
+		public class Regiapro_ValImoveissModel : RequestLookupModel
+		{
+			public Regiapro_ViewModel Model { get; set; }
 		}
 
 		//
 		// GET: /Regio/Regiapro_ValImoveiss
 		// POST: /Regio/Regiapro_ValImoveiss
 		[ActionName("Regiapro_ValImoveiss")]
-		public ActionResult Regiapro_ValImoveiss([FromBody]RequestLookupModel requestModel)
+		public ActionResult Regiapro_ValImoveiss([FromBody] Regiapro_ValImoveissModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -546,16 +566,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Regiapro_ValImoveiss_ViewModel model = new Regiapro_ValImoveiss_ViewModel(UserContext.Current);
-			
+			Models.Regio parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Regiapro_ValImoveiss_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -578,13 +600,18 @@ namespace GenioMVC.Controllers
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
+		}
+
+		public class Regiapro_ValImoveislModel : RequestLookupModel
+		{
+			public Regiapro_ViewModel Model { get; set; }
 		}
 
 		//
 		// GET: /Regio/Regiapro_ValImoveisl
 		// POST: /Regio/Regiapro_ValImoveisl
 		[ActionName("Regiapro_ValImoveisl")]
-		public ActionResult Regiapro_ValImoveisl([FromBody]RequestLookupModel requestModel)
+		public ActionResult Regiapro_ValImoveisl([FromBody] Regiapro_ValImoveislModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -608,16 +635,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Regiapro_ValImoveisl_ViewModel model = new Regiapro_ValImoveisl_ViewModel(UserContext.Current);
-			
+			Models.Regio parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Regiapro_ValImoveisl_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -642,11 +671,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Regiapro_ValImoveisgModel : RequestLookupModel
+		{
+			public Regiapro_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Regio/Regiapro_ValImoveisg
 		// POST: /Regio/Regiapro_ValImoveisg
 		[ActionName("Regiapro_ValImoveisg")]
-		public ActionResult Regiapro_ValImoveisg([FromBody]RequestLookupModel requestModel)
+		public ActionResult Regiapro_ValImoveisg([FromBody] Regiapro_ValImoveisgModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -670,16 +704,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Regiapro_ValImoveisg_ViewModel model = new Regiapro_ValImoveisg_ViewModel(UserContext.Current);
-			
+			Models.Regio parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Regiapro_ValImoveisg_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

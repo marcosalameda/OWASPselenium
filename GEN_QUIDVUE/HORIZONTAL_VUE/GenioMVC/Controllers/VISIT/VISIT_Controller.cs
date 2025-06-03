@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Visit;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER VISIT]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class VisitController : ControllerBase
 	{
-		public VisitController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public VisitController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION VISIT]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER VISIT]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Visit row = null;
-
-			if (row == null)
-			{
-				row = new Models.Visit(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("visit");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Visit row = new Models.Visit(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("visit");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "VISIT___EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Visit_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Visit_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Visit___equipregistnr(qs);
 							result = model.TableEquipRegistnr;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "VISIT2__EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Visit2_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Visit2_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Visit2__equipregistnr(qs);
 							result = model.TableEquipRegistnr;
@@ -155,6 +162,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Visit" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -168,6 +178,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Visit)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Visit2" form. (++, CT, SR, CL and U1)

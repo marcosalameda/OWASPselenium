@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Lnhpd_PedidValNrpedidoModel : RequestLookupModel
+		{
+			public Lnhpd_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Lnhpd/Lnhpd_PedidValNrpedido
 		// POST: /Lnhpd/Lnhpd_PedidValNrpedido
 		[ActionName("Lnhpd_PedidValNrpedido")]
-		public ActionResult Lnhpd_PedidValNrpedido([FromBody]RequestLookupModel requestModel)
+		public ActionResult Lnhpd_PedidValNrpedido([FromBody] Lnhpd_PedidValNrpedidoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Lnhpd_PedidValNrpedido_ViewModel model = new Lnhpd_PedidValNrpedido_ViewModel(UserContext.Current);
-			
+
+			Models.Lnhpd parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Lnhpd_PedidValNrpedido_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Lnhpd_TpequValTipoequiModel : RequestLookupModel
+		{
+			public Lnhpd_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Lnhpd/Lnhpd_TpequValTipoequi
 		// POST: /Lnhpd/Lnhpd_TpequValTipoequi
 		[ActionName("Lnhpd_TpequValTipoequi")]
-		public ActionResult Lnhpd_TpequValTipoequi([FromBody]RequestLookupModel requestModel)
+		public ActionResult Lnhpd_TpequValTipoequi([FromBody] Lnhpd_TpequValTipoequiModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Lnhpd_TpequValTipoequi_ViewModel model = new Lnhpd_TpequValTipoequi_ViewModel(UserContext.Current);
-			
+
+			Models.Lnhpd parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Lnhpd_TpequValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -549,11 +564,16 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
+		public class Lnhpd_ValDesconjuModel : RequestLookupModel
+		{
+			public Lnhpd_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Lnhpd/Lnhpd_ValDesconju
 		// POST: /Lnhpd/Lnhpd_ValDesconju
 		[ActionName("Lnhpd_ValDesconju")]
-		public ActionResult Lnhpd_ValDesconju([FromBody]RequestLookupModel requestModel)
+		public ActionResult Lnhpd_ValDesconju([FromBody] Lnhpd_ValDesconjuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -577,16 +597,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Lnhpd_ValDesconju_ViewModel model = new Lnhpd_ValDesconju_ViewModel(UserContext.Current);
-			
+			Models.Lnhpd parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Lnhpd_ValDesconju_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -611,11 +633,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Lnhpd_ValDesagregModel : RequestLookupModel
+		{
+			public Lnhpd_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Lnhpd/Lnhpd_ValDesagreg
 		// POST: /Lnhpd/Lnhpd_ValDesagreg
 		[ActionName("Lnhpd_ValDesagreg")]
-		public ActionResult Lnhpd_ValDesagreg([FromBody]RequestLookupModel requestModel)
+		public ActionResult Lnhpd_ValDesagreg([FromBody] Lnhpd_ValDesagregModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -639,16 +666,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Lnhpd_ValDesagreg_ViewModel model = new Lnhpd_ValDesagreg_ViewModel(UserContext.Current);
-			
+			Models.Lnhpd parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Lnhpd_ValDesagreg_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

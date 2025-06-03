@@ -16,7 +16,7 @@ using OpenTelemetry.Metrics;
 using CSGenio.core.logger;
 using CSGenio.core.di;
 using GenioMVC.Metrics;
-using CSGenio.core.framework.ChatbotApi;
+using CSGenio.core.ai;
 using GenioMVC.Helpers;
 
 //---------------------------------
@@ -158,7 +158,18 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseDefaultFiles();
-    app.UseStaticFiles();
+    app.UseStaticFiles(new StaticFileOptions
+    {
+        OnPrepareResponse = ctx =>
+        {
+            // Disable cache for index html
+            if (ctx.File.Name.Equals("index.html"))
+            {
+                ctx.Context.Response.Headers.CacheControl = "no-cache, no-store, must-revalidate";
+                ctx.Context.Response.Headers.Expires = "0";
+            }
+        }
+    });
 }
 
 // AspCore wrapper already does this, so its not needed
@@ -186,7 +197,7 @@ app.MapControllerRoute(
 //Chatbot API proxy endpoints
 app.MapControllerRoute(
     name: "chatbotapi",
-    pattern: "chatbotapi/prompt/message",
+    pattern: "chatbotapi/prompt/submit",
     defaults: new { controller = "ChatbotApi", action = "ChatbotApiStreamProxy" });
 
 app.MapControllerRoute(

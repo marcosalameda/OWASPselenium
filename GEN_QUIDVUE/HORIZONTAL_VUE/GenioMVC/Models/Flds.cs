@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Company Name" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValCodaero")]
 		public string ValCodaero { get { return klass.ValCodaero; } set { klass.ValCodaero = value; } }
+
 		private Aero _aero;
 		[DisplayName("Aero")]
 		[ShouldSerialize("Aero")]
-		public virtual Aero Aero {
-			get {
-				if (!this.isEmptyModel && (_aero == null || (!string.IsNullOrEmpty(ValCodaero) && (_aero.isEmptyModel || _aero.klass.QPrimaryKey != ValCodaero))))
+		public virtual Aero Aero
+		{
+			get
+			{
+				if (!isEmptyModel && (_aero == null || (!string.IsNullOrEmpty(ValCodaero) && (_aero.isEmptyModel || _aero.klass.QPrimaryKey != ValCodaero))))
 					_aero = Models.Aero.Find(ValCodaero, m_userContext, Identifier, _fieldsToSerialize);
-				if (_aero == null)
-					_aero = new Models.Aero(m_userContext, true, _fieldsToSerialize);
+				_aero ??= new Models.Aero(m_userContext, true, _fieldsToSerialize);
 				return _aero;
 			}
 			set { _aero = value; }
 		}
-
 
 		[DisplayName("Description")]
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
@@ -63,25 +64,25 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValNpassage")]
 		[NumericAttribute(0)]
-		public decimal? ValNpassage { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNpassage, 0)); } set { klass.ValNpassage = Convert.ToDecimal(value); } }
+		public decimal? ValNpassage { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNpassage, 0)); } set { klass.ValNpassage = Convert.ToDecimal(value); } }
 
 		[DisplayName("Numeric Decimal")]
 		/// <summary>Field : "Numeric Decimal" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValDuration")]
 		[NumericAttribute(2)]
-		public decimal? ValDuration { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDuration, 2)); } set { klass.ValDuration = Convert.ToDecimal(value); } }
+		public decimal? ValDuration { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDuration, 2)); } set { klass.ValDuration = Convert.ToDecimal(value); } }
 
 		[DisplayName("Currency")]
 		/// <summary>Field : "Currency" Tipo: "$" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValPrice")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 
 		[DisplayName("Currency Decimal")]
 		/// <summary>Field : "Currency Decimal" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValPrecobil")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrecobil { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrecobil, 2)); } set { klass.ValPrecobil = Convert.ToDecimal(value); } }
+		public decimal? ValPrecobil { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrecobil, 2)); } set { klass.ValPrecobil = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date (DD/MM/YY)")]
 		/// <summary>Field : "Date (DD/MM/YY)" Tipo: "D" Formula:  ""</summary>
@@ -114,7 +115,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Year" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValYear")]
 		[NumericAttribute(0)]
-		public decimal? ValYear { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDecimal(value); } }
+		public decimal? ValYear { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYear, 0)); } set { klass.ValYear = Convert.ToDecimal(value); } }
 
 		[DisplayName("Logical")]
 		/// <summary>Field : "Logical" Tipo: "L" Formula:  ""</summary>
@@ -199,20 +200,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValCodequip")]
 		public string ValCodequip { get { return klass.ValCodequip; } set { klass.ValCodequip = value; } }
+
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip {
-			get {
-				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
+		public virtual Equip Equip
+		{
+			get
+			{
+				if (!isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
-				if (_equip == null)
-					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
+				_equip ??= new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
 			set { _equip = value; }
 		}
-
 
 		[DisplayName("Text Field")]
 		/// <summary>Field : "Text Field" Tipo: "C" Formula:  ""</summary>
@@ -286,7 +288,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Numeric" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValNrcntry")]
 		[NumericAttribute(0)]
-		public decimal? ValNrcntry { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrcntry, 0)); } set { klass.ValNrcntry = Convert.ToDecimal(value); } }
+		public decimal? ValNrcntry { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNrcntry, 0)); } set { klass.ValNrcntry = Convert.ToDecimal(value); } }
 
 		[DisplayName("Field state")]
 		/// <summary>Field : "Field state" Tipo: "AC" Formula:  ""</summary>
@@ -317,7 +319,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Field with server-side conditions" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Flds.ValFserver2")]
 		[NumericAttribute(2)]
-		public decimal? ValFserver2 { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFserver2, 2)); } set { klass.ValFserver2 = Convert.ToDecimal(value); } }
+		public decimal? ValFserver2 { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValFserver2, 2)); } set { klass.ValFserver2 = Convert.ToDecimal(value); } }
 
 		[DisplayName("Field with client-side conditions")]
 		/// <summary>Field : "Field with client-side conditions" Tipo: "IB" Formula:  ""</summary>
@@ -351,8 +353,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Flds.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Flds(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -371,7 +373,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAflds csgenioa)
 		{
 			if (csgenioa == null)
@@ -382,13 +383,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "aero":
-						if (_aero == null)
-							_aero = new Aero(m_userContext, true, _fieldsToSerialize);
+						_aero ??= new Aero(m_userContext, true, _fieldsToSerialize);
 						_aero.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "equip":
-						if (_equip == null)
-							_equip = new Equip(m_userContext, true, _fieldsToSerialize);
+						_equip ??= new Equip(m_userContext, true, _fieldsToSerialize);
 						_equip.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

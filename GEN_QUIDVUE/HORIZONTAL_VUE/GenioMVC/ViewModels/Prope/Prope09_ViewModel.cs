@@ -252,6 +252,7 @@ namespace GenioMVC.ViewModels.Prope
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Prope m)
 		{
 			if (m == null)
@@ -282,20 +283,13 @@ namespace GenioMVC.ViewModels.Prope
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Prope m)
 		{
 			if (m == null)
@@ -645,7 +639,7 @@ namespace GenioMVC.ViewModels.Prope
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -693,7 +687,7 @@ namespace GenioMVC.ViewModels.Prope
 				// Fill List fields
 				this.ValCodcity = ViewModelConversion.ToString(row["city.codcity"]);
 				TableCityCity.Value = (string)row["city.city"];
-				if (GlobalFunctions.emptyG(this.ValCodcity) == 1)
+				if (GenFunctions.emptyG(this.ValCodcity) == 1)
 				{
 					this.ValCodcity = "";
 					TableCityCity.Value = "";
@@ -836,7 +830,7 @@ namespace GenioMVC.ViewModels.Prope
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -885,7 +879,7 @@ namespace GenioMVC.ViewModels.Prope
 				// Fill List fields
 				this.ValCodagent = ViewModelConversion.ToString(row["agent.codagent"]);
 				TableAgentName.Value = (string)row["agent.name"];
-				if (GlobalFunctions.emptyG(this.ValCodagent) == 1)
+				if (GenFunctions.emptyG(this.ValCodagent) == 1)
 				{
 					this.ValCodagent = "";
 					TableAgentName.Value = "";
@@ -940,7 +934,6 @@ namespace GenioMVC.ViewModels.Prope
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

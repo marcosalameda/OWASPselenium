@@ -61,12 +61,12 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Number of employees" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Ware1.ValNum_employee")]
 		[NumericAttribute(0)]
-		public decimal? ValNum_employee { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNum_employee, 0)); } set { klass.ValNum_employee = Convert.ToDecimal(value); } }
+		public decimal? ValNum_employee { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNum_employee, 0)); } set { klass.ValNum_employee = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Ware1.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Ware1(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -84,7 +84,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioAware1 csgenioa)
 		{

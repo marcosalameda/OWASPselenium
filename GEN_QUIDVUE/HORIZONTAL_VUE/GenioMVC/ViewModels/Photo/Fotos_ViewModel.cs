@@ -175,6 +175,7 @@ namespace GenioMVC.ViewModels.Photo
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Photo m)
 		{
 			if (m == null)
@@ -198,20 +199,13 @@ namespace GenioMVC.ViewModels.Photo
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Photo m)
 		{
 			if (m == null)
@@ -529,7 +523,7 @@ namespace GenioMVC.ViewModels.Photo
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -576,7 +570,7 @@ namespace GenioMVC.ViewModels.Photo
 				// Fill List fields
 				this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
 				TableEquipRegistnr.Value = (string)row["equip.registnr"];
-				if (GlobalFunctions.emptyG(this.ValCodequip) == 1)
+				if (GenFunctions.emptyG(this.ValCodequip) == 1)
 				{
 					this.ValCodequip = "";
 					TableEquipRegistnr.Value = "";
@@ -620,7 +614,6 @@ namespace GenioMVC.ViewModels.Photo
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

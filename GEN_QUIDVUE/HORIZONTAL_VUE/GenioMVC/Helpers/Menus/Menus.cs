@@ -110,7 +110,7 @@ namespace GenioMVC.Helpers.Menus
 						string id = form;
 						MenuEntry menu = null;
 
-						//search the root menu for the dbedit
+						// Search the root menu for the dbedit
 						while (!String.IsNullOrEmpty(id))
 						{
 							menu = Menus.FindMenu(modulo, id);
@@ -434,7 +434,7 @@ namespace GenioMVC.Helpers.Menus
 
 			return m_flatMenus[findKey];
 		}
-		
+
 		/// <summary>
 		/// Finds a menu and applies the same transformation to the MenuEntry object as in the navigation bar
 		/// </summary>
@@ -444,28 +444,28 @@ namespace GenioMVC.Helpers.Menus
 		/// <param name="count">Whether to count</param>
 		/// <returns></returns>
 		public static MenuEntry FindMenuForUserRec(UserContext userContext, string module, string menuID, bool count = false)
-        {
-            List<MenuEntry> menuListForUserRec;
-			
+		{
+			List<MenuEntry> menuListForUserRec;
+
 			// Find menu and put in a List because MenusForUserRec() takes a List
-            MenuEntry menu = FindMenu(module, menuID);
-            List<MenuEntry> menuList = new List<MenuEntry>();
-            menuList.Add(menu);
+			MenuEntry menu = FindMenu(module, menuID);
+			List<MenuEntry> menuList = new List<MenuEntry>();
+			menuList.Add(menu);
 
 			// Apply same transformation to menu entries as in the navigation bar so they are consistent
-            menuListForUserRec = MenusForUserRec(userContext, menuList, module, count);
+			menuListForUserRec = MenusForUserRec(userContext, menuList, module, count);
 
-            return menuListForUserRec.FirstOrDefault();
-        }
+			return menuListForUserRec.FirstOrDefault();
+		}
 
 		/// <summary>
-        /// Checks if the user has access to the menu
-        /// </summary>
-        /// <param name="userContext">The context of the user</param>
-        /// <param name="menu">The menu entry object</param>
-        /// <param name="module">The module ID</param>
-        /// <returns></returns>
-        private static bool AllowMenu(UserContext userContext, MenuEntry menu, string module)
+		/// Checks if the user has access to the menu
+		/// </summary>
+		/// <param name="userContext">The context of the user</param>
+		/// <param name="menu">The menu entry object</param>
+		/// <param name="module">The module ID</param>
+		/// <returns></returns>
+		private static bool AllowMenu(UserContext userContext, MenuEntry menu, string module)
 		{
 			bool hasUserAcess = (menu.TreeLevel > -1 && menu.Allows(userContext.User, module)) || menu.TreeLevel == -1;
 			bool hideMenu = menu.HasCondition && !Menus.ValidateCondition(userContext, menu, module);
@@ -635,15 +635,16 @@ namespace GenioMVC.Helpers.Menus
 			return result;
 		}
 		/// <summary>
-        /// Gets the menu entry and checks show when conditions of the children
-        /// </summary>
-        /// <param name="userContext">The context of the user</param>
-        /// <param name="module">The module ID</param>
-        /// <param name="menu">The menu ID</param>
-        /// <returns>The menu with the submenus filtered</returns>
-        public static MenuEntry GetFilteredMenu(UserContext userContext, string module, string menuID) {
+		/// Gets the menu entry and checks show when conditions of the children
+		/// </summary>
+		/// <param name="userContext">The context of the user</param>
+		/// <param name="module">The module ID</param>
+		/// <param name="menu">The menu ID</param>
+		/// <returns>The menu with the submenus filtered</returns>
+		public static MenuEntry GetFilteredMenu(UserContext userContext, string module, string menuID)
+		{
 			MenuEntry menu = FindMenu(module, menuID);
-            menu.Children = menu.Children.Where(child => AllowMenu(userContext, child, module)).ToList();
+			menu.Children = menu.Children.Where(child => AllowMenu(userContext, child, module)).ToList();
 
 			return menu;
 		}
@@ -712,6 +713,48 @@ namespace GenioMVC.Helpers.Menus
 
 			path.Reverse();
 			return path;
+		}
+
+		/// <summary>
+		/// Get list of actions to fill the initial phe
+		/// </summary>
+		/// <param name="user">User logged in</param>
+		/// <param name="MvcRoute">It indicates if we want the action name or the route name</param>
+		/// <returns>HashSet<(string action, string controller)></returns>
+		//created by FFS at 2024.01.03
+		//last updated by [XX] at [XXXX.XX.XX]
+		//last reviewed by [XX] at [XXXX.XX.XX]
+		public static HashSet<(string action, string controller)> GetAllowedRoutes(User user, bool MvcRoute)
+		{
+			var allowedActions = new HashSet<(string action, string controller)>();
+
+			if (user.CurrentModule == null || user.CurrentModule == "Public")
+				return allowedActions;
+
+			// Get the action for the form id
+			string id = user.EphTofill.GetForm(user.CurrentModule);
+
+			MenuEntry menu;
+
+			// Search all branches possible to navigate
+			while (!string.IsNullOrEmpty(id))
+			{
+				menu = Menus.FindMenu(user.CurrentModule, id);
+
+				if (string.IsNullOrEmpty(menu.Controller))
+					break;
+
+				string controller = menu.Controller.Substring(0, 1).ToUpper() + menu.Controller.Substring(1).ToLower();
+
+				id = menu.ParentId;
+
+				if (MvcRoute)
+					allowedActions.Add((menu.Action_MVC, controller));
+				else
+					allowedActions.Add((menu.Route_VUE, null));
+			}
+
+			return allowedActions;
 		}
 	}
 }

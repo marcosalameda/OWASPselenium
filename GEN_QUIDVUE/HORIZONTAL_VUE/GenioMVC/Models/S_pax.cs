@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("S_pax.ValCods_apr")]
 		public string ValCods_apr { get { return klass.ValCods_apr; } set { klass.ValCods_apr = value; } }
+
 		private S_apr _s_apr;
 		[DisplayName("S_apr")]
 		[ShouldSerialize("S_apr")]
-		public virtual S_apr S_apr {
-			get {
-				if (!this.isEmptyModel && (_s_apr == null || (!string.IsNullOrEmpty(ValCods_apr) && (_s_apr.isEmptyModel || _s_apr.klass.QPrimaryKey != ValCods_apr))))
+		public virtual S_apr S_apr
+		{
+			get
+			{
+				if (!isEmptyModel && (_s_apr == null || (!string.IsNullOrEmpty(ValCods_apr) && (_s_apr.isEmptyModel || _s_apr.klass.QPrimaryKey != ValCods_apr))))
 					_s_apr = Models.S_apr.Find(ValCods_apr, m_userContext, Identifier, _fieldsToSerialize);
-				if (_s_apr == null)
-					_s_apr = new Models.S_apr(m_userContext, true, _fieldsToSerialize);
+				_s_apr ??= new Models.S_apr(m_userContext, true, _fieldsToSerialize);
 				return _s_apr;
 			}
 			set { _s_apr = value; }
 		}
-
 
 		[DisplayName("Document")]
 		/// <summary>Field : "Document" Tipo: "IB" Formula:  ""</summary>
@@ -74,8 +75,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("S_pax.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public S_pax(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -94,7 +95,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAs_pax csgenioa)
 		{
 			if (csgenioa == null)
@@ -105,8 +105,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "s_apr":
-						if (_s_apr == null)
-							_s_apr = new S_apr(m_userContext, true, _fieldsToSerialize);
+						_s_apr ??= new S_apr(m_userContext, true, _fieldsToSerialize);
 						_s_apr.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

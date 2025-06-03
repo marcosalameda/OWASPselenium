@@ -171,6 +171,7 @@ namespace GenioMVC.ViewModels.Pwreg
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Pwreg m)
 		{
 			if (m == null)
@@ -192,20 +193,13 @@ namespace GenioMVC.ViewModels.Pwreg
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Pwreg m)
 		{
 			if (m == null)
@@ -514,7 +508,7 @@ namespace GenioMVC.ViewModels.Pwreg
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -561,7 +555,7 @@ namespace GenioMVC.ViewModels.Pwreg
 				// Fill List fields
 				this.ValCodpsw = ViewModelConversion.ToString(row["psw.codpsw"]);
 				TablePswNome.Value = (string)row["psw.nome"];
-				if (GlobalFunctions.emptyG(this.ValCodpsw) == 1)
+				if (GenFunctions.emptyG(this.ValCodpsw) == 1)
 				{
 					this.ValCodpsw = "";
 					TablePswNome.Value = "";
@@ -704,7 +698,7 @@ namespace GenioMVC.ViewModels.Pwreg
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -751,7 +745,7 @@ namespace GenioMVC.ViewModels.Pwreg
 				// Fill List fields
 				this.ValCodregia = ViewModelConversion.ToString(row["regio.codregia"]);
 				TableRegioRegiao.Value = (string)row["regio.regiao"];
-				if (GlobalFunctions.emptyG(this.ValCodregia) == 1)
+				if (GenFunctions.emptyG(this.ValCodregia) == 1)
 				{
 					this.ValCodregia = "";
 					TableRegioRegiao.Value = "";
@@ -795,8 +789,6 @@ namespace GenioMVC.ViewModels.Pwreg
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

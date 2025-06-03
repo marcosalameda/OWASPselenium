@@ -40,7 +40,7 @@ public class AccessibilityTest : BaseAccessibilityTest
         AccessibilityScanAndLog("APP__NAVIGATION_MENU", "#main-header-navbar");
 
         // Right sidebar
-        AccessibilityScanAndLog("APP__RIGHT_SIDEBAR", "#right-sidenav", false, 1);
+        AccessibilityScanAndLog("APP__RIGHT_SIDEBAR", "#right-sidenav");
     }
 
     [Test]
@@ -264,7 +264,7 @@ public class AccessibilityTest : BaseAccessibilityTest
         var styDashboard = new MenuListPage(Driver, "STY", "DASHBOARD");
 
         // Accessibility scan
-        AccessibilityScanAndLog("MENU_STY_43__DASHBOARD", "#main", true, 3);
+        AccessibilityScanAndLog("MENU_STY_43__DASHBOARD", "#main");
     }
 
     [Test]

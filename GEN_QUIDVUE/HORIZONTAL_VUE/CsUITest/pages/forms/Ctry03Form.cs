@@ -10,7 +10,7 @@ public class Ctry03Form : Form
 	/// <summary>
 	/// Country
 	/// </summary>
-	public BaseInputControl CtryCountry => new BaseInputControl(driver, ContainerLocator, "#CTRY03__CTRY_COUNTRY_");
+	public BaseInputControl CtryCountry => new BaseInputControl(driver, ContainerLocator, "container-CTRY03__CTRY_COUNTRY_", "#CTRY03__CTRY_COUNTRY_");
 
 	public Ctry03Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "CTRY03", containerLocator: containerLocator) { }

@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Messa
 {
-	public class WMS_Menu_611_ViewModel : ListViewModel
+	public class WMS_Menu_611_ViewModel : MenuListViewModel<Models.Messa>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<WMS_Menu_611_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "messa"; }
+		[JsonIgnore]
+		public override string TableAlias => "messa";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "c907abb5-c7f3-4623-8cf5-4701f233e6cb"; }
+		public override string Uuid => "c907abb5-c7f3-4623-8cf5-4701f233e6cb";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodmessa { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Messa
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS 611]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,34 @@ namespace GenioMVC.ViewModels.Messa
 			var areaBase = CSGenio.business.Area.createArea("messa", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_611Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML611");
-			wms_menu_611Conds.Equal(CSGenioAmessa.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML611");
+			conditions.Equal(CSGenioAmessa.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL WMS OVERRQ 611]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAmessa.FldCodmessa, CSGenioAmessa.FldZzstate, CSGenioAmessa.FldIdnotif, CSGenioAmessa.FldIdmsg, CSGenioAmessa.FldDesignat, CSGenioAmessa.FldEmail, CSGenioAmessa.FldMessage, CSGenioAmessa.FldMailsent, CSGenioAmessa.FldMailerr, CSGenioAmessa.FldCreatope, CSGenioAmessa.FldCreatdat, CSGenioAmessa.FldCodentit, CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioAmessa.FldCodperso, CSGenioAperso.FldCodperso, CSGenioAperso.FldName, CSGenioAmessa.FldDocum_nr };
 
-			ListingMVC<CSGenioAmessa> listing = new ListingMVC<CSGenioAmessa>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_611Conds, listing);
+			ListingMVC<CSGenioAmessa> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public WMS_Menu_611_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WMS_Menu_611_ViewModel" /> class.
@@ -102,23 +132,33 @@ namespace GenioMVC.ViewModels.Messa
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WMS_Menu_611_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public WMS_Menu_611_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAmessa.FldIdnotif, FieldType.TEXTO, Resources.Resources.NOTIFICATION_ID25507, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldIdmsg, FieldType.TEXTO, Resources.Resources.MESSAGE_ID37133, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldDesignat, FieldType.TEXTO, Resources.Resources.TO_WHOM_THE_MESSAGE_02337, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldEmail, FieldType.TEXTO, Resources.Resources.E_MAIL_TO_WHOM_THE_M37668, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldIdnotif, FieldType.TEXT, Resources.Resources.NOTIFICATION_ID25507, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldIdmsg, FieldType.TEXT, Resources.Resources.MESSAGE_ID37133, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldDesignat, FieldType.TEXT, Resources.Resources.TO_WHOM_THE_MESSAGE_02337, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldEmail, FieldType.TEXT, Resources.Resources.E_MAIL_TO_WHOM_THE_M37668, 30, 0, true),
 				new Exports.QColumn(CSGenioAmessa.FldMessage, FieldType.MEMO, Resources.Resources.MESSAGE30602, 30, 10, true),
-				new Exports.QColumn(CSGenioAmessa.FldMailsent, FieldType.LOGICO, Resources.Resources.E_MAIL_SENT_60490, 1, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldMailerr, FieldType.TEXTO, Resources.Resources.ERROR_SENDING_MAIL44674, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldCreatope, FieldType.OPERCRIA, Resources.Resources.CREATED_BY12292, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldCreatdat, FieldType.DATACRIA, Resources.Resources.CREATED_ON00051, 8, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
-				new Exports.QColumn(CSGenioAperso.FldName, FieldType.TEXTO, Resources.Resources.PERSON_NAME40980, 30, 0, true),
-				new Exports.QColumn(CSGenioAmessa.FldDocum_nr, FieldType.NUMERO, Resources.Resources.DOCUMENT_NUMBER28451, 10, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldMailsent, FieldType.LOGIC, Resources.Resources.E_MAIL_SENT_60490, 1, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldMailerr, FieldType.TEXT, Resources.Resources.ERROR_SENDING_MAIL44674, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldCreatope, FieldType.TEXT, Resources.Resources.CREATED_BY12292, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldCreatdat, FieldType.DATETIMESECONDS, Resources.Resources.CREATED_ON00051, 8, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
+				new Exports.QColumn(CSGenioAperso.FldName, FieldType.TEXT, Resources.Resources.PERSON_NAME40980, 30, 0, true),
+				new Exports.QColumn(CSGenioAmessa.FldDocum_nr, FieldType.NUMERIC, Resources.Resources.DOCUMENT_NUMBER28451, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -167,13 +207,10 @@ namespace GenioMVC.ViewModels.Messa
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_611_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("MESSA.IDNOTIF", new OrderedDictionary());
-			allSortOrders["MESSA.IDNOTIF"].Add("MESSA.IDNOTIF", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -186,8 +223,7 @@ namespace GenioMVC.ViewModels.Messa
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -284,23 +320,22 @@ namespace GenioMVC.ViewModels.Messa
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAmessa> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "611"),
 				new("Module", "WMS")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_611_RowViewModel>();
 
 				CriteriaSet wms_menu_611Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("MESSA.IDNOTIF", new OrderedDictionary());
 				allSortOrders["MESSA.IDNOTIF"].Add("MESSA.IDNOTIF", "A");
-
 
 
 
@@ -332,26 +367,24 @@ namespace GenioMVC.ViewModels.Messa
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("messa", "idnotif");
+					firstVisibleColumn ??= new FieldRef("messa", "idnotif");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAmessa model_limit_area = new CSGenioAmessa(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML611");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAmessa model_limit_area = new CSGenioAmessa(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML611");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -362,6 +395,8 @@ namespace GenioMVC.ViewModels.Messa
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL WMS OVERRQ 611]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -390,7 +425,7 @@ namespace GenioMVC.ViewModels.Messa
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAmessa> listing = Models.ModelBase.Where<CSGenioAmessa>(m_userContext, false, wms_menu_611Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML611", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAmessa> listing = Models.ModelBase.Where<CSGenioAmessa>(m_userContext, distinct, wms_menu_611Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML611", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -398,7 +433,6 @@ namespace GenioMVC.ViewModels.Messa
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -420,18 +454,12 @@ namespace GenioMVC.ViewModels.Messa
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -439,7 +467,7 @@ namespace GenioMVC.ViewModels.Messa
 
 		private List<WMS_Menu_611_RowViewModel> MapWMS_Menu_611(ListingMVC<CSGenioAmessa> Qlisting)
 		{
-			var Elements = new List<WMS_Menu_611_RowViewModel>();
+			List<WMS_Menu_611_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -456,7 +484,6 @@ namespace GenioMVC.ViewModels.Messa
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAmessa row
 		/// to a WMS_Menu_611_RowViewModel object.
@@ -465,7 +492,9 @@ namespace GenioMVC.ViewModels.Messa
 		private WMS_Menu_611_RowViewModel MapWMS_Menu_611(CSGenioAmessa row)
 		{
 			var model = new WMS_Menu_611_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -481,32 +510,9 @@ namespace GenioMVC.ViewModels.Messa
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(WMS_Menu_611_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -520,31 +526,40 @@ namespace GenioMVC.ViewModels.Messa
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAmessa> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAmessa row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Messa m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Messa m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM WMS_MENU_611]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Messa", "Messa.ValCodmessa", "Messa.ValZzstate", "Messa.ValIdnotif", "Messa.ValIdmsg", "Messa.ValDesignat", "Messa.ValEmail", "Messa.ValMessage", "Messa.ValMailsent", "Messa.ValMailerr", "Messa.ValCreatope", "Messa.ValCreatdat", "Entit", "Entit.ValName", "Perso", "Perso.ValName", "Messa.ValDocum_nr", "Messa.ValCodentit", "Messa.ValCodperso", "BtnPermission"
+			"Messa", "Messa.ValCodmessa", "Messa.ValZzstate", "Messa.ValIdnotif", "Messa.ValIdmsg", "Messa.ValDesignat", "Messa.ValEmail", "Messa.ValMessage", "Messa.ValMailsent", "Messa.ValMailerr", "Messa.ValCreatope", "Messa.ValCreatdat", "Entit", "Entit.ValName", "Perso", "Perso.ValName", "Messa.ValDocum_nr", "Messa.ValCodentit", "Messa.ValCodperso"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValIdnotif", CSGenioAmessa.FldIdnotif, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValIdmsg", CSGenioAmessa.FldIdmsg, typeof(string)),
@@ -557,10 +572,7 @@ namespace GenioMVC.ViewModels.Messa
 			new TableSearchColumn("ValCreatdat", CSGenioAmessa.FldCreatdat, typeof(DateTime?)),
 			new TableSearchColumn("Entit_ValName", CSGenioAentit.FldName, typeof(string)),
 			new TableSearchColumn("Perso_ValName", CSGenioAperso.FldName, typeof(string)),
-			new TableSearchColumn("ValDocum_nr", CSGenioAmessa.FldDocum_nr, typeof(decimal?))
+			new TableSearchColumn("ValDocum_nr", CSGenioAmessa.FldDocum_nr, typeof(decimal?)),
 		];
-
-
-
 	}
 }

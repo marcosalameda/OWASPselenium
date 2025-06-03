@@ -15,22 +15,22 @@ public class Prope08Form : Form
 	/// <summary>
 	/// Foto principal
 	/// </summary>
-	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "#PROPE08_PROPEPHOTO___");
+	public BaseInputControl PropePhoto => new BaseInputControl(driver, ContainerLocator, "container-PROPE08_PROPEPHOTO___", "#PROPE08_PROPEPHOTO___");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "#PROPE08_PROPETITLE___");
+	public BaseInputControl PropeTitle => new BaseInputControl(driver, ContainerLocator, "container-PROPE08_PROPETITLE___", "#PROPE08_PROPETITLE___");
 
 	/// <summary>
 	/// Price
 	/// </summary>
-	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "#PROPE08_PROPEPRICE___");
+	public BaseInputControl PropePrice => new BaseInputControl(driver, ContainerLocator, "container-PROPE08_PROPEPRICE___", "#PROPE08_PROPEPRICE___");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "#PROPE08_PROPEDESCRIPT");
+	public BaseInputControl PropeDescript => new BaseInputControl(driver, ContainerLocator, "container-PROPE08_PROPEDESCRIPT", "#PROPE08_PROPEDESCRIPT");
 
 	/// <summary>
 	/// Localização
@@ -56,17 +56,17 @@ public class Prope08Form : Form
 	/// <summary>
 	/// Tamanho (m2)
 	/// </summary>
-	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "#PROPE08_PROPESIZE____");
+	public BaseInputControl PropeSize => new BaseInputControl(driver, ContainerLocator, "container-PROPE08_PROPESIZE____", "#PROPE08_PROPESIZE____");
 
 	/// <summary>
 	/// Numero de Casa de banhos
 	/// </summary>
-	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "#PROPE08_PROPEBATHRMS_");
+	public BaseInputControl PropeBathrms => new BaseInputControl(driver, ContainerLocator, "container-PROPE08_PROPEBATHRMS_", "#PROPE08_PROPEBATHRMS_");
 
 	/// <summary>
 	/// Ano construído
 	/// </summary>
-	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "#PROPE08_PROPEYEAR____");
+	public BaseInputControl PropeYear => new BaseInputControl(driver, ContainerLocator, "container-PROPE08_PROPEYEAR____", "#PROPE08_PROPEYEAR____");
 
 	/// <summary>
 	/// Informação do agente

@@ -38,45 +38,47 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">COMPANY" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Equip.ValCodempre")]
 		public string ValCodempre { get { return klass.ValCodempre; } set { klass.ValCodempre = value; } }
+
 		private Cmpny _cmpny;
 		[DisplayName("Cmpny")]
 		[ShouldSerialize("Cmpny")]
-		public virtual Cmpny Cmpny {
-			get {
-				if (!this.isEmptyModel && (_cmpny == null || (!string.IsNullOrEmpty(ValCodempre) && (_cmpny.isEmptyModel || _cmpny.klass.QPrimaryKey != ValCodempre))))
+		public virtual Cmpny Cmpny
+		{
+			get
+			{
+				if (!isEmptyModel && (_cmpny == null || (!string.IsNullOrEmpty(ValCodempre) && (_cmpny.isEmptyModel || _cmpny.klass.QPrimaryKey != ValCodempre))))
 					_cmpny = Models.Cmpny.Find(ValCodempre, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cmpny == null)
-					_cmpny = new Models.Cmpny(m_userContext, true, _fieldsToSerialize);
+				_cmpny ??= new Models.Cmpny(m_userContext, true, _fieldsToSerialize);
 				return _cmpny;
 			}
 			set { _cmpny = value; }
 		}
 
-
 		[DisplayName(">COMOMODOR")]
 		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Equip.ValCodpess1")]
 		public string ValCodpess1 { get { return klass.ValCodpess1; } set { klass.ValCodpess1 = value; } }
+
 		private Pess1 _pess1;
 		[DisplayName("Pess1")]
 		[ShouldSerialize("Pess1")]
-		public virtual Pess1 Pess1 {
-			get {
-				if (!this.isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1))))
+		public virtual Pess1 Pess1
+		{
+			get
+			{
+				if (!isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1))))
 					_pess1 = Models.Pess1.Find(ValCodpess1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pess1 == null)
-					_pess1 = new Models.Pess1(m_userContext, true, _fieldsToSerialize);
+				_pess1 ??= new Models.Pess1(m_userContext, true, _fieldsToSerialize);
 				return _pess1;
 			}
 			set { _pess1 = value; }
 		}
 
-
 		[DisplayName("Sequential no.")]
 		/// <summary>Field : "Sequential no." Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Equip.ValSequennr")]
 		[NumericAttribute(0)]
-		public decimal? ValSequennr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSequennr, 0)); } set { klass.ValSequennr = Convert.ToDecimal(value); } }
+		public decimal? ValSequennr { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSequennr, 0)); } set { klass.ValSequennr = Convert.ToDecimal(value); } }
 
 		[DisplayName("No. register")]
 		/// <summary>Field : "No. register" Tipo: "C" Formula: + "RIGHT("000000"+NumericToString([EQUIP->SEQUENNR],0),6)"</summary>
@@ -87,58 +89,61 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">TYPE OF EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Equip.ValCodtpequ")]
 		public string ValCodtpequ { get { return klass.ValCodtpequ; } set { klass.ValCodtpequ = value; } }
+
 		private Tpequ _tpequ;
 		[DisplayName("Tpequ")]
 		[ShouldSerialize("Tpequ")]
-		public virtual Tpequ Tpequ {
-			get {
-				if (!this.isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpequ))))
+		public virtual Tpequ Tpequ
+		{
+			get
+			{
+				if (!isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpequ))))
 					_tpequ = Models.Tpequ.Find(ValCodtpequ, m_userContext, Identifier, _fieldsToSerialize);
-				if (_tpequ == null)
-					_tpequ = new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
+				_tpequ ??= new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
 				return _tpequ;
 			}
 			set { _tpequ = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Equip.ValCodwareh")]
 		public string ValCodwareh { get { return klass.ValCodwareh; } set { klass.ValCodwareh = value; } }
+
 		private Wareh _wareh;
 		[DisplayName("Wareh")]
 		[ShouldSerialize("Wareh")]
-		public virtual Wareh Wareh {
-			get {
-				if (!this.isEmptyModel && (_wareh == null || (!string.IsNullOrEmpty(ValCodwareh) && (_wareh.isEmptyModel || _wareh.klass.QPrimaryKey != ValCodwareh))))
+		public virtual Wareh Wareh
+		{
+			get
+			{
+				if (!isEmptyModel && (_wareh == null || (!string.IsNullOrEmpty(ValCodwareh) && (_wareh.isEmptyModel || _wareh.klass.QPrimaryKey != ValCodwareh))))
 					_wareh = Models.Wareh.Find(ValCodwareh, m_userContext, Identifier, _fieldsToSerialize);
-				if (_wareh == null)
-					_wareh = new Models.Wareh(m_userContext, true, _fieldsToSerialize);
+				_wareh ??= new Models.Wareh(m_userContext, true, _fieldsToSerialize);
 				return _wareh;
 			}
 			set { _wareh = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Equip.ValCoditem")]
 		public string ValCoditem { get { return klass.ValCoditem; } set { klass.ValCoditem = value; } }
+
 		private Item _item;
 		[DisplayName("Item")]
 		[ShouldSerialize("Item")]
-		public virtual Item Item {
-			get {
-				if (!this.isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
+		public virtual Item Item
+		{
+			get
+			{
+				if (!isEmptyModel && (_item == null || (!string.IsNullOrEmpty(ValCoditem) && (_item.isEmptyModel || _item.klass.QPrimaryKey != ValCoditem))))
 					_item = Models.Item.Find(ValCoditem, m_userContext, Identifier, _fieldsToSerialize);
-				if (_item == null)
-					_item = new Models.Item(m_userContext, true, _fieldsToSerialize);
+				_item ??= new Models.Item(m_userContext, true, _fieldsToSerialize);
 				return _item;
 			}
 			set { _item = value; }
 		}
-
 
 		[DisplayName("Designation")]
 		/// <summary>Field : "Designation" Tipo: "C" Formula: DF "[ITEM->ITEMDES]"</summary>
@@ -156,26 +161,27 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Equip.ValCoddeco")]
 		public string ValCoddeco { get { return klass.ValCoddeco; } set { klass.ValCoddeco = value; } }
+
 		private Decom _decom;
 		[DisplayName("Decom")]
 		[ShouldSerialize("Decom")]
-		public virtual Decom Decom {
-			get {
-				if (!this.isEmptyModel && (_decom == null || (!string.IsNullOrEmpty(ValCoddeco) && (_decom.isEmptyModel || _decom.klass.QPrimaryKey != ValCoddeco))))
+		public virtual Decom Decom
+		{
+			get
+			{
+				if (!isEmptyModel && (_decom == null || (!string.IsNullOrEmpty(ValCoddeco) && (_decom.isEmptyModel || _decom.klass.QPrimaryKey != ValCoddeco))))
 					_decom = Models.Decom.Find(ValCoddeco, m_userContext, Identifier, _fieldsToSerialize);
-				if (_decom == null)
-					_decom = new Models.Decom(m_userContext, true, _fieldsToSerialize);
+				_decom ??= new Models.Decom(m_userContext, true, _fieldsToSerialize);
 				return _decom;
 			}
 			set { _decom = value; }
 		}
 
-
 		[DisplayName("Decomission")]
-		/// <summary>Field : "Decomission" Tipo: "D" Formula: ++ "[DECOM->DTDECO]"</summary>
+		/// <summary>Field : "Decomission" Tipo: "DT" Formula: ++ "[DECOM->DTDECO]"</summary>
 		[ShouldSerialize("Equip.ValDtdeco")]
 		[DataType(DataType.Date)]
-		[DateAttribute("D")]
+		[DateAttribute("DT")]
 		public DateTime? ValDtdeco { get { return klass.ValDtdeco; } set { klass.ValDtdeco = value ?? DateTime.MinValue; } }
 
 		[DisplayName("Downed equipment")]
@@ -195,7 +201,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Total value" Tipo: "$D" Formula: SR "[INSTA->VALUE]"</summary>
 		[ShouldSerialize("Equip.ValValortot")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValortot { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValortot, 2)); } set { klass.ValValortot = Convert.ToDecimal(value); } }
+		public decimal? ValValortot { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValortot, 2)); } set { klass.ValValortot = Convert.ToDecimal(value); } }
 
 		[DisplayName("Loan frequency")]
 		/// <summary>Field : "Loan frequency" Tipo: "AN" Formula:  ""</summary>
@@ -214,20 +220,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula: U1 "MOVIM[MOVIM->DHMUDANC][MOVIM->CODROOMS][Today]"</summary>
 		[ShouldSerialize("Equip.ValCodrooms")]
 		public string ValCodrooms { get { return klass.ValCodrooms; } set { klass.ValCodrooms = value; } }
+
 		private Room1 _room1;
 		[DisplayName("Room1")]
 		[ShouldSerialize("Room1")]
-		public virtual Room1 Room1 {
-			get {
-				if (!this.isEmptyModel && (_room1 == null || (!string.IsNullOrEmpty(ValCodrooms) && (_room1.isEmptyModel || _room1.klass.QPrimaryKey != ValCodrooms))))
+		public virtual Room1 Room1
+		{
+			get
+			{
+				if (!isEmptyModel && (_room1 == null || (!string.IsNullOrEmpty(ValCodrooms) && (_room1.isEmptyModel || _room1.klass.QPrimaryKey != ValCodrooms))))
 					_room1 = Models.Room1.Find(ValCodrooms, m_userContext, Identifier, _fieldsToSerialize);
-				if (_room1 == null)
-					_room1 = new Models.Room1(m_userContext, true, _fieldsToSerialize);
+				_room1 ??= new Models.Room1(m_userContext, true, _fieldsToSerialize);
 				return _room1;
 			}
 			set { _room1 = value; }
 		}
-
 
 		[DisplayName("Reference")]
 		/// <summary>Field : "Reference" Tipo: "DT" Formula:  ""</summary>
@@ -280,7 +287,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Qtd. movimentações" Tipo: "N" Formula: SR "[MOVIM->1]"</summary>
 		[ShouldSerialize("Equip.ValQtdmovim")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdmovim { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdmovim, 0)); } set { klass.ValQtdmovim = Convert.ToDecimal(value); } }
+		public decimal? ValQtdmovim { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdmovim, 0)); } set { klass.ValQtdmovim = Convert.ToDecimal(value); } }
 
 		[DisplayName("Show record")]
 		/// <summary>Field : "Show record" Tipo: "L" Formula:  ""</summary>
@@ -289,8 +296,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Equip.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Equip(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -309,7 +316,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAequip csgenioa)
 		{
 			if (csgenioa == null)
@@ -320,38 +326,31 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "cmpny":
-						if (_cmpny == null)
-							_cmpny = new Cmpny(m_userContext, true, _fieldsToSerialize);
+						_cmpny ??= new Cmpny(m_userContext, true, _fieldsToSerialize);
 						_cmpny.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "pess1":
-						if (_pess1 == null)
-							_pess1 = new Pess1(m_userContext, true, _fieldsToSerialize);
+						_pess1 ??= new Pess1(m_userContext, true, _fieldsToSerialize);
 						_pess1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "tpequ":
-						if (_tpequ == null)
-							_tpequ = new Tpequ(m_userContext, true, _fieldsToSerialize);
+						_tpequ ??= new Tpequ(m_userContext, true, _fieldsToSerialize);
 						_tpequ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "wareh":
-						if (_wareh == null)
-							_wareh = new Wareh(m_userContext, true, _fieldsToSerialize);
+						_wareh ??= new Wareh(m_userContext, true, _fieldsToSerialize);
 						_wareh.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "item":
-						if (_item == null)
-							_item = new Item(m_userContext, true, _fieldsToSerialize);
+						_item ??= new Item(m_userContext, true, _fieldsToSerialize);
 						_item.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "decom":
-						if (_decom == null)
-							_decom = new Decom(m_userContext, true, _fieldsToSerialize);
+						_decom ??= new Decom(m_userContext, true, _fieldsToSerialize);
 						_decom.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "room1":
-						if (_room1 == null)
-							_room1 = new Room1(m_userContext, true, _fieldsToSerialize);
+						_room1 ??= new Room1(m_userContext, true, _fieldsToSerialize);
 						_room1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

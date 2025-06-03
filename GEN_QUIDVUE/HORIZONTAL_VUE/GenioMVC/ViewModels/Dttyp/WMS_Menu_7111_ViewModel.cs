@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Dttyp
 {
-	public class WMS_Menu_7111_ViewModel : ListViewModel
+	public class WMS_Menu_7111_ViewModel : MenuListViewModel<Models.Dttyp>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<WMS_Menu_7111_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "dttyp"; }
+		[JsonIgnore]
+		public override string TableAlias => "dttyp";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "c2b15f2a-27e8-459e-91be-79fcbdf502e1"; }
+		public override string Uuid => "c2b15f2a-27e8-459e-91be-79fcbdf502e1";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCoddttyp { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Dttyp
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS 7111]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,35 @@ namespace GenioMVC.ViewModels.Dttyp
 			var areaBase = CSGenio.business.Area.createArea("dttyp", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_7111Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML7111");
-			wms_menu_7111Conds.Equal(CSGenioAdttyp.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML7111");
+			conditions.Equal(CSGenioAdttyp.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL WMS OVERRQ 7111]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAdttyp.FldCoddttyp, CSGenioAdttyp.FldZzstate, CSGenioAdttyp.FldString, CSGenioAdttyp.FldUppercas, CSGenioAdttyp.FldQrcode, CSGenioAdttyp.FldMultilin, CSGenioAdttyp.FldMultili3, CSGenioAdttyp.FldBoolean, CSGenioAdttyp.FldBoolean2, CSGenioAdttyp.FldSmallint, CSGenioAdttyp.FldInteger, CSGenioAdttyp.FldBigint, CSGenioAdttyp.FldReal, CSGenioAdttyp.FldFloat, CSGenioAdttyp.FldDecimal, CSGenioAdttyp.FldDecimal9, CSGenioAdttyp.FldMoney, CSGenioAdttyp.FldMoney9, CSGenioAdttyp.FldDate, CSGenioAdttyp.FldDatetime, CSGenioAdttyp.FldDtsesond, CSGenioAdttyp.FldTime, CSGenioAdttyp.FldUuid, CSGenioAdttyp.FldImage, CSGenioAdttyp.FldStart, CSGenioAdttyp.FldEnd };
 
-			ListingMVC<CSGenioAdttyp> listing = new ListingMVC<CSGenioAdttyp>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_7111Conds, listing);
+			ListingMVC<CSGenioAdttyp> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public WMS_Menu_7111_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WMS_Menu_7111_ViewModel" /> class.
@@ -102,35 +133,45 @@ namespace GenioMVC.ViewModels.Dttyp
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WMS_Menu_7111_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public WMS_Menu_7111_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAdttyp.FldString, FieldType.TEXTO, Resources.Resources.STRING29433, 30, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldUppercas, FieldType.TEXTO, Resources.Resources.UPPER_CASE31324, 30, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldQrcode, FieldType.TEXTO, Resources.Resources.QR_CODE12259, 30, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldString, FieldType.TEXT, Resources.Resources.STRING29433, 30, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldUppercas, FieldType.TEXT, Resources.Resources.UPPER_CASE31324, 30, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldQrcode, FieldType.TEXT, Resources.Resources.QR_CODE12259, 30, 0, true),
 				new Exports.QColumn(CSGenioAdttyp.FldMultilin, FieldType.MEMO, Resources.Resources.SIMPLE_MULTILINE_TEX04460, 30, 3, true),
 				new Exports.QColumn(CSGenioAdttyp.FldMultili3, FieldType.MEMO, Resources.Resources.EDITOR_MULTILINE_TEX05556, 30, 3, true),
-				new Exports.QColumn(CSGenioAdttyp.FldBoolean, FieldType.LOGICO, Resources.Resources.BOOLEAN__TINYINT___S57956, 1, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldBoolean2, FieldType.NUMERO, Resources.Resources.CONDITIONAL__BOOLEAN08919, 1, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldSmallint, FieldType.NUMERO, Resources.Resources.SMALL_INTEGER__STORA54196, 4, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldInteger, FieldType.NUMERO, Resources.Resources.INTEGER__STORAGE__4_49578, 9, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldBigint, FieldType.NUMERO, Resources.Resources.BIG_INTEGER__STORAGE28249, 15, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldReal, FieldType.NUMERO, Resources.Resources.REAL_FLOAT_24___PREC46659, 8, 2, true),
-				new Exports.QColumn(CSGenioAdttyp.FldFloat, FieldType.NUMERO, Resources.Resources.DOUBLE___FLOAT_53___07951, 15, 2, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDecimal, FieldType.NUMERO, Resources.Resources.DECIMAL__1_10___STOR26677, 10, 4, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDecimal9, FieldType.NUMERO, Resources.Resources.DECIMAL__11_15___STO49382, 15, 4, true),
-				new Exports.QColumn(CSGenioAdttyp.FldMoney, FieldType.VALOR, Resources.Resources.MONEY___DECIMAL__1_124403, 10, 2, true),
-				new Exports.QColumn(CSGenioAdttyp.FldMoney9, FieldType.VALOR, Resources.Resources.MONEY___DECIMAL__11_02101, 15, 2, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDate, FieldType.DATA, Resources.Resources.DATE02091, 8, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDatetime, FieldType.DATAHORA, Resources.Resources.DATETIME62630, 16, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldDtsesond, FieldType.DATASEGUNDO, Resources.Resources.DATE_TIME_SECOND__IN55990, 19, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldTime, FieldType.TEMPO, Resources.Resources.TIME50904, 5, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldUuid, FieldType.TEXTO, Resources.Resources.UUID__AKA_GUID_13998, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAdttyp.FldImage, FieldType.IMAGEM_JPEG, Resources.Resources.IMAGE__BINARY_46903, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAdttyp.FldStart, FieldType.DATAHORA, Resources.Resources.STARTING_TIME_WITH_I44217, 16, 0, true),
-				new Exports.QColumn(CSGenioAdttyp.FldEnd, FieldType.DATAHORA, Resources.Resources.END_TIME_WITH_INCLUS19241, 16, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldBoolean, FieldType.LOGIC, Resources.Resources.BOOLEAN__TINYINT___S57956, 1, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldBoolean2, FieldType.NUMERIC, Resources.Resources.CONDITIONAL__BOOLEAN08919, 1, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldSmallint, FieldType.NUMERIC, Resources.Resources.SMALL_INTEGER__STORA54196, 4, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldInteger, FieldType.NUMERIC, Resources.Resources.INTEGER__STORAGE__4_49578, 9, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldBigint, FieldType.NUMERIC, Resources.Resources.BIG_INTEGER__STORAGE28249, 15, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldReal, FieldType.NUMERIC, Resources.Resources.REAL_FLOAT_24___PREC46659, 8, 2, true),
+				new Exports.QColumn(CSGenioAdttyp.FldFloat, FieldType.NUMERIC, Resources.Resources.DOUBLE___FLOAT_53___07951, 15, 2, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDecimal, FieldType.NUMERIC, Resources.Resources.DECIMAL__1_10___STOR26677, 10, 4, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDecimal9, FieldType.NUMERIC, Resources.Resources.DECIMAL__11_15___STO49382, 15, 4, true),
+				new Exports.QColumn(CSGenioAdttyp.FldMoney, FieldType.CURRENCY, Resources.Resources.MONEY___DECIMAL__1_124403, 10, 2, true),
+				new Exports.QColumn(CSGenioAdttyp.FldMoney9, FieldType.CURRENCY, Resources.Resources.MONEY___DECIMAL__11_02101, 15, 2, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDate, FieldType.DATE, Resources.Resources.DATE02091, 8, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDatetime, FieldType.DATETIME, Resources.Resources.DATETIME62630, 16, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldDtsesond, FieldType.DATETIMESECONDS, Resources.Resources.DATE_TIME_SECOND__IN55990, 19, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldTime, FieldType.TIME_HOURS, Resources.Resources.TIME50904, 5, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldUuid, FieldType.TEXT, Resources.Resources.UUID__AKA_GUID_13998, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAdttyp.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE__BINARY_46903, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAdttyp.FldStart, FieldType.DATETIME, Resources.Resources.STARTING_TIME_WITH_I44217, 16, 0, true),
+				new Exports.QColumn(CSGenioAdttyp.FldEnd, FieldType.DATETIME, Resources.Resources.END_TIME_WITH_INCLUS19241, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -179,13 +220,10 @@ namespace GenioMVC.ViewModels.Dttyp
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_7111_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("DTTYP.STRING", new OrderedDictionary());
-			allSortOrders["DTTYP.STRING"].Add("DTTYP.STRING", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -198,8 +236,7 @@ namespace GenioMVC.ViewModels.Dttyp
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -296,23 +333,22 @@ namespace GenioMVC.ViewModels.Dttyp
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAdttyp> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "7111"),
 				new("Module", "WMS")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_7111_RowViewModel>();
 
 				CriteriaSet wms_menu_7111Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("DTTYP.STRING", new OrderedDictionary());
 				allSortOrders["DTTYP.STRING"].Add("DTTYP.STRING", "A");
-
 
 
 
@@ -344,26 +380,24 @@ namespace GenioMVC.ViewModels.Dttyp
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("dttyp", "string");
+					firstVisibleColumn ??= new FieldRef("dttyp", "string");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAdttyp model_limit_area = new CSGenioAdttyp(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML7111");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAdttyp model_limit_area = new CSGenioAdttyp(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML7111");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -374,6 +408,8 @@ namespace GenioMVC.ViewModels.Dttyp
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL WMS OVERRQ 7111]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -402,7 +438,7 @@ namespace GenioMVC.ViewModels.Dttyp
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAdttyp> listing = Models.ModelBase.Where<CSGenioAdttyp>(m_userContext, false, wms_menu_7111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML7111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAdttyp> listing = Models.ModelBase.Where<CSGenioAdttyp>(m_userContext, distinct, wms_menu_7111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML7111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -410,7 +446,6 @@ namespace GenioMVC.ViewModels.Dttyp
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -432,18 +467,12 @@ namespace GenioMVC.ViewModels.Dttyp
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -451,7 +480,7 @@ namespace GenioMVC.ViewModels.Dttyp
 
 		private List<WMS_Menu_7111_RowViewModel> MapWMS_Menu_7111(ListingMVC<CSGenioAdttyp> Qlisting)
 		{
-			var Elements = new List<WMS_Menu_7111_RowViewModel>();
+			List<WMS_Menu_7111_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -468,7 +497,6 @@ namespace GenioMVC.ViewModels.Dttyp
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAdttyp row
 		/// to a WMS_Menu_7111_RowViewModel object.
@@ -477,7 +505,9 @@ namespace GenioMVC.ViewModels.Dttyp
 		private WMS_Menu_7111_RowViewModel MapWMS_Menu_7111(CSGenioAdttyp row)
 		{
 			var model = new WMS_Menu_7111_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -489,33 +519,10 @@ namespace GenioMVC.ViewModels.Dttyp
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			SetTicketToImageFields(model);
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(WMS_Menu_7111_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -529,31 +536,40 @@ namespace GenioMVC.ViewModels.Dttyp
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAdttyp> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAdttyp row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Dttyp m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Dttyp m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM WMS_MENU_7111]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Dttyp", "Dttyp.ValCoddttyp", "Dttyp.ValZzstate", "Dttyp.ValString", "Dttyp.ValUppercas", "Dttyp.ValQrcode", "Dttyp.ValMultilin", "Dttyp.ValMultili3", "Dttyp.ValBoolean", "Dttyp.ValBoolean2", "Dttyp.ValSmallint", "Dttyp.ValInteger", "Dttyp.ValBigint", "Dttyp.ValReal", "Dttyp.ValFloat", "Dttyp.ValDecimal", "Dttyp.ValDecimal9", "Dttyp.ValMoney", "Dttyp.ValMoney9", "Dttyp.ValDate", "Dttyp.ValDatetime", "Dttyp.ValDtsesond", "Dttyp.ValTime", "Dttyp.ValUuid", "Dttyp.ValImage", "Dttyp.ValStart", "Dttyp.ValEnd", "BtnPermission"
+			"Dttyp", "Dttyp.ValCoddttyp", "Dttyp.ValZzstate", "Dttyp.ValString", "Dttyp.ValUppercas", "Dttyp.ValQrcode", "Dttyp.ValMultilin", "Dttyp.ValMultili3", "Dttyp.ValBoolean", "Dttyp.ValBoolean2", "Dttyp.ValSmallint", "Dttyp.ValInteger", "Dttyp.ValBigint", "Dttyp.ValReal", "Dttyp.ValFloat", "Dttyp.ValDecimal", "Dttyp.ValDecimal9", "Dttyp.ValMoney", "Dttyp.ValMoney9", "Dttyp.ValDate", "Dttyp.ValDatetime", "Dttyp.ValDtsesond", "Dttyp.ValTime", "Dttyp.ValUuid", "Dttyp.ValImage", "Dttyp.ValStart", "Dttyp.ValEnd"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValString", CSGenioAdttyp.FldString, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValUppercas", CSGenioAdttyp.FldUppercas, typeof(string)),
@@ -577,14 +593,11 @@ namespace GenioMVC.ViewModels.Dttyp
 			new TableSearchColumn("ValTime", CSGenioAdttyp.FldTime, typeof(string)),
 			new TableSearchColumn("ValUuid", CSGenioAdttyp.FldUuid, typeof(string)),
 			new TableSearchColumn("ValStart", CSGenioAdttyp.FldStart, typeof(DateTime?)),
-			new TableSearchColumn("ValEnd", CSGenioAdttyp.FldEnd, typeof(DateTime?))
+			new TableSearchColumn("ValEnd", CSGenioAdttyp.FldEnd, typeof(DateTime?)),
 		];
-
-
-
 		protected void SetTicketToImageFields(Models.Dttyp row)
 		{
-			if(row == null)
+			if (row == null)
 				return;
 
 			row.ValImageQTicket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaDTTYP, CSGenioAdttyp.FldImage.Field, null, row.ValCoddttyp);

@@ -30,6 +30,7 @@ namespace GenioMVC.Controllers
 	{
 		private static readonly NavigationLocation ACTION_PTN_MENU_3111 = new NavigationLocation("LENDING18782", "PTN_Menu_3111", "Lendi") { vueRouteName = "menu-PTN_3111" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_3121 = new NavigationLocation("LENDING18782", "PTN_Menu_3121", "Lendi") { vueRouteName = "menu-PTN_3121" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_3171 = new NavigationLocation("LENDING18782", "PTN_Menu_3171", "Lendi") { vueRouteName = "menu-PTN_3171" };
 		private static readonly NavigationLocation ACTION_PTN_MENU_LIST_DM_MB_R = new NavigationLocation("LENDING18782", "PTN_Menu_LIST_DM_MB_R", "Lendi") { vueRouteName = "menu-PTN_LIST_DM_MB_R" };
 		private static readonly NavigationLocation ACTION_GQT_MENU_111 = new NavigationLocation("LENDING18782", "GQT_Menu_111", "Lendi") { vueRouteName = "menu-GQT_111" };
 		private static readonly NavigationLocation ACTION_GQT_MENU_1211 = new NavigationLocation("LENDING18782", "GQT_Menu_1211", "Lendi") { vueRouteName = "menu-GQT_1211" };
@@ -54,11 +55,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			PTN_Menu_3111_ViewModel model = new PTN_Menu_3111_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -118,9 +119,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -137,11 +135,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			PTN_Menu_3121_ViewModel model = new PTN_Menu_3121_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -201,8 +199,85 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
+
+			return JsonOK(model);
+		}
+
+		//
+		// GET: /Lendi/PTN_Menu_3171
+		[ActionName("PTN_Menu_3171")]
+		[HttpPost]
+		public ActionResult PTN_Menu_3171([FromBody]RequestMenuModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
+			string rowsPerPageOptionsString = "";
+
+			PTN_Menu_3171_ViewModel model = new PTN_Menu_3171_ViewModel(UserContext.Current);
+
+			// Table configuration load options
+			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
+
+
+			// Determine which table configuration to use and load it
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
+				UserContext.Current.User,
+				tableConfigOptions
+			).DetermineTableConfig(
+				requestModel?.TableConfiguration,
+				requestModel?.UserTableConfigName,
+				(bool)requestModel?.LoadDefaultView,
+				tableConfigOptions
+			);
+
+			// Determine rows per page
+			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+
+			// Determine what columns have totalizers
+			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
+
+			// For tables with multiple selection enabled, determine currently selected rows
+			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
+			if (isHomePage)
+				Navigation.SetValue("HomePage", "PTN_Menu_3171");
+
+			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lendi")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_lendi");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+			CSGenio.framework.StatusMessage result = model.CheckPermissions(FormMode.List);
+			if (result.Status.Equals(CSGenio.framework.Status.E))
+				return PermissionError(result.Message);
+
+			NameValueCollection querystring = new NameValueCollection();
+			if (queryParams != null && queryParams.Count > 0)
+				querystring.AddRange(queryParams);
+
+			if (!isHomePage &&
+				(Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3171.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3171.Action)
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
+			else if (isHomePage)
+			{
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3171.ShortDescription());
+				Navigation.SetValue("HomePageContainsList", true);
+			}
+
+
+
+// USE /[MANUAL PTN MENU_GET 3171]/
+
+
+			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
 
 			return JsonOK(model);
@@ -232,11 +307,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			PTN_Menu_LIST_DM_MB_R_ViewModel model = new PTN_Menu_LIST_DM_MB_R_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -296,9 +371,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -315,16 +387,16 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_111_ViewModel model = new GQT_Menu_111_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
+
 			// Static filter "order" fields that have changed
 			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
 			{
 				{ "filter_GQT_Menu_111_DEVOLUCAO", 1 }
- 			};
- 
+			};
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -421,9 +493,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -461,10 +530,10 @@ namespace GenioMVC.Controllers
 						importRow.insertPseud(UserContext.Current.PersistentSupport);
 						importRow.change(UserContext.Current.PersistentSupport, (CriteriaSet)null);
 					}
-					catch (GenioException ex)
+					catch (GenioException e)
 					{
 						string lineNumberMsg = String.Format(Resources.Resources.ERROR_IN_LINE__0__45377 + " ", lineNumber);
-						ex.UserMessage = lineNumberMsg + ex.UserMessage;
+						e.UserMessage = lineNumberMsg + e.UserMessage;
 						throw;
 					}
 				}
@@ -497,16 +566,16 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_1211_ViewModel model = new GQT_Menu_1211_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
+
 			// Static filter "order" fields that have changed
 			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
 			{
 				{ "filter_GQT_Menu_1211_DEVOLUCAO", 1 }
- 			};
- 
+			};
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -590,9 +659,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -609,16 +675,16 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_1311_ViewModel model = new GQT_Menu_1311_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
+
 			// Static filter "order" fields that have changed
 			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
 			{
 				{ "filter_GQT_Menu_1311_DEVOLUCAO", 1 }
- 			};
- 
+			};
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -706,9 +772,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -726,17 +789,17 @@ namespace GenioMVC.Controllers
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 			string rowsPerPageOptionsString = "";
 
-			if (GlobalFunctions.emptyD(minLendiValStart) == 1 && Navigation.GetValue("minLendiValStart") != null)
+			if (GenFunctions.emptyD(minLendiValStart) == 1 && Navigation.GetValue("minLendiValStart") != null)
 				minLendiValStart = Navigation.GetDateValue("minLendiValStart").GetValueOrDefault();
 
-			if (GlobalFunctions.emptyD(maxLendiValStart) == 1 && Navigation.GetValue("maxLendiValStart") != null)
+			if (GenFunctions.emptyD(maxLendiValStart) == 1 && Navigation.GetValue("maxLendiValStart") != null)
 				maxLendiValStart = Navigation.GetDateValue("maxLendiValStart").GetValueOrDefault();
 			GQT_Menu_1411_ViewModel model = new GQT_Menu_1411_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -799,9 +862,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -818,11 +878,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_DEVOL_ViewModel model = new GQT_Menu_DEVOL_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -908,9 +968,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -927,11 +984,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_1711_ViewModel model = new GQT_Menu_1711_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -994,9 +1051,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -1013,11 +1067,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			GQT_Menu_DEVOLOBS_ViewModel model = new GQT_Menu_DEVOLOBS_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -1102,9 +1156,6 @@ namespace GenioMVC.Controllers
 			}
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);

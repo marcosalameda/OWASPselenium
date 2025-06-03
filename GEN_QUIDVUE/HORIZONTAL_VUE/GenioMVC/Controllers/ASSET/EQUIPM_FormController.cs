@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Equipm_ManufValNameModel : RequestLookupModel
+		{
+			public Equipm_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Asset/Equipm_ManufValName
 		// POST: /Asset/Equipm_ManufValName
 		[ActionName("Equipm_ManufValName")]
-		public ActionResult Equipm_ManufValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equipm_ManufValName([FromBody] Equipm_ManufValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equipm_ManufValName_ViewModel model = new Equipm_ManufValName_ViewModel(UserContext.Current);
-			
+
+			Models.Asset parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equipm_ManufValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equipm_KindeValDesignatModel : RequestLookupModel
+		{
+			public Equipm_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Asset/Equipm_KindeValDesignat
 		// POST: /Asset/Equipm_KindeValDesignat
 		[ActionName("Equipm_KindeValDesignat")]
-		public ActionResult Equipm_KindeValDesignat([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equipm_KindeValDesignat([FromBody] Equipm_KindeValDesignatModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equipm_KindeValDesignat_ViewModel model = new Equipm_KindeValDesignat_ViewModel(UserContext.Current);
-			
+
+			Models.Asset parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equipm_KindeValDesignat_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +533,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip02_ValAttachmeModel : RequestLookupModel
+		{
+			public Equipm_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Asset/Equip02_ValAttachme
 		// POST: /Asset/Equip02_ValAttachme
 		[ActionName("Equip02_ValAttachme")]
-		public ActionResult Equip02_ValAttachme([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip02_ValAttachme([FromBody] Equip02_ValAttachmeModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -546,16 +566,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip02_ValAttachme_ViewModel model = new Equip02_ValAttachme_ViewModel(UserContext.Current);
-			
+			Models.Asset parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip02_ValAttachme_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -580,11 +602,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip03_ValDocumentModel : RequestLookupModel
+		{
+			public Equipm_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Asset/Equip03_ValDocument
 		// POST: /Asset/Equip03_ValDocument
 		[ActionName("Equip03_ValDocument")]
-		public ActionResult Equip03_ValDocument([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip03_ValDocument([FromBody] Equip03_ValDocumentModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -608,16 +635,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip03_ValDocument_ViewModel model = new Equip03_ValDocument_ViewModel(UserContext.Current);
-			
+			Models.Asset parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip03_ValDocument_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -673,11 +702,16 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
+		public class Equip04_ValParamloaModel : RequestLookupModel
+		{
+			public Equipm_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Asset/Equip04_ValParamloa
 		// POST: /Asset/Equip04_ValParamloa
 		[ActionName("Equip04_ValParamloa")]
-		public ActionResult Equip04_ValParamloa([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip04_ValParamloa([FromBody] Equip04_ValParamloaModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -685,11 +719,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_kinde")))
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_assma")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
 			{
-				Navigation.DestroyEntry("ForcePrimaryRead_kinde");
+				Navigation.DestroyEntry("ForcePrimaryRead_assma");
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
@@ -701,16 +735,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip04_ValParamloa_ViewModel model = new Equip04_ValParamloa_ViewModel(UserContext.Current);
-			
+			Models.Asset parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip04_ValParamloa_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -766,11 +802,16 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
+		public class Equip04_ValManualsModel : RequestLookupModel
+		{
+			public Equipm_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Asset/Equip04_ValManuals
 		// POST: /Asset/Equip04_ValManuals
 		[ActionName("Equip04_ValManuals")]
-		public ActionResult Equip04_ValManuals([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip04_ValManuals([FromBody] Equip04_ValManualsModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -778,11 +819,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_kinde")))
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_assma")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
 			{
-				Navigation.DestroyEntry("ForcePrimaryRead_kinde");
+				Navigation.DestroyEntry("ForcePrimaryRead_assma");
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
@@ -794,16 +835,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip04_ValManuals_ViewModel model = new Equip04_ValManuals_ViewModel(UserContext.Current);
-			
+			Models.Asset parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip04_ValManuals_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -828,11 +871,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equip04_ValParameteModel : RequestLookupModel
+		{
+			public Equipm_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Asset/Equip04_ValParamete
 		// POST: /Asset/Equip04_ValParamete
 		[ActionName("Equip04_ValParamete")]
-		public ActionResult Equip04_ValParamete([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equip04_ValParamete([FromBody] Equip04_ValParameteModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -856,16 +904,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Equip04_ValParamete_ViewModel model = new Equip04_ValParamete_ViewModel(UserContext.Current);
-			
+			Models.Asset parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equip04_ValParamete_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

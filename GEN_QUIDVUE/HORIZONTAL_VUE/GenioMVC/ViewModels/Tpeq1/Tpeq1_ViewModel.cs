@@ -206,6 +206,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Tpeq1 m)
 		{
 			if (m == null)
@@ -237,20 +238,13 @@ namespace GenioMVC.ViewModels.Tpeq1
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Tpeq1 m)
 		{
 			if (m == null)
@@ -450,7 +444,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 			validator.StringLength("ValTpequcod", Resources.Resources.CODE49225, ValTpequcod, 20);
 
-			validator.Required("ValTpequcod", Resources.Resources.CODE49225, ViewModelConversion.ToString(ValTpequcod), FieldType.TEXTO.Formatting);
+			validator.Required("ValTpequcod", Resources.Resources.CODE49225, ViewModelConversion.ToString(ValTpequcod), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTipoequi", Resources.Resources.TYPE_OF_EQUIPMENT64921, ValTipoequi, 50);
 			validator.StringLength("ValTpequpai", Resources.Resources.DEPENDENCE_ON13941, ValTpequpai, 20);
 			validator.StringLength("ValBackcolo", Resources.Resources.BACKGROUND_COLOR07511, ValBackcolo, 50);
@@ -605,7 +599,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -652,7 +646,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 				// Fill List fields
 				this.ValCodfamil = ViewModelConversion.ToString(row["fami1.codfamil"]);
 				TableFami1Family.Value = (string)row["fami1.family"];
-				if (GlobalFunctions.emptyG(this.ValCodfamil) == 1)
+				if (GenFunctions.emptyG(this.ValCodfamil) == 1)
 				{
 					this.ValCodfamil = "";
 					TableFami1Family.Value = "";
@@ -704,8 +698,6 @@ namespace GenioMVC.ViewModels.Tpeq1
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

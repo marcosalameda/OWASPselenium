@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,69 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Hpess
 {
-	public class PTN_Menu_1421_ViewModel : ListViewModel
+	public class PTN_Menu_1421_ViewModel : MenuListViewModel<Models.Hpess>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<PTN_Menu_1421_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "hpess"; }
+		[JsonIgnore]
+		public override string TableAlias => "hpess";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "ab8a36df-0588-4ad3-8ca3-f6f500ab1f55"; }
+		public override string Uuid => "ab8a36df-0588-4ad3-8ca3-f6f500ab1f55";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodhpess { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -60,6 +79,12 @@ namespace GenioMVC.ViewModels.Hpess
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 1421]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -67,29 +92,35 @@ namespace GenioMVC.ViewModels.Hpess
 			var areaBase = CSGenio.business.Area.createArea("hpess", user, "PTN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet ptn_menu_1421Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML1421");
-			ptn_menu_1421Conds.Equal(CSGenioAhpess.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML1421");
+			conditions.Equal(CSGenioAhpess.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL PTN OVERRQ 1421]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAhpess.FldCodhpess, CSGenioAhpess.FldZzstate, CSGenioAhpess.FldName, CSGenioAhpess.FldAuthor, CSGenioAhpess.FldDate, CSGenioAhpess.FldCodempre, CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAhpess.FldCodpesso, CSGenioApesso.FldCodpesso, CSGenioApesso.FldName };
 
-			ListingMVC<CSGenioAhpess> listing = new ListingMVC<CSGenioAhpess>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(ptn_menu_1421Conds, listing);
+			ListingMVC<CSGenioAhpess> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public PTN_Menu_1421_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PTN_Menu_1421_ViewModel" /> class.
@@ -100,16 +131,26 @@ namespace GenioMVC.ViewModels.Hpess
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PTN_Menu_1421_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public PTN_Menu_1421_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAhpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAhpess.FldAuthor, FieldType.OPERCRIA, Resources.Resources.AUTHOR21241, 30, 0, true),
-				new Exports.QColumn(CSGenioAhpess.FldDate, FieldType.DATACRIA, Resources.Resources.DATE18475, 8, 0, true),
-				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAhpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAhpess.FldAuthor, FieldType.TEXT, Resources.Resources.AUTHOR21241, 30, 0, true),
+				new Exports.QColumn(CSGenioAhpess.FldDate, FieldType.DATETIMESECONDS, Resources.Resources.DATE18475, 8, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -158,13 +199,10 @@ namespace GenioMVC.ViewModels.Hpess
 
 			if (Menu == null)
 				Menu = new TablePartial<PTN_Menu_1421_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("HPESS.NAME", new OrderedDictionary());
-			allSortOrders["HPESS.NAME"].Add("HPESS.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -177,8 +215,7 @@ namespace GenioMVC.ViewModels.Hpess
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -275,23 +312,22 @@ namespace GenioMVC.ViewModels.Hpess
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAhpess> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "1421"),
 				new("Module", "PTN")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<PTN_Menu_1421_RowViewModel>();
 
 				CriteriaSet ptn_menu_1421Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("HPESS.NAME", new OrderedDictionary());
 				allSortOrders["HPESS.NAME"].Add("HPESS.NAME", "A");
-
 
 
 
@@ -323,26 +359,24 @@ namespace GenioMVC.ViewModels.Hpess
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("hpess", "name");
+					firstVisibleColumn ??= new FieldRef("hpess", "name");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAhpess model_limit_area = new CSGenioAhpess(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML1421");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAhpess model_limit_area = new CSGenioAhpess(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML1421");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -353,6 +387,8 @@ namespace GenioMVC.ViewModels.Hpess
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL PTN OVERRQ 1421]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -381,7 +417,7 @@ namespace GenioMVC.ViewModels.Hpess
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAhpess> listing = Models.ModelBase.Where<CSGenioAhpess>(m_userContext, false, ptn_menu_1421Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1421", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAhpess> listing = Models.ModelBase.Where<CSGenioAhpess>(m_userContext, distinct, ptn_menu_1421Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1421", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -389,7 +425,6 @@ namespace GenioMVC.ViewModels.Hpess
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -411,18 +446,12 @@ namespace GenioMVC.ViewModels.Hpess
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -430,7 +459,7 @@ namespace GenioMVC.ViewModels.Hpess
 
 		private List<PTN_Menu_1421_RowViewModel> MapPTN_Menu_1421(ListingMVC<CSGenioAhpess> Qlisting)
 		{
-			var Elements = new List<PTN_Menu_1421_RowViewModel>();
+			List<PTN_Menu_1421_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -447,7 +476,6 @@ namespace GenioMVC.ViewModels.Hpess
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAhpess row
 		/// to a PTN_Menu_1421_RowViewModel object.
@@ -456,7 +484,9 @@ namespace GenioMVC.ViewModels.Hpess
 		private PTN_Menu_1421_RowViewModel MapPTN_Menu_1421(CSGenioAhpess row)
 		{
 			var model = new PTN_Menu_1421_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -472,32 +502,9 @@ namespace GenioMVC.ViewModels.Hpess
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(PTN_Menu_1421_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -511,40 +518,46 @@ namespace GenioMVC.ViewModels.Hpess
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAhpess> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAhpess row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Hpess m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Hpess m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PTN_MENU_1421]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Hpess", "Hpess.ValCodhpess", "Hpess.ValZzstate", "Hpess.ValName", "Hpess.ValAuthor", "Hpess.ValDate", "Cmpny", "Cmpny.ValDesignat", "Pesso", "Pesso.ValName", "Hpess.ValCodempre", "Hpess.ValCodpesso", "BtnPermission"
+			"Hpess", "Hpess.ValCodhpess", "Hpess.ValZzstate", "Hpess.ValName", "Hpess.ValAuthor", "Hpess.ValDate", "Cmpny", "Cmpny.ValDesignat", "Pesso", "Pesso.ValName", "Hpess.ValCodempre", "Hpess.ValCodpesso"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAhpess.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValAuthor", CSGenioAhpess.FldAuthor, typeof(string)),
 			new TableSearchColumn("ValDate", CSGenioAhpess.FldDate, typeof(DateTime?)),
 			new TableSearchColumn("Cmpny_ValDesignat", CSGenioAcmpny.FldDesignat, typeof(string)),
-			new TableSearchColumn("Pesso_ValName", CSGenioApesso.FldName, typeof(string))
+			new TableSearchColumn("Pesso_ValName", CSGenioApesso.FldName, typeof(string)),
 		];
-
-
-
 	}
 }

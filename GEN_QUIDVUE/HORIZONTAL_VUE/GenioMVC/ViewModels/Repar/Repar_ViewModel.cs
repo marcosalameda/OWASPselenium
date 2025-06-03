@@ -79,7 +79,7 @@ namespace GenioMVC.ViewModels.Repar
 		/// <summary>
 		/// Title: "Photo" | Type: "IJ"
 		/// </summary>
-		[ImageThumbnailJsonConverter(100, 50)]
+		[ImageThumbnailJsonConverter(30, 50)]
 		[ValidateSetAccess]
 		public GenioMVC.Models.ImageModel EquipValPhotogra 
 		{
@@ -259,6 +259,7 @@ namespace GenioMVC.ViewModels.Repar
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Repar m)
 		{
 			if (m == null)
@@ -291,20 +292,13 @@ namespace GenioMVC.ViewModels.Repar
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Repar m)
 		{
 			if (m == null)
@@ -649,7 +643,7 @@ namespace GenioMVC.ViewModels.Repar
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -698,7 +692,7 @@ namespace GenioMVC.ViewModels.Repar
 				// Fill List fields
 				this.ValCodequip = ViewModelConversion.ToString(row["equip.codequip"]);
 				TableEquipRegistnr.Value = (string)row["equip.registnr"];
-				if (GlobalFunctions.emptyG(this.ValCodequip) == 1)
+				if (GenFunctions.emptyG(this.ValCodequip) == 1)
 				{
 					this.ValCodequip = "";
 					TableEquipRegistnr.Value = "";
@@ -847,7 +841,7 @@ namespace GenioMVC.ViewModels.Repar
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -895,7 +889,7 @@ namespace GenioMVC.ViewModels.Repar
 				// Fill List fields
 				this.ValCodespec = ViewModelConversion.ToString(row["speci.codespec"]);
 				TableSpeciEspecial.Value = (string)row["speci.especial"];
-				if (GlobalFunctions.emptyG(this.ValCodespec) == 1)
+				if (GenFunctions.emptyG(this.ValCodespec) == 1)
 				{
 					this.ValCodespec = "";
 					TableSpeciEspecial.Value = "";
@@ -1059,7 +1053,7 @@ namespace GenioMVC.ViewModels.Repar
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -1106,7 +1100,7 @@ namespace GenioMVC.ViewModels.Repar
 				// Fill List fields
 				this.ValCodpesso = ViewModelConversion.ToString(row["pesso.codpesso"]);
 				TablePessoName.Value = (string)row["pesso.name"];
-				if (GlobalFunctions.emptyG(this.ValCodpesso) == 1)
+				if (GenFunctions.emptyG(this.ValCodpesso) == 1)
 				{
 					this.ValCodpesso = "";
 					TablePessoName.Value = "";
@@ -1163,7 +1157,6 @@ namespace GenioMVC.ViewModels.Repar
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

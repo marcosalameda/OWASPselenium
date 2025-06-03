@@ -161,6 +161,7 @@ namespace GenioMVC.ViewModels.Decom
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Decom m)
 		{
 			if (m == null)
@@ -182,20 +183,13 @@ namespace GenioMVC.ViewModels.Decom
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Decom m)
 		{
 			if (m == null)
@@ -353,9 +347,9 @@ namespace GenioMVC.ViewModels.Decom
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValDecomnr", Resources.Resources.NO_DECOMISSION13045, ViewModelConversion.ToNumeric(ValDecomnr), FieldType.NUMERO.Formatting);
+			validator.Required("ValDecomnr", Resources.Resources.NO_DECOMISSION13045, ViewModelConversion.ToNumeric(ValDecomnr), FieldType.NUMERIC.GetFormatting());
 
-			validator.Required("ValDtdeco", Resources.Resources.DECOMISSION14486, ViewModelConversion.ToDateTime(ValDtdeco), FieldType.DATAHORA.Formatting);
+			validator.Required("ValDtdeco", Resources.Resources.DECOMISSION14486, ViewModelConversion.ToDateTime(ValDtdeco), FieldType.DATETIME.GetFormatting());
 
 
 			return validator.GetResult();
@@ -403,8 +397,6 @@ namespace GenioMVC.ViewModels.Decom
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

@@ -161,39 +161,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : "First incorporated facility" Tipo: "CE" Formula: CT "FACIL[ENTIT->FOUNDED][FACIL->INCORPOR][FACIL->CODFACIL][ENTIT->CODENTIT][FACIL->CODENTIT](ASC)"</summary>
 		[ShouldSerialize("Entit.ValFirstfacilitie")]
 		public string ValFirstfacilitie { get { return klass.ValFirstfacilitie; } set { klass.ValFirstfacilitie = value; } }
+
 		private Faci1 _faci1;
 		[DisplayName("Faci1")]
 		[ShouldSerialize("Faci1")]
-		public virtual Faci1 Faci1 {
-			get {
-				if (!this.isEmptyModel && (_faci1 == null || (!string.IsNullOrEmpty(ValFirstfacilitie) && (_faci1.isEmptyModel || _faci1.klass.QPrimaryKey != ValFirstfacilitie))))
+		public virtual Faci1 Faci1
+		{
+			get
+			{
+				if (!isEmptyModel && (_faci1 == null || (!string.IsNullOrEmpty(ValFirstfacilitie) && (_faci1.isEmptyModel || _faci1.klass.QPrimaryKey != ValFirstfacilitie))))
 					_faci1 = Models.Faci1.Find(ValFirstfacilitie, m_userContext, Identifier, _fieldsToSerialize);
-				if (_faci1 == null)
-					_faci1 = new Models.Faci1(m_userContext, true, _fieldsToSerialize);
+				_faci1 ??= new Models.Faci1(m_userContext, true, _fieldsToSerialize);
 				return _faci1;
 			}
 			set { _faci1 = value; }
 		}
 
-
 		[DisplayName("Last incorporated facility")]
 		/// <summary>Field : "Last incorporated facility" Tipo: "CE" Formula: CS "FACIL[ENTIT->FOUNDED][FACIL->INCORPOR][FACIL->CODFACIL][ENTIT->CODENTIT][FACIL->CODENTIT](DESC)"</summary>
 		[ShouldSerialize("Entit.ValLastfacilitie")]
 		public string ValLastfacilitie { get { return klass.ValLastfacilitie; } set { klass.ValLastfacilitie = value; } }
+
 		private Faci2 _faci2;
 		[DisplayName("Faci2")]
 		[ShouldSerialize("Faci2")]
-		public virtual Faci2 Faci2 {
-			get {
-				if (!this.isEmptyModel && (_faci2 == null || (!string.IsNullOrEmpty(ValLastfacilitie) && (_faci2.isEmptyModel || _faci2.klass.QPrimaryKey != ValLastfacilitie))))
+		public virtual Faci2 Faci2
+		{
+			get
+			{
+				if (!isEmptyModel && (_faci2 == null || (!string.IsNullOrEmpty(ValLastfacilitie) && (_faci2.isEmptyModel || _faci2.klass.QPrimaryKey != ValLastfacilitie))))
 					_faci2 = Models.Faci2.Find(ValLastfacilitie, m_userContext, Identifier, _fieldsToSerialize);
-				if (_faci2 == null)
-					_faci2 = new Models.Faci2(m_userContext, true, _fieldsToSerialize);
+				_faci2 ??= new Models.Faci2(m_userContext, true, _fieldsToSerialize);
 				return _faci2;
 			}
 			set { _faci2 = value; }
 		}
-
 
 		[DisplayName("Language")]
 		/// <summary>Field : "Language" Tipo: "C" Formula:  ""</summary>
@@ -207,8 +209,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Entit.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Entit(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -227,7 +229,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAentit csgenioa)
 		{
 			if (csgenioa == null)
@@ -238,13 +239,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "faci1":
-						if (_faci1 == null)
-							_faci1 = new Faci1(m_userContext, true, _fieldsToSerialize);
+						_faci1 ??= new Faci1(m_userContext, true, _fieldsToSerialize);
 						_faci1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "faci2":
-						if (_faci2 == null)
-							_faci2 = new Faci2(m_userContext, true, _fieldsToSerialize);
+						_faci2 ??= new Faci2(m_userContext, true, _fieldsToSerialize);
 						_faci2.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

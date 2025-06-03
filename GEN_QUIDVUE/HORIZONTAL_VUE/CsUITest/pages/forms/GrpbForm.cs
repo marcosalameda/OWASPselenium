@@ -10,7 +10,7 @@ public class GrpbForm : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl GrpbName => new BaseInputControl(driver, ContainerLocator, "#GRPB____GRPB_NAME____");
+	public BaseInputControl GrpbName => new BaseInputControl(driver, ContainerLocator, "container-GRPB____GRPB_NAME____", "#GRPB____GRPB_NAME____");
 
 	/// <summary>
 	/// 

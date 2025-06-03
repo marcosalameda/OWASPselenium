@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Price" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValPrice")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrice, 2)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 
 		[DisplayName("Main Photo")]
 		/// <summary>Field : "Main Photo" Tipo: "IJ" Formula:  ""</summary>
@@ -57,32 +57,33 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValCodagent")]
 		public string ValCodagent { get { return klass.ValCodagent; } set { klass.ValCodagent = value; } }
+
 		private Agent _agent;
 		[DisplayName("Agent")]
 		[ShouldSerialize("Agent")]
-		public virtual Agent Agent {
-			get {
-				if (!this.isEmptyModel && (_agent == null || (!string.IsNullOrEmpty(ValCodagent) && (_agent.isEmptyModel || _agent.klass.QPrimaryKey != ValCodagent))))
+		public virtual Agent Agent
+		{
+			get
+			{
+				if (!isEmptyModel && (_agent == null || (!string.IsNullOrEmpty(ValCodagent) && (_agent.isEmptyModel || _agent.klass.QPrimaryKey != ValCodagent))))
 					_agent = Models.Agent.Find(ValCodagent, m_userContext, Identifier, _fieldsToSerialize);
-				if (_agent == null)
-					_agent = new Models.Agent(m_userContext, true, _fieldsToSerialize);
+				_agent ??= new Models.Agent(m_userContext, true, _fieldsToSerialize);
 				return _agent;
 			}
 			set { _agent = value; }
 		}
 
-
 		[DisplayName("Size (m2)")]
 		/// <summary>Field : "Size (m2)" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValSize")]
 		[NumericAttribute(0)]
-		public decimal? ValSize { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSize, 0)); } set { klass.ValSize = Convert.ToDecimal(value); } }
+		public decimal? ValSize { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSize, 0)); } set { klass.ValSize = Convert.ToDecimal(value); } }
 
 		[DisplayName("Number of Bathrooms")]
 		/// <summary>Field : "Number of Bathrooms" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValBathrms")]
 		[NumericAttribute(0)]
-		public decimal? ValBathrms { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBathrms, 0)); } set { klass.ValBathrms = Convert.ToDecimal(value); } }
+		public decimal? ValBathrms { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBathrms, 0)); } set { klass.ValBathrms = Convert.ToDecimal(value); } }
 
 		[DisplayName("Year Built")]
 		/// <summary>Field : "Year Built" Tipo: "C" Formula:  ""</summary>
@@ -99,20 +100,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "City" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValCodcity")]
 		public string ValCodcity { get { return klass.ValCodcity; } set { klass.ValCodcity = value; } }
+
 		private City _city;
 		[DisplayName("City")]
 		[ShouldSerialize("City")]
-		public virtual City City {
-			get {
-				if (!this.isEmptyModel && (_city == null || (!string.IsNullOrEmpty(ValCodcity) && (_city.isEmptyModel || _city.klass.QPrimaryKey != ValCodcity))))
+		public virtual City City
+		{
+			get
+			{
+				if (!isEmptyModel && (_city == null || (!string.IsNullOrEmpty(ValCodcity) && (_city.isEmptyModel || _city.klass.QPrimaryKey != ValCodcity))))
 					_city = Models.City.Find(ValCodcity, m_userContext, Identifier, _fieldsToSerialize);
-				if (_city == null)
-					_city = new Models.City(m_userContext, true, _fieldsToSerialize);
+				_city ??= new Models.City(m_userContext, true, _fieldsToSerialize);
 				return _city;
 			}
 			set { _city = value; }
 		}
-
 
 		[DisplayName("Building type")]
 		/// <summary>Field : "Building type" Tipo: "AC" Formula:  ""</summary>
@@ -134,30 +136,30 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValOrder")]
 		[NumericAttribute(0)]
-		public decimal? ValOrder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrder, 0)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
+		public decimal? ValOrder { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOrder, 0)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
 
 		[DisplayName("Building age")]
 		/// <summary>Field : "Building age" Tipo: "N" Formula: + "Year([Today])-Year(DateAddYears([ZEROD],StringToInt([PROPE->YEAR])))"</summary>
 		[ShouldSerialize("Prope.ValBuildage")]
 		[NumericAttribute(0)]
-		public decimal? ValBuildage { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBuildage, 0)); } set { klass.ValBuildage = Convert.ToDecimal(value); } }
+		public decimal? ValBuildage { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBuildage, 0)); } set { klass.ValBuildage = Convert.ToDecimal(value); } }
 
 		[DisplayName("Ground Size")]
 		/// <summary>Field : "Ground Size" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValGrndsize")]
 		[NumericAttribute(0)]
-		public decimal? ValGrndsize { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValGrndsize, 0)); } set { klass.ValGrndsize = Convert.ToDecimal(value); } }
+		public decimal? ValGrndsize { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValGrndsize, 0)); } set { klass.ValGrndsize = Convert.ToDecimal(value); } }
 
 		[DisplayName("Floor number")]
 		/// <summary>Field : "Floor number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Prope.ValFloornum")]
 		[NumericAttribute(0)]
-		public decimal? ValFloornum { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFloornum, 0)); } set { klass.ValFloornum = Convert.ToDecimal(value); } }
+		public decimal? ValFloornum { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValFloornum, 0)); } set { klass.ValFloornum = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Prope.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Prope(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -176,7 +178,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAprope csgenioa)
 		{
 			if (csgenioa == null)
@@ -187,13 +188,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "agent":
-						if (_agent == null)
-							_agent = new Agent(m_userContext, true, _fieldsToSerialize);
+						_agent ??= new Agent(m_userContext, true, _fieldsToSerialize);
 						_agent.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "city":
-						if (_city == null)
-							_city = new City(m_userContext, true, _fieldsToSerialize);
+						_city ??= new City(m_userContext, true, _fieldsToSerialize);
 						_city.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Item;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER ITEM]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ItemController : ControllerBase
 	{
-		public ItemController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ItemController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION ITEM]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER ITEM]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Item row = null;
-
-			if (row == null)
-			{
-				row = new Models.Item(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("item");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Item row = new Models.Item(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("item");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "ARTIG___WAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Artig_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Artig_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Artig___warehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "ARTIG___GITEMITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Artig_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Artig_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Artig___gitemitemdes_(qs);
 							result = model.TableGitemItemdes;
@@ -93,8 +100,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "ARTIGEXTWAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Artigext_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Artigext_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Artigextwarehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -102,8 +108,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "ARTIGEXTGITEMITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Artigext_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Artigext_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Artigextgitemitemdes_(qs);
 							result = model.TableGitemItemdes;
@@ -111,8 +116,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "ARTIGINVGITEMITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Artiginv_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Artiginv_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Artiginvgitemitemdes_(qs);
 							result = model.TableGitemItemdes;
@@ -120,8 +124,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "ARTIGINVWAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Artiginv_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Artiginv_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Artiginvwarehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -129,8 +132,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "ARTIGVALGITEMITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Artigval_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Artigval_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Artigvalgitemitemdes_(qs);
 							result = model.TableGitemItemdes;
@@ -138,17 +140,31 @@ namespace GenioMVC.Controllers
 						break;
 					case "ARTIGVALWAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Artigval_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Artigval_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Artigvalwarehwarehdes(qs);
 							result = model.TableWarehWarehdes;
 						}
 						break;
+					case "ITEM____GITEMITEMDES_":	// Field (DB)
+						{
+							var model = new Item_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Item____gitemitemdes_(qs);
+							result = model.TableGitemItemdes;
+						}
+						break;
+					case "ITEM____WAREHWAREHDES":	// Field (DB)
+						{
+							var model = new Item_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Item____warehwarehdes(qs);
+							result = model.TableWarehWarehdes;
+						}
+						break;
 					case "PLIST___WAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Plist_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Plist_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Plist___warehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -211,6 +227,12 @@ namespace GenioMVC.Controllers
 					case "ARTIGVALWAREHWAREHDES":	// Field (DB)
 						values = new Artigval_ViewModel(UserContext.Current).GetDependant_ArtigvalTableWarehWarehdes(Selected);
 						break;
+					case "ITEM____GITEMITEMDES_":	// Field (DB)
+						values = new Item_ViewModel(UserContext.Current).GetDependant_ItemTableGitemItemdes(Selected);
+						break;
+					case "ITEM____WAREHWAREHDES":	// Field (DB)
+						values = new Item_ViewModel(UserContext.Current).GetDependant_ItemTableWarehWarehdes(Selected);
+						break;
 					case "PLIST___WAREHWAREHDES":	// Field (DB)
 						values = new Plist_ViewModel(UserContext.Current).GetDependant_PlistTableWarehWarehdes(Selected);
 						break;
@@ -239,6 +261,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Artig" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -252,6 +277,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Item)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Artigext" form. (++, CT, SR, CL and U1)
@@ -267,6 +294,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Artiginv" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -281,6 +310,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Artigval" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -294,6 +325,24 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Item)
 			);
 		}
+
+
+
+		/// <summary>
+		/// Recalculate formulas of the "Item" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Item([FromBody]Item_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "item",
+				(primaryKey) => Models.Item.Find(primaryKey, UserContext.Current, "FITEM"),
+				(model) => formData.MapToModel(model as Models.Item)
+			);
+		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Plist" form. (++, CT, SR, CL and U1)

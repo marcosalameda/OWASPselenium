@@ -10,12 +10,12 @@ public class ArmazForm : Form
 	/// <summary>
 	/// Acronym
 	/// </summary>
-	public BaseInputControl WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "#ARMAZ___WAREHWAREHCOD");
+	public BaseInputControl WarehWarehcod => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ___WAREHWAREHCOD", "#ARMAZ___WAREHWAREHCOD");
 
 	/// <summary>
 	/// Warehouse
 	/// </summary>
-	public BaseInputControl WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "#ARMAZ___WAREHWAREHDES");
+	public BaseInputControl WarehWarehdes => new BaseInputControl(driver, ContainerLocator, "container-ARMAZ___WAREHWAREHDES", "#ARMAZ___WAREHWAREHDES");
 
 	/// <summary>
 	/// Activity

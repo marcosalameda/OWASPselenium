@@ -174,6 +174,7 @@ namespace GenioMVC.ViewModels.Sale
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Sale m)
 		{
 			if (m == null)
@@ -197,20 +198,13 @@ namespace GenioMVC.ViewModels.Sale
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Sale m)
 		{
 			if (m == null)
@@ -528,7 +522,7 @@ namespace GenioMVC.ViewModels.Sale
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -575,7 +569,7 @@ namespace GenioMVC.ViewModels.Sale
 				// Fill List fields
 				this.ValCodorgan = ViewModelConversion.ToString(row["organ.codorgan"]);
 				TableOrganOrganiza.Value = (string)row["organ.organiza"];
-				if (GlobalFunctions.emptyG(this.ValCodorgan) == 1)
+				if (GenFunctions.emptyG(this.ValCodorgan) == 1)
 				{
 					this.ValCodorgan = "";
 					TableOrganOrganiza.Value = "";
@@ -619,8 +613,6 @@ namespace GenioMVC.ViewModels.Sale
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

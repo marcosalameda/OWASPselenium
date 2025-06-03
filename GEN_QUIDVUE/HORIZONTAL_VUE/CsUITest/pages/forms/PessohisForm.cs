@@ -15,12 +15,12 @@ public class PessohisForm : Form
 	/// <summary>
 	/// Official No.
 	/// </summary>
-	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "#PESSOHISPESSOIDFUNCIO");
+	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "container-PESSOHISPESSOIDFUNCIO", "#PESSOHISPESSOIDFUNCIO");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "#PESSOHISPESSONAME____");
+	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "container-PESSOHISPESSONAME____", "#PESSOHISPESSONAME____");
 
 	/// <summary>
 	/// history

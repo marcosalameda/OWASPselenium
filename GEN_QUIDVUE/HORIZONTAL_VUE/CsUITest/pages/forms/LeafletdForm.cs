@@ -21,7 +21,7 @@ public class LeafletdForm : Form
 	/// <summary>
 	/// Scheduling
 	/// </summary>
-	public BaseInputControl InstaDesignat => new BaseInputControl(driver, ContainerLocator, "#LEAFLETDINSTADESIGNAT");
+	public BaseInputControl InstaDesignat => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETDINSTADESIGNAT", "#LEAFLETDINSTADESIGNAT");
 
 	/// <summary>
 	/// Start
@@ -36,7 +36,7 @@ public class LeafletdForm : Form
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl InstaDescript => new BaseInputControl(driver, ContainerLocator, "#LEAFLETDINSTADESCRIPT");
+	public BaseInputControl InstaDescript => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETDINSTADESCRIPT", "#LEAFLETDINSTADESCRIPT");
 
 	/// <summary>
 	/// All day
@@ -56,22 +56,22 @@ public class LeafletdForm : Form
 	/// <summary>
 	/// Quantity of hours:
 	/// </summary>
-	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "#LEAFLETDINSTAHOURS___");
+	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETDINSTAHOURS___", "#LEAFLETDINSTAHOURS___");
 
 	/// <summary>
 	/// Price per hour:
 	/// </summary>
-	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "#LEAFLETDINSTAPRECOHOR");
+	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETDINSTAPRECOHOR", "#LEAFLETDINSTAPRECOHOR");
 
 	/// <summary>
 	/// Value
 	/// </summary>
-	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "#LEAFLETDINSTAVALUE___");
+	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETDINSTAVALUE___", "#LEAFLETDINSTAVALUE___");
 
 	/// <summary>
 	/// Geographic Coordinates
 	/// </summary>
-	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "#LEAFLETDINSTACOORDGEO");
+	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "container-LEAFLETDINSTACOORDGEO", "#LEAFLETDINSTACOORDGEO");
 
 	public LeafletdForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "LEAFLETD", containerLocator: containerLocator) { }

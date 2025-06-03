@@ -21,7 +21,7 @@ public class FacilForm : Form
 	/// <summary>
 	/// Facility name
 	/// </summary>
-	public BaseInputControl FacilName => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILNAME____");
+	public BaseInputControl FacilName => new BaseInputControl(driver, ContainerLocator, "container-FACIL___FACILNAME____", "#FACIL___FACILNAME____");
 
 	/// <summary>
 	/// Facility type
@@ -37,12 +37,12 @@ public class FacilForm : Form
 	/// <summary>
 	/// Address
 	/// </summary>
-	public BaseInputControl FacilAddress => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILADDRESS_");
+	public BaseInputControl FacilAddress => new BaseInputControl(driver, ContainerLocator, "container-FACIL___FACILADDRESS_", "#FACIL___FACILADDRESS_");
 
 	/// <summary>
 	/// Image
 	/// </summary>
-	public BaseInputControl FacilImage => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILIMAGE___");
+	public BaseInputControl FacilImage => new BaseInputControl(driver, ContainerLocator, "container-FACIL___FACILIMAGE___", "#FACIL___FACILIMAGE___");
 
 	/// <summary>
 	/// GPS input
@@ -52,17 +52,17 @@ public class FacilForm : Form
 	/// <summary>
 	/// Latitude
 	/// </summary>
-	public BaseInputControl FacilLatitude => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILLATITUDE");
+	public BaseInputControl FacilLatitude => new BaseInputControl(driver, ContainerLocator, "container-FACIL___FACILLATITUDE", "#FACIL___FACILLATITUDE");
 
 	/// <summary>
 	/// Longitude
 	/// </summary>
-	public BaseInputControl FacilLongitud => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILLONGITUD");
+	public BaseInputControl FacilLongitud => new BaseInputControl(driver, ContainerLocator, "container-FACIL___FACILLONGITUD", "#FACIL___FACILLONGITUD");
 
 	/// <summary>
 	/// Geographical coordinate
 	/// </summary>
-	public BaseInputControl FacilGeocoori => new BaseInputControl(driver, ContainerLocator, "#FACIL___FACILGEOCOORI");
+	public BaseInputControl FacilGeocoori => new BaseInputControl(driver, ContainerLocator, "container-FACIL___FACILGEOCOORI", "#FACIL___FACILGEOCOORI");
 
 	public FacilForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "FACIL", containerLocator: containerLocator) { }

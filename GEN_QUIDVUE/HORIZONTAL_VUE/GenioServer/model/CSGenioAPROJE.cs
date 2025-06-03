@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAproje(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PROJE]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codproje", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codproje", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("projecto", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "projecto", FieldType.TEXT);
 			Qfield.FieldDescription = "Project";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PROJECT37121";
 
@@ -67,10 +63,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codyear", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codyear", FieldType.KEY_GUID);
 			Qfield.FieldDescription = ">REFERENCE YEAR";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "_REFERENCE_YEAR44132";
 
@@ -78,10 +73,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("year", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "year", FieldType.TEXT);
 			Qfield.FieldDescription = "Year";
 			Qfield.FieldSize =  4;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
@@ -90,66 +84,61 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("primeiro", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "primeiro", FieldType.CURRENCY);
 			Qfield.FieldDescription = "First";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "FIRST42972";
 
 			Qfield.Dupmsg = "";
-			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "yearnumb", "value", SortOrder.Ascending, LookupFormulaType.Previous, "codproje", "codproje");
+			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "year", "value", SortOrder.Ascending, LookupFormulaType.Previous, "codproje", "codproje");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("before", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "before", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Before";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "BEFORE60156";
 
 			Qfield.Dupmsg = "";
-			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "yearnumb", "value", SortOrder.Descending, LookupFormulaType.Previous, "codproje", "codproje");
+			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "year", "value", SortOrder.Descending, LookupFormulaType.Previous, "codproje", "codproje");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("followin", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "followin", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Following";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "FOLLOWING22170";
 
 			Qfield.Dupmsg = "";
-			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "yearnumb", "value", SortOrder.Ascending, LookupFormulaType.Next, "codproje", "codproje");
+			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "year", "value", SortOrder.Ascending, LookupFormulaType.Next, "codproje", "codproje");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("ultimo", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "ultimo", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Last";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
 			Qfield.CavDesignation = "LAST49207";
 
 			Qfield.Dupmsg = "";
-			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "yearnumb", "value", SortOrder.Descending, LookupFormulaType.Next, "codproje", "codproje");
+			Qfield.Formula = new QueryTableFormula("GQT", "gqtagreg", "year", "year", "value", SortOrder.Descending, LookupFormulaType.Next, "codproje", "codproje");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("saldo1", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "saldo1", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Next - Previous =";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
@@ -164,10 +153,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("saldo2", FieldType.VALOR);
+			Qfield = new Field(info.Alias, "saldo2", FieldType.CURRENCY);
 			Qfield.FieldDescription = "Last - First =";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.IntegerDigits = 7;
 			Qfield.Decimals = 2;
@@ -182,9 +170,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -273,8 +260,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Project";
 			info.AreaPluralDesignation="Projects";
 			info.DescriptionCav="PROJECT37121";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);
@@ -393,44 +378,44 @@ namespace CSGenio.business
 			set { insertNameValueField(FldYear, value); }
 		}
 
-		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public static FieldRef FldPrimeiro { get { return m_fldPrimeiro; } }
 		private static FieldRef m_fldPrimeiro = new FieldRef("proje", "primeiro");
 
-		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "First" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public decimal ValPrimeiro
 		{
 			get { return (decimal)returnValueField(FldPrimeiro); }
 			set { insertNameValueField(FldPrimeiro, value); }
 		}
 
-		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public static FieldRef FldBefore { get { return m_fldBefore; } }
 		private static FieldRef m_fldBefore = new FieldRef("proje", "before");
 
-		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Before" Tipo: "$D" Formula: CT "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public decimal ValBefore
 		{
 			get { return (decimal)returnValueField(FldBefore); }
 			set { insertNameValueField(FldBefore, value); }
 		}
 
-		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public static FieldRef FldFollowin { get { return m_fldFollowin; } }
 		private static FieldRef m_fldFollowin = new FieldRef("proje", "followin");
 
-		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
+		/// <summary>Field : "Following" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](ASC)"</summary>
 		public decimal ValFollowin
 		{
 			get { return (decimal)returnValueField(FldFollowin); }
 			set { insertNameValueField(FldFollowin, value); }
 		}
 
-		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public static FieldRef FldUltimo { get { return m_fldUltimo; } }
 		private static FieldRef m_fldUltimo = new FieldRef("proje", "ultimo");
 
-		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEARNUMB][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
+		/// <summary>Field : "Last" Tipo: "$D" Formula: CS "AGREG[PROJE->YEAR][AGREG->YEAR][AGREG->VALUE][PROJE->CODPROJE][AGREG->CODPROJE](DESC)"</summary>
 		public decimal ValUltimo
 		{
 			get { return (decimal)returnValueField(FldUltimo); }

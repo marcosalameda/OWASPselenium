@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Repar
 {
-	public class Repar_SpeciValEspecial_ViewModel : ListViewModel
+	public class Repar_SpeciValEspecial_ViewModel : MenuListViewModel<Models.Speci>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Repar_SpeciValEspecial_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "speci"; }
+		[JsonIgnore]
+		public override string TableAlias => "speci";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Repar_SpeciValEspecial"; }
+		public override string Uuid => "Repar_SpeciValEspecial";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodrepar { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -60,11 +85,25 @@ namespace GenioMVC.ViewModels.Repar
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS REPAR_SPECIESPECIAL]/
+
+			return crs;
+		}
+
 		public string ValTipoarea { get; set; }
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Repar_SpeciValEspecial_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Repar_SpeciValEspecial_ViewModel" /> class.
@@ -75,13 +114,23 @@ namespace GenioMVC.ViewModels.Repar
 			ValCodrepar = userContext.CurrentNavigation.CurrentLevel.GetEntry("repar")?.ToString();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Repar_SpeciValEspecial_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Repar_SpeciValEspecial_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXTO, Resources.Resources.SPECIALTY09304, 50, 0, true),
-				new Exports.QColumn(CSGenioAspeci.FldAreatecn, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
+				new Exports.QColumn(CSGenioAspeci.FldEspecial, FieldType.TEXT, Resources.Resources.SPECIALTY09304, 50, 0, true),
+				new Exports.QColumn(CSGenioAspeci.FldAreatecn, FieldType.ARRAY_TEXT, Resources.Resources.TECHNICAL_AREA50773, 1, 0, true, "AreaTecn"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -137,13 +186,10 @@ namespace GenioMVC.ViewModels.Repar
 
 			if (Menu == null)
 				Menu = new TablePartial<Repar_SpeciValEspecial_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("SPECI.ESPECIAL", new OrderedDictionary());
-			allSortOrders["SPECI.ESPECIAL"].Add("SPECI.ESPECIAL", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -156,9 +202,7 @@ namespace GenioMVC.ViewModels.Repar
 			crs.SubSets.Add(subfilters);
 
 
-
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -253,22 +297,21 @@ namespace GenioMVC.ViewModels.Repar
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAspeci> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "REPAR")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Repar_SpeciValEspecial_RowViewModel>();
 
 				CriteriaSet repar___speciespecialConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("SPECI.ESPECIAL", new OrderedDictionary());
 				allSortOrders["SPECI.ESPECIAL"].Add("SPECI.ESPECIAL", "A");
-
 
 
 
@@ -300,52 +343,50 @@ namespace GenioMVC.ViewModels.Repar
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("speci", "especial");
+					firstVisibleColumn ??= new FieldRef("speci", "especial");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAspeci model_limit_area = new CSGenioAspeci(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_REPAR___SPECIESPECIAL");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAspeci model_limit_area = new CSGenioAspeci(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_REPAR___SPECIESPECIAL");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
-			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-			// Limit origin: form 
-			//Limit type: "C"
-			//Current Area = "SPECI"
-			//1st Area Limit: "SPECI"
-			//1st Area Field: "AREATECN"
-			//1st Area Value: ""
-			//2nd Area Limit: "REPAR"
-			//2nd Area Field: "TIPOAREA"
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.C;
-				limit.NaoAplicaSeNulo = false;
-				CSGenioAspeci model_limit_area = new CSGenioAspeci(m_userContext.User);
-				string limit_field = "areatecn", limit_field_value = "";
-				object this_limit_field = Navigation.GetStrValue(limit_field_value);
-				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+				// Limit origin: form 
+				//Limit type: "C"
+				//Current Area = "SPECI"
+				//1st Area Limit: "SPECI"
+				//1st Area Field: "AREATECN"
+				//1st Area Value: ""
+				//2nd Area Limit: "REPAR"
+				//2nd Area Field: "TIPOAREA"
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.C;
+					limit.NaoAplicaSeNulo = false;
+					CSGenioAspeci model_limit_area = new CSGenioAspeci(m_userContext.User);
+					string limit_field = "areatecn", limit_field_value = "";
+					object this_limit_field = Navigation.GetStrValue(limit_field_value);
+					Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
 
-				CSGenioArepar model_limit_area2 = new CSGenioArepar(m_userContext.User);
-				string limit_field2 = "tipoarea", limit_field_value2 = "";
-				object this_limit_field2 = ValTipoarea;
-				Limit_Filler(ref limit, model_limit_area2, limit_field2, limit_field_value2, this_limit_field2, LimitAreaType.AreaLimitaN);
-				if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
-					this.tableLimits.Add(limit);
-			}
+					CSGenioArepar model_limit_area2 = new CSGenioArepar(m_userContext.User);
+					string limit_field2 = "tipoarea", limit_field_value2 = "";
+					object this_limit_field2 = ValTipoarea;
+					Limit_Filler(ref limit, model_limit_area2, limit_field2, limit_field_value2, this_limit_field2, LimitAreaType.AreaLimitaN);
+					if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+						this.tableLimits.Add(limit);
+				}
 
 				if (conditions == null)
 					conditions = CriteriaSet.And();
@@ -355,6 +396,8 @@ namespace GenioMVC.ViewModels.Repar
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ REPAR_SPECIESPECIAL]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -382,7 +425,7 @@ namespace GenioMVC.ViewModels.Repar
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAspeci> listing = Models.ModelBase.Where<CSGenioAspeci>(m_userContext, false, repar___speciespecialConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___SPECIESPECIAL", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAspeci> listing = Models.ModelBase.Where<CSGenioAspeci>(m_userContext, distinct, repar___speciespecialConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___SPECIESPECIAL", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -390,7 +433,6 @@ namespace GenioMVC.ViewModels.Repar
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -411,18 +453,12 @@ namespace GenioMVC.ViewModels.Repar
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -430,7 +466,7 @@ namespace GenioMVC.ViewModels.Repar
 
 		private List<Repar_SpeciValEspecial_RowViewModel> MapRepar_SpeciValEspecial(ListingMVC<CSGenioAspeci> Qlisting)
 		{
-			var Elements = new List<Repar_SpeciValEspecial_RowViewModel>();
+			List<Repar_SpeciValEspecial_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -447,7 +483,6 @@ namespace GenioMVC.ViewModels.Repar
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAspeci row
 		/// to a Repar_SpeciValEspecial_RowViewModel object.
@@ -456,7 +491,9 @@ namespace GenioMVC.ViewModels.Repar
 		private Repar_SpeciValEspecial_RowViewModel MapRepar_SpeciValEspecial(CSGenioAspeci row)
 		{
 			var model = new Repar_SpeciValEspecial_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -468,32 +505,9 @@ namespace GenioMVC.ViewModels.Repar
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Repar_SpeciValEspecial_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -507,37 +521,43 @@ namespace GenioMVC.ViewModels.Repar
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAspeci> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAspeci row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Speci m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Speci m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM REPAR_SPECIVALESPECIAL]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Speci", "Speci.ValCodespec", "Speci.ValZzstate", "Speci.ValEspecial", "Speci.ValAreatecn", "BtnPermission"
+			"Speci", "Speci.ValCodespec", "Speci.ValZzstate", "Speci.ValEspecial", "Speci.ValAreatecn"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValEspecial", CSGenioAspeci.FldEspecial, typeof(string)),
-			new TableSearchColumn("ValAreatecn", CSGenioAspeci.FldAreatecn, typeof(string), array : "AreaTecn")
+			new TableSearchColumn("ValAreatecn", CSGenioAspeci.FldAreatecn, typeof(string), array : "AreaTecn"),
 		];
-
-
-
 	}
 }

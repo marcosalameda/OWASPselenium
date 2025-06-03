@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Locat
 {
-	public class Locat_ValLocalext_ViewModel : ListViewModel
+	public class Locat_ValLocalext_ViewModel : MenuListViewModel<Models.Lcext>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Locat_ValLocalext_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "lcext"; }
+		[JsonIgnore]
+		public override string TableAlias => "lcext";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Locat_ValLocalext"; }
+		public override string Uuid => "Locat_ValLocalext";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCodlocat { get; set; }
+		[JsonIgnore]
+		public string LocatValCodlocat { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Locat
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS LOCAT_PSEUDLOCALEXT]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Locat_ValLocalext_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Locat_ValLocalext_ViewModel" /> class.
@@ -70,7 +109,17 @@ namespace GenioMVC.ViewModels.Locat
 		/// <param name="userContext">The current user request context</param>
 		public Locat_ValLocalext_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodlocat = userContext.CurrentNavigation.CurrentLevel.GetEntry("locat")?.ToString();
+			LocatValCodlocat = userContext.CurrentNavigation.CurrentLevel.GetEntry("locat")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Locat_ValLocalext_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Locat_ValLocalext_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -78,9 +127,9 @@ namespace GenioMVC.ViewModels.Locat
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXTO, Resources.Resources.GLN_EXTENSION_COMPON55869, 30, 0, true),
-				new Exports.QColumn(CSGenioAlcext.FldSpacetyp, FieldType.ARRAY_COD_TEXTO, Resources.Resources.SPACE_TYPE42493, 1, 0, true, "SpaceTyp"),
-				new Exports.QColumn(CSGenioAlcext.FldSpaceobs, FieldType.TEXTO, Resources.Resources.SPACE62433, 30, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXTENSION_COMPON55869, 30, 0, true),
+				new Exports.QColumn(CSGenioAlcext.FldSpacetyp, FieldType.ARRAY_TEXT, Resources.Resources.SPACE_TYPE42493, 1, 0, true, "SpaceTyp"),
+				new Exports.QColumn(CSGenioAlcext.FldSpaceobs, FieldType.TEXT, Resources.Resources.SPACE62433, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -130,13 +179,10 @@ namespace GenioMVC.ViewModels.Locat
 
 			if (Menu == null)
 				Menu = new TablePartial<Locat_ValLocalext_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("LCEXT.GLNEXT", new OrderedDictionary());
-			allSortOrders["LCEXT.GLNEXT"].Add("LCEXT.GLNEXT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -148,12 +194,11 @@ namespace GenioMVC.ViewModels.Locat
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodlocat != null)
-				crs.Equal(CSGenioAlcext.FldCodlocat, this.ValCodlocat);
+			if (this.LocatValCodlocat != null)
+				crs.Equal(CSGenioAlcext.FldCodlocat, this.LocatValCodlocat);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -250,22 +295,21 @@ namespace GenioMVC.ViewModels.Locat
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAlcext> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "LOCAT")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Locat_ValLocalext_RowViewModel>();
 
 				CriteriaSet locat___pseudlocalextConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("LCEXT.GLNEXT", new OrderedDictionary());
 				allSortOrders["LCEXT.GLNEXT"].Add("LCEXT.GLNEXT", "A");
-
 
 
 
@@ -297,26 +341,24 @@ namespace GenioMVC.ViewModels.Locat
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("lcext", "glnext");
+					firstVisibleColumn ??= new FieldRef("lcext", "glnext");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAlcext model_limit_area = new CSGenioAlcext(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_LOCAT___PSEUDLOCALEXT");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAlcext model_limit_area = new CSGenioAlcext(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_LOCAT___PSEUDLOCALEXT");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -327,6 +369,8 @@ namespace GenioMVC.ViewModels.Locat
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ LOCAT_PSEUDLOCALEXT]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -355,7 +399,7 @@ namespace GenioMVC.ViewModels.Locat
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAlcext> listing = Models.ModelBase.Where<CSGenioAlcext>(m_userContext, false, locat___pseudlocalextConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LOCAT___PSEUDLOCALEXT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAlcext> listing = Models.ModelBase.Where<CSGenioAlcext>(m_userContext, distinct, locat___pseudlocalextConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_LOCAT___PSEUDLOCALEXT", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -363,7 +407,6 @@ namespace GenioMVC.ViewModels.Locat
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -384,18 +427,12 @@ namespace GenioMVC.ViewModels.Locat
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -403,7 +440,7 @@ namespace GenioMVC.ViewModels.Locat
 
 		private List<Locat_ValLocalext_RowViewModel> MapLocat_ValLocalext(ListingMVC<CSGenioAlcext> Qlisting)
 		{
-			var Elements = new List<Locat_ValLocalext_RowViewModel>();
+			List<Locat_ValLocalext_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -420,7 +457,6 @@ namespace GenioMVC.ViewModels.Locat
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAlcext row
 		/// to a Locat_ValLocalext_RowViewModel object.
@@ -429,7 +465,9 @@ namespace GenioMVC.ViewModels.Locat
 		private Locat_ValLocalext_RowViewModel MapLocat_ValLocalext(CSGenioAlcext row)
 		{
 			var model = new Locat_ValLocalext_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -441,32 +479,9 @@ namespace GenioMVC.ViewModels.Locat
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Locat_ValLocalext_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -480,38 +495,44 @@ namespace GenioMVC.ViewModels.Locat
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAlcext> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAlcext row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Lcext m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Lcext m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM LOCAT_VALLOCALEXT]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Lcext", "Lcext.ValCodlcext", "Lcext.ValZzstate", "Lcext.ValGlnext", "Lcext.ValSpacetyp", "Lcext.ValSpaceobs", "Lcext.ValCodlocat", "BtnPermission"
+			"Lcext", "Lcext.ValCodlcext", "Lcext.ValZzstate", "Lcext.ValGlnext", "Lcext.ValSpacetyp", "Lcext.ValSpaceobs", "Lcext.ValCodlocat"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValGlnext", CSGenioAlcext.FldGlnext, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValSpacetyp", CSGenioAlcext.FldSpacetyp, typeof(string), array : "SpaceTyp"),
-			new TableSearchColumn("ValSpaceobs", CSGenioAlcext.FldSpaceobs, typeof(string))
+			new TableSearchColumn("ValSpaceobs", CSGenioAlcext.FldSpaceobs, typeof(string)),
 		];
-
-
-
 	}
 }

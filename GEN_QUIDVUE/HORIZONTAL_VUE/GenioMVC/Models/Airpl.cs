@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Airplane ID" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Airpl.ValAirplid")]
 		[NumericAttribute(0)]
-		public decimal? ValAirplid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAirplid, 0)); } set { klass.ValAirplid = Convert.ToDecimal(value); } }
+		public decimal? ValAirplid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAirplid, 0)); } set { klass.ValAirplid = Convert.ToDecimal(value); } }
 
 		[DisplayName("Airplane Name")]
 		/// <summary>Field : "Airplane Name" Tipo: "C" Formula:  ""</summary>
@@ -55,31 +55,32 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Seating Capacity" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Airpl.ValSeatcap")]
 		[NumericAttribute(0)]
-		public decimal? ValSeatcap { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSeatcap, 0)); } set { klass.ValSeatcap = Convert.ToDecimal(value); } }
+		public decimal? ValSeatcap { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSeatcap, 0)); } set { klass.ValSeatcap = Convert.ToDecimal(value); } }
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Airpl.ValCodairln")]
 		public string ValCodairln { get { return klass.ValCodairln; } set { klass.ValCodairln = value; } }
+
 		private Airln _airln;
 		[DisplayName("Airln")]
 		[ShouldSerialize("Airln")]
-		public virtual Airln Airln {
-			get {
-				if (!this.isEmptyModel && (_airln == null || (!string.IsNullOrEmpty(ValCodairln) && (_airln.isEmptyModel || _airln.klass.QPrimaryKey != ValCodairln))))
+		public virtual Airln Airln
+		{
+			get
+			{
+				if (!isEmptyModel && (_airln == null || (!string.IsNullOrEmpty(ValCodairln) && (_airln.isEmptyModel || _airln.klass.QPrimaryKey != ValCodairln))))
 					_airln = Models.Airln.Find(ValCodairln, m_userContext, Identifier, _fieldsToSerialize);
-				if (_airln == null)
-					_airln = new Models.Airln(m_userContext, true, _fieldsToSerialize);
+				_airln ??= new Models.Airln(m_userContext, true, _fieldsToSerialize);
 				return _airln;
 			}
 			set { _airln = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Airpl.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Airpl(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -98,7 +99,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAairpl csgenioa)
 		{
 			if (csgenioa == null)
@@ -109,8 +109,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "airln":
-						if (_airln == null)
-							_airln = new Airln(m_userContext, true, _fieldsToSerialize);
+						_airln ??= new Airln(m_userContext, true, _fieldsToSerialize);
 						_airln.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

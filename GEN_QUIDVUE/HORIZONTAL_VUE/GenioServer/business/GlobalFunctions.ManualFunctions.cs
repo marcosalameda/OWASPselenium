@@ -72,8 +72,8 @@ namespace CSGenio.business
 		{
 //BEGIN_FUNCTION:453ea83f-9d2e-4569-b7d4-d75f1203cdda
         // se alguma das datas não é válida, retorna 0
-	if (emptyD(dDtNasc) == 0) return 0;
-	if (emptyD(dData) == 0) return 0;
+	if (GenFunctions.emptyD(dDtNasc) == 0) return 0;
+	if (GenFunctions.emptyD(dData) == 0) return 0;
 
             DateTime _dDtNasc = dDtNasc.Value;
             DateTime _dData = dData.Value;
@@ -102,7 +102,7 @@ namespace CSGenio.business
 		public decimal DayOfWeek(DateTime? dt)
 		{
 //BEGIN_FUNCTION:6ccc609d-6af4-44df-bab1-0156e1268a7f
-if ( emptyD(dt)==0 )
+if ( GenFunctions.emptyD(dt)==0 )
 {
      return Convert.ToDecimal(dt.GetValueOrDefault().DayOfWeek);
 }
@@ -132,12 +132,17 @@ return DateTime.Now.ToString("HH:mm");
 		{
 			try
 			{
-				List<IDbDataParameter> parameters = new List<IDbDataParameter>();
-				parameters.Add(sp.CreateParameter("lat", lat));
-				parameters.Add(sp.CreateParameter("lng", lng));
+				object paramlat = QueryUtils.ToValidDbValue(lat, FieldType.NUMERIC);
+				object paramlng = QueryUtils.ToValidDbValue(lng, FieldType.NUMERIC);
 
-				string selectQuery = "select dbo.GetGeoFromLatLng(@lat,@lng);";
-				return DBConversion.ToGeography(sp.executeScalar(selectQuery, parameters));
+				SelectQuery query = new SelectQuery()
+					.Select(new SqlFunction(SqlFunctionType.Custom,
+						"GetGeoFromLatLng"
+						, paramlat, paramlng
+						), "x");
+
+				var result = sp.ExecuteScalar(query);
+				return DBConversion.ToGeography(result);
 			}
 			catch (Exception e)
 			{
@@ -154,8 +159,8 @@ return DateTime.Now.ToString("HH:mm");
 public decimal Idade_X(DateTime dDtNasc, DateTime dData)
 {
 	// se alguma das datas não é válida, retorna 0
-	if (emptyD(dDtNasc) == 0) return 0;
-	if (emptyD(dData) == 0) return 0;
+	if (GenFunctions.emptyD(dDtNasc) == 0) return 0;
+	if (GenFunctions.emptyD(dData) == 0) return 0;
 	int d, m, a;
 	d = dData.Day; m = dData.Month; a = dData.Year;
 	decimal idade = a - dDtNasc.Year;

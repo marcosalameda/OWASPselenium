@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Recei
 {
-	public class WMS_Menu_111_ViewModel : ListViewModel
+	public class WMS_Menu_111_ViewModel : MenuListViewModel<Models.Recei>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<WMS_Menu_111_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "recei"; }
+		[JsonIgnore]
+		public override string TableAlias => "recei";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "6bb55b0e-5337-4429-b2f8-3175958c9c5b"; }
+		public override string Uuid => "6bb55b0e-5337-4429-b2f8-3175958c9c5b";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodrecei { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Recei
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS 111]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,34 @@ namespace GenioMVC.ViewModels.Recei
 			var areaBase = CSGenio.business.Area.createArea("recei", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_111Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML111");
-			wms_menu_111Conds.Equal(CSGenioArecei.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML111");
+			conditions.Equal(CSGenioArecei.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL WMS OVERRQ 111]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioArecei.FldCodrecei, CSGenioArecei.FldZzstate, CSGenioArecei.FldNumber, CSGenioArecei.FldDtreceip, CSGenioArecei.FldCodentit, CSGenioAentit.FldCodentit, CSGenioAentit.FldName, CSGenioArecei.FldDtcheck, CSGenioArecei.FldChecked, CSGenioArecei.FldTocheck, CSGenioArecei.FldDtstorag };
 
-			ListingMVC<CSGenioArecei> listing = new ListingMVC<CSGenioArecei>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_111Conds, listing);
+			ListingMVC<CSGenioArecei> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public WMS_Menu_111_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WMS_Menu_111_ViewModel" /> class.
@@ -102,18 +132,28 @@ namespace GenioMVC.ViewModels.Recei
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WMS_Menu_111_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public WMS_Menu_111_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERO, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldDtreceip, FieldType.DATAHORA, Resources.Resources.RECEIPT_DATE00996, 16, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldDtcheck, FieldType.DATAHORA, Resources.Resources.RECEIPT_VERIFICATION62328, 16, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldChecked, FieldType.LOGICO, Resources.Resources.CHECKED31708, 1, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldTocheck, FieldType.LOGICO, Resources.Resources.TO_CHECK57511, 1, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldDtstorag, FieldType.DATAHORA, Resources.Resources.STORAGE_DATE59954, 16, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERIC, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldDtreceip, FieldType.DATETIME, Resources.Resources.RECEIPT_DATE00996, 16, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldDtcheck, FieldType.DATETIME, Resources.Resources.RECEIPT_VERIFICATION62328, 16, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldChecked, FieldType.LOGIC, Resources.Resources.CHECKED31708, 1, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldTocheck, FieldType.LOGIC, Resources.Resources.TO_CHECK57511, 1, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldDtstorag, FieldType.DATETIME, Resources.Resources.STORAGE_DATE59954, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -162,13 +202,10 @@ namespace GenioMVC.ViewModels.Recei
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_111_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("RECEI.DTRECEIP", new OrderedDictionary());
-			allSortOrders["RECEI.DTRECEIP"].Add("RECEI.DTRECEIP", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -181,8 +218,7 @@ namespace GenioMVC.ViewModels.Recei
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -279,23 +315,22 @@ namespace GenioMVC.ViewModels.Recei
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioArecei> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "111"),
 				new("Module", "WMS")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_111_RowViewModel>();
 
 				CriteriaSet wms_menu_111Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("RECEI.DTRECEIP", new OrderedDictionary());
 				allSortOrders["RECEI.DTRECEIP"].Add("RECEI.DTRECEIP", "A");
-
 
 
 
@@ -327,26 +362,24 @@ namespace GenioMVC.ViewModels.Recei
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("recei", "number");
+					firstVisibleColumn ??= new FieldRef("recei", "number");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioArecei model_limit_area = new CSGenioArecei(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML111");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioArecei model_limit_area = new CSGenioArecei(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML111");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -357,6 +390,8 @@ namespace GenioMVC.ViewModels.Recei
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL WMS OVERRQ 111]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -385,7 +420,7 @@ namespace GenioMVC.ViewModels.Recei
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, false, wms_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, distinct, wms_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -393,7 +428,6 @@ namespace GenioMVC.ViewModels.Recei
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -415,18 +449,12 @@ namespace GenioMVC.ViewModels.Recei
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -434,7 +462,7 @@ namespace GenioMVC.ViewModels.Recei
 
 		private List<WMS_Menu_111_RowViewModel> MapWMS_Menu_111(ListingMVC<CSGenioArecei> Qlisting)
 		{
-			var Elements = new List<WMS_Menu_111_RowViewModel>();
+			List<WMS_Menu_111_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -451,7 +479,6 @@ namespace GenioMVC.ViewModels.Recei
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioArecei row
 		/// to a WMS_Menu_111_RowViewModel object.
@@ -460,7 +487,9 @@ namespace GenioMVC.ViewModels.Recei
 		private WMS_Menu_111_RowViewModel MapWMS_Menu_111(CSGenioArecei row)
 		{
 			var model = new WMS_Menu_111_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -474,32 +503,9 @@ namespace GenioMVC.ViewModels.Recei
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(WMS_Menu_111_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -513,31 +519,40 @@ namespace GenioMVC.ViewModels.Recei
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioArecei> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioArecei row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Recei m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Recei m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM WMS_MENU_111]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Recei", "Recei.ValCodrecei", "Recei.ValZzstate", "Recei.ValNumber", "Recei.ValDtreceip", "Entit", "Entit.ValName", "Recei.ValDtcheck", "Recei.ValChecked", "Recei.ValTocheck", "Recei.ValDtstorag", "Recei.ValCodentit", "BtnPermission"
+			"Recei", "Recei.ValCodrecei", "Recei.ValZzstate", "Recei.ValNumber", "Recei.ValDtreceip", "Entit", "Entit.ValName", "Recei.ValDtcheck", "Recei.ValChecked", "Recei.ValTocheck", "Recei.ValDtstorag", "Recei.ValCodentit"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValNumber", CSGenioArecei.FldNumber, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("ValDtreceip", CSGenioArecei.FldDtreceip, typeof(DateTime?)),
@@ -545,10 +560,7 @@ namespace GenioMVC.ViewModels.Recei
 			new TableSearchColumn("ValDtcheck", CSGenioArecei.FldDtcheck, typeof(DateTime?)),
 			new TableSearchColumn("ValChecked", CSGenioArecei.FldChecked, typeof(bool)),
 			new TableSearchColumn("ValTocheck", CSGenioArecei.FldTocheck, typeof(bool)),
-			new TableSearchColumn("ValDtstorag", CSGenioArecei.FldDtstorag, typeof(DateTime?))
+			new TableSearchColumn("ValDtstorag", CSGenioArecei.FldDtstorag, typeof(DateTime?)),
 		];
-
-
-
 	}
 }

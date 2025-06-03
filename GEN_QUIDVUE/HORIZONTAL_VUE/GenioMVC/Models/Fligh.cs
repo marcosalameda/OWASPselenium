@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Flight ID" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Fligh.ValFlightid")]
 		[NumericAttribute(0)]
-		public decimal? ValFlightid { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValFlightid, 0)); } set { klass.ValFlightid = Convert.ToDecimal(value); } }
+		public decimal? ValFlightid { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValFlightid, 0)); } set { klass.ValFlightid = Convert.ToDecimal(value); } }
 
 		[DisplayName("Departure Date")]
 		/// <summary>Field : "Departure Date" Tipo: "D" Formula:  ""</summary>
@@ -70,82 +70,86 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Fligh.ValCodairln")]
 		public string ValCodairln { get { return klass.ValCodairln; } set { klass.ValCodairln = value; } }
+
 		private Airln _airln;
 		[DisplayName("Airln")]
 		[ShouldSerialize("Airln")]
-		public virtual Airln Airln {
-			get {
-				if (!this.isEmptyModel && (_airln == null || (!string.IsNullOrEmpty(ValCodairln) && (_airln.isEmptyModel || _airln.klass.QPrimaryKey != ValCodairln))))
+		public virtual Airln Airln
+		{
+			get
+			{
+				if (!isEmptyModel && (_airln == null || (!string.IsNullOrEmpty(ValCodairln) && (_airln.isEmptyModel || _airln.klass.QPrimaryKey != ValCodairln))))
 					_airln = Models.Airln.Find(ValCodairln, m_userContext, Identifier, _fieldsToSerialize);
-				if (_airln == null)
-					_airln = new Models.Airln(m_userContext, true, _fieldsToSerialize);
+				_airln ??= new Models.Airln(m_userContext, true, _fieldsToSerialize);
 				return _airln;
 			}
 			set { _airln = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Fligh.ValCodairpt")]
 		public string ValCodairpt { get { return klass.ValCodairpt; } set { klass.ValCodairpt = value; } }
+
 		private Airpt _airpt;
 		[DisplayName("Airpt")]
 		[ShouldSerialize("Airpt")]
-		public virtual Airpt Airpt {
-			get {
-				if (!this.isEmptyModel && (_airpt == null || (!string.IsNullOrEmpty(ValCodairpt) && (_airpt.isEmptyModel || _airpt.klass.QPrimaryKey != ValCodairpt))))
+		public virtual Airpt Airpt
+		{
+			get
+			{
+				if (!isEmptyModel && (_airpt == null || (!string.IsNullOrEmpty(ValCodairpt) && (_airpt.isEmptyModel || _airpt.klass.QPrimaryKey != ValCodairpt))))
 					_airpt = Models.Airpt.Find(ValCodairpt, m_userContext, Identifier, _fieldsToSerialize);
-				if (_airpt == null)
-					_airpt = new Models.Airpt(m_userContext, true, _fieldsToSerialize);
+				_airpt ??= new Models.Airpt(m_userContext, true, _fieldsToSerialize);
 				return _airpt;
 			}
 			set { _airpt = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Fligh.ValCodairfr")]
 		public string ValCodairfr { get { return klass.ValCodairfr; } set { klass.ValCodairfr = value; } }
+
 		private Airfr _airfr;
 		[DisplayName("Airfr")]
 		[ShouldSerialize("Airfr")]
-		public virtual Airfr Airfr {
-			get {
-				if (!this.isEmptyModel && (_airfr == null || (!string.IsNullOrEmpty(ValCodairfr) && (_airfr.isEmptyModel || _airfr.klass.QPrimaryKey != ValCodairfr))))
+		public virtual Airfr Airfr
+		{
+			get
+			{
+				if (!isEmptyModel && (_airfr == null || (!string.IsNullOrEmpty(ValCodairfr) && (_airfr.isEmptyModel || _airfr.klass.QPrimaryKey != ValCodairfr))))
 					_airfr = Models.Airfr.Find(ValCodairfr, m_userContext, Identifier, _fieldsToSerialize);
-				if (_airfr == null)
-					_airfr = new Models.Airfr(m_userContext, true, _fieldsToSerialize);
+				_airfr ??= new Models.Airfr(m_userContext, true, _fieldsToSerialize);
 				return _airfr;
 			}
 			set { _airfr = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Fligh.ValCodairto")]
 		public string ValCodairto { get { return klass.ValCodairto; } set { klass.ValCodairto = value; } }
+
 		private Airto _airto;
 		[DisplayName("Airto")]
 		[ShouldSerialize("Airto")]
-		public virtual Airto Airto {
-			get {
-				if (!this.isEmptyModel && (_airto == null || (!string.IsNullOrEmpty(ValCodairto) && (_airto.isEmptyModel || _airto.klass.QPrimaryKey != ValCodairto))))
+		public virtual Airto Airto
+		{
+			get
+			{
+				if (!isEmptyModel && (_airto == null || (!string.IsNullOrEmpty(ValCodairto) && (_airto.isEmptyModel || _airto.klass.QPrimaryKey != ValCodairto))))
 					_airto = Models.Airto.Find(ValCodairto, m_userContext, Identifier, _fieldsToSerialize);
-				if (_airto == null)
-					_airto = new Models.Airto(m_userContext, true, _fieldsToSerialize);
+				_airto ??= new Models.Airto(m_userContext, true, _fieldsToSerialize);
 				return _airto;
 			}
 			set { _airto = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Fligh.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Fligh(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -164,7 +168,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAfligh csgenioa)
 		{
 			if (csgenioa == null)
@@ -175,23 +178,19 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "airln":
-						if (_airln == null)
-							_airln = new Airln(m_userContext, true, _fieldsToSerialize);
+						_airln ??= new Airln(m_userContext, true, _fieldsToSerialize);
 						_airln.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "airpt":
-						if (_airpt == null)
-							_airpt = new Airpt(m_userContext, true, _fieldsToSerialize);
+						_airpt ??= new Airpt(m_userContext, true, _fieldsToSerialize);
 						_airpt.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "airfr":
-						if (_airfr == null)
-							_airfr = new Airfr(m_userContext, true, _fieldsToSerialize);
+						_airfr ??= new Airfr(m_userContext, true, _fieldsToSerialize);
 						_airfr.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "airto":
-						if (_airto == null)
-							_airto = new Airto(m_userContext, true, _fieldsToSerialize);
+						_airto ??= new Airto(m_userContext, true, _fieldsToSerialize);
 						_airto.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

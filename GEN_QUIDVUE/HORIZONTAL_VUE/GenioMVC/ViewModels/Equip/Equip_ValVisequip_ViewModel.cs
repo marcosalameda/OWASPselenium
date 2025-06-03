@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Equip
 {
-	public class Equip_ValVisequip_ViewModel : ListViewModel
+	public class Equip_ValVisequip_ViewModel : MenuListViewModel<Models.Visit>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Equip_ValVisequip_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "visit"; }
+		[JsonIgnore]
+		public override string TableAlias => "visit";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Equip_ValVisequip"; }
+		public override string Uuid => "Equip_ValVisequip";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCodequip { get; set; }
+		[JsonIgnore]
+		public string EquipValCodequip { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Equip
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS EQUIP_PSEUDVISEQUIP]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Equip_ValVisequip_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Equip_ValVisequip_ViewModel" /> class.
@@ -70,7 +109,17 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="userContext">The current user request context</param>
 		public Equip_ValVisequip_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+			EquipValCodequip = userContext.CurrentNavigation.CurrentLevel.GetEntry("equip")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Equip_ValVisequip_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Equip_ValVisequip_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -78,13 +127,13 @@ namespace GenioMVC.ViewModels.Equip
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAvisit.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioAvisit.FldStartdt, FieldType.DATAHORA, Resources.Resources.BEGINNING18124, 16, 0, true),
-				new Exports.QColumn(CSGenioAvisit.FldDtfim, FieldType.DATAHORA, Resources.Resources.END47577, 16, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldStartdt, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldDtfim, FieldType.DATETIME, Resources.Resources.END47577, 16, 0, true),
 				new Exports.QColumn(CSGenioAvisit.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 3, true),
-				new Exports.QColumn(CSGenioAvisit.FldTodoodia, FieldType.LOGICO, Resources.Resources.DAY27593, 1, 0, true),
-				new Exports.QColumn(CSGenioAvisit.FldColor, FieldType.TEXTO, Resources.Resources.COLOR55628, 30, 0, true),
-				new Exports.QColumn(CSGenioAvisit.FldBack, FieldType.LOGICO, Resources.Resources.BACKGROUND45121, 1, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldTodoodia, FieldType.LOGIC, Resources.Resources.DAY27593, 1, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldColor, FieldType.TEXT, Resources.Resources.COLOR55628, 30, 0, true),
+				new Exports.QColumn(CSGenioAvisit.FldBack, FieldType.LOGIC, Resources.Resources.BACKGROUND45121, 1, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -134,19 +183,10 @@ namespace GenioMVC.ViewModels.Equip
 
 			if (Menu == null)
 				Menu = new TablePartial<Equip_ValVisequip_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("VISIT.TITLE", new OrderedDictionary());
-			allSortOrders["VISIT.TITLE"].Add("VISIT.TITLE", "A");
-			allSortOrders.Add("VISIT.STARTDT", new OrderedDictionary());
-			allSortOrders["VISIT.STARTDT"].Add("VISIT.STARTDT", "A");
-			allSortOrders.Add("VISIT.DTFIM", new OrderedDictionary());
-			allSortOrders["VISIT.DTFIM"].Add("VISIT.DTFIM", "A");
-			allSortOrders.Add("VISIT.COLOR", new OrderedDictionary());
-			allSortOrders["VISIT.COLOR"].Add("VISIT.COLOR", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -158,12 +198,11 @@ namespace GenioMVC.ViewModels.Equip
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodequip != null)
-				crs.Equal(CSGenioAvisit.FldCodequip, this.ValCodequip);
+			if (this.EquipValCodequip != null)
+				crs.Equal(CSGenioAvisit.FldCodequip, this.EquipValCodequip);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -260,15 +299,15 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAvisit> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "EQUIP")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Equip_ValVisequip_RowViewModel>();
 
 				CriteriaSet equip___pseudvisequipConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
@@ -281,7 +320,6 @@ namespace GenioMVC.ViewModels.Equip
 				allSortOrders["VISIT.DTFIM"].Add("VISIT.DTFIM", "A");
 				allSortOrders.Add("VISIT.COLOR", new OrderedDictionary());
 				allSortOrders["VISIT.COLOR"].Add("VISIT.COLOR", "A");
-
 
 
 
@@ -316,26 +354,24 @@ namespace GenioMVC.ViewModels.Equip
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("visit", "title");
+					firstVisibleColumn ??= new FieldRef("visit", "title");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAvisit model_limit_area = new CSGenioAvisit(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_EQUIP___PSEUDVISEQUIP");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAvisit model_limit_area = new CSGenioAvisit(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_EQUIP___PSEUDVISEQUIP");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -346,6 +382,8 @@ namespace GenioMVC.ViewModels.Equip
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ EQUIP_PSEUDVISEQUIP]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -374,7 +412,7 @@ namespace GenioMVC.ViewModels.Equip
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAvisit> listing = Models.ModelBase.Where<CSGenioAvisit>(m_userContext, false, equip___pseudvisequipConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP___PSEUDVISEQUIP", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAvisit> listing = Models.ModelBase.Where<CSGenioAvisit>(m_userContext, distinct, equip___pseudvisequipConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP___PSEUDVISEQUIP", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -382,7 +420,6 @@ namespace GenioMVC.ViewModels.Equip
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -403,18 +440,12 @@ namespace GenioMVC.ViewModels.Equip
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -422,7 +453,7 @@ namespace GenioMVC.ViewModels.Equip
 
 		private List<Equip_ValVisequip_RowViewModel> MapEquip_ValVisequip(ListingMVC<CSGenioAvisit> Qlisting)
 		{
-			var Elements = new List<Equip_ValVisequip_RowViewModel>();
+			List<Equip_ValVisequip_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -439,7 +470,6 @@ namespace GenioMVC.ViewModels.Equip
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAvisit row
 		/// to a Equip_ValVisequip_RowViewModel object.
@@ -448,7 +478,9 @@ namespace GenioMVC.ViewModels.Equip
 		private Equip_ValVisequip_RowViewModel MapEquip_ValVisequip(CSGenioAvisit row)
 		{
 			var model = new Equip_ValVisequip_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -460,32 +492,9 @@ namespace GenioMVC.ViewModels.Equip
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Equip_ValVisequip_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -499,31 +508,40 @@ namespace GenioMVC.ViewModels.Equip
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAvisit> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAvisit row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Visit m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Visit m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM EQUIP_VALVISEQUIP]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Visit", "Visit.ValCodvisit", "Visit.ValZzstate", "Visit.ValTitle", "Visit.ValStartdt", "Visit.ValDtfim", "Visit.ValDescript", "Visit.ValTodoodia", "Visit.ValColor", "Visit.ValBack", "Visit.ValCodequip", "BtnPermission"
+			"Visit", "Visit.ValCodvisit", "Visit.ValZzstate", "Visit.ValTitle", "Visit.ValStartdt", "Visit.ValDtfim", "Visit.ValDescript", "Visit.ValTodoodia", "Visit.ValColor", "Visit.ValBack", "Visit.ValCodequip"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValTitle", CSGenioAvisit.FldTitle, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValStartdt", CSGenioAvisit.FldStartdt, typeof(DateTime?)),
@@ -531,10 +549,7 @@ namespace GenioMVC.ViewModels.Equip
 			new TableSearchColumn("ValDescript", CSGenioAvisit.FldDescript, typeof(string)),
 			new TableSearchColumn("ValTodoodia", CSGenioAvisit.FldTodoodia, typeof(bool)),
 			new TableSearchColumn("ValColor", CSGenioAvisit.FldColor, typeof(string)),
-			new TableSearchColumn("ValBack", CSGenioAvisit.FldBack, typeof(bool))
+			new TableSearchColumn("ValBack", CSGenioAvisit.FldBack, typeof(bool)),
 		];
-
-
-
 	}
 }

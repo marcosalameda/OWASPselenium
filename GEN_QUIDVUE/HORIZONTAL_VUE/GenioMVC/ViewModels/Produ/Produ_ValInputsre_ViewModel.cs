@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Produ
 {
-	public class Produ_ValInputsre_ViewModel : ListViewModel
+	public class Produ_ValInputsre_ViewModel : MenuListViewModel<Models.Relin>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Produ_ValInputsre_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "relin"; }
+		[JsonIgnore]
+		public override string TableAlias => "relin";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Produ_ValInputsre"; }
+		public override string Uuid => "Produ_ValInputsre";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCodprodu { get; set; }
+		[JsonIgnore]
+		public string ProduValCodprodu { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Produ
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PRODU_PSEUDINPUTSRE]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Produ_ValInputsre_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Produ_ValInputsre_ViewModel" /> class.
@@ -70,7 +109,17 @@ namespace GenioMVC.ViewModels.Produ
 		/// <param name="userContext">The current user request context</param>
 		public Produ_ValInputsre_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodprodu = userContext.CurrentNavigation.CurrentLevel.GetEntry("produ")?.ToString();
+			ProduValCodprodu = userContext.CurrentNavigation.CurrentLevel.GetEntry("produ")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Produ_ValInputsre_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Produ_ValInputsre_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -78,13 +127,13 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArelin.FldInstant, FieldType.DATAHORA, Resources.Resources.INSTANT35907, 16, 0, true),
-				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERO, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.ENTITY62049, 30, 0, true),
-				new Exports.QColumn(CSGenioArelin.FldLinenumb, FieldType.NUMERO, Resources.Resources.LINE27983, 6, 0, true),
-				new Exports.QColumn(CSGenioArelin.FldOrdered, FieldType.NUMERO, Resources.Resources.ORDERED04034, 10, 0, true),
-				new Exports.QColumn(CSGenioArelin.FldReceived, FieldType.NUMERO, Resources.Resources.RECEIVED19242, 10, 0, true),
-				new Exports.QColumn(CSGenioArelin.FldOutstand, FieldType.NUMERO, Resources.Resources.OUTSTANDING36400, 10, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldInstant, FieldType.DATETIME, Resources.Resources.INSTANT35907, 16, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERIC, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.ENTITY62049, 30, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldLinenumb, FieldType.NUMERIC, Resources.Resources.LINE27983, 6, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldOrdered, FieldType.NUMERIC, Resources.Resources.ORDERED04034, 10, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldReceived, FieldType.NUMERIC, Resources.Resources.RECEIVED19242, 10, 0, true),
+				new Exports.QColumn(CSGenioArelin.FldOutstand, FieldType.NUMERIC, Resources.Resources.OUTSTANDING36400, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -134,13 +183,10 @@ namespace GenioMVC.ViewModels.Produ
 
 			if (Menu == null)
 				Menu = new TablePartial<Produ_ValInputsre_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("RELIN.INSTANT", new OrderedDictionary());
-			allSortOrders["RELIN.INSTANT"].Add("RELIN.INSTANT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -152,12 +198,11 @@ namespace GenioMVC.ViewModels.Produ
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodprodu != null)
-				crs.Equal(CSGenioArelin.FldCodprodu, this.ValCodprodu);
+			if (this.ProduValCodprodu != null)
+				crs.Equal(CSGenioArelin.FldCodprodu, this.ProduValCodprodu);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -254,22 +299,21 @@ namespace GenioMVC.ViewModels.Produ
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioArelin> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "PRODU")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Produ_ValInputsre_RowViewModel>();
 
 				CriteriaSet produ___pseudinputsreConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("RELIN.INSTANT", new OrderedDictionary());
 				allSortOrders["RELIN.INSTANT"].Add("RELIN.INSTANT", "A");
-
 
 
 
@@ -301,26 +345,24 @@ namespace GenioMVC.ViewModels.Produ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("relin", "instant");
+					firstVisibleColumn ??= new FieldRef("relin", "instant");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioArelin model_limit_area = new CSGenioArelin(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PRODU___PSEUDINPUTSRE");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioArelin model_limit_area = new CSGenioArelin(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PRODU___PSEUDINPUTSRE");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -331,6 +373,8 @@ namespace GenioMVC.ViewModels.Produ
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ PRODU_PSEUDINPUTSRE]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -359,7 +403,7 @@ namespace GenioMVC.ViewModels.Produ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArelin> listing = Models.ModelBase.Where<CSGenioArelin>(m_userContext, false, produ___pseudinputsreConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODU___PSEUDINPUTSRE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArelin> listing = Models.ModelBase.Where<CSGenioArelin>(m_userContext, distinct, produ___pseudinputsreConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODU___PSEUDINPUTSRE", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -367,7 +411,6 @@ namespace GenioMVC.ViewModels.Produ
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -388,18 +431,12 @@ namespace GenioMVC.ViewModels.Produ
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -407,7 +444,7 @@ namespace GenioMVC.ViewModels.Produ
 
 		private List<Produ_ValInputsre_RowViewModel> MapProdu_ValInputsre(ListingMVC<CSGenioArelin> Qlisting)
 		{
-			var Elements = new List<Produ_ValInputsre_RowViewModel>();
+			List<Produ_ValInputsre_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -424,7 +461,6 @@ namespace GenioMVC.ViewModels.Produ
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioArelin row
 		/// to a Produ_ValInputsre_RowViewModel object.
@@ -433,7 +469,9 @@ namespace GenioMVC.ViewModels.Produ
 		private Produ_ValInputsre_RowViewModel MapProdu_ValInputsre(CSGenioArelin row)
 		{
 			var model = new Produ_ValInputsre_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -449,32 +487,9 @@ namespace GenioMVC.ViewModels.Produ
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Produ_ValInputsre_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -488,31 +503,40 @@ namespace GenioMVC.ViewModels.Produ
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioArelin> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioArelin row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Relin m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Relin m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PRODU_VALINPUTSRE]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Relin", "Relin.ValCoddilin", "Relin.ValZzstate", "Relin.ValInstant", "Recei", "Recei.ValNumber", "Entit", "Entit.ValName", "Relin.ValLinenumb", "Relin.ValOrdered", "Relin.ValReceived", "Relin.ValOutstand", "Relin.ValCodentit", "Relin.ValCodprodu", "Relin.ValCodrecei", "BtnPermission"
+			"Relin", "Relin.ValCoddilin", "Relin.ValZzstate", "Relin.ValInstant", "Recei", "Recei.ValNumber", "Entit", "Entit.ValName", "Relin.ValLinenumb", "Relin.ValOrdered", "Relin.ValReceived", "Relin.ValOutstand", "Relin.ValCodentit", "Relin.ValCodprodu", "Relin.ValCodrecei"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValInstant", CSGenioArelin.FldInstant, typeof(DateTime?)),
 			new TableSearchColumn("Recei_ValNumber", CSGenioArecei.FldNumber, typeof(decimal?)),
@@ -520,10 +544,7 @@ namespace GenioMVC.ViewModels.Produ
 			new TableSearchColumn("ValLinenumb", CSGenioArelin.FldLinenumb, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("ValOrdered", CSGenioArelin.FldOrdered, typeof(decimal?)),
 			new TableSearchColumn("ValReceived", CSGenioArelin.FldReceived, typeof(decimal?)),
-			new TableSearchColumn("ValOutstand", CSGenioArelin.FldOutstand, typeof(decimal?))
+			new TableSearchColumn("ValOutstand", CSGenioArelin.FldOutstand, typeof(decimal?)),
 		];
-
-
-
 	}
 }

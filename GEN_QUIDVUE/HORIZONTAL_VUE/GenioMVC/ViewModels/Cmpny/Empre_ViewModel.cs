@@ -196,6 +196,7 @@ namespace GenioMVC.ViewModels.Cmpny
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Cmpny m)
 		{
 			if (m == null)
@@ -224,20 +225,13 @@ namespace GenioMVC.ViewModels.Cmpny
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Cmpny m)
 		{
 			if (m == null)
@@ -431,7 +425,7 @@ namespace GenioMVC.ViewModels.Cmpny
 
 			validator.StringLength("ValDesignat", Resources.Resources.DESIGNATION35876, ValDesignat, 85);
 
-			validator.Required("ValDesignat", Resources.Resources.DESIGNATION35876, ViewModelConversion.ToString(ValDesignat), FieldType.TEXTO.Formatting);
+			validator.Required("ValDesignat", Resources.Resources.DESIGNATION35876, ViewModelConversion.ToString(ValDesignat), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValAcronym", Resources.Resources.ACRONYM00872, ValAcronym, 15);
 			validator.StringLength("ValNif", Resources.Resources.TAX_IDENTIFICATION_55044, ValNif, 15);
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
@@ -586,7 +580,7 @@ namespace GenioMVC.ViewModels.Cmpny
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -633,7 +627,7 @@ namespace GenioMVC.ViewModels.Cmpny
 				// Fill List fields
 				this.ValCodcntry = ViewModelConversion.ToString(row["cntry.codcntry"]);
 				TableCntryCountry.Value = (string)row["cntry.country"];
-				if (GlobalFunctions.emptyG(this.ValCodcntry) == 1)
+				if (GenFunctions.emptyG(this.ValCodcntry) == 1)
 				{
 					this.ValCodcntry = "";
 					TableCntryCountry.Value = "";
@@ -682,7 +676,6 @@ namespace GenioMVC.ViewModels.Cmpny
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

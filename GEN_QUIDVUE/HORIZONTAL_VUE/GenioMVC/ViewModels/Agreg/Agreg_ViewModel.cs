@@ -178,6 +178,7 @@ namespace GenioMVC.ViewModels.Agreg
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Agreg m)
 		{
 			if (m == null)
@@ -200,20 +201,13 @@ namespace GenioMVC.ViewModels.Agreg
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Agreg m)
 		{
 			if (m == null)
@@ -525,7 +519,7 @@ namespace GenioMVC.ViewModels.Agreg
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -572,7 +566,7 @@ namespace GenioMVC.ViewModels.Agreg
 				// Fill List fields
 				this.ValCodproje = ViewModelConversion.ToString(row["proje.codproje"]);
 				TableProjeProjecto.Value = (string)row["proje.projecto"];
-				if (GlobalFunctions.emptyG(this.ValCodproje) == 1)
+				if (GenFunctions.emptyG(this.ValCodproje) == 1)
 				{
 					this.ValCodproje = "";
 					TableProjeProjecto.Value = "";
@@ -715,7 +709,7 @@ namespace GenioMVC.ViewModels.Agreg
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -762,7 +756,7 @@ namespace GenioMVC.ViewModels.Agreg
 				// Fill List fields
 				this.ValCodyear = ViewModelConversion.ToString(row["year.codyear"]);
 				TableYearYear.Value = (string)row["year.year"];
-				if (GlobalFunctions.emptyG(this.ValCodyear) == 1)
+				if (GenFunctions.emptyG(this.ValCodyear) == 1)
 				{
 					this.ValCodyear = "";
 					TableYearYear.Value = "";
@@ -807,8 +801,6 @@ namespace GenioMVC.ViewModels.Agreg
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

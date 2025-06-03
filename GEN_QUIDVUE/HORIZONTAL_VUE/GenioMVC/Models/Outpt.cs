@@ -38,26 +38,27 @@ namespace GenioMVC.Models
 		/// <summary>Field : "BY OMISSION" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Outpt.ValCodwareh")]
 		public string ValCodwareh { get { return klass.ValCodwareh; } set { klass.ValCodwareh = value; } }
+
 		private Ware1 _ware1;
 		[DisplayName("Ware1")]
 		[ShouldSerialize("Ware1")]
-		public virtual Ware1 Ware1 {
-			get {
-				if (!this.isEmptyModel && (_ware1 == null || (!string.IsNullOrEmpty(ValCodwareh) && (_ware1.isEmptyModel || _ware1.klass.QPrimaryKey != ValCodwareh))))
+		public virtual Ware1 Ware1
+		{
+			get
+			{
+				if (!isEmptyModel && (_ware1 == null || (!string.IsNullOrEmpty(ValCodwareh) && (_ware1.isEmptyModel || _ware1.klass.QPrimaryKey != ValCodwareh))))
 					_ware1 = Models.Ware1.Find(ValCodwareh, m_userContext, Identifier, _fieldsToSerialize);
-				if (_ware1 == null)
-					_ware1 = new Models.Ware1(m_userContext, true, _fieldsToSerialize);
+				_ware1 ??= new Models.Ware1(m_userContext, true, _fieldsToSerialize);
 				return _ware1;
 			}
 			set { _ware1 = value; }
 		}
 
-
 		[DisplayName("No.")]
 		/// <summary>Field : "No." Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Outpt.ValDocumenr")]
 		[NumericAttribute(0)]
-		public decimal? ValDocumenr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDocumenr, 0)); } set { klass.ValDocumenr = Convert.ToDecimal(value); } }
+		public decimal? ValDocumenr { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDocumenr, 0)); } set { klass.ValDocumenr = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date")]
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>
@@ -68,8 +69,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Outpt.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Outpt(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -88,7 +89,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAoutpt csgenioa)
 		{
 			if (csgenioa == null)
@@ -99,8 +99,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "ware1":
-						if (_ware1 == null)
-							_ware1 = new Ware1(m_userContext, true, _fieldsToSerialize);
+						_ware1 ??= new Ware1(m_userContext, true, _fieldsToSerialize);
 						_ware1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

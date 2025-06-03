@@ -51,25 +51,26 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Property" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Proph.ValCodprope")]
 		public string ValCodprope { get { return klass.ValCodprope; } set { klass.ValCodprope = value; } }
+
 		private Prope _prope;
 		[DisplayName("Prope")]
 		[ShouldSerialize("Prope")]
-		public virtual Prope Prope {
-			get {
-				if (!this.isEmptyModel && (_prope == null || (!string.IsNullOrEmpty(ValCodprope) && (_prope.isEmptyModel || _prope.klass.QPrimaryKey != ValCodprope))))
+		public virtual Prope Prope
+		{
+			get
+			{
+				if (!isEmptyModel && (_prope == null || (!string.IsNullOrEmpty(ValCodprope) && (_prope.isEmptyModel || _prope.klass.QPrimaryKey != ValCodprope))))
 					_prope = Models.Prope.Find(ValCodprope, m_userContext, Identifier, _fieldsToSerialize);
-				if (_prope == null)
-					_prope = new Models.Prope(m_userContext, true, _fieldsToSerialize);
+				_prope ??= new Models.Prope(m_userContext, true, _fieldsToSerialize);
 				return _prope;
 			}
 			set { _prope = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Proph.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Proph(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -88,7 +89,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAproph csgenioa)
 		{
 			if (csgenioa == null)
@@ -99,8 +99,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "prope":
-						if (_prope == null)
-							_prope = new Prope(m_userContext, true, _fieldsToSerialize);
+						_prope ??= new Prope(m_userContext, true, _fieldsToSerialize);
 						_prope.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

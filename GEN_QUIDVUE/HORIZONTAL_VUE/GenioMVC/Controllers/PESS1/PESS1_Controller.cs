@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Pess1;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PESS1]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class Pess1Controller : ControllerBase
 	{
-		public Pess1Controller(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public Pess1Controller(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PESS1]/
 
 
@@ -373,7 +382,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER PESS1]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -386,13 +394,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Pess1 row = null;
-
-			if (row == null)
-			{
-				row = new Models.Pess1(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("pess1");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Pess1 row = new Models.Pess1(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("pess1");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -405,8 +414,7 @@ namespace GenioMVC.Controllers
 				{
 					case "PESS1___CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pess1_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pess1_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pess1___cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -414,8 +422,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESS1___STAKEDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pess1_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pess1_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pess1___stakedesignat(qs);
 							result = model.TableStakeDesignat;
@@ -485,6 +492,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Pess1" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -528,6 +538,37 @@ namespace GenioMVC.Controllers
 			}
 
 			return Json(new { Success = false, Message = "Error" });
+		}
+
+		public ActionResult GetDocumsTickets([FromBody]RequestDocumGetTicketsModel requestModel)
+		{
+			return base.GetDocumsTickets(requestModel.TableName, requestModel.FieldName, requestModel.KeyValue);
+		}
+
+		public ActionResult GetFileVersions([FromBody]RequestDocumGetModel requestModel)
+		{
+			return base.GetFileVersions(requestModel.Ticket);
+		}
+
+		public ActionResult GetFileProperties([FromBody]RequestDocumGetModel requestModel)
+		{
+			return base.GetFileProperties(requestModel.Ticket);
+		}
+
+		public ActionResult GetFile([FromBody]RequestDocumGetModel requestModel)
+		{
+			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
+		}
+
+		[DisableRequestSizeLimit]
+		public new ActionResult SetFile([FromForm] string ticket, [FromForm] VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
+		{
+			return base.SetFile(ticket, mode, version);
+		}
+
+		public ActionResult SetFilesState([FromBody]RequestDocumsChangeModel requestModel)
+		{
+			return base.SetFilesState(requestModel.Documents);
 		}
 	}
 }

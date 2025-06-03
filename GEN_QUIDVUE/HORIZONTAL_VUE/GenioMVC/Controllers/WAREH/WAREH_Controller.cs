@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Wareh;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER WAREH]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class WarehController : ControllerBase
 	{
-		public WarehController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public WarehController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION WAREH]/
 
 
@@ -42,6 +51,9 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER WAREH]/
+
+
+
 
 
 		/// <summary>
@@ -58,6 +70,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Armaz03" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -71,6 +85,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Wareh)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Armazpop" form. (++, CT, SR, CL and U1)
@@ -86,6 +102,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Authent" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -99,6 +117,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Wareh)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Btnsform" form. (++, CT, SR, CL and U1)
@@ -114,6 +134,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Extforms" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -127,6 +149,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Wareh)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Mltform" form. (++, CT, SR, CL and U1)
@@ -142,6 +166,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Tmline" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -152,6 +178,22 @@ namespace GenioMVC.Controllers
 		{
 			return GenericRecalculateFormulas(formData, "wareh",
 				(primaryKey) => Models.Wareh.Find(primaryKey, UserContext.Current, "FTMLINE"),
+				(model) => formData.MapToModel(model as Models.Wareh)
+			);
+		}
+
+
+
+		/// <summary>
+		/// Recalculate formulas of the "Ware_ws" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Ware_ws([FromBody]Ware_ws_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "wareh",
+				(primaryKey) => Models.Wareh.Find(primaryKey, UserContext.Current, "FWARE_WS"),
 				(model) => formData.MapToModel(model as Models.Wareh)
 			);
 		}

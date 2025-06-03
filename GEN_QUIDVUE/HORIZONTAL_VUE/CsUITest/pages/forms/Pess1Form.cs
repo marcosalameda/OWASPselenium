@@ -22,7 +22,7 @@ public class Pess1Form : Form
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl Pess1Name => new BaseInputControl(driver, ContainerLocator, "#PESS1___PESS1NAME____");
+	public BaseInputControl Pess1Name => new BaseInputControl(driver, ContainerLocator, "container-PESS1___PESS1NAME____", "#PESS1___PESS1NAME____");
 
 	/// <summary>
 	/// Gender
@@ -37,27 +37,27 @@ public class Pess1Form : Form
 	/// <summary>
 	/// Employee No.
 	/// </summary>
-	public BaseInputControl Pess1Idfuncio => new BaseInputControl(driver, ContainerLocator, "#PESS1___PESS1IDFUNCIO");
+	public BaseInputControl Pess1Idfuncio => new BaseInputControl(driver, ContainerLocator, "container-PESS1___PESS1IDFUNCIO", "#PESS1___PESS1IDFUNCIO");
 
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl Pess1Telephon => new BaseInputControl(driver, ContainerLocator, "#PESS1___PESS1TELEPHON");
+	public BaseInputControl Pess1Telephon => new BaseInputControl(driver, ContainerLocator, "container-PESS1___PESS1TELEPHON", "#PESS1___PESS1TELEPHON");
 
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl Pess1Email => new BaseInputControl(driver, ContainerLocator, "#PESS1___PESS1EMAIL___");
+	public BaseInputControl Pess1Email => new BaseInputControl(driver, ContainerLocator, "container-PESS1___PESS1EMAIL___", "#PESS1___PESS1EMAIL___");
 
 	/// <summary>
 	/// Email (confirm)
 	/// </summary>
-	public BaseInputControl Pess1Email2 => new BaseInputControl(driver, ContainerLocator, "#PESS1___PESS1EMAIL2__");
+	public BaseInputControl Pess1Email2 => new BaseInputControl(driver, ContainerLocator, "container-PESS1___PESS1EMAIL2__", "#PESS1___PESS1EMAIL2__");
 
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl Pess1Photogra => new BaseInputControl(driver, ContainerLocator, "#PESS1___PESS1PHOTOGRA");
+	public BaseInputControl Pess1Photogra => new BaseInputControl(driver, ContainerLocator, "container-PESS1___PESS1PHOTOGRA", "#PESS1___PESS1PHOTOGRA");
 
 	/// <summary>
 	/// Since
@@ -77,7 +77,7 @@ public class Pess1Form : Form
 	/// <summary>
 	/// Age
 	/// </summary>
-	public BaseInputControl Pess1Idade => new BaseInputControl(driver, ContainerLocator, "#PESS1___PESS1IDADE___");
+	public BaseInputControl Pess1Idade => new BaseInputControl(driver, ContainerLocator, "container-PESS1___PESS1IDADE___", "#PESS1___PESS1IDADE___");
 
 	public Pess1Form(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "PESS1", containerLocator: containerLocator) { }

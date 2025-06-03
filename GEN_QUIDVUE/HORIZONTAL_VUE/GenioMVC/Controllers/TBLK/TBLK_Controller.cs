@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Tblk;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER TBLK]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class TblkController : ControllerBase
 	{
-		public TblkController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public TblkController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION TBLK]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER TBLK]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Tblk row = null;
-
-			if (row == null)
-			{
-				row = new Models.Tblk(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("tblk");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Tblk row = new Models.Tblk(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("tblk");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "TBLK____GRPB_NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Tblk_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Tblk_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Tblk____grpb_name____(qs);
 							result = model.TableGrpbName;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "TBLK____TRSB_NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Tblk_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Tblk_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Tblk____trsb_name____(qs);
 							result = model.TableTrsbName;
@@ -153,6 +160,9 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
+
 
 
 		/// <summary>

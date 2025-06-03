@@ -21,12 +21,12 @@ public class AnexdForm : Form
 	/// <summary>
 	/// Reference
 	/// </summary>
-	public BaseInputControl AnexdReferenc => new BaseInputControl(driver, ContainerLocator, "#ANEXD___ANEXDREFERENC");
+	public BaseInputControl AnexdReferenc => new BaseInputControl(driver, ContainerLocator, "container-ANEXD___ANEXDREFERENC", "#ANEXD___ANEXDREFERENC");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl AnexdTitle => new BaseInputControl(driver, ContainerLocator, "#ANEXD___ANEXDTITLE___");
+	public BaseInputControl AnexdTitle => new BaseInputControl(driver, ContainerLocator, "container-ANEXD___ANEXDTITLE___", "#ANEXD___ANEXDTITLE___");
 
 	/// <summary>
 	/// Language
@@ -37,12 +37,12 @@ public class AnexdForm : Form
 	/// <summary>
 	/// Translated Title
 	/// </summary>
-	public BaseInputControl AnexdTittradu => new BaseInputControl(driver, ContainerLocator, "#ANEXD___ANEXDTITTRADU");
+	public BaseInputControl AnexdTittradu => new BaseInputControl(driver, ContainerLocator, "container-ANEXD___ANEXDTITTRADU", "#ANEXD___ANEXDTITTRADU");
 
 	/// <summary>
 	/// Document
 	/// </summary>
-	public DocumentControl AnexdDocument => new DocumentControl(driver, ContainerLocator, "container-ANEXD___ANEXDDOCUMENT");
+	public DocumentControl AnexdDocument => new DocumentControl(driver, ContainerLocator, "ANEXD___ANEXDDOCUMENT");
 
 	public AnexdForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ANEXD", containerLocator: containerLocator) { }

@@ -1,19 +1,18 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 using CSGenio.business;
-using CSGenio.persistence;
 using CSGenio.framework;
+using CSGenio.persistence;
 using GenioMVC.Helpers;
 using GenioMVC.Models;
 using GenioMVC.Models.Navigation;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Sale;
 using Quidgest.Persistence.GenericQuery;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-
 
 namespace GenioMVC.Controllers
 {
@@ -28,6 +27,7 @@ namespace GenioMVC.Controllers
 			}
 
 			Models.WizardStep nextStep = new Models.WizardStep();
+			string errorStepMessage = "";
 
 			switch (currentStep)
 			{
@@ -35,27 +35,35 @@ namespace GenioMVC.Controllers
 					nextStep = new Models.WizardStep("VENDAW01", "FASES", 1);
 					break;
 				case "wizard-step-FASES-1":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					nextStep = new Models.WizardStep("VENDAW02", "FASES", 2);
 					break;
 				case "wizard-step-FASES-2":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					nextStep = new Models.WizardStep("VENDAW03", "FASES", 3);
 					break;
 				case "wizard-step-FASES-3":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					nextStep = new Models.WizardStep("VENDAW04", "FASES", 4);
 					break;
 				case "wizard-step-FASES-4":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					nextStep = new Models.WizardStep("VENDAW05", "FASES", 5);
 					break;
 				case "wizard-step-FASES-5":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					nextStep = new Models.WizardStep("VENDAW06", "FASES", 6);
 					break;
 				case "wizard-step-FASES-6":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					nextStep = new Models.WizardStep("VENDAW07", "FASES", 7);
 					break;
 				case "wizard-step-FASES-7":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					nextStep = new Models.WizardStep("VENDAW08", "FASES", 8);
 					break;
 				case "wizard-step-FASES-8":
+					errorStepMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					CSGenio.framework.Log.Error("Wizard FASES - Forward action is disabled for step 'wizard-step-FASES-8'.");
 					// Throw exception as the last step doesn't have a forward action.
 					throw new Exception(Resources.Resources.PEDIMOS_DESCULPA__OC63848);

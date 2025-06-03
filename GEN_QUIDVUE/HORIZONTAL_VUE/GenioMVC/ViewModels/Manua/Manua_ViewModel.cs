@@ -183,6 +183,7 @@ namespace GenioMVC.ViewModels.Manua
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Manua m)
 		{
 			if (m == null)
@@ -207,20 +208,13 @@ namespace GenioMVC.ViewModels.Manua
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Manua m)
 		{
 			if (m == null)
@@ -546,7 +540,7 @@ namespace GenioMVC.ViewModels.Manua
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -593,7 +587,7 @@ namespace GenioMVC.ViewModels.Manua
 				// Fill List fields
 				this.ValCodkinde = ViewModelConversion.ToString(row["kinde.codkinde"]);
 				TableKindeDesignat.Value = (string)row["kinde.designat"];
-				if (GlobalFunctions.emptyG(this.ValCodkinde) == 1)
+				if (GenFunctions.emptyG(this.ValCodkinde) == 1)
 				{
 					this.ValCodkinde = "";
 					TableKindeDesignat.Value = "";
@@ -637,8 +631,6 @@ namespace GenioMVC.ViewModels.Manua
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

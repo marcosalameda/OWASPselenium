@@ -201,6 +201,7 @@ namespace GenioMVC.ViewModels.Asspa
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Asspa m)
 		{
 			if (m == null)
@@ -228,20 +229,13 @@ namespace GenioMVC.ViewModels.Asspa
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Asspa m)
 		{
 			if (m == null)
@@ -430,7 +424,7 @@ namespace GenioMVC.ViewModels.Asspa
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 
-			validator.Required("ValDatatype", Resources.Resources.DATA_TYPE47159, ViewModelConversion.ToString(ValDatatype), FieldType.ARRAY_COD_TEXTO.Formatting);
+			validator.Required("ValDatatype", Resources.Resources.DATA_TYPE47159, ViewModelConversion.ToString(ValDatatype), FieldType.ARRAY_TEXT.GetFormatting());
 			validator.StringLength("ValText", Resources.Resources.TEXT04938, ValText, 50);
 			validator.StringLength("ValToshow", Resources.Resources.TO_SHOW13268, ValToshow, 50);
 
@@ -583,7 +577,7 @@ namespace GenioMVC.ViewModels.Asspa
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -630,7 +624,7 @@ namespace GenioMVC.ViewModels.Asspa
 				// Fill List fields
 				this.ValCodasset = ViewModelConversion.ToString(row["asset.codasset"]);
 				TableAssetName.Value = (string)row["asset.name"];
-				if (GlobalFunctions.emptyG(this.ValCodasset) == 1)
+				if (GenFunctions.emptyG(this.ValCodasset) == 1)
 				{
 					this.ValCodasset = "";
 					TableAssetName.Value = "";
@@ -773,7 +767,7 @@ namespace GenioMVC.ViewModels.Asspa
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -820,7 +814,7 @@ namespace GenioMVC.ViewModels.Asspa
 				// Fill List fields
 				this.ValCodparam = ViewModelConversion.ToString(row["param.codparam"]);
 				TableParamParamete.Value = (string)row["param.parameter"];
-				if (GlobalFunctions.emptyG(this.ValCodparam) == 1)
+				if (GenFunctions.emptyG(this.ValCodparam) == 1)
 				{
 					this.ValCodparam = "";
 					TableParamParamete.Value = "";
@@ -870,8 +864,6 @@ namespace GenioMVC.ViewModels.Asspa
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAprmfrm(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -36,7 +35,7 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 			
 			/*Information das areas*/
-			info.TableName = "GQTprmfrm";
+			info.TableName = "gqtprmfrm";
 			info.ShadowTabName = "";
 			info.PrimaryKeyName = "codprmfrm";
             info.HumanKeyName = "codprmfrm";
@@ -55,19 +54,18 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field("codprmfrm", FieldType.CHAVE_PRIMARIA_GUID));
-			info.KeyType = CodeType.GUID_KEY;
-			info.RegisterFieldDB(new Field("autoriza", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("comprova", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("mensag1", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("mensag2", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("mensag3", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("mensag4", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("prazodia", FieldType.NUMERO));
-			info.RegisterFieldDB(new Field("prazohor", FieldType.NUMERO));
-			info.RegisterFieldDB(new Field("prfvalid", FieldType.TEXTO));
-			info.RegisterFieldDB(new Field("secompro", FieldType.LOGICO));
-			info.RegisterFieldDB(new Field("sevalida", FieldType.LOGICO));
+			info.RegisterFieldDB(new Field(info.Alias, "codprmfrm", FieldType.KEY_GUID));
+			info.RegisterFieldDB(new Field(info.Alias, "autoriza", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "comprova", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "mensag1", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "mensag2", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "mensag3", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "mensag4", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "prazodia", FieldType.NUMERIC));
+			info.RegisterFieldDB(new Field(info.Alias, "prazohor", FieldType.NUMERIC));
+			info.RegisterFieldDB(new Field(info.Alias, "prfvalid", FieldType.TEXT));
+			info.RegisterFieldDB(new Field(info.Alias, "secompro", FieldType.LOGIC));
+			info.RegisterFieldDB(new Field(info.Alias, "sevalida", FieldType.LOGIC));
 
 			// Relações Filhas
 			//------------------------------

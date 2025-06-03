@@ -15,17 +15,17 @@ public class GencoForm : Form
 	/// <summary>
 	/// Genre
 	/// </summary>
-	public BaseInputControl GenreGender => new BaseInputControl(driver, ContainerLocator, "#GENCO___GENREGENDER__");
+	public BaseInputControl GenreGender => new BaseInputControl(driver, ContainerLocator, "container-GENCO___GENREGENDER__", "#GENCO___GENREGENDER__");
 
 	/// <summary>
 	/// Background Color
 	/// </summary>
-	public BaseInputControl GenreBackcolo => new BaseInputControl(driver, ContainerLocator, "#GENCO___GENREBACKCOLO");
+	public BaseInputControl GenreBackcolo => new BaseInputControl(driver, ContainerLocator, "container-GENCO___GENREBACKCOLO", "#GENCO___GENREBACKCOLO");
 
 	/// <summary>
 	/// Text Color
 	/// </summary>
-	public BaseInputControl GenreTextcolo => new BaseInputControl(driver, ContainerLocator, "#GENCO___GENRETEXTCOLO");
+	public BaseInputControl GenreTextcolo => new BaseInputControl(driver, ContainerLocator, "container-GENCO___GENRETEXTCOLO", "#GENCO___GENRETEXTCOLO");
 
 	public GencoForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "GENCO", containerLocator: containerLocator) { }

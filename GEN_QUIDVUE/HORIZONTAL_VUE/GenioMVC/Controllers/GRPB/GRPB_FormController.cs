@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Grpb_ValTblbModel : RequestLookupModel
+		{
+			public Grpb_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Grpb/Grpb_ValTblb
 		// POST: /Grpb/Grpb_ValTblb
 		[ActionName("Grpb_ValTblb")]
-		public ActionResult Grpb_ValTblb([FromBody]RequestLookupModel requestModel)
+		public ActionResult Grpb_ValTblb([FromBody] Grpb_ValTblbModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +424,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Grpb_ValTblb_ViewModel model = new Grpb_ValTblb_ViewModel(UserContext.Current);
-			
+			Models.Grpb parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Grpb_ValTblb_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Produ;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PRODU]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ProduController : ControllerBase
 	{
-		public ProduController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ProduController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PRODU]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER PRODU]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Produ row = null;
-
-			if (row == null)
-			{
-				row = new Models.Produ(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("produ");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Produ row = new Models.Produ(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("produ");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "PRODU___LOCATGLN_____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Produ_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Produ_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Produ___locatgln_____(qs);
 							result = model.TableLocatGln;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PRODU___LCEXTGLNEXT__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Produ_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Produ_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Produ___lcextglnext__(qs);
 							result = model.TableLcextGlnext;
@@ -93,8 +100,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PRODUSIMLOCATGLN_____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Produsim_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Produsim_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Produsimlocatgln_____(qs);
 							result = model.TableLocatGln;
@@ -102,8 +108,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PRODUSIMLCEXTGLNEXT__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Produsim_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Produsim_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Produsimlcextglnext__(qs);
 							result = model.TableLcextGlnext;
@@ -179,6 +184,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Produ" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -192,6 +200,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Produ)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Produsim" form. (++, CT, SR, CL and U1)

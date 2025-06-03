@@ -2,7 +2,7 @@ using System.Globalization;
 
 namespace quidgest.uitests.controls;
 
-public class DateInputControl : ControlObject
+public class DateInputControl : InputControl
 {
     private IWebElement input => m_control.FindElement(By.CssSelector("input.dp__input"));
 
@@ -22,14 +22,21 @@ public class DateInputControl : ControlObject
         return DateTime.ParseExact(v, format, CultureInfo.InvariantCulture);
     }
 
-    public void SetValue(DateTime? val)
+    public override void SetValue(string val)
     {
         input.Clear();
+        input.SendKeys(val);
+        input.SendKeys(Keys.Return);
+    }
+
+    public void SetValue(DateTime? val)
+    {
         if (val.HasValue)
         {
             var v = val.Value.ToString(format, CultureInfo.InvariantCulture);
-            input.SendKeys(v);
-            input.SendKeys(Keys.Return);
+            SetValue(v);
         }
+        else
+            input.Clear();
     }
 }

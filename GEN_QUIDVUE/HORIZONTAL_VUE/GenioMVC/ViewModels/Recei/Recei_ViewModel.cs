@@ -192,6 +192,7 @@ namespace GenioMVC.ViewModels.Recei
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Recei m)
 		{
 			if (m == null)
@@ -219,20 +220,13 @@ namespace GenioMVC.ViewModels.Recei
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Recei m)
 		{
 			if (m == null)
@@ -566,7 +560,7 @@ namespace GenioMVC.ViewModels.Recei
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -613,7 +607,7 @@ namespace GenioMVC.ViewModels.Recei
 				// Fill List fields
 				this.ValCodentit = ViewModelConversion.ToString(row["entit.codentit"]);
 				TableEntitName.Value = (string)row["entit.name"];
-				if (GlobalFunctions.emptyG(this.ValCodentit) == 1)
+				if (GenFunctions.emptyG(this.ValCodentit) == 1)
 				{
 					this.ValCodentit = "";
 					TableEntitName.Value = "";
@@ -661,8 +655,6 @@ namespace GenioMVC.ViewModels.Recei
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

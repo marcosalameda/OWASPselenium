@@ -1,11 +1,10 @@
-﻿using CSGenio.business;
+using CSGenio;
+using CSGenio.business;
 using CSGenio.core.messaging;
 using CSGenio.messaging;
 using CSGenio.persistence;
 using CSGenio.framework;
 using NUnit.Framework;
-using WebTest.Messaging;
-using CSGenio;
 
 namespace WebTest;
 
@@ -48,6 +47,9 @@ public class TestMessaging
         m_user = new User("test", "", "");
         m_user.AddModuleRole("GQT", Role.ADMINISTRATION);
         m_user.CurrentModule = "GQT";
+        
+        CSGenio.core.di.GenioDI.Messaging = m_messaging;
+        GenioDIDefault.UseDatabase();
     }
 
     [TearDown]

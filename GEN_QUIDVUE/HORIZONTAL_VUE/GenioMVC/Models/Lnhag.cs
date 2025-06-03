@@ -38,50 +38,52 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula: ST "[LNHDE->CODPEDID]"</summary>
 		[ShouldSerialize("Lnhag.ValCodpedid")]
 		public string ValCodpedid { get { return klass.ValCodpedid; } set { klass.ValCodpedid = value; } }
+
 		private Pedid _pedid;
 		[DisplayName("Pedid")]
 		[ShouldSerialize("Pedid")]
-		public virtual Pedid Pedid {
-			get {
-				if (!this.isEmptyModel && (_pedid == null || (!string.IsNullOrEmpty(ValCodpedid) && (_pedid.isEmptyModel || _pedid.klass.QPrimaryKey != ValCodpedid))))
+		public virtual Pedid Pedid
+		{
+			get
+			{
+				if (!isEmptyModel && (_pedid == null || (!string.IsNullOrEmpty(ValCodpedid) && (_pedid.isEmptyModel || _pedid.klass.QPrimaryKey != ValCodpedid))))
 					_pedid = Models.Pedid.Find(ValCodpedid, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pedid == null)
-					_pedid = new Models.Pedid(m_userContext, true, _fieldsToSerialize);
+				_pedid ??= new Models.Pedid(m_userContext, true, _fieldsToSerialize);
 				return _pedid;
 			}
 			set { _pedid = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula: ST "[LNHDE->CODTPEQU]"</summary>
 		[ShouldSerialize("Lnhag.ValCodtpequ")]
 		public string ValCodtpequ { get { return klass.ValCodtpequ; } set { klass.ValCodtpequ = value; } }
+
 		private Tpeq1 _tpeq1;
 		[DisplayName("Tpeq1")]
 		[ShouldSerialize("Tpeq1")]
-		public virtual Tpeq1 Tpeq1 {
-			get {
-				if (!this.isEmptyModel && (_tpeq1 == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpeq1.isEmptyModel || _tpeq1.klass.QPrimaryKey != ValCodtpequ))))
+		public virtual Tpeq1 Tpeq1
+		{
+			get
+			{
+				if (!isEmptyModel && (_tpeq1 == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpeq1.isEmptyModel || _tpeq1.klass.QPrimaryKey != ValCodtpequ))))
 					_tpeq1 = Models.Tpeq1.Find(ValCodtpequ, m_userContext, Identifier, _fieldsToSerialize);
-				if (_tpeq1 == null)
-					_tpeq1 = new Models.Tpeq1(m_userContext, true, _fieldsToSerialize);
+				_tpeq1 ??= new Models.Tpeq1(m_userContext, true, _fieldsToSerialize);
 				return _tpeq1;
 			}
 			set { _tpeq1 = value; }
 		}
 
-
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula: SR "[LNHDE->QUANTIDA]"</summary>
 		[ShouldSerialize("Lnhag.ValQtdtpequ")]
 		[NumericAttribute(0)]
-		public decimal? ValQtdtpequ { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQtdtpequ, 0)); } set { klass.ValQtdtpequ = Convert.ToDecimal(value); } }
+		public decimal? ValQtdtpequ { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQtdtpequ, 0)); } set { klass.ValQtdtpequ = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Lnhag.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Lnhag(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -100,7 +102,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAlnhag csgenioa)
 		{
 			if (csgenioa == null)
@@ -111,13 +112,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "pedid":
-						if (_pedid == null)
-							_pedid = new Pedid(m_userContext, true, _fieldsToSerialize);
+						_pedid ??= new Pedid(m_userContext, true, _fieldsToSerialize);
 						_pedid.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "tpeq1":
-						if (_tpeq1 == null)
-							_tpeq1 = new Tpeq1(m_userContext, true, _fieldsToSerialize);
+						_tpeq1 ??= new Tpeq1(m_userContext, true, _fieldsToSerialize);
 						_tpeq1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

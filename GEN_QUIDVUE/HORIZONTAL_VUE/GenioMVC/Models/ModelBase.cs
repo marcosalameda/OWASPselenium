@@ -76,7 +76,8 @@ namespace GenioMVC.Models
 		virtual public void New(string identifier = null, PersistentSupport persistentSupport = null)
 		{
 			var u = m_userContext.User;
-			var sp = (persistentSupport == null? m_userContext.PersistentSupport: persistentSupport);
+			var sp = persistentSupport ?? m_userContext.PersistentSupport;
+
 			try
 			{
 				this.baseklass.fillEPH(u, sp, identifier);
@@ -280,7 +281,7 @@ namespace GenioMVC.Models
 			PersistentSupport sp = m_userContext.PersistentSupport;
 			field = field[..3].ToLower() == "val" ? field[3..].ToLower() : field.ToLower();
 
-			List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(baseklass.Alias).DBFields.Where(x => x.Value.FieldType.Equals(FieldType.FICHEIRO_BD)).ToList();
+			List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(baseklass.Alias).DBFields.Where(x => x.Value.FieldType.Equals(FieldType.DOCUMENT)).ToList();
 
 			if (fields.Exists(x => x.Key.ToLower() == field) && file != null)
 			{
@@ -442,7 +443,7 @@ namespace GenioMVC.Models
 				object fieldValue = baseklass.returnValueField(Qfield);
 				string strFieldValue = Conversion.internal2String(srcDbFld.GetValorEmpty(), srcDbFld.FieldType);
 
-				bool isEmptyVal = GlobalFunctions.emptyG(fieldValue) == 1;
+				bool isEmptyVal = GenFunctions.emptyG(fieldValue) == 1;
 
 				var isComputedField = false;
 				if (!allowOverrideComputed)
@@ -465,7 +466,7 @@ namespace GenioMVC.Models
 
 				//Value do Hist
 				bool hasKey = navigation.CheckKey(areaToLoad, out object hValue, level);
-				bool isEmptyHistVal = GlobalFunctions.emptyG(hValue) == 1;
+				bool isEmptyHistVal = GenFunctions.emptyG(hValue) == 1;
 
 				// skip if unable to find a single value for this key
 				if (hValue is Array)
@@ -674,9 +675,10 @@ namespace GenioMVC.Models
 			{
 				// Condition for field type added because sorting by an image field causes an error
 				if (firstVisibleColumn != null
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGEM_JPEG
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEO_SHAPE)
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGE
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_POINT
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOMETRY_SHAPE
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_SHAPE)
 				{
 					ColumnSort sortFirstVisibleColumn = new(new ColumnReference(firstVisibleColumn), SortOrder.Ascending);
 					sorts.Add(sortFirstVisibleColumn);
@@ -685,7 +687,7 @@ namespace GenioMVC.Models
 
 			if (!distinct)
 			{
-				//< Make sure at least one of the fields or combination of fields is unique
+				// Make sure at least one of the fields or combination of fields is unique
 				bool hasUniqueField = false;
 				AreaInfo areaInfo = CSGenio.business.Area.GetInfoArea<A>();
 
@@ -733,7 +735,6 @@ namespace GenioMVC.Models
 					ColumnSort pkColumnSort = new(new ColumnReference(areaInfo.Alias, areaInfo.PrimaryKeyName), SortOrder.Ascending);
 					sorts.Add(pkColumnSort);
 				}
-				//> Make sure at least one of the fields or combination of fields is unique
 			}
 
 			ListingMVC<A> listing = new(fields, sorts, offset, numRegs, distinct, u, noLock, identifier, getTotal, selectrow, pagingPosEPHs, fieldsWithTotalizer, selectedRecords);

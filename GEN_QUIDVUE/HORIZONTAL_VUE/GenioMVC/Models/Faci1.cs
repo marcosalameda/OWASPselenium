@@ -90,13 +90,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Latitude" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Faci1.ValLatitude")]
 		[NumericAttribute(6)]
-		public decimal? ValLatitude { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDecimal(value); } }
+		public decimal? ValLatitude { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDecimal(value); } }
 
 		[DisplayName("Longitude")]
 		/// <summary>Field : "Longitude" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Faci1.ValLongitud")]
 		[NumericAttribute(6)]
-		public decimal? ValLongitud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDecimal(value); } }
+		public decimal? ValLongitud { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDecimal(value); } }
 
 		[DisplayName("Geographical coordinate")]
 		/// <summary>Field : "Geographical coordinate" Tipo: "GG" Formula:  ""</summary>
@@ -117,8 +117,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Faci1.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Faci1(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -136,7 +136,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioAfaci1 csgenioa)
 		{

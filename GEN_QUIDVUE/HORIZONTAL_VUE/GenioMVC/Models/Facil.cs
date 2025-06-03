@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Facil.ValCodentit")]
 		public string ValCodentit { get { return klass.ValCodentit; } set { klass.ValCodentit = value; } }
+
 		private Entit _entit;
 		[DisplayName("Entit")]
 		[ShouldSerialize("Entit")]
-		public virtual Entit Entit {
-			get {
-				if (!this.isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
+		public virtual Entit Entit
+		{
+			get
+			{
+				if (!isEmptyModel && (_entit == null || (!string.IsNullOrEmpty(ValCodentit) && (_entit.isEmptyModel || _entit.klass.QPrimaryKey != ValCodentit))))
 					_entit = Models.Entit.Find(ValCodentit, m_userContext, Identifier, _fieldsToSerialize);
-				if (_entit == null)
-					_entit = new Models.Entit(m_userContext, true, _fieldsToSerialize);
+				_entit ??= new Models.Entit(m_userContext, true, _fieldsToSerialize);
 				return _entit;
 			}
 			set { _entit = value; }
 		}
-
 
 		[DisplayName("Incorporation")]
 		/// <summary>Field : "Incorporation" Tipo: "D" Formula:  ""</summary>
@@ -83,20 +84,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">>Facility type" Tipo: "CE" Formula: DG "[GLOB->CODFACTY]"</summary>
 		[ShouldSerialize("Facil.ValCodfacty")]
 		public string ValCodfacty { get { return klass.ValCodfacty; } set { klass.ValCodfacty = value; } }
+
 		private Facty _facty;
 		[DisplayName("Facty")]
 		[ShouldSerialize("Facty")]
-		public virtual Facty Facty {
-			get {
-				if (!this.isEmptyModel && (_facty == null || (!string.IsNullOrEmpty(ValCodfacty) && (_facty.isEmptyModel || _facty.klass.QPrimaryKey != ValCodfacty))))
+		public virtual Facty Facty
+		{
+			get
+			{
+				if (!isEmptyModel && (_facty == null || (!string.IsNullOrEmpty(ValCodfacty) && (_facty.isEmptyModel || _facty.klass.QPrimaryKey != ValCodfacty))))
 					_facty = Models.Facty.Find(ValCodfacty, m_userContext, Identifier, _fieldsToSerialize);
-				if (_facty == null)
-					_facty = new Models.Facty(m_userContext, true, _fieldsToSerialize);
+				_facty ??= new Models.Facty(m_userContext, true, _fieldsToSerialize);
 				return _facty;
 			}
 			set { _facty = value; }
 		}
-
 
 		[DisplayName("Image")]
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
@@ -118,13 +120,13 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Latitude" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Facil.ValLatitude")]
 		[NumericAttribute(6)]
-		public decimal? ValLatitude { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDecimal(value); } }
+		public decimal? ValLatitude { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLatitude, 6)); } set { klass.ValLatitude = Convert.ToDecimal(value); } }
 
 		[DisplayName("Longitude")]
 		/// <summary>Field : "Longitude" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Facil.ValLongitud")]
 		[NumericAttribute(6)]
-		public decimal? ValLongitud { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDecimal(value); } }
+		public decimal? ValLongitud { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLongitud, 6)); } set { klass.ValLongitud = Convert.ToDecimal(value); } }
 
 		[DisplayName("Geographical coordinate")]
 		/// <summary>Field : "Geographical coordinate" Tipo: "GG" Formula:  ""</summary>
@@ -142,25 +144,26 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">> Country" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Facil.ValCodcntry")]
 		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
+
 		private Cntry _cntry;
 		[DisplayName("Cntry")]
 		[ShouldSerialize("Cntry")]
-		public virtual Cntry Cntry {
-			get {
-				if (!this.isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
+		public virtual Cntry Cntry
+		{
+			get
+			{
+				if (!isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
 					_cntry = Models.Cntry.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cntry == null)
-					_cntry = new Models.Cntry(m_userContext, true, _fieldsToSerialize);
+				_cntry ??= new Models.Cntry(m_userContext, true, _fieldsToSerialize);
 				return _cntry;
 			}
 			set { _cntry = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Facil.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Facil(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -179,7 +182,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAfacil csgenioa)
 		{
 			if (csgenioa == null)
@@ -190,18 +192,15 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "entit":
-						if (_entit == null)
-							_entit = new Entit(m_userContext, true, _fieldsToSerialize);
+						_entit ??= new Entit(m_userContext, true, _fieldsToSerialize);
 						_entit.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "facty":
-						if (_facty == null)
-							_facty = new Facty(m_userContext, true, _fieldsToSerialize);
+						_facty ??= new Facty(m_userContext, true, _fieldsToSerialize);
 						_facty.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "cntry":
-						if (_cntry == null)
-							_cntry = new Cntry(m_userContext, true, _fieldsToSerialize);
+						_cntry ??= new Cntry(m_userContext, true, _fieldsToSerialize);
 						_cntry.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

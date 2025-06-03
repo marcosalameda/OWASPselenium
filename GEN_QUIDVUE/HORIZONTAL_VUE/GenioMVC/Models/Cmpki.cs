@@ -38,51 +38,53 @@ namespace GenioMVC.Models
 		/// <summary>Field : "TYPE OF EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Cmpki.ValCodtpequ")]
 		public string ValCodtpequ { get { return klass.ValCodtpequ; } set { klass.ValCodtpequ = value; } }
+
 		private Tpequ _tpequ;
 		[DisplayName("Tpequ")]
 		[ShouldSerialize("Tpequ")]
-		public virtual Tpequ Tpequ {
-			get {
-				if (!this.isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpequ))))
+		public virtual Tpequ Tpequ
+		{
+			get
+			{
+				if (!isEmptyModel && (_tpequ == null || (!string.IsNullOrEmpty(ValCodtpequ) && (_tpequ.isEmptyModel || _tpequ.klass.QPrimaryKey != ValCodtpequ))))
 					_tpequ = Models.Tpequ.Find(ValCodtpequ, m_userContext, Identifier, _fieldsToSerialize);
-				if (_tpequ == null)
-					_tpequ = new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
+				_tpequ ??= new Models.Tpequ(m_userContext, true, _fieldsToSerialize);
 				return _tpequ;
 			}
 			set { _tpequ = value; }
 		}
 
-
 		[DisplayName("Order")]
 		/// <summary>Field : "Order" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Cmpki.ValOrder")]
 		[NumericAttribute(1)]
-		public decimal? ValOrder { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrder, 1)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
+		public decimal? ValOrder { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOrder, 1)); } set { klass.ValOrder = Convert.ToDecimal(value); } }
 
 		[DisplayName("TYPE OF COMPONENT EQUIPMENT")]
 		/// <summary>Field : "TYPE OF COMPONENT EQUIPMENT" Tipo: "CE" Formula: DF "[CMPKI->CODTPEQU]"</summary>
 		[ShouldSerialize("Cmpki.ValCodtpeq1")]
 		public string ValCodtpeq1 { get { return klass.ValCodtpeq1; } set { klass.ValCodtpeq1 = value; } }
+
 		private Tpeq1 _tpeq1;
 		[DisplayName("Tpeq1")]
 		[ShouldSerialize("Tpeq1")]
-		public virtual Tpeq1 Tpeq1 {
-			get {
-				if (!this.isEmptyModel && (_tpeq1 == null || (!string.IsNullOrEmpty(ValCodtpeq1) && (_tpeq1.isEmptyModel || _tpeq1.klass.QPrimaryKey != ValCodtpeq1))))
+		public virtual Tpeq1 Tpeq1
+		{
+			get
+			{
+				if (!isEmptyModel && (_tpeq1 == null || (!string.IsNullOrEmpty(ValCodtpeq1) && (_tpeq1.isEmptyModel || _tpeq1.klass.QPrimaryKey != ValCodtpeq1))))
 					_tpeq1 = Models.Tpeq1.Find(ValCodtpeq1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_tpeq1 == null)
-					_tpeq1 = new Models.Tpeq1(m_userContext, true, _fieldsToSerialize);
+				_tpeq1 ??= new Models.Tpeq1(m_userContext, true, _fieldsToSerialize);
 				return _tpeq1;
 			}
 			set { _tpeq1 = value; }
 		}
 
-
 		[DisplayName("Amount")]
 		/// <summary>Field : "Amount" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Cmpki.ValQuantida")]
 		[NumericAttribute(0)]
-		public decimal? ValQuantida { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
+		public decimal? ValQuantida { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantida, 0)); } set { klass.ValQuantida = Convert.ToDecimal(value); } }
 
 		[DisplayName("Description")]
 		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
@@ -103,8 +105,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Cmpki.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Cmpki(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -123,7 +125,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAcmpki csgenioa)
 		{
 			if (csgenioa == null)
@@ -134,13 +135,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "tpequ":
-						if (_tpequ == null)
-							_tpequ = new Tpequ(m_userContext, true, _fieldsToSerialize);
+						_tpequ ??= new Tpequ(m_userContext, true, _fieldsToSerialize);
 						_tpequ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "tpeq1":
-						if (_tpeq1 == null)
-							_tpeq1 = new Tpeq1(m_userContext, true, _fieldsToSerialize);
+						_tpeq1 ??= new Tpeq1(m_userContext, true, _fieldsToSerialize);
 						_tpeq1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

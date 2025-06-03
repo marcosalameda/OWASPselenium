@@ -15,7 +15,7 @@ public class ProprallForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl ProprPhotogra => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRPHOTOGRA");
+	public BaseInputControl ProprPhotogra => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRPHOTOGRA", "#PROPRALLPROPRPHOTOGRA");
 
 	/// <summary>
 	/// Identification
@@ -25,12 +25,12 @@ public class ProprallForm : Form
 	/// <summary>
 	/// real estate
 	/// </summary>
-	public BaseInputControl ProprName => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRNAME____");
+	public BaseInputControl ProprName => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRNAME____", "#PROPRALLPROPRNAME____");
 
 	/// <summary>
 	/// Estimated price
 	/// </summary>
-	public BaseInputControl ProprPrecoest => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRPRECOEST");
+	public BaseInputControl ProprPrecoest => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRPRECOEST", "#PROPRALLPROPRPRECOEST");
 
 	/// <summary>
 	/// Property Type
@@ -63,37 +63,37 @@ public class ProprallForm : Form
 	/// <summary>
 	/// Address
 	/// </summary>
-	public BaseInputControl ProprEndereco => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRENDERECO");
+	public BaseInputControl ProprEndereco => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRENDERECO", "#PROPRALLPROPRENDERECO");
 
 	/// <summary>
 	/// Localization
 	/// </summary>
-	public BaseInputControl ProprLocalida => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRLOCALIDA");
+	public BaseInputControl ProprLocalida => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRLOCALIDA", "#PROPRALLPROPRLOCALIDA");
 
 	/// <summary>
 	/// Zipcode
 	/// </summary>
-	public BaseInputControl ProprPostalco => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRPOSTALCO");
+	public BaseInputControl ProprPostalco => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRPOSTALCO", "#PROPRALLPROPRPOSTALCO");
 
 	/// <summary>
 	/// Zipcode
 	/// </summary>
-	public BaseInputControl ProprPostallo => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRPOSTALLO");
+	public BaseInputControl ProprPostallo => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRPOSTALLO", "#PROPRALLPROPRPOSTALLO");
 
 	/// <summary>
 	/// Bathroom
 	/// </summary>
-	public BaseInputControl ProprQtd_wc => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRQTD_WC__");
+	public BaseInputControl ProprQtd_wc => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRQTD_WC__", "#PROPRALLPROPRQTD_WC__");
 
 	/// <summary>
 	/// Rooms
 	/// </summary>
-	public BaseInputControl ProprQtdquart => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRQTDQUART");
+	public BaseInputControl ProprQtdquart => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRQTDQUART", "#PROPRALLPROPRQTDQUART");
 
 	/// <summary>
 	/// Square meters
 	/// </summary>
-	public BaseInputControl ProprM2 => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRM2______");
+	public BaseInputControl ProprM2 => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRM2______", "#PROPRALLPROPRM2______");
 
 	/// <summary>
 	/// Available from
@@ -108,7 +108,7 @@ public class ProprallForm : Form
 	/// <summary>
 	/// Geographic Coordinates
 	/// </summary>
-	public BaseInputControl ProprCoordgeo => new BaseInputControl(driver, ContainerLocator, "#PROPRALLPROPRCOORDGEO");
+	public BaseInputControl ProprCoordgeo => new BaseInputControl(driver, ContainerLocator, "container-PROPRALLPROPRCOORDGEO", "#PROPRALLPROPRCOORDGEO");
 
 	/// <summary>
 	/// Seller

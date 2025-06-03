@@ -16,7 +16,7 @@ public class RegiaproForm : Form
 	/// <summary>
 	/// Region
 	/// </summary>
-	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "#REGIAPROREGIOREGIAO__");
+	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "container-REGIAPROREGIOREGIAO__", "#REGIAPROREGIOREGIAO__");
 
 	/// <summary>
 	/// Country

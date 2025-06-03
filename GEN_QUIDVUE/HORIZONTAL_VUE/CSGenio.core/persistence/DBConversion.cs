@@ -176,6 +176,8 @@ namespace CSGenio.persistence
                 return (byte)Qvalue;
             else if (Qvalue is int)
                 return (int)Qvalue;
+            else if (Qvalue is short)
+                return (short)Qvalue;
             else if (Qvalue is decimal)
                 return decimal.ToInt32((decimal)Qvalue);
             else if (Qvalue is double)
@@ -319,6 +321,10 @@ namespace CSGenio.persistence
         /// <returns>A objecto convertido to o tipo interno</returns>
         public static string ToGeography(object fieldValue)
         {
+            //this is specific to Postgres, so it should belong to the PersistentSupport class
+            //however, in that logic, this whole class should be specific of database vendor
+            if (fieldValue is NpgsqlTypes.NpgsqlPoint np)
+                return $"POINT({np.X} {np.Y})";
             return ValidateGeography(fieldValue);
         }
 

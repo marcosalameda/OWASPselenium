@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Cntry;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER CNTRY]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class CntryController : ControllerBase
 	{
-		public CntryController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public CntryController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION CNTRY]/
 
 
@@ -42,6 +51,9 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER CNTRY]/
+
+
+
 
 
 		/// <summary>
@@ -57,6 +69,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Cntry)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Proppais" form. (++, CT, SR, CL and U1)

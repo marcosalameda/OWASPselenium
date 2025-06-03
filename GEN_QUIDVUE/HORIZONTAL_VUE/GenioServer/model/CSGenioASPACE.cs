@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAspace(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR SPACE]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codespac", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codespac", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("code", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "code", FieldType.TEXT);
 			Qfield.FieldDescription = "Code";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CODE49225";
 
 			Qfield.Dupmsg = "";
@@ -67,30 +63,27 @@ namespace CSGenio.business
 			info.TreeTable.DesignationField = "space.code";
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("designat", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "designat", FieldType.TEXT);
 			Qfield.FieldDescription = "Designation";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "DESIGNATION35876";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("sigla", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "sigla", FieldType.TEXT);
 			Qfield.FieldDescription = "Acronym";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ACRONYM00872";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("nivel", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "nivel", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Level";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LEVEL06184";
 
 			Qfield.Dupmsg = "";
@@ -98,10 +91,9 @@ namespace CSGenio.business
 			info.TreeTable.RecordLevelField = "space.nivel";
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codigode", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "codigode", FieldType.TEXT);
 			Qfield.FieldDescription = "Dependency";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "DEPENDENCY54251";
 
 			Qfield.Dupmsg = "";
@@ -109,10 +101,9 @@ namespace CSGenio.business
 			info.TreeTable.ParentTableField = "space.codigode";
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("moviment", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "moviment", FieldType.LOGIC);
 			Qfield.FieldDescription = "Moving";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "MOVING46562";
 
 			Qfield.Dupmsg = "";
@@ -120,9 +111,8 @@ namespace CSGenio.business
 			info.TreeTable.MoveableField = "space.moviment";
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -193,8 +183,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Space";
 			info.AreaPluralDesignation="Spaces";
 			info.DescriptionCav="SPACE62433";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

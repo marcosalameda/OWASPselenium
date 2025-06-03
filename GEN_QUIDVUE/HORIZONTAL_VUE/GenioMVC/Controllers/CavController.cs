@@ -18,7 +18,7 @@ namespace GenioMVC.Controllers.Cav
 	{
 		XmlCavService cavServices = XmlCavService.Instance;
 
-        public CavController(UserContextService userContext) : base(userContext) { }
+		public CavController(UserContextService userContext) : base(userContext) { }
 
 		//
 		// GET: /Cav/
@@ -35,7 +35,7 @@ namespace GenioMVC.Controllers.Cav
 				if (query == null)
 				{
 					query = CreateEmptyQuery(area);
-                    HttpContext.Session.SetString("Query", JsonConvert.SerializeObject(query));
+					HttpContext.Session.SetString("Query", JsonConvert.SerializeObject(query));
 					HttpContext.Session.SetString("QueryId", "new");
 					ViewBag.QueryId = "new";
 				}
@@ -51,8 +51,8 @@ namespace GenioMVC.Controllers.Cav
 
 		public class RequestCavNewQueryModel
 		{
-            public string Area { get; set; }
-        }
+			public string Area { get; set; }
+		}
 
 		[HttpPost]
 		public ActionResult NewQuery([FromBody] RequestCavNewQueryModel requestModel)
@@ -61,7 +61,7 @@ namespace GenioMVC.Controllers.Cav
 			if (cavServices != null && !string.IsNullOrEmpty(area))
 			{
 				ReportDefinition query = CreateEmptyQuery(area);
-                HttpContext.Session.SetString("Query", JsonConvert.SerializeObject(query));
+				HttpContext.Session.SetString("Query", JsonConvert.SerializeObject(query));
 				HttpContext.Session.SetString("QueryId", "new");
 
 				List<CAVTable> tables = cavServices.GetTablesList(query.BaseTable, UserContext.Current.User.Language);
@@ -147,9 +147,9 @@ namespace GenioMVC.Controllers.Cav
 
 		public class RequestCavAddFieldModel
 		{
-            public string TableId { get; set; }
-            public string FieldId { get; set; }
-        }
+			public string TableId { get; set; }
+			public string FieldId { get; set; }
+		}
 
 		[HttpPost]
 		public ActionResult AddField([FromBody] RequestCavAddFieldModel requestModel)
@@ -211,24 +211,24 @@ namespace GenioMVC.Controllers.Cav
 
 		public class RequestCavUpdateModel
 		{
-            public List<ReportField> Fields { get; set; }
-            public List<ReportOrdering> Orderby { get; set; }
-            public ReportCondition Conditions { get; set; }
-            public List<ReportGroup> Groupby { get; set; }
-            public string Area { get; set; }
-            public List<List<ReportField>> Totals { get; set; }
+			public List<ReportField> Fields { get; set; }
+			public List<ReportOrdering> Orderby { get; set; }
+			public ReportCondition Conditions { get; set; }
+			public List<ReportGroup> Groupby { get; set; }
+			public string Area { get; set; }
+			public List<List<ReportField>> Totals { get; set; }
 		}
 
 		[HttpPost]
-        public ActionResult UpdateQuery([FromBody] RequestCavUpdateModel requestModel)
-        {
+		public ActionResult UpdateQuery([FromBody] RequestCavUpdateModel requestModel)
+		{
 			var fields = requestModel.Fields;
 			var orderby = requestModel.Orderby;
 			var conditions = requestModel.Conditions;
 			var groupby = requestModel.Groupby;
 			var area = requestModel.Area;
 			var totals = requestModel.Totals;
-			
+
 			// utilizar este método para atravessar o limbo
 			// ou seja, antes de qualquer operação que exija
 			// que a query esteja actualizada do lado do servidor
@@ -281,9 +281,9 @@ namespace GenioMVC.Controllers.Cav
 		{
 			public string Id { get; set; }
 			public bool QueryOverride { get; set; }
-            public string Title { get; set; }
-            public string AccessType { get; set; }
-        }
+			public string Title { get; set; }
+			public string AccessType { get; set; }
+		}
 
 		[HttpPost]
 		public ActionResult SaveQueryData([FromBody] RequestCavSaveModel requestModel)
@@ -338,8 +338,8 @@ namespace GenioMVC.Controllers.Cav
 					query = CreateReportDefinition(table, collection);
 
 				return ExecuteQuery2(new RequestCavQuery2Model() {
-					Query = query, 
-					Page = page, 
+					Query = query,
+					Page = page,
 					Queryid = queryid
 				});
 			}
@@ -350,16 +350,16 @@ namespace GenioMVC.Controllers.Cav
 		}
 
 
-        public class RequestCavQuery2Model
-        {
-            public ReportDefinition Query { get; set; }
-            public int? Page { get; set; }
-            public string Queryid { get; set; }
-        }
+		public class RequestCavQuery2Model
+		{
+			public ReportDefinition Query { get; set; }
+			public int? Page { get; set; }
+			public string Queryid { get; set; }
+		}
 
 
-        public ActionResult ExecuteQuery2([FromBody]RequestCavQuery2Model requestModel)
-        {
+		public ActionResult ExecuteQuery2([FromBody]RequestCavQuery2Model requestModel)
+		{
 			var query = requestModel.Query;
 			var page = requestModel.Page;
 			var queryid = requestModel.Queryid;

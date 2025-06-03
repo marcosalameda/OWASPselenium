@@ -1,3 +1,4 @@
+using System.Text.RegularExpressions;
 namespace quidgest.uitests.pages;
 
 public class SeeMorePage: PageObject {
@@ -13,7 +14,7 @@ public class SeeMorePage: PageObject {
 		ArgumentException.ThrowIfNullOrEmpty(nameof(form));
         ArgumentException.ThrowIfNullOrEmpty(nameof(fieldRef));
 
-		var hydratedFieldRef = fieldRef.TrimEnd('_').Replace("_","-");
+		var hydratedFieldRef = Regex.Replace(fieldRef.TrimEnd('_'), "_+", "-");
 		this.id = $"q-modal-see-more-{hydratedFieldRef}".ToLowerInvariant();
 		wait.Until(c => page);
 	}

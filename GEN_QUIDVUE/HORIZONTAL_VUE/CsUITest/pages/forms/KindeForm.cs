@@ -10,7 +10,7 @@ public class KindeForm : Form
 	/// <summary>
 	/// Kind of equipment
 	/// </summary>
-	public BaseInputControl KindeDesignat => new BaseInputControl(driver, ContainerLocator, "#KINDE___KINDEDESIGNAT");
+	public BaseInputControl KindeDesignat => new BaseInputControl(driver, ContainerLocator, "container-KINDE___KINDEDESIGNAT", "#KINDE___KINDEDESIGNAT");
 
 	/// <summary>
 	/// Parameters

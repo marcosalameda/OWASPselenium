@@ -15,12 +15,12 @@ public class PedidForm : Form
 	/// <summary>
 	/// Number
 	/// </summary>
-	public BaseInputControl PedidNrpedido => new BaseInputControl(driver, ContainerLocator, "#PEDID___PEDIDNRPEDIDO");
+	public BaseInputControl PedidNrpedido => new BaseInputControl(driver, ContainerLocator, "container-PEDID___PEDIDNRPEDIDO", "#PEDID___PEDIDNRPEDIDO");
 
 	/// <summary>
 	/// Motive:
 	/// </summary>
-	public BaseInputControl PedidMotivo => new BaseInputControl(driver, ContainerLocator, "#PEDID___PEDIDMOTIVO__");
+	public BaseInputControl PedidMotivo => new BaseInputControl(driver, ContainerLocator, "container-PEDID___PEDIDMOTIVO__", "#PEDID___PEDIDMOTIVO__");
 
 	/// <summary>
 	/// Lines

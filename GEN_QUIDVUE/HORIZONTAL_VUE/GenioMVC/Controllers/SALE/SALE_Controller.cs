@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Sale;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER SALE]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class SaleController : ControllerBase
 	{
-		public SaleController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public SaleController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION SALE]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER SALE]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Sale row = null;
-
-			if (row == null)
-			{
-				row = new Models.Sale(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("sale");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Sale row = new Models.Sale(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("sale");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "VENDA___ORGANORGANIZA":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Venda_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Venda_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Venda___organorganiza(qs);
 							result = model.TableOrganOrganiza;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "VENDAW01ORGANORGANIZA":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Vendaw01_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Vendaw01_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Vendaw01organorganiza(qs);
 							result = model.TableOrganOrganiza;
@@ -155,6 +162,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Venda" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -168,6 +178,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw01" form. (++, CT, SR, CL and U1)
@@ -183,6 +195,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw02" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -196,6 +210,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw03" form. (++, CT, SR, CL and U1)
@@ -211,6 +227,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw04" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -224,6 +242,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw05" form. (++, CT, SR, CL and U1)
@@ -239,6 +259,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw06" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -253,6 +275,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw07" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -266,6 +290,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Sale)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Vendaw08" form. (++, CT, SR, CL and U1)

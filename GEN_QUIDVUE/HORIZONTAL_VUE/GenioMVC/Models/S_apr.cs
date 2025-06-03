@@ -111,7 +111,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Percentage" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("S_apr.ValPercenta")]
 		[NumericAttribute(0)]
-		public decimal? ValPercenta { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPercenta, 0)); } set { klass.ValPercenta = Convert.ToDecimal(value); } }
+		public decimal? ValPercenta { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPercenta, 0)); } set { klass.ValPercenta = Convert.ToDecimal(value); } }
 
 		[DisplayName("Process mode")]
 		/// <summary>Field : "Process mode" Tipo: "AC" Formula:  ""</summary>
@@ -130,7 +130,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Process ID" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("S_apr.ValId")]
 		[NumericAttribute(0)]
-		public decimal? ValId { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValId, 0)); } set { klass.ValId = Convert.ToDecimal(value); } }
+		public decimal? ValId { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValId, 0)); } set { klass.ValId = Convert.ToDecimal(value); } }
 
 		[DisplayName("Entid key")]
 		/// <summary>Field : "Entid key" Tipo: "CF" Formula:  ""</summary>
@@ -186,8 +186,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("S_apr.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public S_apr(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -205,7 +205,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioAs_apr csgenioa)
 		{

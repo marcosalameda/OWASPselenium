@@ -27,7 +27,7 @@ public class MovimForm : Form
 	/// <summary>
 	/// Observation
 	/// </summary>
-	public BaseInputControl MovimObservat => new BaseInputControl(driver, ContainerLocator, "#MOVIM___MOVIMOBSERVAT");
+	public BaseInputControl MovimObservat => new BaseInputControl(driver, ContainerLocator, "container-MOVIM___MOVIMOBSERVAT", "#MOVIM___MOVIMOBSERVAT");
 
 	public MovimForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "MOVIM", containerLocator: containerLocator) { }

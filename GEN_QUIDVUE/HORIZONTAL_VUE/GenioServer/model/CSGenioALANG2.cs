@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAlang2(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR LANG2]/
 		}
 
@@ -46,39 +44,35 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codlang", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codlang", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("langua", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "langua", FieldType.TEXT);
 			Qfield.FieldDescription = "Language";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LANGUAGE16872";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("acron", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "acron", FieldType.TEXT);
 			Qfield.FieldDescription = "Acronym";
 			Qfield.FieldSize =  5;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ACRONYM00872";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -152,8 +146,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Language";
 			info.AreaPluralDesignation="Languages";
 			info.DescriptionCav="LANGUAGE16872";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

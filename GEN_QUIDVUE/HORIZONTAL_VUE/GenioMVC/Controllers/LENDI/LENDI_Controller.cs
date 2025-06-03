@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lendi;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LENDI]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class LendiController : ControllerBase
 	{
-		public LendiController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public LendiController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION LENDI]/
 
 
@@ -239,7 +248,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER LENDI]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -252,13 +260,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Lendi row = null;
-
-			if (row == null)
-			{
-				row = new Models.Lendi(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("lendi");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Lendi row = new Models.Lendi(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("lendi");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -271,8 +280,7 @@ namespace GenioMVC.Controllers
 				{
 					case "COMOD___PESS1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Comod_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Comod_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Comod___pess1name____(qs);
 							result = model.TablePess1Name;
@@ -280,8 +288,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "COMOD___PESS2NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Comod_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Comod_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Comod___pess2name____(qs);
 							result = model.TablePess2Name;
@@ -289,8 +296,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "COMOD___EQUIPREGISTNR":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Comod_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Comod_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Comod___equipregistnr(qs);
 							result = model.TableEquipRegistnr;
@@ -361,6 +367,52 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
+		// POST: /Lendi/PTN_3171_Equip_Registnr_ShowWhen
+		[HttpPost]
+		public JsonResult PTN_3171_Equip_Registnr_ShowWhen([FromBody] ViewModels.Lendi.PTN_Menu_3171_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Lendi(UserContext.Current);
+
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: 1==1
+				var result = 1==1;
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
+		// POST: /Lendi/PTN_3171_Lendi_Ifoutdt__ShowWhen
+		[HttpPost]
+		public JsonResult PTN_3171_Lendi_Ifoutdt__ShowWhen([FromBody] ViewModels.Lendi.PTN_Menu_3171_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Lendi(UserContext.Current);
+
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: 1==0
+				var result = 1==0;
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
+
 
 
 		/// <summary>

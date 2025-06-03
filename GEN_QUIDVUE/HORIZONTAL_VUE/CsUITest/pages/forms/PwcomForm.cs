@@ -22,7 +22,7 @@ public class PwcomForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl PwcomFoto => new BaseInputControl(driver, ContainerLocator, "#PWCOM___PWCOMFOTO____");
+	public BaseInputControl PwcomFoto => new BaseInputControl(driver, ContainerLocator, "container-PWCOM___PWCOMFOTO____", "#PWCOM___PWCOMFOTO____");
 
 	public PwcomForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "PWCOM", containerLocator: containerLocator) { }

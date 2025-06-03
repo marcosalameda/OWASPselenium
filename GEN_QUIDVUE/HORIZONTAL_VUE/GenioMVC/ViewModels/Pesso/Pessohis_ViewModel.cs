@@ -194,6 +194,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Pesso m)
 		{
 			if (m == null)
@@ -222,20 +223,13 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Pesso m)
 		{
 			if (m == null)
@@ -409,7 +403,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 			validator.StringLength("ValName", Resources.Resources.NAME31974, ValName, 85);
 
-			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXTO.Formatting);
+			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 
 
 			return validator.GetResult();
@@ -464,8 +458,6 @@ namespace GenioMVC.ViewModels.Pesso
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

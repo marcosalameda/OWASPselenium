@@ -38,70 +38,73 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">PROJECT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Expen.ValCodproje")]
 		public string ValCodproje { get { return klass.ValCodproje; } set { klass.ValCodproje = value; } }
+
 		private Proje _proje;
 		[DisplayName("Proje")]
 		[ShouldSerialize("Proje")]
-		public virtual Proje Proje {
-			get {
-				if (!this.isEmptyModel && (_proje == null || (!string.IsNullOrEmpty(ValCodproje) && (_proje.isEmptyModel || _proje.klass.QPrimaryKey != ValCodproje))))
+		public virtual Proje Proje
+		{
+			get
+			{
+				if (!isEmptyModel && (_proje == null || (!string.IsNullOrEmpty(ValCodproje) && (_proje.isEmptyModel || _proje.klass.QPrimaryKey != ValCodproje))))
 					_proje = Models.Proje.Find(ValCodproje, m_userContext, Identifier, _fieldsToSerialize);
-				if (_proje == null)
-					_proje = new Models.Proje(m_userContext, true, _fieldsToSerialize);
+				_proje ??= new Models.Proje(m_userContext, true, _fieldsToSerialize);
 				return _proje;
 			}
 			set { _proje = value; }
 		}
 
-
 		[DisplayName(">ANO")]
 		/// <summary>Field : ">ANO" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Expen.ValCodyear")]
 		public string ValCodyear { get { return klass.ValCodyear; } set { klass.ValCodyear = value; } }
+
 		private Year _year;
 		[DisplayName("Year")]
 		[ShouldSerialize("Year")]
-		public virtual Year Year {
-			get {
-				if (!this.isEmptyModel && (_year == null || (!string.IsNullOrEmpty(ValCodyear) && (_year.isEmptyModel || _year.klass.QPrimaryKey != ValCodyear))))
+		public virtual Year Year
+		{
+			get
+			{
+				if (!isEmptyModel && (_year == null || (!string.IsNullOrEmpty(ValCodyear) && (_year.isEmptyModel || _year.klass.QPrimaryKey != ValCodyear))))
 					_year = Models.Year.Find(ValCodyear, m_userContext, Identifier, _fieldsToSerialize);
-				if (_year == null)
-					_year = new Models.Year(m_userContext, true, _fieldsToSerialize);
+				_year ??= new Models.Year(m_userContext, true, _fieldsToSerialize);
 				return _year;
 			}
 			set { _year = value; }
 		}
 
-
 		[DisplayName("Year")]
 		/// <summary>Field : "Year" Tipo: "N" Formula: + "[YEAR->YEARNUM]"</summary>
 		[ShouldSerialize("Expen.ValYearnumb")]
 		[NumericAttribute(0)]
-		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
+		public decimal? ValYearnumb { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
 
 		[DisplayName("Previous year")]
 		/// <summary>Field : "Previous year" Tipo: "N" Formula: + "[YEAR->YEARNUM]-1"</summary>
 		[ShouldSerialize("Expen.ValYearprev")]
 		[NumericAttribute(0)]
-		public decimal? ValYearprev { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDecimal(value); } }
+		public decimal? ValYearprev { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearprev, 0)); } set { klass.ValYearprev = Convert.ToDecimal(value); } }
 
 		[DisplayName(">AGREGADOR")]
 		/// <summary>Field : ">AGREGADOR" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Expen.ValCodaggre")]
 		public string ValCodaggre { get { return klass.ValCodaggre; } set { klass.ValCodaggre = value; } }
+
 		private Agreg _agreg;
 		[DisplayName("Agreg")]
 		[ShouldSerialize("Agreg")]
-		public virtual Agreg Agreg {
-			get {
-				if (!this.isEmptyModel && (_agreg == null || (!string.IsNullOrEmpty(ValCodaggre) && (_agreg.isEmptyModel || _agreg.klass.QPrimaryKey != ValCodaggre))))
+		public virtual Agreg Agreg
+		{
+			get
+			{
+				if (!isEmptyModel && (_agreg == null || (!string.IsNullOrEmpty(ValCodaggre) && (_agreg.isEmptyModel || _agreg.klass.QPrimaryKey != ValCodaggre))))
 					_agreg = Models.Agreg.Find(ValCodaggre, m_userContext, Identifier, _fieldsToSerialize);
-				if (_agreg == null)
-					_agreg = new Models.Agreg(m_userContext, true, _fieldsToSerialize);
+				_agreg ??= new Models.Agreg(m_userContext, true, _fieldsToSerialize);
 				return _agreg;
 			}
 			set { _agreg = value; }
 		}
-
 
 		[DisplayName("Description")]
 		/// <summary>Field : "Description" Tipo: "C" Formula:  ""</summary>
@@ -112,18 +115,18 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Value" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Expen.ValValue")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 
 		[DisplayName("Previous Value")]
 		/// <summary>Field : "Previous Value" Tipo: "$D" Formula: CT "EXPE1[EXPEN->YEARPREV][EXPE1->YEARNUMB][EXPE1->VALUE](DESC)"</summary>
 		[ShouldSerialize("Expen.ValPrevval")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValPrevval { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDecimal(value); } }
+		public decimal? ValPrevval { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrevval, 2)); } set { klass.ValPrevval = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Expen.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Expen(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -142,7 +145,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAexpen csgenioa)
 		{
 			if (csgenioa == null)
@@ -153,18 +155,15 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "proje":
-						if (_proje == null)
-							_proje = new Proje(m_userContext, true, _fieldsToSerialize);
+						_proje ??= new Proje(m_userContext, true, _fieldsToSerialize);
 						_proje.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "year":
-						if (_year == null)
-							_year = new Year(m_userContext, true, _fieldsToSerialize);
+						_year ??= new Year(m_userContext, true, _fieldsToSerialize);
 						_year.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "agreg":
-						if (_agreg == null)
-							_agreg = new Agreg(m_userContext, true, _fieldsToSerialize);
+						_agreg ??= new Agreg(m_userContext, true, _fieldsToSerialize);
 						_agreg.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

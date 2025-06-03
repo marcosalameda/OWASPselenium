@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Flds;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER FLDS]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class FldsController : ControllerBase
 	{
-		public FldsController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public FldsController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION FLDS]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER FLDS]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Flds row = null;
-
-			if (row == null)
-			{
-				row = new Models.Flds(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("flds");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Flds row = new Models.Flds(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("flds");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "CAMPO___AERO_NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Campo_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Campo_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Campo___aero_name____(qs);
 							result = model.TableAeroName;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "FIELDHLPAERO_NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Fieldhlp_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Fieldhlp_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Fieldhlpaero_name____(qs);
 							result = model.TableAeroName;
@@ -93,8 +100,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "FLDSTBL_AERO_NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Fldstbl_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Fldstbl_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Fldstbl_aero_name____(qs);
 							result = model.TableAeroName;
@@ -167,6 +173,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Campo" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -180,6 +189,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Flds)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Fieldhlp" form. (++, CT, SR, CL and U1)
@@ -197,17 +208,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDS_FSERVER1_ShowWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDS_FSERVER1_ShowWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDS_FSERVER1_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -224,17 +233,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDS_FSERVER1_BlockWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDS_FSERVER1_BlockWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDS_FSERVER1_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -251,17 +258,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER2_ShowWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_ShowWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -278,17 +283,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER2_BlockWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_BlockWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -305,17 +308,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER3_ShowWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_ShowWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -332,17 +333,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER3_BlockWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_BlockWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -359,17 +358,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDS_FSERVER3_ShowWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDS_FSERVER3_ShowWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDS_FSERVER3_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -386,17 +383,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDS_FSERVER3_BlockWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDS_FSERVER3_BlockWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDS_FSERVER3_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -413,17 +408,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDSTATICTX_ShowWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDPSEUDSTATICTX_ShowWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDPSEUDSTATICTX_ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -440,17 +433,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDSTATICTX_BlockWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDPSEUDSTATICTX_BlockWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDPSEUDSTATICTX_BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -467,17 +458,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDLISTBTN__ShowWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDPSEUDLISTBTN__ShowWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDPSEUDLISTBTN__ShowWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -494,17 +483,15 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDPSEUDLISTBTN__BlockWhen
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDPSEUDLISTBTN__BlockWhen([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDPSEUDLISTBTN__BlockWhen([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
 				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
@@ -518,21 +505,15 @@ namespace GenioMVC.Controllers
 				return JsonERROR(ex.Message);
 			}
 		}
-
 		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER1_RequiredCondition
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER1_RequiredCondition([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER1_RequiredCondition([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
-				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
 
@@ -550,18 +531,13 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER2_RequiredCondition
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_RequiredCondition([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER2_RequiredCondition([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
-				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
 
@@ -579,18 +555,13 @@ namespace GenioMVC.Controllers
 
 		// POST: /Flds/FLDSCOND_FLDSCONDFLDS_FSERVER3_RequiredCondition
 		[HttpPost]
-		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_RequiredCondition([FromBody]ViewModels.Flds.Fldscond_ViewModel formData)
+		public JsonResult FLDSCOND_FLDSCONDFLDS_FSERVER3_RequiredCondition([FromBody] ViewModels.Flds.Fldscond_ViewModel formData)
 		{
 			try
 			{
-				// Create a model from form data only to avoid database queries.
+				// Create a model from form data to avoid extra database queries.
 				var p = new Models.Flds(UserContext.Current);
 
-				/*
-				 * At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-				 * the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				 */
-				formData.DisableUserValuesSecurity();
 				// Map client-side form data into the model
 				formData.MapToModel(p);
 
@@ -609,6 +580,7 @@ namespace GenioMVC.Controllers
 			}
 		}
 
+
 		/// <summary>
 		/// Recalculate formulas of the "Fldscond" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -622,6 +594,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Flds)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Fldstbl" form. (++, CT, SR, CL and U1)
@@ -637,6 +611,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Infields" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -650,6 +626,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Flds)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Listacam" form. (++, CT, SR, CL and U1)

@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Tpeq1
 {
-	public class Tpeq1_Fami1ValFamily_ViewModel : ListViewModel
+	public class Tpeq1_Fami1ValFamily_ViewModel : MenuListViewModel<Models.Fami1>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Tpeq1_Fami1ValFamily_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "fami1"; }
+		[JsonIgnore]
+		public override string TableAlias => "fami1";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Tpeq1_Fami1ValFamily"; }
+		public override string Uuid => "Tpeq1_Fami1ValFamily";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodtpequ { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Tpeq1
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS TPEQ1_FAMI1FAMILY]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Tpeq1_Fami1ValFamily_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Tpeq1_Fami1ValFamily_ViewModel" /> class.
@@ -73,12 +112,22 @@ namespace GenioMVC.ViewModels.Tpeq1
 			ValCodtpequ = userContext.CurrentNavigation.CurrentLevel.GetEntry("tpeq1")?.ToString();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Tpeq1_Fami1ValFamily_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Tpeq1_Fami1ValFamily_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfami1.FldFamily, FieldType.TEXTO, Resources.Resources.FAMILIA_DE_EQUIPAMEN12158, 50, 0, true),
+				new Exports.QColumn(CSGenioAfami1.FldFamily, FieldType.TEXT, Resources.Resources.FAMILIA_DE_EQUIPAMEN12158, 50, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -128,13 +177,10 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 			if (Menu == null)
 				Menu = new TablePartial<Tpeq1_Fami1ValFamily_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("FAMI1.FAMILY", new OrderedDictionary());
-			allSortOrders["FAMI1.FAMILY"].Add("FAMI1.FAMILY", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -147,9 +193,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 			crs.SubSets.Add(subfilters);
 
 
-
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -244,22 +288,21 @@ namespace GenioMVC.ViewModels.Tpeq1
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAfami1> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "TPEQ1")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Tpeq1_Fami1ValFamily_RowViewModel>();
 
 				CriteriaSet tpeq1___fami1family__Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("FAMI1.FAMILY", new OrderedDictionary());
 				allSortOrders["FAMI1.FAMILY"].Add("FAMI1.FAMILY", "A");
-
 
 
 
@@ -291,16 +334,14 @@ namespace GenioMVC.ViewModels.Tpeq1
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("fami1", "family");
+					firstVisibleColumn ??= new FieldRef("fami1", "family");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
 
 				if (conditions == null)
@@ -311,6 +352,8 @@ namespace GenioMVC.ViewModels.Tpeq1
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ TPEQ1_FAMI1FAMILY]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -338,7 +381,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfami1> listing = Models.ModelBase.Where<CSGenioAfami1>(m_userContext, false, tpeq1___fami1family__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPEQ1___FAMI1FAMILY__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfami1> listing = Models.ModelBase.Where<CSGenioAfami1>(m_userContext, distinct, tpeq1___fami1family__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TPEQ1___FAMI1FAMILY__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -346,7 +389,6 @@ namespace GenioMVC.ViewModels.Tpeq1
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -367,18 +409,12 @@ namespace GenioMVC.ViewModels.Tpeq1
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -386,7 +422,7 @@ namespace GenioMVC.ViewModels.Tpeq1
 
 		private List<Tpeq1_Fami1ValFamily_RowViewModel> MapTpeq1_Fami1ValFamily(ListingMVC<CSGenioAfami1> Qlisting)
 		{
-			var Elements = new List<Tpeq1_Fami1ValFamily_RowViewModel>();
+			List<Tpeq1_Fami1ValFamily_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -403,7 +439,6 @@ namespace GenioMVC.ViewModels.Tpeq1
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAfami1 row
 		/// to a Tpeq1_Fami1ValFamily_RowViewModel object.
@@ -412,7 +447,9 @@ namespace GenioMVC.ViewModels.Tpeq1
 		private Tpeq1_Fami1ValFamily_RowViewModel MapTpeq1_Fami1ValFamily(CSGenioAfami1 row)
 		{
 			var model = new Tpeq1_Fami1ValFamily_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -424,32 +461,9 @@ namespace GenioMVC.ViewModels.Tpeq1
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Tpeq1_Fami1ValFamily_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -463,36 +477,42 @@ namespace GenioMVC.ViewModels.Tpeq1
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAfami1> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAfami1 row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Fami1 m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Fami1 m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM TPEQ1_FAMI1VALFAMILY]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Fami1", "Fami1.ValCodfamil", "Fami1.ValZzstate", "Fami1.ValFamily", "BtnPermission"
+			"Fami1", "Fami1.ValCodfamil", "Fami1.ValZzstate", "Fami1.ValFamily"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValFamily", CSGenioAfami1.FldFamily, typeof(string))
+			new TableSearchColumn("ValFamily", CSGenioAfami1.FldFamily, typeof(string)),
 		];
-
-
-
 	}
 }

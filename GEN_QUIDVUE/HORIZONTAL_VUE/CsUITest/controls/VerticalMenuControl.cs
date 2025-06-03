@@ -2,7 +2,8 @@ using AngleSharp.Text;
 
 namespace quidgest.uitests.controls;
 
-public class VerticalMenuControl: PageObject, IMenuControl {
+public class VerticalMenuControl : PageObject, IMenuControl
+{
 
     private IWebElement navbar => driver.FindElement(By.CssSelector(".main-sidebar"));
 
@@ -16,7 +17,8 @@ public class VerticalMenuControl: PageObject, IMenuControl {
 
     private MenuTree _menuTree;
 
-    public VerticalMenuControl(IWebDriver driver, MenuTree menuTree): base(driver) {
+    public VerticalMenuControl(IWebDriver driver, MenuTree menuTree) : base(driver)
+    {
         _menuTree = menuTree;
 
         wait.Until(c => navbar);
@@ -97,5 +99,10 @@ public class VerticalMenuControl: PageObject, IMenuControl {
 
         // Convert to integer
         return counterElemText == null ? 0 : counterElemText.ToInteger(0);
+    }
+
+    public int GetBookmarkCount()
+    {
+        return bookmarks.FindElements(By.CssSelector(".bookmarks__btn--link")).Count;
     }
 }

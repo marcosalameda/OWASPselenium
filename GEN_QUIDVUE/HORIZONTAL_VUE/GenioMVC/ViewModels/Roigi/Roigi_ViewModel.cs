@@ -170,6 +170,7 @@ namespace GenioMVC.ViewModels.Roigi
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Roigi m)
 		{
 			if (m == null)
@@ -192,20 +193,13 @@ namespace GenioMVC.ViewModels.Roigi
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Roigi m)
 		{
 			if (m == null)
@@ -518,7 +512,7 @@ namespace GenioMVC.ViewModels.Roigi
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -565,7 +559,7 @@ namespace GenioMVC.ViewModels.Roigi
 				// Fill List fields
 				this.ValCodrogl1 = ViewModelConversion.ToString(row["rogl1.codrogl1"]);
 				TableRogl1Title.Value = (string)row["rogl1.title"];
-				if (GlobalFunctions.emptyG(this.ValCodrogl1) == 1)
+				if (GenFunctions.emptyG(this.ValCodrogl1) == 1)
 				{
 					this.ValCodrogl1 = "";
 					TableRogl1Title.Value = "";
@@ -608,8 +602,6 @@ namespace GenioMVC.ViewModels.Roigi
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

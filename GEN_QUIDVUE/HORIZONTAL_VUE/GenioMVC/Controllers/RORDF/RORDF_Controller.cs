@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Rordf;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER RORDF]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class RordfController : ControllerBase
 	{
-		public RordfController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public RordfController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION RORDF]/
 
 
@@ -42,6 +51,9 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER RORDF]/
+
+
+
 
 
 		/// <summary>

@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Cmpki_TpequValTipoequiModel : RequestLookupModel
+		{
+			public Cmpki_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Cmpki/Cmpki_TpequValTipoequi
 		// POST: /Cmpki/Cmpki_TpequValTipoequi
 		[ActionName("Cmpki_TpequValTipoequi")]
-		public ActionResult Cmpki_TpequValTipoequi([FromBody]RequestLookupModel requestModel)
+		public ActionResult Cmpki_TpequValTipoequi([FromBody] Cmpki_TpequValTipoequiModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Cmpki_TpequValTipoequi_ViewModel model = new Cmpki_TpequValTipoequi_ViewModel(UserContext.Current);
-			
+
+			Models.Cmpki parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Cmpki_TpequValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Cmpki_Tpeq1ValTipoequiModel : RequestLookupModel
+		{
+			public Cmpki_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Cmpki/Cmpki_Tpeq1ValTipoequi
 		// POST: /Cmpki/Cmpki_Tpeq1ValTipoequi
 		[ActionName("Cmpki_Tpeq1ValTipoequi")]
-		public ActionResult Cmpki_Tpeq1ValTipoequi([FromBody]RequestLookupModel requestModel)
+		public ActionResult Cmpki_Tpeq1ValTipoequi([FromBody] Cmpki_Tpeq1ValTipoequiModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Cmpki_Tpeq1ValTipoequi_ViewModel model = new Cmpki_Tpeq1ValTipoequi_ViewModel(UserContext.Current);
-			
+
+			Models.Cmpki parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Cmpki_Tpeq1ValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

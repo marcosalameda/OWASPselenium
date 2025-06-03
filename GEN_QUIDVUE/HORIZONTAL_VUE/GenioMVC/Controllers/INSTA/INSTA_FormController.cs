@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Insta_TpequValTipoequiModel : RequestLookupModel
+		{
+			public Insta_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Insta/Insta_TpequValTipoequi
 		// POST: /Insta/Insta_TpequValTipoequi
 		[ActionName("Insta_TpequValTipoequi")]
-		public ActionResult Insta_TpequValTipoequi([FromBody]RequestLookupModel requestModel)
+		public ActionResult Insta_TpequValTipoequi([FromBody] Insta_TpequValTipoequiModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Insta_TpequValTipoequi_ViewModel model = new Insta_TpequValTipoequi_ViewModel(UserContext.Current);
-			
+
+			Models.Insta parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Insta_TpequValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Insta_EquipValRegistnrModel : RequestLookupModel
+		{
+			public Insta_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Insta/Insta_EquipValRegistnr
 		// POST: /Insta/Insta_EquipValRegistnr
 		[ActionName("Insta_EquipValRegistnr")]
-		public ActionResult Insta_EquipValRegistnr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Insta_EquipValRegistnr([FromBody] Insta_EquipValRegistnrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Insta_EquipValRegistnr_ViewModel model = new Insta_EquipValRegistnr_ViewModel(UserContext.Current);
-			
+
+			Models.Insta parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Insta_EquipValRegistnr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

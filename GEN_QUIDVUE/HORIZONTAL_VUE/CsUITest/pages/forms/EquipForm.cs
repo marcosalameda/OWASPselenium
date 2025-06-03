@@ -32,12 +32,12 @@ public class EquipForm : Form
 	/// <summary>
 	/// Sequential No.
 	/// </summary>
-	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPSEQUENNR");
+	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPSEQUENNR", "#EQUIP___EQUIPSEQUENNR");
 
 	/// <summary>
 	/// Registration No.
 	/// </summary>
-	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPREGISTNR");
+	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPREGISTNR", "#EQUIP___EQUIPREGISTNR");
 
 	/// <summary>
 	/// Type of equipment
@@ -48,7 +48,7 @@ public class EquipForm : Form
 	/// <summary>
 	/// Manufacturer's website:
 	/// </summary>
-	public BaseInputControl EquipSitefabr => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPSITEFABR");
+	public BaseInputControl EquipSitefabr => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPSITEFABR", "#EQUIP___EQUIPSITEFABR");
 
 	/// <summary>
 	/// Warehouse
@@ -65,7 +65,7 @@ public class EquipForm : Form
 	/// <summary>
 	/// Designation:
 	/// </summary>
-	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPDESIGNAT");
+	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPDESIGNAT", "#EQUIP___EQUIPDESIGNAT");
 
 	/// <summary>
 	/// Loan Frequency
@@ -75,7 +75,7 @@ public class EquipForm : Form
 	/// <summary>
 	/// Total Value:
 	/// </summary>
-	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPVALORTOT");
+	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPVALORTOT", "#EQUIP___EQUIPVALORTOT");
 
 	/// <summary>
 	/// Acquisition:
@@ -85,7 +85,7 @@ public class EquipForm : Form
 	/// <summary>
 	/// Decomission:
 	/// </summary>
-	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#EQUIP___EQUIPDTDECO__");
+	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#EQUIP___EQUIPDTDECO__", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// bought
@@ -100,7 +100,7 @@ public class EquipForm : Form
 	/// <summary>
 	/// Room No:
 	/// </summary>
-	public BaseInputControl Room1Roomnr => new BaseInputControl(driver, ContainerLocator, "#EQUIP___ROOM1ROOMNR__");
+	public BaseInputControl Room1Roomnr => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___ROOM1ROOMNR__", "#EQUIP___ROOM1ROOMNR__");
 
 	/// <summary>
 	/// Room Designation:
@@ -115,32 +115,32 @@ public class EquipForm : Form
 	/// <summary>
 	/// First
 	/// </summary>
-	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPFIRST___");
+	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPFIRST___", "#EQUIP___EQUIPFIRST___");
 
 	/// <summary>
 	/// Before
 	/// </summary>
-	public BaseInputControl EquipBefore => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPBEFORE__");
+	public BaseInputControl EquipBefore => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPBEFORE__", "#EQUIP___EQUIPBEFORE__");
 
 	/// <summary>
 	/// Following
 	/// </summary>
-	public BaseInputControl EquipFollowin => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPFOLLOWIN");
+	public BaseInputControl EquipFollowin => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPFOLLOWIN", "#EQUIP___EQUIPFOLLOWIN");
 
 	/// <summary>
 	/// last
 	/// </summary>
-	public BaseInputControl EquipLast => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPLAST____");
+	public BaseInputControl EquipLast => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPLAST____", "#EQUIP___EQUIPLAST____");
 
 	/// <summary>
 	/// Quantity of transactions
 	/// </summary>
-	public BaseInputControl EquipQtdmovim => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPQTDMOVIM");
+	public BaseInputControl EquipQtdmovim => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPQTDMOVIM", "#EQUIP___EQUIPQTDMOVIM");
 
 	/// <summary>
 	/// Movements
 	/// </summary>
-	public BaseInputControl EquipMoviment => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPMOVIMENT");
+	public BaseInputControl EquipMoviment => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPMOVIMENT", "#EQUIP___EQUIPMOVIMENT");
 
 	/// <summary>
 	/// Where did the equipment go
@@ -170,12 +170,12 @@ public class EquipForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPPHOTOGRA");
+	public BaseInputControl EquipPhotogra => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPPHOTOGRA", "#EQUIP___EQUIPPHOTOGRA");
 
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl EquipLastpho => new BaseInputControl(driver, ContainerLocator, "#EQUIP___EQUIPLASTPHO_");
+	public BaseInputControl EquipLastpho => new BaseInputControl(driver, ContainerLocator, "container-EQUIP___EQUIPLASTPHO_", "#EQUIP___EQUIPLASTPHO_");
 
 	/// <summary>
 	/// ACCORDION

@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Pesso
 {
-	public class Pesso1_ValEvolucao_ViewModel : ListViewModel
+	public class Pesso1_ValEvolucao_ViewModel : MenuListViewModel<Models.Evcat>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Pesso1_ValEvolucao_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "evcat"; }
+		[JsonIgnore]
+		public override string TableAlias => "evcat";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Pesso1_ValEvolucao"; }
+		public override string Uuid => "Pesso1_ValEvolucao";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCodpesso { get; set; }
+		[JsonIgnore]
+		public string PessoValCodpesso { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Pesso
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PESSO1_PSEUDEVOLUCAO]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Pesso1_ValEvolucao_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Pesso1_ValEvolucao_ViewModel" /> class.
@@ -70,7 +109,17 @@ namespace GenioMVC.ViewModels.Pesso
 		/// <param name="userContext">The current user request context</param>
 		public Pesso1_ValEvolucao_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodpesso = userContext.CurrentNavigation.CurrentLevel.GetEntry("pesso")?.ToString();
+			PessoValCodpesso = userContext.CurrentNavigation.CurrentLevel.GetEntry("pesso")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Pesso1_ValEvolucao_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Pesso1_ValEvolucao_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -78,9 +127,9 @@ namespace GenioMVC.ViewModels.Pesso
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAevcat.FldSince, FieldType.DATA, Resources.Resources.SINCE47259, 8, 0, true),
-				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXTO, Resources.Resources.CATEGORY18978, 30, 0, true),
-				new Exports.QColumn(CSGenioAevcat.FldFimperio, FieldType.DATA, Resources.Resources.END_OF_PERIOD44616, 8, 0, true),
+				new Exports.QColumn(CSGenioAevcat.FldSince, FieldType.DATE, Resources.Resources.SINCE47259, 8, 0, true),
+				new Exports.QColumn(CSGenioAcate1.FldCategoria, FieldType.TEXT, Resources.Resources.CATEGORY18978, 30, 0, true),
+				new Exports.QColumn(CSGenioAevcat.FldFimperio, FieldType.DATE, Resources.Resources.END_OF_PERIOD44616, 8, 0, true),
 				new Exports.QColumn(CSGenioAevcat.FldObservat, FieldType.MEMO, Resources.Resources.OBSERVATION37880, 30, 2, true),
 			};
 
@@ -131,13 +180,10 @@ namespace GenioMVC.ViewModels.Pesso
 
 			if (Menu == null)
 				Menu = new TablePartial<Pesso1_ValEvolucao_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("EVCAT.SINCE", new OrderedDictionary());
-			allSortOrders["EVCAT.SINCE"].Add("EVCAT.SINCE", "D");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -149,12 +195,11 @@ namespace GenioMVC.ViewModels.Pesso
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodpesso != null)
-				crs.Equal(CSGenioAevcat.FldCodpesso, this.ValCodpesso);
+			if (this.PessoValCodpesso != null)
+				crs.Equal(CSGenioAevcat.FldCodpesso, this.PessoValCodpesso);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -251,22 +296,21 @@ namespace GenioMVC.ViewModels.Pesso
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAevcat> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "PESSO1")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Pesso1_ValEvolucao_RowViewModel>();
 
 				CriteriaSet pesso1__pseudevolucaoConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("EVCAT.SINCE", new OrderedDictionary());
 				allSortOrders["EVCAT.SINCE"].Add("EVCAT.SINCE", "D");
-
 
 
 
@@ -298,26 +342,24 @@ namespace GenioMVC.ViewModels.Pesso
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("evcat", "since");
+					firstVisibleColumn ??= new FieldRef("evcat", "since");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAevcat model_limit_area = new CSGenioAevcat(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PESSO1__PSEUDEVOLUCAO");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAevcat model_limit_area = new CSGenioAevcat(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PESSO1__PSEUDEVOLUCAO");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -328,6 +370,8 @@ namespace GenioMVC.ViewModels.Pesso
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ PESSO1_PSEUDEVOLUCAO]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -356,7 +400,7 @@ namespace GenioMVC.ViewModels.Pesso
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAevcat> listing = Models.ModelBase.Where<CSGenioAevcat>(m_userContext, false, pesso1__pseudevolucaoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PESSO1__PSEUDEVOLUCAO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAevcat> listing = Models.ModelBase.Where<CSGenioAevcat>(m_userContext, distinct, pesso1__pseudevolucaoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PESSO1__PSEUDEVOLUCAO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -364,7 +408,6 @@ namespace GenioMVC.ViewModels.Pesso
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -385,18 +428,12 @@ namespace GenioMVC.ViewModels.Pesso
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -404,7 +441,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 		private List<Pesso1_ValEvolucao_RowViewModel> MapPesso1_ValEvolucao(ListingMVC<CSGenioAevcat> Qlisting)
 		{
-			var Elements = new List<Pesso1_ValEvolucao_RowViewModel>();
+			List<Pesso1_ValEvolucao_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -421,7 +458,6 @@ namespace GenioMVC.ViewModels.Pesso
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAevcat row
 		/// to a Pesso1_ValEvolucao_RowViewModel object.
@@ -430,7 +466,9 @@ namespace GenioMVC.ViewModels.Pesso
 		private Pesso1_ValEvolucao_RowViewModel MapPesso1_ValEvolucao(CSGenioAevcat row)
 		{
 			var model = new Pesso1_ValEvolucao_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -444,32 +482,9 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Pesso1_ValEvolucao_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -483,39 +498,45 @@ namespace GenioMVC.ViewModels.Pesso
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAevcat> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAevcat row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Evcat m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Evcat m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PESSO1_VALEVOLUCAO]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Evcat", "Evcat.ValCodprogr", "Evcat.ValZzstate", "Evcat.ValSince", "Cate1", "Cate1.ValCategoria", "Evcat.ValFimperio", "Evcat.ValObservat", "Evcat.ValCodcateg", "Evcat.ValCodpesso", "BtnPermission"
+			"Evcat", "Evcat.ValCodprogr", "Evcat.ValZzstate", "Evcat.ValSince", "Cate1", "Cate1.ValCategoria", "Evcat.ValFimperio", "Evcat.ValObservat", "Evcat.ValCodcateg", "Evcat.ValCodpesso"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValSince", CSGenioAevcat.FldSince, typeof(DateTime?)),
 			new TableSearchColumn("Cate1_ValCategoria", CSGenioAcate1.FldCategoria, typeof(string)),
 			new TableSearchColumn("ValFimperio", CSGenioAevcat.FldFimperio, typeof(DateTime?)),
-			new TableSearchColumn("ValObservat", CSGenioAevcat.FldObservat, typeof(string))
+			new TableSearchColumn("ValObservat", CSGenioAevcat.FldObservat, typeof(string)),
 		];
-
-
-
 	}
 }

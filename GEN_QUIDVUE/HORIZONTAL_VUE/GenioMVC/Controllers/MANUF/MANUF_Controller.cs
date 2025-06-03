@@ -21,6 +21,8 @@ using GenioMVC.Models.Navigation;
 using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER MANUF]/
@@ -29,7 +31,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ManufController : ControllerBase
 	{
-		public ManufController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ManufController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION MANUF]/
 
 
@@ -41,6 +50,7 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER MANUF]/
+
 
 
 		/// <summary>

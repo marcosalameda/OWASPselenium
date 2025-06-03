@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Dsaid_Ware1ValWarehdesModel : RequestLookupModel
+		{
+			public Dsaid_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Outpt/Dsaid_Ware1ValWarehdes
 		// POST: /Outpt/Dsaid_Ware1ValWarehdes
 		[ActionName("Dsaid_Ware1ValWarehdes")]
-		public ActionResult Dsaid_Ware1ValWarehdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dsaid_Ware1ValWarehdes([FromBody] Dsaid_Ware1ValWarehdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dsaid_Ware1ValWarehdes_ViewModel model = new Dsaid_Ware1ValWarehdes_ViewModel(UserContext.Current);
-			
+
+			Models.Outpt parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dsaid_Ware1ValWarehdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Dsaid_ValSaidasModel : RequestLookupModel
+		{
+			public Dsaid_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Outpt/Dsaid_ValSaidas
 		// POST: /Outpt/Dsaid_ValSaidas
 		[ActionName("Dsaid_ValSaidas")]
-		public ActionResult Dsaid_ValSaidas([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dsaid_ValSaidas([FromBody] Dsaid_ValSaidasModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -483,16 +495,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Dsaid_ValSaidas_ViewModel model = new Dsaid_ValSaidas_ViewModel(UserContext.Current);
-			
+			Models.Outpt parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dsaid_ValSaidas_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,14 +532,14 @@ namespace GenioMVC.Controllers
 		}
 
 		[ActionName("ReorderDsaid_ValSaidas")]
-		public ActionResult ReorderDsaid_ValSaidas([FromBody]RequestReorderModel requestModel)
+		public ActionResult ReorderDsaid_ValSaidas([FromBody] RequestReorderModel requestModel)
 		{
 			var id = requestModel.Id;
 			var position = requestModel.Position.ToString();
 
-			Dsaid_ValSaidas_ViewModel model = new Dsaid_ValSaidas_ViewModel(UserContext.Current);
+			Dsaid_ValSaidas_ViewModel model = new(UserContext.Current);
 			model.setModes(Request.Query["m"].ToString());
-			model.ValCodoutpt = Navigation.GetStrValue("outpt");
+			model.OutptValCodoutpt = Navigation.GetStrValue("outpt");
 			model.Reorder(id, position);
 			model.Load(-1);
 

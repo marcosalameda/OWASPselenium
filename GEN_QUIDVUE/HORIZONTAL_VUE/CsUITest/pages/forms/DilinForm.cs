@@ -16,7 +16,7 @@ public class DilinForm : Form
 	/// <summary>
 	/// Line
 	/// </summary>
-	public BaseInputControl DilinLinenumb => new BaseInputControl(driver, ContainerLocator, "#DILIN___DILINLINENUMB");
+	public BaseInputControl DilinLinenumb => new BaseInputControl(driver, ContainerLocator, "container-DILIN___DILINLINENUMB", "#DILIN___DILINLINENUMB");
 
 	/// <summary>
 	/// Product
@@ -27,17 +27,17 @@ public class DilinForm : Form
 	/// <summary>
 	/// Ordered
 	/// </summary>
-	public BaseInputControl DilinOrdered => new BaseInputControl(driver, ContainerLocator, "#DILIN___DILINORDERED_");
+	public BaseInputControl DilinOrdered => new BaseInputControl(driver, ContainerLocator, "container-DILIN___DILINORDERED_", "#DILIN___DILINORDERED_");
 
 	/// <summary>
 	/// Delivered
 	/// </summary>
-	public BaseInputControl DilinDelivere => new BaseInputControl(driver, ContainerLocator, "#DILIN___DILINDELIVERE");
+	public BaseInputControl DilinDelivere => new BaseInputControl(driver, ContainerLocator, "container-DILIN___DILINDELIVERE", "#DILIN___DILINDELIVERE");
 
 	/// <summary>
 	/// Outstanding
 	/// </summary>
-	public BaseInputControl DilinOutstand => new BaseInputControl(driver, ContainerLocator, "#DILIN___DILINOUTSTAND");
+	public BaseInputControl DilinOutstand => new BaseInputControl(driver, ContainerLocator, "container-DILIN___DILINOUTSTAND", "#DILIN___DILINOUTSTAND");
 
 	public DilinForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "DILIN", containerLocator: containerLocator) { }

@@ -31,7 +31,7 @@ public class RelinForm : Form
 	/// <summary>
 	/// Line
 	/// </summary>
-	public BaseInputControl RelinLinenumb => new BaseInputControl(driver, ContainerLocator, "#RELIN___RELINLINENUMB");
+	public BaseInputControl RelinLinenumb => new BaseInputControl(driver, ContainerLocator, "container-RELIN___RELINLINENUMB", "#RELIN___RELINLINENUMB");
 
 	/// <summary>
 	/// Product
@@ -42,17 +42,17 @@ public class RelinForm : Form
 	/// <summary>
 	/// Ordered
 	/// </summary>
-	public BaseInputControl RelinOrdered => new BaseInputControl(driver, ContainerLocator, "#RELIN___RELINORDERED_");
+	public BaseInputControl RelinOrdered => new BaseInputControl(driver, ContainerLocator, "container-RELIN___RELINORDERED_", "#RELIN___RELINORDERED_");
 
 	/// <summary>
 	/// Received
 	/// </summary>
-	public BaseInputControl RelinReceived => new BaseInputControl(driver, ContainerLocator, "#RELIN___RELINRECEIVED");
+	public BaseInputControl RelinReceived => new BaseInputControl(driver, ContainerLocator, "container-RELIN___RELINRECEIVED", "#RELIN___RELINRECEIVED");
 
 	/// <summary>
 	/// Outstanding
 	/// </summary>
-	public BaseInputControl RelinOutstand => new BaseInputControl(driver, ContainerLocator, "#RELIN___RELINOUTSTAND");
+	public BaseInputControl RelinOutstand => new BaseInputControl(driver, ContainerLocator, "container-RELIN___RELINOUTSTAND", "#RELIN___RELINOUTSTAND");
 
 	public RelinForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "RELIN", containerLocator: containerLocator) { }

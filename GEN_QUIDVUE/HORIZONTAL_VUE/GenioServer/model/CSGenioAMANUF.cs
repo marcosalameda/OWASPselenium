@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAmanuf(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR MANUF]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codentit", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codentit", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("name", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "name", FieldType.TEXT);
 			Qfield.FieldDescription = "Legal name";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "LEGAL_NAME42902";
 
@@ -68,20 +64,18 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("initials", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "initials", FieldType.TEXT);
 			Qfield.FieldDescription = "Company initials";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "COMPANY_INITIALS56204";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("registra", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "registra", FieldType.TEXT);
 			Qfield.FieldDescription = "Legal registration";
 			Qfield.FieldSize =  30;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "LEGAL_REGISTRATION04413";
 
@@ -89,10 +83,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("taxnumbe", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "taxnumbe", FieldType.TEXT);
 			Qfield.FieldDescription = "VAT Number";
 			Qfield.FieldSize =  30;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "VAT_NUMBER24236";
 
@@ -100,10 +93,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("email", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "email", FieldType.TEXT);
 			Qfield.FieldDescription = "Email";
 			Qfield.FieldSize =  254;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "EMAIL25170";
 
@@ -111,10 +103,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("phonenum", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "phonenum", FieldType.TEXT);
 			Qfield.FieldDescription = "Phone number";
 			Qfield.FieldSize =  20;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PHONE_NUMBER20774";
 
@@ -122,10 +113,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("iban", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "iban", FieldType.TEXT);
 			Qfield.FieldDescription = "IBAN (International Bank Account Number)";
 			Qfield.FieldSize =  33;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "IBAN__INTERNATIONAL_45066";
 
@@ -133,130 +123,117 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("building", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "building", FieldType.TEXT);
 			Qfield.FieldDescription = "Building/house number";
 			Qfield.FieldSize =  25;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "BUILDING_HOUSE_NUMBE20738";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("street", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "street", FieldType.TEXT);
 			Qfield.FieldDescription = "Street";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "STREET44324";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("town", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "town", FieldType.TEXT);
 			Qfield.FieldDescription = "Town/City";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TOWN_CITY16259";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("county", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "county", FieldType.TEXT);
 			Qfield.FieldDescription = "County/Province";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "COUNTY_PROVINCE34285";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("state", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "state", FieldType.TEXT);
 			Qfield.FieldDescription = "State/Province";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "STATE_PROVINCE28516";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("pobox", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "pobox", FieldType.TEXT);
 			Qfield.FieldDescription = "Post office box";
 			Qfield.FieldSize =  5;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "POST_OFFICE_BOX06223";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("postalco", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "postalco", FieldType.TEXT);
 			Qfield.FieldDescription = "ZIP/Popstal code";
 			Qfield.FieldSize =  10;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ZIP_POPSTAL_CODE65164";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("telephon", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "telephon", FieldType.TEXT);
 			Qfield.FieldDescription = "Telephone";
 			Qfield.FieldSize =  20;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "TELEPHONE28697";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("fax", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "fax", FieldType.TEXT);
 			Qfield.FieldDescription = "Fax";
 			Qfield.FieldSize =  20;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "FAX08532";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("website", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "website", FieldType.TEXT);
 			Qfield.FieldDescription = "Web site";
 			Qfield.FieldSize =  254;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "WEB_SITE06263";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("person", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "person", FieldType.TEXT);
 			Qfield.FieldDescription = "Person/Department to contact";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "PERSON_DEPARTMENT_TO28777";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("contact", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "contact", FieldType.TEXT);
 			Qfield.FieldDescription = "Contact telephone number";
 			Qfield.FieldSize =  30;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CONTACT_TELEPHONE_NU12694";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("owner", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "owner", FieldType.TEXT);
 			Qfield.FieldDescription = "Owner";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "OWNER09558";
 
@@ -264,10 +241,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("carrier", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "carrier", FieldType.LOGIC);
 			Qfield.FieldDescription = "Carrier";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "CARRIER64855";
 
@@ -275,10 +251,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("supplier", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "supplier", FieldType.LOGIC);
 			Qfield.FieldDescription = "Supplier";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "SUPPLIER17230";
 
@@ -286,10 +261,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("manufact", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "manufact", FieldType.LOGIC);
 			Qfield.FieldDescription = "Manufacturer";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "MANUFACTURER50759";
 
@@ -297,59 +271,53 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("founded", FieldType.DATA);
+			Qfield = new Field(info.Alias, "founded", FieldType.DATE);
 			Qfield.FieldDescription = "Founded in";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "FOUNDED_IN54120";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("firstfacilitie", FieldType.CHAVE_FALSA_GUID);
+			Qfield = new Field(info.Alias, "firstfacilitie", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "First incorporated facility";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "FIRST_INCORPORATED_F63789";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("lastfacilitie", FieldType.CHAVE_FALSA_GUID);
+			Qfield = new Field(info.Alias, "lastfacilitie", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Last incorporated facility";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LAST_INCORPORATED_FA29541";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("language", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "language", FieldType.TEXT);
 			Qfield.FieldDescription = "Language";
 			Qfield.FieldSize =  2;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "LANGUAGE16872";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("currency", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "currency", FieldType.TEXT);
 			Qfield.FieldDescription = "Currency";
 			Qfield.FieldSize =  3;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CURRENCY13881";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -428,8 +396,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Manufacturer";
 			info.AreaPluralDesignation="Manufacturers";
 			info.DescriptionCav="MANUFACTURER50759";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

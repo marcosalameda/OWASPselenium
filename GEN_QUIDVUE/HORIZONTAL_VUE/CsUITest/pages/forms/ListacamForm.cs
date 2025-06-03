@@ -45,37 +45,37 @@ public class ListacamForm : Form
 	/// <summary>
 	/// Text Field
 	/// </summary>
-	public BaseInputControl CamtextoFldsTxtfield => new BaseInputControl(driver, ContainerLocator, "#CAMTEXTOFLDS_TXTFIELD");
+	public BaseInputControl CamtextoFldsTxtfield => new BaseInputControl(driver, ContainerLocator, "container-CAMTEXTOFLDS_TXTFIELD", "#CAMTEXTOFLDS_TXTFIELD");
 
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl CamtextoFldsDescrip => new BaseInputControl(driver, ContainerLocator, "#CAMTEXTOFLDS_DESCRIP_");
+	public BaseInputControl CamtextoFldsDescrip => new BaseInputControl(driver, ContainerLocator, "container-CAMTEXTOFLDS_DESCRIP_", "#CAMTEXTOFLDS_DESCRIP_");
 
 	/// <summary>
 	/// Numeric
 	/// </summary>
-	public BaseInputControl CamnumFldsNpassage => new BaseInputControl(driver, ContainerLocator, "#CAMNUM__FLDS_NPASSAGE");
+	public BaseInputControl CamnumFldsNpassage => new BaseInputControl(driver, ContainerLocator, "container-CAMNUM__FLDS_NPASSAGE", "#CAMNUM__FLDS_NPASSAGE");
 
 	/// <summary>
 	/// Numeric Decimal
 	/// </summary>
-	public BaseInputControl CamnumFldsDuration => new BaseInputControl(driver, ContainerLocator, "#CAMNUM__FLDS_DURATION");
+	public BaseInputControl CamnumFldsDuration => new BaseInputControl(driver, ContainerLocator, "container-CAMNUM__FLDS_DURATION", "#CAMNUM__FLDS_DURATION");
 
 	/// <summary>
 	/// Currency
 	/// </summary>
-	public BaseInputControl CamnumFldsPrice => new BaseInputControl(driver, ContainerLocator, "#CAMNUM__FLDS_PRICE___");
+	public BaseInputControl CamnumFldsPrice => new BaseInputControl(driver, ContainerLocator, "container-CAMNUM__FLDS_PRICE___", "#CAMNUM__FLDS_PRICE___");
 
 	/// <summary>
 	/// Currency Decimal
 	/// </summary>
-	public BaseInputControl CamnumFldsPrecobil => new BaseInputControl(driver, ContainerLocator, "#CAMNUM__FLDS_PRECOBIL");
+	public BaseInputControl CamnumFldsPrecobil => new BaseInputControl(driver, ContainerLocator, "container-CAMNUM__FLDS_PRECOBIL", "#CAMNUM__FLDS_PRECOBIL");
 
 	/// <summary>
 	/// Year
 	/// </summary>
-	public BaseInputControl CamdateFldsYear => new BaseInputControl(driver, ContainerLocator, "#CAMDATE_FLDS_YEAR____");
+	public BaseInputControl CamdateFldsYear => new BaseInputControl(driver, ContainerLocator, "container-CAMDATE_FLDS_YEAR____", "#CAMDATE_FLDS_YEAR____");
 
 	/// <summary>
 	/// Date
@@ -95,47 +95,47 @@ public class ListacamForm : Form
 	/// <summary>
 	/// Time
 	/// </summary>
-	public BaseInputControl CamdateFldsTime => new BaseInputControl(driver, ContainerLocator, "#CAMDATE_FLDS_TIME____");
+	public BaseInputControl CamdateFldsTime => new BaseInputControl(driver, ContainerLocator, "container-CAMDATE_FLDS_TIME____", "#CAMDATE_FLDS_TIME____");
 
 	/// <summary>
 	/// Zipcode
 	/// </summary>
-	public BaseInputControl CammaskFldsZipfield => new BaseInputControl(driver, ContainerLocator, "#CAMMASK_FLDS_ZIPFIELD");
+	public BaseInputControl CammaskFldsZipfield => new BaseInputControl(driver, ContainerLocator, "container-CAMMASK_FLDS_ZIPFIELD", "#CAMMASK_FLDS_ZIPFIELD");
 
 	/// <summary>
 	/// VAT Number
 	/// </summary>
-	public BaseInputControl CammaskFldsVatnumbr => new BaseInputControl(driver, ContainerLocator, "#CAMMASK_FLDS_VATNUMBR");
+	public BaseInputControl CammaskFldsVatnumbr => new BaseInputControl(driver, ContainerLocator, "container-CAMMASK_FLDS_VATNUMBR", "#CAMMASK_FLDS_VATNUMBR");
 
 	/// <summary>
 	/// Licence plate
 	/// </summary>
-	public BaseInputControl CammaskFldsLicplate => new BaseInputControl(driver, ContainerLocator, "#CAMMASK_FLDS_LICPLATE");
+	public BaseInputControl CammaskFldsLicplate => new BaseInputControl(driver, ContainerLocator, "container-CAMMASK_FLDS_LICPLATE", "#CAMMASK_FLDS_LICPLATE");
 
 	/// <summary>
 	/// Social Security No
 	/// </summary>
-	public BaseInputControl CammaskFldsSsnumber => new BaseInputControl(driver, ContainerLocator, "#CAMMASK_FLDS_SSNUMBER");
+	public BaseInputControl CammaskFldsSsnumber => new BaseInputControl(driver, ContainerLocator, "container-CAMMASK_FLDS_SSNUMBER", "#CAMMASK_FLDS_SSNUMBER");
 
 	/// <summary>
 	/// Banking Account Number
 	/// </summary>
-	public BaseInputControl CammaskFldsBanknmbr => new BaseInputControl(driver, ContainerLocator, "#CAMMASK_FLDS_BANKNMBR");
+	public BaseInputControl CammaskFldsBanknmbr => new BaseInputControl(driver, ContainerLocator, "container-CAMMASK_FLDS_BANKNMBR", "#CAMMASK_FLDS_BANKNMBR");
 
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl CammaskFldsEmailfld => new BaseInputControl(driver, ContainerLocator, "#CAMMASK_FLDS_EMAILFLD");
+	public BaseInputControl CammaskFldsEmailfld => new BaseInputControl(driver, ContainerLocator, "container-CAMMASK_FLDS_EMAILFLD", "#CAMMASK_FLDS_EMAILFLD");
 
 	/// <summary>
 	/// IBAN
 	/// </summary>
-	public BaseInputControl CammaskFldsIbanfiel => new BaseInputControl(driver, ContainerLocator, "#CAMMASK_FLDS_IBANFIEL");
+	public BaseInputControl CammaskFldsIbanfiel => new BaseInputControl(driver, ContainerLocator, "container-CAMMASK_FLDS_IBANFIEL", "#CAMMASK_FLDS_IBANFIEL");
 
 	/// <summary>
 	/// Uppercase
 	/// </summary>
-	public BaseInputControl CammaskFldsUpprtext => new BaseInputControl(driver, ContainerLocator, "#CAMMASK_FLDS_UPPRTEXT");
+	public BaseInputControl CammaskFldsUpprtext => new BaseInputControl(driver, ContainerLocator, "container-CAMMASK_FLDS_UPPRTEXT", "#CAMMASK_FLDS_UPPRTEXT");
 
 	/// <summary>
 	/// Numeric enumeration
@@ -155,32 +155,32 @@ public class ListacamForm : Form
 	/// <summary>
 	/// Logo
 	/// </summary>
-	public BaseInputControl CamdocsFldsLogo => new BaseInputControl(driver, ContainerLocator, "#CAMDOCS_FLDS_LOGO____");
+	public BaseInputControl CamdocsFldsLogo => new BaseInputControl(driver, ContainerLocator, "container-CAMDOCS_FLDS_LOGO____", "#CAMDOCS_FLDS_LOGO____");
 
 	/// <summary>
 	/// Attachments
 	/// </summary>
-	public DocumentControl CamdocsFldsAttach => new DocumentControl(driver, ContainerLocator, "container-CAMDOCS_FLDS_ATTACH__");
+	public DocumentControl CamdocsFldsAttach => new DocumentControl(driver, ContainerLocator, "CAMDOCS_FLDS_ATTACH__");
 
 	/// <summary>
 	/// Created by
 	/// </summary>
-	public BaseInputControl CamauditFldsCreatuse => new BaseInputControl(driver, ContainerLocator, "#CAMAUDITFLDS_CREATUSE");
+	public BaseInputControl CamauditFldsCreatuse => new BaseInputControl(driver, ContainerLocator, "container-CAMAUDITFLDS_CREATUSE", "#CAMAUDITFLDS_CREATUSE");
 
 	/// <summary>
 	/// Date of Creation
 	/// </summary>
-	public BaseInputControl CamauditFldsCreatdat => new BaseInputControl(driver, ContainerLocator, "#CAMAUDITFLDS_CREATDAT");
+	public BaseInputControl CamauditFldsCreatdat => new BaseInputControl(driver, ContainerLocator, "container-CAMAUDITFLDS_CREATDAT", "#CAMAUDITFLDS_CREATDAT");
 
 	/// <summary>
 	/// Creation hour
 	/// </summary>
-	public BaseInputControl CamauditFldsCreathou => new BaseInputControl(driver, ContainerLocator, "#CAMAUDITFLDS_CREATHOU");
+	public BaseInputControl CamauditFldsCreathou => new BaseInputControl(driver, ContainerLocator, "container-CAMAUDITFLDS_CREATHOU", "#CAMAUDITFLDS_CREATHOU");
 
 	/// <summary>
 	/// Complete Date of Creation
 	/// </summary>
-	public BaseInputControl CamauditFldsCreatins => new BaseInputControl(driver, ContainerLocator, "#CAMAUDITFLDS_CREATINS");
+	public BaseInputControl CamauditFldsCreatins => new BaseInputControl(driver, ContainerLocator, "container-CAMAUDITFLDS_CREATINS", "#CAMAUDITFLDS_CREATINS");
 
 	public ListacamForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "LISTACAM", containerLocator: containerLocator) { }

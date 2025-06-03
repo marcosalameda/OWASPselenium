@@ -38,7 +38,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Sequence" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Stock.ValSequence")]
 		[NumericAttribute(0)]
-		public decimal? ValSequence { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValSequence, 0)); } set { klass.ValSequence = Convert.ToDecimal(value); } }
+		public decimal? ValSequence { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValSequence, 0)); } set { klass.ValSequence = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date")]
 		/// <summary>Field : "Date" Tipo: "DT" Formula:  ""</summary>
@@ -56,70 +56,73 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">>PRODUCT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Stock.ValCodprodu")]
 		public string ValCodprodu { get { return klass.ValCodprodu; } set { klass.ValCodprodu = value; } }
+
 		private Produ _produ;
 		[DisplayName("Produ")]
 		[ShouldSerialize("Produ")]
-		public virtual Produ Produ {
-			get {
-				if (!this.isEmptyModel && (_produ == null || (!string.IsNullOrEmpty(ValCodprodu) && (_produ.isEmptyModel || _produ.klass.QPrimaryKey != ValCodprodu))))
+		public virtual Produ Produ
+		{
+			get
+			{
+				if (!isEmptyModel && (_produ == null || (!string.IsNullOrEmpty(ValCodprodu) && (_produ.isEmptyModel || _produ.klass.QPrimaryKey != ValCodprodu))))
 					_produ = Models.Produ.Find(ValCodprodu, m_userContext, Identifier, _fieldsToSerialize);
-				if (_produ == null)
-					_produ = new Models.Produ(m_userContext, true, _fieldsToSerialize);
+				_produ ??= new Models.Produ(m_userContext, true, _fieldsToSerialize);
 				return _produ;
 			}
 			set { _produ = value; }
 		}
 
-
 		[DisplayName(">>RECEIPT")]
 		/// <summary>Field : ">>RECEIPT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Stock.ValCodrecei")]
 		public string ValCodrecei { get { return klass.ValCodrecei; } set { klass.ValCodrecei = value; } }
+
 		private Recei _recei;
 		[DisplayName("Recei")]
 		[ShouldSerialize("Recei")]
-		public virtual Recei Recei {
-			get {
-				if (!this.isEmptyModel && (_recei == null || (!string.IsNullOrEmpty(ValCodrecei) && (_recei.isEmptyModel || _recei.klass.QPrimaryKey != ValCodrecei))))
+		public virtual Recei Recei
+		{
+			get
+			{
+				if (!isEmptyModel && (_recei == null || (!string.IsNullOrEmpty(ValCodrecei) && (_recei.isEmptyModel || _recei.klass.QPrimaryKey != ValCodrecei))))
 					_recei = Models.Recei.Find(ValCodrecei, m_userContext, Identifier, _fieldsToSerialize);
-				if (_recei == null)
-					_recei = new Models.Recei(m_userContext, true, _fieldsToSerialize);
+				_recei ??= new Models.Recei(m_userContext, true, _fieldsToSerialize);
 				return _recei;
 			}
 			set { _recei = value; }
 		}
 
-
 		[DisplayName(">>DISPATCH")]
 		/// <summary>Field : ">>DISPATCH" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Stock.ValCoddispa")]
 		public string ValCoddispa { get { return klass.ValCoddispa; } set { klass.ValCoddispa = value; } }
+
 		private Dispa _dispa;
 		[DisplayName("Dispa")]
 		[ShouldSerialize("Dispa")]
-		public virtual Dispa Dispa {
-			get {
-				if (!this.isEmptyModel && (_dispa == null || (!string.IsNullOrEmpty(ValCoddispa) && (_dispa.isEmptyModel || _dispa.klass.QPrimaryKey != ValCoddispa))))
+		public virtual Dispa Dispa
+		{
+			get
+			{
+				if (!isEmptyModel && (_dispa == null || (!string.IsNullOrEmpty(ValCoddispa) && (_dispa.isEmptyModel || _dispa.klass.QPrimaryKey != ValCoddispa))))
 					_dispa = Models.Dispa.Find(ValCoddispa, m_userContext, Identifier, _fieldsToSerialize);
-				if (_dispa == null)
-					_dispa = new Models.Dispa(m_userContext, true, _fieldsToSerialize);
+				_dispa ??= new Models.Dispa(m_userContext, true, _fieldsToSerialize);
 				return _dispa;
 			}
 			set { _dispa = value; }
 		}
 
-
 		[DisplayName("Quantity")]
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Stock.ValQuantity")]
 		[NumericAttribute(0)]
-		public decimal? ValQuantity { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantity, 0)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
+		public decimal? ValQuantity { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantity, 0)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
 
 		[DisplayName("Balance")]
 		/// <summary>Field : "Balance" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Stock.ValBalance")]
 		[NumericAttribute(0)]
-		public decimal? ValBalance { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDecimal(value); } }
+		public decimal? ValBalance { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValBalance, 0)); } set { klass.ValBalance = Convert.ToDecimal(value); } }
 
 		[DisplayName("Reference")]
 		/// <summary>Field : "Reference" Tipo: "C" Formula:  ""</summary>
@@ -128,8 +131,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Stock.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Stock(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -148,7 +151,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAstock csgenioa)
 		{
 			if (csgenioa == null)
@@ -159,18 +161,15 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "produ":
-						if (_produ == null)
-							_produ = new Produ(m_userContext, true, _fieldsToSerialize);
+						_produ ??= new Produ(m_userContext, true, _fieldsToSerialize);
 						_produ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "recei":
-						if (_recei == null)
-							_recei = new Recei(m_userContext, true, _fieldsToSerialize);
+						_recei ??= new Recei(m_userContext, true, _fieldsToSerialize);
 						_recei.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "dispa":
-						if (_dispa == null)
-							_dispa = new Dispa(m_userContext, true, _fieldsToSerialize);
+						_dispa ??= new Dispa(m_userContext, true, _fieldsToSerialize);
 						_dispa.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Timequip_ValReparacoModel : RequestLookupModel
+		{
+			public Timequip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Timequip_ValReparaco
 		// POST: /Equip/Timequip_ValReparaco
 		[ActionName("Timequip_ValReparaco")]
-		public ActionResult Timequip_ValReparaco([FromBody]RequestLookupModel requestModel)
+		public ActionResult Timequip_ValReparaco([FromBody] Timequip_ValReparacoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +424,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Timequip_ValReparaco_ViewModel model = new Timequip_ValReparaco_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Timequip_ValReparaco_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -452,13 +458,18 @@ namespace GenioMVC.Controllers
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
 
 			return JsonOK(model);
+		}
+
+		public class Timequip_ValPrimaryModel : RequestLookupModel
+		{
+			public Timequip_ViewModel Model { get; set; }
 		}
 
 		//
 		// GET: /Equip/Timequip_ValPrimary
 		// POST: /Equip/Timequip_ValPrimary
 		[ActionName("Timequip_ValPrimary")]
-		public ActionResult Timequip_ValPrimary([FromBody]RequestLookupModel requestModel)
+		public ActionResult Timequip_ValPrimary([FromBody] Timequip_ValPrimaryModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -482,16 +493,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Timequip_ValPrimary_ViewModel model = new Timequip_ValPrimary_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Timequip_ValPrimary_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -516,11 +529,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Timequip_ValSecundarModel : RequestLookupModel
+		{
+			public Timequip_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Timequip_ValSecundar
 		// POST: /Equip/Timequip_ValSecundar
 		[ActionName("Timequip_ValSecundar")]
-		public ActionResult Timequip_ValSecundar([FromBody]RequestLookupModel requestModel)
+		public ActionResult Timequip_ValSecundar([FromBody] Timequip_ValSecundarModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -544,16 +562,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Timequip_ValSecundar_ViewModel model = new Timequip_ValSecundar_ViewModel(UserContext.Current);
-			
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Timequip_ValSecundar_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Pesso;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PESSO]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class PessoController : ControllerBase
 	{
-		public PessoController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public PessoController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PESSO]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER PESSO]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Pesso row = null;
-
-			if (row == null)
-			{
-				row = new Models.Pesso(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("pesso");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Pesso row = new Models.Pesso(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("pesso");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "EXTERNO_CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Externo_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Externo_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Externo_cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO___CATEGCATEGORY":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pesso___categcategory(qs);
 							result = model.TableCategCategory;
@@ -93,8 +100,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO___PAIS1COUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pesso___pais1country_(qs);
 							result = model.TablePais1Country;
@@ -102,8 +108,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO___CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pesso___cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -111,8 +116,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO___REGI1REGIAO__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pesso_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pesso___regi1regiao__(qs);
 							result = model.TableRegi1Regiao;
@@ -120,8 +124,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO1__CATEGCATEGORY":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pesso1__categcategory(qs);
 							result = model.TableCategCategory;
@@ -129,8 +132,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO1__CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pesso1__cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -138,8 +140,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSO1__REGI1REGIAO__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pesso1_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pesso1__regi1regiao__(qs);
 							result = model.TableRegi1Regiao;
@@ -147,8 +148,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSOSEPCATEGCATEGORY":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pessosep_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pessosep_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pessosepcategcategory(qs);
 							result = model.TableCategCategory;
@@ -156,8 +156,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSOS00CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pessosep_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pessosep_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pessos00cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -251,6 +250,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Externo" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -264,6 +266,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Pesso)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Pesso" form. (++, CT, SR, CL and U1)
@@ -279,6 +283,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Pesso1" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -293,6 +299,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Pessohis" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -306,6 +314,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Pesso)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Pessosep" form. (++, CT, SR, CL and U1)
@@ -350,6 +360,37 @@ namespace GenioMVC.Controllers
 			}
 
 			return Json(new { Success = false, Message = "Error" });
+		}
+
+		public ActionResult GetDocumsTickets([FromBody]RequestDocumGetTicketsModel requestModel)
+		{
+			return base.GetDocumsTickets(requestModel.TableName, requestModel.FieldName, requestModel.KeyValue);
+		}
+
+		public ActionResult GetFileVersions([FromBody]RequestDocumGetModel requestModel)
+		{
+			return base.GetFileVersions(requestModel.Ticket);
+		}
+
+		public ActionResult GetFileProperties([FromBody]RequestDocumGetModel requestModel)
+		{
+			return base.GetFileProperties(requestModel.Ticket);
+		}
+
+		public ActionResult GetFile([FromBody]RequestDocumGetModel requestModel)
+		{
+			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
+		}
+
+		[DisableRequestSizeLimit]
+		public new ActionResult SetFile([FromForm] string ticket, [FromForm] VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
+		{
+			return base.SetFile(ticket, mode, version);
+		}
+
+		public ActionResult SetFilesState([FromBody]RequestDocumsChangeModel requestModel)
+		{
+			return base.SetFilesState(requestModel.Documents);
 		}
 	}
 }

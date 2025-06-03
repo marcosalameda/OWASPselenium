@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">PERSON" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Evcat.ValCodpesso")]
 		public string ValCodpesso { get { return klass.ValCodpesso; } set { klass.ValCodpesso = value; } }
+
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso {
-			get {
-				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
+		public virtual Pesso Pesso
+		{
+			get
+			{
+				if (!isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pesso == null)
-					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
+				_pesso ??= new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
 			set { _pesso = value; }
 		}
 
-
 		[DisplayName(">CATEGORy")]
 		/// <summary>Field : ">CATEGORy" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Evcat.ValCodcateg")]
 		public string ValCodcateg { get { return klass.ValCodcateg; } set { klass.ValCodcateg = value; } }
+
 		private Cate1 _cate1;
 		[DisplayName("Cate1")]
 		[ShouldSerialize("Cate1")]
-		public virtual Cate1 Cate1 {
-			get {
-				if (!this.isEmptyModel && (_cate1 == null || (!string.IsNullOrEmpty(ValCodcateg) && (_cate1.isEmptyModel || _cate1.klass.QPrimaryKey != ValCodcateg))))
+		public virtual Cate1 Cate1
+		{
+			get
+			{
+				if (!isEmptyModel && (_cate1 == null || (!string.IsNullOrEmpty(ValCodcateg) && (_cate1.isEmptyModel || _cate1.klass.QPrimaryKey != ValCodcateg))))
 					_cate1 = Models.Cate1.Find(ValCodcateg, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cate1 == null)
-					_cate1 = new Models.Cate1(m_userContext, true, _fieldsToSerialize);
+				_cate1 ??= new Models.Cate1(m_userContext, true, _fieldsToSerialize);
 				return _cate1;
 			}
 			set { _cate1 = value; }
 		}
-
 
 		[DisplayName("Since")]
 		/// <summary>Field : "Since" Tipo: "D" Formula:  ""</summary>
@@ -108,8 +110,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Evcat.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Evcat(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -128,7 +130,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAevcat csgenioa)
 		{
 			if (csgenioa == null)
@@ -139,13 +140,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "pesso":
-						if (_pesso == null)
-							_pesso = new Pesso(m_userContext, true, _fieldsToSerialize);
+						_pesso ??= new Pesso(m_userContext, true, _fieldsToSerialize);
 						_pesso.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "cate1":
-						if (_cate1 == null)
-							_cate1 = new Cate1(m_userContext, true, _fieldsToSerialize);
+						_cate1 ??= new Cate1(m_userContext, true, _fieldsToSerialize);
 						_cate1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

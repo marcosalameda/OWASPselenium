@@ -220,34 +220,34 @@ namespace GenioMVC.ViewModels.Flds
 			{
 				// (FLDSCOND form condition) !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
 				if (!isApply && (!(areaFlds.klass.ValFormcond == 0)&&areaFlds.klass.ValCond=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A"))
-					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFserver2).isEmptyValue(model.ValFserver2))
+					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFserver2).isEmptyValue(ViewModelConversion.ToNumeric(model.ValFserver2)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, ""); // Message: ""
+					StatusMessage message = new(status, ""); // Message: ""
 					result.MergeStatusMessage(message);
 				}
 				// (FLDSCOND form condition) !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE"
 				if (!isApply && (!(areaFlds.klass.ValFormcond == 0)&&areaFlds.klass.ValCond=="REQUIRE")
-					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFclient3).isEmptyValue(model.ValFclient3))
+					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFclient3).isEmptyValue(ViewModelConversion.ToString(model.ValFclient3)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, ""); // Message: ""
+					StatusMessage message = new(status, ""); // Message: ""
 					result.MergeStatusMessage(message);
 				}
 				// (FLDSCOND form condition) !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE" && HasRole("A")
 				if (!isApply && (!(areaFlds.klass.ValFormcond == 0)&&areaFlds.klass.ValCond=="REQUIRE"&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A"))
-					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFserver3).isEmptyValue(model.ValFserver3))
+					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFserver3).isEmptyValue(ViewModelConversion.ToImage(model.ValFserver3)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, ""); // Message: ""
+					StatusMessage message = new(status, ""); // Message: ""
 					result.MergeStatusMessage(message);
 				}
 				// (FLDSCOND form condition) !isEmptyL([FLDS->FORMCOND]) && [FLDS->COND] == "REQUIRE"
 				if (!isApply && (!(areaFlds.klass.ValFormcond == 0)&&areaFlds.klass.ValCond=="REQUIRE")
-					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFclient2).isEmptyValue(model.ValFclient2))
+					&& CSGenio.business.Area.GetFieldInfo(CSGenioAflds.FldFclient2).isEmptyValue(ViewModelConversion.ToLogic(model.ValFclient2)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, ""); // Message: ""
+					StatusMessage message = new(status, ""); // Message: ""
 					result.MergeStatusMessage(message);
 				}
 			}
@@ -268,6 +268,7 @@ namespace GenioMVC.ViewModels.Flds
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Flds m)
 		{
 			if (m == null)
@@ -302,20 +303,13 @@ namespace GenioMVC.ViewModels.Flds
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Flds m)
 		{
 			if (m == null)
@@ -625,7 +619,6 @@ namespace GenioMVC.ViewModels.Flds
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">>LOCATION" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Produ.ValCodlocat")]
 		public string ValCodlocat { get { return klass.ValCodlocat; } set { klass.ValCodlocat = value; } }
+
 		private Locat _locat;
 		[DisplayName("Locat")]
 		[ShouldSerialize("Locat")]
-		public virtual Locat Locat {
-			get {
-				if (!this.isEmptyModel && (_locat == null || (!string.IsNullOrEmpty(ValCodlocat) && (_locat.isEmptyModel || _locat.klass.QPrimaryKey != ValCodlocat))))
+		public virtual Locat Locat
+		{
+			get
+			{
+				if (!isEmptyModel && (_locat == null || (!string.IsNullOrEmpty(ValCodlocat) && (_locat.isEmptyModel || _locat.klass.QPrimaryKey != ValCodlocat))))
 					_locat = Models.Locat.Find(ValCodlocat, m_userContext, Identifier, _fieldsToSerialize);
-				if (_locat == null)
-					_locat = new Models.Locat(m_userContext, true, _fieldsToSerialize);
+				_locat ??= new Models.Locat(m_userContext, true, _fieldsToSerialize);
 				return _locat;
 			}
 			set { _locat = value; }
 		}
 
-
 		[DisplayName(">>LOCATION EXTENSION")]
 		/// <summary>Field : ">>LOCATION EXTENSION" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Produ.ValCodlcext")]
 		public string ValCodlcext { get { return klass.ValCodlcext; } set { klass.ValCodlcext = value; } }
+
 		private Lcext _lcext;
 		[DisplayName("Lcext")]
 		[ShouldSerialize("Lcext")]
-		public virtual Lcext Lcext {
-			get {
-				if (!this.isEmptyModel && (_lcext == null || (!string.IsNullOrEmpty(ValCodlcext) && (_lcext.isEmptyModel || _lcext.klass.QPrimaryKey != ValCodlcext))))
+		public virtual Lcext Lcext
+		{
+			get
+			{
+				if (!isEmptyModel && (_lcext == null || (!string.IsNullOrEmpty(ValCodlcext) && (_lcext.isEmptyModel || _lcext.klass.QPrimaryKey != ValCodlcext))))
 					_lcext = Models.Lcext.Find(ValCodlcext, m_userContext, Identifier, _fieldsToSerialize);
-				if (_lcext == null)
-					_lcext = new Models.Lcext(m_userContext, true, _fieldsToSerialize);
+				_lcext ??= new Models.Lcext(m_userContext, true, _fieldsToSerialize);
 				return _lcext;
 			}
 			set { _lcext = value; }
 		}
-
 
 		[DisplayName("Product")]
 		/// <summary>Field : "Product" Tipo: "C" Formula:  ""</summary>
@@ -102,31 +104,31 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Weight" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Produ.ValWeight")]
 		[NumericAttribute(2)]
-		public decimal? ValWeight { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValWeight, 2)); } set { klass.ValWeight = Convert.ToDecimal(value); } }
+		public decimal? ValWeight { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValWeight, 2)); } set { klass.ValWeight = Convert.ToDecimal(value); } }
 
 		[DisplayName("Price")]
 		/// <summary>Field : "Price" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Produ.ValPrice")]
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValPrice { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValPrice, 4)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
+		public decimal? ValPrice { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValPrice, 4)); } set { klass.ValPrice = Convert.ToDecimal(value); } }
 
 		[DisplayName("Inputs")]
 		/// <summary>Field : "Inputs" Tipo: "N" Formula: SR "[RELIN->RECEIVED]"</summary>
 		[ShouldSerialize("Produ.ValInputs")]
 		[NumericAttribute(0)]
-		public decimal? ValInputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValInputs, 0)); } set { klass.ValInputs = Convert.ToDecimal(value); } }
+		public decimal? ValInputs { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValInputs, 0)); } set { klass.ValInputs = Convert.ToDecimal(value); } }
 
 		[DisplayName("Outputs")]
 		/// <summary>Field : "Outputs" Tipo: "N" Formula: SR "[DILIN->DELIVERE]"</summary>
 		[ShouldSerialize("Produ.ValOutputs")]
 		[NumericAttribute(0)]
-		public decimal? ValOutputs { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutputs, 0)); } set { klass.ValOutputs = Convert.ToDecimal(value); } }
+		public decimal? ValOutputs { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOutputs, 0)); } set { klass.ValOutputs = Convert.ToDecimal(value); } }
 
 		[DisplayName("Stock")]
 		/// <summary>Field : "Stock" Tipo: "N" Formula: SR "[RELIN->RECEIVED]-[DILIN->DELIVERE]"</summary>
 		[ShouldSerialize("Produ.ValStock")]
 		[NumericAttribute(0)]
-		public decimal? ValStock { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStock, 0)); } set { klass.ValStock = Convert.ToDecimal(value); } }
+		public decimal? ValStock { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValStock, 0)); } set { klass.ValStock = Convert.ToDecimal(value); } }
 
 		[DisplayName("Image")]
 		/// <summary>Field : "Image" Tipo: "IJ" Formula:  ""</summary>
@@ -146,8 +148,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Produ.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Produ(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -166,7 +168,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAprodu csgenioa)
 		{
 			if (csgenioa == null)
@@ -177,13 +178,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "locat":
-						if (_locat == null)
-							_locat = new Locat(m_userContext, true, _fieldsToSerialize);
+						_locat ??= new Locat(m_userContext, true, _fieldsToSerialize);
 						_locat.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "lcext":
-						if (_lcext == null)
-							_lcext = new Lcext(m_userContext, true, _fieldsToSerialize);
+						_lcext ??= new Lcext(m_userContext, true, _fieldsToSerialize);
 						_lcext.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

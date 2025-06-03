@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Fldstbl_AeroValNameModel : RequestLookupModel
+		{
+			public Fldstbl_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Flds/Fldstbl_AeroValName
 		// POST: /Flds/Fldstbl_AeroValName
 		[ActionName("Fldstbl_AeroValName")]
-		public ActionResult Fldstbl_AeroValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Fldstbl_AeroValName([FromBody] Fldstbl_AeroValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Fldstbl_AeroValName_ViewModel model = new Fldstbl_AeroValName_ViewModel(UserContext.Current);
-			
+
+			Models.Flds parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Fldstbl_AeroValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Fldstbl_ValFeecaModel : RequestLookupModel
+		{
+			public Fldstbl_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Flds/Fldstbl_ValFeeca
 		// POST: /Flds/Fldstbl_ValFeeca
 		[ActionName("Fldstbl_ValFeeca")]
-		public ActionResult Fldstbl_ValFeeca([FromBody]RequestLookupModel requestModel)
+		public ActionResult Fldstbl_ValFeeca([FromBody] Fldstbl_ValFeecaModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -483,16 +495,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Fldstbl_ValFeeca_ViewModel model = new Fldstbl_ValFeeca_ViewModel(UserContext.Current);
-			
+			Models.Flds parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Fldstbl_ValFeeca_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

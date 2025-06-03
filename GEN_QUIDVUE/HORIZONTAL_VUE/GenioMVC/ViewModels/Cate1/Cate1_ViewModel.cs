@@ -161,6 +161,7 @@ namespace GenioMVC.ViewModels.Cate1
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Cate1 m)
 		{
 			if (m == null)
@@ -182,20 +183,13 @@ namespace GenioMVC.ViewModels.Cate1
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Cate1 m)
 		{
 			if (m == null)
@@ -355,7 +349,7 @@ namespace GenioMVC.ViewModels.Cate1
 			validator.StringLength("ValAbbreviation", Resources.Resources.ABBREVIATION31267, ValAbbreviation, 10);
 			validator.StringLength("ValCategoria", Resources.Resources.CATEGORY18978, ValCategoria, 50);
 
-			validator.Required("ValCategoria", Resources.Resources.CATEGORY18978, ViewModelConversion.ToString(ValCategoria), FieldType.TEXTO.Formatting);
+			validator.Required("ValCategoria", Resources.Resources.CATEGORY18978, ViewModelConversion.ToString(ValCategoria), FieldType.TEXT.GetFormatting());
 
 
 			return validator.GetResult();
@@ -403,8 +397,6 @@ namespace GenioMVC.ViewModels.Cate1
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

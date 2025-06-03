@@ -220,7 +220,7 @@ namespace CSGenio.framework
 
         public static ColumnFormat GetColumnFormat(Field f)
         {
-            if (f.FieldType == FieldType.VALOR)
+            if (f.FieldType == FieldType.CURRENCY)
                 return QueryInfo.ColumnFormat.CurrencyField;
 
             switch (f.FieldFormat)

@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Wareh
 {
-	public class Mltform_ValMltform1_ViewModel : ListViewModel
+	public class Mltform_ValMltform1_ViewModel : MenuListViewModel<Models.Wpess>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DF"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<GenioMVC.ViewModels.Wpess.Armapess_ViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "wpess"; }
+		[JsonIgnore]
+		public override string TableAlias => "wpess";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Mltform_ValMltform1"; }
+		public override string Uuid => "Mltform_ValMltform1";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCodwareh { get; set; }
+		[JsonIgnore]
+		public string WarehValCodwareh { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Wareh
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS MLTFORM_PSEUDMLTFORM1]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Mltform_ValMltform1_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Mltform_ValMltform1_ViewModel" /> class.
@@ -70,7 +109,17 @@ namespace GenioMVC.ViewModels.Wareh
 		/// <param name="userContext">The current user request context</param>
 		public Mltform_ValMltform1_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodwareh = userContext.CurrentNavigation.CurrentLevel.GetEntry("wareh")?.ToString();
+			WarehValCodwareh = userContext.CurrentNavigation.CurrentLevel.GetEntry("wareh")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Mltform_ValMltform1_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Mltform_ValMltform1_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -78,9 +127,9 @@ namespace GenioMVC.ViewModels.Wareh
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.EMPLOYEE_NUMBER50873, 1, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATA, Resources.Resources.BIRTH_DATE00284, 8, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERIC, Resources.Resources.EMPLOYEE_NUMBER50873, 1, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATE, Resources.Resources.BIRTH_DATE00284, 8, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -130,11 +179,10 @@ namespace GenioMVC.ViewModels.Wareh
 
 			if (Menu == null)
 				Menu = new TablePartial<GenioMVC.ViewModels.Wpess.Armapess_ViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -146,12 +194,11 @@ namespace GenioMVC.ViewModels.Wareh
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodwareh != null)
-				crs.Equal(CSGenioAwpess.FldCodwareh, this.ValCodwareh);
+			if (this.WarehValCodwareh != null)
+				crs.Equal(CSGenioAwpess.FldCodwareh, this.WarehValCodwareh);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -248,20 +295,19 @@ namespace GenioMVC.ViewModels.Wareh
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAwpess> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "MLTFORM")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<GenioMVC.ViewModels.Wpess.Armapess_ViewModel>();
 
 				CriteriaSet mltform_pseudmltform1Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -287,26 +333,24 @@ namespace GenioMVC.ViewModels.Wareh
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("wpess", "name");
+					firstVisibleColumn ??= new FieldRef("wpess", "name");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAwpess model_limit_area = new CSGenioAwpess(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_MLTFORM_PSEUDMLTFORM1");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAwpess model_limit_area = new CSGenioAwpess(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_MLTFORM_PSEUDMLTFORM1");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -317,6 +361,8 @@ namespace GenioMVC.ViewModels.Wareh
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ MLTFORM_PSEUDMLTFORM1]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -345,7 +391,7 @@ namespace GenioMVC.ViewModels.Wareh
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAwpess> listing = Models.ModelBase.Where<CSGenioAwpess>(m_userContext, false, mltform_pseudmltform1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_MLTFORM_PSEUDMLTFORM1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAwpess> listing = Models.ModelBase.Where<CSGenioAwpess>(m_userContext, distinct, mltform_pseudmltform1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_MLTFORM_PSEUDMLTFORM1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -381,18 +427,12 @@ namespace GenioMVC.ViewModels.Wareh
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -400,7 +440,7 @@ namespace GenioMVC.ViewModels.Wareh
 
 		private List<Models.Wpess> MapMltform_ValMltform1(ListingMVC<CSGenioAwpess> Qlisting)
 		{
-			var Elements = new List<Models.Wpess>();
+			List<Models.Wpess> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -417,7 +457,6 @@ namespace GenioMVC.ViewModels.Wareh
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAwpess row
 		/// to a Models.Wpess object.
@@ -426,7 +465,9 @@ namespace GenioMVC.ViewModels.Wareh
 		private Models.Wpess MapMltform_ValMltform1(CSGenioAwpess row)
 		{
 			var model = new Models.Wpess(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -438,10 +479,8 @@ namespace GenioMVC.ViewModels.Wareh
 				}
 			}
 
-
 			return model;
 		}
-
 
 		/// <summary>
 		/// Checks the loaded model for pending rows (zzsttate not 0).
@@ -454,31 +493,40 @@ namespace GenioMVC.ViewModels.Wareh
 			return false;
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAwpess> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAwpess row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Wpess m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Wpess m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM MLTFORM_VALMLTFORM1]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Wpess", "Wpess.ValCodpess", "Wpess.ValZzstate", "Wpess.ValName", "Wpess.ValNfunc", "Wpess.ValDate", "Wpess.ValCodwareh", "BtnPermission"
+			"Wpess", "Wpess.ValCodpess", "Wpess.ValZzstate", "Wpess.ValName", "Wpess.ValNfunc", "Wpess.ValDate", "Wpess.ValCodwareh"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValNfunc", CSGenioAwpess.FldNfunc, typeof(decimal?)),
 			new TableSearchColumn("ValName", CSGenioAwpess.FldName, typeof(string)),
@@ -491,10 +539,6 @@ namespace GenioMVC.ViewModels.Wareh
 			new TableSearchColumn("ValCountry", CSGenioAwpess.FldCountry, typeof(string)),
 			new TableSearchColumn("ValEmail", CSGenioAwpess.FldEmail, typeof(string)),
 			new TableSearchColumn("ValCellphon", CSGenioAwpess.FldCellphon, typeof(decimal?)),
-			new TableSearchColumn("ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string))
-		];
-
-
-
+			new TableSearchColumn("ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string))		];
 	}
 }

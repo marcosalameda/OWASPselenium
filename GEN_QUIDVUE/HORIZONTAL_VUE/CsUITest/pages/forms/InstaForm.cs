@@ -52,17 +52,17 @@ public class InstaForm : Form
 	/// <summary>
 	/// Quantity of hours:
 	/// </summary>
-	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "#INSTA___INSTAHOURS___");
+	public BaseInputControl InstaHours => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTAHOURS___", "#INSTA___INSTAHOURS___");
 
 	/// <summary>
 	/// Price per hour:
 	/// </summary>
-	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "#INSTA___INSTAPRECOHOR");
+	public BaseInputControl InstaPrecohor => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTAPRECOHOR", "#INSTA___INSTAPRECOHOR");
 
 	/// <summary>
 	/// Value:
 	/// </summary>
-	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "#INSTA___INSTAVALUE___");
+	public BaseInputControl InstaValue => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTAVALUE___", "#INSTA___INSTAVALUE___");
 
 	/// <summary>
 	/// LOCAL
@@ -72,7 +72,7 @@ public class InstaForm : Form
 	/// <summary>
 	/// Geographic Coordinates
 	/// </summary>
-	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "#INSTA___INSTACOORDGEO");
+	public BaseInputControl InstaCoordgeo => new BaseInputControl(driver, ContainerLocator, "container-INSTA___INSTACOORDGEO", "#INSTA___INSTACOORDGEO");
 
 	public InstaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "INSTA", containerLocator: containerLocator) { }

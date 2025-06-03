@@ -10,12 +10,12 @@ public class Wid_iequForm : Form
 	/// <summary>
 	/// Sequential no.
 	/// </summary>
-	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "#WID_IEQUEQUIPSEQUENNR");
+	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-WID_IEQUEQUIPSEQUENNR", "#WID_IEQUEQUIPSEQUENNR");
 
 	/// <summary>
 	/// No. register
 	/// </summary>
-	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "#WID_IEQUEQUIPREGISTNR");
+	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "container-WID_IEQUEQUIPREGISTNR", "#WID_IEQUEQUIPREGISTNR");
 
 	/// <summary>
 	/// TYPE OF EQUIPMENT
@@ -32,7 +32,7 @@ public class Wid_iequForm : Form
 	/// <summary>
 	/// Total value
 	/// </summary>
-	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "#WID_IEQUEQUIPVALORTOT");
+	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "container-WID_IEQUEQUIPVALORTOT", "#WID_IEQUEQUIPVALORTOT");
 
 	/// <summary>
 	/// Acquisition
@@ -42,7 +42,7 @@ public class Wid_iequForm : Form
 	/// <summary>
 	/// Decomission
 	/// </summary>
-	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#WID_IEQUEQUIPDTDECO__");
+	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#WID_IEQUEQUIPDTDECO__", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Bought

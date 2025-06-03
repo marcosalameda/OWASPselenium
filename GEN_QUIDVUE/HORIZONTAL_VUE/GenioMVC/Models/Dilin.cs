@@ -38,63 +38,65 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">>DISPATCH" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValCoddispa")]
 		public string ValCoddispa { get { return klass.ValCoddispa; } set { klass.ValCoddispa = value; } }
+
 		private Dispa _dispa;
 		[DisplayName("Dispa")]
 		[ShouldSerialize("Dispa")]
-		public virtual Dispa Dispa {
-			get {
-				if (!this.isEmptyModel && (_dispa == null || (!string.IsNullOrEmpty(ValCoddispa) && (_dispa.isEmptyModel || _dispa.klass.QPrimaryKey != ValCoddispa))))
+		public virtual Dispa Dispa
+		{
+			get
+			{
+				if (!isEmptyModel && (_dispa == null || (!string.IsNullOrEmpty(ValCoddispa) && (_dispa.isEmptyModel || _dispa.klass.QPrimaryKey != ValCoddispa))))
 					_dispa = Models.Dispa.Find(ValCoddispa, m_userContext, Identifier, _fieldsToSerialize);
-				if (_dispa == null)
-					_dispa = new Models.Dispa(m_userContext, true, _fieldsToSerialize);
+				_dispa ??= new Models.Dispa(m_userContext, true, _fieldsToSerialize);
 				return _dispa;
 			}
 			set { _dispa = value; }
 		}
 
-
 		[DisplayName("Line")]
 		/// <summary>Field : "Line" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValLinenumb")]
 		[NumericAttribute(0)]
-		public decimal? ValLinenumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLinenumb, 0)); } set { klass.ValLinenumb = Convert.ToDecimal(value); } }
+		public decimal? ValLinenumb { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLinenumb, 0)); } set { klass.ValLinenumb = Convert.ToDecimal(value); } }
 
 		[DisplayName(">>PRODUCT")]
 		/// <summary>Field : ">>PRODUCT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValCodprodu")]
 		public string ValCodprodu { get { return klass.ValCodprodu; } set { klass.ValCodprodu = value; } }
+
 		private Produ _produ;
 		[DisplayName("Produ")]
 		[ShouldSerialize("Produ")]
-		public virtual Produ Produ {
-			get {
-				if (!this.isEmptyModel && (_produ == null || (!string.IsNullOrEmpty(ValCodprodu) && (_produ.isEmptyModel || _produ.klass.QPrimaryKey != ValCodprodu))))
+		public virtual Produ Produ
+		{
+			get
+			{
+				if (!isEmptyModel && (_produ == null || (!string.IsNullOrEmpty(ValCodprodu) && (_produ.isEmptyModel || _produ.klass.QPrimaryKey != ValCodprodu))))
 					_produ = Models.Produ.Find(ValCodprodu, m_userContext, Identifier, _fieldsToSerialize);
-				if (_produ == null)
-					_produ = new Models.Produ(m_userContext, true, _fieldsToSerialize);
+				_produ ??= new Models.Produ(m_userContext, true, _fieldsToSerialize);
 				return _produ;
 			}
 			set { _produ = value; }
 		}
 
-
 		[DisplayName("Ordered")]
 		/// <summary>Field : "Ordered" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValOrdered")]
 		[NumericAttribute(0)]
-		public decimal? ValOrdered { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOrdered, 0)); } set { klass.ValOrdered = Convert.ToDecimal(value); } }
+		public decimal? ValOrdered { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOrdered, 0)); } set { klass.ValOrdered = Convert.ToDecimal(value); } }
 
 		[DisplayName("Delivered")]
 		/// <summary>Field : "Delivered" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Dilin.ValDelivere")]
 		[NumericAttribute(0)]
-		public decimal? ValDelivere { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDelivere, 0)); } set { klass.ValDelivere = Convert.ToDecimal(value); } }
+		public decimal? ValDelivere { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDelivere, 0)); } set { klass.ValDelivere = Convert.ToDecimal(value); } }
 
 		[DisplayName("Outstanding")]
 		/// <summary>Field : "Outstanding" Tipo: "N" Formula: + "[DILIN->ORDERED]-[DILIN->DELIVERE]"</summary>
 		[ShouldSerialize("Dilin.ValOutstand")]
 		[NumericAttribute(0)]
-		public decimal? ValOutstand { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValOutstand, 0)); } set { klass.ValOutstand = Convert.ToDecimal(value); } }
+		public decimal? ValOutstand { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValOutstand, 0)); } set { klass.ValOutstand = Convert.ToDecimal(value); } }
 
 		[DisplayName("Instant")]
 		/// <summary>Field : "Instant" Tipo: "DT" Formula: ++ "[DISPA->DISPADT]"</summary>
@@ -105,8 +107,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Dilin.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Dilin(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -125,7 +127,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAdilin csgenioa)
 		{
 			if (csgenioa == null)
@@ -136,13 +137,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "dispa":
-						if (_dispa == null)
-							_dispa = new Dispa(m_userContext, true, _fieldsToSerialize);
+						_dispa ??= new Dispa(m_userContext, true, _fieldsToSerialize);
 						_dispa.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "produ":
-						if (_produ == null)
-							_produ = new Produ(m_userContext, true, _fieldsToSerialize);
+						_produ ??= new Produ(m_userContext, true, _fieldsToSerialize);
 						_produ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

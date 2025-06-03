@@ -21,7 +21,7 @@ public class LcextForm : Form
 	/// <summary>
 	/// GLN Extension Component
 	/// </summary>
-	public BaseInputControl LcextGlnext => new BaseInputControl(driver, ContainerLocator, "#LCEXT___LCEXTGLNEXT__");
+	public BaseInputControl LcextGlnext => new BaseInputControl(driver, ContainerLocator, "container-LCEXT___LCEXTGLNEXT__", "#LCEXT___LCEXTGLNEXT__");
 
 	/// <summary>
 	/// Space type
@@ -31,7 +31,7 @@ public class LcextForm : Form
 	/// <summary>
 	/// Space
 	/// </summary>
-	public BaseInputControl LcextSpaceobs => new BaseInputControl(driver, ContainerLocator, "#LCEXT___LCEXTSPACEOBS");
+	public BaseInputControl LcextSpaceobs => new BaseInputControl(driver, ContainerLocator, "container-LCEXT___LCEXTSPACEOBS", "#LCEXT___LCEXTSPACEOBS");
 
 	public LcextForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "LCEXT", containerLocator: containerLocator) { }

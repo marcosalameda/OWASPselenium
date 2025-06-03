@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Faqs.ValCodcfaqs")]
 		public string ValCodcfaqs { get { return klass.ValCodcfaqs; } set { klass.ValCodcfaqs = value; } }
+
 		private Cfaqs _cfaqs;
 		[DisplayName("Cfaqs")]
 		[ShouldSerialize("Cfaqs")]
-		public virtual Cfaqs Cfaqs {
-			get {
-				if (!this.isEmptyModel && (_cfaqs == null || (!string.IsNullOrEmpty(ValCodcfaqs) && (_cfaqs.isEmptyModel || _cfaqs.klass.QPrimaryKey != ValCodcfaqs))))
+		public virtual Cfaqs Cfaqs
+		{
+			get
+			{
+				if (!isEmptyModel && (_cfaqs == null || (!string.IsNullOrEmpty(ValCodcfaqs) && (_cfaqs.isEmptyModel || _cfaqs.klass.QPrimaryKey != ValCodcfaqs))))
 					_cfaqs = Models.Cfaqs.Find(ValCodcfaqs, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cfaqs == null)
-					_cfaqs = new Models.Cfaqs(m_userContext, true, _fieldsToSerialize);
+				_cfaqs ??= new Models.Cfaqs(m_userContext, true, _fieldsToSerialize);
 				return _cfaqs;
 			}
 			set { _cfaqs = value; }
 		}
-
 
 		[DisplayName("Question")]
 		/// <summary>Field : "Question" Tipo: "MO" Formula:  ""</summary>
@@ -67,8 +68,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Faqs.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Faqs(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -87,7 +88,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAfaqs csgenioa)
 		{
 			if (csgenioa == null)
@@ -98,8 +98,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "cfaqs":
-						if (_cfaqs == null)
-							_cfaqs = new Cfaqs(m_userContext, true, _fieldsToSerialize);
+						_cfaqs ??= new Cfaqs(m_userContext, true, _fieldsToSerialize);
 						_cfaqs.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

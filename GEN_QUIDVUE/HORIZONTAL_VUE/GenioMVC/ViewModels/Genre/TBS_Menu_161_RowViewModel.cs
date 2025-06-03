@@ -1,37 +1,148 @@
-﻿
+﻿using System.Text.Json.Serialization;
+
 using CSGenio.business;
 using CSGenio.framework;
 using GenioMVC.Models.Navigation;
-using System.Text.Json.Serialization;
 
-namespace GenioMVC.ViewModels.Genre
+namespace GenioMVC.ViewModels.Genre;
+
+public class TBS_Menu_161_RowViewModel : Models.Genre
 {
-    public class TBS_Menu_161_RowViewModel : Models.Genre
-    {
-		#region constructors
-		public TBS_Menu_161_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize) { }
-		public TBS_Menu_161_RowViewModel(UserContext userContext, CSGenioAgenre val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize) { }
-		#endregion
+	#region Constructors
 
-		[JsonPropertyName("btnPermission")]
-		public TableRowCrudButtonPermissions BtnPermission { get; set; } = null;
+	public TBS_Menu_161_RowViewModel(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, isEmpty, fieldsToSerialize)
+	{
+		InitRowProperties();
+	}
 
+	public TBS_Menu_161_RowViewModel(UserContext userContext, CSGenioAgenre val, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext, val, isEmpty, fieldsToSerialize)
+	{
+		InitRowProperties();
+	}
 
-		///// <summary>
-		///// Foreground color formula 
-		///// iif(emptyC([GENRE->TEXTCOLO])==1,RGB(0,0,0),NCOLOUR([GENRE->TEXTCOLO]))
-		///// </summary> 
-		//[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		//public string? ForegroundColor => ((CSGenio.business.GlobalFunctions.emptyC(((string)this.ValTextcolo))==1)?("RGB(0,0,0)"):(((string)this.ValTextcolo)));
+	#endregion
 
-		///// <summary>
-		///// Background color formula 
-		///// iif(emptyC([GENRE->BACKCOLO])==1,RGB(255,255,255),NCOLOUR([GENRE->BACKCOLO]))
-		///// </summary> 
-		////[JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-		////public string? BackgroundColor => ((CSGenio.business.GlobalFunctions.emptyC(((string)this.ValBackcolo))==1)?("RGB(255,255,255)"):(((string)this.ValBackcolo)));
+	#region Private methods
 
+	private void InitRowProperties()
+	{
+		SetColumns();
+		SetCustomActions();
+	}
 
+	private void SetColumns()
+	{
+		Columns ??= [
+			new ListColumn()
+			{
+				Order = 1,
+				Area = "GENRE",
+				Field = "GENDER",
+			},
+			new ListColumn()
+			{
+				Order = 2,
+				Area = "GENRE",
+				Field = "AGENCONT",
+			},
+			new ListColumn()
+			{
+				Order = 3,
+				Area = "GENRE",
+				Field = "BACKCOLO",
+			},
+			new ListColumn()
+			{
+				Order = 4,
+				Area = "GENRE",
+				Field = "TEXTCOLO",
+			},
+		];
+	}
 
-    }
+	private void SetButtonPermissions()
+	{
+		if (BtnPermission != null)
+			return;
+
+		bool canView = true;
+		bool canEdit = true;
+		bool canDelete = true;
+		bool canDuplicate = true;
+		bool canInsert = true;
+
+		using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport))
+		{
+		}
+
+		BtnPermission = new TableRowCrudButtonPermissions()
+		{
+			ViewBtnDisabled = !canView,
+			EditBtnDisabled = !canEdit,
+			DeleteBtnDisabled = !canDelete,
+			DuplicateBtnDisabled = !canDuplicate,
+			InsertBtnDisabled = !canInsert
+		};
+	}
+
+	private void SetCustomActions()
+	{
+		CustomActions ??= new()
+		{
+		};
+	}
+
+	#endregion
+
+	/// <summary>
+	/// The state of the row (it's an internal value, therefore it shouldn't be sent to the client-side)
+	/// </summary>
+	[JsonIgnore]
+	public override int ValZzstate => base.ValZzstate;
+
+	/// <summary>
+	/// Whether the row is in a valid state
+	/// </summary>
+	[JsonPropertyName("isValid")]
+	public bool IsValid => ValZzstate == 0;
+
+	/// <summary>
+	/// The list columns
+	/// </summary>
+	[JsonPropertyName("columns")]
+	public List<ListColumn> Columns { get; private set; }
+
+	/// <summary>
+	/// The button permissions
+	/// </summary>
+	[JsonPropertyName("btnPermission")]
+	public TableRowCrudButtonPermissions BtnPermission { get; private set; }
+
+	/// <summary>
+	/// The custom action buttons
+	/// </summary>
+	[JsonPropertyName("customActions")]
+	public Dictionary<string, ListCustomAction> CustomActions { get; private set; }
+
+	/// <summary>
+	/// The foreground color
+	/// Formula: iif(emptyC([GENRE->TEXTCOLO])==1,RGB(0,0,0),NCOLOUR([GENRE->TEXTCOLO]))
+	/// </summary>
+	[JsonPropertyName("foregroundColor")]
+	public string ForegroundColor => ((CSGenio.framework.GenFunctions.emptyC(((string)this.ValTextcolo))==1)?("RGB(0,0,0)"):(((string)this.ValTextcolo)));
+
+	/// <summary>
+	/// The background color
+	/// Formula: iif(emptyC([GENRE->BACKCOLO])==1,RGB(255,255,255),NCOLOUR([GENRE->BACKCOLO]))
+	/// </summary>
+	[JsonPropertyName("backgroundColor")]
+	public string BackgroundColor => ((CSGenio.framework.GenFunctions.emptyC(((string)this.ValBackcolo))==1)?("RGB(255,255,255)"):(((string)this.ValBackcolo)));
+
+	/// <summary>
+	/// Runs init logic that depends on row data.
+	/// </summary>
+	public void InitRowData()
+	{
+		SetButtonPermissions();
+	}
 }

@@ -8,15 +8,14 @@ namespace quidgest.uitests.pages.forms;
 public class FeecaForm : Form
 {
 	/// <summary>
-	/// Description
+	/// Text Enumeration
 	/// </summary>
-	public LookupControl FldsDescrip => new LookupControl(driver, ContainerLocator, "container-FEECA___FLDS_DESCRIP_");
-	public SeeMorePage FldsDescripSeeMorePage => new SeeMorePage(driver, "FEECA", "FEECA___FLDS_DESCRIP_");
+	public IWebElement FldsClass => throw new NotImplementedException();
 
 	/// <summary>
 	/// Feedback
 	/// </summary>
-	public BaseInputControl FeecaFeedback => new BaseInputControl(driver, ContainerLocator, "#FEECA___FEECAFEEDBACK");
+	public BaseInputControl FeecaFeedback => new BaseInputControl(driver, ContainerLocator, "container-FEECA___FEECAFEEDBACK", "#FEECA___FEECAFEEDBACK");
 
 	/// <summary>
 	/// Attachments

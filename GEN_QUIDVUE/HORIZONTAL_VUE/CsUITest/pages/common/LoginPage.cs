@@ -15,15 +15,25 @@ public class LoginPage: PageObject {
 	{
 		wait.Until(c => submitButton.GetAttribute("data-loading") == "false");
 	}
-	public void Login(string username, string password) {
+	public void Login(string username, string password) 
+	{
 
-		this.username.Clear();
-		this.username.SendKeys(username);
-
-		this.password.Clear();
-		this.password.SendKeys(password);
+		FillUsername(username);
+		FillPassword(password);
 
 		this.submitButton.Click();
+	}
+
+	public void FillPassword(string password)
+	{
+		this.password.Clear();
+		this.password.SendKeys(password);
+	}
+
+	public void FillUsername(string username)
+	{
+		this.username.Clear();
+		this.username.SendKeys(username);
 	}
 
 	public void Register() {
@@ -40,8 +50,15 @@ public class LoginPage: PageObject {
 	public bool HasErrorMessage(string id)
 	{
 		WaitForLoad();
-		IWebElement errorMessage = loginForm.FindElement(By.Id(id));
+		try
+		{
+			IWebElement errorMessage = loginForm.FindElement(By.Id(id));
+			return errorMessage.Text.Length > 0;
+		}
+		catch
+		{
+			return false;
+		}
 
-		return errorMessage.Text.Length > 0;
 	}
 }

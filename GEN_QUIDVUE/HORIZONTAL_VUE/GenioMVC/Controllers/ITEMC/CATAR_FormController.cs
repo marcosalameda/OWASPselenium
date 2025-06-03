@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Catar_ItemValItemdesModel : RequestLookupModel
+		{
+			public Catar_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Itemc/Catar_ItemValItemdes
 		// POST: /Itemc/Catar_ItemValItemdes
 		[ActionName("Catar_ItemValItemdes")]
-		public ActionResult Catar_ItemValItemdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Catar_ItemValItemdes([FromBody] Catar_ItemValItemdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Catar_ItemValItemdes_ViewModel model = new Catar_ItemValItemdes_ViewModel(UserContext.Current);
-			
+
+			Models.Itemc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Catar_ItemValItemdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Catar_CattpValTpcategoModel : RequestLookupModel
+		{
+			public Catar_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Itemc/Catar_CattpValTpcatego
 		// POST: /Itemc/Catar_CattpValTpcatego
 		[ActionName("Catar_CattpValTpcatego")]
-		public ActionResult Catar_CattpValTpcatego([FromBody]RequestLookupModel requestModel)
+		public ActionResult Catar_CattpValTpcatego([FromBody] Catar_CattpValTpcategoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Catar_CattpValTpcatego_ViewModel model = new Catar_CattpValTpcatego_ViewModel(UserContext.Current);
-			
+
+			Models.Itemc parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Catar_CattpValTpcatego_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

@@ -353,6 +353,7 @@ namespace GenioMVC.ViewModels.Flds
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Flds m)
 		{
 			if (m == null)
@@ -412,20 +413,13 @@ namespace GenioMVC.ViewModels.Flds
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Flds m)
 		{
 			if (m == null)
@@ -889,7 +883,7 @@ namespace GenioMVC.ViewModels.Flds
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -936,7 +930,7 @@ namespace GenioMVC.ViewModels.Flds
 				// Fill List fields
 				this.ValCodaero = ViewModelConversion.ToString(row["aero.codaero"]);
 				TableAeroName.Value = (string)row["aero.name"];
-				if (GlobalFunctions.emptyG(this.ValCodaero) == 1)
+				if (GenFunctions.emptyG(this.ValCodaero) == 1)
 				{
 					this.ValCodaero = "";
 					TableAeroName.Value = "";
@@ -1015,7 +1009,6 @@ namespace GenioMVC.ViewModels.Flds
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

@@ -170,6 +170,7 @@ namespace GenioMVC.ViewModels.Tabpr
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Tabpr m)
 		{
 			if (m == null)
@@ -192,20 +193,13 @@ namespace GenioMVC.ViewModels.Tabpr
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Tabpr m)
 		{
 			if (m == null)
@@ -517,7 +511,7 @@ namespace GenioMVC.ViewModels.Tabpr
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -564,7 +558,7 @@ namespace GenioMVC.ViewModels.Tabpr
 				// Fill List fields
 				this.ValCodtpeq1 = ViewModelConversion.ToString(row["tpequ.codtpequ"]);
 				TableTpequTipoequi.Value = (string)row["tpequ.tipoequi"];
-				if (GlobalFunctions.emptyG(this.ValCodtpeq1) == 1)
+				if (GenFunctions.emptyG(this.ValCodtpeq1) == 1)
 				{
 					this.ValCodtpeq1 = "";
 					TableTpequTipoequi.Value = "";
@@ -607,8 +601,6 @@ namespace GenioMVC.ViewModels.Tabpr
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

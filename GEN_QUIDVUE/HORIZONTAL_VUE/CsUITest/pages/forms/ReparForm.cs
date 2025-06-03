@@ -31,7 +31,7 @@ public class ReparForm : Form
 	/// <summary>
 	/// Company Repair Number
 	/// </summary>
-	public BaseInputControl ReparNrrepara => new BaseInputControl(driver, ContainerLocator, "#REPAR___REPARNRREPARA");
+	public BaseInputControl ReparNrrepara => new BaseInputControl(driver, ContainerLocator, "container-REPAR___REPARNRREPARA", "#REPAR___REPARNRREPARA");
 
 	/// <summary>
 	/// Technical area
@@ -53,12 +53,17 @@ public class ReparForm : Form
 	/// <summary>
 	/// Repair Description
 	/// </summary>
-	public BaseInputControl ReparDescript => new BaseInputControl(driver, ContainerLocator, "#REPAR___REPARDESCRIPT");
+	public BaseInputControl ReparDescript => new BaseInputControl(driver, ContainerLocator, "container-REPAR___REPARDESCRIPT", "#REPAR___REPARDESCRIPT");
+
+	/// <summary>
+	/// Categorize
+	/// </summary>
+	public ButtonControl PseudCateg_ai => new ButtonControl(driver, ContainerLocator, "#REPAR___PSEUDCATEG_AI");
 
 	/// <summary>
 	/// Spent in Hours
 	/// </summary>
-	public BaseInputControl ReparHours => new BaseInputControl(driver, ContainerLocator, "#REPAR___REPARHOURS___");
+	public BaseInputControl ReparHours => new BaseInputControl(driver, ContainerLocator, "container-REPAR___REPARHOURS___", "#REPAR___REPARHOURS___");
 
 	public ReparForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "REPAR", containerLocator: containerLocator) { }

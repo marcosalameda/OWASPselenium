@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Lcext.ValCodlocat")]
 		public string ValCodlocat { get { return klass.ValCodlocat; } set { klass.ValCodlocat = value; } }
+
 		private Locat _locat;
 		[DisplayName("Locat")]
 		[ShouldSerialize("Locat")]
-		public virtual Locat Locat {
-			get {
-				if (!this.isEmptyModel && (_locat == null || (!string.IsNullOrEmpty(ValCodlocat) && (_locat.isEmptyModel || _locat.klass.QPrimaryKey != ValCodlocat))))
+		public virtual Locat Locat
+		{
+			get
+			{
+				if (!isEmptyModel && (_locat == null || (!string.IsNullOrEmpty(ValCodlocat) && (_locat.isEmptyModel || _locat.klass.QPrimaryKey != ValCodlocat))))
 					_locat = Models.Locat.Find(ValCodlocat, m_userContext, Identifier, _fieldsToSerialize);
-				if (_locat == null)
-					_locat = new Models.Locat(m_userContext, true, _fieldsToSerialize);
+				_locat ??= new Models.Locat(m_userContext, true, _fieldsToSerialize);
 				return _locat;
 			}
 			set { _locat = value; }
 		}
-
 
 		[DisplayName("GLN Extension Component")]
 		/// <summary>Field : "GLN Extension Component" Tipo: "C" Formula:  ""</summary>
@@ -73,8 +74,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Lcext.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Lcext(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -93,7 +94,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAlcext csgenioa)
 		{
 			if (csgenioa == null)
@@ -104,8 +104,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "locat":
-						if (_locat == null)
-							_locat = new Locat(m_userContext, true, _fieldsToSerialize);
+						_locat ??= new Locat(m_userContext, true, _fieldsToSerialize);
 						_locat.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

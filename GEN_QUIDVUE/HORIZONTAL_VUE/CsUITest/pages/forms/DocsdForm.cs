@@ -10,7 +10,7 @@ public class DocsdForm : Form
 	/// <summary>
 	/// Number:
 	/// </summary>
-	public BaseInputControl OudocNrdocsda => new BaseInputControl(driver, ContainerLocator, "#DOCSD___OUDOCNRDOCSDA");
+	public BaseInputControl OudocNrdocsda => new BaseInputControl(driver, ContainerLocator, "container-DOCSD___OUDOCNRDOCSDA", "#DOCSD___OUDOCNRDOCSDA");
 
 	/// <summary>
 	/// Date:
@@ -20,7 +20,7 @@ public class DocsdForm : Form
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl OudocTitle => new BaseInputControl(driver, ContainerLocator, "#DOCSD___OUDOCTITLE___");
+	public BaseInputControl OudocTitle => new BaseInputControl(driver, ContainerLocator, "container-DOCSD___OUDOCTITLE___", "#DOCSD___OUDOCTITLE___");
 
 	public DocsdForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "DOCSD", containerLocator: containerLocator) { }

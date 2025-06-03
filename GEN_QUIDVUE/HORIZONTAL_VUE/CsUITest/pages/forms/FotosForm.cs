@@ -16,12 +16,12 @@ public class FotosForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl PhotoPhotogra => new BaseInputControl(driver, ContainerLocator, "#FOTOS___PHOTOPHOTOGRA");
+	public BaseInputControl PhotoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-FOTOS___PHOTOPHOTOGRA", "#FOTOS___PHOTOPHOTOGRA");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl PhotoTitle => new BaseInputControl(driver, ContainerLocator, "#FOTOS___PHOTOTITLE___");
+	public BaseInputControl PhotoTitle => new BaseInputControl(driver, ContainerLocator, "container-FOTOS___PHOTOTITLE___", "#FOTOS___PHOTOTITLE___");
 
 	/// <summary>
 	/// Attached:

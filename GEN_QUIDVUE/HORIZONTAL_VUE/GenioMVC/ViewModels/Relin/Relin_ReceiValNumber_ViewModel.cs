@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Relin
 {
-	public class Relin_ReceiValNumber_ViewModel : ListViewModel
+	public class Relin_ReceiValNumber_ViewModel : MenuListViewModel<Models.Recei>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Relin_ReceiValNumber_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "recei"; }
+		[JsonIgnore]
+		public override string TableAlias => "recei";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Relin_ReceiValNumber"; }
+		public override string Uuid => "Relin_ReceiValNumber";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCoddilin { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Relin
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS RELIN_RECEINUMBER]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Relin_ReceiValNumber_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Relin_ReceiValNumber_ViewModel" /> class.
@@ -73,12 +112,22 @@ namespace GenioMVC.ViewModels.Relin
 			ValCoddilin = userContext.CurrentNavigation.CurrentLevel.GetEntry("relin")?.ToString();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Relin_ReceiValNumber_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Relin_ReceiValNumber_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERO, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
+				new Exports.QColumn(CSGenioArecei.FldNumber, FieldType.NUMERIC, Resources.Resources.RECEIPT_NUMBER31380, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -128,11 +177,10 @@ namespace GenioMVC.ViewModels.Relin
 
 			if (Menu == null)
 				Menu = new TablePartial<Relin_ReceiValNumber_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -145,9 +193,7 @@ namespace GenioMVC.ViewModels.Relin
 			crs.SubSets.Add(subfilters);
 
 
-
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -242,20 +288,19 @@ namespace GenioMVC.ViewModels.Relin
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioArecei> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "RELIN")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Relin_ReceiValNumber_RowViewModel>();
 
 				CriteriaSet relin___receinumber__Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -281,16 +326,14 @@ namespace GenioMVC.ViewModels.Relin
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("recei", "number");
+					firstVisibleColumn ??= new FieldRef("recei", "number");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
 
 				if (conditions == null)
@@ -300,7 +343,9 @@ namespace GenioMVC.ViewModels.Relin
 				relin___receinumber__Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ RELIN_NUMBER]/
+// USE /[MANUAL GQT OVERRQ RELIN_RECEINUMBER]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -309,14 +354,14 @@ namespace GenioMVC.ViewModels.Relin
 
 					Qlisting = Models.ModelBase.Where<CSGenioArecei>(m_userContext, false, relin___receinumber__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_RELIN___RECEINUMBER__", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP RELIN_NUMBER]/
+// USE /[MANUAL GQT OVERRQLSTEXP RELIN_RECEINUMBER]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST RELIN_NUMBER]/
+// USE /[MANUAL GQT OVERRQLIST RELIN_RECEINUMBER]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_recei"];
 					CriteriaSet m_PagingPosEPHs = null;
@@ -328,7 +373,7 @@ namespace GenioMVC.ViewModels.Relin
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, false, relin___receinumber__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_RELIN___RECEINUMBER__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioArecei> listing = Models.ModelBase.Where<CSGenioArecei>(m_userContext, distinct, relin___receinumber__Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_RELIN___RECEINUMBER__", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -336,7 +381,6 @@ namespace GenioMVC.ViewModels.Relin
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -357,18 +401,12 @@ namespace GenioMVC.ViewModels.Relin
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -376,7 +414,7 @@ namespace GenioMVC.ViewModels.Relin
 
 		private List<Relin_ReceiValNumber_RowViewModel> MapRelin_ReceiValNumber(ListingMVC<CSGenioArecei> Qlisting)
 		{
-			var Elements = new List<Relin_ReceiValNumber_RowViewModel>();
+			List<Relin_ReceiValNumber_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -393,7 +431,6 @@ namespace GenioMVC.ViewModels.Relin
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioArecei row
 		/// to a Relin_ReceiValNumber_RowViewModel object.
@@ -402,7 +439,9 @@ namespace GenioMVC.ViewModels.Relin
 		private Relin_ReceiValNumber_RowViewModel MapRelin_ReceiValNumber(CSGenioArecei row)
 		{
 			var model = new Relin_ReceiValNumber_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -414,32 +453,9 @@ namespace GenioMVC.ViewModels.Relin
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Relin_ReceiValNumber_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -453,36 +469,42 @@ namespace GenioMVC.ViewModels.Relin
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioArecei> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioArecei row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Recei m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Recei m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM RELIN_RECEIVALNUMBER]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Recei", "Recei.ValCodrecei", "Recei.ValZzstate", "Recei.ValNumber", "Recei.ValCodentit", "BtnPermission"
+			"Recei", "Recei.ValCodrecei", "Recei.ValZzstate", "Recei.ValNumber", "Recei.ValCodentit"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValNumber", CSGenioArecei.FldNumber, typeof(decimal?))
+			new TableSearchColumn("ValNumber", CSGenioArecei.FldNumber, typeof(decimal?)),
 		];
-
-
-
 	}
 }

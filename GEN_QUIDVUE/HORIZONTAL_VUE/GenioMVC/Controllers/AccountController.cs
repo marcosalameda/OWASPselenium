@@ -7,6 +7,8 @@ using System.Security.Claims;
 using System.Security.Principal;
 
 using CSGenio.business;
+using CSGenio.core.di;
+using CSGenio.core.persistence;
 using CSGenio.framework;
 using CSGenio.persistence;
 using GenioMVC.Helpers;
@@ -15,8 +17,6 @@ using GenioMVC.Models;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using GenioServer.security;
-using CSGenio.core.persistence;
-using CSGenio.core.di;
 
 namespace GenioMVC.Controllers
 {
@@ -25,11 +25,8 @@ namespace GenioMVC.Controllers
 		//
 		// GET: /Account/LogOn
 // USE /[MANUAL GQT CUSTOM_LOGON_GET]/
-
 		[HttpGet]
 		[AllowAnonymous]
-		//
-		// GET: /Account/LogOn
 		public ActionResult LogOn()
 		{
 			LogOnModel model = new();
@@ -42,18 +39,19 @@ namespace GenioMVC.Controllers
 						Id = ip.Id,
 						Description = ip.Description,
 						Redirect = ip.GetRedirectLoginUrl(
-                            AuthRedirectMethodModel.MapRedirectEndpoint(ip, Url, Request))
+							AuthRedirectMethodModel.MapRedirectEndpoint(ip, Url, Request))
 					});
-            }
+			}
 
 			return JsonOK(model);
 		}
-        /// <summary>
-        /// Validates the provided model and adds any validation errors to the ModelState.
-        /// </summary>
-        /// <param name="model">The model to be validated.</param>
-        /// <param name="userContext">The userContext.</param>
-        public void ValidateModel(IValidatable model, UserContext userContext)
+
+		/// <summary>
+		/// Validates the provided model and adds any validation errors to the ModelState.
+		/// </summary>
+		/// <param name="model">The model to be validated.</param>
+		/// <param name="userContext">The userContext.</param>
+		public void ValidateModel(IValidatable model, UserContext userContext)
 		{
 			var validationResult = model.Validate(userContext);
 
@@ -78,9 +76,10 @@ namespace GenioMVC.Controllers
 			if (user == null)
 			{
 				ModelState.AddModelError("Error", Resources.Resources.ENTRADA_INCORRETA__T45717);
-				
+
 				//Increment invalid login counter
-				GenioDI.MetricsOtlp.IncrementCounter("login_counter", 1, new List<KeyValuePair<string, object>>() {
+				GenioDI.MetricsOtlp.IncrementCounter("login_counter", 1, new List<KeyValuePair<string, object>>()
+				{
 					new("User", model.UserName),
 					new("Ip", HttpContext.GetIpAddress()),
 					new("Failed", true)
@@ -89,20 +88,21 @@ namespace GenioMVC.Controllers
 				return JsonERROR();
 			}
 
-            string loginError = ValidateLoginState(user);
-			if(!string.IsNullOrEmpty(loginError))
+			string loginError = ValidateLoginState(user);
+			if (!string.IsNullOrEmpty(loginError))
 			{
-                ModelState.AddModelError("Error", loginError);
+				ModelState.AddModelError("Error", loginError);
 
-				//Increment invalid login counter
-				GenioDI.MetricsOtlp.IncrementCounter("login_counter", 1, new List<KeyValuePair<string, object>>() {
+				// Increment invalid login counter
+				GenioDI.MetricsOtlp.IncrementCounter("login_counter", 1, new List<KeyValuePair<string, object>>()
+				{
 					new("User", model.UserName),
 					new("Ip", user.Location),
 					new("Failed", true)
 				});
 
-                return JsonERROR();
-            }
+				return JsonERROR();
+			}
 
 			//Increment success login counter
 			GenioDI.MetricsOtlp.IncrementCounter("login_counter", 1, new List<KeyValuePair<string, object>>() {
@@ -117,34 +117,33 @@ namespace GenioMVC.Controllers
 			return finalizeAuthentication(user, returnUrl, false);
 		}
 
-
 		private string ValidateLoginState(User user)
 		{
-            if (user.Status == 2)
-            {
-                string errorMessage = Resources.Resources.ESTE_UTILIZADOR_ENCO01685;
-                Log.Error($"{errorMessage}. User: {user.Name}");
+			if (user.Status == 2)
+			{
+				string errorMessage = Resources.Resources.ESTE_UTILIZADOR_ENCO01685;
+				Log.Error($"{errorMessage}. User: {user.Name}");
 				return errorMessage;
-            }
+			}
 
-            bool isConfigurationValid = DatabaseVersionReader.IsConfigurationUpToDate();
+			bool isConfigurationValid = DatabaseVersionReader.IsConfigurationUpToDate();
 			if (!isConfigurationValid)
 			{
-                string errorMessage = Resources.Resources.E_NECESSARIO_PROCEDE36325;
-                Log.Error($"{errorMessage}. Found: {Configuration.GetDbVersion(user.Year)}, Expected: {Configuration.VersionDbGen}");
+				string errorMessage = Resources.Resources.E_NECESSARIO_PROCEDE36325;
+				Log.Error($"{errorMessage}. Found: {Configuration.GetDbVersion(user.Year)}, Expected: {Configuration.VersionDbGen}");
 				return errorMessage;
-            }
+			}
 
-            bool isValidDb = DatabaseVersionReader.IsDatabaseUpToDate(user);
-            if (!isValidDb)
-            {
-                string errorMessage = Resources.Resources.E_NECESSARIO_ATUALIZ49371;
-                Log.Error($"{errorMessage}. Found: {Configuration.GetDbVersion(user.Year)}, Expected: {Configuration.VersionDbGen}");
-                return errorMessage;
-            }
+			bool isValidDb = DatabaseVersionReader.IsDatabaseUpToDate(user);
+			if (!isValidDb)
+			{
+				string errorMessage = Resources.Resources.E_NECESSARIO_ATUALIZ49371;
+				Log.Error($"{errorMessage}. Found: {Configuration.GetDbVersion(user.Year)}, Expected: {Configuration.VersionDbGen}");
+				return errorMessage;
+			}
 
-            return null;
-        }
+			return null;
+		}
 
 		[HttpPost]
 		[AllowAnonymous]
@@ -180,25 +179,25 @@ namespace GenioMVC.Controllers
 				if (!ModelState.IsValid)
 					return JsonERROR();
 
-                var CaptchaData = model.CaptchaData;
-                bool isValidCaptcha = QCaptcha.Validate(CaptchaData.UserEnteredCaptchaCode, CaptchaData.CaptchaId, HttpContext.Session);
-                QCaptcha.SetCaptcha(CaptchaData.CaptchaId, null, HttpContext.Session);
-                if (!isValidCaptcha)
-                {
-                    ModelState.AddModelError("userEnteredCaptchaCode", Resources.Resources.INVALID_CAPTCHA29660);
-                    return JsonERROR(Resources.Resources.INVALID_CAPTCHA29660);
-                }
+				var captchaData = model.CaptchaData;
+				bool isValidCaptcha = QCaptcha.Validate(captchaData.UserEnteredCaptchaCode, captchaData.CaptchaId, HttpContext.Session);
+				QCaptcha.SetCaptcha(captchaData.CaptchaId, null, HttpContext.Session);
+				if (!isValidCaptcha)
+				{
+					ModelState.AddModelError("userEnteredCaptchaCode", Resources.Resources.INVALID_CAPTCHA29660);
+					return JsonERROR(Resources.Resources.INVALID_CAPTCHA29660);
+				}
 
 				User u = UserContext.Current.User;
 				PersistentSupport sp = PersistentSupport.getPersistentSupport(u.Year, u.Name);
 				UserFactory userFactory = new(sp, u);
 				IPrincipal principal = HttpContext.User;
-				//Check if the user with this email exists
+				// Check if the user with this email exists
 				var user = SecurityFactory.GetUserFromEmail(principal.Identity, model.Email, u, sp);
 
 				string emailBody = "";
 				string appName = Configuration.Application.Name;
-				//TODO: this should be obtained directly from user that already has its language filled by Usercontext
+				// TODO: this should be obtained directly from user that already has its language filled by Usercontext
 				string lang = RouteData.Values["culture"]?.ToString() ?? "";
 
 				if (user != null)
@@ -222,11 +221,10 @@ namespace GenioMVC.Controllers
 				userFactory.SendPasswordRecoveryMail(model.Email, emailBody);
 				model.IsEmailSent = true;
 			}
-			catch (Exception exc)
+			catch (Exception e)
 			{
-				Log.Error(exc.Message);
-				ModelState.AddModelError("error", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
-				return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
+				Log.Error(e.Message);
+				return JsonERROR(HandleException(e));
 			}
 
 			return JsonOK(model);
@@ -244,7 +242,7 @@ namespace GenioMVC.Controllers
 				ResourceUser resource = ticketContent[2] as ResourceUser;
 
 				//Check if ticket expired
-				if (GlobalFunctions.Diferenca_entre_Datas(resource.CreationDate, DateTime.UtcNow, "M") < 60)
+				if (GenFunctions.DateDiffPart(resource.CreationDate, DateTime.UtcNow, "M") < 60)
 				{
 					//Store the id in session for later use
 					HttpContext.Session.SetString("userId", resource.Name);
@@ -267,7 +265,7 @@ namespace GenioMVC.Controllers
 		public ActionResult RecoverPasswordChange([FromBody]PasswordRecoverChangeModel model)
 		{
 			ValidateModel(model, UserContext.Current);
-			if(!ModelState.IsValid)
+			if (!ModelState.IsValid)
 				return JsonERROR();
 
 			try
@@ -314,17 +312,15 @@ namespace GenioMVC.Controllers
 				HttpContext.Session.Remove("userId");
 				return JsonOK();
 			}
-			catch (InvalidPasswordException exc)
+			catch (InvalidPasswordException e)
 			{
-				Log.Error(exc.Message);
-				ModelState.AddModelError("error", exc.UserMessage);
-				return JsonERROR();
+				Log.Error(e.Message);
+				return JsonERROR(HandleException(e));
 			}
-			catch (Exception exc)
+			catch (Exception e)
 			{
-				Log.Error(exc.Message);
-				ModelState.AddModelError("error", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
-				return JsonERROR();
+				Log.Error(e.Message);
+				return JsonERROR(HandleException(e));
 			}
 		}
 
@@ -373,77 +369,72 @@ namespace GenioMVC.Controllers
 			return Json(new { returnWebAuth.Success, returnWebAuth.ErrorMessage });
 		}
 
-
-        private ActionResult IdentityProviderLoginGeneric(string providerId, Func<IIdentityProvider, Credential> createCredential)
-        {
-            try
-            {
-                var ip = SecurityFactory.IdentityProviderList.First(i => i.Id == providerId);
-                var credential = createCredential(ip);
+		private ActionResult IdentityProviderLoginGeneric(string providerId, Func<IIdentityProvider, Credential> createCredential)
+		{
+			try
+			{
+				var ip = SecurityFactory.IdentityProviderList.First(i => i.Id == providerId);
+				var credential = createCredential(ip);
 				var identity = ip.Authenticate(credential);
-                
-                if (identity != null) //When user authenticated successfull return to Home page
-                {
-                    User user = new(identity.Name, "id", Configuration.DefaultYear, HttpContext.GetHostName())
-                    {
-                        Auth2FA = false, // This authentication method doesn't allow 2FA because the provider have this responsibility
-                        Status = 0 // At this point if "id" isn't null then this user has status = 0
-                    };
+
+				if (identity != null) // On authentication success, return to Home page
+				{
+					User user = new(identity.Name, "id", Configuration.DefaultYear, HttpContext.GetHostName())
+					{
+						Auth2FA = false, // This authentication method doesn't allow 2FA because the provider have this responsibility
+						Status = 0 // At this point if "id" isn't null then this user has status = 0
+					};
 
 					var principal = SecurityFactory.GetUserRoles(identity);
 					user = UserFactory.FillUser(principal, user);
 
-                    string loginError = ValidateLoginState(user);
+					string loginError = ValidateLoginState(user);
 					if (!string.IsNullOrEmpty(loginError))
 						throw new BusinessException(loginError, "IdentityProviderLoginGeneric", loginError);
 
-                    finalizeAuthentication(user, "", false);
-                    return RedirectToVuePage("");
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-            }
+					finalizeAuthentication(user, "", false);
+					return RedirectToVuePage("");
+				}
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex.Message);
+			}
 
-            ErrorMessage(Resources.Resources.ENTRADA_INCORRETA__T45717);
-            return RedirectToVuePage("Error", null, false); //TODO: When user authentication error then return again to Logon page
-        }
+			// TODO: When an authentication error occurs, return to Logon page and present the user with a perceptible error message.
+			return RedirectToVuePage("Error", null, false);
+		}
 
-        [HttpPost]
-        [AllowAnonymous]
+		[HttpPost]
+		[AllowAnonymous]
 		public ActionResult OpenIdConnectLogin([FromRoute] string providerId, [FromForm] string code, [FromForm] string id_token)
-        {
-			return IdentityProviderLoginGeneric(providerId, (ip) => new TokenCredential() {
+		{
+			return IdentityProviderLoginGeneric(providerId, (ip) => new TokenCredential()
+			{
 				Auth = code,
 				Token = id_token,
 				OriginUrl = AuthRedirectMethodModel.MapRedirectEndpoint(ip, Url, Request)
 			});
-        }
-
+		}
 
 		private ActionResult IdentityProviderRegisterGeneric(string providerId, Func<IIdentityProvider, Credential> createCredential)
 		{
-            try
-            {
-                var ip = SecurityFactory.IdentityProviderList.First(i => i.Id == providerId);
+			try
+			{
+				var ip = SecurityFactory.IdentityProviderList.First(i => i.Id == providerId);
 				var credential = createCredential(ip);
 
-                if (ip.RegisterExternalId(credential, UserContext.Current.User))
-                {
-                    SuccessMessage(Resources.Resources.CONTA_FOI_CRIADA_COM31537);
-                    return RedirectToVuePage("Profile");
-                }
-            }
-            catch (Exception ex)
-            {
-                Log.Error(ex.Message);
-            }
+				if (ip.RegisterExternalId(credential, UserContext.Current.User))
+					return RedirectToVuePage("Profile");
+			}
+			catch (Exception ex)
+			{
+				Log.Error(ex.Message);
+			}
 
-            ErrorMessage(Resources.Resources.ENTRADA_INCORRETA__T45717);
-			return RedirectToVuePage(""); //TODO: When user authentication error then return again to Logon page
-        }
-
+			// TODO: When an authentication error occurs, return to Logon page and present the user with a perceptible error message.
+			return RedirectToVuePage("");
+		}
 
 		[HttpGet]
 		[ActionName("OpenIdConnectRegister")]
@@ -455,79 +446,74 @@ namespace GenioMVC.Controllers
 				Token = id_token,
 				OriginUrl = AuthRedirectMethodModel.MapRedirectEndpoint(ip, Url, Request, "Register")
 			});
-        }
+		}
 
-        [HttpPost]
-        [AllowAnonymous]
-        public ActionResult OpenIdConnectRegister([FromRoute] string providerId, [FromForm] string code, [FromForm] string id_token, [FromForm] string state)
-        {
+		[HttpPost]
+		[AllowAnonymous]
+		public ActionResult OpenIdConnectRegister([FromRoute] string providerId, [FromForm] string code, [FromForm] string id_token, [FromForm] string state)
+		{
 			//reflects the request back to the server through a browser initiated Get
 			//this is necessary because an external request will not bring the authentication cookies of the person registering because its considered cross-site
 			//However if we do the registration part in a subsequent request then the cookies are sent and we can use them to get the user state.
 			//This has the advantage of not needing any internal state being sent and maintained by the external provider.
 			string endpoint = Url.Action("OpenIdConnectRegister", "Account", new { providerId, code, id_token, state });
 			return ClientSideRedirect(endpoint);
-        }
+		}
 
-
-
-
-        /// <summary>
-        /// After user have authenticated on Governement CMD identity provider will callback to our application to that funcion.
-        /// </summary>
-        /// <returns></returns>
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult CMDLogin([FromRoute] string providerId)
-        {
-            //Government CMD sends the results in the Url hash (instead of the standard that sends them in the url query)
-            //The server will not receive them in this method call, so we need to render a html page that captures them in javascript and sends them back as url query
-            string endpoint = Url.Action("CMDLoginParams", "Account", new { providerId });
+		/// <summary>
+		/// After user have authenticated on Governement CMD identity provider will callback to our application to that funcion.
+		/// </summary>
+		/// <returns></returns>
+		[HttpGet]
+		[AllowAnonymous]
+		public ActionResult CMDLogin([FromRoute] string providerId)
+		{
+			//Government CMD sends the results in the Url hash (instead of the standard that sends them in the url query)
+			//The server will not receive them in this method call, so we need to render a html page that captures them in javascript and sends them back as url query
+			string endpoint = Url.Action("CMDLoginParams", "Account", new { providerId });
 			return ClientSideRedirect(endpoint, captureHash: true);
-        }
+		}
 
+		[HttpGet]
+		[AllowAnonymous]
+		public ActionResult CMDLoginParams([FromRoute] string providerId, string access_token, string token_type, string expires_in)
+		{
+			return IdentityProviderLoginGeneric(providerId, (ip) => new TokenCredential()
+			{
+				Token = access_token,
+			});
+		}
 
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult CMDLoginParams([FromRoute] string providerId, string access_token, string token_type, string expires_in)
-        {
-            return IdentityProviderLoginGeneric(providerId, (ip) => new TokenCredential()
-            {
-                Token = access_token,
-            });
-        }
+		[HttpGet]
+		public ActionResult CMDRegisterParams([FromRoute] string providerId, string access_token, string token_type, string expires_in)
+		{
+			return IdentityProviderRegisterGeneric(providerId, (ip) => new TokenCredential()
+			{
+				Token = access_token
+			});
+		}
 
-        [HttpGet]
-        public ActionResult CMDRegisterParams([FromRoute] string providerId, string access_token, string token_type, string expires_in)
-        {
-            return IdentityProviderRegisterGeneric(providerId, (ip) => new TokenCredential()
-            {
-                Token = access_token
-            });
-        }
+		[HttpGet]
+		[AllowAnonymous]
+		public ActionResult CMDRegister([FromRoute] string providerId)
+		{
+			//reflects the request back to the server through a browser initiated Get
+			//this is necessary because an external request will not bring the authentication cookies of the person registering because its considered cross-site
+			//However if we do the registration part in a subsequent request then the cookies are sent and we can use them to get the user state.
+			//This has the advantage of not needing any internal state being sent and maintained by the external provider.
+			string endpoint = Url.Action("CMDRegisterParams", "Account", new { providerId });
+			return ClientSideRedirect(endpoint, captureHash: true);
+		}
 
-        [HttpGet]
-        [AllowAnonymous]
-        public ActionResult CMDRegister([FromRoute] string providerId)
-        {
-            //reflects the request back to the server through a browser initiated Get
-            //this is necessary because an external request will not bring the authentication cookies of the person registering because its considered cross-site
-            //However if we do the registration part in a subsequent request then the cookies are sent and we can use them to get the user state.
-            //This has the advantage of not needing any internal state being sent and maintained by the external provider.
-            string endpoint = Url.Action("CMDRegisterParams", "Account", new { providerId });
-            return ClientSideRedirect(endpoint, captureHash: true);
-        }
-
-
-        [HttpGet]
+		[HttpGet]
 		[AllowAnonymous]
 		public ActionResult CASLogin([FromRoute] string providerId, string ticket)
 		{
 			return IdentityProviderLoginGeneric(providerId, (ip) => new TokenCredential()
 			{
-                Token = ticket,
-                OriginUrl = AuthRedirectMethodModel.MapRedirectEndpoint(ip, Url, Request)
-            });
+				Token = ticket,
+				OriginUrl = AuthRedirectMethodModel.MapRedirectEndpoint(ip, Url, Request)
+			});
 		}
 
 		private ActionResult finalizeAuthentication(User user, string returnUrl, bool Val2FA)
@@ -549,7 +535,7 @@ namespace GenioMVC.Controllers
 				CSGenio.framework.Audit.registLoginOut(user, Resources.Resources.ENTRADA31905, Resources.Resources.ENTRADA_ATRAVES_DA_P48446, HttpContext.GetHostName(), HttpContext.GetIpAddress());
 				GlobalAppSessions.Instance.AddOrUpdate(HttpContext.Session.Id, user.Name, HttpContext.GetHostName());
 
-				if (GlobalFunctions.emptyN(user.Status) == 0 && user.Status == 1 || (Configuration.Security.Mandatory2FA && !user.Auth2FA))
+				if (GenFunctions.emptyN(user.Status) == 0 && user.Status == 1 || (Configuration.Security.Mandatory2FA && !user.Auth2FA))
 				{
 					if (Val2FA)
 						return Json(new { Success = true, Redirect = Url.Action("Profile", "Home"), Val2FA = true });
@@ -627,8 +613,7 @@ namespace GenioMVC.Controllers
 				{
 					if (formlist[0].Equals(form))
 						return 1;
-					else
-						return 2;
+					return 2;
 				}
 			}
 
@@ -687,7 +672,7 @@ namespace GenioMVC.Controllers
 					var Model = new Models.Regis(UserContext.Current);
 					Model.klass.UserRecord = false;
 					Model.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level);
-					//this line is commented because we don´t want to create a new records everytime a user enter on user registration page (this is a  public page)
+					// This line is commented because we don't want to create a new record everytime a user enters the registration page (this is a  public page)
 					//Model.New("Regis");
 
 					Navigation.SetValue("regis", Model.ValCodregis);
@@ -723,20 +708,13 @@ namespace GenioMVC.Controllers
 				model.LoadPartial(Request.QueryNameValues());
 				model.MapFromModel();
 
-				var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				if (e is GenioException && (e as GenioException).UserMessage != null)
-					exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-				ModelState.AddModelError("Erro", exceptionUserMessage);
-
 				CSGenio.framework.Log.Error("Regis_New - GET " + e.Message);
 
-				ErrorMessage(exceptionUserMessage);
+				HandleException(e);
 			}
 
 			return model;
 		}
-
 
 		public class Regis_RegisterRequestModel
 		{
@@ -748,59 +726,59 @@ namespace GenioMVC.Controllers
 		// POST: /Account/Register
 		[HttpPost]
 		[AllowAnonymous]
-		public ActionResult Regis_Register([FromBody]Regis_RegisterRequestModel requestModel)
+		public ActionResult Regis_Register([FromBody] Regis_RegisterRequestModel requestModel)
 		{
 			const string registrationId = "38736086-6c5c-4d7c-868b-99965d00f117";
 
-			var FormData = requestModel.FormData;
-			var FormPswData = requestModel.FormPswData;
-			var CaptchaData = requestModel.CaptchaData;
+			var formData = requestModel.FormData;
+			var formPswData = requestModel.FormPswData;
+			var captchaData = requestModel.CaptchaData;
 
 			// execute the captcha validation
-			bool isValidCaptcha = QCaptcha.Validate(CaptchaData.UserEnteredCaptchaCode, CaptchaData.CaptchaId, HttpContext.Session);
-			QCaptcha.SetCaptcha(CaptchaData.CaptchaId, null, HttpContext.Session);
+			bool isValidCaptcha = QCaptcha.Validate(captchaData.UserEnteredCaptchaCode, captchaData.CaptchaId, HttpContext.Session);
+			QCaptcha.SetCaptcha(captchaData.CaptchaId, null, HttpContext.Session);
 			if (!isValidCaptcha)
 			{
 				ModelState.AddModelError("registerCaptchaUserInput", Resources.Resources.INVALID_CAPTCHA29660);
 				return JsonERROR(Resources.Resources.INVALID_CAPTCHA29660);
 			}
 
-			FormData.Init(UserContext.Current);
-			FormPswData.Init(UserContext.Current);
+			formData.Init(UserContext.Current);
+			formPswData.Init(UserContext.Current);
 
 			// TODO: if (!Config.RegisterUsers) return "ERROR UNAUTHORIZED";
 			ViewModels.RegisterViewModel returnModel = new ViewModels.RegisterViewModel();
 
 			if (!ModelState.IsValid)
 			{
-				returnModel.FormData = FormData;
-				RegistrationConfig(returnModel,"Regis", registrationId);
+				returnModel.FormData = formData;
+				RegistrationConfig(returnModel, "Regis", registrationId);
 				var formDataModel = returnModel.FormData as ViewModels.Regis.Regis_ViewModel;
 				formDataModel.LoadPartial(Request.QueryNameValues());
 				formDataModel.MapFromModel();
 
-				returnModel.FormPswData = FormPswData;
+				returnModel.FormPswData = formPswData;
 				RegistrationConfig(returnModel, "Defaultpsw", registrationId);
 
 				return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, new { model = returnModel });
 			}
 
-			string UserName = FormPswData.ValNome;
-			string Email = FormPswData.ValEmail;
-			string Password = FormPswData.ValPassword;
-			string ConfirmPassword = FormPswData.ConfirmValPassword;
+			string userName = formPswData.ValNome;
+			string email = formPswData.ValEmail;
+			string passwordText = formPswData.ValPassword;
+			string confirmPassword = formPswData.ConfirmValPassword;
 
 			CSGenioApsw user;
 			PersistentSupport sp = UserContext.Current.PersistentSupport;
 
 			try
 			{
-				Password password = new Password(Password,ConfirmPassword);
+				Password password = new(passwordText, confirmPassword);
 				UserFactory factory = new UserFactory(sp, UserContext.Current.User);
 				sp.openTransaction();
 
 				Psw pswModel = new Psw(UserContext.Current);
-				FormPswData.MapToModel(pswModel);
+				formPswData.MapToModel(pswModel);
 				var userRecord = pswModel.klass;
 				user = userRecord;
 				user.User.Public = true;
@@ -809,20 +787,25 @@ namespace GenioMVC.Controllers
 
 				//Insert new user data into database
 				user.UserRecord = false;
-				user.User.Name = UserName;
+				user.User.Name = userName;
 				user.fillStampInsert();
 
 				try
 				{
 					UserContext.Current.User.AddModuleRole("STY", CSGenio.framework.Role.ADMINISTRATION);
 					factory.FillPsw(userPsw: user,
-						userName: UserName,
-						email: Email,
+						userName: userName,
+						email: email,
 						phone: string.Empty,
 						status: 2, //Account starts disabled
 						password: password);
 
 					user.insert(sp);
+				}
+				catch (BusinessException ex)
+				{
+					ModelState.AddModelError("Erro", ex.UserMessage);
+					return JsonERROR(ex.UserMessage);
 				}
 				finally
 				{
@@ -834,22 +817,22 @@ namespace GenioMVC.Controllers
 
 				//Set foreign key to primary key of record in user table (USERLOGIN / PSW)
 				//Change by [TMV] (16.03.2021) -> Returns the CSGenio to be able to create eph with formula fields
-				CSGenioAregis area = Regis_New_Registration(FormData);
+				CSGenioAregis area = Regis_New_Registration(formData);
 
 				if (area is null)
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
 
-					returnModel.FormData = FormData;
-					RegistrationConfig(returnModel,"Regis", registrationId);
+					returnModel.FormData = formData;
+					RegistrationConfig(returnModel, "Regis", registrationId);
 
 					var formDataModel = returnModel.FormData as ViewModels.Regis.Regis_ViewModel;
 					formDataModel.LoadPartial(Request.QueryNameValues());
 					formDataModel.MapFromModel();
 
-					returnModel.FormPswData = FormPswData;
-					RegistrationConfig(returnModel,"Defaultpsw", registrationId);
+					returnModel.FormPswData = formPswData;
+					RegistrationConfig(returnModel, "Defaultpsw", registrationId);
 
 					return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, new { model = returnModel });
 				}
@@ -858,10 +841,10 @@ namespace GenioMVC.Controllers
 				string lang = "";
 				try
 				{
-					//TODO: this should be obtained directly from user that already has its language filled by Usercontext
+					// TODO: this should be obtained directly from user that already has its language filled by Usercontext
 					lang = RouteData.Values["culture"]?.ToString() ?? "";
 				}
-				catch {/*In case language is not defined*/ }
+				catch { /*In case language is not defined*/ }
 
 				UserFactory.MailSender(user, Url.Action("ConfirmEmail", "Account", new { ticket = "fldTicket" }, Request.Scheme), lang);
 
@@ -874,9 +857,9 @@ namespace GenioMVC.Controllers
 				sp.rollbackTransaction();
 				sp.closeConnection();
 
-				if(e.ErrorStack != null)
+				if (e.ErrorStack != null)
 				{
-					foreach(var error in e.ErrorStack)
+					foreach (var error in e.ErrorStack)
 					{
 						ModelState.AddModelError("Erro", error);
 						Log.Error(error);
@@ -895,14 +878,14 @@ namespace GenioMVC.Controllers
 				Log.Error(e.Message);
 			}
 
-			returnModel.FormData = FormData;
-			RegistrationConfig(returnModel,"Regis", registrationId);
+			returnModel.FormData = formData;
+			RegistrationConfig(returnModel, "Regis", registrationId);
 			var tempFormDataModel = returnModel.FormData as ViewModels.Regis.Regis_ViewModel;
 			tempFormDataModel.LoadPartial(Request.QueryNameValues());
 			tempFormDataModel.MapFromModel();
 
-			returnModel.FormPswData = FormPswData;
-			RegistrationConfig(returnModel,"Defaultpsw", registrationId);
+			returnModel.FormPswData = formPswData;
+			RegistrationConfig(returnModel, "Defaultpsw", registrationId);
 
 			return JsonERROR(Resources.Resources.PEDIMOS_DESCULPA__OC63848, new { Form = "Form_Regis", model = returnModel });
 		}
@@ -932,10 +915,6 @@ namespace GenioMVC.Controllers
 
 				u.RemoveModuleRole("STY", CSGenio.framework.Role.ADMINISTRATION);
 				u.CurrentModule = null;
-
-				// MH - Visualizar os warnings obtidos durante gravação. (ex: Condição de escrita que não impede gravação)
-				if (model.flashMessage != null && (model.flashMessage.Status == Status.W || model.flashMessage.Status == Status.OK_MAIS_W))
-					GetFlashMessage(model.flashMessage, Navigation.CurrentLevel.FormMode);
 
 				return Model.klass;
 			}
@@ -1102,6 +1081,5 @@ namespace GenioMVC.Controllers
 			var user = UserContext.Current.User;
 			return Json(new { username = user.Name != "guest" ? user.Name : "" });
 		}
-
 	}
 }

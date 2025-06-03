@@ -23,7 +23,7 @@ public class ExceptionHandlerMiddleware
         }
         catch (Exception ex)
         {
-            Log.Error(ex.Message);
+            Log.Error("Error: " + ex.Message + "; Stack: " + ex.StackTrace);
 
             context.Response.StatusCode = 500;
             context.Response.Headers.ContentType = "text/plain";
@@ -31,13 +31,13 @@ public class ExceptionHandlerMiddleware
             {
                 if (Configuration.EventTracking)
                 {
-                    writer.WriteLine(ex.Message);
-                    writer.WriteLine();
-                    writer.WriteLine(ex.StackTrace);
+                    await writer.WriteLineAsync(ex.Message);
+                    await writer.WriteLineAsync();
+                    await writer.WriteLineAsync(ex.StackTrace);
                 }
                 else
                 {
-                    writer.WriteLine("A low level exception has ocurred. Please review server application logs for details.");
+                    await writer.WriteLineAsync("A low level exception has ocurred. Please review server application logs for details.");
                 }
             }
 

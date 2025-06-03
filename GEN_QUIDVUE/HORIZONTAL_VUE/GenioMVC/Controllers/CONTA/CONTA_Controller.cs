@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Conta;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER CONTA]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ContaController : ControllerBase
 	{
-		public ContaController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ContaController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION CONTA]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER CONTA]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Conta row = null;
-
-			if (row == null)
-			{
-				row = new Models.Conta(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("conta");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Conta row = new Models.Conta(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("conta");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "CONTA___PESSONAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Conta_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Conta_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Conta___pessoname____(qs);
 							result = model.TablePessoName;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "CONTA___GENREGENDER__":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Conta_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Conta_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Conta___genregender__(qs);
 							result = model.TableGenreGender;
@@ -93,8 +100,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "CONTA___TPCONTIPOCONT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Conta_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Conta_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Conta___tpcontipocont(qs);
 							result = model.TableTpconTipocont;
@@ -165,6 +171,9 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
+
 
 
 		/// <summary>

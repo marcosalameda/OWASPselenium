@@ -20,12 +20,12 @@ public class Pessos01Form : Subform
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "#PESSOS01PESSOTELEPHON");
+	public BaseInputControl PessoTelephon => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOTELEPHON", "#PESSOS01PESSOTELEPHON");
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "#PESSOS01PESSOEMAIL___");
+	public BaseInputControl PessoEmail => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOEMAIL___", "#PESSOS01PESSOEMAIL___");
 
 	/// <summary>
 	/// PHOTO
@@ -35,7 +35,7 @@ public class Pessos01Form : Subform
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "#PESSOS01PESSOPHOTOGRA");
+	public BaseInputControl PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOPHOTOGRA", "#PESSOS01PESSOPHOTOGRA");
 
 	/// <summary>
 	/// CAREER

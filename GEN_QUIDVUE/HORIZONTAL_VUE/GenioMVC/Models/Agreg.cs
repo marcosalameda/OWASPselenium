@@ -38,39 +38,41 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">PROJECT" Tipo: "CE" Formula: ST "[EXPEN->CODPROJE]"</summary>
 		[ShouldSerialize("Agreg.ValCodproje")]
 		public string ValCodproje { get { return klass.ValCodproje; } set { klass.ValCodproje = value; } }
+
 		private Proje _proje;
 		[DisplayName("Proje")]
 		[ShouldSerialize("Proje")]
-		public virtual Proje Proje {
-			get {
-				if (!this.isEmptyModel && (_proje == null || (!string.IsNullOrEmpty(ValCodproje) && (_proje.isEmptyModel || _proje.klass.QPrimaryKey != ValCodproje))))
+		public virtual Proje Proje
+		{
+			get
+			{
+				if (!isEmptyModel && (_proje == null || (!string.IsNullOrEmpty(ValCodproje) && (_proje.isEmptyModel || _proje.klass.QPrimaryKey != ValCodproje))))
 					_proje = Models.Proje.Find(ValCodproje, m_userContext, Identifier, _fieldsToSerialize);
-				if (_proje == null)
-					_proje = new Models.Proje(m_userContext, true, _fieldsToSerialize);
+				_proje ??= new Models.Proje(m_userContext, true, _fieldsToSerialize);
 				return _proje;
 			}
 			set { _proje = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula: ST "[EXPEN->CODYEAR]"</summary>
 		[ShouldSerialize("Agreg.ValCodyear")]
 		public string ValCodyear { get { return klass.ValCodyear; } set { klass.ValCodyear = value; } }
+
 		private Year _year;
 		[DisplayName("Year")]
 		[ShouldSerialize("Year")]
-		public virtual Year Year {
-			get {
-				if (!this.isEmptyModel && (_year == null || (!string.IsNullOrEmpty(ValCodyear) && (_year.isEmptyModel || _year.klass.QPrimaryKey != ValCodyear))))
+		public virtual Year Year
+		{
+			get
+			{
+				if (!isEmptyModel && (_year == null || (!string.IsNullOrEmpty(ValCodyear) && (_year.isEmptyModel || _year.klass.QPrimaryKey != ValCodyear))))
 					_year = Models.Year.Find(ValCodyear, m_userContext, Identifier, _fieldsToSerialize);
-				if (_year == null)
-					_year = new Models.Year(m_userContext, true, _fieldsToSerialize);
+				_year ??= new Models.Year(m_userContext, true, _fieldsToSerialize);
 				return _year;
 			}
 			set { _year = value; }
 		}
-
 
 		[DisplayName("Year")]
 		/// <summary>Field : "Year" Tipo: "C" Formula: ++ "[YEAR->YEAR]"</summary>
@@ -81,18 +83,18 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Value" Tipo: "$D" Formula: SR "[EXPEN->VALUE]"</summary>
 		[ShouldSerialize("Agreg.ValValue")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValValue { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
+		public decimal? ValValue { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValValue, 2)); } set { klass.ValValue = Convert.ToDecimal(value); } }
 
 		[DisplayName("Year NUMBER")]
 		/// <summary>Field : "Year NUMBER" Tipo: "N" Formula: ++ "[YEAR->YEARNUM]"</summary>
 		[ShouldSerialize("Agreg.ValYearnumb")]
 		[NumericAttribute(0)]
-		public decimal? ValYearnumb { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
+		public decimal? ValYearnumb { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValYearnumb, 0)); } set { klass.ValYearnumb = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Agreg.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Agreg(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -111,7 +113,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAagreg csgenioa)
 		{
 			if (csgenioa == null)
@@ -122,13 +123,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "proje":
-						if (_proje == null)
-							_proje = new Proje(m_userContext, true, _fieldsToSerialize);
+						_proje ??= new Proje(m_userContext, true, _fieldsToSerialize);
 						_proje.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "year":
-						if (_year == null)
-							_year = new Year(m_userContext, true, _fieldsToSerialize);
+						_year ??= new Year(m_userContext, true, _fieldsToSerialize);
 						_year.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

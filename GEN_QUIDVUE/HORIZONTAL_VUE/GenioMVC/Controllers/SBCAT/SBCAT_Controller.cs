@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Sbcat;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER SBCAT]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class SbcatController : ControllerBase
 	{
-		public SbcatController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public SbcatController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION SBCAT]/
 
 
@@ -42,6 +51,9 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER SBCAT]/
+
+
+
 
 
 		/// <summary>

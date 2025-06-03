@@ -220,6 +220,7 @@ namespace GenioMVC.ViewModels.Tblb
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Tblb m)
 		{
 			if (m == null)
@@ -253,20 +254,13 @@ namespace GenioMVC.ViewModels.Tblb
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Tblb m)
 		{
 			if (m == null)
@@ -478,7 +472,7 @@ namespace GenioMVC.ViewModels.Tblb
 
 			validator.StringLength("ValText", Resources.Resources.TEXT04938, ValText, 50);
 
-			validator.Required("ValText", Resources.Resources.TEXT04938, ViewModelConversion.ToString(ValText), FieldType.TEXTO.Formatting);
+			validator.Required("ValText", Resources.Resources.TEXT04938, ViewModelConversion.ToString(ValText), FieldType.TEXT.GetFormatting());
 
 
 			return validator.GetResult();
@@ -538,8 +532,6 @@ namespace GenioMVC.ViewModels.Tblb
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

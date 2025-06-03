@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Dilin_DispaValDispanrModel : RequestLookupModel
+		{
+			public Dilin_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Dilin/Dilin_DispaValDispanr
 		// POST: /Dilin/Dilin_DispaValDispanr
 		[ActionName("Dilin_DispaValDispanr")]
-		public ActionResult Dilin_DispaValDispanr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dilin_DispaValDispanr([FromBody] Dilin_DispaValDispanrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dilin_DispaValDispanr_ViewModel model = new Dilin_DispaValDispanr_ViewModel(UserContext.Current);
-			
+
+			Models.Dilin parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dilin_DispaValDispanr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Dilin_ProduValProductModel : RequestLookupModel
+		{
+			public Dilin_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Dilin/Dilin_ProduValProduct
 		// POST: /Dilin/Dilin_ProduValProduct
 		[ActionName("Dilin_ProduValProduct")]
-		public ActionResult Dilin_ProduValProduct([FromBody]RequestLookupModel requestModel)
+		public ActionResult Dilin_ProduValProduct([FromBody] Dilin_ProduValProductModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Dilin_ProduValProduct_ViewModel model = new Dilin_ProduValProduct_ViewModel(UserContext.Current);
-			
+
+			Models.Dilin parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Dilin_ProduValProduct_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

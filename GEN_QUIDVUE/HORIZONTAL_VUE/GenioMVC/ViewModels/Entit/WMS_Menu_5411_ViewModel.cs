@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,43 +7,62 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Entit
 {
-	public class WMS_Menu_5411_ViewModel : ListViewModel
+	public class WMS_Menu_5411_ViewModel : MenuListViewModel<Models.Entit>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<WMS_Menu_5411_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "entit"; }
+		[JsonIgnore]
+		public override string TableAlias => "entit";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "7c66b6d5-d903-4719-bd1e-67b5650e047d"; }
+		public override string Uuid => "7c66b6d5-d903-4719-bd1e-67b5650e047d";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodentit { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+				// Limit "SC"
+				conditions.Equal(CSGenioAentit.FldManufact, "1");
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
@@ -50,11 +70,13 @@ namespace GenioMVC.ViewModels.Entit
 				CriteriaSet conds = CriteriaSet.And();
 				if (Navigation.CheckKey("entit.manufact"))
 					conds.Equal(CSGenioAentit.FldManufact, Navigation.GetValue("entit.manufact"));
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -64,6 +86,12 @@ namespace GenioMVC.ViewModels.Entit
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS 5411]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -71,30 +99,35 @@ namespace GenioMVC.ViewModels.Entit
 			var areaBase = CSGenio.business.Area.createArea("entit", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_5411Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML5411");
-			wms_menu_5411Conds.Equal(CSGenioAentit.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML5411");
+			conditions.Equal(CSGenioAentit.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-						wms_menu_5411Conds.Equal(CSGenioAentit.FldManufact, 1);
-
-
-// USE /[MANUAL WMS OVERRQ 5411]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAentit.FldCodentit, CSGenioAentit.FldZzstate, CSGenioAentit.FldName, CSGenioAentit.FldInitials, CSGenioAentit.FldRegistra, CSGenioAentit.FldTaxnumbe, CSGenioAentit.FldEmail, CSGenioAentit.FldPhonenum, CSGenioAentit.FldIban, CSGenioAentit.FldBuilding, CSGenioAentit.FldStreet, CSGenioAentit.FldTown, CSGenioAentit.FldCounty, CSGenioAentit.FldState, CSGenioAentit.FldPobox, CSGenioAentit.FldPostalco, CSGenioAentit.FldTelephon, CSGenioAentit.FldFax, CSGenioAentit.FldWebsite, CSGenioAentit.FldPerson, CSGenioAentit.FldContact, CSGenioAentit.FldManufact, CSGenioAentit.FldFounded, CSGenioAentit.FldFirstfacilitie, CSGenioAfaci1.FldCodfacil, CSGenioAfaci1.FldName, CSGenioAentit.FldLastfacilitie, CSGenioAfaci2.FldCodfacil, CSGenioAfaci2.FldName, CSGenioAentit.FldLanguage, CSGenioAentit.FldCurrency, CSGenioAentit.FldOwner, CSGenioAentit.FldCarrier, CSGenioAentit.FldSupplier };
 
-			ListingMVC<CSGenioAentit> listing = new ListingMVC<CSGenioAentit>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_5411Conds, listing);
+			ListingMVC<CSGenioAentit> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public WMS_Menu_5411_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WMS_Menu_5411_ViewModel" /> class.
@@ -105,39 +138,49 @@ namespace GenioMVC.ViewModels.Entit
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WMS_Menu_5411_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public WMS_Menu_5411_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXTO, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldInitials, FieldType.TEXTO, Resources.Resources.COMPANY_INITIALS56204, 10, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldRegistra, FieldType.TEXTO, Resources.Resources.LEGAL_REGISTRATION04413, 20, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldTaxnumbe, FieldType.TEXTO, Resources.Resources.VAT_NUMBER24236, 20, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldPhonenum, FieldType.TEXTO, Resources.Resources.PHONE_NUMBER20774, 20, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldIban, FieldType.TEXTO, Resources.Resources.IBAN__INTERNATIONAL_45066, 25, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldBuilding, FieldType.TEXTO, Resources.Resources.BUILDING_HOUSE_NUMBE20738, 10, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldStreet, FieldType.TEXTO, Resources.Resources.STREET44324, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldTown, FieldType.TEXTO, Resources.Resources.TOWN_CITY16259, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldCounty, FieldType.TEXTO, Resources.Resources.COUNTY_PROVINCE34285, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldState, FieldType.TEXTO, Resources.Resources.STATE_PROVINCE28516, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldPobox, FieldType.TEXTO, Resources.Resources.POST_OFFICE_BOX06223, 5, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldPostalco, FieldType.TEXTO, Resources.Resources.ZIP_POSTAL_CODE55613, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldTelephon, FieldType.TEXTO, Resources.Resources.TELEPHONE28697, 20, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldFax, FieldType.TEXTO, Resources.Resources.FAX08532, 20, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldWebsite, FieldType.TEXTO, Resources.Resources.WEB_SITE06263, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldPerson, FieldType.TEXTO, Resources.Resources.PERSON_DEPARTMENT_TO28777, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldContact, FieldType.TEXTO, Resources.Resources.CONTACT_TELEPHONE_NU12694, 20, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldManufact, FieldType.LOGICO, Resources.Resources.MANUFACTURER50759, 1, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldFounded, FieldType.DATA, Resources.Resources.FOUNDED_IN54120, 8, 0, false),
-				new Exports.QColumn(CSGenioAfaci1.FldName, FieldType.TEXTO, Resources.Resources.FACILITY_NAME19514, 30, 0, false),
-				new Exports.QColumn(CSGenioAfaci2.FldName, FieldType.TEXTO, Resources.Resources.FACILITY_NAME19514, 30, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldLanguage, FieldType.TEXTO, Resources.Resources.LANGUAGE16872, 2, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldCurrency, FieldType.TEXTO, Resources.Resources.CURRENCY13881, 3, 0, false),
-				new Exports.QColumn(CSGenioAentit.FldOwner, FieldType.TEXTO, Resources.Resources.OWNER09558, 1, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldCarrier, FieldType.LOGICO, Resources.Resources.CARRIER64855, 1, 0, true),
-				new Exports.QColumn(CSGenioAentit.FldSupplier, FieldType.LOGICO, Resources.Resources.SUPPLIER17230, 1, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldInitials, FieldType.TEXT, Resources.Resources.COMPANY_INITIALS56204, 10, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldRegistra, FieldType.TEXT, Resources.Resources.LEGAL_REGISTRATION04413, 20, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldTaxnumbe, FieldType.TEXT, Resources.Resources.VAT_NUMBER24236, 20, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldPhonenum, FieldType.TEXT, Resources.Resources.PHONE_NUMBER20774, 20, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldIban, FieldType.TEXT, Resources.Resources.IBAN__INTERNATIONAL_45066, 25, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldBuilding, FieldType.TEXT, Resources.Resources.BUILDING_HOUSE_NUMBE20738, 10, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldStreet, FieldType.TEXT, Resources.Resources.STREET44324, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldTown, FieldType.TEXT, Resources.Resources.TOWN_CITY16259, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldCounty, FieldType.TEXT, Resources.Resources.COUNTY_PROVINCE34285, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldState, FieldType.TEXT, Resources.Resources.STATE_PROVINCE28516, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldPobox, FieldType.TEXT, Resources.Resources.POST_OFFICE_BOX06223, 5, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldPostalco, FieldType.TEXT, Resources.Resources.ZIP_POSTAL_CODE55613, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldTelephon, FieldType.TEXT, Resources.Resources.TELEPHONE28697, 20, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldFax, FieldType.TEXT, Resources.Resources.FAX08532, 20, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldWebsite, FieldType.TEXT, Resources.Resources.WEB_SITE06263, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldPerson, FieldType.TEXT, Resources.Resources.PERSON_DEPARTMENT_TO28777, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldContact, FieldType.TEXT, Resources.Resources.CONTACT_TELEPHONE_NU12694, 20, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldManufact, FieldType.LOGIC, Resources.Resources.MANUFACTURER50759, 1, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldFounded, FieldType.DATE, Resources.Resources.FOUNDED_IN54120, 8, 0, false),
+				new Exports.QColumn(CSGenioAfaci1.FldName, FieldType.TEXT, Resources.Resources.FACILITY_NAME19514, 30, 0, false),
+				new Exports.QColumn(CSGenioAfaci2.FldName, FieldType.TEXT, Resources.Resources.FACILITY_NAME19514, 30, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldLanguage, FieldType.TEXT, Resources.Resources.LANGUAGE16872, 2, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldCurrency, FieldType.TEXT, Resources.Resources.CURRENCY13881, 3, 0, false),
+				new Exports.QColumn(CSGenioAentit.FldOwner, FieldType.TEXT, Resources.Resources.OWNER09558, 1, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldCarrier, FieldType.LOGIC, Resources.Resources.CARRIER64855, 1, 0, true),
+				new Exports.QColumn(CSGenioAentit.FldSupplier, FieldType.LOGIC, Resources.Resources.SUPPLIER17230, 1, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -186,13 +229,10 @@ namespace GenioMVC.ViewModels.Entit
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_5411_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ENTIT.NAME", new OrderedDictionary());
-			allSortOrders["ENTIT.NAME"].Add("ENTIT.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -205,12 +245,9 @@ namespace GenioMVC.ViewModels.Entit
 			crs.SubSets.Add(subfilters);
 
 
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Limitations
-			// Limit "SC"
-			crs.Equal(CSGenioAentit.FldManufact, "1");
-
 			if (isToExport)
 			{
 				// EPH
@@ -306,23 +343,22 @@ namespace GenioMVC.ViewModels.Entit
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAentit> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "5411"),
 				new("Module", "WMS")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_5411_RowViewModel>();
 
 				CriteriaSet wms_menu_5411Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("ENTIT.NAME", new OrderedDictionary());
 				allSortOrders["ENTIT.NAME"].Add("ENTIT.NAME", "A");
-
 
 
 
@@ -354,46 +390,44 @@ namespace GenioMVC.ViewModels.Entit
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("entit", "name");
+					firstVisibleColumn ??= new FieldRef("entit", "name");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAentit model_limit_area = new CSGenioAentit(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML5411");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAentit model_limit_area = new CSGenioAentit(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML5411");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
-			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-			// Limit origin: menu 
+				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+				// Limit origin: menu 
 
-			//Limit type: "SC"
-			//Current Area = "ENTIT"
-			//1st Area Limit: "ENTIT"
-			//1st Area Field: "MANUFACT"
-			//1st Area Value: "1"
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.SC;
-				limit.NaoAplicaSeNulo = false;
-				CSGenioAentit model_limit_area = new CSGenioAentit(m_userContext.User);
-				string limit_field = "manufact", limit_field_value = "1";
-				object this_limit_field = Navigation.GetStrValue(limit_field_value);
-				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
-				if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
-					this.tableLimits.Add(limit);
-			}
+				//Limit type: "SC"
+				//Current Area = "ENTIT"
+				//1st Area Limit: "ENTIT"
+				//1st Area Field: "MANUFACT"
+				//1st Area Value: "1"
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.SC;
+					limit.NaoAplicaSeNulo = false;
+					CSGenioAentit model_limit_area = new CSGenioAentit(m_userContext.User);
+					string limit_field = "manufact", limit_field_value = "1";
+					object this_limit_field = Navigation.GetStrValue(limit_field_value);
+					Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+					if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+						this.tableLimits.Add(limit);
+				}
 
 				if (conditions == null)
 					conditions = CriteriaSet.And();
@@ -403,6 +437,8 @@ namespace GenioMVC.ViewModels.Entit
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL WMS OVERRQ 5411]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -431,7 +467,7 @@ namespace GenioMVC.ViewModels.Entit
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAentit> listing = Models.ModelBase.Where<CSGenioAentit>(m_userContext, false, wms_menu_5411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML5411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAentit> listing = Models.ModelBase.Where<CSGenioAentit>(m_userContext, distinct, wms_menu_5411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML5411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -439,7 +475,6 @@ namespace GenioMVC.ViewModels.Entit
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -461,18 +496,12 @@ namespace GenioMVC.ViewModels.Entit
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -480,7 +509,7 @@ namespace GenioMVC.ViewModels.Entit
 
 		private List<WMS_Menu_5411_RowViewModel> MapWMS_Menu_5411(ListingMVC<CSGenioAentit> Qlisting)
 		{
-			var Elements = new List<WMS_Menu_5411_RowViewModel>();
+			List<WMS_Menu_5411_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -497,7 +526,6 @@ namespace GenioMVC.ViewModels.Entit
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAentit row
 		/// to a WMS_Menu_5411_RowViewModel object.
@@ -506,7 +534,9 @@ namespace GenioMVC.ViewModels.Entit
 		private WMS_Menu_5411_RowViewModel MapWMS_Menu_5411(CSGenioAentit row)
 		{
 			var model = new WMS_Menu_5411_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -522,32 +552,9 @@ namespace GenioMVC.ViewModels.Entit
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(WMS_Menu_5411_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -561,31 +568,40 @@ namespace GenioMVC.ViewModels.Entit
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAentit> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAentit row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Entit m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Entit m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM WMS_MENU_5411]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Entit", "Entit.ValCodentit", "Entit.ValZzstate", "Entit.ValName", "Entit.ValInitials", "Entit.ValRegistra", "Entit.ValTaxnumbe", "Entit.ValEmail", "Entit.ValPhonenum", "Entit.ValIban", "Entit.ValBuilding", "Entit.ValStreet", "Entit.ValTown", "Entit.ValCounty", "Entit.ValState", "Entit.ValPobox", "Entit.ValPostalco", "Entit.ValTelephon", "Entit.ValFax", "Entit.ValWebsite", "Entit.ValPerson", "Entit.ValContact", "Entit.ValManufact", "Entit.ValFounded", "Faci1", "Faci1.ValName", "Faci2", "Faci2.ValName", "Entit.ValLanguage", "Entit.ValCurrency", "Entit.ValOwner", "Entit.ValCarrier", "Entit.ValSupplier", "Entit.ValFirstfacilitie", "Entit.ValLastfacilitie", "BtnPermission"
+			"Entit", "Entit.ValCodentit", "Entit.ValZzstate", "Entit.ValName", "Entit.ValInitials", "Entit.ValRegistra", "Entit.ValTaxnumbe", "Entit.ValEmail", "Entit.ValPhonenum", "Entit.ValIban", "Entit.ValBuilding", "Entit.ValStreet", "Entit.ValTown", "Entit.ValCounty", "Entit.ValState", "Entit.ValPobox", "Entit.ValPostalco", "Entit.ValTelephon", "Entit.ValFax", "Entit.ValWebsite", "Entit.ValPerson", "Entit.ValContact", "Entit.ValManufact", "Entit.ValFounded", "Faci1", "Faci1.ValName", "Faci2", "Faci2.ValName", "Entit.ValLanguage", "Entit.ValCurrency", "Entit.ValOwner", "Entit.ValCarrier", "Entit.ValSupplier", "Entit.ValFirstfacilitie", "Entit.ValLastfacilitie"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAentit.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValInitials", CSGenioAentit.FldInitials, typeof(string)),
@@ -614,10 +630,7 @@ namespace GenioMVC.ViewModels.Entit
 			new TableSearchColumn("ValCurrency", CSGenioAentit.FldCurrency, typeof(string), visible : false),
 			new TableSearchColumn("ValOwner", CSGenioAentit.FldOwner, typeof(string)),
 			new TableSearchColumn("ValCarrier", CSGenioAentit.FldCarrier, typeof(bool)),
-			new TableSearchColumn("ValSupplier", CSGenioAentit.FldSupplier, typeof(bool))
+			new TableSearchColumn("ValSupplier", CSGenioAentit.FldSupplier, typeof(bool)),
 		];
-
-
-
 	}
 }

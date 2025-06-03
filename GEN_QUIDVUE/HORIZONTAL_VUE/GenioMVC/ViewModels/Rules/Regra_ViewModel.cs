@@ -143,7 +143,7 @@ namespace GenioMVC.ViewModels.Rules
 				if (!(areaRules.klass.ValTipocond!="U"||areaRules.klass.ValLocal!="F"))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.FALHOU_A_CONDICAO_DE02451); // Message: "Falhou a condição de edição no form"
+					StatusMessage message = new(status, Resources.Resources.FALHOU_A_CONDICAO_DE02451); // Message: "Falhou a condição de edição no form"
 					result.MergeStatusMessage(message);
 				}
 			}
@@ -170,7 +170,7 @@ namespace GenioMVC.ViewModels.Rules
 				if (!(areaRules.klass.ValTipocond!="D"||areaRules.klass.ValLocal!="F"))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.FALHOU_A_CONDICAO_DE16866); // Message: "Falhou a condição de eliminação no form"
+					StatusMessage message = new(status, Resources.Resources.FALHOU_A_CONDICAO_DE16866); // Message: "Falhou a condição de eliminação no form"
 					result.MergeStatusMessage(message);
 				}
 			}
@@ -195,7 +195,7 @@ namespace GenioMVC.ViewModels.Rules
 				if (!(areaRules.klass.ValTipocond!="V"||areaRules.klass.ValLocal!="F"))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.FALHOU_A_CONDICAO_DE57428); // Message: "Falhou a condição de visualização no form"
+					StatusMessage message = new(status, Resources.Resources.FALHOU_A_CONDICAO_DE57428); // Message: "Falhou a condição de visualização no form"
 					result.MergeStatusMessage(message);
 				}
 			}
@@ -218,53 +218,53 @@ namespace GenioMVC.ViewModels.Rules
 			{
 				// (REGRA form condition) [RULES->TIPOCOND]=="M"
 				if (!isApply && (areaRules.klass.ValTipocond=="M")
-					&& CSGenio.business.Area.GetFieldInfo(CSGenioArules.FldDescript).isEmptyValue(model.ValDescript))
+					&& CSGenio.business.Area.GetFieldInfo(CSGenioArules.FldDescript).isEmptyValue(ViewModelConversion.ToString(model.ValDescript)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.E_OBRIGATORIO_PREENC03702); // Message: "É obrigatório preencher a descrição: Regra do form sem apply"
+					StatusMessage message = new(status, Resources.Resources.E_OBRIGATORIO_PREENC03702); // Message: "É obrigatório preencher a descrição: Regra do form sem apply"
 					result.MergeStatusMessage(message);
 				}
 				// (REGRA form condition) [RULES->TIPOCOND]!="E" || [RULES->LOCAL]!="F"
 				if (!isApply && !(areaRules.klass.ValTipocond!="E"||areaRules.klass.ValLocal!="F"))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.FALHOU_A_CONDICAO_DE23304); // Message: "Falhou a condição de escrita do form sem apply"
+					StatusMessage message = new(status, Resources.Resources.FALHOU_A_CONDICAO_DE23304); // Message: "Falhou a condição de escrita do form sem apply"
 					result.MergeStatusMessage(message);
 				}
 				// (REGRA form condition) [RULES->TIPOCOND]!="W" || [RULES->LOCAL]!="F"
 				if (!isApply && !(areaRules.klass.ValTipocond!="W"||areaRules.klass.ValLocal!="F"))
 				{
 					var status = Status.W;
-					var message = new StatusMessage(status, Resources.Resources.FALHOU_A_VALIDACAO_D60313); // Message: "Falhou a validação do form sem apply"
+					StatusMessage message = new(status, Resources.Resources.FALHOU_A_VALIDACAO_D60313); // Message: "Falhou a validação do form sem apply"
 					result.MergeStatusMessage(message);
 				}
 				// (REGRA form condition) [RULES->TIPOCOND]=="M" && [RULES->LOCAL]=="F"
 				if ((areaRules.klass.ValTipocond=="M"&&areaRules.klass.ValLocal=="F")
-					&& CSGenio.business.Area.GetFieldInfo(CSGenioArules.FldDescript).isEmptyValue(model.ValDescript))
+					&& CSGenio.business.Area.GetFieldInfo(CSGenioArules.FldDescript).isEmptyValue(ViewModelConversion.ToString(model.ValDescript)))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.E_OBRIGATORIO_PREENC62370); // Message: "É obrigatório preencher a descrição: Regra do form com apply"
+					StatusMessage message = new(status, Resources.Resources.E_OBRIGATORIO_PREENC62370); // Message: "É obrigatório preencher a descrição: Regra do form com apply"
 					result.MergeStatusMessage(message);
 				}
 				// (REGRA form condition) [RULES->TIPOCOND]!="I" || [RULES->LOCAL]!="F"
 				if (!isApply && !(areaRules.klass.ValTipocond!="I"||areaRules.klass.ValLocal!="F"))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.FALHOU_A_CONDICAO_DE23484); // Message: "Falhou a condição de inserção no form"
+					StatusMessage message = new(status, Resources.Resources.FALHOU_A_CONDICAO_DE23484); // Message: "Falhou a condição de inserção no form"
 					result.MergeStatusMessage(message);
 				}
 				// (REGRA form condition) [RULES->TIPOCOND]!="W" || [RULES->LOCAL]!="F"
 				if (!(areaRules.klass.ValTipocond!="W"||areaRules.klass.ValLocal!="F"))
 				{
 					var status = Status.W;
-					var message = new StatusMessage(status, Resources.Resources.FALHOU_A_VALIDACAO_D54728); // Message: "Falhou a validação do form com apply"
+					StatusMessage message = new(status, Resources.Resources.FALHOU_A_VALIDACAO_D54728); // Message: "Falhou a validação do form com apply"
 					result.MergeStatusMessage(message);
 				}
 				// (REGRA form condition) [RULES->TIPOCOND]!="E" || [RULES->LOCAL]!="F"
 				if (!(areaRules.klass.ValTipocond!="E"||areaRules.klass.ValLocal!="F"))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.FALHOU_A_CONDICAO_DE06933); // Message: "Falhou a condição de escrita do form com apply"
+					StatusMessage message = new(status, Resources.Resources.FALHOU_A_CONDICAO_DE06933); // Message: "Falhou a condição de escrita do form com apply"
 					result.MergeStatusMessage(message);
 				}
 			}
@@ -285,6 +285,7 @@ namespace GenioMVC.ViewModels.Rules
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Rules m)
 		{
 			if (m == null)
@@ -307,20 +308,13 @@ namespace GenioMVC.ViewModels.Rules
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Rules m)
 		{
 			if (m == null)
@@ -530,8 +524,6 @@ namespace GenioMVC.ViewModels.Rules
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

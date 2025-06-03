@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Propr00_TpproValTppropriModel : RequestLookupModel
+		{
+			public Propr00_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Propr/Propr00_TpproValTppropri
 		// POST: /Propr/Propr00_TpproValTppropri
 		[ActionName("Propr00_TpproValTppropri")]
-		public ActionResult Propr00_TpproValTppropri([FromBody]RequestLookupModel requestModel)
+		public ActionResult Propr00_TpproValTppropri([FromBody] Propr00_TpproValTppropriModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Propr00_TpproValTppropri_ViewModel model = new Propr00_TpproValTppropri_ViewModel(UserContext.Current);
-			
+
+			Models.Propr parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Propr00_TpproValTppropri_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Propr00_PessoValNameModel : RequestLookupModel
+		{
+			public Propr00_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Propr/Propr00_PessoValName
 		// POST: /Propr/Propr00_PessoValName
 		[ActionName("Propr00_PessoValName")]
-		public ActionResult Propr00_PessoValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Propr00_PessoValName([FromBody] Propr00_PessoValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Propr00_PessoValName_ViewModel model = new Propr00_PessoValName_ViewModel(UserContext.Current);
-			
+
+			Models.Propr parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Propr00_PessoValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +533,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Propr01_CntryValCountryModel : RequestLookupModel
+		{
+			public Propr00_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Propr/Propr01_CntryValCountry
 		// POST: /Propr/Propr01_CntryValCountry
 		[ActionName("Propr01_CntryValCountry")]
-		public ActionResult Propr01_CntryValCountry([FromBody]RequestLookupModel requestModel)
+		public ActionResult Propr01_CntryValCountry([FromBody] Propr01_CntryValCountryModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -547,16 +567,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Propr01_CntryValCountry_ViewModel model = new Propr01_CntryValCountry_ViewModel(UserContext.Current);
-			
+
+			Models.Propr parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Propr01_CntryValCountry_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -581,11 +604,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Propr01_RegioValRegiaoModel : RequestLookupModel
+		{
+			public Propr00_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Propr/Propr01_RegioValRegiao
 		// POST: /Propr/Propr01_RegioValRegiao
 		[ActionName("Propr01_RegioValRegiao")]
-		public ActionResult Propr01_RegioValRegiao([FromBody]RequestLookupModel requestModel)
+		public ActionResult Propr01_RegioValRegiao([FromBody] Propr01_RegioValRegiaoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -610,16 +638,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Propr01_RegioValRegiao_ViewModel model = new Propr01_RegioValRegiao_ViewModel(UserContext.Current);
-			
+
+			Models.Propr parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Propr01_RegioValRegiao_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

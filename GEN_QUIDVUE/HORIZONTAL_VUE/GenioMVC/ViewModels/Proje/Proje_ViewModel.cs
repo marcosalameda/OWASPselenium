@@ -196,6 +196,7 @@ namespace GenioMVC.ViewModels.Proje
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Proje m)
 		{
 			if (m == null)
@@ -223,20 +224,13 @@ namespace GenioMVC.ViewModels.Proje
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Proje m)
 		{
 			if (m == null)
@@ -559,7 +553,7 @@ namespace GenioMVC.ViewModels.Proje
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -606,7 +600,7 @@ namespace GenioMVC.ViewModels.Proje
 				// Fill List fields
 				this.ValCodyear = ViewModelConversion.ToString(row["year1.codyear"]);
 				TableYear1Year.Value = (string)row["year1.year"];
-				if (GlobalFunctions.emptyG(this.ValCodyear) == 1)
+				if (GenFunctions.emptyG(this.ValCodyear) == 1)
 				{
 					this.ValCodyear = "";
 					TableYear1Year.Value = "";
@@ -654,8 +648,6 @@ namespace GenioMVC.ViewModels.Proje
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

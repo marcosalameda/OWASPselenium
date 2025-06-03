@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
+using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
 using CSGenio.framework;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
-using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
 namespace GenioMVC.ViewModels.Psw
 {
@@ -79,6 +79,7 @@ namespace GenioMVC.ViewModels.Psw
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Psw m)
 		{
 			if (m == null)
@@ -86,6 +87,7 @@ namespace GenioMVC.ViewModels.Psw
 				CSGenio.framework.Log.Error("Map Model (Psw) to ViewModel (Pswnew) - Model is a null reference");
 				throw new ModelNotFoundException("Model not found");
 			}
+
 			try
 			{
 				ValNome = ViewModelConversion.ToString(m.ValNome);
@@ -99,19 +101,13 @@ namespace GenioMVC.ViewModels.Psw
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Psw m)
 		{
 			if (m == null)
@@ -119,6 +115,7 @@ namespace GenioMVC.ViewModels.Psw
 				CSGenio.framework.Log.Error("Map ViewModel (Pswnew) to Model (Psw) - Model is a null reference");
 				throw new ModelNotFoundException("Model not found");
 			}
+
 			try
 			{
 				m.ValNome = ViewModelConversion.ToString(ValNome);

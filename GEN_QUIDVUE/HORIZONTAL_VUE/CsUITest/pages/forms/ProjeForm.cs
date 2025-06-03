@@ -10,7 +10,7 @@ public class ProjeForm : Form
 	/// <summary>
 	/// Project
 	/// </summary>
-	public BaseInputControl ProjeProjecto => new BaseInputControl(driver, ContainerLocator, "#PROJE___PROJEPROJECTO");
+	public BaseInputControl ProjeProjecto => new BaseInputControl(driver, ContainerLocator, "container-PROJE___PROJEPROJECTO", "#PROJE___PROJEPROJECTO");
 
 	/// <summary>
 	/// Year
@@ -21,32 +21,32 @@ public class ProjeForm : Form
 	/// <summary>
 	/// First
 	/// </summary>
-	public BaseInputControl ProjePrimeiro => new BaseInputControl(driver, ContainerLocator, "#PROJE___PROJEPRIMEIRO");
+	public BaseInputControl ProjePrimeiro => new BaseInputControl(driver, ContainerLocator, "container-PROJE___PROJEPRIMEIRO", "#PROJE___PROJEPRIMEIRO");
 
 	/// <summary>
 	/// Before
 	/// </summary>
-	public BaseInputControl ProjeBefore => new BaseInputControl(driver, ContainerLocator, "#PROJE___PROJEBEFORE__");
+	public BaseInputControl ProjeBefore => new BaseInputControl(driver, ContainerLocator, "container-PROJE___PROJEBEFORE__", "#PROJE___PROJEBEFORE__");
 
 	/// <summary>
 	/// Following
 	/// </summary>
-	public BaseInputControl ProjeFollowin => new BaseInputControl(driver, ContainerLocator, "#PROJE___PROJEFOLLOWIN");
+	public BaseInputControl ProjeFollowin => new BaseInputControl(driver, ContainerLocator, "container-PROJE___PROJEFOLLOWIN", "#PROJE___PROJEFOLLOWIN");
 
 	/// <summary>
 	/// Last
 	/// </summary>
-	public BaseInputControl ProjeUltimo => new BaseInputControl(driver, ContainerLocator, "#PROJE___PROJEULTIMO__");
+	public BaseInputControl ProjeUltimo => new BaseInputControl(driver, ContainerLocator, "container-PROJE___PROJEULTIMO__", "#PROJE___PROJEULTIMO__");
 
 	/// <summary>
 	/// Next - previous =
 	/// </summary>
-	public BaseInputControl ProjeSaldo1 => new BaseInputControl(driver, ContainerLocator, "#PROJE___PROJESALDO1__");
+	public BaseInputControl ProjeSaldo1 => new BaseInputControl(driver, ContainerLocator, "container-PROJE___PROJESALDO1__", "#PROJE___PROJESALDO1__");
 
 	/// <summary>
 	/// Last - First =
 	/// </summary>
-	public BaseInputControl ProjeSaldo2 => new BaseInputControl(driver, ContainerLocator, "#PROJE___PROJESALDO2__");
+	public BaseInputControl ProjeSaldo2 => new BaseInputControl(driver, ContainerLocator, "container-PROJE___PROJESALDO2__", "#PROJE___PROJESALDO2__");
 
 	/// <summary>
 	/// Expenses

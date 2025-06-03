@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Pais_ValProprie1Model : RequestLookupModel
+		{
+			public Pais_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Cntry/Pais_ValProprie1
 		// POST: /Cntry/Pais_ValProprie1
 		[ActionName("Pais_ValProprie1")]
-		public ActionResult Pais_ValProprie1([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pais_ValProprie1([FromBody] Pais_ValProprie1Model requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +424,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Pais_ValProprie1_ViewModel model = new Pais_ValProprie1_ViewModel(UserContext.Current);
-			
+			Models.Cntry parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pais_ValProprie1_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -454,11 +460,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Pais_ValPropriedModel : RequestLookupModel
+		{
+			public Pais_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Cntry/Pais_ValPropried
 		// POST: /Cntry/Pais_ValPropried
 		[ActionName("Pais_ValPropried")]
-		public ActionResult Pais_ValPropried([FromBody]RequestLookupModel requestModel)
+		public ActionResult Pais_ValPropried([FromBody] Pais_ValPropriedModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -482,16 +493,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Pais_ValPropried_ViewModel model = new Pais_ValPropried_ViewModel(UserContext.Current);
-			
+			Models.Cntry parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Pais_ValPropried_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

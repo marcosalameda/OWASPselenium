@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Asspa_AssetValNameModel : RequestLookupModel
+		{
+			public Asspa_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Asspa/Asspa_AssetValName
 		// POST: /Asspa/Asspa_AssetValName
 		[ActionName("Asspa_AssetValName")]
-		public ActionResult Asspa_AssetValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Asspa_AssetValName([FromBody] Asspa_AssetValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Asspa_AssetValName_ViewModel model = new Asspa_AssetValName_ViewModel(UserContext.Current);
-			
+
+			Models.Asspa parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Asspa_AssetValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Asspa_ParamValParameterModel : RequestLookupModel
+		{
+			public Asspa_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Asspa/Asspa_ParamValParameter
 		// POST: /Asspa/Asspa_ParamValParameter
 		[ActionName("Asspa_ParamValParameter")]
-		public ActionResult Asspa_ParamValParameter([FromBody]RequestLookupModel requestModel)
+		public ActionResult Asspa_ParamValParameter([FromBody] Asspa_ParamValParameterModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Asspa_ParamValParameter_ViewModel model = new Asspa_ParamValParameter_ViewModel(UserContext.Current);
-			
+
+			Models.Asspa parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Asspa_ParamValParameter_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

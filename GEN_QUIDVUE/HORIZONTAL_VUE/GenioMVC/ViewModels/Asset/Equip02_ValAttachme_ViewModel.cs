@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Asset
 {
-	public class Equip02_ValAttachme_ViewModel : ListViewModel
+	public class Equip02_ValAttachme_ViewModel : MenuListViewModel<Models.Attac>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Equip02_ValAttachme_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "attac"; }
+		[JsonIgnore]
+		public override string TableAlias => "attac";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Equip02_ValAttachme"; }
+		public override string Uuid => "Equip02_ValAttachme";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCodasset { get; set; }
+		[JsonIgnore]
+		public string AssetValCodasset { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Asset
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS EQUIP02_PSEUDATTACHME]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Equip02_ValAttachme_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Equip02_ValAttachme_ViewModel" /> class.
@@ -70,7 +109,17 @@ namespace GenioMVC.ViewModels.Asset
 		/// <param name="userContext">The current user request context</param>
 		public Equip02_ValAttachme_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodasset = userContext.CurrentNavigation.CurrentLevel.GetEntry("asset")?.ToString();
+			AssetValCodasset = userContext.CurrentNavigation.CurrentLevel.GetEntry("asset")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Equip02_ValAttachme_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Equip02_ValAttachme_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -78,9 +127,9 @@ namespace GenioMVC.ViewModels.Asset
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAattac.FldAttached, FieldType.DATAHORA, Resources.Resources.ATTACHED26247, 16, 0, true),
+				new Exports.QColumn(CSGenioAattac.FldAttached, FieldType.DATETIME, Resources.Resources.ATTACHED26247, 16, 0, true),
 				new Exports.QColumn(CSGenioAattac.FldNote, FieldType.MEMO, Resources.Resources.NOTE54557, 30, 2, true),
-				new Exports.QColumn(CSGenioAattac.FldDocument, FieldType.FICHEIRO_BD, Resources.Resources.DOCUMENT00695, 30, 0, true),
+				new Exports.QColumn(CSGenioAattac.FldDocument, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -130,13 +179,10 @@ namespace GenioMVC.ViewModels.Asset
 
 			if (Menu == null)
 				Menu = new TablePartial<Equip02_ValAttachme_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ATTAC.ATTACHED", new OrderedDictionary());
-			allSortOrders["ATTAC.ATTACHED"].Add("ATTAC.ATTACHED", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -148,12 +194,11 @@ namespace GenioMVC.ViewModels.Asset
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodasset != null)
-				crs.Equal(CSGenioAattac.FldCodasset, this.ValCodasset);
+			if (this.AssetValCodasset != null)
+				crs.Equal(CSGenioAattac.FldCodasset, this.AssetValCodasset);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -250,22 +295,21 @@ namespace GenioMVC.ViewModels.Asset
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAattac> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "EQUIP02")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Equip02_ValAttachme_RowViewModel>();
 
 				CriteriaSet equip02_pseudattachmeConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("ATTAC.ATTACHED", new OrderedDictionary());
 				allSortOrders["ATTAC.ATTACHED"].Add("ATTAC.ATTACHED", "A");
-
 
 
 
@@ -297,26 +341,24 @@ namespace GenioMVC.ViewModels.Asset
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("attac", "attached");
+					firstVisibleColumn ??= new FieldRef("attac", "attached");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAattac model_limit_area = new CSGenioAattac(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_EQUIP02_PSEUDATTACHME");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAattac model_limit_area = new CSGenioAattac(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_EQUIP02_PSEUDATTACHME");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -327,6 +369,8 @@ namespace GenioMVC.ViewModels.Asset
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ EQUIP02_PSEUDATTACHME]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -355,7 +399,7 @@ namespace GenioMVC.ViewModels.Asset
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAattac> listing = Models.ModelBase.Where<CSGenioAattac>(m_userContext, false, equip02_pseudattachmeConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP02_PSEUDATTACHME", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAattac> listing = Models.ModelBase.Where<CSGenioAattac>(m_userContext, distinct, equip02_pseudattachmeConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_EQUIP02_PSEUDATTACHME", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -363,7 +407,6 @@ namespace GenioMVC.ViewModels.Asset
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -384,18 +427,12 @@ namespace GenioMVC.ViewModels.Asset
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -403,7 +440,7 @@ namespace GenioMVC.ViewModels.Asset
 
 		private List<Equip02_ValAttachme_RowViewModel> MapEquip02_ValAttachme(ListingMVC<CSGenioAattac> Qlisting)
 		{
-			var Elements = new List<Equip02_ValAttachme_RowViewModel>();
+			List<Equip02_ValAttachme_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -420,7 +457,6 @@ namespace GenioMVC.ViewModels.Asset
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAattac row
 		/// to a Equip02_ValAttachme_RowViewModel object.
@@ -429,7 +465,9 @@ namespace GenioMVC.ViewModels.Asset
 		private Equip02_ValAttachme_RowViewModel MapEquip02_ValAttachme(CSGenioAattac row)
 		{
 			var model = new Equip02_ValAttachme_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -441,32 +479,9 @@ namespace GenioMVC.ViewModels.Asset
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Equip02_ValAttachme_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -480,11 +495,10 @@ namespace GenioMVC.ViewModels.Asset
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAattac> listing)
 		{
 			if (listing.Rows == null)
@@ -493,8 +507,9 @@ namespace GenioMVC.ViewModels.Asset
 			foreach (CSGenioAattac row in listing.Rows)
 			{
 				{
-					if (!string.IsNullOrEmpty((string)row.returnValueField("attac.documentfk"))){
-						ResourceQuery resource = new ResourceQuery("Attac", "ValDocument", "ValDocumentfk", row.ValCodattac);
+					if (!string.IsNullOrEmpty((string)row.returnValueField("attac.documentfk")))
+					{
+						ResourceQuery resource = new("Attac", "ValDocument", "ValDocumentfk", row.ValCodattac);
 						string ticket = QResources.CreateTicketEncryptedBase64(m_userContext.User.Name, m_userContext.User.Location, resource);
 
 						row.insertNameValueField("attac.document", Newtonsoft.Json.JsonConvert.SerializeObject(new
@@ -509,23 +524,36 @@ namespace GenioMVC.ViewModels.Asset
 			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Attac m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Attac m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM EQUIP02_VALATTACHME]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Attac", "Attac.ValCodattac", "Attac.ValZzstate", "Attac.ValAttached", "Attac.ValNote", "Attac.ValDocument", "Attac.ValCodasset", "BtnPermission"
+			"Attac", "Attac.ValCodattac", "Attac.ValZzstate", "Attac.ValAttached", "Attac.ValNote", "Attac.ValDocument", "Attac.ValCodasset"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValAttached", CSGenioAattac.FldAttached, typeof(DateTime?), defaultSearch : true),
 			new TableSearchColumn("ValNote", CSGenioAattac.FldNote, typeof(string)),
-			new TableSearchColumn("ValDocument", CSGenioAattac.FldDocument, typeof(string))
+			new TableSearchColumn("ValDocument", CSGenioAattac.FldDocument, typeof(string)),
 		];
-
-
-
 	}
 }

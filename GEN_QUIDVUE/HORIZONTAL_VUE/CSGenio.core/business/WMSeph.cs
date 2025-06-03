@@ -29,7 +29,7 @@ namespace CSGenio.framework
 			//Esta a obter os do cliente e nao os do modulo
 			//PHE in role Manager
 			EPHCondition[] eph20 = new EPHCondition[1];
-			eph20[0] = new EPHCondition("USERS", "GQT", "gqtusers", "users", "codperso", "users", "codperso", FieldType.CHAVE_ESTRANGEIRA_GUID, "");
+			eph20[0] = new EPHCondition("USERS", "GQT", "gqtusers", "users", "codperso", "users", "codperso", FieldType.KEY_GUID, "");
 			ephsPorModulo.Add("20", eph20);
 			niveis = new string[]{ "20" };
 		}

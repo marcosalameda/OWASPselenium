@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Anexd_EquipValRegistnrModel : RequestLookupModel
+		{
+			public Anexd_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Anexd/Anexd_EquipValRegistnr
 		// POST: /Anexd/Anexd_EquipValRegistnr
 		[ActionName("Anexd_EquipValRegistnr")]
-		public ActionResult Anexd_EquipValRegistnr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Anexd_EquipValRegistnr([FromBody] Anexd_EquipValRegistnrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Anexd_EquipValRegistnr_ViewModel model = new Anexd_EquipValRegistnr_ViewModel(UserContext.Current);
-			
+
+			Models.Anexd parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Anexd_EquipValRegistnr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Anexd_LanguValLanguaModel : RequestLookupModel
+		{
+			public Anexd_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Anexd/Anexd_LanguValLangua
 		// POST: /Anexd/Anexd_LanguValLangua
 		[ActionName("Anexd_LanguValLangua")]
-		public ActionResult Anexd_LanguValLangua([FromBody]RequestLookupModel requestModel)
+		public ActionResult Anexd_LanguValLangua([FromBody] Anexd_LanguValLanguaModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Anexd_LanguValLangua_ViewModel model = new Anexd_LanguValLangua_ViewModel(UserContext.Current);
-			
+
+			Models.Anexd parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Anexd_LanguValLangua_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

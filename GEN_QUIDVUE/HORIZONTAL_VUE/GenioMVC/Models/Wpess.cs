@@ -58,7 +58,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "NºFuncionário" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValNfunc")]
 		[NumericAttribute(0)]
-		public decimal? ValNfunc { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNfunc, 0)); } set { klass.ValNfunc = Convert.ToDecimal(value); } }
+		public decimal? ValNfunc { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNfunc, 0)); } set { klass.ValNfunc = Convert.ToDecimal(value); } }
 
 		[DisplayName("Address")]
 		/// <summary>Field : "Address" Tipo: "C" Formula:  ""</summary>
@@ -84,7 +84,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "NºTelefone" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValCellphon")]
 		[NumericAttribute(0)]
-		public decimal? ValCellphon { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCellphon, 0)); } set { klass.ValCellphon = Convert.ToDecimal(value); } }
+		public decimal? ValCellphon { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValCellphon, 0)); } set { klass.ValCellphon = Convert.ToDecimal(value); } }
 
 		[DisplayName("Naturalness")]
 		/// <summary>Field : "Naturalness" Tipo: "C" Formula:  ""</summary>
@@ -108,20 +108,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Wpess.ValCodwareh")]
 		public string ValCodwareh { get { return klass.ValCodwareh; } set { klass.ValCodwareh = value; } }
+
 		private Wareh _wareh;
 		[DisplayName("Wareh")]
 		[ShouldSerialize("Wareh")]
-		public virtual Wareh Wareh {
-			get {
-				if (!this.isEmptyModel && (_wareh == null || (!string.IsNullOrEmpty(ValCodwareh) && (_wareh.isEmptyModel || _wareh.klass.QPrimaryKey != ValCodwareh))))
+		public virtual Wareh Wareh
+		{
+			get
+			{
+				if (!isEmptyModel && (_wareh == null || (!string.IsNullOrEmpty(ValCodwareh) && (_wareh.isEmptyModel || _wareh.klass.QPrimaryKey != ValCodwareh))))
 					_wareh = Models.Wareh.Find(ValCodwareh, m_userContext, Identifier, _fieldsToSerialize);
-				if (_wareh == null)
-					_wareh = new Models.Wareh(m_userContext, true, _fieldsToSerialize);
+				_wareh ??= new Models.Wareh(m_userContext, true, _fieldsToSerialize);
 				return _wareh;
 			}
 			set { _wareh = value; }
 		}
-
 
 		[DisplayName("Image Top")]
 		/// <summary>Field : "Image Top" Tipo: "IJ" Formula:  ""</summary>
@@ -154,8 +155,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Wpess.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Wpess(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -174,7 +175,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAwpess csgenioa)
 		{
 			if (csgenioa == null)
@@ -185,8 +185,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "wareh":
-						if (_wareh == null)
-							_wareh = new Wareh(m_userContext, true, _fieldsToSerialize);
+						_wareh ??= new Wareh(m_userContext, true, _fieldsToSerialize);
 						_wareh.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

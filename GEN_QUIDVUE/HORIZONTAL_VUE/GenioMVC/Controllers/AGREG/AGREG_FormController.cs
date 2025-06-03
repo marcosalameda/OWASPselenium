@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Agreg_ProjeValProjectoModel : RequestLookupModel
+		{
+			public Agreg_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Agreg/Agreg_ProjeValProjecto
 		// POST: /Agreg/Agreg_ProjeValProjecto
 		[ActionName("Agreg_ProjeValProjecto")]
-		public ActionResult Agreg_ProjeValProjecto([FromBody]RequestLookupModel requestModel)
+		public ActionResult Agreg_ProjeValProjecto([FromBody] Agreg_ProjeValProjectoModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Agreg_ProjeValProjecto_ViewModel model = new Agreg_ProjeValProjecto_ViewModel(UserContext.Current);
-			
+
+			Models.Agreg parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Agreg_ProjeValProjecto_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Agreg_YearValYearModel : RequestLookupModel
+		{
+			public Agreg_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Agreg/Agreg_YearValYear
 		// POST: /Agreg/Agreg_YearValYear
 		[ActionName("Agreg_YearValYear")]
-		public ActionResult Agreg_YearValYear([FromBody]RequestLookupModel requestModel)
+		public ActionResult Agreg_YearValYear([FromBody] Agreg_YearValYearModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Agreg_YearValYear_ViewModel model = new Agreg_YearValYear_ViewModel(UserContext.Current);
-			
+
+			Models.Agreg parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Agreg_YearValYear_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

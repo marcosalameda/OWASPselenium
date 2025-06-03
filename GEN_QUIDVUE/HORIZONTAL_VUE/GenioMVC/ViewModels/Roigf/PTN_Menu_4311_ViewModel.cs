@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,54 +7,73 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Roigf
 {
-	public class PTN_Menu_4311_ViewModel : ListViewModel
+	public class PTN_Menu_4311_ViewModel : MenuListViewModel<Models.Roigf>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<PTN_Menu_4311_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "roigf"; }
+		[JsonIgnore]
+		public override string TableAlias => "roigf";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "89d29d5f-c51e-40ab-9b60-aef9f71c56ab"; }
+		public override string Uuid => "89d29d5f-c51e-40ab-9b60-aef9f71c56ab";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodroigf { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
 				conds.Equal(CSGenioAroigf.FldCodrogl1, Navigation.GetValue("rogl1"));
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -63,6 +83,12 @@ namespace GenioMVC.ViewModels.Roigf
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 4311]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -70,32 +96,37 @@ namespace GenioMVC.ViewModels.Roigf
 			var areaBase = CSGenio.business.Area.createArea("roigf", user, "PTN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet ptn_menu_4311Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4311");
-			ptn_menu_4311Conds.Equal(CSGenioAroigf.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4311");
+			conditions.Equal(CSGenioAroigf.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL PTN OVERRQ 4311]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAroigf.FldCodroigf, CSGenioAroigf.FldZzstate, CSGenioAroigf.FldOrder, CSGenioAroigf.FldTitle, CSGenioAroigf.FldCodrogl1, CSGenioArogl1.FldCodrogl1, CSGenioArogl1.FldTitle };
 
-			ListingMVC<CSGenioAroigf> listing = new ListingMVC<CSGenioAroigf>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(ptn_menu_4311Conds, listing);
+			ListingMVC<CSGenioAroigf> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
 
-
-			if (!qs.Joins.Select(x => x.Table).Select(y=>y.TableAlias).Contains(CSGenio.business.Area.AreaROGL1.Alias))
+			if (!qs.Joins.Select(x => x.Table).Select(y => y.TableAlias).Contains(CSGenio.business.Area.AreaROGL1.Alias))
 				qs.Join(CSGenio.business.Area.AreaROGL1, TableJoinType.Inner).On(CriteriaSet.And().Equal(CSGenioArogl1.FldCodrogl1, CSGenioAroigf.FldCodrogl1));
+
+
+
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public PTN_Menu_4311_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PTN_Menu_4311_ViewModel" /> class.
@@ -106,14 +137,24 @@ namespace GenioMVC.ViewModels.Roigf
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PTN_Menu_4311_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public PTN_Menu_4311_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAroigf.FldOrder, FieldType.NUMERO, Resources.Resources.ORDER39632, 10, 1, true),
-				new Exports.QColumn(CSGenioAroigf.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
-				new Exports.QColumn(CSGenioArogl1.FldTitle, FieldType.TEXTO, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioAroigf.FldOrder, FieldType.NUMERIC, Resources.Resources.ORDER39632, 10, 1, true),
+				new Exports.QColumn(CSGenioAroigf.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
+				new Exports.QColumn(CSGenioArogl1.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -162,13 +203,10 @@ namespace GenioMVC.ViewModels.Roigf
 
 			if (Menu == null)
 				Menu = new TablePartial<PTN_Menu_4311_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ROIGF.ORDER", new OrderedDictionary());
-			allSortOrders["ROIGF.ORDER"].Add("ROIGF.ORDER", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -181,12 +219,11 @@ namespace GenioMVC.ViewModels.Roigf
 			crs.SubSets.Add(subfilters);
 
 
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Limitations
 			// Limit "DB"
 			crs.Equal(CSGenioAroigf.FldCodrogl1, Navigation.GetValue("rogl1"));
-
 			if (isToExport)
 			{
 				// EPH
@@ -282,23 +319,22 @@ namespace GenioMVC.ViewModels.Roigf
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAroigf> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "4311"),
 				new("Module", "PTN")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<PTN_Menu_4311_RowViewModel>();
 
 				CriteriaSet ptn_menu_4311Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("ROIGF.ORDER", new OrderedDictionary());
 				allSortOrders["ROIGF.ORDER"].Add("ROIGF.ORDER", "A");
-
 
 
 
@@ -330,46 +366,44 @@ namespace GenioMVC.ViewModels.Roigf
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("roigf", "order");
+					firstVisibleColumn ??= new FieldRef("roigf", "order");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAroigf model_limit_area = new CSGenioAroigf(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML4311");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAroigf model_limit_area = new CSGenioAroigf(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML4311");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
-			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-			// Limit origin: menu 
+				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+				// Limit origin: menu 
 
-			//Limit type: "DB"
-			//Current Area = "ROIGF"
-			//1st Area Limit: "ROGL1"
-			//1st Area Field: "CODROGL1"
-			//1st Area Value: ""
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.DB;
-				limit.NaoAplicaSeNulo = false;
-				CSGenioArogl1 model_limit_area = new CSGenioArogl1(m_userContext.User);
-				string limit_field = "codrogl1", limit_field_value = "";
-				object this_limit_field = Navigation.GetStrValue(limit_field_value);
-				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
-				if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
-					this.tableLimits.Add(limit);
-			}
+				//Limit type: "DB"
+				//Current Area = "ROIGF"
+				//1st Area Limit: "ROGL1"
+				//1st Area Field: "CODROGL1"
+				//1st Area Value: ""
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.DB;
+					limit.NaoAplicaSeNulo = false;
+					CSGenioArogl1 model_limit_area = new CSGenioArogl1(m_userContext.User);
+					string limit_field = "codrogl1", limit_field_value = "";
+					object this_limit_field = Navigation.GetStrValue(limit_field_value);
+					Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+					if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+						this.tableLimits.Add(limit);
+				}
 
 				if (conditions == null)
 					conditions = CriteriaSet.And();
@@ -379,6 +413,8 @@ namespace GenioMVC.ViewModels.Roigf
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL PTN OVERRQ 4311]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -407,7 +443,7 @@ namespace GenioMVC.ViewModels.Roigf
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAroigf> listing = Models.ModelBase.Where<CSGenioAroigf>(m_userContext, false, ptn_menu_4311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4311", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAroigf> listing = Models.ModelBase.Where<CSGenioAroigf>(m_userContext, distinct, ptn_menu_4311Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4311", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -415,7 +451,6 @@ namespace GenioMVC.ViewModels.Roigf
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -437,18 +472,12 @@ namespace GenioMVC.ViewModels.Roigf
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -456,7 +485,7 @@ namespace GenioMVC.ViewModels.Roigf
 
 		private List<PTN_Menu_4311_RowViewModel> MapPTN_Menu_4311(ListingMVC<CSGenioAroigf> Qlisting)
 		{
-			var Elements = new List<PTN_Menu_4311_RowViewModel>();
+			List<PTN_Menu_4311_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -473,7 +502,6 @@ namespace GenioMVC.ViewModels.Roigf
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAroigf row
 		/// to a PTN_Menu_4311_RowViewModel object.
@@ -482,7 +510,9 @@ namespace GenioMVC.ViewModels.Roigf
 		private PTN_Menu_4311_RowViewModel MapPTN_Menu_4311(CSGenioAroigf row)
 		{
 			var model = new PTN_Menu_4311_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -496,32 +526,9 @@ namespace GenioMVC.ViewModels.Roigf
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(PTN_Menu_4311_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -535,22 +542,16 @@ namespace GenioMVC.ViewModels.Roigf
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAroigf> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAroigf row in listing.Rows)
-			{
-			}
 		}
 
 		#region ReorderCode
+
 		public void ReorderPTN_Menu_4311(string id, string position)
 		{
 
@@ -562,25 +563,39 @@ namespace GenioMVC.ViewModels.Roigf
 			sp.closeConnection();
 
 		}
+
+		#endregion
+
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Roigf m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Roigf m)
+		{
+		}
+
 		#endregion
 
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PTN_MENU_4311]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Roigf", "Roigf.ValCodroigf", "Roigf.ValZzstate", "Roigf.ValOrder", "Roigf.ValTitle", "Rogl1", "Rogl1.ValTitle", "Roigf.ValCodrogl1", "BtnPermission"
+			"Roigf", "Roigf.ValCodroigf", "Roigf.ValZzstate", "Roigf.ValOrder", "Roigf.ValTitle", "Rogl1", "Rogl1.ValTitle", "Roigf.ValCodrogl1"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValOrder", CSGenioAroigf.FldOrder, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("ValTitle", CSGenioAroigf.FldTitle, typeof(string)),
-			new TableSearchColumn("Rogl1_ValTitle", CSGenioArogl1.FldTitle, typeof(string))
+			new TableSearchColumn("Rogl1_ValTitle", CSGenioArogl1.FldTitle, typeof(string)),
 		];
-
-
-
 	}
 }

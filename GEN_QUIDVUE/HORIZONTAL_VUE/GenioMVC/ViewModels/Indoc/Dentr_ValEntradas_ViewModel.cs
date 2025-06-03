@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,52 +7,76 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Indoc
 {
-	public class Dentr_ValEntradas_ViewModel : ListViewModel
+	public class Dentr_ValEntradas_ViewModel : MenuListViewModel<Models.Ldent>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Dentr_ValEntradas_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "ldent"; }
+		[JsonIgnore]
+		public override string TableAlias => "ldent";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Dentr_ValEntradas"; }
+		public override string Uuid => "Dentr_ValEntradas";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCoddentr { get; set; }
+		[JsonIgnore]
+		public string IndocValCoddentr { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
-				conds.Equal(CSGenioAldent.FldCoddentr, this.ValCoddentr ?? Navigation.GetStrValue("indoc"));
+				conds.Equal(CSGenioAldent.FldCoddentr, this.IndocValCoddentr ?? Navigation.GetStrValue("indoc"));
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -64,10 +89,24 @@ namespace GenioMVC.ViewModels.Indoc
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS DENTR_PSEUDENTRADAS]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Dentr_ValEntradas_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Dentr_ValEntradas_ViewModel" /> class.
@@ -75,7 +114,17 @@ namespace GenioMVC.ViewModels.Indoc
 		/// <param name="userContext">The current user request context</param>
 		public Dentr_ValEntradas_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCoddentr = userContext.CurrentNavigation.CurrentLevel.GetEntry("indoc")?.ToString();
+			IndocValCoddentr = userContext.CurrentNavigation.CurrentLevel.GetEntry("indoc")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Dentr_ValEntradas_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Dentr_ValEntradas_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -83,11 +132,11 @@ namespace GenioMVC.ViewModels.Indoc
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAldent.FldLine, FieldType.NUMERO, Resources.Resources.LINE27983, 5, 1, true),
-				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
-				new Exports.QColumn(CSGenioAldent.FldQtdentra, FieldType.NUMERO, Resources.Resources.QTD_ENTRY35144, 10, 0, true),
-				new Exports.QColumn(CSGenioAldent.FldDhentra, FieldType.DATAHORA, Resources.Resources.INSTANT_ENTRANCE27379, 16, 0, true),
+				new Exports.QColumn(CSGenioAldent.FldLine, FieldType.NUMERIC, Resources.Resources.LINE27983, 5, 1, true),
+				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 30, 0, true),
+				new Exports.QColumn(CSGenioAldent.FldQtdentra, FieldType.NUMERIC, Resources.Resources.QTD_ENTRY35144, 10, 0, true),
+				new Exports.QColumn(CSGenioAldent.FldDhentra, FieldType.DATETIME, Resources.Resources.INSTANT_ENTRANCE27379, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -137,13 +186,10 @@ namespace GenioMVC.ViewModels.Indoc
 
 			if (Menu == null)
 				Menu = new TablePartial<Dentr_ValEntradas_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("LDENT.LINE", new OrderedDictionary());
-			allSortOrders["LDENT.LINE"].Add("LDENT.LINE", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -155,12 +201,11 @@ namespace GenioMVC.ViewModels.Indoc
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCoddentr != null)
-				crs.Equal(CSGenioAldent.FldCoddentr, this.ValCoddentr);
+			if (this.IndocValCoddentr != null)
+				crs.Equal(CSGenioAldent.FldCoddentr, this.IndocValCoddentr);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -257,22 +302,21 @@ namespace GenioMVC.ViewModels.Indoc
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAldent> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "DENTR")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Dentr_ValEntradas_RowViewModel>();
 
 				CriteriaSet dentr___pseudentradasConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("LDENT.LINE", new OrderedDictionary());
 				allSortOrders["LDENT.LINE"].Add("LDENT.LINE", "A");
-
 
 
 
@@ -304,26 +348,24 @@ namespace GenioMVC.ViewModels.Indoc
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("ldent", "line");
+					firstVisibleColumn ??= new FieldRef("ldent", "line");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAldent model_limit_area = new CSGenioAldent(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_DENTR___PSEUDENTRADAS");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAldent model_limit_area = new CSGenioAldent(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_DENTR___PSEUDENTRADAS");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -334,6 +376,8 @@ namespace GenioMVC.ViewModels.Indoc
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ DENTR_PSEUDENTRADAS]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -362,7 +406,7 @@ namespace GenioMVC.ViewModels.Indoc
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAldent> listing = Models.ModelBase.Where<CSGenioAldent>(m_userContext, false, dentr___pseudentradasConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DENTR___PSEUDENTRADAS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAldent> listing = Models.ModelBase.Where<CSGenioAldent>(m_userContext, distinct, dentr___pseudentradasConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_DENTR___PSEUDENTRADAS", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -370,7 +414,6 @@ namespace GenioMVC.ViewModels.Indoc
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -391,18 +434,12 @@ namespace GenioMVC.ViewModels.Indoc
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -410,7 +447,7 @@ namespace GenioMVC.ViewModels.Indoc
 
 		private List<Dentr_ValEntradas_RowViewModel> MapDentr_ValEntradas(ListingMVC<CSGenioAldent> Qlisting)
 		{
-			var Elements = new List<Dentr_ValEntradas_RowViewModel>();
+			List<Dentr_ValEntradas_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -427,7 +464,6 @@ namespace GenioMVC.ViewModels.Indoc
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAldent row
 		/// to a Dentr_ValEntradas_RowViewModel object.
@@ -436,7 +472,9 @@ namespace GenioMVC.ViewModels.Indoc
 		private Dentr_ValEntradas_RowViewModel MapDentr_ValEntradas(CSGenioAldent row)
 		{
 			var model = new Dentr_ValEntradas_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -452,32 +490,9 @@ namespace GenioMVC.ViewModels.Indoc
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Dentr_ValEntradas_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -491,19 +506,12 @@ namespace GenioMVC.ViewModels.Indoc
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAldent> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAldent row in listing.Rows)
-			{
-			}
 		}
 
 		public void Reorder(string id, string position)
@@ -516,25 +524,38 @@ namespace GenioMVC.ViewModels.Indoc
 			sp.closeConnection();
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Ldent m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Ldent m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM DENTR_VALENTRADAS]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Ldent", "Ldent.ValCodldent", "Ldent.ValZzstate", "Ldent.ValLine", "Wareh", "Wareh.ValWarehdes", "Item", "Item.ValItemdes", "Ldent.ValQtdentra", "Ldent.ValDhentra", "Ldent.ValCoddentr", "Ldent.ValCoditem", "Ldent.ValCodwareh", "BtnPermission"
+			"Ldent", "Ldent.ValCodldent", "Ldent.ValZzstate", "Ldent.ValLine", "Wareh", "Wareh.ValWarehdes", "Item", "Item.ValItemdes", "Ldent.ValQtdentra", "Ldent.ValDhentra", "Ldent.ValCoddentr", "Ldent.ValCoditem", "Ldent.ValCodwareh"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValLine", CSGenioAldent.FldLine, typeof(decimal?), defaultSearch : true),
 			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string)),
 			new TableSearchColumn("Item_ValItemdes", CSGenioAitem.FldItemdes, typeof(string)),
 			new TableSearchColumn("ValQtdentra", CSGenioAldent.FldQtdentra, typeof(decimal?)),
-			new TableSearchColumn("ValDhentra", CSGenioAldent.FldDhentra, typeof(DateTime?))
+			new TableSearchColumn("ValDhentra", CSGenioAldent.FldDhentra, typeof(DateTime?)),
 		];
-
-
-
 	}
 }

@@ -43,20 +43,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "language" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tradu.ValCodidio1")]
 		public string ValCodidio1 { get { return klass.ValCodidio1; } set { klass.ValCodidio1 = value; } }
+
 		private Lang1 _lang1;
 		[DisplayName("Lang1")]
 		[ShouldSerialize("Lang1")]
-		public virtual Lang1 Lang1 {
-			get {
-				if (!this.isEmptyModel && (_lang1 == null || (!string.IsNullOrEmpty(ValCodidio1) && (_lang1.isEmptyModel || _lang1.klass.QPrimaryKey != ValCodidio1))))
+		public virtual Lang1 Lang1
+		{
+			get
+			{
+				if (!isEmptyModel && (_lang1 == null || (!string.IsNullOrEmpty(ValCodidio1) && (_lang1.isEmptyModel || _lang1.klass.QPrimaryKey != ValCodidio1))))
 					_lang1 = Models.Lang1.Find(ValCodidio1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_lang1 == null)
-					_lang1 = new Models.Lang1(m_userContext, true, _fieldsToSerialize);
+				_lang1 ??= new Models.Lang1(m_userContext, true, _fieldsToSerialize);
 				return _lang1;
 			}
 			set { _lang1 = value; }
 		}
-
 
 		[DisplayName("To review")]
 		/// <summary>Field : "To review" Tipo: "C" Formula:  ""</summary>
@@ -67,20 +68,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Language" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tradu.ValCodidio2")]
 		public string ValCodidio2 { get { return klass.ValCodidio2; } set { klass.ValCodidio2 = value; } }
+
 		private Lang2 _lang2;
 		[DisplayName("Lang2")]
 		[ShouldSerialize("Lang2")]
-		public virtual Lang2 Lang2 {
-			get {
-				if (!this.isEmptyModel && (_lang2 == null || (!string.IsNullOrEmpty(ValCodidio2) && (_lang2.isEmptyModel || _lang2.klass.QPrimaryKey != ValCodidio2))))
+		public virtual Lang2 Lang2
+		{
+			get
+			{
+				if (!isEmptyModel && (_lang2 == null || (!string.IsNullOrEmpty(ValCodidio2) && (_lang2.isEmptyModel || _lang2.klass.QPrimaryKey != ValCodidio2))))
 					_lang2 = Models.Lang2.Find(ValCodidio2, m_userContext, Identifier, _fieldsToSerialize);
-				if (_lang2 == null)
-					_lang2 = new Models.Lang2(m_userContext, true, _fieldsToSerialize);
+				_lang2 ??= new Models.Lang2(m_userContext, true, _fieldsToSerialize);
 				return _lang2;
 			}
 			set { _lang2 = value; }
 		}
-
 
 		[DisplayName("Translated")]
 		/// <summary>Field : "Translated" Tipo: "C" Formula:  ""</summary>
@@ -89,8 +91,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tradu.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Tradu(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -109,7 +111,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAtradu csgenioa)
 		{
 			if (csgenioa == null)
@@ -120,13 +121,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "lang1":
-						if (_lang1 == null)
-							_lang1 = new Lang1(m_userContext, true, _fieldsToSerialize);
+						_lang1 ??= new Lang1(m_userContext, true, _fieldsToSerialize);
 						_lang1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "lang2":
-						if (_lang2 == null)
-							_lang2 = new Lang2(m_userContext, true, _fieldsToSerialize);
+						_lang2 ??= new Lang2(m_userContext, true, _fieldsToSerialize);
 						_lang2.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

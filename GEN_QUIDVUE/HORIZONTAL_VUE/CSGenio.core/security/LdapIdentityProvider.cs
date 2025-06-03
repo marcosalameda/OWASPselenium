@@ -1,8 +1,12 @@
-﻿using System;
+﻿using CSGenio.framework;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.DirectoryServices;
+using System.DirectoryServices.Protocols;
+using System.Net;
 using System.Security.Principal;
-using CSGenio.framework;
+using System.Text;
 
 namespace GenioServer.security
 {
@@ -65,6 +69,55 @@ namespace GenioServer.security
 				return new GenericIdentity(credential.DomainUser);
 
             //return null;
+        }
+
+        /// <summary>
+        /// Searches for all users in the domain
+        /// </summary>
+        /// <param name="adminUser">Administrator username</param>
+        /// <param name="adminPsw">Administrator password</param>
+        /// <returns>A list with the username of each user</returns>
+        public List<string> ImportUsers(string adminUser, string adminPsw)
+        {
+            //get complete domain value separated by dot
+            var domainValue = Domain;
+            if (!string.IsNullOrEmpty(Port))
+                domainValue += ":" + Port;
+
+            //derive DC root from the domain
+            string[] split = Domain.Split('.');
+            StringBuilder root = new StringBuilder();
+            foreach (string s in split)
+            {
+                root.Append("DC=");
+                root.Append(s);
+                root.Append(',');
+            }
+            if(root.Length > 0)
+                root.Length -= 1;
+
+            using (var ldap = new LdapConnection(new LdapDirectoryIdentifier(domainValue)))
+            {
+                ldap.SessionOptions.ProtocolVersion = 3;
+                ldap.Credential = new NetworkCredential(adminUser, adminPsw);
+                ldap.AuthType = AuthType.Basic;
+
+                ldap.Bind();
+
+                var search = ldap.SendRequest(
+                    new SearchRequest(
+                        root.ToString(),
+                        "(&(&(objectCategory=person)(objectClass=user)(!useraccountcontrol:1.2.840.113556.1.4.803:=2)))",
+                        System.DirectoryServices.Protocols.SearchScope.Subtree)
+                    ) as SearchResponse;
+
+                List<string> result = new List<string>();
+                if (search != null)
+                    foreach (SearchResultEntry entry in search.Entries)
+                        result.Add(entry?.Attributes["samaccountname"][0].ToString() ?? "");
+
+                return result;
+            }
         }
 	}
 }

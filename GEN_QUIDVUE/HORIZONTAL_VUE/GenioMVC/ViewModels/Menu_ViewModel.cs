@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using CSGenio.framework;
+﻿using CSGenio.framework;
 using GenioMVC.Helpers.Menus;
-using GenioMVC.Models;
 using GenioMVC.Models.Navigation;
 
 namespace GenioMVC.ViewModels
@@ -13,7 +8,7 @@ namespace GenioMVC.ViewModels
 	{
 		private List<MenuEntry> m_allMenus;
 
-		public List<MenuEntry> MenuList { get { return m_allMenus; } }
+		public List<MenuEntry> MenuList => m_allMenus;
 
 		public List<MenuEntry> AvailableModules { get; set; }
 
@@ -53,7 +48,7 @@ namespace GenioMVC.ViewModels
 			User user = userContext.User;
 			user.CurrentModule = selectedModule.ID;
 			CurrentModule = user.CurrentModule;
-			if (!String.IsNullOrEmpty(selectedModule.Image))
+			if (!string.IsNullOrEmpty(selectedModule.Image))
 				Icon = selectedModule.Image;
 		}
 	}

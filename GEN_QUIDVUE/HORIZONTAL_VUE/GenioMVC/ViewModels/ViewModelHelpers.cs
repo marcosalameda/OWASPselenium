@@ -32,6 +32,9 @@ namespace GenioMVC.ViewModels
 		[JsonIgnore]
 		public string Identifier { get; set; }
 
+		[JsonIgnore]
+		public string TableName { get; set; }
+
 		public TablePagination Pagination { get; set; }
 
 		public List<Totalizer> Totalizers { get; set; }
@@ -39,6 +42,7 @@ namespace GenioMVC.ViewModels
 		[JsonIgnore]
 		public TableSort Sort { get; set; }
 
+		[JsonIgnore]
 		public TableFiltering Filters { get; set; }
 
 		[JsonIgnore]
@@ -202,17 +206,63 @@ namespace GenioMVC.ViewModels
 	{
 		[JsonPropertyName("editBtnDisabled")]
 		public bool EditBtnDisabled { get; set; } = true;
+
 		[JsonPropertyName("viewBtnDisabled")]
 		public bool ViewBtnDisabled { get; set; } = true;
+
 		[JsonPropertyName("deleteBtnDisabled")]
 		public bool DeleteBtnDisabled { get; set; } = true;
+
 		[JsonPropertyName("insertBtnDisabled")]
 		public bool InsertBtnDisabled { get; set; } = true;
+
 		[JsonPropertyName("duplicateBtnDisabled")]
 		public bool DuplicateBtnDisabled { get; set; } = true;
 	}
 
-	public class GridTableList<T> : TablePartial<T> where T: class, ICrudViewModel
+	public class ListColumn
+	{
+		[JsonPropertyName("order")]
+		public int Order { get; set; }
+
+		[JsonPropertyName("area")]
+		public string Area { get; set; }
+
+		[JsonPropertyName("field")]
+		public string Field { get; set; }
+
+		[JsonPropertyName("foregroundColor")]
+		public string ForegroundColor => TextColorFormula?.Invoke() ?? "";
+
+		[JsonPropertyName("backgroundColor")]
+		public string BackgroundColor => BackColorFormula?.Invoke() ?? "";
+
+		[JsonIgnore]
+		public Func<string> TextColorFormula { get; set; }
+
+		[JsonIgnore]
+		public Func<string> BackColorFormula { get; set; }
+	}
+
+	public class ListCustomAction
+	{
+		[JsonPropertyName("id")]
+		public string Id { get; set; }
+
+		[JsonPropertyName("isVisible")]
+		public bool IsVisible => IsVisibleFormula?.Invoke() ?? true;
+
+		[JsonPropertyName("isBlocked")]
+		public bool IsBlocked => IsBlockedFormula?.Invoke() ?? false;
+
+		[JsonIgnore]
+		public Func<bool> IsVisibleFormula { get; set; }
+
+		[JsonIgnore]
+		public Func<bool> IsBlockedFormula { get; set; }
+	}
+
+	public class GridTableList<T> : TablePartial<T> where T : class, ICrudViewModel
 	{
 		private UserContext m_userContext;
 
@@ -412,7 +462,7 @@ namespace GenioMVC.ViewModels
 				}
 				catch (BusinessException e)
 				{
-						result.MergeStatusMessage(StatusMessage.Error(e.UserMessage, string.Format("propertyListRows[{0}]", propertyListRows.IndexOf(row))));
+					result.MergeStatusMessage(StatusMessage.Error(e.UserMessage, string.Format("propertyListRows[{0}]", propertyListRows.IndexOf(row))));
 				}
 			}
 		}
@@ -438,5 +488,8 @@ namespace GenioMVC.ViewModels
 
 		[JsonPropertyName("type")]
 		public string Type { get; set; }
+
+		[JsonPropertyName("isRowDirty")]
+		public bool IsDirty { get; set; }
 	}
 }

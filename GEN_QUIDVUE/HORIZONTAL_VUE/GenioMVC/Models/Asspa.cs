@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Asspa.ValCodasset")]
 		public string ValCodasset { get { return klass.ValCodasset; } set { klass.ValCodasset = value; } }
+
 		private Asset _asset;
 		[DisplayName("Asset")]
 		[ShouldSerialize("Asset")]
-		public virtual Asset Asset {
-			get {
-				if (!this.isEmptyModel && (_asset == null || (!string.IsNullOrEmpty(ValCodasset) && (_asset.isEmptyModel || _asset.klass.QPrimaryKey != ValCodasset))))
+		public virtual Asset Asset
+		{
+			get
+			{
+				if (!isEmptyModel && (_asset == null || (!string.IsNullOrEmpty(ValCodasset) && (_asset.isEmptyModel || _asset.klass.QPrimaryKey != ValCodasset))))
 					_asset = Models.Asset.Find(ValCodasset, m_userContext, Identifier, _fieldsToSerialize);
-				if (_asset == null)
-					_asset = new Models.Asset(m_userContext, true, _fieldsToSerialize);
+				_asset ??= new Models.Asset(m_userContext, true, _fieldsToSerialize);
 				return _asset;
 			}
 			set { _asset = value; }
 		}
-
 
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CF" Formula:  ""</summary>
@@ -62,20 +63,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Asspa.ValCodparam")]
 		public string ValCodparam { get { return klass.ValCodparam; } set { klass.ValCodparam = value; } }
+
 		private Param _param;
 		[DisplayName("Param")]
 		[ShouldSerialize("Param")]
-		public virtual Param Param {
-			get {
-				if (!this.isEmptyModel && (_param == null || (!string.IsNullOrEmpty(ValCodparam) && (_param.isEmptyModel || _param.klass.QPrimaryKey != ValCodparam))))
+		public virtual Param Param
+		{
+			get
+			{
+				if (!isEmptyModel && (_param == null || (!string.IsNullOrEmpty(ValCodparam) && (_param.isEmptyModel || _param.klass.QPrimaryKey != ValCodparam))))
 					_param = Models.Param.Find(ValCodparam, m_userContext, Identifier, _fieldsToSerialize);
-				if (_param == null)
-					_param = new Models.Param(m_userContext, true, _fieldsToSerialize);
+				_param ??= new Models.Param(m_userContext, true, _fieldsToSerialize);
 				return _param;
 			}
 			set { _param = value; }
 		}
-
 
 		[DisplayName("Data type")]
 		/// <summary>Field : "Data type" Tipo: "AC" Formula:  ""</summary>
@@ -89,7 +91,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Decimal places" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Asspa.ValDecimalplaces")]
 		[NumericAttribute(0)]
-		public decimal? ValDecimalplaces { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDecimalplaces, 0)); } set { klass.ValDecimalplaces = Convert.ToDecimal(value); } }
+		public decimal? ValDecimalplaces { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDecimalplaces, 0)); } set { klass.ValDecimalplaces = Convert.ToDecimal(value); } }
 
 		[DisplayName("Text")]
 		/// <summary>Field : "Text" Tipo: "C" Formula:  ""</summary>
@@ -100,7 +102,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Quantity" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Asspa.ValQuantity")]
 		[NumericAttribute(4)]
-		public decimal? ValQuantity { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValQuantity, 4)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
+		public decimal? ValQuantity { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValQuantity, 4)); } set { klass.ValQuantity = Convert.ToDecimal(value); } }
 
 		[DisplayName("Date")]
 		/// <summary>Field : "Date" Tipo: "D" Formula:  ""</summary>
@@ -116,8 +118,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Asspa.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Asspa(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -136,7 +138,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAasspa csgenioa)
 		{
 			if (csgenioa == null)
@@ -147,13 +148,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "asset":
-						if (_asset == null)
-							_asset = new Asset(m_userContext, true, _fieldsToSerialize);
+						_asset ??= new Asset(m_userContext, true, _fieldsToSerialize);
 						_asset.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "param":
-						if (_param == null)
-							_param = new Param(m_userContext, true, _fieldsToSerialize);
+						_param ??= new Param(m_userContext, true, _fieldsToSerialize);
 						_param.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

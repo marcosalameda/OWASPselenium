@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Indoc;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER INDOC]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class IndocController : ControllerBase
 	{
-		public IndocController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public IndocController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION INDOC]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER INDOC]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Indoc row = null;
-
-			if (row == null)
-			{
-				row = new Models.Indoc(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("indoc");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Indoc row = new Models.Indoc(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("indoc");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "DENTR___CNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Dentr_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Dentr_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Dentr___cntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "DENTR___CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Dentr_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Dentr_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Dentr___cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -93,8 +100,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "DENTR___PESSONAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Dentr_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Dentr_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Dentr___pessoname____(qs);
 							result = model.TablePessoName;
@@ -102,8 +108,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "DENTR___WARE1WAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Dentr_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Dentr_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Dentr___ware1warehdes(qs);
 							result = model.TableWare1Warehdes;
@@ -177,6 +182,9 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
+
 
 
 		/// <summary>

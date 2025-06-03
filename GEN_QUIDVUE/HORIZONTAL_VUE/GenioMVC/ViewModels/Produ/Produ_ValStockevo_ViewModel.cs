@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Produ
 {
-	public class Produ_ValStockevo_ViewModel : ListViewModel
+	public class Produ_ValStockevo_ViewModel : MenuListViewModel<Models.Stock>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Produ_ValStockevo_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "stock"; }
+		[JsonIgnore]
+		public override string TableAlias => "stock";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Produ_ValStockevo"; }
+		public override string Uuid => "Produ_ValStockevo";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCodprodu { get; set; }
+		[JsonIgnore]
+		public string ProduValCodprodu { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Produ
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PRODU_PSEUDSTOCKEVO]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Produ_ValStockevo_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Produ_ValStockevo_ViewModel" /> class.
@@ -70,7 +109,17 @@ namespace GenioMVC.ViewModels.Produ
 		/// <param name="userContext">The current user request context</param>
 		public Produ_ValStockevo_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCodprodu = userContext.CurrentNavigation.CurrentLevel.GetEntry("produ")?.ToString();
+			ProduValCodprodu = userContext.CurrentNavigation.CurrentLevel.GetEntry("produ")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Produ_ValStockevo_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Produ_ValStockevo_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -78,12 +127,12 @@ namespace GenioMVC.ViewModels.Produ
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAstock.FldSequence, FieldType.NUMERO, Resources.Resources.SEQUENCE42310, 6, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldDate, FieldType.DATAHORA, Resources.Resources.DATE18475, 16, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldType, FieldType.TEXTO, Resources.Resources.TYPE00312, 8, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldReferenc, FieldType.TEXTO, Resources.Resources.REFERENCE28402, 10, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldQuantity, FieldType.NUMERO, Resources.Resources.QUANTITY06415, 10, 0, true),
-				new Exports.QColumn(CSGenioAstock.FldBalance, FieldType.NUMERO, Resources.Resources.BALANCE13297, 10, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldSequence, FieldType.NUMERIC, Resources.Resources.SEQUENCE42310, 6, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldDate, FieldType.DATETIME, Resources.Resources.DATE18475, 16, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldType, FieldType.TEXT, Resources.Resources.TYPE00312, 8, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldReferenc, FieldType.TEXT, Resources.Resources.REFERENCE28402, 10, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldQuantity, FieldType.NUMERIC, Resources.Resources.QUANTITY06415, 10, 0, true),
+				new Exports.QColumn(CSGenioAstock.FldBalance, FieldType.NUMERIC, Resources.Resources.BALANCE13297, 10, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -133,11 +182,10 @@ namespace GenioMVC.ViewModels.Produ
 
 			if (Menu == null)
 				Menu = new TablePartial<Produ_ValStockevo_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -149,12 +197,11 @@ namespace GenioMVC.ViewModels.Produ
 
 			crs.SubSets.Add(subfilters);
 
-			if (this.ValCodprodu != null)
-				crs.Equal(CSGenioAstock.FldCodprodu, this.ValCodprodu);
+			if (this.ProduValCodprodu != null)
+				crs.Equal(CSGenioAstock.FldCodprodu, this.ProduValCodprodu);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -251,20 +298,19 @@ namespace GenioMVC.ViewModels.Produ
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAstock> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "PRODU")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Produ_ValStockevo_RowViewModel>();
 
 				CriteriaSet produ___pseudstockevoConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -290,26 +336,24 @@ namespace GenioMVC.ViewModels.Produ
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("stock", "sequence");
+					firstVisibleColumn ??= new FieldRef("stock", "sequence");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAstock model_limit_area = new CSGenioAstock(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PRODU___PSEUDSTOCKEVO");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAstock model_limit_area = new CSGenioAstock(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PRODU___PSEUDSTOCKEVO");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -320,6 +364,8 @@ namespace GenioMVC.ViewModels.Produ
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ PRODU_PSEUDSTOCKEVO]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -348,7 +394,7 @@ namespace GenioMVC.ViewModels.Produ
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAstock> listing = Models.ModelBase.Where<CSGenioAstock>(m_userContext, false, produ___pseudstockevoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODU___PSEUDSTOCKEVO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAstock> listing = Models.ModelBase.Where<CSGenioAstock>(m_userContext, distinct, produ___pseudstockevoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PRODU___PSEUDSTOCKEVO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -356,7 +402,6 @@ namespace GenioMVC.ViewModels.Produ
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -377,18 +422,12 @@ namespace GenioMVC.ViewModels.Produ
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -396,7 +435,7 @@ namespace GenioMVC.ViewModels.Produ
 
 		private List<Produ_ValStockevo_RowViewModel> MapProdu_ValStockevo(ListingMVC<CSGenioAstock> Qlisting)
 		{
-			var Elements = new List<Produ_ValStockevo_RowViewModel>();
+			List<Produ_ValStockevo_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -413,7 +452,6 @@ namespace GenioMVC.ViewModels.Produ
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAstock row
 		/// to a Produ_ValStockevo_RowViewModel object.
@@ -422,7 +460,9 @@ namespace GenioMVC.ViewModels.Produ
 		private Produ_ValStockevo_RowViewModel MapProdu_ValStockevo(CSGenioAstock row)
 		{
 			var model = new Produ_ValStockevo_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -434,32 +474,9 @@ namespace GenioMVC.ViewModels.Produ
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Produ_ValStockevo_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -473,41 +490,47 @@ namespace GenioMVC.ViewModels.Produ
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAstock> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAstock row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Stock m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Stock m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PRODU_VALSTOCKEVO]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Stock", "Stock.ValCodstock", "Stock.ValZzstate", "Stock.ValSequence", "Stock.ValDate", "Stock.ValType", "Stock.ValReferenc", "Stock.ValQuantity", "Stock.ValBalance", "Stock.ValCoddispa", "Stock.ValCodprodu", "Stock.ValCodrecei", "BtnPermission"
+			"Stock", "Stock.ValCodstock", "Stock.ValZzstate", "Stock.ValSequence", "Stock.ValDate", "Stock.ValType", "Stock.ValReferenc", "Stock.ValQuantity", "Stock.ValBalance", "Stock.ValCoddispa", "Stock.ValCodprodu", "Stock.ValCodrecei"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValSequence", CSGenioAstock.FldSequence, typeof(decimal?)),
 			new TableSearchColumn("ValDate", CSGenioAstock.FldDate, typeof(DateTime?)),
 			new TableSearchColumn("ValType", CSGenioAstock.FldType, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValReferenc", CSGenioAstock.FldReferenc, typeof(string)),
 			new TableSearchColumn("ValQuantity", CSGenioAstock.FldQuantity, typeof(decimal?)),
-			new TableSearchColumn("ValBalance", CSGenioAstock.FldBalance, typeof(decimal?))
+			new TableSearchColumn("ValBalance", CSGenioAstock.FldBalance, typeof(decimal?)),
 		];
-
-
-
 	}
 }

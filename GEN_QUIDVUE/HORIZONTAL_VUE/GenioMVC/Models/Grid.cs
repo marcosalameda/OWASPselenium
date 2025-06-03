@@ -38,44 +38,46 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Grid.ValCodftgri")]
 		public string ValCodftgri { get { return klass.ValCodftgri; } set { klass.ValCodftgri = value; } }
+
 		private Ftgri _ftgri;
 		[DisplayName("Ftgri")]
 		[ShouldSerialize("Ftgri")]
-		public virtual Ftgri Ftgri {
-			get {
-				if (!this.isEmptyModel && (_ftgri == null || (!string.IsNullOrEmpty(ValCodftgri) && (_ftgri.isEmptyModel || _ftgri.klass.QPrimaryKey != ValCodftgri))))
+		public virtual Ftgri Ftgri
+		{
+			get
+			{
+				if (!isEmptyModel && (_ftgri == null || (!string.IsNullOrEmpty(ValCodftgri) && (_ftgri.isEmptyModel || _ftgri.klass.QPrimaryKey != ValCodftgri))))
 					_ftgri = Models.Ftgri.Find(ValCodftgri, m_userContext, Identifier, _fieldsToSerialize);
-				if (_ftgri == null)
-					_ftgri = new Models.Ftgri(m_userContext, true, _fieldsToSerialize);
+				_ftgri ??= new Models.Ftgri(m_userContext, true, _fieldsToSerialize);
 				return _ftgri;
 			}
 			set { _ftgri = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Grid.ValCodpesso")]
 		public string ValCodpesso { get { return klass.ValCodpesso; } set { klass.ValCodpesso = value; } }
+
 		private Pesso _pesso;
 		[DisplayName("Pesso")]
 		[ShouldSerialize("Pesso")]
-		public virtual Pesso Pesso {
-			get {
-				if (!this.isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
+		public virtual Pesso Pesso
+		{
+			get
+			{
+				if (!isEmptyModel && (_pesso == null || (!string.IsNullOrEmpty(ValCodpesso) && (_pesso.isEmptyModel || _pesso.klass.QPrimaryKey != ValCodpesso))))
 					_pesso = Models.Pesso.Find(ValCodpesso, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pesso == null)
-					_pesso = new Models.Pesso(m_userContext, true, _fieldsToSerialize);
+				_pesso ??= new Models.Pesso(m_userContext, true, _fieldsToSerialize);
 				return _pesso;
 			}
 			set { _pesso = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Grid.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Grid(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -94,7 +96,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAgrid csgenioa)
 		{
 			if (csgenioa == null)
@@ -105,13 +106,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "ftgri":
-						if (_ftgri == null)
-							_ftgri = new Ftgri(m_userContext, true, _fieldsToSerialize);
+						_ftgri ??= new Ftgri(m_userContext, true, _fieldsToSerialize);
 						_ftgri.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "pesso":
-						if (_pesso == null)
-							_pesso = new Pesso(m_userContext, true, _fieldsToSerialize);
+						_pesso ??= new Pesso(m_userContext, true, _fieldsToSerialize);
 						_pesso.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

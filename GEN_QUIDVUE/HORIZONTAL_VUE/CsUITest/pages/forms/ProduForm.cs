@@ -15,7 +15,7 @@ public class ProduForm : Form
 	/// <summary>
 	/// Product
 	/// </summary>
-	public BaseInputControl ProduProduct => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUPRODUCT_");
+	public BaseInputControl ProduProduct => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUPRODUCT_", "#PRODU___PRODUPRODUCT_");
 
 	/// <summary>
 	/// In use
@@ -25,47 +25,47 @@ public class ProduForm : Form
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl ProduDescript => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUDESCRIPT");
+	public BaseInputControl ProduDescript => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUDESCRIPT", "#PRODU___PRODUDESCRIPT");
 
 	/// <summary>
 	/// SKU
 	/// </summary>
-	public BaseInputControl ProduSku => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUSKU_____");
+	public BaseInputControl ProduSku => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUSKU_____", "#PRODU___PRODUSKU_____");
 
 	/// <summary>
 	/// GTIN
 	/// </summary>
-	public BaseInputControl ProduGtin => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUGTIN____");
+	public BaseInputControl ProduGtin => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUGTIN____", "#PRODU___PRODUGTIN____");
 
 	/// <summary>
 	/// Size
 	/// </summary>
-	public BaseInputControl ProduSize => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUSIZE____");
+	public BaseInputControl ProduSize => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUSIZE____", "#PRODU___PRODUSIZE____");
 
 	/// <summary>
 	/// Weight
 	/// </summary>
-	public BaseInputControl ProduWeight => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUWEIGHT__");
+	public BaseInputControl ProduWeight => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUWEIGHT__", "#PRODU___PRODUWEIGHT__");
 
 	/// <summary>
 	/// Price
 	/// </summary>
-	public BaseInputControl ProduPrice => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUPRICE___");
+	public BaseInputControl ProduPrice => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUPRICE___", "#PRODU___PRODUPRICE___");
 
 	/// <summary>
 	/// Inputs
 	/// </summary>
-	public BaseInputControl ProduInputs => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUINPUTS__");
+	public BaseInputControl ProduInputs => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUINPUTS__", "#PRODU___PRODUINPUTS__");
 
 	/// <summary>
 	/// Outputs
 	/// </summary>
-	public BaseInputControl ProduOutputs => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUOUTPUTS_");
+	public BaseInputControl ProduOutputs => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUOUTPUTS_", "#PRODU___PRODUOUTPUTS_");
 
 	/// <summary>
 	/// Stock
 	/// </summary>
-	public BaseInputControl ProduStock => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUSTOCK___");
+	public BaseInputControl ProduStock => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUSTOCK___", "#PRODU___PRODUSTOCK___");
 
 	/// <summary>
 	/// Image
@@ -75,7 +75,7 @@ public class ProduForm : Form
 	/// <summary>
 	/// Image
 	/// </summary>
-	public BaseInputControl ProduImage => new BaseInputControl(driver, ContainerLocator, "#PRODU___PRODUIMAGE___");
+	public BaseInputControl ProduImage => new BaseInputControl(driver, ContainerLocator, "container-PRODU___PRODUIMAGE___", "#PRODU___PRODUIMAGE___");
 
 	/// <summary>
 	/// ACCORDEON

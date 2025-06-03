@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Comod_Pess1ValNameModel : RequestLookupModel
+		{
+			public Comod_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Lendi/Comod_Pess1ValName
 		// POST: /Lendi/Comod_Pess1ValName
 		[ActionName("Comod_Pess1ValName")]
-		public ActionResult Comod_Pess1ValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Comod_Pess1ValName([FromBody] Comod_Pess1ValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -404,11 +408,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lendi")))
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pess1")))
 				UserContext.Current.SetPersistenceReadOnly(true);
 			else
 			{
-				Navigation.DestroyEntry("ForcePrimaryRead_lendi");
+				Navigation.DestroyEntry("ForcePrimaryRead_pess1");
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Comod_Pess1ValName_ViewModel model = new Comod_Pess1ValName_ViewModel(UserContext.Current);
-			
+
+			Models.Lendi parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Comod_Pess1ValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Comod_Pess2ValNameModel : RequestLookupModel
+		{
+			public Comod_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Lendi/Comod_Pess2ValName
 		// POST: /Lendi/Comod_Pess2ValName
 		[ActionName("Comod_Pess2ValName")]
-		public ActionResult Comod_Pess2ValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Comod_Pess2ValName([FromBody] Comod_Pess2ValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Comod_Pess2ValName_ViewModel model = new Comod_Pess2ValName_ViewModel(UserContext.Current);
-			
+
+			Models.Lendi parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Comod_Pess2ValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +533,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Comod_EquipValRegistnrModel : RequestLookupModel
+		{
+			public Comod_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Lendi/Comod_EquipValRegistnr
 		// POST: /Lendi/Comod_EquipValRegistnr
 		[ActionName("Comod_EquipValRegistnr")]
-		public ActionResult Comod_EquipValRegistnr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Comod_EquipValRegistnr([FromBody] Comod_EquipValRegistnrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -547,16 +567,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Comod_EquipValRegistnr_ViewModel model = new Comod_EquipValRegistnr_ViewModel(UserContext.Current);
-			
+
+			Models.Lendi parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Comod_EquipValRegistnr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

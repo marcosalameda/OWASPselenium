@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Equigrou_Pess1ValNameModel : RequestLookupModel
+		{
+			public Equigrou_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equigrou_Pess1ValName
 		// POST: /Equip/Equigrou_Pess1ValName
 		[ActionName("Equigrou_Pess1ValName")]
-		public ActionResult Equigrou_Pess1ValName([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equigrou_Pess1ValName([FromBody] Equigrou_Pess1ValNameModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equigrou_Pess1ValName_ViewModel model = new Equigrou_Pess1ValName_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equigrou_Pess1ValName_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Equigrou_TpequValTipoequiModel : RequestLookupModel
+		{
+			public Equigrou_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Equigrou_TpequValTipoequi
 		// POST: /Equip/Equigrou_TpequValTipoequi
 		[ActionName("Equigrou_TpequValTipoequi")]
-		public ActionResult Equigrou_TpequValTipoequi([FromBody]RequestLookupModel requestModel)
+		public ActionResult Equigrou_TpequValTipoequi([FromBody] Equigrou_TpequValTipoequiModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Equigrou_TpequValTipoequi_ViewModel model = new Equigrou_TpequValTipoequi_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Equigrou_TpequValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

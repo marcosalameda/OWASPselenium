@@ -209,6 +209,7 @@ namespace GenioMVC.ViewModels.Equip
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Equip m)
 		{
 			if (m == null)
@@ -238,20 +239,13 @@ namespace GenioMVC.ViewModels.Equip
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Equip m)
 		{
 			if (m == null)
@@ -583,7 +577,7 @@ namespace GenioMVC.ViewModels.Equip
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -630,7 +624,7 @@ namespace GenioMVC.ViewModels.Equip
 				// Fill List fields
 				this.ValCodempre = ViewModelConversion.ToString(row["cmpny.codempre"]);
 				TableCmpnyDesignat.Value = (string)row["cmpny.designat"];
-				if (GlobalFunctions.emptyG(this.ValCodempre) == 1)
+				if (GenFunctions.emptyG(this.ValCodempre) == 1)
 				{
 					this.ValCodempre = "";
 					TableCmpnyDesignat.Value = "";
@@ -815,7 +809,7 @@ namespace GenioMVC.ViewModels.Equip
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -823,7 +817,7 @@ namespace GenioMVC.ViewModels.Equip
 				object hValue = Navigation.GetValue("cmpny");
 				if (!(hValue is Array))
 				{
-					if (GlobalFunctions.emptyG(hValue) == 1)
+					if (GenFunctions.emptyG(hValue) == 1)
 						returnEmptyDependants = true;
 					wherecodition.Equal(CSGenioApess1.FldCodempre, hValue);
 				}
@@ -871,7 +865,7 @@ namespace GenioMVC.ViewModels.Equip
 				// Fill List fields
 				this.ValCodpess1 = ViewModelConversion.ToString(row["pess1.codpesso"]);
 				TablePess1Name.Value = (string)row["pess1.name"];
-				if (GlobalFunctions.emptyG(this.ValCodpess1) == 1)
+				if (GenFunctions.emptyG(this.ValCodpess1) == 1)
 				{
 					this.ValCodpess1 = "";
 					TablePess1Name.Value = "";
@@ -1010,7 +1004,6 @@ namespace GenioMVC.ViewModels.Equip
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

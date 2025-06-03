@@ -43,12 +43,12 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Code" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Aero.ValCodcmaer")]
 		[NumericAttribute(0)]
-		public decimal? ValCodcmaer { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCodcmaer, 0)); } set { klass.ValCodcmaer = Convert.ToDecimal(value); } }
+		public decimal? ValCodcmaer { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValCodcmaer, 0)); } set { klass.ValCodcmaer = Convert.ToDecimal(value); } }
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Aero.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Aero(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -66,7 +66,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioAaero csgenioa)
 		{

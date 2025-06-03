@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Cmpny;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER CMPNY]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class CmpnyController : ControllerBase
 	{
-		public CmpnyController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public CmpnyController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION CMPNY]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER CMPNY]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Cmpny row = null;
-
-			if (row == null)
-			{
-				row = new Models.Cmpny(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("cmpny");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Cmpny row = new Models.Cmpny(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("cmpny");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "EMPRE___CNTRYCOUNTRY_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Empre_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Empre_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Empre___cntrycountry_(qs);
 							result = model.TableCntryCountry;
@@ -143,6 +151,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Empre" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -156,6 +167,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Cmpny)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Wid_cola" form. (++, CT, SR, CL and U1)

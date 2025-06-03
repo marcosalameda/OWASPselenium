@@ -16,7 +16,7 @@ public class RegiaForm : Form
 	/// <summary>
 	/// Region
 	/// </summary>
-	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "#REGIA___REGIOREGIAO__");
+	public BaseInputControl RegioRegiao => new BaseInputControl(driver, ContainerLocator, "container-REGIA___REGIOREGIAO__", "#REGIA___REGIOREGIAO__");
 
 	public RegiaForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "REGIA", containerLocator: containerLocator) { }

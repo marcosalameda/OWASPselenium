@@ -173,7 +173,7 @@ namespace GenioMVC.ViewModels.Wareh
 				if (!isApply && !(areaWareh.klass.ValNum_employee>0))
 				{
 					var status = Status.E;
-					var message = new StatusMessage(status, Resources.Resources.THERE_MUST_BE_AT_LEA43628); // Message: "There must be at least one employee working in this warehouse"
+					StatusMessage message = new(status, Resources.Resources.THERE_MUST_BE_AT_LEA43628); // Message: "There must be at least one employee working in this warehouse"
 					result.MergeStatusMessage(message);
 				}
 			}
@@ -194,6 +194,7 @@ namespace GenioMVC.ViewModels.Wareh
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Wareh m)
 		{
 			if (m == null)
@@ -218,20 +219,13 @@ namespace GenioMVC.ViewModels.Wareh
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Wareh m)
 		{
 			if (m == null)
@@ -457,8 +451,6 @@ namespace GenioMVC.ViewModels.Wareh
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

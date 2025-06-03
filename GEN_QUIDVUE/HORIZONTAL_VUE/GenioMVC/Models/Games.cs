@@ -45,44 +45,46 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">TEAM PLAYING AT HOME" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Games.ValCodeqjgc")]
 		public string ValCodeqjgc { get { return klass.ValCodeqjgc; } set { klass.ValCodeqjgc = value; } }
+
 		private Teamp _teamp;
 		[DisplayName("Teamp")]
 		[ShouldSerialize("Teamp")]
-		public virtual Teamp Teamp {
-			get {
-				if (!this.isEmptyModel && (_teamp == null || (!string.IsNullOrEmpty(ValCodeqjgc) && (_teamp.isEmptyModel || _teamp.klass.QPrimaryKey != ValCodeqjgc))))
+		public virtual Teamp Teamp
+		{
+			get
+			{
+				if (!isEmptyModel && (_teamp == null || (!string.IsNullOrEmpty(ValCodeqjgc) && (_teamp.isEmptyModel || _teamp.klass.QPrimaryKey != ValCodeqjgc))))
 					_teamp = Models.Teamp.Find(ValCodeqjgc, m_userContext, Identifier, _fieldsToSerialize);
-				if (_teamp == null)
-					_teamp = new Models.Teamp(m_userContext, true, _fieldsToSerialize);
+				_teamp ??= new Models.Teamp(m_userContext, true, _fieldsToSerialize);
 				return _teamp;
 			}
 			set { _teamp = value; }
 		}
 
-
 		[DisplayName(">TEAM PLAYING AWAY")]
 		/// <summary>Field : ">TEAM PLAYING AWAY" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Games.ValCodeqjgf")]
 		public string ValCodeqjgf { get { return klass.ValCodeqjgf; } set { klass.ValCodeqjgf = value; } }
+
 		private Team1 _team1;
 		[DisplayName("Team1")]
 		[ShouldSerialize("Team1")]
-		public virtual Team1 Team1 {
-			get {
-				if (!this.isEmptyModel && (_team1 == null || (!string.IsNullOrEmpty(ValCodeqjgf) && (_team1.isEmptyModel || _team1.klass.QPrimaryKey != ValCodeqjgf))))
+		public virtual Team1 Team1
+		{
+			get
+			{
+				if (!isEmptyModel && (_team1 == null || (!string.IsNullOrEmpty(ValCodeqjgf) && (_team1.isEmptyModel || _team1.klass.QPrimaryKey != ValCodeqjgf))))
 					_team1 = Models.Team1.Find(ValCodeqjgf, m_userContext, Identifier, _fieldsToSerialize);
-				if (_team1 == null)
-					_team1 = new Models.Team1(m_userContext, true, _fieldsToSerialize);
+				_team1 ??= new Models.Team1(m_userContext, true, _fieldsToSerialize);
 				return _team1;
 			}
 			set { _team1 = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Games.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Games(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -101,7 +103,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAgames csgenioa)
 		{
 			if (csgenioa == null)
@@ -112,13 +113,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "teamp":
-						if (_teamp == null)
-							_teamp = new Teamp(m_userContext, true, _fieldsToSerialize);
+						_teamp ??= new Teamp(m_userContext, true, _fieldsToSerialize);
 						_teamp.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "team1":
-						if (_team1 == null)
-							_team1 = new Team1(m_userContext, true, _fieldsToSerialize);
+						_team1 ??= new Team1(m_userContext, true, _fieldsToSerialize);
 						_team1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

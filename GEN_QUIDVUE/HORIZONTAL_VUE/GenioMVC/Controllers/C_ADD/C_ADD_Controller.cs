@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.C_add;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER C_ADD]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class C_addController : ControllerBase
 	{
-		public C_addController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public C_addController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION C_ADD]/
 
 
@@ -42,6 +51,9 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER C_ADD]/
+
+
+
 
 
 		/// <summary>

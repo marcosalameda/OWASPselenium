@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Foreign Key" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValFkey1")]
 		public string ValFkey1 { get { return klass.ValFkey1; } set { klass.ValFkey1 = value; } }
+
 		private Grpb _grpb;
 		[DisplayName("Grpb")]
 		[ShouldSerialize("Grpb")]
-		public virtual Grpb Grpb {
-			get {
-				if (!this.isEmptyModel && (_grpb == null || (!string.IsNullOrEmpty(ValFkey1) && (_grpb.isEmptyModel || _grpb.klass.QPrimaryKey != ValFkey1))))
+		public virtual Grpb Grpb
+		{
+			get
+			{
+				if (!isEmptyModel && (_grpb == null || (!string.IsNullOrEmpty(ValFkey1) && (_grpb.isEmptyModel || _grpb.klass.QPrimaryKey != ValFkey1))))
 					_grpb = Models.Grpb.Find(ValFkey1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_grpb == null)
-					_grpb = new Models.Grpb(m_userContext, true, _fieldsToSerialize);
+				_grpb ??= new Models.Grpb(m_userContext, true, _fieldsToSerialize);
 				return _grpb;
 			}
 			set { _grpb = value; }
 		}
-
 
 		[DisplayName("Text")]
 		/// <summary>Field : "Text" Tipo: "C" Formula:  ""</summary>
@@ -68,25 +69,25 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Numeric (Integer)" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValNumint")]
 		[NumericAttribute(0)]
-		public decimal? ValNumint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumint, 0)); } set { klass.ValNumint = Convert.ToDecimal(value); } }
+		public decimal? ValNumint { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNumint, 0)); } set { klass.ValNumint = Convert.ToDecimal(value); } }
 
 		[DisplayName("Numeric (Decimal)")]
 		/// <summary>Field : "Numeric (Decimal)" Tipo: "ND" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValNumdec")]
 		[NumericAttribute(3)]
-		public decimal? ValNumdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNumdec, 3)); } set { klass.ValNumdec = Convert.ToDecimal(value); } }
+		public decimal? ValNumdec { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNumdec, 3)); } set { klass.ValNumdec = Convert.ToDecimal(value); } }
 
 		[DisplayName("Currency (Interger)")]
 		/// <summary>Field : "Currency (Interger)" Tipo: "$" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValCurint")]
 		[CurrencyAttribute("EUR", 2)]
-		public decimal? ValCurint { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurint, 2)); } set { klass.ValCurint = Convert.ToDecimal(value); } }
+		public decimal? ValCurint { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValCurint, 2)); } set { klass.ValCurint = Convert.ToDecimal(value); } }
 
 		[DisplayName("Currency (Decimal)")]
 		/// <summary>Field : "Currency (Decimal)" Tipo: "$D" Formula:  ""</summary>
 		[ShouldSerialize("Tblb.ValCurdec")]
 		[CurrencyAttribute("EUR", 4)]
-		public decimal? ValCurdec { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValCurdec, 4)); } set { klass.ValCurdec = Convert.ToDecimal(value); } }
+		public decimal? ValCurdec { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValCurdec, 4)); } set { klass.ValCurdec = Convert.ToDecimal(value); } }
 
 		[DisplayName("Boolean")]
 		/// <summary>Field : "Boolean" Tipo: "L" Formula:  ""</summary>
@@ -138,8 +139,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Tblb.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Tblb(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -158,7 +159,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAtblb csgenioa)
 		{
 			if (csgenioa == null)
@@ -169,8 +169,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "grpb":
-						if (_grpb == null)
-							_grpb = new Grpb(m_userContext, true, _fieldsToSerialize);
+						_grpb ??= new Grpb(m_userContext, true, _fieldsToSerialize);
 						_grpb.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

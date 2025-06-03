@@ -15,12 +15,12 @@ public class InfieldsForm : Form
 	/// <summary>
 	/// Text Field
 	/// </summary>
-	public BaseInputControl FldsTxtfield => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_TXTFIELD");
+	public BaseInputControl FldsTxtfield => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_TXTFIELD", "#INFIELDSFLDS_TXTFIELD");
 
 	/// <summary>
 	/// Multine Text
 	/// </summary>
-	public BaseInputControl FldsDescrip => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_DESCRIP_");
+	public BaseInputControl FldsDescrip => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_DESCRIP_", "#INFIELDSFLDS_DESCRIP_");
 
 	/// <summary>
 	/// Date/Time Inputs
@@ -30,12 +30,12 @@ public class InfieldsForm : Form
 	/// <summary>
 	/// Year
 	/// </summary>
-	public BaseInputControl FldsYear => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_YEAR____");
+	public BaseInputControl FldsYear => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_YEAR____", "#INFIELDSFLDS_YEAR____");
 
 	/// <summary>
 	/// Time
 	/// </summary>
-	public BaseInputControl FldsTime => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_TIME____");
+	public BaseInputControl FldsTime => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_TIME____", "#INFIELDSFLDS_TIME____");
 
 	/// <summary>
 	/// Date
@@ -55,22 +55,22 @@ public class InfieldsForm : Form
 	/// <summary>
 	/// Numeric
 	/// </summary>
-	public BaseInputControl FldsNpassage => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_NPASSAGE");
+	public BaseInputControl FldsNpassage => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_NPASSAGE", "#INFIELDSFLDS_NPASSAGE");
 
 	/// <summary>
 	/// Numeric decimal
 	/// </summary>
-	public BaseInputControl FldsDuration => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_DURATION");
+	public BaseInputControl FldsDuration => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_DURATION", "#INFIELDSFLDS_DURATION");
 
 	/// <summary>
 	/// Currency Decimal
 	/// </summary>
-	public BaseInputControl FldsPrecobil => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_PRECOBIL");
+	public BaseInputControl FldsPrecobil => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_PRECOBIL", "#INFIELDSFLDS_PRECOBIL");
 
 	/// <summary>
 	/// Currency
 	/// </summary>
-	public BaseInputControl FldsPrice => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_PRICE___");
+	public BaseInputControl FldsPrice => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_PRICE___", "#INFIELDSFLDS_PRICE___");
 
 	/// <summary>
 	/// Inputs with Masks
@@ -85,42 +85,42 @@ public class InfieldsForm : Form
 	/// <summary>
 	/// Social Security No
 	/// </summary>
-	public BaseInputControl FldsSsnumber => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_SSNUMBER");
+	public BaseInputControl FldsSsnumber => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_SSNUMBER", "#INFIELDSFLDS_SSNUMBER");
 
 	/// <summary>
 	/// Zipcode
 	/// </summary>
-	public BaseInputControl FldsZipfield => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_ZIPFIELD");
+	public BaseInputControl FldsZipfield => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_ZIPFIELD", "#INFIELDSFLDS_ZIPFIELD");
 
 	/// <summary>
 	/// VAT Number
 	/// </summary>
-	public BaseInputControl FldsVatnumbr => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_VATNUMBR");
+	public BaseInputControl FldsVatnumbr => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_VATNUMBR", "#INFIELDSFLDS_VATNUMBR");
 
 	/// <summary>
 	/// Licence plate
 	/// </summary>
-	public BaseInputControl FldsLicplate => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_LICPLATE");
+	public BaseInputControl FldsLicplate => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_LICPLATE", "#INFIELDSFLDS_LICPLATE");
 
 	/// <summary>
 	/// Banking Account Number
 	/// </summary>
-	public BaseInputControl FldsBanknmbr => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_BANKNMBR");
+	public BaseInputControl FldsBanknmbr => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_BANKNMBR", "#INFIELDSFLDS_BANKNMBR");
 
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl FldsEmailfld => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_EMAILFLD");
+	public BaseInputControl FldsEmailfld => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_EMAILFLD", "#INFIELDSFLDS_EMAILFLD");
 
 	/// <summary>
 	/// IBAN
 	/// </summary>
-	public BaseInputControl FldsIbanfiel => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_IBANFIEL");
+	public BaseInputControl FldsIbanfiel => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_IBANFIEL", "#INFIELDSFLDS_IBANFIEL");
 
 	/// <summary>
 	/// Uppercase
 	/// </summary>
-	public BaseInputControl FldsUpprtext => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_UPPRTEXT");
+	public BaseInputControl FldsUpprtext => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_UPPRTEXT", "#INFIELDSFLDS_UPPRTEXT");
 
 	/// <summary>
 	/// 
@@ -135,7 +135,7 @@ public class InfieldsForm : Form
 	/// <summary>
 	/// Colorpicker
 	/// </summary>
-	public BaseInputControl FldsClrpicke => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_CLRPICKE");
+	public BaseInputControl FldsClrpicke => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_CLRPICKE", "#INFIELDSFLDS_CLRPICKE");
 
 	/// <summary>
 	/// Other Inputs
@@ -155,22 +155,22 @@ public class InfieldsForm : Form
 	/// <summary>
 	/// Created by
 	/// </summary>
-	public BaseInputControl FldsCreatuse => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_CREATUSE");
+	public BaseInputControl FldsCreatuse => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_CREATUSE", "#INFIELDSFLDS_CREATUSE");
 
 	/// <summary>
 	/// Day
 	/// </summary>
-	public BaseInputControl FldsCreatdat => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_CREATDAT");
+	public BaseInputControl FldsCreatdat => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_CREATDAT", "#INFIELDSFLDS_CREATDAT");
 
 	/// <summary>
 	/// Complete Date
 	/// </summary>
-	public BaseInputControl FldsCreatins => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_CREATINS");
+	public BaseInputControl FldsCreatins => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_CREATINS", "#INFIELDSFLDS_CREATINS");
 
 	/// <summary>
 	/// Hour
 	/// </summary>
-	public BaseInputControl FldsCreathou => new BaseInputControl(driver, ContainerLocator, "#INFIELDSFLDS_CREATHOU");
+	public BaseInputControl FldsCreathou => new BaseInputControl(driver, ContainerLocator, "container-INFIELDSFLDS_CREATHOU", "#INFIELDSFLDS_CREATHOU");
 
 	/// <summary>
 	/// Radio Btn

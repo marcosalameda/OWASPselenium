@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -391,69 +390,6 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
-
-		//
-		// GET: /Feeca/Feeca_FldsValDescrip
-		// POST: /Feeca/Feeca_FldsValDescrip
-		[ActionName("Feeca_FldsValDescrip")]
-		public ActionResult Feeca_FldsValDescrip([FromBody]RequestLookupModel requestModel)
-		{
-			var queryParams = requestModel.QueryParams;
-
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
-			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
-			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_flds")))
-				UserContext.Current.SetPersistenceReadOnly(true);
-			else
-			{
-				Navigation.DestroyEntry("ForcePrimaryRead_flds");
-				UserContext.Current.SetPersistenceReadOnly(false);
-			}
-
-			var requestValues = new NameValueCollection();
-			if (queryParams != null)
-			{
-				// Add to request values
-				foreach (var kv in queryParams)
-					requestValues.Add(kv.Key, kv.Value);
-			}
-
-			IsStateReadonly = true;
-			Feeca_FldsValDescrip_ViewModel model = new Feeca_FldsValDescrip_ViewModel(UserContext.Current);
-			
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
-
-			model.setModes(Request.Query["m"].ToString());
-			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
-
-			return JsonOK(model);
-		}
 
 
 		// POST: /Feeca/Feeca_SaveEdit

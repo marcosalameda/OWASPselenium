@@ -22,6 +22,11 @@ public abstract class Form : PageObject
     public FORM_MODE Mode { get; }
 
     /// <summary>
+    /// Gets the mode of the form from the page url
+    /// </summary>
+    public string UrlMode { get; }
+
+    /// <summary>
     /// Gets the locator for the form container element.
     /// </summary>
     protected By ContainerLocator => _containerLocator ?? By.CssSelector("#form-container");
@@ -64,6 +69,9 @@ public abstract class Form : PageObject
 
         wait.Until(c => Container);
         WaitForLoading();
+
+        
+        UrlMode = GetFormModeFromURL(driver.Url);
     }
 
     /// <summary>
@@ -116,5 +124,36 @@ public abstract class Form : PageObject
     {
         WaitForLoading();
         ConfirmBtn.Click();
+    }
+
+    /// <summary>
+    /// Compares the form mode that is set when initializing the form with the form mode set in the URL
+    /// </summary>
+    /// <returns>Wether or not the form modes are equal</returns>
+    public bool ValidateFormMode()
+    {
+        if (Enum.TryParse(UrlMode, true, out FORM_MODE parsedMode))
+        {
+            return parsedMode == Mode;
+        }
+        return false;
+    }
+
+    /// <summary>
+    /// Returns the form mode from the page url
+    /// </summary>
+    /// <param name="url">The URL of the page</param>
+    /// <returns>The mode of the current form</returns>
+    private string GetFormModeFromURL(string url)
+    {
+        string[] parts = url.Split('/');
+        int formIndex = Array.IndexOf(parts, "form");
+
+        if (formIndex != -1 && parts.Length > formIndex + 2)
+        {
+            return parts[formIndex + 2];
+        }
+
+        return ""; 
     }
 }

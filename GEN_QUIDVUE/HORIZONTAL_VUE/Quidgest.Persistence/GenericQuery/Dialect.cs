@@ -292,6 +292,22 @@ namespace Quidgest.Persistence.GenericQuery
         }
 
         /// <summary>
+        /// True if the vendor supports returning data from a update or insert clause
+        /// </summary>
+        public virtual bool SupportsOutput => false;
+
+        /// <summary>
+        /// Extends a insert query with the output clause for the chosen columns
+        /// </summary>
+        /// <param name="sql">The insert query</param>
+        /// <param name="columns">The columns to fetch in the return values</param>
+        /// <remarks>The sql stringbuilder will be modified by this function</remarks>
+        public virtual void AddOutputString(StringBuilder sql, IList<ColumnReference> columns)
+        {
+            throw new NotImplementedException("Dialect does not support output clause");
+        }
+
+        /// <summary>
         /// True if the limit value is the number of the last row to return, otherwise it is the number of rows to return
         /// </summary>
         /// <remarks>

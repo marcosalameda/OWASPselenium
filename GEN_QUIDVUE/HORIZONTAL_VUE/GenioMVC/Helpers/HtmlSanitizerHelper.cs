@@ -182,5 +182,29 @@ namespace GenioMVC.Helpers
             // Return true if no dangerous elements or attributes are found.
             return true;
         }
+       
+        /// <summary>
+        /// Extracts only the text content from HTML, removing all HTML tags, images, and formatting.
+        /// This is useful for preparing content to be sent to a Large Language Model (LLM).
+        /// </summary>
+        /// <param name="htmlContent">The HTML content to extract text from.</param>
+        /// <returns>Plain text content.</returns>
+        public static string ExtractTextOnly(string htmlContent, bool isDocument)
+        {
+            if (string.IsNullOrEmpty(htmlContent))
+            {
+                return string.Empty;
+            }
+
+            // First sanitize the HTML to remove unwanted elements like base64 images
+            var sanitizedHtml = SanitizeHTML(htmlContent, isDocument);
+
+            // Parse HTML and extract only the text content
+            var parser = new AngleSharp.Html.Parser.HtmlParser();
+            var htmlDocument = parser.ParseDocument(sanitizedHtml);
+
+            // Simply get the text content of the body
+            return htmlDocument.Body?.TextContent?.Trim() ?? string.Empty;
+        }
     }
 }

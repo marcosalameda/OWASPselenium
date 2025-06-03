@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lnhdf;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LNHDF]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class LnhdfController : ControllerBase
 	{
-		public LnhdfController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public LnhdfController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION LNHDF]/
 
 
@@ -42,6 +51,9 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER LNHDF]/
+
+
+
 
 
 		/// <summary>

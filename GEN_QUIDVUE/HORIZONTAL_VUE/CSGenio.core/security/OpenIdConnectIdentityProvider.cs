@@ -346,7 +346,7 @@ namespace GenioServer.security
             return id;
         }
 
-        private IIdentity Authenticate(string ext_username, PersistentSupport sp)
+        protected virtual IIdentity Authenticate(string ext_username, PersistentSupport sp)
         {
             try
             {

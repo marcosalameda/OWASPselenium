@@ -1,7 +1,8 @@
-using Newtonsoft.Json;
-using CSGenio.core.framework.ChatbotApi;
-using GenioMVC.Models.Navigation;
+﻿using Newtonsoft.Json;
 using System.Text;
+
+using CSGenio.core.ai;
+using GenioMVC.Models.Navigation;
 
 namespace GenioMVC.Controllers
 {
@@ -23,7 +24,18 @@ namespace GenioMVC.Controllers
 
         public async Task ChatbotApiStreamProxy()
         {
-            var stream = await _chatbotService.GetChatbotStreamAsync(HttpContext.Request.Body);
+            var form = HttpContext.Request.Form;
+
+            var formFields = form
+                .SelectMany(f => f.Value.Select(val => new KeyValuePair<string, string>(f.Key, val)))
+                .ToList();
+
+            var formFiles = form.Files
+                .Select(file => ( file.Name, file.ContentType, file.OpenReadStream()))
+                .ToList();
+
+            var stream = await _chatbotService.GetChatbotStreamAsync(formFields, formFiles);
+
             Response.ContentType = "text/event-stream";
 
             using (var reader = new StreamReader(stream))
@@ -53,6 +65,7 @@ namespace GenioMVC.Controllers
             request.Content = new StringContent(JsonConvert.SerializeObject(newContent), Encoding.UTF8, "application/json");
             return await _chatbotService.SendChatbotRequestAsync(request);
         }
+
         public async Task<T> ChatbotApiFunction<T>(StringContent content)
         {
             // Convert StringContent to object for the service call

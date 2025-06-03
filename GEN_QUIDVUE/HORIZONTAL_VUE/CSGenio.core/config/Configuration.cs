@@ -55,7 +55,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 3907;
+        public static int Version { get; } = 4086;
 
         /// <summary>
         /// System id
@@ -85,12 +85,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 3907;
+        public const int VersionDbGen = 4086;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1574;
+        public const int VersionIdxDbGen = 1756;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -105,12 +105,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "361.17";
+        public const string GenioVersion = "369.55";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2888;
+        public const int BuildVersionGen = 2931;
         /// <summary>
         /// Solution release version
         /// </summary>
@@ -131,6 +131,8 @@ namespace CSGenio.framework
         /// Should documents be saved on disk. False to save on the database
         /// </summary>
         public static bool Files2Disk { get; private set; } =  false;
+
+
         //----------------------------------------------
         // ChatBot
         //----------------------------------------------
@@ -334,7 +336,7 @@ namespace CSGenio.framework
             string defaultPath = AppDomain.CurrentDomain.BaseDirectory;
 
             //Check for config in BaseDirectory first
-            string defaultConfig = Path.Combine(defaultPath, "configuracoes.xml");
+            string defaultConfig = Path.Combine(defaultPath, "Configuracoes.xml");
             if (File.Exists(defaultConfig))
                 return defaultPath;
 
@@ -346,14 +348,22 @@ namespace CSGenio.framework
                 string path = redirect.GetFullPath(defaultPath);
 
                 //Try to get the file with the default path first
-                if (File.Exists(Path.Combine(path, "configuracoes.xml")))
+                if (File.Exists(Path.Combine(path, "Configuracoes.xml")))
                     return path;
 
                 //If it does not exist, try with environment variable
                 //This will happen when the CLI is in debug
                 path = redirect.GetFullPath(Environment.CurrentDirectory);
-                if (File.Exists(Path.Combine(path, "configuracoes.xml")))
+                if (File.Exists(Path.Combine(path, "Configuracoes.xml")))
                     return path;
+            }
+
+            // Check for a custom path defined in env variable
+            string envPath = Environment.GetEnvironmentVariable("CONFIG_PATH");
+            if(envPath != null)
+            {
+                envPath = Path.Combine(envPath, "Configuracoes.xml");
+                if (File.Exists(envPath)) return envPath;
             }
 
             return defaultPath;
@@ -545,6 +555,8 @@ namespace CSGenio.framework
                 throw new FrameworkException("Erro nas configurações.", "Configuration.GetProperty", "Property not found: " + name);
             return maisPropriedades[name];
         }
+
+
 
         /// <summary>
         /// Retrieve a property using its key.

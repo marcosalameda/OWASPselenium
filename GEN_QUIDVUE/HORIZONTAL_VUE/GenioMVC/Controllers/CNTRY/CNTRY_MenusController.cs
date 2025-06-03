@@ -46,11 +46,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			IMO_Menu_131_ViewModel model = new IMO_Menu_131_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -147,9 +147,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
 
@@ -209,10 +206,10 @@ namespace GenioMVC.Controllers
 						importRow.insertPseud(UserContext.Current.PersistentSupport);
 						importRow.change(UserContext.Current.PersistentSupport, (CriteriaSet)null);
 					}
-					catch (GenioException ex)
+					catch (GenioException e)
 					{
 						string lineNumberMsg = String.Format(Resources.Resources.ERROR_IN_LINE__0__45377 + " ", lineNumber);
-						ex.UserMessage = lineNumberMsg + ex.UserMessage;
+						e.UserMessage = lineNumberMsg + e.UserMessage;
 						throw;
 					}
 				}
@@ -245,16 +242,16 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			IMO_Menu_211_ViewModel model = new IMO_Menu_211_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
+
 			// Static filter "order" fields that have changed
 			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
 			{
 				{ "filter_IMO_Menu_211_ACTIVO", 0 }
- 			};
- 
+			};
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -351,9 +348,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -391,10 +385,10 @@ namespace GenioMVC.Controllers
 						importRow.insertPseud(UserContext.Current.PersistentSupport);
 						importRow.change(UserContext.Current.PersistentSupport, (CriteriaSet)null);
 					}
-					catch (GenioException ex)
+					catch (GenioException e)
 					{
 						string lineNumberMsg = String.Format(Resources.Resources.ERROR_IN_LINE__0__45377 + " ", lineNumber);
-						ex.UserMessage = lineNumberMsg + ex.UserMessage;
+						e.UserMessage = lineNumberMsg + e.UserMessage;
 						throw;
 					}
 				}
@@ -427,11 +421,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			IMO_Menu_231_ViewModel model = new IMO_Menu_231_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -528,9 +522,6 @@ namespace GenioMVC.Controllers
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
 
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
-
 
 			return JsonOK(model);
 		}
@@ -568,10 +559,10 @@ namespace GenioMVC.Controllers
 						importRow.insertPseud(UserContext.Current.PersistentSupport);
 						importRow.change(UserContext.Current.PersistentSupport, (CriteriaSet)null);
 					}
-					catch (GenioException ex)
+					catch (GenioException e)
 					{
 						string lineNumberMsg = String.Format(Resources.Resources.ERROR_IN_LINE__0__45377 + " ", lineNumber);
-						ex.UserMessage = lineNumberMsg + ex.UserMessage;
+						e.UserMessage = lineNumberMsg + e.UserMessage;
 						throw;
 					}
 				}
@@ -604,11 +595,11 @@ namespace GenioMVC.Controllers
 			string rowsPerPageOptionsString = "";
 
 			WMS_Menu_4271_ViewModel model = new WMS_Menu_4271_ViewModel(UserContext.Current);
-			
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -667,9 +658,6 @@ namespace GenioMVC.Controllers
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);

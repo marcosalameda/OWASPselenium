@@ -10,7 +10,7 @@ public class Fami1Form : Form
 	/// <summary>
 	/// Equipment family
 	/// </summary>
-	public BaseInputControl Fami1Family => new BaseInputControl(driver, ContainerLocator, "#FAMI1___FAMI1FAMILY__");
+	public BaseInputControl Fami1Family => new BaseInputControl(driver, ContainerLocator, "container-FAMI1___FAMI1FAMILY__", "#FAMI1___FAMI1FAMILY__");
 
 	/// <summary>
 	/// Type of equipment

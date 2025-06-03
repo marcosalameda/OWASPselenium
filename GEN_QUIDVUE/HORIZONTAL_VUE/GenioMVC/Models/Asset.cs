@@ -43,7 +43,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Asset number" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Asset.ValAssetnum")]
 		[NumericAttribute(0)]
-		public decimal? ValAssetnum { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAssetnum, 0)); } set { klass.ValAssetnum = Convert.ToDecimal(value); } }
+		public decimal? ValAssetnum { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAssetnum, 0)); } set { klass.ValAssetnum = Convert.ToDecimal(value); } }
 
 		[DisplayName("Asset type")]
 		/// <summary>Field : "Asset type" Tipo: "AC" Formula:  ""</summary>
@@ -83,44 +83,46 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">>Kind of equipment" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Asset.ValCodkinde")]
 		public string ValCodkinde { get { return klass.ValCodkinde; } set { klass.ValCodkinde = value; } }
+
 		private Kinde _kinde;
 		[DisplayName("Kinde")]
 		[ShouldSerialize("Kinde")]
-		public virtual Kinde Kinde {
-			get {
-				if (!this.isEmptyModel && (_kinde == null || (!string.IsNullOrEmpty(ValCodkinde) && (_kinde.isEmptyModel || _kinde.klass.QPrimaryKey != ValCodkinde))))
+		public virtual Kinde Kinde
+		{
+			get
+			{
+				if (!isEmptyModel && (_kinde == null || (!string.IsNullOrEmpty(ValCodkinde) && (_kinde.isEmptyModel || _kinde.klass.QPrimaryKey != ValCodkinde))))
 					_kinde = Models.Kinde.Find(ValCodkinde, m_userContext, Identifier, _fieldsToSerialize);
-				if (_kinde == null)
-					_kinde = new Models.Kinde(m_userContext, true, _fieldsToSerialize);
+				_kinde ??= new Models.Kinde(m_userContext, true, _fieldsToSerialize);
 				return _kinde;
 			}
 			set { _kinde = value; }
 		}
 
-
 		[DisplayName("")]
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Asset.ValCodmanuf")]
 		public string ValCodmanuf { get { return klass.ValCodmanuf; } set { klass.ValCodmanuf = value; } }
+
 		private Manuf _manuf;
 		[DisplayName("Manuf")]
 		[ShouldSerialize("Manuf")]
-		public virtual Manuf Manuf {
-			get {
-				if (!this.isEmptyModel && (_manuf == null || (!string.IsNullOrEmpty(ValCodmanuf) && (_manuf.isEmptyModel || _manuf.klass.QPrimaryKey != ValCodmanuf))))
+		public virtual Manuf Manuf
+		{
+			get
+			{
+				if (!isEmptyModel && (_manuf == null || (!string.IsNullOrEmpty(ValCodmanuf) && (_manuf.isEmptyModel || _manuf.klass.QPrimaryKey != ValCodmanuf))))
 					_manuf = Models.Manuf.Find(ValCodmanuf, m_userContext, Identifier, _fieldsToSerialize);
-				if (_manuf == null)
-					_manuf = new Models.Manuf(m_userContext, true, _fieldsToSerialize);
+				_manuf ??= new Models.Manuf(m_userContext, true, _fieldsToSerialize);
 				return _manuf;
 			}
 			set { _manuf = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Asset.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Asset(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -139,7 +141,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAasset csgenioa)
 		{
 			if (csgenioa == null)
@@ -150,13 +151,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "kinde":
-						if (_kinde == null)
-							_kinde = new Kinde(m_userContext, true, _fieldsToSerialize);
+						_kinde ??= new Kinde(m_userContext, true, _fieldsToSerialize);
 						_kinde.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "manuf":
-						if (_manuf == null)
-							_manuf = new Manuf(m_userContext, true, _fieldsToSerialize);
+						_manuf ??= new Manuf(m_userContext, true, _fieldsToSerialize);
 						_manuf.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

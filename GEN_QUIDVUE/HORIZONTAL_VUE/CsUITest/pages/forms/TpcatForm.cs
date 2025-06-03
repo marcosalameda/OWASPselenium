@@ -10,7 +10,7 @@ public class TpcatForm : Form
 	/// <summary>
 	/// Category type
 	/// </summary>
-	public BaseInputControl CattpTpcatego => new BaseInputControl(driver, ContainerLocator, "#TPCAT___CATTPTPCATEGO");
+	public BaseInputControl CattpTpcatego => new BaseInputControl(driver, ContainerLocator, "container-TPCAT___CATTPTPCATEGO", "#TPCAT___CATTPTPCATEGO");
 
 	/// <summary>
 	/// Sub categoria

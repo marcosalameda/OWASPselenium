@@ -1,5 +1,3 @@
-using System.IO;
-
 namespace SeleniumWebTest.tests;
 
 public class FormOperationsTest : BaseSeleniumTest
@@ -26,16 +24,8 @@ public class FormOperationsTest : BaseSeleniumTest
 
         var list = new MenuListPage(Driver, "GQT", "2911").List;
 
-        //int col = list.GetColumn("tpequ.tipoequi");
-
         list.Search.Search("Bomba");
-        //list.WaitForLoading();
-
-        //list.Search.clear();
-
         list.ClickRow(0);
-
-        //list.Insert();
 
         var form = new TpequForm(Driver, FORM_MODE.EDIT);
 
@@ -49,24 +39,11 @@ public class FormOperationsTest : BaseSeleniumTest
         l = form.TpequKit.GetValue();
         Assert.That(l, Is.True);
 
-        //form.Cancel();
         form.TpequTpequcod.SetValue("08");
-        //form.IFF_TPEQU___FAMILFAMILY__.TypeText("Ferramentas");
-        //int ix = form.IFF_TPEQU___FAMILFAMILY__.GetRowByText("Ferramentas");
-        //form.FamilFamily.SetValue("Ferramentas");
-        //form.TPEQU___FAMILFAMILY__.Clear();
-
-        /*
-        //See more
-        form.TPEQU___FAMILFAMILY__.SeeMore();
-        var sml = form.TPEQU___FAMILFAMILY__SeeMorePage.List;
-        sml.Search.search("Ferramentas");
-        sml.ClickRow(0);
-        */
     }
 
     [Test]
-    public void FailedLoginShowsErrors()
+    public void ShowsUserAndPasswordRequiredErrors()
     {
         var a = new AppPage(Driver);
         a.ClickLogin();
@@ -79,6 +56,49 @@ public class FormOperationsTest : BaseSeleniumTest
 
         error = p.HasErrorMessage("user-error");
         Assert.That(error, Is.True);
+    }
+
+    [Test]
+    public void InvalidLoginAttemptShowsError()
+    {
+        var a = new AppPage(Driver);
+        a.ClickLogin();
+
+        var p = new LoginPage(Driver);
+        p.Login("xpto-user", "123456");
+
+        bool error = p.HasErrorMessage("error-message");
+        Assert.That(error, Is.True);
+    }
+
+    [Test]
+    public void FillingUserNameClearsError()
+    {
+        var a = new AppPage(Driver);
+        a.ClickLogin();
+
+        var p = new LoginPage(Driver);
+        p.Login("", "1234567");
+
+        p.FillUsername("my-user");
+
+        bool error = p.HasErrorMessage("user-error");
+        Assert.That(error, Is.False);
+    }
+
+    [Test]
+    public void FillingPasswordClearsError()
+    {
+        var a = new AppPage(Driver);
+        a.ClickLogin();
+
+        var p = new LoginPage(Driver);
+        p.Login("my-user", "");
+
+        p.FillPassword("1234567");
+
+        bool error = p.HasErrorMessage("error-message");
+        Assert.That(error, Is.False);
     }
 
     [Test]
@@ -118,7 +138,7 @@ public class FormOperationsTest : BaseSeleniumTest
     {
         var a = Authenticate();
 
-        //Not working correctly if we are already on that module, needs a data-key
+        // Not working correctly if we are already on that module, needs a data-key
         a.Menu.ActivateModule("STY");
         a.Menu.ActivateMenu("STY", "24");
 
@@ -138,7 +158,7 @@ public class FormOperationsTest : BaseSeleniumTest
     public void Tabs()
     {
         var a = Authenticate();
-		a.Menu.ActivateModule("STY");
+        a.Menu.ActivateModule("STY");
         a.Menu.ActivateMenu("STY", "26");
 
         var form = new ListacamForm(Driver, FORM_MODE.EDIT);
@@ -166,10 +186,10 @@ public class FormOperationsTest : BaseSeleniumTest
     [Test]
     public void Document()
     {
-        AppPage a = Authenticate();
+        AppPage app = Authenticate();
 
-        a.Menu.ActivateModule("GQT");
-        a.Menu.ActivateMenu("GQT", "93");
+        app.Menu.ActivateModule("GQT");
+        app.Menu.ActivateMenu("GQT", "93");
 
         ListControl list = new MenuListPage(Driver, "GQT", "931").List;
         list.ExecuteAction(0, CrudAction.Edit);
@@ -223,6 +243,52 @@ public class FormOperationsTest : BaseSeleniumTest
         fileName = form.AnexdDocument.GetFileName();
         Assert.That(fileName, Is.EqualTo(string.Empty));
     }
+    */
+
+    [Test]
+    public void ConditionsPerRow()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "27");
+
+        MenuListPage menu = new(Driver, "PTN", "271");
+        menu.List.ExecuteAction(0, CrudAction.Edit);
+
+        FldscondForm form = new(Driver, FORM_MODE.EDIT);
+
+        var list = form.PseudListtbl;
+        var grid = form.PseudGridtbl;
+        grid.SetCurrentRow(0);
+
+        // If there are no rows, or there's no empty one, inserts an empty record.
+        if (list.RowCount == 0 || !string.IsNullOrWhiteSpace(grid.FeecaFeedback.GetValue()))
+        {
+            list.Insert();
+            FeecaForm subForm = new(Driver, FORM_MODE.EDIT);
+            subForm.Save();
+        }
+
+        grid.SetCurrentRow(list.RowCount - 1);
+
+        // If the last row is empty, insert a non-empty record.
+        if (string.IsNullOrWhiteSpace(grid.FeecaFeedback.GetValue()))
+        {
+            list.Insert();
+            FeecaForm subForm = new(Driver, FORM_MODE.EDIT);
+            subForm.FeecaFeedback.SetValue("Testing!!");
+            subForm.Save();
+        }
+
+        // Check that an empty row has an action more than a filled one.
+        // Because of the show when condition by record.
+        Assert.That(list.GetActionCount(list.RowCount - 1), Is.EqualTo(5));
+        Assert.That(list.GetActionCount(0), Is.EqualTo(6));
+
+        string actionId = "BE_LISTBTN2";
+        Assert.That(!list.IsActionAvailable(list.RowCount - 1, actionId));
+        Assert.That(list.IsActionAvailable(0, actionId));
+    }
 
     [Test]
     public void BlockConditions()
@@ -242,32 +308,75 @@ public class FormOperationsTest : BaseSeleniumTest
         form.FldsTblcond.SetValue(false);
         form.FldsFormcond.SetValue(false);
 
-        Assert.That(!form.FldsFclient1.IsBlocked());
-        Assert.That(!form.FldsFclient2.IsBlocked());
-        Assert.That(!form.FldsFclient3.IsBlocked());
+        Assert.That(!form.FldsFclient1.IsBlocked);
+        Assert.That(!form.FldsFclient2.IsBlocked);
+        Assert.That(!form.FldsFclient3.IsBlocked);
 
         // Activate only the table conditions.
         radioGroup.SetValue("BLOCK");
         form.FldsTblcond.SetValue(true);
 
-        Assert.That(form.FldsFclient1.IsBlocked());
-        Assert.That(!form.FldsFclient2.IsBlocked());
-        Assert.That(form.FldsFclient3.IsBlocked());
+        Assert.That(form.FldsFclient1.IsBlocked);
+        Assert.That(!form.FldsFclient2.IsBlocked);
+        Assert.That(form.FldsFclient3.IsBlocked);
 
         // Activate only the form conditions.
         form.FldsTblcond.SetValue(false);
         form.FldsFormcond.SetValue(true);
 
-        Assert.That(!form.FldsFclient1.IsBlocked());
-        Assert.That(form.FldsFclient2.IsBlocked());
-        Assert.That(form.FldsFclient3.IsBlocked());
+        Assert.That(!form.FldsFclient1.IsBlocked);
+        Assert.That(form.FldsFclient2.IsBlocked);
+        Assert.That(form.FldsFclient3.IsBlocked);
 
         // Activate both table and form conditions.
         form.FldsTblcond.SetValue(true);
 
-        Assert.That(form.FldsFclient1.IsBlocked());
-        Assert.That(form.FldsFclient2.IsBlocked());
-        Assert.That(form.FldsFclient3.IsBlocked());
+        Assert.That(form.FldsFclient1.IsBlocked);
+        Assert.That(form.FldsFclient2.IsBlocked);
+        Assert.That(form.FldsFclient3.IsBlocked);
+    }
+
+    [Test]
+    public void Containers()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("GQT");
+        app.Menu.ActivateMenu("GQT", "27");
+
+        MenuListPage menu = new(Driver, "GQT", "271");
+        menu.List.ExecuteAction(0, CrudAction.Edit);
+
+        PessoForm supportForm = new(Driver, FORM_MODE.EDIT);
+
+        // Ensure internal is marked, so that we enter form PESSOSEP on row click.
+        if (!supportForm.PessoInterna.GetValue())
+        {
+            supportForm.PessoInterna.Toggle();
+            supportForm.Save();
+        }
+        else
+            supportForm.Cancel();
+
+        menu.List.ClickRow(0);
+        PessosepForm form = new(Driver, FORM_MODE.EDIT);
+
+        // Navigate to tab.
+        form.PseudPessos01.Activate();
+        // Open collapsible group.
+        form.Pessos01PseudNovogr05.Toggle();
+
+        Assert.That(form.PseudPessos01.IsOpen);
+        Assert.That(form.Pessos01PseudNovogr05.IsExpanded);
+
+        // Navigate to a different form.
+        form.Pessos01PseudEvolucao.Insert();
+        EvcatForm subForm = new(Driver, FORM_MODE.EDIT);
+        subForm.Cancel(true);
+
+        // When coming back, the previously selected tab/group should still be selected/expanded.
+        form = new(Driver, FORM_MODE.EDIT);
+        Assert.That(form.PseudPessos01.IsOpen);
+        Assert.That(form.Pessos01PseudNovogr05.IsExpanded);
     }
 
     [Test]
@@ -276,52 +385,376 @@ public class FormOperationsTest : BaseSeleniumTest
         AppPage app = Authenticate();
         app.Menu.ActivateModule("PTN");
         app.Menu.ActivateMenu("PTN", "27");
-        
+
         MenuListPage menu = new(Driver, "PTN", "271");
         menu.List.ExecuteAction(0, CrudAction.Edit);
-        
+
         FldscondForm form = new(Driver, FORM_MODE.EDIT);
         form.FldsFormcond.SetValue(false);
-        
+
         var grid = form.PseudGridtbl;
         grid.SetCurrentRow(0);
         grid.FeecaFeedback.SetValue("xpto");
         grid.SetInsertRow();
         grid.FeecaFeedback.SetValue("new record");
         grid.FeecaFeedback.Confirm();
-        
+
         int gridRows = grid.RowCount;
-        
-        // Navigate to another form.
-        form.PseudListtbl.ExecuteAction(0, CrudAction.Edit);
+
+        // Navigate to a different form.
+        form.PseudListtbl.Insert();
         FeecaForm subForm = new(Driver, FORM_MODE.EDIT);
-        subForm.Cancel();
-        
+        subForm.Cancel(true);
+
         form = new(Driver, FORM_MODE.EDIT);
         grid = form.PseudGridtbl;
-        
+
         // When coming back, the changed rows that weren't saved should still be there.
-        Assert.That(gridRows == grid.RowCount);
+        Assert.That(gridRows, Is.EqualTo(grid.RowCount));
     }
-    */
 
     [Test]
-    public void Grid()
+    public void CurrencyCellDecimalPlaces2()
     {
         AppPage app = Authenticate();
+
         app.Menu.ActivateModule("PTN");
-        app.Menu.ActivateMenu("PTN", "27");
-        
-        MenuListPage menu = new(Driver, "PTN", "271");
-        menu.List.ExecuteAction(0, CrudAction.Edit);
-        
-        FldscondForm form = new(Driver, FORM_MODE.EDIT);
-        
-        var grid = form.PseudGridtbl;
-        grid.SetCurrentRow(0);
-        grid.FeecaFeedback.SetValue("xpto");
-        grid.SetInsertRow();
-        grid.FeecaFeedback.SetValue("new record");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        string value = list.GetValue(0, "ValCurint");
+
+        string[] valueParts = value.Split('.');
+
+        int numDecimalPlaces = valueParts[1].Length;
+
+        Assert.That(numDecimalPlaces == 2);
+    }
+
+    [Test]
+    public void CurrencyCellDecimalPlaces4()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        string value = list.GetValue(0, "ValCurdec");
+
+        string[] valueParts = value.Split('.');
+
+        int numDecimalPlaces = valueParts[1].Length;
+
+        Assert.That(numDecimalPlaces == 4);
+    }
+
+    [Test]
+    public void AdvancedFilterText()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.AddAdvancedFilter("Text", FilterOperators.Text.Equal, "first");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValText").Equals("first"));
+    }
+
+    [Test]
+    public void AdvancedFilterInteger()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.AddAdvancedFilter("Numeric (Integer)", FilterOperators.Text.Equal, "30");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValNumint").Equals("30"));
+    }
+
+    [Test]
+    public void AdvancedFilterDecimal()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.AddAdvancedFilter("Numeric (Decimal)", FilterOperators.Text.Equal, "20.890");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValNumdec").Equals("20.890"));
+    }
+
+    [Test]
+    public void AdvancedFilterDate()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.AddAdvancedFilter("Date", FilterOperators.Text.Equal, "03/02/2023");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValDate").Equals("03/02/2023"));
+    }
+
+    [Test]
+    public void AdvancedFilterDateTime()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.AddAdvancedFilter("DateTime (Minutes)", FilterOperators.Text.Equal, "24/02/2023 15:13");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValDatetm").Equals("24/02/2023 15:13"));
+    }
+
+    [Test]
+    public void AdvancedFilterDateTimeSeconds()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.AddAdvancedFilter("DateTime (Seconds)", FilterOperators.Text.Equal, "24/02/2023 15:17:34");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValDatets").Equals("24/02/2023 15:17:34"));
+    }
+
+    [Test]
+    public void ColumnFilterText()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.FilterByColumn("ValText", FilterOperators.Text.Equal, "first");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValText").Equals("first"));
+    }
+
+    [Test]
+    public void ColumnFilterInteger()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.FilterByColumn("ValNumint", FilterOperators.Number.Equal, "30");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValNumint"), Is.EqualTo("30"));
+    }
+
+    [Test]
+    public void ColumnFilterDecimal()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.FilterByColumn("ValNumdec", FilterOperators.Number.Equal, "20.890");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValNumdec"), Is.EqualTo("20.890"));
+    }
+
+    [Test]
+    public void ColumnFilterDate()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.FilterByColumn("ValDate", FilterOperators.Date.Equal, "03/02/2023");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValDate").Equals("03/02/2023"));
+    }
+
+    [Test]
+    public void ColumnFilterDateTime()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.FilterByColumn("ValDatetm", FilterOperators.Date.Equal, "24/02/2023 15:13");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValDatetm").Equals("24/02/2023 15:13"));
+    }
+
+    [Test]
+    public void ColumnFilterDateTimeSeconds()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.FilterByColumn("ValDatets", FilterOperators.Date.Equal, "24/02/2023 15:17:34");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValDatets").Equals("24/02/2023 15:17:34"));
+    }
+
+    [Test]
+    public void SearchBarFilterText()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.Search.Search("first", "TEXT");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValText").Equals("first"));
+    }
+
+    [Test]
+    public void SearchBarFilterInteger()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.Search.Search("50", "NUMINT");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValNumint").Equals("50"));
+    }
+
+    [Test]
+    public void SearchBarFilterDecimal()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.Search.Search("12.058", "NUMDEC");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValNumdec").Equals("12.058"));
+    }
+
+    [Test]
+    public void SearchBarFilterDate()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.Search.Search("03/02/2023", "DATE");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValDate").Equals("03/02/2023"));
+    }
+
+    [Test]
+    public void SearchBarFilterDateTime()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.Search.Search("24/02/2023 15:13", "DATETM");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValDatetm").Equals("24/02/2023 15:13"));
+    }
+
+    [Test]
+    public void SearchBarFilterDateTimeSeconds()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.Search.Search("24/02/2023 15:14:47", "DATETS");
+
+        Assert.That(list.RowCount == 1);
+        Assert.That(list.GetValue(0, "ValDatets").Equals("24/02/2023 15:14:47"));
+    }
+
+    [Test]
+    public void SearchBarFilterTime()
+    {
+        AppPage app = Authenticate();
+
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "313");
+
+        var list = new MenuListPage(Driver, "PTN", "3131").List;
+
+        list.Search.Search("00:00", "TIMEHM");
+
+        Assert.That(list.RowCount == 3);
+        Assert.That(list.GetValue(0, "ValTimehm").Equals("00:00"));
+        Assert.That(list.GetValue(1, "ValTimehm").Equals("00:00"));
+        Assert.That(list.GetValue(2, "ValTimehm").Equals("00:00"));
     }
 
     private TableConfigurationPage GetTableConfigPage()
@@ -427,5 +860,126 @@ public class FormOperationsTest : BaseSeleniumTest
     public void ReorderMenuListColumnByButtonUp_1()
     {
         ReorderMenuListColumnUpOrDown("GQT", "11", "111", 1, false);
+    }
+
+    /*
+    [Test]
+    public void MenuButtons()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "36");
+
+        MenuListPage menu = new(Driver, "PTN", "361");
+
+        var actionId = "MB_3611";
+
+        // Checks to see if the MB exists
+        Assert.That(menu.List.IsActionAvailable(0, actionId));
+
+        menu.List.ExecuteAction(0, actionId);
+
+        DespeForm form = new(Driver, FORM_MODE.SHOW);
+
+        // Checks that the form mode is the one set for the MB
+        Assert.That(form.ValidateFormMode());
+    }
+    */
+
+    [Test]
+    public void MenuColumnShowWhen()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "317");
+
+        // List PTN3161 has a true show-when condition on the first column and a false condition on the last column
+        var list = new MenuListPage(Driver, "PTN", "3171").List;
+        string firstCol = list.GetColumnNameByIndex(0);
+        string lastCol = list.GetColumnNameByIndex(2);
+
+        Assert.That(firstCol.Equals("Equip.ValRegistnr"));
+        Assert.That(lastCol, Is.Null);
+
+        // False show-when conditions should also hide the column from the configuration
+        list.OpenColumnConfig();
+
+        var columnConfig = GetTableConfigPage().columnConfigList;
+
+        Assert.That(columnConfig.RowCount.Equals(2));
+        // first column has a true show-when condition
+        Assert.That(columnConfig.GetValue(0, "name").Equals("No. register"));
+        // last column (3rd) has a false show-when condition, so it shouldn't appear in the config
+        Assert.That(columnConfig.GetValue(2, "name"), Is.Null);
+    }
+
+    [Test]
+    public void DashboardMenuWidget()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("GQT");
+        app.Menu.ActivateMenu("GQT", "C");
+
+        var dashboard = new MenuDashboardPage<GQT_TESTDSDashboard>(Driver, "GQT", "TESTDS").Dashboard;
+
+        // Two shortcuts, one alert and all bookmarks
+        Assert.That(dashboard.VisibleWidgetCount, Is.EqualTo(3 + app.Menu.GetBookmarkCount()));
+
+        //LENDINGS widget
+        var lendingsWidget = dashboard.ALL_LENDINGS;
+        Assert.That(lendingsWidget.IsVisible, Is.True);
+        Assert.That(lendingsWidget.GetTitle(), Is.EqualTo("All Lendings"));
+        Assert.That(lendingsWidget.GetGroupTitle(), Is.EqualTo("Lendings".ToUpperInvariant()));
+
+        // Execute menu action (GQT-111)
+        lendingsWidget.ExecuteAction();
+        Assert.That(app.ValidateMenuNavigation("GQT", "111"), Is.True);
+    }
+
+    [Test]
+    public void DashboardAlertWidget()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("GQT");
+        app.Menu.ActivateMenu("GQT", "C");
+
+        var dashboard = new MenuDashboardPage<GQT_TESTDSDashboard>(Driver, "GQT", "TESTDS").Dashboard;
+
+        var alertWidget = dashboard.ALERT;
+        //ALERT widget
+        Assert.That(alertWidget.IsVisible, Is.True);
+        Assert.That(alertWidget.GetTitle(), Is.EqualTo("Unused items"));
+        Assert.That(alertWidget.GetGroupTitle(), Is.EqualTo("Items".ToUpperInvariant()));
+
+        int alertCount = alertWidget.GetCount();
+
+        // Execute alert action (GQT-4A1)
+        alertWidget.ExecuteAction();
+        Assert.That(app.ValidateMenuNavigation("GQT", "UNUSED_ITEMS"), Is.True);
+
+        // The count on the alert should be the number of valid records in GQT-4A1
+        var list = new MenuListPage(Driver, "GQT", "UNUSED_ITEMS").List;
+        Assert.That(list.TotalRecordCount, Is.EqualTo(alertCount));
+    }
+
+    [Test]
+    public void DashboardFavouritesWidget()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("GQT");
+        app.Menu.ActivateMenu("GQT", "C");
+
+        var dashboard = new MenuDashboardPage<GQT_TESTDSDashboard>(Driver, "GQT", "TESTDS").Dashboard;
+
+        var favorites = dashboard.FAVORITES;
+
+        // All bookmarks should be in the dashboard as widgets
+        Assert.That(favorites.Widgets.Count, Is.EqualTo(app.Menu.GetBookmarkCount()));
+
+        // Favorite widgets work as menu widgets - navigate to bookmarked menu or form (STY-Overview-Accordions)
+        var accordionsWidget = favorites.GetBookmarkWidget("Accordions");
+        accordionsWidget.ExecuteAction();
+        var accordionsForm = new AccordiForm(Driver, FORM_MODE.SHOW);
+        Assert.That(accordionsForm.ValidateFormMode(), Is.True);
     }
 }

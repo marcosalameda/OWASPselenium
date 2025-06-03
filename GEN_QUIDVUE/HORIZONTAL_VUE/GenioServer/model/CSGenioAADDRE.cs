@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAaddre(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR ADDRE]/
 		}
 
@@ -46,20 +44,18 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codaddre", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codaddre", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addressuse", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "addressuse", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Address Use";
 			Qfield.FieldSize =  7;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ADDRESS_USE16014";
 
@@ -69,10 +65,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addresstype", FieldType.ARRAY_COD_TEXTO);
+			Qfield = new Field(info.Alias, "addresstype", FieldType.ARRAY_TEXT);
 			Qfield.FieldDescription = "Address Type";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ADDRESS_TYPE12455";
 
@@ -82,10 +77,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addresstext", FieldType.MEMO);
+			Qfield = new Field(info.Alias, "addresstext", FieldType.MEMO);
 			Qfield.FieldDescription = "Entire address";
 			Qfield.FieldSize =  85;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.Decimals = 10;
 			Qfield.CavDesignation = "ENTIRE_ADDRESS64248";
@@ -94,10 +88,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addresscity", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addresscity", FieldType.TEXT);
 			Qfield.FieldDescription = "Address City";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ADDRESS_CITY41109";
 
@@ -105,10 +98,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addressdistrict", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addressdistrict", FieldType.TEXT);
 			Qfield.FieldDescription = "Address District";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ADDRESS_DISTRICT48524";
 
@@ -116,10 +108,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addressstate", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addressstate", FieldType.TEXT);
 			Qfield.FieldDescription = "Address State";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ADDRESS_STATE16863";
 
@@ -127,10 +118,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addresspostalcode", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addresspostalcode", FieldType.TEXT);
 			Qfield.FieldDescription = "Address Postal Code";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ADDRESS_POSTAL_CODE41631";
 
@@ -138,10 +128,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("addresscountry", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "addresscountry", FieldType.TEXT);
 			Qfield.FieldDescription = "Address Country";
 			Qfield.FieldSize =  50;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "ADDRESS_COUNTRY56159";
 
@@ -149,10 +138,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("periodstart", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "periodstart", FieldType.DATETIME);
 			Qfield.FieldDescription = "Period Start";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PERIOD_START07901";
 
@@ -160,10 +148,9 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("periodend", FieldType.DATAHORA);
+			Qfield = new Field(info.Alias, "periodend", FieldType.DATETIME);
 			Qfield.FieldDescription = "Period End";
 			Qfield.FieldSize =  16;
-			Qfield.Alias = info.Alias;
 			Qfield.MQueue = false;
 			Qfield.CavDesignation = "PERIOD_END31576";
 
@@ -171,9 +158,8 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -225,7 +211,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"addressuse"},new int[] {0},"addre","codaddre"));
 			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 1, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return GlobalFunctions.emptyC(((string)args[0]))==0;
+				return GenFunctions.emptyC(((string)args[0]))==0;
 			});
 			writeCondition.ErrorWarning = "Filling in this field should not be safely ignored as it may lead to misinterpretation of the information contained in the record.";
             writeCondition.Type =  ConditionType.WARNING;
@@ -240,7 +226,7 @@ namespace CSGenio.business
 			argumentsListByArea= new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"periodstart","periodend","periodstart","periodend"},new int[] {0,1,2,3},"addre","codaddre"));
 			ConditionFormula writeCondition = new ConditionFormula(argumentsListByArea, 4, delegate(object []args,User user,string module,PersistentSupport sp) {
-				return GlobalFunctions.emptyD(((DateTime)args[0]))==1||GlobalFunctions.emptyD(((DateTime)args[1]))==1||GlobalFunctions.CompareDates(((DateTime)args[2]),((DateTime)args[3]))<=0;
+				return GenFunctions.emptyD(((DateTime)args[0]))==1||GenFunctions.emptyD(((DateTime)args[1]))==1||GenFunctions.CompareDates(((DateTime)args[2]),((DateTime)args[3]))<=0;
 			});
 			writeCondition.ErrorWarning = "If present, Start SHALL have a lower value than End";
             writeCondition.Type =  ConditionType.ERROR;
@@ -273,8 +259,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Address";
 			info.AreaPluralDesignation="Addresses";
 			info.DescriptionCav="ADDRESS04342";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

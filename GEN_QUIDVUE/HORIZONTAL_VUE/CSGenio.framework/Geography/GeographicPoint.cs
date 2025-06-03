@@ -17,5 +17,10 @@ namespace CSGenio.framework.Geography
 		public double lat { get; set; }
 
 		public double lng { get; set; }
+
+		public override string ToString()
+		{
+			return $"POINT({lng} {lat})";
+		}
 	}
 }

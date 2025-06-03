@@ -10,17 +10,17 @@ public class Propr02Form : Subform
 	/// <summary>
 	/// Bathroom
 	/// </summary>
-	public BaseInputControl ProprQtd_wc => new BaseInputControl(driver, ContainerLocator, "#PROPR02_PROPRQTD_WC__");
+	public BaseInputControl ProprQtd_wc => new BaseInputControl(driver, ContainerLocator, "container-PROPR02_PROPRQTD_WC__", "#PROPR02_PROPRQTD_WC__");
 
 	/// <summary>
 	/// Quartos
 	/// </summary>
-	public BaseInputControl ProprQtdquart => new BaseInputControl(driver, ContainerLocator, "#PROPR02_PROPRQTDQUART");
+	public BaseInputControl ProprQtdquart => new BaseInputControl(driver, ContainerLocator, "container-PROPR02_PROPRQTDQUART", "#PROPR02_PROPRQTDQUART");
 
 	/// <summary>
 	/// Square meters
 	/// </summary>
-	public BaseInputControl ProprM2 => new BaseInputControl(driver, ContainerLocator, "#PROPR02_PROPRM2______");
+	public BaseInputControl ProprM2 => new BaseInputControl(driver, ContainerLocator, "container-PROPR02_PROPRM2______", "#PROPR02_PROPRM2______");
 
 	/// <summary>
 	/// Available from

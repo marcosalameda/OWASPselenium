@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Expen;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER EXPEN]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class ExpenController : ControllerBase
 	{
-		public ExpenController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public ExpenController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION EXPEN]/
 
 
@@ -464,7 +473,6 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER EXPEN]/
 
-
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
 		{
@@ -477,13 +485,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Expen row = null;
-
-			if (row == null)
-			{
-				row = new Models.Expen(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("expen");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Expen row = new Models.Expen(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("expen");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -496,8 +505,7 @@ namespace GenioMVC.Controllers
 				{
 					case "DESPE___PROJEPROJECTO":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Despe_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Despe_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Despe___projeprojecto(qs);
 							result = model.TableProjeProjecto;
@@ -505,8 +513,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "DESPE___YEAR_YEAR____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Despe_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Despe_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Despe___year_year____(qs);
 							result = model.TableYearYear;
@@ -514,8 +521,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "DESPE___AGREGVALUE___":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Despe_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Despe_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Despe___agregvalue___(qs);
 							result = model.TableAgregValue;
@@ -586,6 +592,9 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
+
 
 
 		/// <summary>

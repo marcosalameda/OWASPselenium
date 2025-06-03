@@ -1,13 +1,21 @@
-﻿using CSGenio.framework;
-using Microsoft.AspNetCore.Antiforgery;
+﻿using Microsoft.AspNetCore.Antiforgery;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+
+using CSGenio.core.logger;
+using CSGenio.framework;
 
 namespace GenioMVC.Controllers
 {
 	public class ConfigController : ControllerExtension
 	{
-		public ConfigController(UserContextService userContextService) : base(userContextService) { }
+		private readonly bool enableOtlpTracing;
+		public ConfigController(UserContextService userContextService, IConfiguration config) : base(userContextService)
+		{
+			IConfigurationSection telemetryConfig = config.GetSection("TelemetryConfig");
+			if (telemetryConfig?.Exists() ?? false)
+				enableOtlpTracing = telemetryConfig.Get<TelemetryConfiguration>().EnableTracing;
+		}
 
 		private object getConfig()
 		{
@@ -93,7 +101,8 @@ namespace GenioMVC.Controllers
 				homePages = homePages.GetAvaibleHomePages(availableModules.Keys.ToList()),
 				hasPasswordRecovery,
 				hasUsernameAuth,
-				eventTracking = Configuration.EventTracking
+				eventTracking = Configuration.EventTracking,
+				enableTracing = enableOtlpTracing
 			};
 			return conf;
 		}

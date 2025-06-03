@@ -22,7 +22,6 @@ namespace CSGenio.business
 
 		public CSGenioAdelega(User user,string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
 		}
@@ -36,7 +35,7 @@ namespace CSGenio.business
 			AreaInfo info = new AreaInfo();
 			
 			/*Information das areas*/
-			info.TableName = "GQTdelega";
+			info.TableName = "gqtdelega";
 			info.ShadowTabName = "";
 			info.PrimaryKeyName = "coddelega";
             info.HumanKeyName = "coddelega";
@@ -55,33 +54,19 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-      info.RegisterFieldDB(new Field("coddelega", FieldType.CHAVE_PRIMARIA_GUID));
-	  info.DBFields["coddelega"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("codpswup", FieldType.CHAVE_ESTRANGEIRA_GUID));
-      info.RegisterFieldDB(new Field("codpswdw", FieldType.CHAVE_ESTRANGEIRA_GUID));
-	  info.KeyType = CodeType.GUID_KEY;
-	  info.DBFields["codpswup"].Alias = info.Alias;
-	  info.DBFields["codpswdw"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("dateini", FieldType.DATA));
-	  info.DBFields["dateini"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("dateend", FieldType.DATA));
-	  info.DBFields["dateend"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("message", FieldType.TEXTO));
-	  info.DBFields["message"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("revoked", FieldType.LOGICO));
-	  info.DBFields["revoked"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("auditusr", FieldType.TEXTO));
-	  info.DBFields["auditusr"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("opercria", FieldType.TEXTO));
-	  info.DBFields["opercria"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("datacria", FieldType.DATA));
-	  info.DBFields["datacria"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("opermuda", FieldType.TEXTO));
-	  info.DBFields["opermuda"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("datamuda", FieldType.DATA));
-	  info.DBFields["datamuda"].Alias = info.Alias;
-      info.RegisterFieldDB(new Field("zzstate", FieldType.INTEIRO));
-	  info.DBFields["zzstate"].Alias = info.Alias;
+      info.RegisterFieldDB(new Field(info.Alias, "coddelega", FieldType.KEY_GUID));
+      info.RegisterFieldDB(new Field(info.Alias, "codpswup", FieldType.KEY_GUID));
+      info.RegisterFieldDB(new Field(info.Alias, "codpswdw", FieldType.KEY_GUID));
+      info.RegisterFieldDB(new Field(info.Alias, "dateini", FieldType.DATE));
+      info.RegisterFieldDB(new Field(info.Alias, "dateend", FieldType.DATE));
+      info.RegisterFieldDB(new Field(info.Alias, "message", FieldType.TEXT));
+      info.RegisterFieldDB(new Field(info.Alias, "revoked", FieldType.LOGIC));
+      info.RegisterFieldDB(new Field(info.Alias, "auditusr", FieldType.TEXT));
+      info.RegisterFieldDB(new Field(info.Alias, "opercria", FieldType.TEXT));
+      info.RegisterFieldDB(new Field(info.Alias, "datacria", FieldType.DATE));
+      info.RegisterFieldDB(new Field(info.Alias, "opermuda", FieldType.TEXT));
+      info.RegisterFieldDB(new Field(info.Alias, "datamuda", FieldType.DATE));
+      info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
 			// Relações Filhas
 			//------------------------------

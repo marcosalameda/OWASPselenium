@@ -38,20 +38,21 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Regio.ValCodcntry")]
 		public string ValCodcntry { get { return klass.ValCodcntry; } set { klass.ValCodcntry = value; } }
+
 		private Cntry _cntry;
 		[DisplayName("Cntry")]
 		[ShouldSerialize("Cntry")]
-		public virtual Cntry Cntry {
-			get {
-				if (!this.isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
+		public virtual Cntry Cntry
+		{
+			get
+			{
+				if (!isEmptyModel && (_cntry == null || (!string.IsNullOrEmpty(ValCodcntry) && (_cntry.isEmptyModel || _cntry.klass.QPrimaryKey != ValCodcntry))))
 					_cntry = Models.Cntry.Find(ValCodcntry, m_userContext, Identifier, _fieldsToSerialize);
-				if (_cntry == null)
-					_cntry = new Models.Cntry(m_userContext, true, _fieldsToSerialize);
+				_cntry ??= new Models.Cntry(m_userContext, true, _fieldsToSerialize);
 				return _cntry;
 			}
 			set { _cntry = value; }
 		}
-
 
 		[DisplayName("Region")]
 		/// <summary>Field : "Region" Tipo: "C" Formula:  ""</summary>
@@ -62,25 +63,26 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Regio.ValCodpais1")]
 		public string ValCodpais1 { get { return klass.ValCodpais1; } set { klass.ValCodpais1 = value; } }
+
 		private Pais1 _pais1;
 		[DisplayName("Pais1")]
 		[ShouldSerialize("Pais1")]
-		public virtual Pais1 Pais1 {
-			get {
-				if (!this.isEmptyModel && (_pais1 == null || (!string.IsNullOrEmpty(ValCodpais1) && (_pais1.isEmptyModel || _pais1.klass.QPrimaryKey != ValCodpais1))))
+		public virtual Pais1 Pais1
+		{
+			get
+			{
+				if (!isEmptyModel && (_pais1 == null || (!string.IsNullOrEmpty(ValCodpais1) && (_pais1.isEmptyModel || _pais1.klass.QPrimaryKey != ValCodpais1))))
 					_pais1 = Models.Pais1.Find(ValCodpais1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pais1 == null)
-					_pais1 = new Models.Pais1(m_userContext, true, _fieldsToSerialize);
+				_pais1 ??= new Models.Pais1(m_userContext, true, _fieldsToSerialize);
 				return _pais1;
 			}
 			set { _pais1 = value; }
 		}
 
-
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Regio.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Regio(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -99,7 +101,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAregio csgenioa)
 		{
 			if (csgenioa == null)
@@ -110,13 +111,11 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "cntry":
-						if (_cntry == null)
-							_cntry = new Cntry(m_userContext, true, _fieldsToSerialize);
+						_cntry ??= new Cntry(m_userContext, true, _fieldsToSerialize);
 						_cntry.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "pais1":
-						if (_pais1 == null)
-							_pais1 = new Pais1(m_userContext, true, _fieldsToSerialize);
+						_pais1 ??= new Pais1(m_userContext, true, _fieldsToSerialize);
 						_pais1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

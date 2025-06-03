@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Feeca
 {
-	public class TBS_Menu_1931_ViewModel : ListViewModel
+	public class TBS_Menu_1931_ViewModel : MenuListViewModel<Models.Feeca>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<TBS_Menu_1931_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "feeca"; }
+		[JsonIgnore]
+		public override string TableAlias => "feeca";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "bcd28de4-9e50-4d1a-92e0-3c661c0ab999"; }
+		public override string Uuid => "bcd28de4-9e50-4d1a-92e0-3c661c0ab999";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodfeeca { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Feeca
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL TBS LIST_LIMITS 1931]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,35 @@ namespace GenioMVC.ViewModels.Feeca
 			var areaBase = CSGenio.business.Area.createArea("feeca", user, "TBS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet tbs_menu_1931Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML1931");
-			tbs_menu_1931Conds.Equal(CSGenioAfeeca.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML1931");
+			conditions.Equal(CSGenioAfeeca.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL TBS OVERRQ 1931]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAfeeca.FldCodfeeca, CSGenioAfeeca.FldZzstate, CSGenioAfeeca.FldCodflds, CSGenioAflds.FldCodflds, CSGenioAflds.FldDescrip, CSGenioAfeeca.FldFeedback, CSGenioAflds.FldAttach };
 
-			ListingMVC<CSGenioAfeeca> listing = new ListingMVC<CSGenioAfeeca>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(tbs_menu_1931Conds, listing);
+			ListingMVC<CSGenioAfeeca> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public TBS_Menu_1931_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TBS_Menu_1931_ViewModel" /> class.
@@ -102,14 +133,24 @@ namespace GenioMVC.ViewModels.Feeca
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TBS_Menu_1931_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public TBS_Menu_1931_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
 				new Exports.QColumn(CSGenioAflds.FldDescrip, FieldType.MEMO, Resources.Resources.DESCRICAO51618, 30, 0, true),
-				new Exports.QColumn(CSGenioAfeeca.FldFeedback, FieldType.TEXTO, Resources.Resources.FEEDBACK52855, 30, 0, true),
-				new Exports.QColumn(CSGenioAflds.FldAttach, FieldType.FICHEIRO_BD, Resources.Resources.ANEXOS65235, 30, 0, true),
+				new Exports.QColumn(CSGenioAfeeca.FldFeedback, FieldType.TEXT, Resources.Resources.FEEDBACK52855, 30, 0, true),
+				new Exports.QColumn(CSGenioAflds.FldAttach, FieldType.DOCUMENT, Resources.Resources.ANEXOS65235, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -158,13 +199,10 @@ namespace GenioMVC.ViewModels.Feeca
 
 			if (Menu == null)
 				Menu = new TablePartial<TBS_Menu_1931_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("FEECA.FEEDBACK", new OrderedDictionary());
-			allSortOrders["FEECA.FEEDBACK"].Add("FEECA.FEEDBACK", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -177,8 +215,7 @@ namespace GenioMVC.ViewModels.Feeca
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -275,23 +312,22 @@ namespace GenioMVC.ViewModels.Feeca
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAfeeca> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "1931"),
 				new("Module", "TBS")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<TBS_Menu_1931_RowViewModel>();
 
 				CriteriaSet tbs_menu_1931Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("FEECA.FEEDBACK", new OrderedDictionary());
 				allSortOrders["FEECA.FEEDBACK"].Add("FEECA.FEEDBACK", "A");
-
 
 
 
@@ -323,26 +359,24 @@ namespace GenioMVC.ViewModels.Feeca
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("flds", "descrip");
+					firstVisibleColumn ??= new FieldRef("flds", "descrip");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAfeeca model_limit_area = new CSGenioAfeeca(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML1931");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAfeeca model_limit_area = new CSGenioAfeeca(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML1931");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -353,6 +387,8 @@ namespace GenioMVC.ViewModels.Feeca
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL TBS OVERRQ 1931]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -381,7 +417,7 @@ namespace GenioMVC.ViewModels.Feeca
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfeeca> listing = Models.ModelBase.Where<CSGenioAfeeca>(m_userContext, false, tbs_menu_1931Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1931", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfeeca> listing = Models.ModelBase.Where<CSGenioAfeeca>(m_userContext, distinct, tbs_menu_1931Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML1931", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -389,7 +425,6 @@ namespace GenioMVC.ViewModels.Feeca
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -411,18 +446,12 @@ namespace GenioMVC.ViewModels.Feeca
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -430,7 +459,7 @@ namespace GenioMVC.ViewModels.Feeca
 
 		private List<TBS_Menu_1931_RowViewModel> MapTBS_Menu_1931(ListingMVC<CSGenioAfeeca> Qlisting)
 		{
-			var Elements = new List<TBS_Menu_1931_RowViewModel>();
+			List<TBS_Menu_1931_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -447,7 +476,6 @@ namespace GenioMVC.ViewModels.Feeca
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAfeeca row
 		/// to a TBS_Menu_1931_RowViewModel object.
@@ -456,7 +484,9 @@ namespace GenioMVC.ViewModels.Feeca
 		private TBS_Menu_1931_RowViewModel MapTBS_Menu_1931(CSGenioAfeeca row)
 		{
 			var model = new TBS_Menu_1931_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -470,32 +500,9 @@ namespace GenioMVC.ViewModels.Feeca
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(TBS_Menu_1931_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -509,11 +516,10 @@ namespace GenioMVC.ViewModels.Feeca
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAfeeca> listing)
 		{
 			if (listing.Rows == null)
@@ -522,8 +528,9 @@ namespace GenioMVC.ViewModels.Feeca
 			foreach (CSGenioAfeeca row in listing.Rows)
 			{
 				{
-					if (!string.IsNullOrEmpty((string)row.returnValueField("flds.attachfk"))){
-						ResourceQuery resource = new ResourceQuery("Flds", "ValAttach", "ValAttachfk", row.ValCodflds);
+					if (!string.IsNullOrEmpty((string)row.returnValueField("flds.attachfk")))
+					{
+						ResourceQuery resource = new("Flds", "ValAttach", "ValAttachfk", row.ValCodflds);
 						string ticket = QResources.CreateTicketEncryptedBase64(m_userContext.User.Name, m_userContext.User.Location, resource);
 
 						row.insertNameValueField("flds.attach", Newtonsoft.Json.JsonConvert.SerializeObject(new
@@ -538,23 +545,36 @@ namespace GenioMVC.ViewModels.Feeca
 			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Feeca m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Feeca m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM TBS_MENU_1931]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Feeca", "Feeca.ValCodfeeca", "Feeca.ValZzstate", "Flds", "Flds.ValDescrip", "Feeca.ValFeedback", "Flds.ValAttach", "Feeca.ValCodflds", "BtnPermission"
+			"Feeca", "Feeca.ValCodfeeca", "Feeca.ValZzstate", "Flds", "Flds.ValDescrip", "Feeca.ValFeedback", "Flds.ValAttach", "Feeca.ValCodflds"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("Flds_ValDescrip", CSGenioAflds.FldDescrip, typeof(string)),
 			new TableSearchColumn("ValFeedback", CSGenioAfeeca.FldFeedback, typeof(string), defaultSearch : true),
-			new TableSearchColumn("Flds_ValAttach", CSGenioAflds.FldAttach, typeof(string))
+			new TableSearchColumn("Flds_ValAttach", CSGenioAflds.FldAttach, typeof(string)),
 		];
-
-
-
 	}
 }

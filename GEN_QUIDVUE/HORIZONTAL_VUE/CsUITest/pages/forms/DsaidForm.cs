@@ -16,7 +16,7 @@ public class DsaidForm : Form
 	/// <summary>
 	/// No:
 	/// </summary>
-	public BaseInputControl OutptDocumenr => new BaseInputControl(driver, ContainerLocator, "#DSAID___OUTPTDOCUMENR");
+	public BaseInputControl OutptDocumenr => new BaseInputControl(driver, ContainerLocator, "container-DSAID___OUTPTDOCUMENR", "#DSAID___OUTPTDOCUMENR");
 
 	/// <summary>
 	/// Date:

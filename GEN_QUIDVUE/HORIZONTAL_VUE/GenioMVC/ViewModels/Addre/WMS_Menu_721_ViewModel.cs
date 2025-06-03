@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Addre
 {
-	public class WMS_Menu_721_ViewModel : ListViewModel
+	public class WMS_Menu_721_ViewModel : MenuListViewModel<Models.Addre>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<WMS_Menu_721_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "addre"; }
+		[JsonIgnore]
+		public override string TableAlias => "addre";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "effd297d-4589-4a9c-b1c1-d836902892b1"; }
+		public override string Uuid => "effd297d-4589-4a9c-b1c1-d836902892b1";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodaddre { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Addre
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS 721]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,34 @@ namespace GenioMVC.ViewModels.Addre
 			var areaBase = CSGenio.business.Area.createArea("addre", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_721Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML721");
-			wms_menu_721Conds.Equal(CSGenioAaddre.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML721");
+			conditions.Equal(CSGenioAaddre.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL WMS OVERRQ 721]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAaddre.FldCodaddre, CSGenioAaddre.FldZzstate, CSGenioAaddre.FldAddressuse, CSGenioAaddre.FldAddresstype, CSGenioAaddre.FldAddresstext, CSGenioAaddre.FldAddresscity, CSGenioAaddre.FldAddressdistrict, CSGenioAaddre.FldAddressstate, CSGenioAaddre.FldAddresspostalcode, CSGenioAaddre.FldAddresscountry, CSGenioAaddre.FldPeriodstart, CSGenioAaddre.FldPeriodend };
 
-			ListingMVC<CSGenioAaddre> listing = new ListingMVC<CSGenioAaddre>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_721Conds, listing);
+			ListingMVC<CSGenioAaddre> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public WMS_Menu_721_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WMS_Menu_721_ViewModel" /> class.
@@ -102,21 +132,31 @@ namespace GenioMVC.ViewModels.Addre
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WMS_Menu_721_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public WMS_Menu_721_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAaddre.FldAddressuse, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ADDRESS_USE16014, 7, 0, true, "AddressU"),
-				new Exports.QColumn(CSGenioAaddre.FldAddresstype, FieldType.ARRAY_COD_TEXTO, Resources.Resources.ADDRESS_TYPE12455, 8, 0, true, "AddressT"),
+				new Exports.QColumn(CSGenioAaddre.FldAddressuse, FieldType.ARRAY_TEXT, Resources.Resources.ADDRESS_USE16014, 7, 0, true, "AddressU"),
+				new Exports.QColumn(CSGenioAaddre.FldAddresstype, FieldType.ARRAY_TEXT, Resources.Resources.ADDRESS_TYPE12455, 8, 0, true, "AddressT"),
 				new Exports.QColumn(CSGenioAaddre.FldAddresstext, FieldType.MEMO, Resources.Resources.ENTIRE_ADDRESS64248, 30, 10, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddresscity, FieldType.TEXTO, Resources.Resources.ADDRESS_CITY41109, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddressdistrict, FieldType.TEXTO, Resources.Resources.ADDRESS_DISTRICT48524, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddressstate, FieldType.TEXTO, Resources.Resources.ADDRESS_STATE16863, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddresspostalcode, FieldType.TEXTO, Resources.Resources.ADDRESS_POSTAL_CODE41631, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldAddresscountry, FieldType.TEXTO, Resources.Resources.ADDRESS_COUNTRY56159, 30, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldPeriodstart, FieldType.DATAHORA, Resources.Resources.PERIOD_START07901, 16, 0, true),
-				new Exports.QColumn(CSGenioAaddre.FldPeriodend, FieldType.DATAHORA, Resources.Resources.PERIOD_END31576, 16, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddresscity, FieldType.TEXT, Resources.Resources.ADDRESS_CITY41109, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddressdistrict, FieldType.TEXT, Resources.Resources.ADDRESS_DISTRICT48524, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddressstate, FieldType.TEXT, Resources.Resources.ADDRESS_STATE16863, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddresspostalcode, FieldType.TEXT, Resources.Resources.ADDRESS_POSTAL_CODE41631, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldAddresscountry, FieldType.TEXT, Resources.Resources.ADDRESS_COUNTRY56159, 30, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldPeriodstart, FieldType.DATETIME, Resources.Resources.PERIOD_START07901, 16, 0, true),
+				new Exports.QColumn(CSGenioAaddre.FldPeriodend, FieldType.DATETIME, Resources.Resources.PERIOD_END31576, 16, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -165,13 +205,10 @@ namespace GenioMVC.ViewModels.Addre
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_721_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ADDRE.ADDRESSCITY", new OrderedDictionary());
-			allSortOrders["ADDRE.ADDRESSCITY"].Add("ADDRE.ADDRESSCITY", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -184,8 +221,7 @@ namespace GenioMVC.ViewModels.Addre
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -282,23 +318,22 @@ namespace GenioMVC.ViewModels.Addre
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAaddre> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "721"),
 				new("Module", "WMS")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_721_RowViewModel>();
 
 				CriteriaSet wms_menu_721Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("ADDRE.ADDRESSCITY", new OrderedDictionary());
 				allSortOrders["ADDRE.ADDRESSCITY"].Add("ADDRE.ADDRESSCITY", "A");
-
 
 
 
@@ -330,26 +365,24 @@ namespace GenioMVC.ViewModels.Addre
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("addre", "addressuse");
+					firstVisibleColumn ??= new FieldRef("addre", "addressuse");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAaddre model_limit_area = new CSGenioAaddre(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML721");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAaddre model_limit_area = new CSGenioAaddre(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML721");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -360,6 +393,8 @@ namespace GenioMVC.ViewModels.Addre
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL WMS OVERRQ 721]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -388,7 +423,7 @@ namespace GenioMVC.ViewModels.Addre
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAaddre> listing = Models.ModelBase.Where<CSGenioAaddre>(m_userContext, false, wms_menu_721Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML721", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAaddre> listing = Models.ModelBase.Where<CSGenioAaddre>(m_userContext, distinct, wms_menu_721Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML721", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -396,7 +431,6 @@ namespace GenioMVC.ViewModels.Addre
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -418,18 +452,12 @@ namespace GenioMVC.ViewModels.Addre
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -437,7 +465,7 @@ namespace GenioMVC.ViewModels.Addre
 
 		private List<WMS_Menu_721_RowViewModel> MapWMS_Menu_721(ListingMVC<CSGenioAaddre> Qlisting)
 		{
-			var Elements = new List<WMS_Menu_721_RowViewModel>();
+			List<WMS_Menu_721_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -454,7 +482,6 @@ namespace GenioMVC.ViewModels.Addre
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAaddre row
 		/// to a WMS_Menu_721_RowViewModel object.
@@ -463,7 +490,9 @@ namespace GenioMVC.ViewModels.Addre
 		private WMS_Menu_721_RowViewModel MapWMS_Menu_721(CSGenioAaddre row)
 		{
 			var model = new WMS_Menu_721_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -475,34 +504,9 @@ namespace GenioMVC.ViewModels.Addre
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(WMS_Menu_721_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-
-				// Table CRUD conditions
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -516,31 +520,40 @@ namespace GenioMVC.ViewModels.Addre
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAaddre> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAaddre row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Addre m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Addre m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM WMS_MENU_721]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Addre", "Addre.ValCodaddre", "Addre.ValZzstate", "Addre.ValAddressuse", "Addre.ValAddresstype", "Addre.ValAddresstext", "Addre.ValAddresscity", "Addre.ValAddressdistrict", "Addre.ValAddressstate", "Addre.ValAddresspostalcode", "Addre.ValAddresscountry", "Addre.ValPeriodstart", "Addre.ValPeriodend", "BtnPermission"
+			"Addre", "Addre.ValCodaddre", "Addre.ValZzstate", "Addre.ValAddressuse", "Addre.ValAddresstype", "Addre.ValAddresstext", "Addre.ValAddresscity", "Addre.ValAddressdistrict", "Addre.ValAddressstate", "Addre.ValAddresspostalcode", "Addre.ValAddresscountry", "Addre.ValPeriodstart", "Addre.ValPeriodend"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValAddressuse", CSGenioAaddre.FldAddressuse, typeof(string), defaultSearch : true, array : "AddressU"),
 			new TableSearchColumn("ValAddresstype", CSGenioAaddre.FldAddresstype, typeof(string), array : "AddressT"),
@@ -551,10 +564,7 @@ namespace GenioMVC.ViewModels.Addre
 			new TableSearchColumn("ValAddresspostalcode", CSGenioAaddre.FldAddresspostalcode, typeof(string)),
 			new TableSearchColumn("ValAddresscountry", CSGenioAaddre.FldAddresscountry, typeof(string)),
 			new TableSearchColumn("ValPeriodstart", CSGenioAaddre.FldPeriodstart, typeof(DateTime?)),
-			new TableSearchColumn("ValPeriodend", CSGenioAaddre.FldPeriodend, typeof(DateTime?))
+			new TableSearchColumn("ValPeriodend", CSGenioAaddre.FldPeriodend, typeof(DateTime?)),
 		];
-
-
-
 	}
 }

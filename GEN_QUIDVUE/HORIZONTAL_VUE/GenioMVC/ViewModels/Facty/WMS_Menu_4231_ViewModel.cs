@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Facty
 {
-	public class WMS_Menu_4231_ViewModel : ListViewModel
+	public class WMS_Menu_4231_ViewModel : MenuListViewModel<Models.Facty>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<WMS_Menu_4231_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "facty"; }
+		[JsonIgnore]
+		public override string TableAlias => "facty";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "7e4470ed-09c8-442d-91d2-b76a9ecd0d88"; }
+		public override string Uuid => "7e4470ed-09c8-442d-91d2-b76a9ecd0d88";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodfacty { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Facty
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL WMS LIST_LIMITS 4231]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,35 @@ namespace GenioMVC.ViewModels.Facty
 			var areaBase = CSGenio.business.Area.createArea("facty", user, "WMS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet wms_menu_4231Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4231");
-			wms_menu_4231Conds.Equal(CSGenioAfacty.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4231");
+			conditions.Equal(CSGenioAfacty.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL WMS OVERRQ 4231]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAfacty.FldCodfacty, CSGenioAfacty.FldZzstate, CSGenioAfacty.FldType, CSGenioAfacty.FldLayrname, CSGenioAfacty.FldIconurl, CSGenioAfacty.FldShadowur, CSGenioAfacty.FldIconancx, CSGenioAfacty.FldIconancy, CSGenioAfacty.FldIconheig, CSGenioAfacty.FldIconwid, CSGenioAfacty.FldPopupanx, CSGenioAfacty.FldPopupany, CSGenioAfacty.FldShadowax, CSGenioAfacty.FldShadoway, CSGenioAfacty.FldShadowhe, CSGenioAfacty.FldShadowwi };
 
-			ListingMVC<CSGenioAfacty> listing = new ListingMVC<CSGenioAfacty>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(wms_menu_4231Conds, listing);
+			ListingMVC<CSGenioAfacty> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public WMS_Menu_4231_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WMS_Menu_4231_ViewModel" /> class.
@@ -102,25 +133,35 @@ namespace GenioMVC.ViewModels.Facty
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="WMS_Menu_4231_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public WMS_Menu_4231_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAfacty.FldType, FieldType.TEXTO, Resources.Resources.FACILITY_TYPE44577, 25, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldLayrname, FieldType.TEXTO, Resources.Resources.LAYER_NAME49545, 30, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconurl, FieldType.TEXTO, Resources.Resources.ICON_URL07016, 30, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadowur, FieldType.TEXTO, Resources.Resources.SHADOW_URL57805, 30, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconancx, FieldType.NUMERO, Resources.Resources.ICON_ANCHOR__X_AXIS_18664, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconancy, FieldType.NUMERO, Resources.Resources.ICON_ANCHOR__Y_AXIS_63725, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconheig, FieldType.NUMERO, Resources.Resources.ICON_HEIGHT61896, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldIconwid, FieldType.NUMERO, Resources.Resources.ICON_WIDTH02295, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldPopupanx, FieldType.NUMERO, Resources.Resources.POPUP_ANCHOR__X_AXIS15060, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldPopupany, FieldType.NUMERO, Resources.Resources.POPUP_ANCHOR__Y_AXIS64670, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadowax, FieldType.NUMERO, Resources.Resources.SHADOW_ANCHOR__X_AXI31230, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadoway, FieldType.NUMERO, Resources.Resources.SHADOW_ANCHOR__Y_AXI51495, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadowhe, FieldType.NUMERO, Resources.Resources.SHADOW_HEIGHT64343, 3, 0, true),
-				new Exports.QColumn(CSGenioAfacty.FldShadowwi, FieldType.NUMERO, Resources.Resources.SHADOW_WIDTH01769, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldType, FieldType.TEXT, Resources.Resources.FACILITY_TYPE44577, 25, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldLayrname, FieldType.TEXT, Resources.Resources.LAYER_NAME49545, 30, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconurl, FieldType.TEXT, Resources.Resources.ICON_URL07016, 30, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadowur, FieldType.TEXT, Resources.Resources.SHADOW_URL57805, 30, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconancx, FieldType.NUMERIC, Resources.Resources.ICON_ANCHOR__X_AXIS_18664, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconancy, FieldType.NUMERIC, Resources.Resources.ICON_ANCHOR__Y_AXIS_63725, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconheig, FieldType.NUMERIC, Resources.Resources.ICON_HEIGHT61896, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldIconwid, FieldType.NUMERIC, Resources.Resources.ICON_WIDTH02295, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldPopupanx, FieldType.NUMERIC, Resources.Resources.POPUP_ANCHOR__X_AXIS15060, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldPopupany, FieldType.NUMERIC, Resources.Resources.POPUP_ANCHOR__Y_AXIS64670, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadowax, FieldType.NUMERIC, Resources.Resources.SHADOW_ANCHOR__X_AXI31230, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadoway, FieldType.NUMERIC, Resources.Resources.SHADOW_ANCHOR__Y_AXI51495, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadowhe, FieldType.NUMERIC, Resources.Resources.SHADOW_HEIGHT64343, 3, 0, true),
+				new Exports.QColumn(CSGenioAfacty.FldShadowwi, FieldType.NUMERIC, Resources.Resources.SHADOW_WIDTH01769, 3, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -169,13 +210,10 @@ namespace GenioMVC.ViewModels.Facty
 
 			if (Menu == null)
 				Menu = new TablePartial<WMS_Menu_4231_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("FACTY.TYPE", new OrderedDictionary());
-			allSortOrders["FACTY.TYPE"].Add("FACTY.TYPE", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -188,8 +226,7 @@ namespace GenioMVC.ViewModels.Facty
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -286,23 +323,22 @@ namespace GenioMVC.ViewModels.Facty
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAfacty> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "4231"),
 				new("Module", "WMS")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_4231_RowViewModel>();
 
 				CriteriaSet wms_menu_4231Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("FACTY.TYPE", new OrderedDictionary());
 				allSortOrders["FACTY.TYPE"].Add("FACTY.TYPE", "A");
-
 
 
 
@@ -334,26 +370,24 @@ namespace GenioMVC.ViewModels.Facty
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("facty", "type");
+					firstVisibleColumn ??= new FieldRef("facty", "type");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAfacty model_limit_area = new CSGenioAfacty(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML4231");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAfacty model_limit_area = new CSGenioAfacty(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML4231");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -364,6 +398,8 @@ namespace GenioMVC.ViewModels.Facty
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL WMS OVERRQ 4231]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -392,7 +428,7 @@ namespace GenioMVC.ViewModels.Facty
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAfacty> listing = Models.ModelBase.Where<CSGenioAfacty>(m_userContext, false, wms_menu_4231Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4231", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAfacty> listing = Models.ModelBase.Where<CSGenioAfacty>(m_userContext, distinct, wms_menu_4231Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4231", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -400,7 +436,6 @@ namespace GenioMVC.ViewModels.Facty
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -422,18 +457,12 @@ namespace GenioMVC.ViewModels.Facty
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -441,7 +470,7 @@ namespace GenioMVC.ViewModels.Facty
 
 		private List<WMS_Menu_4231_RowViewModel> MapWMS_Menu_4231(ListingMVC<CSGenioAfacty> Qlisting)
 		{
-			var Elements = new List<WMS_Menu_4231_RowViewModel>();
+			List<WMS_Menu_4231_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -458,7 +487,6 @@ namespace GenioMVC.ViewModels.Facty
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAfacty row
 		/// to a WMS_Menu_4231_RowViewModel object.
@@ -467,7 +495,9 @@ namespace GenioMVC.ViewModels.Facty
 		private WMS_Menu_4231_RowViewModel MapWMS_Menu_4231(CSGenioAfacty row)
 		{
 			var model = new WMS_Menu_4231_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -479,32 +509,9 @@ namespace GenioMVC.ViewModels.Facty
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(WMS_Menu_4231_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -518,31 +525,40 @@ namespace GenioMVC.ViewModels.Facty
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAfacty> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAfacty row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Facty m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Facty m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM WMS_MENU_4231]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Facty", "Facty.ValCodfacty", "Facty.ValZzstate", "Facty.ValType", "Facty.ValLayrname", "Facty.ValIconurl", "Facty.ValShadowur", "Facty.ValIconancx", "Facty.ValIconancy", "Facty.ValIconheig", "Facty.ValIconwid", "Facty.ValPopupanx", "Facty.ValPopupany", "Facty.ValShadowax", "Facty.ValShadoway", "Facty.ValShadowhe", "Facty.ValShadowwi", "BtnPermission"
+			"Facty", "Facty.ValCodfacty", "Facty.ValZzstate", "Facty.ValType", "Facty.ValLayrname", "Facty.ValIconurl", "Facty.ValShadowur", "Facty.ValIconancx", "Facty.ValIconancy", "Facty.ValIconheig", "Facty.ValIconwid", "Facty.ValPopupanx", "Facty.ValPopupany", "Facty.ValShadowax", "Facty.ValShadoway", "Facty.ValShadowhe", "Facty.ValShadowwi"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValType", CSGenioAfacty.FldType, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValLayrname", CSGenioAfacty.FldLayrname, typeof(string)),
@@ -557,10 +573,7 @@ namespace GenioMVC.ViewModels.Facty
 			new TableSearchColumn("ValShadowax", CSGenioAfacty.FldShadowax, typeof(decimal?)),
 			new TableSearchColumn("ValShadoway", CSGenioAfacty.FldShadoway, typeof(decimal?)),
 			new TableSearchColumn("ValShadowhe", CSGenioAfacty.FldShadowhe, typeof(decimal?)),
-			new TableSearchColumn("ValShadowwi", CSGenioAfacty.FldShadowwi, typeof(decimal?))
+			new TableSearchColumn("ValShadowwi", CSGenioAfacty.FldShadowwi, typeof(decimal?)),
 		];
-
-
-
 	}
 }

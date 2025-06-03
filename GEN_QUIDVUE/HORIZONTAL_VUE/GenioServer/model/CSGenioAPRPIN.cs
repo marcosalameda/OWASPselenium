@@ -25,10 +25,8 @@ namespace CSGenio.business
 
 		public CSGenioAprpin(User user, string module)
 		{
-			fields = new Hashtable();
             this.user = user;
             this.module = module;
-			this.KeyType = CodeType.GUID_KEY;
 			// USE /[MANUAL GQT CONSTRUTOR PRPIN]/
 		}
 
@@ -46,30 +44,27 @@ namespace CSGenio.business
 			List<ByAreaArguments> argumentsListByArea;
 #pragma warning restore CS0168, S1481 // Variable is declared but never used
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpesso", FieldType.CHAVE_PRIMARIA_GUID);
+			Qfield = new Field(info.Alias, "codpesso", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Primary key";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CHAVE_PRIMARIA61422";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codpsw", FieldType.CHAVE_ESTRANGEIRA_GUID);
+			Qfield = new Field(info.Alias, "codpsw", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Foreign key";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CHAVE_ESTRANGEIRA25502";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("nummecan", FieldType.NUMERO);
+			Qfield = new Field(info.Alias, "nummecan", FieldType.NUMERIC);
 			Qfield.FieldDescription = "Mechanografic number";
 			Qfield.FieldSize =  5;
-			Qfield.Alias = info.Alias;
 			Qfield.IntegerDigits = 5;
 			Qfield.CavDesignation = "NO_MECANOGRAFICO18516";
 
@@ -77,60 +72,54 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("pessoa", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "pessoa", FieldType.TEXT);
 			Qfield.FieldDescription = "Name";
 			Qfield.FieldSize =  100;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "NAME31974";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("cargo", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "cargo", FieldType.TEXT);
 			Qfield.FieldDescription = "Role";
 			Qfield.FieldSize =  100;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CARGO15596";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("email", FieldType.TEXTO);
+			Qfield = new Field(info.Alias, "email", FieldType.TEXT);
 			Qfield.FieldDescription = "E-mail";
 			Qfield.FieldSize =  100;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "E_MAIL42251";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("notifind", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "notifind", FieldType.LOGIC);
 			Qfield.FieldDescription = "Individual Notifications";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "NOTIFICACOES_INDIVID17237";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("codorgaf", FieldType.CHAVE_FALSA_GUID);
+			Qfield = new Field(info.Alias, "codorgaf", FieldType.KEY_GUID);
 			Qfield.FieldDescription = "Foreign key";
 			Qfield.FieldSize =  36;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CHAVE_ESTRANGEIRA25502";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("eexterna", FieldType.LOGICO);
+			Qfield = new Field(info.Alias, "eexterna", FieldType.LOGIC);
 			Qfield.FieldDescription = "External Entity";
 			Qfield.FieldSize =  1;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "EXTERNAL_ENTITY00698";
 
 			Qfield.Dupmsg = "";
@@ -138,49 +127,44 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("creatdat", FieldType.DATACRIA);
+			Qfield = new Field(info.Alias, "creatdat", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Creation date";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CRIADO_EM61283";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("creatope", FieldType.OPERCRIA);
+			Qfield = new Field(info.Alias, "creatope", FieldType.TEXT);
 			Qfield.FieldDescription = "Created by";
 			Qfield.FieldSize =  200;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "CRIADO_POR17895";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("chngdate", FieldType.DATAMUDA);
+			Qfield = new Field(info.Alias, "chngdate", FieldType.DATETIMESECONDS);
 			Qfield.FieldDescription = "Changed on";
 			Qfield.FieldSize =  8;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ALTERADO_EM23573";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("operchng", FieldType.OPERMUDA);
+			Qfield = new Field(info.Alias, "operchng", FieldType.TEXT);
 			Qfield.FieldDescription = "Changed by";
 			Qfield.FieldSize =  200;
-			Qfield.Alias = info.Alias;
 			Qfield.CavDesignation = "ALTERADO_POR39254";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
-			Qfield = new Field("zzstate", FieldType.INTEIRO);
+			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
-			Qfield.Alias = info.Alias;
 			info.RegisterFieldDB(Qfield);
 
 		}
@@ -257,8 +241,6 @@ namespace CSGenio.business
 			info.AreaDesignation="Responsible for the Indicator";
 			info.AreaPluralDesignation="Responsibles for the Indicators";
 			info.DescriptionCav="RESPONSIBLE_FOR_THE_21918";
-
-			info.KeyType = CodeType.GUID_KEY;
 
 			//sincronização
 			info.SyncIncrementalDateStart = TimeSpan.FromHours(8);

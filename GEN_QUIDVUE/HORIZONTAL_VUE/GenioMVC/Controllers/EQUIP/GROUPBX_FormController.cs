@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Groupbx_TpequValTipoequiModel : RequestLookupModel
+		{
+			public Groupbx_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Groupbx_TpequValTipoequi
 		// POST: /Equip/Groupbx_TpequValTipoequi
 		[ActionName("Groupbx_TpequValTipoequi")]
-		public ActionResult Groupbx_TpequValTipoequi([FromBody]RequestLookupModel requestModel)
+		public ActionResult Groupbx_TpequValTipoequi([FromBody] Groupbx_TpequValTipoequiModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Groupbx_TpequValTipoequi_ViewModel model = new Groupbx_TpequValTipoequi_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Groupbx_TpequValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Groupbx_WarehValWarehdesModel : RequestLookupModel
+		{
+			public Groupbx_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Groupbx_WarehValWarehdes
 		// POST: /Equip/Groupbx_WarehValWarehdes
 		[ActionName("Groupbx_WarehValWarehdes")]
-		public ActionResult Groupbx_WarehValWarehdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Groupbx_WarehValWarehdes([FromBody] Groupbx_WarehValWarehdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Groupbx_WarehValWarehdes_ViewModel model = new Groupbx_WarehValWarehdes_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Groupbx_WarehValWarehdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -518,11 +533,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Groupbx_ItemValItemdesModel : RequestLookupModel
+		{
+			public Groupbx_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Equip/Groupbx_ItemValItemdes
 		// POST: /Equip/Groupbx_ItemValItemdes
 		[ActionName("Groupbx_ItemValItemdes")]
-		public ActionResult Groupbx_ItemValItemdes([FromBody]RequestLookupModel requestModel)
+		public ActionResult Groupbx_ItemValItemdes([FromBody] Groupbx_ItemValItemdesModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -547,16 +567,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Groupbx_ItemValItemdes_ViewModel model = new Groupbx_ItemValItemdes_ViewModel(UserContext.Current);
-			
+
+			Models.Equip parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Groupbx_ItemValItemdes_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

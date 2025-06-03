@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,72 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Pesso
 {
-	public class GQT_Menu_61411_ViewModel : ListViewModel
+	public class GQT_Menu_61411_ViewModel : MenuListViewModel<Models.Pesso>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<GQT_Menu_61411_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "pesso"; }
+		[JsonIgnore]
+		public override string TableAlias => "pesso";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "5e65936e-5e88-4afe-9d15-53eb4dc381cd"; }
+		public override string Uuid => "5e65936e-5e88-4afe-9d15-53eb4dc381cd";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodpesso { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+				// Limitations
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +82,12 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 61411]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,40 +95,46 @@ namespace GenioMVC.ViewModels.Pesso
 			var areaBase = CSGenio.business.Area.createArea("pesso", user, "GQT");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet gqt_menu_61411Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML61411");
-			gqt_menu_61411Conds.Equal(CSGenioApesso.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML61411");
+			conditions.Equal(CSGenioApesso.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL GQT OVERRQ 61411]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.FldZzstate, CSGenioApesso.FldCodempre, CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioApesso.FldName, CSGenioApesso.FldGender, CSGenioApesso.FldDtnascim, CSGenioApesso.FldIdade, CSGenioApesso.FldIdfuncio, CSGenioApesso.FldTelephon, CSGenioApesso.FldEmail, CSGenioApesso.FldEmail2, CSGenioApesso.FldPhotogra, CSGenioApesso.FldDtultcat, CSGenioApesso.FldCodcateg, CSGenioAcateg.FldCodcateg, CSGenioAcateg.FldCategoria, CSGenioApesso.FldExterna, CSGenioApesso.FldInterna, CSGenioApesso.FldCodpaise, CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldCountry, CSGenioApesso.FldCodcntry, CSGenioApais1.FldCodcntry, CSGenioApais1.FldCountry, CSGenioApesso.FldCodregia, CSGenioAregi1.FldCodregia, CSGenioAregi1.FldRegiao };
 
-			ListingMVC<CSGenioApesso> listing = new ListingMVC<CSGenioApesso>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(gqt_menu_61411Conds, listing);
+			ListingMVC<CSGenioApesso> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
 
 
 			if (qs.FromTable.TableAlias != areaBase.Alias)
 			{
-				if (!qs.Joins.Select(x => x.Table).Select(y=>y.TableAlias).Contains(CSGenio.business.Area.AreaPESSO.Alias))
+				if (!qs.Joins.Select(x => x.Table).Select(y => y.TableAlias).Contains(CSGenio.business.Area.AreaPESSO.Alias))
 					qs.Join(CSGenio.business.Area.AreaPESSO, TableJoinType.Cross).On(CriteriaSet.And().Equal(areaBase.PrimaryKeyName, areaBase.PrimaryKeyName));
 			}
 			else
 			{
-				if (!qs.Joins.Select(x => x.Table).Select(y=>y.TableAlias).Contains(CSGenio.business.Area.AreaCATE1.Alias))
+				if (!qs.Joins.Select(x => x.Table).Select(y => y.TableAlias).Contains(CSGenio.business.Area.AreaCATE1.Alias))
 					qs.Join(CSGenio.business.Area.AreaCATE1, TableJoinType.Cross).On(CriteriaSet.And().Equal(areaBase.PrimaryKeyName, areaBase.PrimaryKeyName));
 			}
+
+
+
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public GQT_Menu_61411_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GQT_Menu_61411_ViewModel" /> class.
@@ -113,28 +145,38 @@ namespace GenioMVC.ViewModels.Pesso
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GQT_Menu_61411_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public GQT_Menu_61411_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXTO, Resources.Resources.DESIGNATION35876, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldGender, FieldType.ARRAY_COD_TEXTO, Resources.Resources.GENUS37471, 1, 0, true, "Genero"),
-				new Exports.QColumn(CSGenioApesso.FldDtnascim, FieldType.DATA, Resources.Resources.BIRTH21799, 8, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldIdade, FieldType.NUMERO, Resources.Resources.AGE28663, 5, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldIdfuncio, FieldType.NUMERO, Resources.Resources.OFFICIAL_NO_34819, 6, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldTelephon, FieldType.TEXTO, Resources.Resources.PHONE56703, 20, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldEmail2, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioApesso.FldPhotogra, FieldType.IMAGEM_JPEG, Resources.Resources.PHOTO51874, 3, 1, true):null,
-				new Exports.QColumn(CSGenioApesso.FldDtultcat, FieldType.DATA, Resources.Resources.SINCE47259, 8, 0, true),
-				new Exports.QColumn(CSGenioAcateg.FldCategoria, FieldType.TEXTO, Resources.Resources.CATEGORY18978, 30, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldExterna, FieldType.LOGICO, Resources.Resources.EXTERNAL13375, 1, 0, true),
-				new Exports.QColumn(CSGenioApesso.FldInterna, FieldType.LOGICO, Resources.Resources.INTERNAL04894, 1, 0, true),
-				new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXTO, Resources.Resources.COUNTRY64133, 30, 0, true),
-				new Exports.QColumn(CSGenioApais1.FldCountry, FieldType.TEXTO, Resources.Resources.COUNTRY64133, 30, 0, true),
-				new Exports.QColumn(CSGenioAregi1.FldRegiao, FieldType.TEXTO, Resources.Resources.REGION12723, 30, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldGender, FieldType.ARRAY_TEXT, Resources.Resources.GENUS37471, 1, 0, true, "Genero"),
+				new Exports.QColumn(CSGenioApesso.FldDtnascim, FieldType.DATE, Resources.Resources.BIRTH21799, 8, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldIdade, FieldType.NUMERIC, Resources.Resources.AGE28663, 5, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldIdfuncio, FieldType.NUMERIC, Resources.Resources.OFFICIAL_NO_34819, 6, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldTelephon, FieldType.TEXT, Resources.Resources.PHONE56703, 20, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldEmail2, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioApesso.FldPhotogra, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
+				new Exports.QColumn(CSGenioApesso.FldDtultcat, FieldType.DATE, Resources.Resources.SINCE47259, 8, 0, true),
+				new Exports.QColumn(CSGenioAcateg.FldCategoria, FieldType.TEXT, Resources.Resources.CATEGORY18978, 30, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldExterna, FieldType.LOGIC, Resources.Resources.EXTERNAL13375, 1, 0, true),
+				new Exports.QColumn(CSGenioApesso.FldInterna, FieldType.LOGIC, Resources.Resources.INTERNAL04894, 1, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 30, 0, true),
+				new Exports.QColumn(CSGenioApais1.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 30, 0, true),
+				new Exports.QColumn(CSGenioAregi1.FldRegiao, FieldType.TEXT, Resources.Resources.REGION12723, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -183,23 +225,10 @@ namespace GenioMVC.ViewModels.Pesso
 
 			if (Menu == null)
 				Menu = new TablePartial<GQT_Menu_61411_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("PESSO.NAME", new OrderedDictionary());
-			allSortOrders["PESSO.NAME"].Add("PESSO.NAME", "A");
-			allSortOrders.Add("PESSO.DTNASCIM", new OrderedDictionary());
-			allSortOrders["PESSO.DTNASCIM"].Add("PESSO.DTNASCIM", "A");
-			allSortOrders.Add("PESSO.TELEPHON", new OrderedDictionary());
-			allSortOrders["PESSO.TELEPHON"].Add("PESSO.TELEPHON", "A");
-			allSortOrders.Add("PESSO.EMAIL", new OrderedDictionary());
-			allSortOrders["PESSO.EMAIL"].Add("PESSO.EMAIL", "A");
-			allSortOrders.Add("PESSO.EMAIL2", new OrderedDictionary());
-			allSortOrders["PESSO.EMAIL2"].Add("PESSO.EMAIL2", "A");
-			allSortOrders.Add("PESSO.DTULTCAT", new OrderedDictionary());
-			allSortOrders["PESSO.DTULTCAT"].Add("PESSO.DTULTCAT", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -211,13 +240,12 @@ namespace GenioMVC.ViewModels.Pesso
 
 			crs.SubSets.Add(subfilters);
 
-
-
 			//DbEdit N:N Limits
 			crs.SubSets.Add(GetConditionsToNN(CSGenio.business.Area.AreaPESSO, CSGenioApesso.FldCodpesso, CSGenio.business.Area.AreaEVCAT, CSGenio.business.Area.AreaCATE1, CSGenioAcate1.FldCodcateg, (string)Navigation.GetValue("cate1"), "ML61411"));
 
-			// Limitations
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
+			// Limitations
 			if (isToExport)
 			{
 				// EPH
@@ -313,16 +341,16 @@ namespace GenioMVC.ViewModels.Pesso
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioApesso> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "61411"),
 				new("Module", "GQT")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<GQT_Menu_61411_RowViewModel>();
 
 				CriteriaSet gqt_menu_61411Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
@@ -339,7 +367,6 @@ namespace GenioMVC.ViewModels.Pesso
 				allSortOrders["PESSO.EMAIL2"].Add("PESSO.EMAIL2", "A");
 				allSortOrders.Add("PESSO.DTULTCAT", new OrderedDictionary());
 				allSortOrders["PESSO.DTULTCAT"].Add("PESSO.DTULTCAT", "A");
-
 
 
 
@@ -376,44 +403,42 @@ namespace GenioMVC.ViewModels.Pesso
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("cmpny", "designat");
+					firstVisibleColumn ??= new FieldRef("cmpny", "designat");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioApesso model_limit_area = new CSGenioApesso(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML61411");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
-			//Tooltip for "DbEdit N:N Limit" affecting this viewmodel list
-			//Tooltip for "DC" type, affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.DC;
-				CSGenioAcate1 model_limit_area = new CSGenioAcate1(m_userContext.User);
-				string limit_field = "codcateg";
-				Limit_Filler(ref limit, model_limit_area, limit_field, "", null, LimitAreaType.AreaLimita);
-				CSGenioAevcat model_limit_areaN = new CSGenioAevcat(m_userContext.User);
-				string limit_fieldN = "codprogr";
-				Limit_Filler(ref limit, model_limit_areaN, limit_fieldN, "", null, LimitAreaType.AreaLimitaN);
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioApesso model_limit_area = new CSGenioApesso(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML61411");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
+				//Tooltip for "DbEdit N:N Limit" affecting this viewmodel list
+				//Tooltip for "DC" type, affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.DC;
+					CSGenioAcate1 model_limit_area = new CSGenioAcate1(m_userContext.User);
+					string limit_field = "codcateg";
+					Limit_Filler(ref limit, model_limit_area, limit_field, "", null, LimitAreaType.AreaLimita);
+					CSGenioAevcat model_limit_areaN = new CSGenioAevcat(m_userContext.User);
+					string limit_fieldN = "codprogr";
+					Limit_Filler(ref limit, model_limit_areaN, limit_fieldN, "", null, LimitAreaType.AreaLimitaN);
 
-				this.tableLimits.Add(limit);
-			}
+					this.tableLimits.Add(limit);
+				}
 
-			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-			// Limit origin: menu 
-			//Tooltip for limit "DB" to area "CATE1" was ignored (unrelated to this viewmodel).
+				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+				// Limit origin: menu 
+				//Tooltip for limit "DB" to area "CATE1" was ignored (unrelated to this viewmodel).
 
 
 				if (conditions == null)
@@ -424,6 +449,8 @@ namespace GenioMVC.ViewModels.Pesso
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ 61411]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -452,7 +479,7 @@ namespace GenioMVC.ViewModels.Pesso
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioApesso> listing = Models.ModelBase.Where<CSGenioApesso>(m_userContext, false, gqt_menu_61411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML61411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioApesso> listing = Models.ModelBase.Where<CSGenioApesso>(m_userContext, distinct, gqt_menu_61411Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML61411", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -460,7 +487,6 @@ namespace GenioMVC.ViewModels.Pesso
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -482,18 +508,12 @@ namespace GenioMVC.ViewModels.Pesso
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -501,7 +521,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 		private List<GQT_Menu_61411_RowViewModel> MapGQT_Menu_61411(ListingMVC<CSGenioApesso> Qlisting)
 		{
-			var Elements = new List<GQT_Menu_61411_RowViewModel>();
+			List<GQT_Menu_61411_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -518,7 +538,6 @@ namespace GenioMVC.ViewModels.Pesso
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioApesso row
 		/// to a GQT_Menu_61411_RowViewModel object.
@@ -527,7 +546,9 @@ namespace GenioMVC.ViewModels.Pesso
 		private GQT_Menu_61411_RowViewModel MapGQT_Menu_61411(CSGenioApesso row)
 		{
 			var model = new GQT_Menu_61411_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -549,35 +570,10 @@ namespace GenioMVC.ViewModels.Pesso
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			SetTicketToImageFields(model);
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(GQT_Menu_61411_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-
-				// Table CRUD conditions
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -591,31 +587,40 @@ namespace GenioMVC.ViewModels.Pesso
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioApesso> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioApesso row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Pesso m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Pesso m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM GQT_MENU_61411]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Cmpny", "Cmpny.ValDesignat", "Pesso.ValName", "Pesso.ValGender", "Pesso.ValDtnascim", "Pesso.ValIdade", "Pesso.ValIdfuncio", "Pesso.ValTelephon", "Pesso.ValEmail", "Pesso.ValEmail2", "Pesso.ValPhotogra", "Pesso.ValDtultcat", "Categ", "Categ.ValCategoria", "Pesso.ValExterna", "Pesso.ValInterna", "Cntry", "Cntry.ValCountry", "Pais1", "Pais1.ValCountry", "Regi1", "Regi1.ValRegiao", "Pesso.ValCodcateg", "Pesso.ValCodempre", "Pesso.ValCodpaise", "Pesso.ValCodcntry", "Pesso.ValCodregia", "BtnPermission"
+			"Pesso", "Pesso.ValCodpesso", "Pesso.ValZzstate", "Cmpny", "Cmpny.ValDesignat", "Pesso.ValName", "Pesso.ValGender", "Pesso.ValDtnascim", "Pesso.ValIdade", "Pesso.ValIdfuncio", "Pesso.ValTelephon", "Pesso.ValEmail", "Pesso.ValEmail2", "Pesso.ValPhotogra", "Pesso.ValDtultcat", "Categ", "Categ.ValCategoria", "Pesso.ValExterna", "Pesso.ValInterna", "Cntry", "Cntry.ValCountry", "Pais1", "Pais1.ValCountry", "Regi1", "Regi1.ValRegiao", "Pesso.ValCodcateg", "Pesso.ValCodempre", "Pesso.ValCodpaise", "Pesso.ValCodcntry", "Pesso.ValCodregia"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("Cmpny_ValDesignat", CSGenioAcmpny.FldDesignat, typeof(string)),
 			new TableSearchColumn("ValName", CSGenioApesso.FldName, typeof(string), defaultSearch : true),
@@ -632,14 +637,11 @@ namespace GenioMVC.ViewModels.Pesso
 			new TableSearchColumn("ValInterna", CSGenioApesso.FldInterna, typeof(bool)),
 			new TableSearchColumn("Cntry_ValCountry", CSGenioAcntry.FldCountry, typeof(string)),
 			new TableSearchColumn("Pais1_ValCountry", CSGenioApais1.FldCountry, typeof(string)),
-			new TableSearchColumn("Regi1_ValRegiao", CSGenioAregi1.FldRegiao, typeof(string))
+			new TableSearchColumn("Regi1_ValRegiao", CSGenioAregi1.FldRegiao, typeof(string)),
 		];
-
-
-
 		protected void SetTicketToImageFields(Models.Pesso row)
 		{
-			if(row == null)
+			if (row == null)
 				return;
 
 			row.ValPhotograQTicket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaPESSO, CSGenioApesso.FldPhotogra.Field, null, row.ValCodpesso);

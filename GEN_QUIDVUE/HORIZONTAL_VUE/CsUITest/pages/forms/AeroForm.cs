@@ -10,12 +10,12 @@ public class AeroForm : Form
 	/// <summary>
 	/// Airline
 	/// </summary>
-	public BaseInputControl AeroName => new BaseInputControl(driver, ContainerLocator, "#AERO____AERO_NAME____");
+	public BaseInputControl AeroName => new BaseInputControl(driver, ContainerLocator, "container-AERO____AERO_NAME____", "#AERO____AERO_NAME____");
 
 	/// <summary>
 	/// Code
 	/// </summary>
-	public BaseInputControl AeroCodcmaer => new BaseInputControl(driver, ContainerLocator, "#AERO____AERO_CODCMAER");
+	public BaseInputControl AeroCodcmaer => new BaseInputControl(driver, ContainerLocator, "container-AERO____AERO_CODCMAER", "#AERO____AERO_CODCMAER");
 
 	public AeroForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "AERO", containerLocator: containerLocator) { }

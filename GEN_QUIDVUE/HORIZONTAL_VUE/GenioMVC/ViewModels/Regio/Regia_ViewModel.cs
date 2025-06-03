@@ -171,6 +171,7 @@ namespace GenioMVC.ViewModels.Regio
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Regio m)
 		{
 			if (m == null)
@@ -193,20 +194,13 @@ namespace GenioMVC.ViewModels.Regio
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Regio m)
 		{
 			if (m == null)
@@ -524,7 +518,7 @@ namespace GenioMVC.ViewModels.Regio
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -571,7 +565,7 @@ namespace GenioMVC.ViewModels.Regio
 				// Fill List fields
 				this.ValCodcntry = ViewModelConversion.ToString(row["cntry.codcntry"]);
 				TableCntryCountry.Value = (string)row["cntry.country"];
-				if (GlobalFunctions.emptyG(this.ValCodcntry) == 1)
+				if (GenFunctions.emptyG(this.ValCodcntry) == 1)
 				{
 					this.ValCodcntry = "";
 					TableCntryCountry.Value = "";
@@ -614,8 +608,6 @@ namespace GenioMVC.ViewModels.Regio
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

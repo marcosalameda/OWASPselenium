@@ -22,7 +22,7 @@ public class AgregForm : Form
 	/// <summary>
 	/// Value
 	/// </summary>
-	public BaseInputControl AgregValue => new BaseInputControl(driver, ContainerLocator, "#AGREG___AGREGVALUE___");
+	public BaseInputControl AgregValue => new BaseInputControl(driver, ContainerLocator, "container-AGREG___AGREGVALUE___", "#AGREG___AGREGVALUE___");
 
 	public AgregForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "AGREG", containerLocator: containerLocator) { }

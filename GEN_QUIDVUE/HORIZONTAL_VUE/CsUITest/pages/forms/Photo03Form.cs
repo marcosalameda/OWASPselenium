@@ -10,12 +10,12 @@ public class Photo03Form : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl ProphPhoto => new BaseInputControl(driver, ContainerLocator, "#PHOTO03_PROPHPHOTO___");
+	public BaseInputControl ProphPhoto => new BaseInputControl(driver, ContainerLocator, "container-PHOTO03_PROPHPHOTO___", "#PHOTO03_PROPHPHOTO___");
 
 	/// <summary>
 	/// Title
 	/// </summary>
-	public BaseInputControl ProphTitle => new BaseInputControl(driver, ContainerLocator, "#PHOTO03_PROPHTITLE___");
+	public BaseInputControl ProphTitle => new BaseInputControl(driver, ContainerLocator, "container-PHOTO03_PROPHTITLE___", "#PHOTO03_PROPHTITLE___");
 
 	/// <summary>
 	/// Title

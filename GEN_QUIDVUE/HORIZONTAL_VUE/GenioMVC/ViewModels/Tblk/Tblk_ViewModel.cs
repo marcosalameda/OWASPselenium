@@ -175,6 +175,7 @@ namespace GenioMVC.ViewModels.Tblk
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Tblk m)
 		{
 			if (m == null)
@@ -197,20 +198,13 @@ namespace GenioMVC.ViewModels.Tblk
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Tblk m)
 		{
 			if (m == null)
@@ -524,7 +518,7 @@ namespace GenioMVC.ViewModels.Tblk
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -571,7 +565,7 @@ namespace GenioMVC.ViewModels.Tblk
 				// Fill List fields
 				this.ValFkey1 = ViewModelConversion.ToString(row["grpb.codgrpb"]);
 				TableGrpbName.Value = (string)row["grpb.name"];
-				if (GlobalFunctions.emptyG(this.ValFkey1) == 1)
+				if (GenFunctions.emptyG(this.ValFkey1) == 1)
 				{
 					this.ValFkey1 = "";
 					TableGrpbName.Value = "";
@@ -714,7 +708,7 @@ namespace GenioMVC.ViewModels.Tblk
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -761,7 +755,7 @@ namespace GenioMVC.ViewModels.Tblk
 				// Fill List fields
 				this.ValFkey2 = ViewModelConversion.ToString(row["trsb.codtrsb"]);
 				TableTrsbName.Value = (string)row["trsb.name"];
-				if (GlobalFunctions.emptyG(this.ValFkey2) == 1)
+				if (GenFunctions.emptyG(this.ValFkey2) == 1)
 				{
 					this.ValFkey2 = "";
 					TableTrsbName.Value = "";
@@ -806,8 +800,6 @@ namespace GenioMVC.ViewModels.Tblk
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

@@ -183,6 +183,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Lnhpd m)
 		{
 			if (m == null)
@@ -207,20 +208,13 @@ namespace GenioMVC.ViewModels.Lnhpd
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Lnhpd m)
 		{
 			if (m == null)
@@ -540,7 +534,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -587,7 +581,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				// Fill List fields
 				this.ValCodpedid = ViewModelConversion.ToString(row["pedid.codpedid"]);
 				TablePedidNrpedido.Value = (decimal?)row["pedid.nrpedido"];
-				if (GlobalFunctions.emptyG(this.ValCodpedid) == 1)
+				if (GenFunctions.emptyG(this.ValCodpedid) == 1)
 				{
 					this.ValCodpedid = "";
 					TablePedidNrpedido.Value = 0m;
@@ -730,7 +724,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -777,7 +771,7 @@ namespace GenioMVC.ViewModels.Lnhpd
 				// Fill List fields
 				this.ValCodtpequ = ViewModelConversion.ToString(row["tpequ.codtpequ"]);
 				TableTpequTipoequi.Value = (string)row["tpequ.tipoequi"];
-				if (GlobalFunctions.emptyG(this.ValCodtpequ) == 1)
+				if (GenFunctions.emptyG(this.ValCodtpequ) == 1)
 				{
 					this.ValCodtpequ = "";
 					TableTpequTipoequi.Value = "";
@@ -824,8 +818,6 @@ namespace GenioMVC.ViewModels.Lnhpd
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

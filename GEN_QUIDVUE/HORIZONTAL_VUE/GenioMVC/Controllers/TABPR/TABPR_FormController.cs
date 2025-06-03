@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Tabpr_TpequValTipoequiModel : RequestLookupModel
+		{
+			public Tabpr_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Tabpr/Tabpr_TpequValTipoequi
 		// POST: /Tabpr/Tabpr_TpequValTipoequi
 		[ActionName("Tabpr_TpequValTipoequi")]
-		public ActionResult Tabpr_TpequValTipoequi([FromBody]RequestLookupModel requestModel)
+		public ActionResult Tabpr_TpequValTipoequi([FromBody] Tabpr_TpequValTipoequiModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Tabpr_TpequValTipoequi_ViewModel model = new Tabpr_TpequValTipoequi_ViewModel(UserContext.Current);
-			
+
+			Models.Tabpr parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Tabpr_TpequValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

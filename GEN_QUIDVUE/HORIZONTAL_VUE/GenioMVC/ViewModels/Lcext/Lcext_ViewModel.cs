@@ -179,6 +179,7 @@ namespace GenioMVC.ViewModels.Lcext
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Lcext m)
 		{
 			if (m == null)
@@ -202,20 +203,13 @@ namespace GenioMVC.ViewModels.Lcext
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Lcext m)
 		{
 			if (m == null)
@@ -533,7 +527,7 @@ namespace GenioMVC.ViewModels.Lcext
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -580,7 +574,7 @@ namespace GenioMVC.ViewModels.Lcext
 				// Fill List fields
 				this.ValCodlocat = ViewModelConversion.ToString(row["locat.codlocat"]);
 				TableLocatGln.Value = (string)row["locat.gln"];
-				if (GlobalFunctions.emptyG(this.ValCodlocat) == 1)
+				if (GenFunctions.emptyG(this.ValCodlocat) == 1)
 				{
 					this.ValCodlocat = "";
 					TableLocatGln.Value = "";
@@ -624,8 +618,6 @@ namespace GenioMVC.ViewModels.Lcext
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

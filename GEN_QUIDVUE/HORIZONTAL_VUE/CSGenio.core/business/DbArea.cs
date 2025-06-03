@@ -391,7 +391,7 @@ namespace CSGenio.business
             {
                 if (!Fields.ContainsKey(key))
                 {
-                    Fields[key] = new RequestedField(oldvalues.Fields[key] as RequestedField);
+                    Fields[key] = new RequestedField(oldvalues.Fields[key]);
                 }
             }
         }
@@ -415,15 +415,12 @@ namespace CSGenio.business
                     string[] valoresDefault = this.DefaultValues;
                     for (int i = 0; i < valoresDefault.Length; i++)
                     {
-                        Field Qfield = (Field)this.DBFields[valoresDefault[i]];
-                        RequestedField reqField = null;
-                        bool hasEmptyValue = true;
+                        Field Qfield = DBFields[valoresDefault[i]];
 
-                        if (this.Fields.ContainsKey(Alias + "." + valoresDefault[i]))
-                        {
-                            reqField = (RequestedField)this.Fields[Alias + "." + Qfield.Name];
+                        bool hasEmptyValue = true;
+                        if(Fields.TryGetValue(Qfield.FullName, out RequestedField reqField))
                             hasEmptyValue = Qfield.isEmptyValue(reqField.Value);
-                        }
+
                         // Ignore fields with default of the type "FIXO" when this field is already filled.
                         if (Qfield.DefaultValue.tpDefault == DefaultValue.DefaultType.FIXO && !hasEmptyValue)
                             continue;
@@ -433,7 +430,7 @@ namespace CSGenio.business
                             continue;
 
                         object valorDefault = Qfield.DefaultValue.calculateFormulaDefault(this, sp, fdc, tpFunction);
-                        insertNameValueField(Alias + "." + valoresDefault[i], valorDefault);
+                        insertNameValueField(Qfield.FullName, valorDefault);
                     }
                 }
                 return this;
@@ -466,7 +463,7 @@ namespace CSGenio.business
                     if (campoBD.DefaultValue != null && campoBD.DefaultValue.tpDefault.Equals(DefaultValue.DefaultType.PRE_DEF_BD))
                     {
                         object valorObj = QueryUtils.getRandomValue(campoBD);
-                        condition = DBConversion.FromInternal(valorObj, campoBD.FieldType.Formatting);
+                        condition = DBConversion.FromInternal(valorObj, campoBD.FieldType.GetFormatting());
                     }
                     if (condition != null)
                     {
@@ -492,7 +489,7 @@ namespace CSGenio.business
             bool savePseudoNew =  oldValues != null && oldValues.Zzstate == 1 && Zzstate == 0 ? true : false; // PseudoNew Save or Manual Calls without oldvalues
 
 
-            object sequentialFieldValue = returnValueField(Alias + "." + Qfield.Name); //Qvalue do Qfield sequencial
+            object sequentialFieldValue = returnValueField(Qfield.FullName); //Qvalue do Qfield sequencial
 
             object nDupPrefValue = null; //Qvalue do prefixo de não duplicação (caso exista)
             FieldFormatting formCampoPrefNDup = FieldFormatting.CARACTERES;
@@ -531,7 +528,7 @@ namespace CSGenio.business
             //Check if already Calculated and value has not changed
             if (!InvalidValue && !noChanges) //check for changes only in valid value and with oldValues
             {
-                object oldSequencialValue = oldValues.returnValueField(Alias + "." + Qfield.Name);
+                object oldSequencialValue = oldValues.returnValueField(Qfield.FullName);
                 if (!sequentialFieldValue.Equals(oldSequencialValue))
                     isChanged = true;
             }
@@ -573,8 +570,7 @@ namespace CSGenio.business
             }
             else if (isChanged) //Check if changed value already exists, or if from manual entry value cannot be trusted
             {
-                object primaryKeyValue = returnValueField(Alias + "." + PrimaryKeyName);
-                if (Qfield.DefaultValue.existsSequentialValue(this, primaryKeyValue, Qfield.PrefNDup, nDupPrefValue, formCampoPrefNDup, sequentialFieldValue, Qfield.FieldFormat, sp))
+                if (Qfield.DefaultValue.existsSequentialValue(this, QPrimaryKey, Qfield.PrefNDup, nDupPrefValue, formCampoPrefNDup, sequentialFieldValue, Qfield.FieldFormat, sp))
                     needsToBeCalculated = true;
             }
             //-------------------------
@@ -604,10 +600,10 @@ namespace CSGenio.business
                     //Try to insert anyways (results in duplication error if unique)
                     if (!(Convert.ToDecimal(sequentialFieldValue) >= Convert.ToDecimal(valorSequencial) || Convert.ToDecimal(sequentialFieldValue) < 1))
                     {
-                        insertNameValueField(Alias + "." + Qfield.Name, sequentialFieldValue);
+                        insertNameValueField(Qfield.FullName, sequentialFieldValue);
                     }
                 }
-                insertNameValueField(Alias + "." + Qfield.Name, valorSequencial);
+                insertNameValueField(Qfield.FullName, valorSequencial);
             }
         }
 
@@ -621,21 +617,27 @@ namespace CSGenio.business
                 //right alignment
                 if (Qfield.AlignRightPad)
                 {
-                    string value = returnValueField(Alias + "." + Qfield.Name) as string;
+                    string value = returnValueField(Qfield.FullName) as string;
                     if (!string.IsNullOrEmpty(value))
                     {
                         value = value.PadLeft(Qfield.FieldSize);
-                        insertNameValueField(Alias + "." + Qfield.Name, value);
+                        insertNameValueField(Qfield.FullName, value);
                     }
                 }//Text trim
-                else if (textTrim && (Qfield.FieldType.Equals(FieldType.TEXTO) || Qfield.FieldType.Equals(FieldType.MUITAS_LINHAS)))
+                else if (textTrim && (Qfield.FieldType.Equals(FieldType.TEXT) || Qfield.FieldType.Equals(FieldType.MEMO)))
                 {
-                    string value = returnValueField(Alias + "." + Qfield.Name) as string;
+                    string value = returnValueField(Qfield.FullName) as string;
                     if (!string.IsNullOrEmpty(value))
                     {
                         value = value.Trim();
-                        insertNameValueField(Alias + "." + Qfield.Name, value);
+                        insertNameValueField(Qfield.FullName, value);
                     }
+                }
+				//Data trim, remove time values
+				else if(Qfield.FieldType.Equals(FieldType.DATE))
+                {
+                    DateTime value = (DateTime)returnValueField(Qfield.FullName);
+                    insertNameValueField(Qfield.FullName, value.Date);
                 }
             }
         }
@@ -669,7 +671,7 @@ namespace CSGenio.business
                     {
                         // Field with formula default (DG and DF) that has dependency of the sequential field.
                         object valorDefault = Qfield.DefaultValue.calculateFormulaDefault(this, sp, fdc, FunctionType.INS);
-                        insertNameValueField(Alias + "." + Qfield.Name, valorDefault);
+                        insertNameValueField(Qfield.FullName, valorDefault);
                     }
                     else
                     {
@@ -683,7 +685,7 @@ namespace CSGenio.business
                 {
                     object[] fieldsValue = Qfield.FillWhen.returnValueFieldsInternalFormula(this, Qfield.FillWhen.ByAreaArguments, sp, Qfield.FillWhen.ParameterCount, FunctionType.ALT);
                     if (!Qfield.FillWhen.calculateFormulaCondition(fieldsValue, user, user.CurrentModule, sp))
-                        insertNameValueField(Alias + "." + Qfield.Name, null);
+                        insertNameValueField(Qfield.FullName, null);
                 }
 
                 if (Qfield.Formula == null)
@@ -747,7 +749,7 @@ namespace CSGenio.business
             string fkvalue = fdc.GetForeignKeyValue(targetname, rel.SourceRelField, sp);
             Area target = fdc.ReadRecord(targetname, fkvalue, sp);
             object replica = target.returnValueField(target.Alias + "." + formula.Field);
-            insertNameValueField(Alias + "." + Qfield.Name, replica);
+            insertNameValueField(Qfield.FullName, replica);
         }
 
         /// <summary>
@@ -761,8 +763,8 @@ namespace CSGenio.business
             System.Diagnostics.Debug.Assert(formula != null);
 
             object ct = null; //result
-            object dateValue = returnValueField(Alias + "." + formula.FilledDateFields);
             Field dateInfo = DBFields[formula.FilledDateFields];
+            object dateValue = returnValueField(dateInfo.FullName);            
             //se o valor do campo e null
             if (!dateInfo.isEmptyValue(dateValue))
             {
@@ -770,27 +772,27 @@ namespace CSGenio.business
                 if (formula.IsGroup)
                 {
                     //valor do campo que agrupa
-                    object group1Value = returnValueField(Alias + "." + formula.FilledGroupField);
                     Field group1Info = DBFields[formula.FilledGroupField];
+                    object group1Value = returnValueField(group1Info.FullName);
                     if (!group1Info.isEmptyValue(group1Value))//se não existe valor, nao ha nada para mudar
                     {
                         if (formula.IsGroup2)
                         {
                             //valor do campo que agrupa
-                            object group2Value = returnValueField(Alias + "." + formula.Filled2GroupField);
                             Field group2Info = DBFields[formula.Filled2GroupField];
+                            object group2Value = returnValueField(group2Info.FullName);
                             if (!group2Info.isEmptyValue(group2Value))//se não existe valor, nao ha nada para mudar
                             {
                                 ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat, 
-                                    group1Value, group1Info.FieldType.Formatting, 
-                                    group2Value, group2Info.FieldType.Formatting,
+                                    group1Value, group1Info.FieldType.GetFormatting(), 
+                                    group2Value, group2Info.FieldType.GetFormatting(),
                                     sp);
                             }
                         }
                         else
 						{
                             ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat,
-                                group1Value, group1Info.FieldType.Formatting,
+                                group1Value, group1Info.FieldType.GetFormatting(),
                                 sp);
                         }
                     }
@@ -800,7 +802,7 @@ namespace CSGenio.business
                     ct = formula.getCTValue(dateValue, dateInfo.FieldFormat, sp);
                 }
             }
-            insertNameValueField(Alias + "." + field.Name, ct);
+            insertNameValueField(field.FullName, ct);
         }
 
         /// <summary>
@@ -834,7 +836,7 @@ namespace CSGenio.business
             {
                 object fieldValue = formula.calculateInternalFormula(this, sp, fdc, FunctionType.ALT);
                 if (fieldValue != null)
-                    insertNameValueField(Alias + "." + Qfield.Name, fieldValue);
+                    insertNameValueField(Qfield.FullName, fieldValue);
             }
         }
 
@@ -915,14 +917,17 @@ namespace CSGenio.business
             }
 
             object fim;
+            //Change by TMV (2025.01.29) - For numeric fields, check if it is empty does't make sense, because zero is a number
+            bool isNumericField = Qfield.FieldFormat == FieldFormatting.FLOAT || Qfield.FieldFormat == FieldFormatting.INTEIRO;
+
             // evita-se fazer mais uma query, quando já se sabe que temos de limpar o Qvalue do Qfield de fim
-            if (Qfield.isEmptyValue(start) || (campoGrupo != null && campoGrupo.isEmptyValue(grouping)))
+            if ((!isNumericField && Qfield.isEmptyValue(start)) || (campoGrupo != null && campoGrupo.isEmptyValue(grouping)))
                 // se o start é vazio, tem de limpar o fim!
                 fim = Qfield.GetValorEmpty();
             else
                 //ler qual é o fim de periodo dada a data de start
                 fim = formula.readEndPeriod(sp, this, start, grouping, primaryKeyValue);
-            insertNameValueField(Alias + "." + Qfield.Name, fim);
+            insertNameValueField(Qfield.FullName, fim);
         }
 
         /// <summary>
@@ -938,34 +943,12 @@ namespace CSGenio.business
                 return;
             foreach (LastValueArgument arg in LastValueArgs)
             {
-                //ver se a relação mudou
-                Relation rel = Information.ParentTables[arg.AliasRUV];
-                object oldrel = oldvalues.returnValueField(Alias + "." + rel.SourceRelField);
-                object newrel = returnValueField(Alias + "." + rel.SourceRelField);
-
-                //se a ficha é pseudo-nova então é como se o Qvalue antigo não existisse
-                if (Zzstate != 0)
-                    oldrel = "";
-                //se a ficha foi apagada é como se a nova relação não existisse
-                if (deleted)
-                    newrel = "";
-
-                // TODO - se:
-                // o U1 não tem condição
-                // e a relação não mudar
-                // e o Qvalue da data não mudar
-                // e nenhum dos Qvalues dos fields consultados tiver sido alterado
-                // não é necessária nenhuma propagação
-
-                FieldFormatting formatacaoRelacao = DBFields[rel.SourceRelField].FieldFormat;
-
-                //se a nova relação não é nula é preciso actualizar a nova
-                if (!Field.isEmptyValue(newrel, formatacaoRelacao))
-                    auxActualizarUltimoValor(context, sp, arg, rel.SourceRelField, rel.TargetRelField, newrel, formatacaoRelacao);
-
-                //se a relação mudou e a antiga não era nula é preciso actualizar a antiga
-                if (!Field.isEmptyValue(oldrel, formatacaoRelacao) && !oldrel.Equals(newrel))
-                    auxActualizarUltimoValor(context, sp, arg, rel.SourceRelField, rel.TargetRelField, oldrel, formatacaoRelacao);
+                arg.DeterminePropagation(deleted ? null : this, oldvalues, (string alias, string pk, Area newrow, Area oldrow) =>
+                {
+                    Relation rel = Information.ParentTables[arg.AliasRUV];
+                    FieldFormatting formatacaoRelacao = DBFields[rel.SourceRelField].FieldFormat;
+                    auxActualizarUltimoValor(context, sp, arg, rel.SourceRelField, rel.TargetRelField, pk, formatacaoRelacao);
+                });
             }
         }
 
@@ -1021,71 +1004,21 @@ namespace CSGenio.business
 
             foreach (string campoFp in EndofPeriodFields)
             {
-                Field Qfield = (Field)this.DBFields[campoFp];
-				Field campoAgrupar = null;
+                Field Qfield = DBFields[campoFp];
                 EndPeriodFormula formula = (EndPeriodFormula)Qfield.Formula;
 
-                //ver se temos de actualizar o registo anterior ao actual
-                object primaryKeyValue = QPrimaryKey;
-
-                //obter os Qvalues actuais
-                object start = returnValueField(Alias + "." + formula.DateField);
-                object grouping = null;
-                if (formula.GroupField != null)
-                {
-                    grouping = returnValueField(Alias + "." + formula.GroupField);
-                    campoAgrupar = (Field)this.DBFields[formula.GroupField];
-                }
-
-                //obter os Qvalues antigos
-                object oldinicio = oldvalues.returnValueField(Alias + "." + formula.DateField);
-                object oldagrupamento = null;
-                if (formula.GroupField != null)
-                    oldagrupamento = oldvalues.returnValueField(Alias + "." + formula.GroupField);
-
-                //se a ficha está a ser apagada então é como se os Qvalues novos fossem zero
-                if (deleted)
-                {
-                    start = Qfield.GetValorEmpty();
-                    grouping = (campoAgrupar != null) ? campoAgrupar.GetValorEmpty() : null;
-                }
-
-                //se a ficha não é nova entao é como se os Qvalues antigos fossem zero
-                if (oldvalues.Zzstate == 1)
-                {
-                    oldinicio = Qfield.GetValorEmpty();
-                    oldagrupamento = (campoAgrupar != null) ? campoAgrupar.GetValorEmpty() : null;
-                }
-
-                //se a data e o grouping forem iguais não é preciso propagar
-                if (start.Equals(oldinicio) && (formula.GroupField == null || (oldagrupamento != null && oldagrupamento.Equals(grouping))))
-                    continue;
-
-                //actualiza a ficha que ficou atras dos novos Qvalues
-                if (!Qfield.isEmptyValue(start))
-                {
-                    string chaveAnterior = formula.getPreviousRecord(sp, this, start, grouping);
-                    if (!string.IsNullOrEmpty(chaveAnterior))
-                        auxActualizaFimPeriodo(context, sp, campoFp, formula, chaveAnterior);
-                }
-
-                //actualiza a ficha que estava atras dos Qvalues antigos
-                if (!Qfield.isEmptyValue(oldinicio))
-                {
-                    string chaveAnterior = formula.getPreviousRecord(sp, this, oldinicio, oldagrupamento);
-                    if (!string.IsNullOrEmpty(chaveAnterior))
-                        auxActualizaFimPeriodo(context, sp, campoFp, formula, chaveAnterior);
-                }
+                formula.DeterminePropagation(sp, deleted ? null : this, oldvalues, (string alias, string pk, Area newrow, Area oldrow) 
+                    => auxActualizaFimPeriodo(context, sp, Qfield, formula, pk));
             }
         }
 
-        private void auxActualizaFimPeriodo(FormulaDbContext context, PersistentSupport sp, string campoFp, EndPeriodFormula formula, object chaveAnterior)
+        private void auxActualizaFimPeriodo(FormulaDbContext context, PersistentSupport sp, Field campoFp, EndPeriodFormula formula, object chaveAnterior)
         {
             Area outra = context.UpdateRecord(Alias, chaveAnterior as string);
             //If the internal operations will recalculate this value anyway, then just add a dummy value to the column
             //object fim = formula.readEndPeriod(sp, this, start, grouping, chaveAnterior);
-            object fim = Information.DBFields[campoFp].GetValorEmpty();
-            outra.insertNameValueField(Alias + "." + campoFp, fim);
+            object fim = campoFp.GetValorEmpty();
+            outra.insertNameValueField(campoFp.FullName, fim);
         }
 
 		/// <summary>
@@ -1106,84 +1039,27 @@ namespace CSGenio.business
             if (Zzstate == 1 || Zzstate == 11)
                 return;
 
-            Dictionary<string, DbArea> areasPosicionadas = new Dictionary<string, DbArea>();
-
-            // JMN (17/07/2020) - HACK: There is a scenario where a group of SRs affects the same row but have different areas associated.
+            // There is a scenario where a group of SRs affects the same row but have different areas associated.
             // In this scenario, SR values computed for the first area were being overriden by the values from the second area SR.
             // This happens because we read all the information before updating the values, causing the second area SR to use the old values and overriding the values set by the first area SR.
-            // The fix consists in dealing with each area separately and applying the updates once SRs from that area are computed.
-            var linkedSumAlias = RelatedSumArgs.Select(x => x.AliasSR).Distinct();
-            foreach (string aliasSR in linkedSumAlias)
+            // It does not happen here, just because we are only updating 1 column in each area, so the 2nd time the row is read its value is not overriden.
+            // Should the algorithm change, this use case needs to be taken into account.
+            foreach (RelatedSumArgument argSR in RelatedSumArgs)
             {
-                foreach (RelatedSumArgument argSR in RelatedSumArgs)
-                {
-                    if (!argSR.AliasSR.Equals(aliasSR))
-                        continue;
-
-                    AreaInfo source = Area.GetInfoArea(argSR.AliasSource);
-                    Relation relacao = source.ParentTables[argSR.AliasSR];
-
-                    FieldFormatting formatacaoRel = returnFormattingDBField(relacao.SourceRelField);
-                    object valorRel = returnValueField(Alias + "." + relacao.SourceRelField);
-                    object oldValorRel = oldValues.returnValueField(Alias + "." + relacao.SourceRelField);
-
-                    decimal novoValor;
-                    decimal oldValor;
-                    if (argSR.IsField) //se for um Qfield vai buscar o Qvalue senão é uma contagem
-                    {
-                        novoValor = Convert.ToDecimal(returnValueField(Alias + "." + argSR.ArgField));
-                        oldValor = Convert.ToDecimal(oldValues.returnValueField(Alias + "." + argSR.ArgField));
-                    }
-                    else //a contagem é feita com um number fixo (tipicamente 1.0)
-                    {
-                        novoValor = decimal.Parse(argSR.ArgField);
-                        oldValor = novoValor;
-                    }
-
-                    //se antes a ficha era pseudo-nova então é como se o Qvalue antigo fosse 0
-                    if (oldValues.Zzstate == 1)
-                    {
-                        oldValor = 0;
-                        oldValorRel = "";
-                    }
-
-                    //se a ficha vai ser apagada então é como se o Qvalue novo fosse 0
-                    if (delete)
-                    {
-                        novoValor = 0;
-                        valorRel = "";
-                    }
-
-                    //calcula a diferença a causar na relação antiga e na relação nova
-                    decimal olddiff = -oldValor;
-                    decimal newdiff = novoValor;
-                    //se a relação ficou igual agregamos tudo no newdiff
-                    if (oldValorRel.Equals(valorRel))
-                    {
-                        newdiff -= oldValor;
-                        olddiff = 0;
-                    }
-
-                    //ao novo Qvalue da relação adicionamos a diferença
-                    if (newdiff != 0 && !Field.isEmptyValue(valorRel, formatacaoRel))
-                        AuxUpdateSr(context, sp, argSR, relacao, valorRel, newdiff, areasPosicionadas);
-
-                    //ao Qvalue antigo da relação
-                    if (olddiff != 0 && !Field.isEmptyValue(oldValorRel, formatacaoRel))
-                        AuxUpdateSr(context, sp, argSR, relacao, oldValorRel, olddiff, areasPosicionadas);
-                }
+                argSR.DeterminePropagation(delete ? null : this, oldValues, (string alias, string pk, Area newrow, Area oldrow, decimal diff)
+                    => AuxUpdateSr(context, sp, argSR, alias, pk, diff));
             }
         }
 
-        private void AuxUpdateSr(FormulaDbContext context, PersistentSupport sp, RelatedSumArgument argSR, Relation relacao, object valorRel, decimal diff, Dictionary<string, DbArea> areasPosicionadas)
+        private void AuxUpdateSr(FormulaDbContext context, PersistentSupport sp, RelatedSumArgument argSR, string areaTarget, string valorRel, decimal diff)
         {
-            Area other = context.UpdateRecord(relacao.AliasTargetTab, valorRel.ToString());
+            Area other = context.UpdateRecord(areaTarget, valorRel);
             var srFieldName = other.Alias + "." + argSR.SRField;
 
             //if the field is not already set in the target record we need to fetch it from the database values
             if (!other.Fields.ContainsKey(argSR.SRField))
             {
-                var dboutra = context.ReadRecord(relacao.AliasTargetTab, valorRel as string, sp);
+                var dboutra = context.ReadRecord(areaTarget, valorRel, sp);
                 other.insertNameValueField(srFieldName, dboutra.returnValueField(srFieldName));
             }
             decimal valorSR = Convert.ToDecimal(other.returnValueField(srFieldName));
@@ -1205,7 +1081,7 @@ namespace CSGenio.business
         /// <param name="deleted">True se o registo está a ser apagado</param>
         public void propagateListAggregate(FormulaDbContext context, PersistentSupport sp, Area oldValues, bool delete)
         {
-            if (ArgsListAggregate == null)//fields argumentos de fórmulas do tipo soma relacionada
+            if (ArgsListAggregate == null)
                 return;
 
             //com zzstate a 1 não somamos nada
@@ -1214,33 +1090,12 @@ namespace CSGenio.business
 
             foreach (ListAggregateArgument argLG in ArgsListAggregate)
             {
-                AreaInfo source = Area.GetInfoArea(argLG.AliasSource);
-                Relation relacao = source.ParentTables[argLG.AliasLG];
-
-                FieldFormatting formatacaoRel = returnFormattingDBField(relacao.SourceRelField);
-                object valorRel = returnValueField(Alias + "." + relacao.SourceRelField);
-                object oldValorRel = oldValues.returnValueField(Alias + "." + relacao.SourceRelField);
-
-                Field infoValorLG = source.DBFields[argLG.ArgField];
-                object novoValorLG = returnValueField(Alias + "." + argLG.ArgField);
-                object oldValorLG = oldValues.returnValueField(Alias + "." + argLG.ArgField);
-
-                object novoValorOrdenacao = returnValueField(Alias + "." + argLG.SortField);
-                object oldValorOrdenacao = oldValues.returnValueField(Alias + "." + argLG.SortField);
-
-                // To the new value of the relationship, we add the difference.
-                if (!Equals(valorRel, oldValorRel) || !Equals(novoValorLG, oldValorLG) || !Equals(novoValorOrdenacao, oldValorOrdenacao)
-                    //we are deleting this value and we has something that was propagated
-                    || (delete && !infoValorLG.isEmptyValue(oldValorLG))
-                    //zzstate was pseudo new state and we have something to actually propagate
-                    || (oldValues.Zzstate != 0 && !infoValorLG.isEmptyValue(novoValorLG)))
+                argLG.DeterminePropagation(delete ? null : this, oldValues, (string alias, string pk, Area newrow, Area oldrow) =>
                 {
-                    //AJA 2016-04-06 - Verifica se a relação exists. Se estiver fazia não calcula a formula.
-                    if (!Field.isEmptyValue(valorRel, formatacaoRel))
-                        AuxUpdateLG(context, sp, argLG, relacao, valorRel);
-                    if (!delete && !Field.isEmptyValue(oldValorRel, formatacaoRel) && !Equals(valorRel, oldValorRel))
-                        AuxUpdateLG(context, sp, argLG, relacao, oldValorRel);
-                }
+                    AreaInfo source = Area.GetInfoArea(argLG.AliasSource);
+                    Relation relacao = source.ParentTables[argLG.AliasLG];
+                    AuxUpdateLG(context, sp, argLG, relacao, pk);
+                });
             }
         }
 
@@ -1268,11 +1123,12 @@ namespace CSGenio.business
             var valorLG = "";
             if (trimmedValues.Count > 0)
                 valorLG = string.Join(argLG.SeparatorField, trimmedValues);
-            var maxlen = outra.DBFields[argLG.LGField].FieldSize;
+            var lgFieldInfo = outra.DBFields[argLG.LGField];
+            var maxlen = lgFieldInfo.FieldSize;
             if(valorLG.Length > maxlen)
                 valorLG = valorLG.Substring(0, maxlen);
 
-            outra.insertNameValueField(outra.Alias + "." + argLG.LGField, valorLG);
+            outra.insertNameValueField(lgFieldInfo.FullName, valorLG);
         }
 
 		/// <summary>
@@ -1311,7 +1167,7 @@ namespace CSGenio.business
                                 updates.Add(target.ReplicaDestinationTable+"_"+target.ForeignKey, uq);
                             }
 
-                            uq.Set(target.ReplicaTargetFields, ((campoReplica.FieldType == FieldType.CHAVE_FALSA_GUID || campoReplica.FieldType == FieldType.CHAVE_PRIMARIA_GUID || campoReplica.FieldType == FieldType.CHAVE_ESTRANGEIRA_GUID) && String.Equals(valorReplica, "")) ?
+                            uq.Set(target.ReplicaTargetFields, ((campoReplica.FieldType == FieldType.KEY_GUID || campoReplica.FieldType == FieldType.KEY_GUID || campoReplica.FieldType == FieldType.KEY_GUID) && String.Equals(valorReplica, "")) ?
                                     null :
                                     valorReplica);
                         }
@@ -1409,10 +1265,9 @@ namespace CSGenio.business
 			try
 			{
 				object primaryKeyValue = QPrimaryKey;
-				IEnumerator enumficheiros = this.Fields.Values.GetEnumerator();
-				while (enumficheiros.MoveNext())
+
+				foreach(var Qfield in Fields.Values)
 				{
-					RequestedField Qfield = (RequestedField)enumficheiros.Current;
 					if (Qfield.FieldType.Equals(FieldType.PATH))
 					{
 						object fieldValue = sp.returnField(this, Qfield.Name, primaryKeyValue);
@@ -1472,13 +1327,11 @@ namespace CSGenio.business
 		{
 			try
 			{
-				IEnumerator enumficheiros = areaDb.Fields.Values.GetEnumerator();
-				while (enumficheiros.MoveNext())
+                foreach(var Qfield in areaDb.Fields.Values)
 				{
-					RequestedField Qfield = (RequestedField)enumficheiros.Current;
-					if (((Field)DBFields[Qfield.Name]).CreateHist == history.CreateHistTables && Fields.ContainsKey(Alias + "." + Qfield.Name))
+					if (DBFields[Qfield.Name].CreateHist == history.CreateHistTables && Fields.ContainsKey(Qfield.FullName))
 					{
-						if (!Qfield.Value.Equals(((RequestedField)Fields[Alias + "." + Qfield.Name]).Value))
+						if (!Qfield.Value.Equals(Fields[Qfield.FullName].Value))
 							return true;
 					}
 				}
@@ -1499,48 +1352,29 @@ namespace CSGenio.business
 		{
 			try
 			{
-                if (HistoryList == null)
-                    return;
+				if (HistoryList == null)
+					return;
 
-				//Area areaDb = Area.createArea(Alias, User, Module);
-				History history;
-
-				for (int i = 0; i < HistoryList.Count; i++)
+				foreach (History history in HistoryList)
 				{
-					history = HistoryList[i];
-					int totalCamposCriaHist = history.CreateHistFields.Length;
+					bool pseudoToNew = oldvalues.Zzstate == 1 && this.Zzstate == 0;
 
-					string[] nomesCamposBd = new string[totalCamposCriaHist];
-					string[] nomesCamposCriaHist = new string[totalCamposCriaHist];
-					object[] fieldsvalues = new object[totalCamposCriaHist];
-					for (int j = 0; j < totalCamposCriaHist; j++)
-					{
-						nomesCamposBd[j] = Alias + "." + history.CreateHistFields[j];
-						nomesCamposCriaHist[j] = history.CreateHistTables + "." + history.CreateHistFields[j];
-                        if (Fields.ContainsKey(Alias + "." + history.CreateHistFields[j]))
-                            fieldsvalues[j] = ((RequestedField)Fields[Alias + "." + history.CreateHistFields[j]]).Value;
-					}
-                    bool pseudoToNew = oldvalues.Zzstate == 1 && this.Zzstate == 0;
-
-                    //The record is not pseudo or is no longer a pseudo
-                    if (this.Zzstate == 0 && verifyChangesHistory(oldvalues, user, history) || pseudoToNew)
+					//The record is not pseudo or is no longer a pseudo
+					if (this.Zzstate == 0 && verifyChangesHistory(oldvalues, user, history) || pseudoToNew)
 					{
 						string tabelaCriaHist = history.CreateHistTables;
-						Area areaHist = Area.createArea(tabelaCriaHist, User, Module);
+						DbArea areaHist = (DbArea)Area.createArea(tabelaCriaHist, User, Module);
 
-						//introduce fields da table de histórico
-						areaHist.insertNamesFields(new string[] { });
-						for (int j = 0; j < totalCamposCriaHist; j++)
-                            areaHist.insertNameValueField(nomesCamposCriaHist[j], fieldsvalues[j]);
+						//copy all the history fields
+						foreach (var histField in history.CreateHistFields)
+							areaHist.insertNameValueField(
+								tabelaCriaHist + "." + histField,
+								returnValueField(Alias + "." + histField));
 
-						//introduce Qfield da key primária
-						RequestedField campoPedido = new RequestedField(tabelaCriaHist + "." + areaHist.PrimaryKeyName, tabelaCriaHist);
-						FieldType fieldType = ((Field)areaHist.DBFields[campoPedido.Name]).FieldType;
-						campoPedido.FieldType = fieldType;
-						areaHist.Fields.Add(tabelaCriaHist + "." + areaHist.PrimaryKeyName, campoPedido);
+						//copy the primary key field
 						areaHist.insertNameValueField(tabelaCriaHist + "." + PrimaryKeyName, QPrimaryKey);
-						areaHist.insertPseud(sp, new string[] { }, new string[] { });
-						areaHist.change(sp, (CriteriaSet)null);
+
+						areaHist.insert(sp);
 					}
 				}
 			}
@@ -2016,6 +1850,12 @@ namespace CSGenio.business
 
 		public override StatusMessage change(PersistentSupport sp, CriteriaSet condition)
 		{
+			// Prevent changes when in maintenance mode
+			if (Maintenance.Current.IsActive)
+			{
+				throw new BusinessException(Translations.Get("O Sistema encontra-se em manutenção! Pedimos desculpa pelo incómodo.", user.Language), "DbArea.change", "In maintenance mode.");
+			}
+
 			StatusMessage Qresult = StatusMessage.GetAggregator();
 			StatusMessage validationResults = null;
             try
@@ -2040,7 +1880,7 @@ namespace CSGenio.business
 				{
                     if (!Fields.ContainsKey(key))
 					{
-                        Fields[key] = new RequestedField(oldvalues.Fields[key] as RequestedField);
+                        Fields[key] = new RequestedField(oldvalues.Fields[key]);
 					}
 				}
 
@@ -2104,8 +1944,9 @@ namespace CSGenio.business
                     {
                         foreach (string camposeq in SequentialDefaultValues)
                         {
-                            tempValoresSequenciais.Add(Alias + "." + camposeq, (RequestedField)fields[Alias + "." + camposeq]);
-                            removeFieldValue(Alias + "." + camposeq);
+                            var seqInfo = DBFields[camposeq];
+                            tempValoresSequenciais.Add(seqInfo.FullName, Fields[seqInfo.FullName]);
+                            removeFieldValue(seqInfo.FullName);
                         }
                     }
                 }
@@ -2117,7 +1958,7 @@ namespace CSGenio.business
 				sp.change(this);
 
                 foreach (KeyValuePair<string, RequestedField> Qfield in tempValoresSequenciais)
-                    fields[Qfield.Key] = Qfield.Value;
+                    Fields[Qfield.Key] = Qfield.Value;
 
                 //propagar alterações to outros registos
                 propagateReplicas(sp, oldvalues);
@@ -2210,15 +2051,13 @@ namespace CSGenio.business
 
                 beforeInsert(sp);
 
-                // key primária
-                string codInt = sp.codIntInsertion(this, false);
-
                 // AV(2010/09/20) As fichas novas deixam de ter registos com fields NULL e passam a ter com os Qvalues vazios apropriados
                 removeCalculatedFields();
                 createEmptyFields();
 
                 Zzstate = 1;
-                QPrimaryKey = codInt;
+                if(!sp.DatabaseSidePk)
+                    QPrimaryKey = sp.codIntInsertion(this, false);
 
                 if (UserRecord)
                 {
@@ -2321,7 +2160,7 @@ namespace CSGenio.business
                 {
                     if (!Fields.ContainsKey(key))
                     {
-                        Fields[key] = new RequestedField(oldvalues.Fields[key] as RequestedField);
+                        Fields[key] = new RequestedField(oldvalues.Fields[key]);
                     }
                 }
             }
@@ -2385,33 +2224,37 @@ namespace CSGenio.business
 		/// <returns>o status e a mensagem resposta da inserção</returns>
 		public override StatusMessage inserir_WS(PersistentSupport sp)
 		{
+			// Prevent changes when in maintenance mode
+			if (Maintenance.Current.IsActive)
+			{
+				throw new BusinessException(Translations.Get("O Sistema encontra-se em manutenção! Pedimos desculpa pelo incómodo.", user.Language), "DbArea.change", "In maintenance mode.");
+			}
+			
             StatusMessage Qresult = StatusMessage.GetAggregator();
 
             try
 			{
                 //guardar os Qvalues default que ja possam ter sido preenchidos
-                Hashtable temp = new Hashtable();
-                foreach (DictionaryEntry cpvl in Fields)
+                var temp = new Dictionary<string, object>();
+                foreach (var cpvl in Fields)
                 {
                     if (DefaultValues != null && Array.Exists(DefaultValues, X => (Alias + "." + X) == cpvl.Key.ToString()))
-                        temp.Add(cpvl.Key, ((RequestedField)cpvl.Value).Value);
+                        temp.Add(cpvl.Key, cpvl.Value.Value);
                     else if (SequentialDefaultValues != null && Array.Exists(SequentialDefaultValues, X => (Alias + "." + X) == cpvl.Key.ToString()))
-                        temp.Add(cpvl.Key, ((RequestedField)cpvl.Value).Value);
+                        temp.Add(cpvl.Key, cpvl.Value.Value);
                 }
 
                 //INSERT PHASE
                 //--------------------------------------------------------------------
                 if (Log.IsDebugEnabled) Log.Debug(string.Format("Area.inserir [area] {0}", Alias));
 
-                // key primária
-                string codInt = sp.codIntInsertion(this, false);
-
                 // AV(2010/09/20) As fichas novas deixam de ter registos com fields NULL e passam a ter com os Qvalues vazios apropriados
                 removeCalculatedFields();
                 createEmptyFields();
 
                 Zzstate = 1;
-                QPrimaryKey = codInt;
+                if(!sp.DatabaseSidePk)
+                    QPrimaryKey = sp.codIntInsertion(this, false);
 
                 if (UserRecord)
                 {
@@ -2434,8 +2277,8 @@ namespace CSGenio.business
                 //--------------------------------------------------------------------
 
                 //devolver os Qvalues dos defaults que vieram do exterior
-                foreach (DictionaryEntry cpvl in temp)
-                    ((RequestedField)Fields[cpvl.Key]).Value = cpvl.Value;
+                foreach (KeyValuePair<string, object> kvp in temp)
+                    Fields[kvp.Key].Value = kvp.Value;
 
                 //Aqui queremos sempre garantir que o zzstate passa a 0
                 Zzstate = 0;
@@ -2454,7 +2297,7 @@ namespace CSGenio.business
                 {
                     if (!Fields.ContainsKey(key))
                     {
-                        Fields[key] = new RequestedField(oldvalues.Fields[key] as RequestedField);
+                        Fields[key] = new RequestedField(oldvalues.Fields[key]);
                     }
                 }
 
@@ -2541,12 +2384,14 @@ namespace CSGenio.business
                 //ir buscar o registo to duplicate
                 object codeValue = condition.Criterias[0].RightTerm;
                 sp.getRecord(this, codeValue);
-                string codInt = sp.codIntInsertion(this, false);
 
                 //zerar os fields declarados com zeroAduplicar
                 zeroDuplicar();
 
-                QPrimaryKey = codInt;
+                if(!sp.DatabaseSidePk)
+                    QPrimaryKey = sp.codIntInsertion(this, false);
+                else
+                    QPrimaryKey = "";
                 Zzstate = 1;
 
                 //1 - preencher carimbo
@@ -2565,15 +2410,19 @@ namespace CSGenio.business
                 //5 - operações internas que dependem de números sequenciais
                 fillInternalOperations(sp, null);
 
-                beforeDuplicate(sp);
-
                 //6 - duplicate os documentos na db
-                sp.duplicateFilesDB(this, codInt, false);
+                sp.duplicateFilesDB(this);
+
+                beforeDuplicate(sp);
 
                 // Executes the encryption formulas associated with the fields before saving the value to the database
                 ExecuteFieldValueEncryption(sp);
 
                 sp.insertPseud(this);
+
+                // With database side pk's the docums Chave field will not have been filled so we need to do it after the insert
+                if (sp.DatabaseSidePk)
+                    sp.AfterDuplicateFilesDB(this);
 
                 //duplicate as fichas relacionadas
                 List<FieldRef> fieldsToUpdate = tambemDuplica(sp, codeValue.ToString());
@@ -2600,17 +2449,15 @@ namespace CSGenio.business
         /// </summary>
         private void zeroDuplicar()
         {
-            IEnumerator enumCampos = Fields.Values.GetEnumerator();
             List<string> camposToZero = new List<string>();
             var camposSR = new List<string>(this.RelatedSumFields ?? new string[] { }); // To simplificar o código na validação e não ter que lidar com array vazio
-            while (enumCampos.MoveNext())
+            foreach(var campoPedido in Fields.Values)
             {
-                RequestedField campoPedido = (RequestedField)enumCampos.Current;
-                if (DBFields[campoPedido.Name] != null)
+                if (DBFields.TryGetValue(campoPedido.Name, out Field campoBD))
                 {
-                    Field campoBD = (Field)DBFields[campoPedido.Name];
-                    //RMR(2017-06-01) - Whenever a record is duplicated, every DATAMUDA/HORAMUDA/OPERMUDA should also be reseted
-                    if (campoBD.ZeroDuplication || campoBD.FieldType == FieldType.DATAMUDA || campoBD.FieldType == FieldType.OPERMUDA || campoBD.FieldType == FieldType.HORAMUDA
+                    if (campoBD.ZeroDuplication
+                        // Whenever a record is duplicated, every DATAMUDA/HORAMUDA/OPERMUDA should also be reseted
+                        || StampFieldsAlt.Contains(campoBD.Name)
                         // The target fields of the SRs must be reseted
                         || camposSR.Contains(campoBD.Name)
                         // The encrypted fields can never be duplicated!
@@ -2647,10 +2494,7 @@ namespace CSGenio.business
 
                 // Replace DB value in the model fields
                 foreach(var field in fieldGroup)
-                {
-                    string key = (field.Area + "." + field.Field).ToLower();
-                    Fields[key] = fieldArea.Fields[key];
-                }
+                    Fields[field] = fieldArea.Fields[field];
             }
         }
 
@@ -2721,30 +2565,27 @@ namespace CSGenio.business
                     var filhasParaDuplicar = areasDuplicadas[relacao.TargetTable];
                     string condArea = relacao.AliasTargetTab.ToUpper();
                     foreach (var filha in filhasParaDuplicar)
-                    {
-                        ArrayList duplicacoes = sp.existsChild(relacao.SourceRelField, relacao.SourceIntKey, relacao.SourceSystem, relacao.SourceTable, relacao.AliasSourceTab, filha.Key);
+                    {                        
                         DbArea areaChild = (DbArea)Area.createArea(relacao.AliasSourceTab, User, User.CurrentModule);
 
                         // Load fields to update on the parent table
-                        modelFieldsToUpdate = loadFieldsToUpdate(areaChild);
+                        modelFieldsToUpdate.AddRange(loadFieldsToUpdate(areaChild));
 
                         //RMR(2022-11-11) - If it has more child record to duplicate after, it cannot enforce conditions
-                        areaChild.NeedsValidation = false;
-                        if (cascata.Where(x=>x.TargetTable == relacao.SourceTable).Count() == 0)
-                            areaChild.NeedsValidation = true;
+                        bool needsValidation = cascata.Any(x => x.TargetTable == relacao.SourceTable);
+                        var sourceRecords = LoadAndSortRecords(sp, areaChild, relacao, filha.Key);
+                        if (!sourceRecords.Any())
+                            continue;
 
-                        foreach (var dup in duplicacoes)
+                        foreach (var dup in sourceRecords)
                         {
-							if (!fichasDuplicadas.ContainsKey(dup.ToString()))
+                            if (!fichasDuplicadas.ContainsKey(dup.QPrimaryKey))
                             {
-                                //Fetch current records
-                                //We do this to make sure the duplicate condition is validated
-                                //based on the original values and not the duplicated ones
-                                sp.getRecord(areaChild, dup);
-
+                                areaChild = (DbArea) dup;
+                                areaChild.NeedsValidation = needsValidation;
                                 if (areaChild.ValidateDupConditions(sp, condArea)) //Validate Duplicate Conditions
-                                    if (areaChild.duplicarFilha(sp, dup.ToString(), areasDuplicadas)) //Duplicate Record
-                                        fichasDuplicadas.Add(dup.ToString(), areaChild.QPrimaryKey);
+                                    if (areaChild.duplicarFilha(sp, dup.QPrimaryKey, areasDuplicadas)) //Duplicate Record
+                                        fichasDuplicadas.Add(dup.QPrimaryKey, areaChild.QPrimaryKey);
                             }
                         }
                     }
@@ -2752,6 +2593,35 @@ namespace CSGenio.business
             }
 
             return modelFieldsToUpdate;
+        }
+
+        /// <summary>
+        /// Loads the child records to be duplicated based on the relation and the parent key
+        /// If the table references itself, applies special ordering to handle dependency correctly.
+        /// </summary>
+        /// <param name="sp">Persistent support</param>
+        /// <param name="area">The child DbArea instance (representing the table to query).</param>
+        /// <param name="relation">Relation metadata between parent and child tables.</param>
+        /// <param name="parentKeyValue">The parent key to search</param>
+        /// <returns>List of DbArea instances ready for duplication.</returns>
+        private List<Area> LoadAndSortRecords(PersistentSupport sp, DbArea area, Relation relation, string parentKeyValue)
+        {
+            Log.Debug($"Loading children {relation.AliasSourceTab} of table {relation.AliasTargetTab}");
+
+            var criteria = CriteriaSet.And().
+                    Equal(relation.AliasSourceTab, relation.SourceRelField, parentKeyValue);
+            var records = searchList(area.Alias, sp, user, criteria);
+
+            // If the table references itself, ensure that the referenced records come before the others
+            foreach (var selfRelation in area.ParentTables.Values.Where(parent => parent.TargetTable == area.TableName))
+            {                   
+                //Fields with no foreign key to self come first
+                records = records
+                    .OrderByDescending(r => string.IsNullOrEmpty(r.returnValueField(selfRelation.SourceRelField).ToString()))
+                    .ToList();
+            }
+            
+            return records;
         }
 
 		private List<Relation> CalcularCascataDuplicacao()
@@ -2792,7 +2662,6 @@ namespace CSGenio.business
         {
             //TODO: falta o suporte to a duplicação em cascata
             sp.getRecord(this, codIntValue);
-            string codInt = sp.codIntInsertion(this, false);
 
             // Last updated by [CJP] at [2016.06.01]
             // Não deve duplicate os registos filhos com ZZSTATE != 0
@@ -2820,7 +2689,8 @@ namespace CSGenio.business
 
             //zerar os fields declarados com zeroAduplicar
             zeroDuplicar();
-            QPrimaryKey = codInt;
+            if(!sp.DatabaseSidePk)
+                QPrimaryKey = sp.codIntInsertion(this, false);
 
             //1 - preencher carimbo
             fillStampInsert();
@@ -2834,8 +2704,9 @@ namespace CSGenio.business
 
             //5 - operações internas que dependem de números sequenciais
             fillInternalOperations(sp, null);
+
             //Duplicate docums
-            string newcodDocums = sp.duplicateFilesDB(this, codInt, false);
+            sp.duplicateFilesDB(this);
 
             // Executes the encryption formulas associated with the fields before saving the value to the database
             ExecuteFieldValueEncryption(sp);
@@ -2843,19 +2714,12 @@ namespace CSGenio.business
             //RS 24.04.2017 Passa a efectuar todas as regras de business durante a duplicação.
             insert(sp);
 
+            //with database side pk's the docums Chave field will not have been filled so we need to do it after the insert
             //This is not the best way to update the field "chave" from Docums table.
             //May be, we should not use this field because it creates a bidirectionl relationship with other tables.
             //There is one place where the field "chave" is used, but it could be unused if we refactory the content of document ticket. 
-            if (!string.IsNullOrEmpty(newcodDocums))
-            {
-                UpdateQuery uq = new UpdateQuery()
-                .Update("docums")
-                .Set("chave", QPrimaryKey)
-                .Where(CriteriaSet.And()
-                    .Equal("docums", "coddocums", newcodDocums));
-
-                sp.Execute(uq);
-            } 
+            if (sp.DatabaseSidePk)
+                sp.AfterDuplicateFilesDB(this);
 
             return true;
         }
@@ -2863,32 +2727,42 @@ namespace CSGenio.business
         public virtual bool checkoutDocums(PersistentSupport sp, string docField, out string newcodDocums)
         {
             string documField = Alias + "." + docField + "fk";
-			string valorLigacao = returnValueField(documField).ToString();
-            string codtable = QPrimaryKey;
-
+            string valorLigacao = returnValueField(documField).ToString();
             newcodDocums = "";
-            DataMatrix resultados = this.returnValuesDocums(
-				sp,
-                new SelectField[] { new SelectField(SqlFunctions.Count(0), "count") },
-                CriteriaSet.And()
-                    .Equal("docums", "versao", "CHECKOUT")
-                    .Equal("docums", "documid", valorLigacao),
-				null,
-                docField);
 
-            if (DBConversion.ToInteger(resultados.GetDirect(0, 0)) > 0)
+            //validate no one there is no checkout already
+            SelectQuery sql = new SelectQuery()
+                .Select(SqlFunctions.Count(0), "count")
+                .From("docums")
+                .Where(CriteriaSet.And()
+                    .Equal("docums", "versao", "CHECKOUT")
+                    .Equal("docums", "documid", valorLigacao));
+            if (DBConversion.ToInteger(sp.executeScalar(sql)) > 0)
                 return false;
 
-            newcodDocums = sp.duplicateFilesDB(this, codtable, true, documField);
-
-            UpdateQuery uq = new UpdateQuery()
-                .Update("docums")
-                .Set("opercria", user.Name)
+            //get the latest version
+            sql = new SelectQuery()
+                .Select("docums", "coddocums")
+                .From("docums")
                 .Where(CriteriaSet.And()
-                    .Equal("docums", "coddocums", newcodDocums));
+                    .NotEqual("docums", "versao", "CHECKOUT")
+                    .Equal("docums", "documid", valorLigacao))
+                .OrderBy("docums", "versao", SortOrder.Descending)
+                .PageSize(1);
+            var codlastDocums = DBConversion.ToString(sp.executeScalar(sql));
 
-			sp.Execute(uq);
+            if (string.IsNullOrEmpty(codlastDocums))
+                return false;
+            var lastDocum = CSGenioAdocums.search(sp, codlastDocums, user);
 
+            //Force the insert to allocate a new pk
+            lastDocum.QPrimaryKey = "";
+            //Create the checkout version and mark it with this user
+            lastDocum.ValOpercria = user.Name;
+            lastDocum.ValVersao = "CHECKOUT";
+            lastDocum.insertDirect(sp);
+
+            newcodDocums = lastDocum.QPrimaryKey;
             return true;
         }
 
@@ -3236,13 +3110,11 @@ namespace CSGenio.business
                     }
                     else
                     {
-                        //key primária
-                        string codInt = sp.codIntInsertion(this, false);
-
                         //AV(2010/09/20) As fichas novas deixam de ter registos com fields NULL e passam a ter com os Qvalues vazios apropriados
                         createEmptyFields();
-
-                        sp.fillAreaInsert(this, user.Name, codInt, "", 1);
+                        if(!sp.DatabaseSidePk)
+                            QPrimaryKey = sp.codIntInsertion(this, false);
+                        Zzstate = 1;
 
                         //antes de introduce
                         //1 - preencher carimbo
@@ -3269,7 +3141,7 @@ namespace CSGenio.business
                 {
                     foreach (object keyValue in chavesPrimarias)
                     {
-                        Fields = new Hashtable();
+                        Fields.Clear();
                         QPrimaryKey = keyValue as string;
                         eliminate(sp);
                     }
@@ -3302,16 +3174,15 @@ namespace CSGenio.business
             {
                 if (Qfield.MQueue)
                 {
-                    string campoNome = this.Alias + "." + Qfield.Name;
-                    if (!oldValues.returnValueField(campoNome).Equals(this.returnValueField(campoNome)))
+                    if (!oldValues.returnValueField(Qfield.FullName).Equals(this.returnValueField(Qfield.FullName)))
                         return true;
                 }
             }
             return false;
         }
 
-
-        private void MessageQueue(PersistentSupport sp, string operation, Area oldValues)
+        /// <inheritdoc/>
+        public override void MessageQueue(PersistentSupport sp, string operation, Area oldValues)
         {
             if(!Configuration.Messaging.Enabled)
                 return;
@@ -3381,8 +3252,9 @@ namespace CSGenio.business
                 var anex = pub.Tables.Find(x => x.IsAnex && x.Areas.Contains(rel.Key));
                 if (anex != null)
                 {
-                    string fk = returnValueField(this.Alias + "." + rel.Value.SourceRelField) as string;
-                    if (DBFields[rel.Value.SourceRelField].isEmptyValue(fk))
+                    var fieldInfo = DBFields[rel.Value.SourceRelField];
+                    string fk = returnValueField(fieldInfo.FullName) as string;
+                    if (fieldInfo.isEmptyValue(fk))
                         continue;
 
                     Area areaUp = Area.createArea(rel.Key, user, user.CurrentModule);
@@ -3469,8 +3341,9 @@ namespace CSGenio.business
             foreach (var rel in this.Information.ParentTables)
                 if (pub.Tables.Exists(x => !x.IsAnex && x.Table == rel.Key))
                 {
-                    string fk = returnValueField(this.Alias + "." + rel.Value.SourceRelField) as string;
-                    if (DBFields[rel.Value.SourceRelField].isEmptyValue(fk))
+                    var fieldInfo = DBFields[rel.Value.SourceRelField];
+                    string fk = returnValueField(fieldInfo.FullName) as string;
+                    if (fieldInfo.isEmptyValue(fk))
                         continue;
 
                     //fetch zzstate
@@ -3482,15 +3355,8 @@ namespace CSGenio.business
             return false;
         }
 
-        /// <summary>
-        /// Método to enviar queues(estas ficam na db, posteriormente deverão ser enviadas pelo integrador)
-        /// </summary>
-        /// <param name="sp">suporte persistente</param>
-        /// <param name="operacao">Type de Operação, C - Create, U - Update, D - Delete </param>
-		/// <param name="oldValues">Valores originais to validar se algum Qfield mudou. Passar a null caso seja uma inserção ou quisermos forçar o envio</param>
-		/// <param name="queueId">Id da queue a enviar ou passar a null to enviar todas as queues desta area</param>
-        /// <returns>o status e a mensagem resposta da inserção</returns>
-        public virtual void insertQueue(PersistentSupport sp, string operation, Area oldValues, string queueId)
+        /// <inheritdoc/>
+        public override void insertQueue(PersistentSupport sp, string operation, Area oldValues, string queueId)
         {
             //TODO - Actualmente as queues só estão a ser criadas no Area.Alterar e Area.Apagar, verificar por casos praticos se faz sentido estender isto
             try
@@ -3540,6 +3406,7 @@ namespace CSGenio.business
                     xmlMainElem.SetAttribute("queue", queue.Name);
                     xmlMainElem.SetAttribute("tp", operation);
                     xmlMainElem.SetAttribute("year", DBConversion.ToString(user.Year));
+                    xmlMainElem.SetAttribute("timestamp", DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString());
 
                     foreach (Field Qfield in this.DBFields.Values)//percorre area corrente
                     {
@@ -3548,7 +3415,7 @@ namespace CSGenio.business
                             xmlMainElem.AppendChild(MQXml.FieldAdd(xml,
                                                                    Qfield.Name,
                                                                    Qfield,
-                                                                   this.returnValueField(this.Alias + "." + Qfield.Name)));
+                                                                   this.returnValueField(Qfield.FullName)));
                             xml.AppendChild(xmlMainElem);
                         }
                     }
@@ -3572,7 +3439,7 @@ namespace CSGenio.business
                                     xmlNTableField.AppendChild(MQXml.FieldAdd(xml,
                                                                               Qfield.Name,
                                                                               Qfield,
-                                                                              mq_area_N1.returnValueField(mq_area_N1.Alias + "." + Qfield.Name)));
+                                                                              mq_area_N1.returnValueField(Qfield.FullName)));
                                 }
                             }
                             xmlNTable.AppendChild(xmlNTableField);
@@ -3698,7 +3565,8 @@ namespace CSGenio.business
             mqqueue.insertNameValueField("mqqueues.operacao", operation);
 
             mqqueue.Zzstate = 0;
-            mqqueue.QPrimaryKey = sp.codIntInsertion(mqqueue, false);
+            if(!sp.DatabaseSidePk)
+                mqqueue.QPrimaryKey = sp.codIntInsertion(mqqueue, false);
 			sp.DeferQueueToCommit(mqqueue);
             return StatusMessage.OK();
         }

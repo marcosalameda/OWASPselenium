@@ -38,64 +38,67 @@ namespace GenioMVC.Models
 		/// <summary>Field : ">COMOMODOR" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Lendi.ValCodpess1")]
 		public string ValCodpess1 { get { return klass.ValCodpess1; } set { klass.ValCodpess1 = value; } }
+
 		private Pess1 _pess1;
 		[DisplayName("Pess1")]
 		[ShouldSerialize("Pess1")]
-		public virtual Pess1 Pess1 {
-			get {
-				if (!this.isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1))))
+		public virtual Pess1 Pess1
+		{
+			get
+			{
+				if (!isEmptyModel && (_pess1 == null || (!string.IsNullOrEmpty(ValCodpess1) && (_pess1.isEmptyModel || _pess1.klass.QPrimaryKey != ValCodpess1))))
 					_pess1 = Models.Pess1.Find(ValCodpess1, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pess1 == null)
-					_pess1 = new Models.Pess1(m_userContext, true, _fieldsToSerialize);
+				_pess1 ??= new Models.Pess1(m_userContext, true, _fieldsToSerialize);
 				return _pess1;
 			}
 			set { _pess1 = value; }
 		}
 
-
 		[DisplayName(">EQUIPMENT")]
 		/// <summary>Field : ">EQUIPMENT" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Lendi.ValCodequip")]
 		public string ValCodequip { get { return klass.ValCodequip; } set { klass.ValCodequip = value; } }
+
 		private Equip _equip;
 		[DisplayName("Equip")]
 		[ShouldSerialize("Equip")]
-		public virtual Equip Equip {
-			get {
-				if (!this.isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
+		public virtual Equip Equip
+		{
+			get
+			{
+				if (!isEmptyModel && (_equip == null || (!string.IsNullOrEmpty(ValCodequip) && (_equip.isEmptyModel || _equip.klass.QPrimaryKey != ValCodequip))))
 					_equip = Models.Equip.Find(ValCodequip, m_userContext, Identifier, _fieldsToSerialize);
-				if (_equip == null)
-					_equip = new Models.Equip(m_userContext, true, _fieldsToSerialize);
+				_equip ??= new Models.Equip(m_userContext, true, _fieldsToSerialize);
 				return _equip;
 			}
 			set { _equip = value; }
 		}
 
-
 		[DisplayName(">DADATARY")]
 		/// <summary>Field : ">DADATARY" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Lendi.ValCodpess2")]
 		public string ValCodpess2 { get { return klass.ValCodpess2; } set { klass.ValCodpess2 = value; } }
+
 		private Pess2 _pess2;
 		[DisplayName("Pess2")]
 		[ShouldSerialize("Pess2")]
-		public virtual Pess2 Pess2 {
-			get {
-				if (!this.isEmptyModel && (_pess2 == null || (!string.IsNullOrEmpty(ValCodpess2) && (_pess2.isEmptyModel || _pess2.klass.QPrimaryKey != ValCodpess2))))
+		public virtual Pess2 Pess2
+		{
+			get
+			{
+				if (!isEmptyModel && (_pess2 == null || (!string.IsNullOrEmpty(ValCodpess2) && (_pess2.isEmptyModel || _pess2.klass.QPrimaryKey != ValCodpess2))))
 					_pess2 = Models.Pess2.Find(ValCodpess2, m_userContext, Identifier, _fieldsToSerialize);
-				if (_pess2 == null)
-					_pess2 = new Models.Pess2(m_userContext, true, _fieldsToSerialize);
+				_pess2 ??= new Models.Pess2(m_userContext, true, _fieldsToSerialize);
 				return _pess2;
 			}
 			set { _pess2 = value; }
 		}
 
-
 		[DisplayName("Number of lending")]
 		/// <summary>Field : "Number of lending" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Lendi.ValLendinnr")]
 		[NumericAttribute(0)]
-		public decimal? ValLendinnr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValLendinnr, 0)); } set { klass.ValLendinnr = Convert.ToDecimal(value); } }
+		public decimal? ValLendinnr { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValLendinnr, 0)); } set { klass.ValLendinnr = Convert.ToDecimal(value); } }
 
 		[DisplayName("Beginning")]
 		/// <summary>Field : "Beginning" Tipo: "DT" Formula:  ""</summary>
@@ -140,7 +143,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Days for return period" Tipo: "N" Formula: +H "iif(emptyD([LENDI->END])==1,0,Diferenca_entre_Datas([Today],[LENDI->END],"D"))"</summary>
 		[ShouldSerialize("Lendi.ValDayslimi")]
 		[NumericAttribute(0)]
-		public decimal? ValDayslimi { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDayslimi, 0)); } set { klass.ValDayslimi = Convert.ToDecimal(value); } }
+		public decimal? ValDayslimi { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDayslimi, 0)); } set { klass.ValDayslimi = Convert.ToDecimal(value); } }
 
 		[DisplayName("If out of date")]
 		/// <summary>Field : "If out of date" Tipo: "L" Formula: + "iif([LENDI->DAYSLIMI]<0,1,0)"</summary>
@@ -149,8 +152,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Lendi.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Lendi(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -169,7 +172,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAlendi csgenioa)
 		{
 			if (csgenioa == null)
@@ -180,18 +182,15 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "pess1":
-						if (_pess1 == null)
-							_pess1 = new Pess1(m_userContext, true, _fieldsToSerialize);
+						_pess1 ??= new Pess1(m_userContext, true, _fieldsToSerialize);
 						_pess1.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "equip":
-						if (_equip == null)
-							_equip = new Equip(m_userContext, true, _fieldsToSerialize);
+						_equip ??= new Equip(m_userContext, true, _fieldsToSerialize);
 						_equip.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					case "pess2":
-						if (_pess2 == null)
-							_pess2 = new Pess2(m_userContext, true, _fieldsToSerialize);
+						_pess2 ??= new Pess2(m_userContext, true, _fieldsToSerialize);
 						_pess2.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

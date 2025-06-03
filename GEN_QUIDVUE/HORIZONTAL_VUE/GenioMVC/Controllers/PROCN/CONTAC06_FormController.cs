@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Contac06_PropeValTitleModel : RequestLookupModel
+		{
+			public Contac06_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Procn/Contac06_PropeValTitle
 		// POST: /Procn/Contac06_PropeValTitle
 		[ActionName("Contac06_PropeValTitle")]
-		public ActionResult Contac06_PropeValTitle([FromBody]RequestLookupModel requestModel)
+		public ActionResult Contac06_PropeValTitle([FromBody] Contac06_PropeValTitleModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Contac06_PropeValTitle_ViewModel model = new Contac06_PropeValTitle_ViewModel(UserContext.Current);
-			
+
+			Models.Procn parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Contac06_PropeValTitle_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

@@ -54,7 +54,7 @@ namespace CSGenio.business
             }
 
             string descTrans = Translations.Get(Qfield.FieldDescription, user.Language);
-            if (Qfield.FieldSize > 0 && Qfield.FieldType == FieldType.TEXTO && Qfield.FieldSize < fieldValue.ToString().Length)
+            if (Qfield.FieldSize > 0 && Qfield.FieldType == FieldType.TEXT && Qfield.FieldSize < fieldValue.ToString().Length)
                 return string.Format(Translations.Get("O tamanho do campo {0} excede o valor máximo permitido ({1}).", user.Language), descTrans, Qfield.FieldSize);
 
             // validate if the field value is unique (prefNdup)
@@ -64,16 +64,16 @@ namespace CSGenio.business
                 // Prevent returning codes / guids in error messages to the user
 
                 bool isKey = true;
-                if (Qfield.FieldType != FieldType.CHAVE_ESTRANGEIRA && Qfield.FieldType != FieldType.CHAVE_ESTRANGEIRA_GUID && Qfield.FieldType != FieldType.CHAVE_PRIMARIA && Qfield.FieldType != FieldType.CHAVE_PRIMARIA_GUID)
+                if (Qfield.FieldType != FieldType.KEY_VARCHAR && Qfield.FieldType != FieldType.KEY_GUID && Qfield.FieldType != FieldType.KEY_VARCHAR && Qfield.FieldType != FieldType.KEY_GUID)
                     isKey = false;
 
                 if (!String.IsNullOrEmpty(Qfield.ArrayName) && !isKey)
                 {
                     // Convert array name
                     string arrayPrefix = string.Empty;
-                    if (Qfield.FieldType == FieldType.ARRAY_COD_NUMERICO)
+                    if (Qfield.FieldType == FieldType.ARRAY_NUMERIC)
                         arrayPrefix = "dbo.GetValArrayN";
-                    else if (Qfield.FieldType == FieldType.ARRAY_COD_LOGICO)
+                    else if (Qfield.FieldType == FieldType.ARRAY_LOGIC)
                         arrayPrefix = "dbo.GetValArrayL";
                     else
                         arrayPrefix = "dbo.GetValArrayC";
@@ -107,17 +107,14 @@ namespace CSGenio.business
                                 // When we have a whole field name,
                                 // check if there is a field with that name in the current table
 
-                                foreach (DictionaryEntry fld in area.Fields)
-                                {
-
-                                    if (fld.Key.ToString().Replace(Qfield.Alias + ".", "").ToUpper() == currentField.ToUpper())
+                                foreach (var fld in area.Fields)
+                                    if(currentField.Equals(fld.Value.Name, StringComparison.OrdinalIgnoreCase))
                                     {
                                         //If we confirm there is a field in the current table with this name
                                         //Fetch its value and replace it in the string
                                         dupeMsg = dupeMsg.Replace("[" + currentField + "]", (fld.Value as RequestedField).Value.ToString());
                                         break;
                                     }
-                                }
 
                                 currentField = ""; //Clear currentField even if nothing was replaced
 

@@ -157,6 +157,7 @@ namespace GenioMVC.ViewModels.Kinde
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Kinde m)
 		{
 			if (m == null)
@@ -177,20 +178,13 @@ namespace GenioMVC.ViewModels.Kinde
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Kinde m)
 		{
 			if (m == null)
@@ -390,8 +384,6 @@ namespace GenioMVC.ViewModels.Kinde
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

@@ -236,13 +236,6 @@ public abstract class KanbanBaseViewModel<TColumn, TCard, TViewModelColumn, TVie
 	/// <exception cref="BusinessException">An error is emitted if moving and/or reordering is not allowed or if the move and/or reordering fails.</exception>
 	private void MoveCard(string id, string columnId, int position)
 	{
-		if(!IsEditable)
-		{
-			// TODO: Translate error message
-			var errorMsg = $"Moving cards in the '{Identifier}' Kanban is not allowed.";
-			throw new BusinessException(errorMsg, $"{Identifier} kanban - ReorderColumn", errorMsg);
-		}
-
 		var user = m_userContext.User;
 		var sp = m_userContext.PersistentSupport;
 		try

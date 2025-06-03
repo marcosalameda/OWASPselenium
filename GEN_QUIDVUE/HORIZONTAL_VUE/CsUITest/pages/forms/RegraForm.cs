@@ -15,7 +15,7 @@ public class RegraForm : Form
 	/// <summary>
 	/// Description
 	/// </summary>
-	public BaseInputControl RulesDescript => new BaseInputControl(driver, ContainerLocator, "#REGRA___RULESDESCRIPT");
+	public BaseInputControl RulesDescript => new BaseInputControl(driver, ContainerLocator, "container-REGRA___RULESDESCRIPT", "#REGRA___RULESDESCRIPT");
 
 	/// <summary>
 	/// Local onde executa

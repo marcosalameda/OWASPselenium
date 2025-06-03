@@ -31,7 +31,11 @@ namespace GenioMVC.ViewModels.Dispa
 
 		#region Foreign keys
 		/// <summary>
-		/// Title: "Customer" | Type: "CE"
+		/// Title: "Status" | Type: "CE"
+		/// </summary>
+		public string ValCoddisst { get; set; }
+		/// <summary>
+		/// Title: "Cliente" | Type: "CE"
 		/// </summary>
 		public string ValCodentit { get; set; }
 		/// <summary>
@@ -49,6 +53,11 @@ namespace GenioMVC.ViewModels.Dispa
 		/// </summary>
 		public decimal? ValDispanr { get; set; }
 		/// <summary>
+		/// Title: "Status" | Type: "C"
+		/// </summary>
+		[ValidateSetAccess]
+		public TableDBEdit<GenioMVC.Models.Disst> TableDisstStatus { get; set; }
+		/// <summary>
 		/// Title: "Status" | Type: "AC"
 		/// </summary>
 		[ValidateSetAccess]
@@ -59,7 +68,7 @@ namespace GenioMVC.ViewModels.Dispa
 		[JsonIgnore]
 		public SelectList List_ValStatus { get; set; }
 		/// <summary>
-		/// Title: "Customer" | Type: "C"
+		/// Title: "Cliente" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Entit> TableEntitName { get; set; }
@@ -197,6 +206,7 @@ namespace GenioMVC.ViewModels.Dispa
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Dispa m)
 		{
 			if (m == null)
@@ -207,6 +217,7 @@ namespace GenioMVC.ViewModels.Dispa
 
 			try
 			{
+				ValCoddisst = ViewModelConversion.ToString(m.ValCoddisst);
 				ValCodentit = ViewModelConversion.ToString(m.ValCodentit);
 				ValCodperso = ViewModelConversion.ToString(m.ValCodperso);
 				ValDispadt = ViewModelConversion.ToDateTime(m.ValDispadt);
@@ -223,20 +234,13 @@ namespace GenioMVC.ViewModels.Dispa
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Dispa m)
 		{
 			if (m == null)
@@ -247,6 +251,7 @@ namespace GenioMVC.ViewModels.Dispa
 
 			try
 			{
+				m.ValCoddisst = ViewModelConversion.ToString(ValCoddisst);
 				m.ValCodentit = ViewModelConversion.ToString(ValCodentit);
 				m.ValCodperso = ViewModelConversion.ToString(ValCodperso);
 				m.ValDispadt = ViewModelConversion.ToDateTime(ValDispadt);
@@ -287,6 +292,9 @@ namespace GenioMVC.ViewModels.Dispa
 
 				switch (fullFieldName)
 				{
+					case "dispa.coddisst":
+						this.ValCoddisst = ViewModelConversion.ToString(_value);
+						break;
 					case "dispa.codentit":
 						this.ValCodentit = ViewModelConversion.ToString(_value);
 						break;
@@ -404,6 +412,7 @@ namespace GenioMVC.ViewModels.Dispa
 			// Add characteristics
 			Characs = new List<string>();
 
+			Load_Dispa___disststatus__(qs, lazyLoad);
 			Load_Dispa___entitname____(qs, lazyLoad);
 			Load_Dispa___personame____(qs, lazyLoad);
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL DISPA]/
@@ -456,6 +465,195 @@ namespace GenioMVC.ViewModels.Dispa
 		public void LoadChecklistsSelectedIDs()
 		{
 		}
+
+		/// <summary>
+		/// TableDisstStatus -> (DB)
+		/// </summary>
+		/// <param name="qs"></param>
+		/// <param name="lazyLoad">Lazy loading of dropdown items</param>
+		public void Load_Dispa___disststatus__(NameValueCollection qs, bool lazyLoad = false)
+		{
+			bool dispa___disststatus__DoLoad = true;
+			CriteriaSet dispa___disststatus__Conds = CriteriaSet.And();
+			{
+				object hValue = Navigation.GetValue("disst", true);
+				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
+				{
+					dispa___disststatus__Conds.Equal(CSGenioAdisst.FldCoddisst, hValue);
+					this.ValCoddisst = DBConversion.ToString(hValue);
+				}
+			}
+
+			TableDisstStatus = new TableDBEdit<Models.Disst>
+			{
+				IsLazyLoad = lazyLoad
+			};
+
+			if (lazyLoad)
+			{
+				if (Navigation.CurrentLevel.GetEntry("RETURN_disst") != null)
+				{
+					this.ValCoddisst = Navigation.GetStrValue("RETURN_disst");
+					Navigation.CurrentLevel.SetEntry("RETURN_disst", null);
+				}
+				FillDependant_DispaTableDisstStatus(lazyLoad);
+				return;
+			}
+
+			if (dispa___disststatus__DoLoad)
+			{
+				List<ColumnSort> sorts = new List<ColumnSort>();
+				ColumnSort requestedSort = GetRequestSort(TableDisstStatus, "sTableDisstStatus", "dTableDisstStatus", qs, "disst");
+				if (requestedSort != null)
+					sorts.Add(requestedSort);
+
+				string query = "";
+				if (!string.IsNullOrEmpty(qs["TableDisstStatus_tableFilters"]))
+					TableDisstStatus.TableFilters = bool.Parse(qs["TableDisstStatus_tableFilters"]);
+				else
+					TableDisstStatus.TableFilters = false;
+
+				query = qs["qTableDisstStatus"];
+
+				//RS 26.07.2016 O preenchimento da lista de ajuda dos Dbedits passa a basear-se apenas no campo do próprio DbEdit
+				// O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
+				//  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
+				CriteriaSet search_filters = CriteriaSet.And();
+				if (!string.IsNullOrEmpty(query))
+				{
+					search_filters.Like(CSGenioAdisst.FldStatus, query + "%");
+				}
+				dispa___disststatus__Conds.SubSet(search_filters);
+
+				string tryParsePage = qs["pTableDisstStatus"] != null ? qs["pTableDisstStatus"].ToString() : "1";
+				int page = !string.IsNullOrEmpty(tryParsePage) ? int.Parse(tryParsePage) : 1;
+				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
+				int offset = (page - 1) * numberItems;
+
+				FieldRef[] fields = new FieldRef[] { CSGenioAdisst.FldCoddisst, CSGenioAdisst.FldStatus, CSGenioAdisst.FldZzstate };
+
+// USE /[MANUAL GQT OVERRQ DISPA_DISSTSTATUS]/
+
+				// Limitation by Zzstate
+				/*
+					Records that are currently being inserted or duplicated will also be included.
+					Client-side persistence will try to fill the "text" value of that option.
+				*/
+				if (Navigation.checkFormMode("disst", FormMode.New) || Navigation.checkFormMode("disst", FormMode.Duplicate))
+					dispa___disststatus__Conds.SubSet(CriteriaSet.Or()
+						.Equal(CSGenioAdisst.FldZzstate, 0)
+						.Equal(CSGenioAdisst.FldCoddisst, Navigation.GetStrValue("disst")));
+				else
+					dispa___disststatus__Conds.Criterias.Add(new Criteria(new ColumnReference(CSGenioAdisst.FldZzstate), CriteriaOperator.Equal, 0));
+
+				FieldRef firstVisibleColumn = new FieldRef("disst", "status");
+				ListingMVC<CSGenioAdisst> listing = Models.ModelBase.Where<CSGenioAdisst>(m_userContext, false, dispa___disststatus__Conds, fields, offset, numberItems, sorts, "LED_DISPA___DISSTSTATUS__", true, false, firstVisibleColumn: firstVisibleColumn);
+
+				TableDisstStatus.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+				TableDisstStatus.Query = query;
+				TableDisstStatus.Elements = listing.RowsForViewModel<GenioMVC.Models.Disst>((r) => new GenioMVC.Models.Disst(m_userContext, r, true, _fieldsToSerialize_DISPA___DISSTSTATUS__));
+
+				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
+				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
+				if (Navigation.CurrentLevel.GetEntry("RETURN_disst") != null)
+				{
+					this.ValCoddisst = Navigation.GetStrValue("RETURN_disst");
+					Navigation.CurrentLevel.SetEntry("RETURN_disst", null);
+				}
+
+				TableDisstStatus.List = new SelectList(TableDisstStatus.Elements.ToSelectList(x => x.ValStatus, x => x.ValCoddisst,  x => x.ValCoddisst == this.ValCoddisst), "Value", "Text", this.ValCoddisst);
+				FillDependant_DispaTableDisstStatus();
+			}
+		}
+
+		/// <summary>
+		/// Get Dependant fields values -> TableDisstStatus (DB)
+		/// </summary>
+		/// <param name="PKey">Primary Key of Disst</param>
+		public ConcurrentDictionary<string, object> GetDependant_DispaTableDisstStatus(string PKey)
+		{
+			FieldRef[] refDependantFields = [CSGenioAdisst.FldCoddisst, CSGenioAdisst.FldStatus];
+
+			var returnEmptyDependants = false;
+			CriteriaSet wherecodition = CriteriaSet.And();
+
+			// Return default values
+			if (GenFunctions.emptyG(PKey) == 1)
+				returnEmptyDependants = true;
+
+			// Check if the limit(s) is filled if exists
+			// - - - - - - - - - - - - - - - - - - - - -
+
+			if (returnEmptyDependants)
+				return GetViewModelFieldValues(refDependantFields);
+
+			PersistentSupport sp = m_userContext.PersistentSupport;
+			User u = m_userContext.User;
+
+			CSGenioAdisst tempArea = new(u);
+
+			// Fields to select
+			SelectQuery querySelect = new();
+			querySelect.PageSize(1);
+			foreach (FieldRef field in refDependantFields)
+				querySelect.Select(field);
+
+			querySelect.From(tempArea.QSystem, tempArea.TableName, tempArea.Alias)
+				.Where(wherecodition.Equal(CSGenioAdisst.FldCoddisst, PKey));
+
+			string[] dependantFields = refDependantFields.Select(f => f.FullName).ToArray();
+			QueryUtils.SetInnerJoins(dependantFields, null, tempArea, querySelect);
+
+			ArrayList values = sp.executeReaderOneRow(querySelect);
+			bool useDefaults = values.Count == 0;
+
+			if (useDefaults)
+				return GetViewModelFieldValues(refDependantFields);
+			return GetViewModelFieldValues(refDependantFields, values);
+		}
+
+		/// <summary>
+		/// Fill Dependant fields values -> TableDisstStatus (DB)
+		/// </summary>
+		/// <param name="lazyLoad">Lazy loading of dropdown items</param>
+		public void FillDependant_DispaTableDisstStatus(bool lazyLoad = false)
+		{
+			var row = GetDependant_DispaTableDisstStatus(this.ValCoddisst);
+			try
+			{
+
+				// Fill List fields
+				this.ValCoddisst = ViewModelConversion.ToString(row["disst.coddisst"]);
+				TableDisstStatus.Value = (string)row["disst.status"];
+				if (GenFunctions.emptyG(this.ValCoddisst) == 1)
+				{
+					this.ValCoddisst = "";
+					TableDisstStatus.Value = "";
+					Navigation.ClearValue("disst");
+				}
+				else if (lazyLoad)
+				{
+					TableDisstStatus.SetPagination(1, 0, false, false, 1);
+					TableDisstStatus.List = new SelectList(new List<SelectListItem>()
+					{
+						new SelectListItem
+						{
+							Value = Convert.ToString(this.ValCoddisst),
+							Text = Convert.ToString(TableDisstStatus.Value),
+							Selected = true
+						}
+					}, "Value", "Text", this.ValCoddisst);
+				}
+
+				TableDisstStatus.Selected = this.ValCoddisst;
+			}
+			catch (Exception ex)
+			{
+				CSGenio.framework.Log.Error(string.Format("FillDependant_Error (TableDisstStatus): {0}; {1}", ex.Message, ex.InnerException != null ? ex.InnerException.Message : ""));
+			}
+		}
+
+		private readonly string[] _fieldsToSerialize_DISPA___DISSTSTATUS__ = ["Disst", "Disst.ValCoddisst", "Disst.ValZzstate", "Disst.ValStatus"];
 
 		/// <summary>
 		/// TableEntitName -> (DB)
@@ -570,7 +768,7 @@ namespace GenioMVC.ViewModels.Dispa
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -617,7 +815,7 @@ namespace GenioMVC.ViewModels.Dispa
 				// Fill List fields
 				this.ValCodentit = ViewModelConversion.ToString(row["entit.codentit"]);
 				TableEntitName.Value = (string)row["entit.name"];
-				if (GlobalFunctions.emptyG(this.ValCodentit) == 1)
+				if (GenFunctions.emptyG(this.ValCodentit) == 1)
 				{
 					this.ValCodentit = "";
 					TableEntitName.Value = "";
@@ -760,7 +958,7 @@ namespace GenioMVC.ViewModels.Dispa
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -807,7 +1005,7 @@ namespace GenioMVC.ViewModels.Dispa
 				// Fill List fields
 				this.ValCodperso = ViewModelConversion.ToString(row["perso.codperso"]);
 				TablePersoName.Value = (string)row["perso.name"];
-				if (GlobalFunctions.emptyG(this.ValCodperso) == 1)
+				if (GenFunctions.emptyG(this.ValCodperso) == 1)
 				{
 					this.ValCodperso = "";
 					TablePersoName.Value = "";
@@ -841,6 +1039,7 @@ namespace GenioMVC.ViewModels.Dispa
 		{
 			return identifier switch
 			{
+				"dispa.coddisst" => ViewModelConversion.ToString(modelValue),
 				"dispa.codentit" => ViewModelConversion.ToString(modelValue),
 				"dispa.codperso" => ViewModelConversion.ToString(modelValue),
 				"dispa.dispadt" => ViewModelConversion.ToDateTime(modelValue),
@@ -849,6 +1048,8 @@ namespace GenioMVC.ViewModels.Dispa
 				"dispa.isprepar" => ViewModelConversion.ToLogic(modelValue),
 				"dispa.prepared" => ViewModelConversion.ToDateTime(modelValue),
 				"dispa.coddispa" => ViewModelConversion.ToString(modelValue),
+				"disst.coddisst" => ViewModelConversion.ToString(modelValue),
+				"disst.status" => ViewModelConversion.ToString(modelValue),
 				"entit.codentit" => ViewModelConversion.ToString(modelValue),
 				"entit.name" => ViewModelConversion.ToString(modelValue),
 				"perso.codperso" => ViewModelConversion.ToString(modelValue),
@@ -856,8 +1057,6 @@ namespace GenioMVC.ViewModels.Dispa
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

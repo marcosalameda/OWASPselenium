@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Kinde_ValParameteModel : RequestLookupModel
+		{
+			public Kinde_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Kinde/Kinde_ValParamete
 		// POST: /Kinde/Kinde_ValParamete
 		[ActionName("Kinde_ValParamete")]
-		public ActionResult Kinde_ValParamete([FromBody]RequestLookupModel requestModel)
+		public ActionResult Kinde_ValParamete([FromBody] Kinde_ValParameteModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -420,16 +424,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Kinde_ValParamete_ViewModel model = new Kinde_ValParamete_ViewModel(UserContext.Current);
-			
+			Models.Kinde parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Kinde_ValParamete_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -454,11 +460,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Kinde_ValManualsModel : RequestLookupModel
+		{
+			public Kinde_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Kinde/Kinde_ValManuals
 		// POST: /Kinde/Kinde_ValManuals
 		[ActionName("Kinde_ValManuals")]
-		public ActionResult Kinde_ValManuals([FromBody]RequestLookupModel requestModel)
+		public ActionResult Kinde_ValManuals([FromBody] Kinde_ValManualsModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -482,16 +493,18 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Kinde_ValManuals_ViewModel model = new Kinde_ValManuals_ViewModel(UserContext.Current);
-			
+			Models.Kinde parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Kinde_ValManuals_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

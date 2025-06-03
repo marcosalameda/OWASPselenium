@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Equip;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER EQUIP]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class EquipController : ControllerBase
 	{
-		public EquipController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public EquipController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION EQUIP]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER EQUIP]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Equip row = null;
-
-			if (row == null)
-			{
-				row = new Models.Equip(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("equip");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Equip row = new Models.Equip(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("equip");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "ACCORDI_CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Accordi_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Accordi_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Accordi_cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "ACCORDI_PESS1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Accordi_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Accordi_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Accordi_pess1name____(qs);
 							result = model.TablePess1Name;
@@ -93,8 +100,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIGROUPESS1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equigrou_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Equigrou_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Equigroupess1name____(qs);
 							result = model.TablePess1Name;
@@ -102,8 +108,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIGROUTPEQUTIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equigrou_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Equigrou_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Equigroutpequtipoequi(qs);
 							result = model.TableTpequTipoequi;
@@ -111,8 +116,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___CMPNYDESIGNAT":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Equip___cmpnydesignat(qs);
 							result = model.TableCmpnyDesignat;
@@ -120,8 +124,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___PESS1NAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Equip___pess1name____(qs);
 							result = model.TablePess1Name;
@@ -129,8 +132,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___TPEQUTIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Equip___tpequtipoequi(qs);
 							result = model.TableTpequTipoequi;
@@ -138,8 +140,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___WAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Equip___warehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -147,8 +148,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___ITEM_ITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Equip___item_itemdes_(qs);
 							result = model.TableItemItemdes;
@@ -156,8 +156,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___ROOM1ROOMNR__":	// Field (F1)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Equip___room1roomnr__(qs);
 							result = model.TableRoom1Roomnr;
@@ -165,8 +164,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "EQUIP___DECOMDECOMNR_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Equip_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Equip_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Equip___decomdecomnr_(qs);
 							result = model.TableDecomDecomnr;
@@ -174,8 +172,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_TPEQUTIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Groupbx_tpequtipoequi(qs);
 							result = model.TableTpequTipoequi;
@@ -183,8 +180,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_WAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Groupbx_warehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -192,8 +188,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_ITEM_ITEMDES_":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Groupbx_item_itemdes_(qs);
 							result = model.TableItemItemdes;
@@ -201,8 +196,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "GROUPBX_ROOM1ROOMNR__":	// Field (F1)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Groupbx_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Groupbx_room1roomnr__(qs);
 							result = model.TableRoom1Roomnr;
@@ -210,8 +204,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "WID_IEQUTPEQUTIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Wid_iequ_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Wid_iequ_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Wid_iequtpequtipoequi(qs);
 							result = model.TableTpequTipoequi;
@@ -219,8 +212,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "WID_IEQUWAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Wid_iequ_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Wid_iequ_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Wid_iequwarehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -335,6 +327,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Accordi" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -348,6 +343,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Equdocum" form. (++, CT, SR, CL and U1)
@@ -363,6 +360,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Equigrou" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -376,6 +375,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Equip" form. (++, CT, SR, CL and U1)
@@ -391,6 +392,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Fullcale" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -404,6 +407,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Gmaps" form. (++, CT, SR, CL and U1)
@@ -419,6 +424,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Groupbx" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -433,6 +440,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Timequip" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -446,6 +455,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Equip)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Wid_iequ" form. (++, CT, SR, CL and U1)

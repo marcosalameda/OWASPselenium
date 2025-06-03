@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Genre
 {
-	public class TBS_Menu_161_ViewModel : ListViewModel
+	public class TBS_Menu_161_ViewModel : MenuListViewModel<Models.Genre>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<TBS_Menu_161_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "genre"; }
+		[JsonIgnore]
+		public override string TableAlias => "genre";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "367a8002-7b01-45e4-9022-ea27414db6de"; }
+		public override string Uuid => "367a8002-7b01-45e4-9022-ea27414db6de";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodgenre { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Genre
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL TBS LIST_LIMITS 161]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,34 @@ namespace GenioMVC.ViewModels.Genre
 			var areaBase = CSGenio.business.Area.createArea("genre", user, "TBS");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet tbs_menu_161Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML161");
-			tbs_menu_161Conds.Equal(CSGenioAgenre.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML161");
+			conditions.Equal(CSGenioAgenre.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL TBS OVERRQ 161]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.FldZzstate, CSGenioAgenre.FldGender, CSGenioAgenre.FldAgencont, CSGenioAgenre.FldBackcolo, CSGenioAgenre.FldTextcolo };
 
-			ListingMVC<CSGenioAgenre> listing = new ListingMVC<CSGenioAgenre>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(tbs_menu_161Conds, listing);
+			ListingMVC<CSGenioAgenre> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public TBS_Menu_161_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="TBS_Menu_161_ViewModel" /> class.
@@ -102,15 +132,25 @@ namespace GenioMVC.ViewModels.Genre
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TBS_Menu_161_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public TBS_Menu_161_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXTO, Resources.Resources.GENUS37471, 20, 0, true),
-				new Exports.QColumn(CSGenioAgenre.FldAgencont, FieldType.ARRAY_COD_TEXTO, Resources.Resources.GENDER_CONTACT17830, 1, 0, true, "GenConta"),
-				new Exports.QColumn(CSGenioAgenre.FldBackcolo, FieldType.TEXTO, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
-				new Exports.QColumn(CSGenioAgenre.FldTextcolo, FieldType.TEXTO, Resources.Resources.TEXT_COLOR24820, 30, 0, false),
+				new Exports.QColumn(CSGenioAgenre.FldGender, FieldType.TEXT, Resources.Resources.GENUS37471, 20, 0, true),
+				new Exports.QColumn(CSGenioAgenre.FldAgencont, FieldType.ARRAY_TEXT, Resources.Resources.GENDER_CONTACT17830, 1, 0, true, "GenConta"),
+				new Exports.QColumn(CSGenioAgenre.FldBackcolo, FieldType.TEXT, Resources.Resources.BACKGROUND_COLOR47883, 30, 0, false),
+				new Exports.QColumn(CSGenioAgenre.FldTextcolo, FieldType.TEXT, Resources.Resources.TEXT_COLOR24820, 30, 0, false),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -159,13 +199,10 @@ namespace GenioMVC.ViewModels.Genre
 
 			if (Menu == null)
 				Menu = new TablePartial<TBS_Menu_161_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("GENRE.GENDER", new OrderedDictionary());
-			allSortOrders["GENRE.GENDER"].Add("GENRE.GENDER", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -178,8 +215,7 @@ namespace GenioMVC.ViewModels.Genre
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -276,23 +312,22 @@ namespace GenioMVC.ViewModels.Genre
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAgenre> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "161"),
 				new("Module", "TBS")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<TBS_Menu_161_RowViewModel>();
 
 				CriteriaSet tbs_menu_161Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("GENRE.GENDER", new OrderedDictionary());
 				allSortOrders["GENRE.GENDER"].Add("GENRE.GENDER", "A");
-
 
 
 
@@ -324,26 +359,24 @@ namespace GenioMVC.ViewModels.Genre
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("genre", "gender");
+					firstVisibleColumn ??= new FieldRef("genre", "gender");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAgenre model_limit_area = new CSGenioAgenre(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML161");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAgenre model_limit_area = new CSGenioAgenre(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML161");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -354,6 +387,8 @@ namespace GenioMVC.ViewModels.Genre
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL TBS OVERRQ 161]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -382,7 +417,7 @@ namespace GenioMVC.ViewModels.Genre
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAgenre> listing = Models.ModelBase.Where<CSGenioAgenre>(m_userContext, false, tbs_menu_161Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML161", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAgenre> listing = Models.ModelBase.Where<CSGenioAgenre>(m_userContext, distinct, tbs_menu_161Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML161", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -390,7 +425,6 @@ namespace GenioMVC.ViewModels.Genre
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -412,18 +446,12 @@ namespace GenioMVC.ViewModels.Genre
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -431,7 +459,7 @@ namespace GenioMVC.ViewModels.Genre
 
 		private List<TBS_Menu_161_RowViewModel> MapTBS_Menu_161(ListingMVC<CSGenioAgenre> Qlisting)
 		{
-			var Elements = new List<TBS_Menu_161_RowViewModel>();
+			List<TBS_Menu_161_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -448,7 +476,6 @@ namespace GenioMVC.ViewModels.Genre
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAgenre row
 		/// to a TBS_Menu_161_RowViewModel object.
@@ -457,7 +484,9 @@ namespace GenioMVC.ViewModels.Genre
 		private TBS_Menu_161_RowViewModel MapTBS_Menu_161(CSGenioAgenre row)
 		{
 			var model = new TBS_Menu_161_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -469,32 +498,9 @@ namespace GenioMVC.ViewModels.Genre
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(TBS_Menu_161_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -508,39 +514,45 @@ namespace GenioMVC.ViewModels.Genre
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAgenre> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAgenre row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Genre m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Genre m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM TBS_MENU_161]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Genre", "Genre.ValCodgenre", "Genre.ValZzstate", "Genre.ValGender", "Genre.ValAgencont", "Genre.ValBackcolo", "Genre.ValTextcolo", "BtnPermission"
+			"Genre", "Genre.ValCodgenre", "Genre.ValZzstate", "Genre.ValGender", "Genre.ValAgencont", "Genre.ValBackcolo", "Genre.ValTextcolo"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValGender", CSGenioAgenre.FldGender, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValAgencont", CSGenioAgenre.FldAgencont, typeof(string), array : "GenConta"),
 			new TableSearchColumn("ValBackcolo", CSGenioAgenre.FldBackcolo, typeof(string), visible : false),
-			new TableSearchColumn("ValTextcolo", CSGenioAgenre.FldTextcolo, typeof(string), visible : false)
+			new TableSearchColumn("ValTextcolo", CSGenioAgenre.FldTextcolo, typeof(string), visible : false),
 		];
-
-
-
 	}
 }

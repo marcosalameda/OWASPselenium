@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Prope;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER PROPE]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class PropeController : ControllerBase
 	{
-		public PropeController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public PropeController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PROPE]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER PROPE]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Prope row = null;
-
-			if (row == null)
-			{
-				row = new Models.Prope(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("prope");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Prope row = new Models.Prope(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("prope");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "PROPE01_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope01_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope01_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope01_agentname____(qs);
 							result = model.TableAgentName;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE03_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope03_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope03_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope03_agentname____(qs);
 							result = model.TableAgentName;
@@ -93,8 +100,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE03_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope03_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope03_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope03_city_city____(qs);
 							result = model.TableCityCity;
@@ -102,8 +108,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE05_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope05_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope05_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope05_agentname____(qs);
 							result = model.TableAgentName;
@@ -111,8 +116,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE05_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope05_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope05_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope05_city_city____(qs);
 							result = model.TableCityCity;
@@ -120,8 +124,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE06_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope06_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope06_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope06_city_city____(qs);
 							result = model.TableCityCity;
@@ -129,8 +132,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE06_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope06_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope06_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope06_agentname____(qs);
 							result = model.TableAgentName;
@@ -138,8 +140,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE07_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope07_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope07_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope07_city_city____(qs);
 							result = model.TableCityCity;
@@ -147,8 +148,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE07_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope07_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope07_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope07_agentname____(qs);
 							result = model.TableAgentName;
@@ -156,8 +156,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE08_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope08_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope08_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope08_city_city____(qs);
 							result = model.TableCityCity;
@@ -165,8 +164,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE08_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope08_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope08_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope08_agentname____(qs);
 							result = model.TableAgentName;
@@ -174,8 +172,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE09_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope09_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope09_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope09_city_city____(qs);
 							result = model.TableCityCity;
@@ -183,8 +180,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE09_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope09_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope09_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope09_agentname____(qs);
 							result = model.TableAgentName;
@@ -192,8 +188,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE10_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope10_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope10_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope10_city_city____(qs);
 							result = model.TableCityCity;
@@ -201,8 +196,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE10_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope10_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope10_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope10_agentname____(qs);
 							result = model.TableAgentName;
@@ -210,8 +204,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE11_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope11_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope11_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope11_city_city____(qs);
 							result = model.TableCityCity;
@@ -219,8 +212,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE11_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope11_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope11_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope11_agentname____(qs);
 							result = model.TableAgentName;
@@ -228,8 +220,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE17_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope17_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope17_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope17_city_city____(qs);
 							result = model.TableCityCity;
@@ -237,8 +228,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE17_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope17_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope17_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope17_agentname____(qs);
 							result = model.TableAgentName;
@@ -246,8 +236,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE19_CITY_CITY____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope19_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope19_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope19_city_city____(qs);
 							result = model.TableCityCity;
@@ -255,8 +244,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PROPE19_AGENTNAME____":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Prope19_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Prope19_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Prope19_agentname____(qs);
 							result = model.TableAgentName;
@@ -383,6 +371,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope01" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -396,6 +387,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Prope03" form. (++, CT, SR, CL and U1)
@@ -411,6 +404,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope05" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -424,6 +419,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Prope06" form. (++, CT, SR, CL and U1)
@@ -439,6 +436,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope07" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -452,6 +451,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Prope08" form. (++, CT, SR, CL and U1)
@@ -467,6 +468,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope09" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -480,6 +483,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Prope10" form. (++, CT, SR, CL and U1)
@@ -495,6 +500,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope11" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -509,6 +516,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Prope17" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -522,6 +531,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Prope)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Prope19" form. (++, CT, SR, CL and U1)

@@ -4,9 +4,9 @@ namespace quidgest.uitests.controls;
 
 public class LookupControl : DropdownControl
 {
-    protected IWebElement _seeMore => m_control.FindElement(By.CssSelector("[title=\"See more\"]"));
+    protected IWebElement _seeMore => m_control.FindElement(ByData.Testid("SeeMore"));
 
-    protected IWebElement _clear => m_control.FindElement(By.CssSelector(".q-combobox__clear"));
+    protected IWebElement _clear => m_control.FindElement(By.CssSelector(".q-clear-btn"));
 
     protected IWebElement _input => m_control.FindElement(By.CssSelector("[role=combobox]"));
 
@@ -44,7 +44,6 @@ public class LookupControl : DropdownControl
 
     public void SeeMore()
     {
-        //This should be testid = SeeMore, or testid = actions + testkey = SeeMore
         _seeMore.Click();
     }
 

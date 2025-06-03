@@ -1,134 +1,142 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using CSGenio.framework;
 using CSGenio.persistence;
-using Quidgest.Persistence.GenericQuery;
-using System.Linq;
-
 
 namespace CSGenio.business.async
 {
-    using Unit = String;
-    using Process = CSGenioAs_apr;    
+    using Process = CSGenioAs_apr;
 
-
+    /// <summary>
+    /// Manages the scheduling and execution of Genio work items
+    /// </summary>
     public class GenioScheduler
     {
+        private readonly JobFinder _jobFinder;
+        private readonly List<GenioWork> _works;
 
         public GenioScheduler(JobFinder jobFinder)
         {
-            _jobFinder = jobFinder;
+            _jobFinder = jobFinder ?? throw new ArgumentNullException(nameof(jobFinder));
+            _works = new List<GenioWork>();
         }
-    
-        private JobFinder _jobFinder;
 
-        private List<GenioWork> works = new List<GenioWork>();
-        //private List<CSGenioAprman> inMaintenance = new List<CSGenioAprman>();
-
-
-        public GenioWork GetWork(List<Process> processos, PersistentSupport sp, User user)
+        public GenioWork GetWork(List<Process> processes, PersistentSupport sp, User user)
         {
-            UpdateWorks(processos, sp, user);
+            if (processes == null) throw new ArgumentNullException(nameof(processes));
+            if (sp == null) throw new ArgumentNullException(nameof(sp));
+            if (user == null) throw new ArgumentNullException(nameof(user));
 
-            for (int i = 0; i < works.Count; i++)
+            UpdateWorks(processes, sp, user);
+
+            for (int i = 0; i < _works.Count; i++)
             {
-                //Se está em fila de espera tentamos subi-lo na lista de execução
-                if (works[i].Process.ValRtstatus == ArrayS_prstat.E_FE_2 && works[i].FulfillRequirements(sp, user))
-                {
-
-                    for (int j = i - 1; ; j--)
-                    {
-                        if (j == -1)
-                            //If evaluating the first process, that means it's executable right now.
-                            return works[i];
-                        else if (Collision(works[i].Job, works[j].Job, sp))
-                            break;
-                        else
-                            //Move up the list, continue checking for collisions
-                            continue;
-                    }
-                    //If it hasn't returned, this process cannot be executed. Move to next
+                if (!IsWorkItemEligible(_works[i], sp, user))
                     continue;
-                }
+
+                if (CanExecuteWorkItem(_works[i], i, sp))
+                    return _works[i];
             }
 
             return null;
         }
 
+        private bool IsWorkItemEligible(GenioWork work, PersistentSupport sp, User user)
+        {
+            return work.Process.ValRtstatus == ArrayS_prstat.E_FE_2 &&
+                   work.FulfillRequirements(sp, user);
+        }
+
+        private bool CanExecuteWorkItem(GenioWork work, int currentIndex, PersistentSupport sp)
+        {
+            for (int j = currentIndex - 1; j >= 0; j--)
+            {
+                if (Collision(work.Job, _works[j].Job, sp))
+                    return false;
+            }
+            return true;
+        }
+
         public bool Collision(GenioExecutableJob first, GenioExecutableJob second, PersistentSupport sp)
         {
-            PartitionPolicy firstPolicy = first.GetPartitionPolicy(second);
-            PartitionPolicy secondPolicy = second.GetPartitionPolicy(first);
+            if (first == null) throw new ArgumentNullException(nameof(first));
+            if (second == null) throw new ArgumentNullException(nameof(second));
+            if (sp == null) throw new ArgumentNullException(nameof(sp));
 
-            if (firstPolicy.IsGlobal || secondPolicy.IsGlobal)
-            {
-                return true;
-            }
-            else
-            {
-                List<Unit> firstList = firstPolicy.GetSubUnits(sp);
-                List<Unit> secondList = secondPolicy.GetSubUnits(sp);
-                return firstList.Intersect(secondList).Any();
-            }            
+            var firstPolicy = first.GetPartitionPolicy(second);
+            var secondPolicy = second.GetPartitionPolicy(first);
+
+            var firstUnits = firstPolicy.GetWorkUnits(sp);
+            var secondUnits = secondPolicy.GetWorkUnits(sp);
+
+            // Check if any work unit in the first set conflicts with any work unit in the second set
+            return firstUnits.Any(workUnit => secondUnits.Any(otherWorkUnit => workUnit.CollidesWith(otherWorkUnit)));
         }
 
-        private int OlderFirst(GenioWork first, GenioWork second)
+        private void UpdateWorks(List<Process> processes, PersistentSupport sp, User user)
         {
-            if (first.Process.ValId > second.Process.ValId)
-                return 1;
-            else if (first.Process.ValId == second.Process.ValId)
-                return 0;
-            else
-                return -1;
+            RemoveFinishedWorks(processes);
+            UpdateExistingAndAddNewWorks(processes, sp, user);
+            ReorderWorks();
         }
 
-        private int HighestPriority(GenioWork first, GenioWork second)
+        private void RemoveFinishedWorks(List<Process> processes)
         {
-            if (first.Priority > second.Priority)
-                return 1;
-            else if (first.Priority == second.Priority)
-                return OlderFirst(first, second);
-            else
-                return -1;
+            var finished = _works.Select(x => x.Process.ValCodascpr)
+                                .Except(processes.Select(x => x.ValCodascpr));
+
+            if (finished.Any())
+                _works.RemoveAll(x => finished.Contains(x.Process.ValCodascpr));
         }
 
-        private void UpdateWorks(List<Process> processos, PersistentSupport sp, User user)
+        private void UpdateExistingAndAddNewWorks(List<Process> processes, PersistentSupport sp, User user)
         {
-            //If a process isn't in the list it has finished. Remove it.
-            var finished = works.Select(x => x.Process.ValCodascpr)
-                .Except(processos.Select(x => x.ValCodascpr));
-            if (finished.Count() > 0)
-                works.RemoveAll(x => finished.Contains(x.Process.ValCodascpr));
-
-            //Add new process and update existing ones            
-            foreach (Process process in processos)
+            foreach (var process in processes)
             {
-                GenioWork existing = works.Find(x => x.Process.ValCodascpr == process.ValCodascpr);
+                var existing = _works.Find(x => x.Process.ValCodascpr == process.ValCodascpr);
+
                 if (existing != null)
                 {
-                    if (existing.Process.ValExternal == 1 && existing.Process.ValRtstatus != process.ValRtstatus)
-                    {
-                        existing.Process.ValRtstatus = process.ValRtstatus;
-                    }
+                    UpdateExistingWork(existing, process);
                 }
                 else
                 {
-                    GenioExecutableJob job = _jobFinder.ObtainJob(process);
-                    job.FillArguments(sp, user, process);
-                    job.SetPartitionPolicies();
-                    works.Add(new GenioWork(process, job));
+                    AddNewWork(process, sp, user);
                 }
             }
+        }
 
-            var executing = works.Where(w => SchedulerBroker.IsExecuting(w.Process));
-            var notExecuting = works.Where(w => !SchedulerBroker.IsExecuting(w.Process)).ToList();
-            notExecuting.Sort(HighestPriority);
+        private void UpdateExistingWork(GenioWork work, Process process)
+        {
+            if (work.Process.ValExternal == 1 && work.Process.ValRtstatus != process.ValRtstatus)
+            {
+                work.Process.ValRtstatus = process.ValRtstatus;
+            }
+        }
 
-            works = executing.Union(notExecuting).ToList();
+        private void AddNewWork(Process process, PersistentSupport sp, User user)
+        {
+            var job = _jobFinder.ObtainJob(process);
+            job.FillArguments(sp, user, process);
+            job.SetPartitionPolicies();
+            _works.Add(new GenioWork(process, job));
+        }
+
+        private void ReorderWorks()
+        {
+            var executing = _works.Where(w => SchedulerBroker.IsExecuting(w.Process));
+            var notExecuting = _works.Where(w => !SchedulerBroker.IsExecuting(w.Process)).OrderBy(w => w).ToList();
+
+            _works.Clear();
+            _works.AddRange(executing.Concat(notExecuting));
         }
     }
 
-    class InvalidProcessException : BusinessException
+    /// <summary>
+    /// Exception thrown when a process is invalid
+    /// </summary>
+    public class InvalidProcessException : BusinessException
     {
         public InvalidProcessException(string message, string localErro, string causaErro)
             : base(message, localErro, causaErro)
@@ -136,6 +144,9 @@ namespace CSGenio.business.async
         }
     }
 
+    /// <summary>
+    /// Represents time units for monitoring purposes
+    /// </summary>
     public enum TimeUnit
     {
         Seconds,
@@ -143,73 +154,50 @@ namespace CSGenio.business.async
         Hours
     }
 
+    /// <summary>
+    /// Provides utility methods for time-based monitoring operations
+    /// </summary>
     public static class MonitorUtils
     {
+        private static readonly Dictionary<TimeUnit, string> TimeUnitStrings = new Dictionary<TimeUnit, string>
+        {
+            { TimeUnit.Seconds, "segundos" },
+            { TimeUnit.Minutes, "minutos" },
+            { TimeUnit.Hours, "horas" }
+        };
+
+        private static readonly Dictionary<string, TimeUnit> StringToTimeUnit = new Dictionary<string, TimeUnit>
+        {
+            { "H", TimeUnit.Hours },
+            { "M", TimeUnit.Minutes },
+            { "S", TimeUnit.Seconds }
+        };
+
         public static string GetTimeUnitAsString(TimeUnit unit)
         {
-            switch (unit)
-            {
-                case TimeUnit.Seconds:
-                    return "segundos";
-                case TimeUnit.Minutes:
-                    return "minutos";
-                case TimeUnit.Hours:
-                    return "horas";
-            }
-            return string.Empty;
+            return TimeUnitStrings.TryGetValue(unit, out var result) ? result : string.Empty;
         }
 
-        public static bool CompareTimeDiff(TimeSpan span, double val, TimeUnit unit)
+        public static bool CompareTimeDiff(TimeSpan span, double value, TimeUnit unit)
         {
-            bool result = false;
-
-            switch (unit)
-            {
-                case TimeUnit.Seconds:
-                    result = span.TotalSeconds > val;
-                    break;
-                case TimeUnit.Minutes:
-                    result = span.TotalMinutes > val;
-                    break;
-                case TimeUnit.Hours:
-                    result = span.TotalHours > val;
-                    break;
-                default:
-                    break;
-            }
-
-            return result;
+            var spanValue = GetUnitTimeSpan(unit, span);
+            return spanValue > value;
         }
 
         public static double GetUnitTimeSpan(TimeUnit unit, TimeSpan span)
         {
             switch (unit)
             {
-                case TimeUnit.Seconds:
-                    return span.TotalSeconds;
-                case TimeUnit.Minutes:
-                    return span.TotalMinutes;
-                case TimeUnit.Hours:
-                    return span.TotalHours;
+                case TimeUnit.Seconds: return span.TotalSeconds;
+                case TimeUnit.Minutes: return span.TotalMinutes;
+                case TimeUnit.Hours: return span.TotalHours;
+                default: return span.TotalMinutes;
             }
-            return span.Minutes;
         }
 
         public static TimeUnit GetTimeUnit(string unit)
         {
-            switch (unit)
-            {
-                case "H":
-                    return TimeUnit.Hours;
-                case "M":
-                    return TimeUnit.Minutes;
-                case "S":
-                    return TimeUnit.Seconds;
-                default:
-                    return TimeUnit.Seconds;
-            }
+            return StringToTimeUnit.TryGetValue(unit, out var result) ? result : TimeUnit.Seconds;
         }
     }
-
-
 }

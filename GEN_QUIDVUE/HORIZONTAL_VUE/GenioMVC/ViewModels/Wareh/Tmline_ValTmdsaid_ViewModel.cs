@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
@@ -19,11 +20,35 @@ namespace GenioMVC.ViewModels.Wareh
 	{
 		public TablePartial<Models.TimelineItem> Menu { get; set; }
 
+		/// <summary>
+		/// The primary key field.
+		/// </summary>
+		[JsonIgnore]
 		public string ValCodwareh { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		public string Uuid { get => "Tmline_ValTmdsaid"; }
-		
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Tmline_ValTmdsaid_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
 		public Tmline_ValTmdsaid_ViewModel(UserContext userContext) : base(userContext) { }
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Tmline_ValTmdsaid_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Tmline_ValTmdsaid_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
 
 		public void Load(int numberListItems, bool ajaxRequest = false)
 		{
@@ -36,16 +61,16 @@ namespace GenioMVC.ViewModels.Wareh
 			CriteriaSet conditions = null;
 			Load(numberListItems, requestValues, ajaxRequest, false, ref listing, ref conditions);
 		}
-		
+
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
 		{
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-			
+
 			tableConfig.RowsPerPage = numberListItems;
 
 			Load(tableConfig, requestValues, ajaxRequest, isToExport, ref Qlisting, ref conditions);
 		}
-		
+
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
 			List<Models.TimelineItem> listing = null;
@@ -125,7 +150,7 @@ namespace GenioMVC.ViewModels.Wareh
 
 				if (Qfield.FullName.Equals("item.itemdes"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Item", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 
@@ -133,7 +158,7 @@ namespace GenioMVC.ViewModels.Wareh
 
 				if (Qfield.FullName.Equals("item.itemcod"))
 				{
-					var fieldType = FieldType.TEXTO;
+					var fieldType = FieldType.TEXT;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Code", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 2, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 
@@ -141,7 +166,7 @@ namespace GenioMVC.ViewModels.Wareh
 
 				if (Qfield.FullName.Equals("item.date"))
 				{
-					var fieldType = FieldType.DATA;
+					var fieldType = FieldType.DATE;
 					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Date", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
 

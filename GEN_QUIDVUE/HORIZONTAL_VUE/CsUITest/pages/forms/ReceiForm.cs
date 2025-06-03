@@ -15,7 +15,7 @@ public class ReceiForm : Form
 	/// <summary>
 	/// Receipt number
 	/// </summary>
-	public BaseInputControl ReceiNumber => new BaseInputControl(driver, ContainerLocator, "#RECEI___RECEINUMBER__");
+	public BaseInputControl ReceiNumber => new BaseInputControl(driver, ContainerLocator, "container-RECEI___RECEINUMBER__", "#RECEI___RECEINUMBER__");
 
 	/// <summary>
 	/// Suplier

@@ -96,6 +96,19 @@ namespace GenioMVC.ViewModels.Pesso
 		[ValidateSetAccess]
 		public DateTime? ValDtultcat { get; set; }
 		/// <summary>
+		/// Title: "Curriculum" | Type: "IB"
+		/// </summary>
+		[Document("ValCurricul", false, false, false, DocumentViewTypeMode.Preview)]
+		public string ValCurricul { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "PSEUD"
+		/// </summary>
+		public string ValCurriculfk { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "PSEUD"
+		/// </summary>
+		public DocumsProperties_ViewModel ValCurriculPropertiesVM { get; set; }
+		/// <summary>
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
@@ -238,6 +251,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Pesso m)
 		{
 			if (m == null)
@@ -260,6 +274,8 @@ namespace GenioMVC.ViewModels.Pesso
 				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
 				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
 				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
+				ValCurricul = ViewModelConversion.ToString(m.ValCurricul);
+				ValCurriculfk = ViewModelConversion.ToString(m.ValCurriculfk);
 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
@@ -273,20 +289,13 @@ namespace GenioMVC.ViewModels.Pesso
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Pesso m)
 		{
 			if (m == null)
@@ -304,6 +313,8 @@ namespace GenioMVC.ViewModels.Pesso
 				m.ValGender = ViewModelConversion.ToString(ValGender);
 				m.ValInterna = ViewModelConversion.ToLogic(ValInterna);
 				m.ValExterna = ViewModelConversion.ToLogic(ValExterna);
+				m.ValCurricul = ViewModelConversion.ToString(ValCurricul);
+				m.ValCurriculfk = ViewModelConversion.ToString(ValCurriculfk);
 				m.ValTelephon = ViewModelConversion.ToString(ValTelephon);
 				m.ValEmail = ViewModelConversion.ToString(ValEmail);
 				if (ValPhotogra == null || !ValPhotogra.IsThumbnail)
@@ -367,6 +378,9 @@ namespace GenioMVC.ViewModels.Pesso
 						break;
 					case "pesso.externa":
 						this.ValExterna = ViewModelConversion.ToLogic(_value);
+						break;
+					case "pesso.curricul":
+						this.ValCurricul = ViewModelConversion.ToString(_value);
 						break;
 					case "pesso.telephon":
 						this.ValTelephon = ViewModelConversion.ToString(_value);
@@ -451,6 +465,14 @@ namespace GenioMVC.ViewModels.Pesso
 
 		protected override void LoadDocumentsProperties(Models.Pesso row)
 		{
+			try
+			{
+				ValCurriculPropertiesVM = row.GetInfoDoc("ValCurricul");
+			}
+			catch (Exception)
+			{
+				ValCurriculPropertiesVM = new DocumsProperties_ViewModel(m_userContext);
+			}
 		}
 
 		/// <summary>
@@ -494,7 +516,7 @@ namespace GenioMVC.ViewModels.Pesso
 
 			validator.StringLength("ValName", Resources.Resources.NAME_23841, ValName, 85);
 
-			validator.Required("ValName", Resources.Resources.NAME_23841, ViewModelConversion.ToString(ValName), FieldType.TEXTO.Formatting);
+			validator.Required("ValName", Resources.Resources.NAME_23841, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 20);
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL_44228, ValEmail, 254);
 
@@ -648,7 +670,7 @@ namespace GenioMVC.ViewModels.Pesso
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -695,7 +717,7 @@ namespace GenioMVC.ViewModels.Pesso
 				// Fill List fields
 				this.ValCodcateg = ViewModelConversion.ToString(row["categ.codcateg"]);
 				TableCategCategory.Value = (string)row["categ.categoria"];
-				if (GlobalFunctions.emptyG(this.ValCodcateg) == 1)
+				if (GenFunctions.emptyG(this.ValCodcateg) == 1)
 				{
 					this.ValCodcateg = "";
 					TableCategCategory.Value = "";
@@ -841,7 +863,7 @@ namespace GenioMVC.ViewModels.Pesso
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -888,7 +910,7 @@ namespace GenioMVC.ViewModels.Pesso
 				// Fill List fields
 				this.ValCodempre = ViewModelConversion.ToString(row["cmpny.codempre"]);
 				TableCmpnyDesignat.Value = (string)row["cmpny.designat"];
-				if (GlobalFunctions.emptyG(this.ValCodempre) == 1)
+				if (GenFunctions.emptyG(this.ValCodempre) == 1)
 				{
 					this.ValCodempre = "";
 					TableCmpnyDesignat.Value = "";
@@ -934,6 +956,7 @@ namespace GenioMVC.ViewModels.Pesso
 				"pesso.interna" => ViewModelConversion.ToLogic(modelValue),
 				"pesso.externa" => ViewModelConversion.ToLogic(modelValue),
 				"pesso.dtultcat" => ViewModelConversion.ToDateTime(modelValue),
+				"pesso.curricul" => ViewModelConversion.ToString(modelValue),
 				"pesso.telephon" => ViewModelConversion.ToString(modelValue),
 				"pesso.email" => ViewModelConversion.ToString(modelValue),
 				"pesso.photogra" => ViewModelConversion.ToImage(modelValue),
@@ -946,7 +969,6 @@ namespace GenioMVC.ViewModels.Pesso
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

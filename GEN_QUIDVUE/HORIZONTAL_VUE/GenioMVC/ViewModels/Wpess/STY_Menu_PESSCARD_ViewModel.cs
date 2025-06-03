@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Wpess
 {
-	public class STY_Menu_PESSCARD_ViewModel : ListViewModel
+	public class STY_Menu_PESSCARD_ViewModel : MenuListViewModel<Models.Wpess>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<STY_Menu_PESSCARD_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "wpess"; }
+		[JsonIgnore]
+		public override string TableAlias => "wpess";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "644ad93f-2ee6-44bf-b95b-53f4e8a1f4da"; }
+		public override string Uuid => "644ad93f-2ee6-44bf-b95b-53f4e8a1f4da";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCodpess { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Wpess
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL STY LIST_LIMITS PESSCARD]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,35 @@ namespace GenioMVC.ViewModels.Wpess
 			var areaBase = CSGenio.business.Area.createArea("wpess", user, "STY");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet sty_menu_pesscardConds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLPESSCARD");
-			sty_menu_pesscardConds.Equal(CSGenioAwpess.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "MLPESSCARD");
+			conditions.Equal(CSGenioAwpess.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL STY OVERRQ PESSCARD]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.FldZzstate, CSGenioAwpess.FldName, CSGenioAwpess.FldDate, CSGenioAwpess.FldSex, CSGenioAwpess.FldNfunc, CSGenioAwpess.FldAdress, CSGenioAwpess.FldZipcode, CSGenioAwpess.FldCountry, CSGenioAwpess.FldEmail, CSGenioAwpess.FldCellphon, CSGenioAwpess.FldNaturali, CSGenioAwpess.FldNacional, CSGenioAwpess.FldPfoto, CSGenioAwpess.FldCodwareh, CSGenioAwareh.FldCodwareh, CSGenioAwareh.FldWarehdes };
 
-			ListingMVC<CSGenioAwpess> listing = new ListingMVC<CSGenioAwpess>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(sty_menu_pesscardConds, listing);
+			ListingMVC<CSGenioAwpess> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public STY_Menu_PESSCARD_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="STY_Menu_PESSCARD_ViewModel" /> class.
@@ -102,24 +133,34 @@ namespace GenioMVC.ViewModels.Wpess
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="STY_Menu_PESSCARD_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public STY_Menu_PESSCARD_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXTO, Resources.Resources.NAME31974, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATA, Resources.Resources.DATA_DE_NASCIMENTO48110, 8, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_COD_TEXTO, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
-				new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERO, Resources.Resources.NOFUNCIONARIO21429, 1, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldAdress, FieldType.TEXTO, Resources.Resources.ADDRESS04342, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldZipcode, FieldType.TEXTO, Resources.Resources.ZIP_CODE56964, 8, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldCountry, FieldType.TEXTO, Resources.Resources.PAIS04637, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldEmail, FieldType.TEXTO, Resources.Resources.EMAIL25170, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldCellphon, FieldType.NUMERO, Resources.Resources.NOTELEFONE56747, 9, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldNaturali, FieldType.TEXTO, Resources.Resources.NATURALNESS33189, 30, 0, true),
-				new Exports.QColumn(CSGenioAwpess.FldNacional, FieldType.TEXTO, Resources.Resources.NACIONALIDADE23735, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldPfoto, FieldType.IMAGEM_JPEG, Resources.Resources.FOTO_DE_PERFIL03502, 3, 1, true):null,
-				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXTO, Resources.Resources.WAREHOUSE51864, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldDate, FieldType.DATE, Resources.Resources.DATA_DE_NASCIMENTO48110, 8, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldSex, FieldType.ARRAY_TEXT, Resources.Resources.SEXO52099, 9, 0, true, "SEXO"),
+				new Exports.QColumn(CSGenioAwpess.FldNfunc, FieldType.NUMERIC, Resources.Resources.NOFUNCIONARIO21429, 1, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldAdress, FieldType.TEXT, Resources.Resources.ADDRESS04342, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldZipcode, FieldType.TEXT, Resources.Resources.ZIP_CODE56964, 8, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldCountry, FieldType.TEXT, Resources.Resources.PAIS04637, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldCellphon, FieldType.NUMERIC, Resources.Resources.NOTELEFONE56747, 9, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldNaturali, FieldType.TEXT, Resources.Resources.NATURALNESS33189, 30, 0, true),
+				new Exports.QColumn(CSGenioAwpess.FldNacional, FieldType.TEXT, Resources.Resources.NACIONALIDADE23735, 30, 0, true),
+				!ajaxRequest ? new Exports.QColumn(CSGenioAwpess.FldPfoto, FieldType.IMAGE, Resources.Resources.FOTO_DE_PERFIL03502, 3, 1, true):null,
+				new Exports.QColumn(CSGenioAwareh.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -168,13 +209,10 @@ namespace GenioMVC.ViewModels.Wpess
 
 			if (Menu == null)
 				Menu = new TablePartial<STY_Menu_PESSCARD_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("WPESS.NAME", new OrderedDictionary());
-			allSortOrders["WPESS.NAME"].Add("WPESS.NAME", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -187,8 +225,7 @@ namespace GenioMVC.ViewModels.Wpess
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -285,23 +322,22 @@ namespace GenioMVC.ViewModels.Wpess
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAwpess> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "PESSCARD"),
 				new("Module", "STY")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<STY_Menu_PESSCARD_RowViewModel>();
 
 				CriteriaSet sty_menu_pesscardConds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("WPESS.NAME", new OrderedDictionary());
 				allSortOrders["WPESS.NAME"].Add("WPESS.NAME", "A");
-
 
 
 
@@ -333,26 +369,24 @@ namespace GenioMVC.ViewModels.Wpess
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("wpess", "name");
+					firstVisibleColumn ??= new FieldRef("wpess", "name");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAwpess model_limit_area = new CSGenioAwpess(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "MLPESSCARD");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAwpess model_limit_area = new CSGenioAwpess(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "MLPESSCARD");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -363,6 +397,8 @@ namespace GenioMVC.ViewModels.Wpess
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL STY OVERRQ PESSCARD]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -391,7 +427,7 @@ namespace GenioMVC.ViewModels.Wpess
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAwpess> listing = Models.ModelBase.Where<CSGenioAwpess>(m_userContext, false, sty_menu_pesscardConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLPESSCARD", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAwpess> listing = Models.ModelBase.Where<CSGenioAwpess>(m_userContext, distinct, sty_menu_pesscardConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "MLPESSCARD", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -399,7 +435,6 @@ namespace GenioMVC.ViewModels.Wpess
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -421,18 +456,12 @@ namespace GenioMVC.ViewModels.Wpess
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -440,7 +469,7 @@ namespace GenioMVC.ViewModels.Wpess
 
 		private List<STY_Menu_PESSCARD_RowViewModel> MapSTY_Menu_PESSCARD(ListingMVC<CSGenioAwpess> Qlisting)
 		{
-			var Elements = new List<STY_Menu_PESSCARD_RowViewModel>();
+			List<STY_Menu_PESSCARD_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -457,7 +486,6 @@ namespace GenioMVC.ViewModels.Wpess
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAwpess row
 		/// to a STY_Menu_PESSCARD_RowViewModel object.
@@ -466,7 +494,9 @@ namespace GenioMVC.ViewModels.Wpess
 		private STY_Menu_PESSCARD_RowViewModel MapSTY_Menu_PESSCARD(CSGenioAwpess row)
 		{
 			var model = new STY_Menu_PESSCARD_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -480,33 +510,10 @@ namespace GenioMVC.ViewModels.Wpess
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			SetTicketToImageFields(model);
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(STY_Menu_PESSCARD_RowViewModel model)
-		{
-			bool canView = false;
-			bool canEdit = false;
-			bool canDelete = false;
-			bool canDuplicate = false;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -520,31 +527,40 @@ namespace GenioMVC.ViewModels.Wpess
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAwpess> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAwpess row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Wpess m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Wpess m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM STY_MENU_PESSCARD]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Wpess", "Wpess.ValCodpess", "Wpess.ValZzstate", "Wpess.ValName", "Wpess.ValDate", "Wpess.ValSex", "Wpess.ValNfunc", "Wpess.ValAdress", "Wpess.ValZipcode", "Wpess.ValCountry", "Wpess.ValEmail", "Wpess.ValCellphon", "Wpess.ValNaturali", "Wpess.ValNacional", "Wpess.ValPfoto", "Wareh", "Wareh.ValWarehdes", "Wpess.ValCodwareh", "BtnPermission"
+			"Wpess", "Wpess.ValCodpess", "Wpess.ValZzstate", "Wpess.ValName", "Wpess.ValDate", "Wpess.ValSex", "Wpess.ValNfunc", "Wpess.ValAdress", "Wpess.ValZipcode", "Wpess.ValCountry", "Wpess.ValEmail", "Wpess.ValCellphon", "Wpess.ValNaturali", "Wpess.ValNacional", "Wpess.ValPfoto", "Wareh", "Wareh.ValWarehdes", "Wpess.ValCodwareh"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValName", CSGenioAwpess.FldName, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValDate", CSGenioAwpess.FldDate, typeof(DateTime?)),
@@ -557,14 +573,11 @@ namespace GenioMVC.ViewModels.Wpess
 			new TableSearchColumn("ValCellphon", CSGenioAwpess.FldCellphon, typeof(decimal?)),
 			new TableSearchColumn("ValNaturali", CSGenioAwpess.FldNaturali, typeof(string)),
 			new TableSearchColumn("ValNacional", CSGenioAwpess.FldNacional, typeof(string)),
-			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string))
+			new TableSearchColumn("Wareh_ValWarehdes", CSGenioAwareh.FldWarehdes, typeof(string)),
 		];
-
-
-
 		protected void SetTicketToImageFields(Models.Wpess row)
 		{
-			if(row == null)
+			if (row == null)
 				return;
 
 			row.ValPfotoQTicket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaWPESS, CSGenioAwpess.FldPfoto.Field, null, row.ValCodpess);

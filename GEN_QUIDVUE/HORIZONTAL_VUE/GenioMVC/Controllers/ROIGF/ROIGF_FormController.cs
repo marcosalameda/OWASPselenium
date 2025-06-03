@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Roigf_Rogl1ValTitleModel : RequestLookupModel
+		{
+			public Roigf_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Roigf/Roigf_Rogl1ValTitle
 		// POST: /Roigf/Roigf_Rogl1ValTitle
 		[ActionName("Roigf_Rogl1ValTitle")]
-		public ActionResult Roigf_Rogl1ValTitle([FromBody]RequestLookupModel requestModel)
+		public ActionResult Roigf_Rogl1ValTitle([FromBody] Roigf_Rogl1ValTitleModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Roigf_Rogl1ValTitle_ViewModel model = new Roigf_Rogl1ValTitle_ViewModel(UserContext.Current);
-			
+
+			Models.Roigf parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Roigf_Rogl1ValTitle_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

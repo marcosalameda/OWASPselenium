@@ -174,6 +174,7 @@ namespace GenioMVC.ViewModels.Gitem
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Gitem m)
 		{
 			if (m == null)
@@ -197,20 +198,13 @@ namespace GenioMVC.ViewModels.Gitem
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Gitem m)
 		{
 			if (m == null)
@@ -382,7 +376,7 @@ namespace GenioMVC.ViewModels.Gitem
 
 			validator.StringLength("ValItemdes", Resources.Resources.GLOBAL_ITEM49586, ValItemdes, 85);
 
-			validator.Required("ValItemdes", Resources.Resources.GLOBAL_ITEM49586, ViewModelConversion.ToString(ValItemdes), FieldType.TEXTO.Formatting);
+			validator.Required("ValItemdes", Resources.Resources.GLOBAL_ITEM49586, ViewModelConversion.ToString(ValItemdes), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValItemgcod", Resources.Resources.CODE49225, ValItemgcod, 15);
 
 
@@ -432,8 +426,6 @@ namespace GenioMVC.ViewModels.Gitem
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

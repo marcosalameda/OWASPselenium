@@ -171,6 +171,7 @@ namespace GenioMVC.ViewModels.Esppe
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Esppe m)
 		{
 			if (m == null)
@@ -192,20 +193,13 @@ namespace GenioMVC.ViewModels.Esppe
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Esppe m)
 		{
 			if (m == null)
@@ -514,7 +508,7 @@ namespace GenioMVC.ViewModels.Esppe
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -561,7 +555,7 @@ namespace GenioMVC.ViewModels.Esppe
 				// Fill List fields
 				this.ValCodpesso = ViewModelConversion.ToString(row["pesso.codpesso"]);
 				TablePessoName.Value = (string)row["pesso.name"];
-				if (GlobalFunctions.emptyG(this.ValCodpesso) == 1)
+				if (GenFunctions.emptyG(this.ValCodpesso) == 1)
 				{
 					this.ValCodpesso = "";
 					TablePessoName.Value = "";
@@ -704,7 +698,7 @@ namespace GenioMVC.ViewModels.Esppe
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -751,7 +745,7 @@ namespace GenioMVC.ViewModels.Esppe
 				// Fill List fields
 				this.ValCodespec = ViewModelConversion.ToString(row["speci.codespec"]);
 				TableSpeciEspecial.Value = (string)row["speci.especial"];
-				if (GlobalFunctions.emptyG(this.ValCodespec) == 1)
+				if (GenFunctions.emptyG(this.ValCodespec) == 1)
 				{
 					this.ValCodespec = "";
 					TableSpeciEspecial.Value = "";
@@ -795,8 +789,6 @@ namespace GenioMVC.ViewModels.Esppe
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

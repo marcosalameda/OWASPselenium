@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Item
 {
-	public class Plist_ValPlist_ViewModel : ListViewModel
+	public class Plist_ValPlist_ViewModel : MenuListViewModel<Models.Itemp>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "LP"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public GenioMVC.ViewModels.Itemp.PropertyList_Plist_ValPlist_ViewModel Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "itemp"; }
+		[JsonIgnore]
+		public override string TableAlias => "itemp";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Plist_ValPlist"; }
+		public override string Uuid => "Plist_ValPlist";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
-		public string ValCoditem { get; set; }
+		[JsonIgnore]
+		public string ItemValCoditem { get; set; }
+
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Item
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS PLIST_PSEUDPLIST]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Plist_ValPlist_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Plist_ValPlist_ViewModel" /> class.
@@ -70,7 +109,17 @@ namespace GenioMVC.ViewModels.Item
 		/// <param name="userContext">The current user request context</param>
 		public Plist_ValPlist_ViewModel(UserContext userContext) : base(userContext)
 		{
-			ValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
+			ItemValCoditem = userContext.CurrentNavigation.CurrentLevel.GetEntry("item")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Plist_ValPlist_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Plist_ValPlist_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -127,23 +176,21 @@ namespace GenioMVC.ViewModels.Item
 
 			if (Menu == null)
 				Menu = new GenioMVC.ViewModels.Itemp.PropertyList_Plist_ValPlist_ViewModel();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
 
 
 
-			if (this.ValCoditem != null)
-				crs.Equal(CSGenioAitemp.FldCoditem, this.ValCoditem);
+			if (this.ItemValCoditem != null)
+				crs.Equal(CSGenioAitemp.FldCoditem, this.ItemValCoditem);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -240,20 +287,19 @@ namespace GenioMVC.ViewModels.Item
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAitemp> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "PLIST")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new GenioMVC.ViewModels.Itemp.PropertyList_Plist_ValPlist_ViewModel();
 
 				CriteriaSet plist___pseudplist___Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -278,20 +324,19 @@ namespace GenioMVC.ViewModels.Item
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAitemp model_limit_area = new CSGenioAitemp(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PLIST___PSEUDPLIST___");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAitemp model_limit_area = new CSGenioAitemp(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_PLIST___PSEUDPLIST___");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -302,6 +347,8 @@ namespace GenioMVC.ViewModels.Item
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ PLIST_PSEUDPLIST]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -330,7 +377,7 @@ namespace GenioMVC.ViewModels.Item
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAitemp> listing = Models.ModelBase.Where<CSGenioAitemp>(m_userContext, false, plist___pseudplist___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PLIST___PSEUDPLIST___", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAitemp> listing = Models.ModelBase.Where<CSGenioAitemp>(m_userContext, distinct, plist___pseudplist___Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_PLIST___PSEUDPLIST___", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -338,7 +385,6 @@ namespace GenioMVC.ViewModels.Item
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -359,18 +405,12 @@ namespace GenioMVC.ViewModels.Item
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -378,7 +418,7 @@ namespace GenioMVC.ViewModels.Item
 
 		private List<Plist_ValPlist_RowViewModel> MapPlist_ValPlist(ListingMVC<CSGenioAitemp> Qlisting)
 		{
-			var Elements = new List<Plist_ValPlist_RowViewModel>();
+			List<Plist_ValPlist_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -395,7 +435,6 @@ namespace GenioMVC.ViewModels.Item
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAitemp row
 		/// to a Plist_ValPlist_RowViewModel object.
@@ -404,7 +443,9 @@ namespace GenioMVC.ViewModels.Item
 		private Plist_ValPlist_RowViewModel MapPlist_ValPlist(CSGenioAitemp row)
 		{
 			var model = new Plist_ValPlist_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -416,32 +457,9 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Plist_ValPlist_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -455,36 +473,41 @@ namespace GenioMVC.ViewModels.Item
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAitemp> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAitemp row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Itemp m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Itemp m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PLIST_VALPLIST]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Itemp", "Itemp.ValCoditemp", "Itemp.ValZzstate", "Itemp.ValPropid", "Itemp.ValPropval", "Itemp.ValProptype", "Itemp.ValCoditem", "BtnPermission"
+			"Itemp", "Itemp.ValCoditemp", "Itemp.ValZzstate", "Itemp.ValPropid", "Itemp.ValPropval", "Itemp.ValProptype", "Itemp.ValCoditem"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-
 		];
-
-
-
 	}
 }

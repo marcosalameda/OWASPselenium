@@ -5,6 +5,18 @@ using System.Linq;
 
 namespace CSGenio.config
 {
+
+    public class AdvancedProperty
+    {
+        public string Id { get; set; }
+        public string Label { get; set; }
+        public string Type { get; set; }
+        public string DefaultValue { get; set; }  
+        public string ResourceId { get; set; }  
+        public string HelpResourceId { get; set; }  
+        public string HelpResourceVerboseId { get; set; }     
+    }
+
     /// <summary>
     /// Handle specific project properties that are specific to this system. 
     /// They will be visible in the more properties area of Webadmin
@@ -19,6 +31,13 @@ namespace CSGenio.config
             // Notice: these properties cannot be deleted on WebAdmin,
             // because they will be recreated from the MANWIN.
 // USE /[MANUAL GQT INITPROPERTIES]/
+        };
+
+        private static List<AdvancedProperty> initialAdvancedProperties = new List<AdvancedProperty>()
+        {            
+            // but are displayed in the form dropdown for selection.
+            // Notice: these properties cannot be deleted on WebAdmin,
+            // because they will be recreated from the MANWIN.         
         };
 
 
@@ -38,6 +57,17 @@ namespace CSGenio.config
 
                 propertyList.Add(entry.Key, entry.Value);
             }
+
+            foreach (var entry in initialAdvancedProperties)
+            {
+                if (
+                    String.IsNullOrEmpty(entry.DefaultValue) ||
+                    propertyList.ContainsKey(entry.Id)
+                )
+                { continue;}
+
+                propertyList.Add(entry.Id, entry.DefaultValue);
+            }
         }
 
         /// <summary>
@@ -54,6 +84,17 @@ namespace CSGenio.config
 
                 result.Add(entry.Key, entry.Value);
             }
+            
+            foreach (var entry in initialAdvancedProperties)
+            {
+                if (
+                    String.IsNullOrEmpty(entry.DefaultValue) ||
+                    result.ContainsKey(entry.Id)
+                )
+                { continue;}
+
+                result.Add(entry.Id, entry.DefaultValue);
+            }
             return result;
         }
 
@@ -62,11 +103,22 @@ namespace CSGenio.config
             return initialProperties.Keys.ToList();
         }
 
+        public static List<AdvancedProperty> GetAdvancedProperties()
+        {
+            return initialAdvancedProperties;
+        }
+        
         public static bool HasDefaultValue(string key)
         {
-            return initialProperties.ContainsKey(key) && !String.IsNullOrEmpty(initialProperties[key]);
+            if(initialProperties.ContainsKey(key))
+            {
+                return !String.IsNullOrEmpty(initialProperties[key]);
+            }                
+            else
+            {
+                var property = initialAdvancedProperties.FirstOrDefault(p=> p.Id.Equals(key));
+                return property != null && !string.IsNullOrEmpty(property?.DefaultValue);
+            }
         }
-
-
     }
 }

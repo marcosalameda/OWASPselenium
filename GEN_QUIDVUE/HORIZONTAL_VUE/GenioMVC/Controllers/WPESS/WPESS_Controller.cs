@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Wpess;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER WPESS]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class WpessController : ControllerBase
 	{
-		public WpessController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public WpessController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION WPESS]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER WPESS]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Wpess row = null;
-
-			if (row == null)
-			{
-				row = new Models.Wpess(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("wpess");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Wpess row = new Models.Wpess(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("wpess");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "ARMAPESSWAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Armapess_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Armapess_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Armapesswarehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "PESSPOP_WAREHWAREHDES":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Pesspop_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Pesspop_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Pesspop_warehwarehdes(qs);
 							result = model.TableWarehWarehdes;
@@ -155,6 +162,9 @@ namespace GenioMVC.Controllers
 		}
 
 
+
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Armapess" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -169,6 +179,8 @@ namespace GenioMVC.Controllers
 			);
 		}
 
+
+
 		/// <summary>
 		/// Recalculate formulas of the "Imgmagn" form. (++, CT, SR, CL and U1)
 		/// </summary>
@@ -182,6 +194,8 @@ namespace GenioMVC.Controllers
 				(model) => formData.MapToModel(model as Models.Wpess)
 			);
 		}
+
+
 
 		/// <summary>
 		/// Recalculate formulas of the "Pesspop" form. (++, CT, SR, CL and U1)

@@ -15,12 +15,12 @@ public class GroupbxForm : Form
 	/// <summary>
 	/// Sequential No.:
 	/// </summary>
-	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPSEQUENNR");
+	public BaseInputControl EquipSequennr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPSEQUENNR", "#GROUPBX_EQUIPSEQUENNR");
 
 	/// <summary>
 	/// Registration No.
 	/// </summary>
-	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPREGISTNR");
+	public BaseInputControl EquipRegistnr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPREGISTNR", "#GROUPBX_EQUIPREGISTNR");
 
 	/// <summary>
 	/// Type of equipment
@@ -31,7 +31,7 @@ public class GroupbxForm : Form
 	/// <summary>
 	/// Manufacturer's website:
 	/// </summary>
-	public BaseInputControl EquipSitefabr => new BaseInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPSITEFABR");
+	public BaseInputControl EquipSitefabr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPSITEFABR", "#GROUPBX_EQUIPSITEFABR");
 
 	/// <summary>
 	/// Warehouse
@@ -53,12 +53,12 @@ public class GroupbxForm : Form
 	/// <summary>
 	/// Decomission:
 	/// </summary>
-	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTDECO__");
+	public DateInputControl EquipDtdeco => new DateInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDTDECO__", "dd/MM/yyyy HH:mm");
 
 	/// <summary>
 	/// Room No.
 	/// </summary>
-	public BaseInputControl Room1Roomnr => new BaseInputControl(driver, ContainerLocator, "#GROUPBX_ROOM1ROOMNR__");
+	public BaseInputControl Room1Roomnr => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_ROOM1ROOMNR__", "#GROUPBX_ROOM1ROOMNR__");
 
 	/// <summary>
 	/// Room Designation
@@ -68,7 +68,7 @@ public class GroupbxForm : Form
 	/// <summary>
 	/// Designation:
 	/// </summary>
-	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPDESIGNAT");
+	public BaseInputControl EquipDesignat => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPDESIGNAT", "#GROUPBX_EQUIPDESIGNAT");
 
 	/// <summary>
 	/// Acquisition:
@@ -78,7 +78,7 @@ public class GroupbxForm : Form
 	/// <summary>
 	/// Total Value:
 	/// </summary>
-	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPVALORTOT");
+	public BaseInputControl EquipValortot => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPVALORTOT", "#GROUPBX_EQUIPVALORTOT");
 
 	/// <summary>
 	/// Loan Frequency
@@ -93,12 +93,12 @@ public class GroupbxForm : Form
 	/// <summary>
 	/// First
 	/// </summary>
-	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPFIRST___");
+	public BaseInputControl EquipFirst => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPFIRST___", "#GROUPBX_EQUIPFIRST___");
 
 	/// <summary>
 	/// Before
 	/// </summary>
-	public BaseInputControl EquipBefore => new BaseInputControl(driver, ContainerLocator, "#GROUPBX_EQUIPBEFORE__");
+	public BaseInputControl EquipBefore => new BaseInputControl(driver, ContainerLocator, "container-GROUPBX_EQUIPBEFORE__", "#GROUPBX_EQUIPBEFORE__");
 
 	/// <summary>
 	/// Bought

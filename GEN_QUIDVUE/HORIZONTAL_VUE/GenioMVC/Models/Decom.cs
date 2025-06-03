@@ -45,7 +45,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "No bate" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Decom.ValDecomnr")]
 		[NumericAttribute(0)]
-		public decimal? ValDecomnr { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValDecomnr, 0)); } set { klass.ValDecomnr = Convert.ToDecimal(value); } }
+		public decimal? ValDecomnr { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValDecomnr, 0)); } set { klass.ValDecomnr = Convert.ToDecimal(value); } }
 
 		[DisplayName("Notes")]
 		/// <summary>Field : "Notes" Tipo: "MO" Formula:  ""</summary>
@@ -79,8 +79,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Decom.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Decom(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -98,7 +98,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioAdecom csgenioa)
 		{

@@ -180,6 +180,7 @@ namespace GenioMVC.ViewModels.Pwcom
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Pwcom m)
 		{
 			if (m == null)
@@ -203,20 +204,13 @@ namespace GenioMVC.ViewModels.Pwcom
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Pwcom m)
 		{
 			if (m == null)
@@ -539,7 +533,7 @@ namespace GenioMVC.ViewModels.Pwcom
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -586,7 +580,7 @@ namespace GenioMVC.ViewModels.Pwcom
 				// Fill List fields
 				this.ValCodpsw = ViewModelConversion.ToString(row["psw.codpsw"]);
 				TablePswNome.Value = (string)row["psw.nome"];
-				if (GlobalFunctions.emptyG(this.ValCodpsw) == 1)
+				if (GenFunctions.emptyG(this.ValCodpsw) == 1)
 				{
 					this.ValCodpsw = "";
 					TablePswNome.Value = "";
@@ -729,7 +723,7 @@ namespace GenioMVC.ViewModels.Pwcom
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -776,7 +770,7 @@ namespace GenioMVC.ViewModels.Pwcom
 				// Fill List fields
 				this.ValCodpess1 = ViewModelConversion.ToString(row["pess1.codpesso"]);
 				TablePess1Name.Value = (string)row["pess1.name"];
-				if (GlobalFunctions.emptyG(this.ValCodpess1) == 1)
+				if (GenFunctions.emptyG(this.ValCodpess1) == 1)
 				{
 					this.ValCodpess1 = "";
 					TablePess1Name.Value = "";
@@ -822,7 +816,6 @@ namespace GenioMVC.ViewModels.Pwcom
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

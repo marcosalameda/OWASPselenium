@@ -174,6 +174,7 @@ namespace GenioMVC.ViewModels.Agent
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Agent m)
 		{
 			if (m == null)
@@ -198,20 +199,13 @@ namespace GenioMVC.ViewModels.Agent
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Agent m)
 		{
 			if (m == null)
@@ -383,10 +377,10 @@ namespace GenioMVC.ViewModels.Agent
 
 			validator.StringLength("ValName", Resources.Resources.NAME31974, ValName, 50);
 
-			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXTO.Formatting);
+			validator.Required("ValName", Resources.Resources.NAME31974, ViewModelConversion.ToString(ValName), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValEmail", Resources.Resources.EMAIL25170, ValEmail, 50);
 
-			validator.Required("ValEmail", Resources.Resources.EMAIL25170, ViewModelConversion.ToString(ValEmail), FieldType.TEXTO.Formatting);
+			validator.Required("ValEmail", Resources.Resources.EMAIL25170, ViewModelConversion.ToString(ValEmail), FieldType.TEXT.GetFormatting());
 			validator.StringLength("ValTelephon", Resources.Resources.TELEPHONE28697, ValTelephon, 50);
 
 
@@ -438,7 +432,6 @@ namespace GenioMVC.ViewModels.Agent
 				_ => modelValue
 			};
 		}
-
 
 		/// <inheritdoc/>
 		protected override void SetTicketToImageFields()

@@ -10,17 +10,17 @@ public class PesspopForm : PopupForm
 	/// <summary>
 	/// Employee Number
 	/// </summary>
-	public BaseInputControl WpessNfunc => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSNFUNC___");
+	public BaseInputControl WpessNfunc => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSNFUNC___", "#PESSPOP_WPESSNFUNC___");
 
 	/// <summary>
 	/// Profille picture
 	/// </summary>
-	public BaseInputControl WpessPfoto => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSPFOTO___");
+	public BaseInputControl WpessPfoto => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSPFOTO___", "#PESSPOP_WPESSPFOTO___");
 
 	/// <summary>
 	/// Name
 	/// </summary>
-	public BaseInputControl WpessName => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSNAME____");
+	public BaseInputControl WpessName => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSNAME____", "#PESSPOP_WPESSNAME____");
 
 	/// <summary>
 	/// Birth date
@@ -35,37 +35,37 @@ public class PesspopForm : PopupForm
 	/// <summary>
 	/// Country of Birth
 	/// </summary>
-	public BaseInputControl WpessNaturali => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSNATURALI");
+	public BaseInputControl WpessNaturali => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSNATURALI", "#PESSPOP_WPESSNATURALI");
 
 	/// <summary>
 	/// Nationality
 	/// </summary>
-	public BaseInputControl WpessNacional => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSNACIONAL");
+	public BaseInputControl WpessNacional => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSNACIONAL", "#PESSPOP_WPESSNACIONAL");
 
 	/// <summary>
 	/// Adress
 	/// </summary>
-	public BaseInputControl WpessAdress => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSADRESS__");
+	public BaseInputControl WpessAdress => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSADRESS__", "#PESSPOP_WPESSADRESS__");
 
 	/// <summary>
 	/// Zipcode
 	/// </summary>
-	public BaseInputControl WpessZipcode => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSZIPCODE_");
+	public BaseInputControl WpessZipcode => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSZIPCODE_", "#PESSPOP_WPESSZIPCODE_");
 
 	/// <summary>
 	/// Country
 	/// </summary>
-	public BaseInputControl WpessCountry => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSCOUNTRY_");
+	public BaseInputControl WpessCountry => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSCOUNTRY_", "#PESSPOP_WPESSCOUNTRY_");
 
 	/// <summary>
 	/// Email
 	/// </summary>
-	public BaseInputControl WpessEmail => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSEMAIL___");
+	public BaseInputControl WpessEmail => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSEMAIL___", "#PESSPOP_WPESSEMAIL___");
 
 	/// <summary>
 	/// Cellphone
 	/// </summary>
-	public BaseInputControl WpessCellphon => new BaseInputControl(driver, ContainerLocator, "#PESSPOP_WPESSCELLPHON");
+	public BaseInputControl WpessCellphon => new BaseInputControl(driver, ContainerLocator, "container-PESSPOP_WPESSCELLPHON", "#PESSPOP_WPESSCELLPHON");
 
 	/// <summary>
 	/// Warehouse

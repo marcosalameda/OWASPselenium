@@ -12,18 +12,8 @@ namespace CSGenio.framework
         SQLSERVERCOMPAT,
         SQLITE,
 		MYSQL,
+        POSTGRES,
         ERRO
 	}
-	
-	/// <summary>
-    /// Primary key types
-    /// </summary>
-    public enum CodeType
-    {
-        NOT_KEY = 0,
-        STRING_KEY,
-        GUID_KEY,
-        INT_KEY,
-    };
 
 }

@@ -38,26 +38,27 @@ namespace GenioMVC.Models
 		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
 		[ShouldSerialize("Sale.ValCodorgan")]
 		public string ValCodorgan { get { return klass.ValCodorgan; } set { klass.ValCodorgan = value; } }
+
 		private Organ _organ;
 		[DisplayName("Organ")]
 		[ShouldSerialize("Organ")]
-		public virtual Organ Organ {
-			get {
-				if (!this.isEmptyModel && (_organ == null || (!string.IsNullOrEmpty(ValCodorgan) && (_organ.isEmptyModel || _organ.klass.QPrimaryKey != ValCodorgan))))
+		public virtual Organ Organ
+		{
+			get
+			{
+				if (!isEmptyModel && (_organ == null || (!string.IsNullOrEmpty(ValCodorgan) && (_organ.isEmptyModel || _organ.klass.QPrimaryKey != ValCodorgan))))
 					_organ = Models.Organ.Find(ValCodorgan, m_userContext, Identifier, _fieldsToSerialize);
-				if (_organ == null)
-					_organ = new Models.Organ(m_userContext, true, _fieldsToSerialize);
+				_organ ??= new Models.Organ(m_userContext, true, _fieldsToSerialize);
 				return _organ;
 			}
 			set { _organ = value; }
 		}
 
-
 		[DisplayName("leadership numb")]
 		/// <summary>Field : "leadership numb" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Sale.ValNrlide")]
 		[NumericAttribute(0)]
-		public decimal? ValNrlide { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValNrlide, 0)); } set { klass.ValNrlide = Convert.ToDecimal(value); } }
+		public decimal? ValNrlide { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValNrlide, 0)); } set { klass.ValNrlide = Convert.ToDecimal(value); } }
 
 		[DisplayName("Beginning")]
 		/// <summary>Field : "Beginning" Tipo: "DT" Formula:  ""</summary>
@@ -179,8 +180,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Sale.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Sale(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -199,7 +200,6 @@ namespace GenioMVC.Models
 			FillRelatedAreas(val);
 		}
 
-
 		public void FillRelatedAreas(CSGenioAsale csgenioa)
 		{
 			if (csgenioa == null)
@@ -210,8 +210,7 @@ namespace GenioMVC.Models
 				switch (Qfield.Area)
 				{
 					case "organ":
-						if (_organ == null)
-							_organ = new Organ(m_userContext, true, _fieldsToSerialize);
+						_organ ??= new Organ(m_userContext, true, _fieldsToSerialize);
 						_organ.klass.insertNameValueField(Qfield.FullName, Qfield.Value);
 						break;
 					default:

@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Decom
 {
-	public class PTN_Menu_111_ViewModel : ListViewModel
+	public class PTN_Menu_111_ViewModel : MenuListViewModel<Models.Decom>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<PTN_Menu_111_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "decom"; }
+		[JsonIgnore]
+		public override string TableAlias => "decom";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "08896786-8e39-461e-b166-e259f92211f7"; }
+		public override string Uuid => "08896786-8e39-461e-b166-e259f92211f7";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCoddeco { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Decom
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL PTN LIST_LIMITS 111]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,34 @@ namespace GenioMVC.ViewModels.Decom
 			var areaBase = CSGenio.business.Area.createArea("decom", user, "PTN");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet ptn_menu_111Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML111");
-			ptn_menu_111Conds.Equal(CSGenioAdecom.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML111");
+			conditions.Equal(CSGenioAdecom.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL PTN OVERRQ 111]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.FldZzstate, CSGenioAdecom.FldDtdeco, CSGenioAdecom.FldDecomnr, CSGenioAdecom.FldNote, CSGenioAdecom.FldCreatdat, CSGenioAdecom.FldCreatope, CSGenioAdecom.FldChngdate, CSGenioAdecom.FldOperchng };
 
-			ListingMVC<CSGenioAdecom> listing = new ListingMVC<CSGenioAdecom>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(ptn_menu_111Conds, listing);
+			ListingMVC<CSGenioAdecom> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public PTN_Menu_111_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="PTN_Menu_111_ViewModel" /> class.
@@ -102,18 +132,28 @@ namespace GenioMVC.ViewModels.Decom
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PTN_Menu_111_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public PTN_Menu_111_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATAHORA, Resources.Resources.DECOMISSION14486, 16, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERO, Resources.Resources.NO_BATE21045, 10, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldDtdeco, FieldType.DATETIME, Resources.Resources.DECOMISSION14486, 16, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldDecomnr, FieldType.NUMERIC, Resources.Resources.NO_BATE21045, 10, 0, true),
 				new Exports.QColumn(CSGenioAdecom.FldNote, FieldType.MEMO, Resources.Resources.NOTES05274, 30, 3, true),
-				new Exports.QColumn(CSGenioAdecom.FldCreatdat, FieldType.DATACRIA, Resources.Resources.CRIADO_EM61283, 8, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldCreatope, FieldType.OPERCRIA, Resources.Resources.CRIADO_POR17895, 20, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldChngdate, FieldType.DATAMUDA, Resources.Resources.ALTERADO_EM23573, 8, 0, true),
-				new Exports.QColumn(CSGenioAdecom.FldOperchng, FieldType.OPERMUDA, Resources.Resources.ALTERADO_POR39254, 20, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldCreatdat, FieldType.DATETIMESECONDS, Resources.Resources.CRIADO_EM61283, 8, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldCreatope, FieldType.TEXT, Resources.Resources.CRIADO_POR17895, 20, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldChngdate, FieldType.DATETIMESECONDS, Resources.Resources.ALTERADO_EM23573, 8, 0, true),
+				new Exports.QColumn(CSGenioAdecom.FldOperchng, FieldType.TEXT, Resources.Resources.ALTERADO_POR39254, 20, 0, true),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -162,13 +202,10 @@ namespace GenioMVC.ViewModels.Decom
 
 			if (Menu == null)
 				Menu = new TablePartial<PTN_Menu_111_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("DECOM.DTDECO", new OrderedDictionary());
-			allSortOrders["DECOM.DTDECO"].Add("DECOM.DTDECO", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -181,8 +218,7 @@ namespace GenioMVC.ViewModels.Decom
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -279,23 +315,22 @@ namespace GenioMVC.ViewModels.Decom
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAdecom> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "111"),
 				new("Module", "PTN")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<PTN_Menu_111_RowViewModel>();
 
 				CriteriaSet ptn_menu_111Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("DECOM.DTDECO", new OrderedDictionary());
 				allSortOrders["DECOM.DTDECO"].Add("DECOM.DTDECO", "A");
-
 
 
 
@@ -327,26 +362,24 @@ namespace GenioMVC.ViewModels.Decom
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("decom", "dtdeco");
+					firstVisibleColumn ??= new FieldRef("decom", "dtdeco");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAdecom model_limit_area = new CSGenioAdecom(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML111");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAdecom model_limit_area = new CSGenioAdecom(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML111");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -357,6 +390,8 @@ namespace GenioMVC.ViewModels.Decom
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL PTN OVERRQ 111]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -385,7 +420,7 @@ namespace GenioMVC.ViewModels.Decom
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAdecom> listing = Models.ModelBase.Where<CSGenioAdecom>(m_userContext, false, ptn_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAdecom> listing = Models.ModelBase.Where<CSGenioAdecom>(m_userContext, distinct, ptn_menu_111Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML111", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -393,7 +428,6 @@ namespace GenioMVC.ViewModels.Decom
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -415,18 +449,12 @@ namespace GenioMVC.ViewModels.Decom
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -434,7 +462,7 @@ namespace GenioMVC.ViewModels.Decom
 
 		private List<PTN_Menu_111_RowViewModel> MapPTN_Menu_111(ListingMVC<CSGenioAdecom> Qlisting)
 		{
-			var Elements = new List<PTN_Menu_111_RowViewModel>();
+			List<PTN_Menu_111_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -451,7 +479,6 @@ namespace GenioMVC.ViewModels.Decom
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAdecom row
 		/// to a PTN_Menu_111_RowViewModel object.
@@ -460,7 +487,9 @@ namespace GenioMVC.ViewModels.Decom
 		private PTN_Menu_111_RowViewModel MapPTN_Menu_111(CSGenioAdecom row)
 		{
 			var model = new PTN_Menu_111_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -472,32 +501,9 @@ namespace GenioMVC.ViewModels.Decom
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(PTN_Menu_111_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -511,31 +517,40 @@ namespace GenioMVC.ViewModels.Decom
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAdecom> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAdecom row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Decom m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Decom m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM PTN_MENU_111]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Decom", "Decom.ValCoddeco", "Decom.ValZzstate", "Decom.ValDtdeco", "Decom.ValDecomnr", "Decom.ValNote", "Decom.ValCreatdat", "Decom.ValCreatope", "Decom.ValChngdate", "Decom.ValOperchng", "BtnPermission"
+			"Decom", "Decom.ValCoddeco", "Decom.ValZzstate", "Decom.ValDtdeco", "Decom.ValDecomnr", "Decom.ValNote", "Decom.ValCreatdat", "Decom.ValCreatope", "Decom.ValChngdate", "Decom.ValOperchng"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValDtdeco", CSGenioAdecom.FldDtdeco, typeof(DateTime?)),
 			new TableSearchColumn("ValDecomnr", CSGenioAdecom.FldDecomnr, typeof(decimal?), defaultSearch : true),
@@ -543,10 +558,7 @@ namespace GenioMVC.ViewModels.Decom
 			new TableSearchColumn("ValCreatdat", CSGenioAdecom.FldCreatdat, typeof(DateTime?)),
 			new TableSearchColumn("ValCreatope", CSGenioAdecom.FldCreatope, typeof(string)),
 			new TableSearchColumn("ValChngdate", CSGenioAdecom.FldChngdate, typeof(DateTime?)),
-			new TableSearchColumn("ValOperchng", CSGenioAdecom.FldOperchng, typeof(string))
+			new TableSearchColumn("ValOperchng", CSGenioAdecom.FldOperchng, typeof(string)),
 		];
-
-
-
 	}
 }

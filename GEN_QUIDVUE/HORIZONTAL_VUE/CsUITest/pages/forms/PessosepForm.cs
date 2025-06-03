@@ -15,12 +15,12 @@ public class PessosepForm : Form
 	/// <summary>
 	/// Employee No.
 	/// </summary>
-	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "#PESSOSEPPESSOIDFUNCIO");
+	public BaseInputControl PessoIdfuncio => new BaseInputControl(driver, ContainerLocator, "container-PESSOSEPPESSOIDFUNCIO", "#PESSOSEPPESSOIDFUNCIO");
 
 	/// <summary>
 	/// Name:
 	/// </summary>
-	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "#PESSOSEPPESSONAME____");
+	public BaseInputControl PessoName => new BaseInputControl(driver, ContainerLocator, "container-PESSOSEPPESSONAME____", "#PESSOSEPPESSONAME____");
 
 	/// <summary>
 	/// Birth
@@ -52,6 +52,11 @@ public class PessosepForm : Form
 	/// Since
 	/// </summary>
 	public DateInputControl PessoDtultcat => new DateInputControl(driver, ContainerLocator, "#PESSOSEPPESSODTULTCAT");
+
+	/// <summary>
+	/// Curriculum
+	/// </summary>
+	public DocumentControl PessoCurricul => new DocumentControl(driver, ContainerLocator, "PESSOSEPPESSOCURRICUL");
 
 	/// <summary>
 	/// @required
@@ -87,12 +92,12 @@ public class PessosepForm : Form
 	/// <summary>
 	/// Telephone
 	/// </summary>
-	public BaseInputControl Pessos01PessoTelephon => new BaseInputControl(driver, ContainerLocator, "#PESSOS01PESSOTELEPHON");
+	public BaseInputControl Pessos01PessoTelephon => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOTELEPHON", "#PESSOS01PESSOTELEPHON");
 
 	/// <summary>
 	/// Email:
 	/// </summary>
-	public BaseInputControl Pessos01PessoEmail => new BaseInputControl(driver, ContainerLocator, "#PESSOS01PESSOEMAIL___");
+	public BaseInputControl Pessos01PessoEmail => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOEMAIL___", "#PESSOS01PESSOEMAIL___");
 
 	/// <summary>
 	/// PHOTO
@@ -102,7 +107,7 @@ public class PessosepForm : Form
 	/// <summary>
 	/// Photo
 	/// </summary>
-	public BaseInputControl Pessos01PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "#PESSOS01PESSOPHOTOGRA");
+	public BaseInputControl Pessos01PessoPhotogra => new BaseInputControl(driver, ContainerLocator, "container-PESSOS01PESSOPHOTOGRA", "#PESSOS01PESSOPHOTOGRA");
 
 	/// <summary>
 	/// CAREER

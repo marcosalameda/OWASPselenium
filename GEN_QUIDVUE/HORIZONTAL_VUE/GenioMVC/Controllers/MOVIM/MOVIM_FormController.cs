@@ -373,7 +373,6 @@ namespace GenioMVC.Controllers
 				{
 					sp.rollbackTransaction();
 					sp.closeConnection();
-					ClearMessages();
 
 					var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
 					if (e is GenioException && (e as GenioException).UserMessage != null)
@@ -392,11 +391,16 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
+		public class Movim_EquipValRegistnrModel : RequestLookupModel
+		{
+			public Movim_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Movim/Movim_EquipValRegistnr
 		// POST: /Movim/Movim_EquipValRegistnr
 		[ActionName("Movim_EquipValRegistnr")]
-		public ActionResult Movim_EquipValRegistnr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Movim_EquipValRegistnr([FromBody] Movim_EquipValRegistnrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -421,16 +425,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Movim_EquipValRegistnr_ViewModel model = new Movim_EquipValRegistnr_ViewModel(UserContext.Current);
-			
+
+			Models.Movim parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Movim_EquipValRegistnr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(
@@ -455,11 +462,16 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
+		public class Movim_RoomsValRoomnrModel : RequestLookupModel
+		{
+			public Movim_ViewModel Model { get; set; }
+		}
+
 		//
 		// GET: /Movim/Movim_RoomsValRoomnr
 		// POST: /Movim/Movim_RoomsValRoomnr
 		[ActionName("Movim_RoomsValRoomnr")]
-		public ActionResult Movim_RoomsValRoomnr([FromBody]RequestLookupModel requestModel)
+		public ActionResult Movim_RoomsValRoomnr([FromBody] Movim_RoomsValRoomnrModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
@@ -484,16 +496,19 @@ namespace GenioMVC.Controllers
 			}
 
 			IsStateReadonly = true;
-			Movim_RoomsValRoomnr_ViewModel model = new Movim_RoomsValRoomnr_ViewModel(UserContext.Current);
-			
+
+			Models.Movim parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
+			requestModel.Model?.Init(UserContext.Current);
+			requestModel.Model?.MapToModel(parentCtx);
+			Movim_RoomsValRoomnr_ViewModel model = new(UserContext.Current, parentCtx);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport, 
-				model.Uuid, 
+				UserContext.Current.PersistentSupport,
+				model.Uuid,
 				UserContext.Current.User,
 				tableConfigOptions
 			).DetermineTableConfig(

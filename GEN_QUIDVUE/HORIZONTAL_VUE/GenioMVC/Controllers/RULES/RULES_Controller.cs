@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Rules;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER RULES]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class RulesController : ControllerBase
 	{
-		public RulesController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public RulesController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION RULES]/
 
 
@@ -42,6 +51,9 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER RULES]/
+
+
+
 
 
 		/// <summary>

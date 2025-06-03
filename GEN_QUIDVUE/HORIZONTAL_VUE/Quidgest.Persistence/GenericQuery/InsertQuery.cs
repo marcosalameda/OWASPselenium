@@ -48,6 +48,18 @@ namespace Quidgest.Persistence.GenericQuery
         }
 
         /// <summary>
+        /// List of output clauses
+        /// </summary>
+        /// <remarks>
+        /// optional
+        /// </remarks>
+        public IList<ColumnReference> Outputs
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="persistentSupport">The object with the persistent support information</param>
@@ -61,6 +73,7 @@ namespace Quidgest.Persistence.GenericQuery
         public InsertQuery()
         {
             Values = new List<ColumnAttribution>();
+            Outputs = new List<ColumnReference>();
         }
 
         /// <summary>
@@ -161,6 +174,28 @@ namespace Quidgest.Persistence.GenericQuery
             return this;
         }
 
+        /// <summary>
+        /// Add a column to the ouput clause of the query
+        /// </summary>
+        /// <param name="column">The column to output</param>
+        /// <returns>The query</returns>
+        public InsertQuery Output(string column)
+        {
+            Outputs.Add(new ColumnReference("", column));
+            return this;
+        }
+
+        /// <summary>
+        /// Add a column to the ouput clause of the query
+        /// </summary>
+        /// <param name="field">The field to output</param>
+        /// <returns>The query</returns>
+        public InsertQuery Output(FieldRef field)
+        {
+            Outputs.Add(new ColumnReference(field));
+            return this;
+        }
+
         public object Clone()
         {
             InsertQuery result = new InsertQuery();
@@ -169,11 +204,14 @@ namespace Quidgest.Persistence.GenericQuery
             {
                 result.IntoTable = (TableReference)IntoTable.Clone();
             }
-            foreach (ColumnAttribution value in result.Values)
+            foreach (ColumnAttribution value in Values)
             {
                 result.Values.Add((ColumnAttribution)value.Clone());
             }
-
+            foreach (ColumnReference value in Outputs)
+            {
+                result.Outputs.Add((ColumnReference)value.Clone());
+            }
             return result;
         }
 

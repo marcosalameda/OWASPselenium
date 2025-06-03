@@ -22,6 +22,8 @@ using GenioMVC.Resources;
 using GenioMVC.ViewModels;
 using GenioMVC.ViewModels.Lnhpd;
 using GenioServer.business;
+using CSGenio.core.ai;
+
 using Quidgest.Persistence.GenericQuery;
 
 // USE /[MANUAL GQT INCLUDE_CONTROLLER LNHPD]/
@@ -30,7 +32,14 @@ namespace GenioMVC.Controllers
 {
 	public partial class LnhpdController : ControllerBase
 	{
-		public LnhpdController(UserContextService userContext): base(userContext) { }
+
+		private IChatbotService _aiService;
+		public LnhpdController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		{
+			_aiService = aiService;
+		}
+
+
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION LNHPD]/
 
 
@@ -42,7 +51,6 @@ namespace GenioMVC.Controllers
 		}
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER LNHPD]/
-
 
 		[HttpPost]
 		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
@@ -56,13 +64,14 @@ namespace GenioMVC.Controllers
 			this.IsStateReadonly = true;
 
 			dynamic result = null;
-			Models.Lnhpd row = null;
-
-			if (row == null)
-			{
-				row = new Models.Lnhpd(UserContext.Current, isEmpty: true);
-				row.klass.QPrimaryKey = Navigation.GetStrValue("lnhpd");
-			}
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Lnhpd row = new Models.Lnhpd(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("lnhpd");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
 
 			// Only the last reload request is accepted.
 			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
@@ -75,8 +84,7 @@ namespace GenioMVC.Controllers
 				{
 					case "LNHPD___PEDIDNRPEDIDO":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Lnhpd_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Lnhpd_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Lnhpd___pedidnrpedido(qs);
 							result = model.TablePedidNrpedido;
@@ -84,8 +92,7 @@ namespace GenioMVC.Controllers
 						break;
 					case "LNHPD___TPEQUTIPOEQUI":	// Field (DB)
 						{
-							row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
-							var model = new Lnhpd_ViewModel(UserContext.Current) { editable = false };							
+							var model = new Lnhpd_ViewModel(UserContext.Current) { editable = false };
 							model.MapFromModel(row);
 							model.Load_Lnhpd___tpequtipoequi(qs);
 							result = model.TableTpequTipoequi;
@@ -153,6 +160,9 @@ namespace GenioMVC.Controllers
 				UserContext.Current.PersistentSupport.closeConnection();
 			}
 		}
+
+
+
 
 
 		/// <summary>

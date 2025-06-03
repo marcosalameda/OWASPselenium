@@ -8,8 +8,6 @@ namespace CSGenio.framework
 	/// </summary>
 	public enum FieldFormatting
 	{
-		ANO_MES_DIA,
-		DIA_MES_ANO,
 		CARACTERES,
 		GUID,
 		INTEIRO,

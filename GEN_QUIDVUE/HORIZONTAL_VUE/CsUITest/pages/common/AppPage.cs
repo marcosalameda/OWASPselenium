@@ -45,6 +45,15 @@ public class AppPage: PageObject
 		return false;
 	}
 
+    public bool ValidateMenuNavigation(string moduleId, string itemId)
+    {
+        try
+        {
+            return wait.Until(driver => driver.Url.Contains($"{moduleId}/menu/{moduleId}_{itemId}"));
+        }
+        catch { return false; }
+    }
+
 	//Header
 		//logo
 		//avatar
@@ -129,6 +138,8 @@ public class AppPage: PageObject
 		res.AddMenu(module, "313", "31");
 		res.AddMenu(module, "314", "31");
 		res.AddMenu(module, "315", "31");
+		res.AddMenu(module, "316", "31");
+		res.AddMenu(module, "317", "31");
 		res.AddMenu(module, "32", "3");
 		res.AddMenu(module, "33", "3");
 		res.AddMenu(module, "34", "3");
@@ -200,7 +211,7 @@ public class AppPage: PageObject
 		res.AddMenu(module, "2D1", "2D");
 		res.AddMenu(module, "2D2", "2D");
 		res.AddMenu(module, "3", null);
-		res.AddMenu(module, "31", "3");
+		res.AddMenu(module, "REPAIR", "3");
 		res.AddMenu(module, "32", "3");
 		res.AddMenu(module, "33", "3");
 		res.AddMenu(module, "4", null);
@@ -246,6 +257,7 @@ public class AppPage: PageObject
 		res.AddMenu(module, "A3", "A");
 		res.AddMenu(module, "A4", "A");
 		res.AddMenu(module, "B", null);
+		res.AddMenu(module, "C", null);
 		module = "IMO";
 		res.AddModule(module);
 		res.AddMenu(module, "1", null);
@@ -286,6 +298,8 @@ public class AppPage: PageObject
 		res.AddMenu(module, "21", "2");
 		res.AddMenu(module, "22", "2");
 		res.AddMenu(module, "23", "2");
+		res.AddMenu(module, "24", "2");
+		res.AddMenu(module, "25", "2");
 		res.AddMenu(module, "3", null);
 		res.AddMenu(module, "31", "3");
 		res.AddMenu(module, "32", "3");

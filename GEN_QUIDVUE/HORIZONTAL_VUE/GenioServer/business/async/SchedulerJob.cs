@@ -112,7 +112,7 @@ namespace CSGenio.business.async
 
         private string Value(object arg)
         {
-            if (arg.GetType() == typeof(CSGenioAs_arg))
+            if (arg?.GetType() == typeof(CSGenioAs_arg))
                 return ((CSGenioAs_arg)arg).ValValor;
             else
                 return (String)arg;
@@ -144,7 +144,7 @@ namespace CSGenio.business.async
             }
             else
             {
-                return ParseString(Value(args[0]), type);
+                return ParseString(Value(args.Count > 0 ? args[0] : default), type);
             }
         }
 

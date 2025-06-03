@@ -183,6 +183,7 @@ namespace GenioMVC.ViewModels.Attac
 
 		#region Mapper
 
+		/// <inheritdoc />
 		public override void MapFromModel(Models.Attac m)
 		{
 			if (m == null)
@@ -207,20 +208,13 @@ namespace GenioMVC.ViewModels.Attac
 			}
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel()
 		{
 			MapToModel(this.Model);
 		}
 
-		/// <summary>
-		/// Performs the mapping of field values from the ViewModel to the Model.
-		/// </summary>
-		/// <param name="m">The Model to be filled.</param>
-		/// <exception cref="ModelNotFoundException">Thrown if <paramref name="m"/> is null.</exception>
+		/// <inheritdoc />
 		public override void MapToModel(Models.Attac m)
 		{
 			if (m == null)
@@ -545,7 +539,7 @@ namespace GenioMVC.ViewModels.Attac
 			CriteriaSet wherecodition = CriteriaSet.And();
 
 			// Return default values
-			if (GlobalFunctions.emptyG(PKey) == 1)
+			if (GenFunctions.emptyG(PKey) == 1)
 				returnEmptyDependants = true;
 
 			// Check if the limit(s) is filled if exists
@@ -592,7 +586,7 @@ namespace GenioMVC.ViewModels.Attac
 				// Fill List fields
 				this.ValCodasset = ViewModelConversion.ToString(row["asset.codasset"]);
 				TableAssetName.Value = (string)row["asset.name"];
-				if (GlobalFunctions.emptyG(this.ValCodasset) == 1)
+				if (GenFunctions.emptyG(this.ValCodasset) == 1)
 				{
 					this.ValCodasset = "";
 					TableAssetName.Value = "";
@@ -636,8 +630,6 @@ namespace GenioMVC.ViewModels.Attac
 				_ => modelValue
 			};
 		}
-
-
 
 		#region Charts
 

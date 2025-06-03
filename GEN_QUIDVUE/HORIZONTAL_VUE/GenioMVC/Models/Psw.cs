@@ -100,7 +100,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Login attempts" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Psw.ValAttempts")]
 		[NumericAttribute(0)]
-		public decimal? ValAttempts { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValAttempts, 0)); } set { klass.ValAttempts = Convert.ToDecimal(value); } }
+		public decimal? ValAttempts { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValAttempts, 0)); } set { klass.ValAttempts = Convert.ToDecimal(value); } }
 
 		[DisplayName("Phone number")]
 		/// <summary>Field : "Phone number" Tipo: "C" Formula:  ""</summary>
@@ -111,7 +111,7 @@ namespace GenioMVC.Models
 		/// <summary>Field : "Status" Tipo: "N" Formula:  ""</summary>
 		[ShouldSerialize("Psw.ValStatus")]
 		[NumericAttribute(0)]
-		public decimal? ValStatus { get { return Convert.ToDecimal(GlobalFunctions.RoundQG(klass.ValStatus, 0)); } set { klass.ValStatus = Convert.ToDecimal(value); } }
+		public decimal? ValStatus { get { return Convert.ToDecimal(GenFunctions.RoundQG(klass.ValStatus, 0)); } set { klass.ValStatus = Convert.ToDecimal(value); } }
 
 		[DisplayName("Has login?")]
 		/// <summary>Field : "Has login?" Tipo: "L" Formula:  ""</summary>
@@ -144,8 +144,8 @@ namespace GenioMVC.Models
 
 		[DisplayName("ZZSTATE")]
 		[ShouldSerialize("Psw.ValZzstate")]
-		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
-		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
+		/// <summary>Field: "ZZSTATE", Type: "INT", Formula: ""</summary>
+		public virtual int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }
 
 		public Psw(UserContext userContext, bool isEmpty = false, string[]? fieldsToSerialize = null) : base(userContext)
 		{
@@ -163,7 +163,6 @@ namespace GenioMVC.Models
 				SetFieldsToSerialize(fieldsToSerialize);
 			FillRelatedAreas(val);
 		}
-
 
 		public void FillRelatedAreas(CSGenioApsw csgenioa)
 		{

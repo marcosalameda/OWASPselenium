@@ -28,26 +28,26 @@ namespace GenioMVC.Controllers
 {
 	public partial class TblkController : ControllerBase
 	{
-		private static readonly NavigationLocation ACTION_PTN_MENU_3151 = new NavigationLocation("TABLES__FOREIGN_KEYS59930", "PTN_Menu_3151", "Tblk") { vueRouteName = "menu-PTN_3151" };
+		private static readonly NavigationLocation ACTION_PTN_MENU_3161 = new NavigationLocation("TABLES__FOREIGN_KEYS59930", "PTN_Menu_3161", "Tblk") { vueRouteName = "menu-PTN_3161" };
 
 
 		//
-		// GET: /Tblk/PTN_Menu_3151
-		[ActionName("PTN_Menu_3151")]
+		// GET: /Tblk/PTN_Menu_3161
+		[ActionName("PTN_Menu_3161")]
 		[HttpPost]
-		public ActionResult PTN_Menu_3151([FromBody]RequestMenuModel requestModel)
+		public ActionResult PTN_Menu_3161([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 			string rowsPerPageOptionsString = "";
 
-			PTN_Menu_3151_ViewModel model = new PTN_Menu_3151_ViewModel(UserContext.Current);
-			
+			PTN_Menu_3161_ViewModel model = new PTN_Menu_3161_ViewModel(UserContext.Current);
+
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-			
- 
+
+
 			// Determine which table configuration to use and load it
 			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
 				UserContext.Current.PersistentSupport,
@@ -72,7 +72,7 @@ namespace GenioMVC.Controllers
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
-				Navigation.SetValue("HomePage", "PTN_Menu_3151");
+				Navigation.SetValue("HomePage", "PTN_Menu_3161");
 
 			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tblk")))
@@ -91,24 +91,21 @@ namespace GenioMVC.Controllers
 				querystring.AddRange(queryParams);
 
 			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3151.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3151.Action)
+				(Navigation.CurrentLevel == null || !ACTION_PTN_MENU_3161.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_PTN_MENU_3161.Action)
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 			else if (isHomePage)
 			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3151.ShortDescription());
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_PTN_MENU_3161.ShortDescription());
 				Navigation.SetValue("HomePageContainsList", true);
 			}
 
 
 
-// USE /[MANUAL PTN MENU_GET 3151]/
+// USE /[MANUAL PTN MENU_GET 3161]/
 
 
 			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-
-			if (model.CheckForZzstate())
-				WarningMessage(Resources.Resources.ATENCAO__TEM_FICHAS_40812);
 
 
 			return JsonOK(model);

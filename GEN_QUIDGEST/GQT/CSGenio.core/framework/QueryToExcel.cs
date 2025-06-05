@@ -1905,11 +1905,12 @@ namespace CSGenio.framework
                 if (colIndex >= 0)
                 {
                     var aggregateCell = worksheet.Cells[positions.R_Aggregate, colIndex + 1];
-                    string func = aggregate.GetAggregateFunction();
+                    string columns = $"R{positions.R_Data}C{colIndex + 1}:R{positions.R_Data_End}C{colIndex + 1}";
+                    string func = aggregate.GetAggregateFunction(columns);
+
                     if (!string.IsNullOrEmpty(func))
                     {
-                        string address = string.Format("SUBTOTAL({0}, R{1}C{2}:R{3}C{4})", func, positions.R_Data, colIndex + 1, positions.R_Data_End, colIndex + 1);
-                        aggregateCell.FormulaR1C1 = address;
+                        aggregateCell.FormulaR1C1 = func;
                     }
                     else if (!string.IsNullOrEmpty(aggregate.Label))
                     {
@@ -1979,11 +1980,11 @@ namespace CSGenio.framework
                     if (table.Columns.Count > colIndex && colIndex >= 0)
                     {
                         var column = table.Columns[colIndex];
-                        string func = aggregate.GetAggregateFunction();
+                        string func = aggregate.GetAggregateFunction(column.Name);
 
                         if (!string.IsNullOrEmpty(func))
                         {
-                            column.TotalsRowFormula = $"SUBTOTAL({func}, [{column.Name}])";
+                            column.TotalsRowFormula = func;
                         }
                         else if (!string.IsNullOrEmpty(aggregate.Label))
                         {
@@ -2181,43 +2182,45 @@ namespace CSGenio.framework
             Label = label;
         }
 
-        public string GetAggregateFunction()
+                public string GetAggregateFunction(string columns)
         {
-            switch (Function)
-            {
-                case AggregateFunction.Average:
-                    return "101";
-                case AggregateFunction.Count:
-                    return "102";
-                case AggregateFunction.CountA:
-                    return "103";
-                case AggregateFunction.Max:
-                    return "104";
-                case AggregateFunction.Min:
-                    return "105";
-                case AggregateFunction.Product:
-                    return "106";
-                case AggregateFunction.StdDev:
-                    return "107";
-                case AggregateFunction.StdDevP:
-                    return "108";
-                case AggregateFunction.Sum:
-                    return "109";
-                case AggregateFunction.Variance:
-                    return "110";
-                case AggregateFunction.VarianceP:
-                    return "111";
-            }
+            if (string.IsNullOrEmpty(columns))
+                return "";
 
-            return "";
+            const string subtotalTemplate = "=SUBTOTAL({0}, {1})";
+
+            return Function switch
+            {
+                //Formulas com subtotal
+                AggregateFunction.Average => string.Format(subtotalTemplate, "101", columns),
+                AggregateFunction.Count => string.Format(subtotalTemplate, "102", columns),
+                AggregateFunction.CountA => string.Format(subtotalTemplate, "103", columns),
+                AggregateFunction.Max => string.Format(subtotalTemplate, "104", columns),
+                AggregateFunction.Min => string.Format(subtotalTemplate, "105", columns),
+                AggregateFunction.Product => string.Format(subtotalTemplate, "106", columns),
+                AggregateFunction.StdDev => string.Format(subtotalTemplate, "107", columns),
+                AggregateFunction.StdDevP => string.Format(subtotalTemplate, "108", columns),
+                AggregateFunction.Sum => string.Format(subtotalTemplate, "109", columns),
+                AggregateFunction.Variance => string.Format(subtotalTemplate, "110", columns),
+                AggregateFunction.VarianceP => string.Format(subtotalTemplate, "111", columns),
+
+                //Formulas custom
+                AggregateFunction.CountDistinct =>
+                    $"=SUM(IF(FREQUENCY(MATCH({columns},{columns},0),MATCH({columns},{columns},0))>0,1))",
+
+                _ => ""
+            };
         }
+
     }
+    
     public enum AggregateFunction
     {
         None,
         Average,
         Count,
         CountA,
+        CountDistinct,
         Max,
         Min,
         Product,
@@ -2225,6 +2228,6 @@ namespace CSGenio.framework
         StdDevP,
         Sum,
         Variance,
-        VarianceP
+        VarianceP,
     }
 }

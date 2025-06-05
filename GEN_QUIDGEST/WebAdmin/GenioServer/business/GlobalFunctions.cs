@@ -403,7 +403,7 @@ namespace CSGenio.business
                     var uf = new UserFactory(sp, User);
                     sp.openConnection();
                     var psw = uf.GetUser(User.Name);
-                    uf.ChangePassword(psw, newPass, newPassRepetition, oldPass);                        
+                    uf.ChangePassword(psw, newPass, newPassRepetition, oldPass);
                     sp.closeConnection();
 
                     sp.openTransaction();
@@ -811,19 +811,19 @@ namespace CSGenio.business
 
         /// <inheritdoc cref="GenFunctions.LEFT"/>
 		[Obsolete("Use GenFunctions.LEFT instead")]
-        public static string LEFT(string arg,int nrElem)
+        public static string LEFT(string arg, int nrElem)
 			=> GenFunctions.LEFT(arg, nrElem);
 
 
         /// <inheritdoc cref="GenFunctions.RIGHT"/>
 		[Obsolete("Use GenFunctions.RIGHT instead")]
-        public static string RIGHT(string arg,int nrElem)
+        public static string RIGHT(string arg, int nrElem)
 			=> GenFunctions.RIGHT(arg, nrElem);
 
 
         /// <inheritdoc cref="GenFunctions.SubString"/>
 		[Obsolete("Use GenFunctions.SubString instead")]
-        public static string SubString(string arg,int start,int nrElem)
+        public static string SubString(string arg, int start, int nrElem)
 			=> GenFunctions.SubString(arg, start, nrElem);
 
 
@@ -846,7 +846,7 @@ namespace CSGenio.business
 
         /// <inheritdoc cref="GenFunctions.CompareDates"/>
 		[Obsolete("Use GenFunctions.CompareDates instead")]
-        public static int CompareDates(DateTime date1,DateTime date2)
+        public static int CompareDates(DateTime date1, DateTime date2)
 			=> GenFunctions.CompareDates(date1, date2);
 
 
@@ -1068,7 +1068,7 @@ namespace CSGenio.business
             string nomeTabelaBD = Configuration.Program + QtableName.ToUpper();
             string HashRegis = "";
 
-            Area a = Area.createArea(QtableName, user, user.CurrentModule);            
+            Area a = Area.createArea(QtableName, user, user.CurrentModule);
             sp.getRecord(a, internalCode);
             string codhashcd = a.returnValueField(QtableName + ".codhashcd") as string;
             if (string.IsNullOrEmpty(a.QPrimaryKey) || string.IsNullOrEmpty(codhashcd))
@@ -1534,8 +1534,8 @@ namespace CSGenio.business
         {
             int upgrindx;
             decimal dbVersion;
-            
-            try 
+
+            try
             {
                 upgrindx = versionReader.GetDbUpgradeVersion();
                 dbVersion = versionReader.GetDbVersion();

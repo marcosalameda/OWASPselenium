@@ -22,9 +22,9 @@ namespace GenioMVC.Models
 
 		public string ValDocumid { get { return klass.ValDocumid; } set { klass.ValDocumid = value; } }
 
-		public byte[] ValDocument { get { return klass.ValDocument; } set { klass.ValDocument = value; } }
+		public byte[] ValDocument { get { return klass.ValDocument; } }
 
-		public string ValDocpath { get { return klass.ValDocpath; } }
+		public string ValDocpath { get { return klass.ValDocpath; } set { klass.ValDocpath = value; } }
 
 		[Display(Name = "DOCUMENTO60418", ResourceType = typeof(Resources.Resources))]
 		public string ValNome { get { return klass.ValNome; } set { klass.ValNome = value; } }

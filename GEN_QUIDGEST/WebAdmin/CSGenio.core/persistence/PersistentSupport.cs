@@ -2558,13 +2558,15 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                 primaryKeyValue = primaryKeyValue.ToString().Replace("-", "");
             Field chaveDocums = CSGenioAdocums.GetInformation().DBFields["coddocums"];
             object valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, "coddocums", chaveDocums.FieldSize, CSGenioAdocums.GetInformation().KeyType);
+            // MH [update] (15/03/2015) - Burning of files to disk
+            string filepath = saveFileToDisk(Convert.ToString(valorChavePrimariaDocums), file, area.TableName, extension);
 
             //RS(2010.09.16) The table docums starts to gardar several verses and the author of the document
             InsertQuery query = new InsertQuery()
                 .Into(tabelaDocums)
                 .Value("coddocums", valorChavePrimariaDocums)
                 .Value("documid", valorChavePrimariaDocums)
-                .Value("document", file)
+                .Value("docpath", filepath)
                 .Value("tabela", area.TableName)
                 .Value("campo", fieldName)
                 .Value("chave", primaryKeyValue)
@@ -2617,7 +2619,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
                             SelectQuery qs = new SelectQuery()
                                 .Select(CSGenioAdocums.FldDocumid)
-                                .Select(CSGenioAdocums.FldDocument)
+                                .Select(CSGenioAdocums.FldDocpath)
                                 .Select(CSGenioAdocums.FldTabela)
                                 .Select(CSGenioAdocums.FldCampo)
                                 .Select(CSGenioAdocums.FldNome)
@@ -2640,8 +2642,10 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                                 InsertQuery insert = new InsertQuery().Into(tabelaDocums);
                                 insert.Value(CSGenioAdocums.FldCoddocums, valorChavePrimariaDocums);
                                 insert.Value(CSGenioAdocums.FldDocumid, documid);
-                                //This client stores documents in the database
-                                insert.Value(CSGenioAdocums.FldDocument, matrix.GetBinary(0, CSGenioAdocums.FldDocument));
+                                //This client uses file to disk
+                                string sourceDocpath = matrix.GetString(0, CSGenioAdocums.FldDocpath);
+                                string filepath = duplicateFileOnDisk(valorChavePrimariaDocums, sourceDocpath, area.TableName, extension);
+                                insert.Value(CSGenioAdocums.FldDocpath, filepath);
                                 insert.Value(CSGenioAdocums.FldTabela, matrix.GetString(0, CSGenioAdocums.FldTabela));
                                 insert.Value(CSGenioAdocums.FldCampo, matrix.GetString(0, CSGenioAdocums.FldCampo));
                                 insert.Value(CSGenioAdocums.FldChave, primaryKeyValueAux);
@@ -2661,6 +2665,25 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                             }
                         }
                     }
+                }
+                else if(area.TableName == "docums")
+                {
+					object primaryKeyValueAux = area.QPrimaryKey;
+					if (area.DBFields[area.PrimaryKeyName].FieldType == FieldType.KEY_GUID)
+						primaryKeyValueAux = primaryKeyValueAux.ToString().Replace("-", "");
+						
+                    var document = (string)area.returnValueField(CSGenioAdocums.FldDocpath);
+                    var ext = (string)area.returnValueField(CSGenioAdocums.FldExtensao);
+                    int version = 0; int.TryParse((string)area.returnValueField(CSGenioAdocums.FldVersao), out version);
+                    string filepath = duplicateFileOnDisk(primaryKeyValueAux, document, area.TableName, ext);
+                    valorChavePrimariaDocums = primaryKeyValueAux.ToString();
+
+                    var updateDocums = new UpdateQuery()
+                        .Update("docums")
+                        .Set(CSGenioAdocums.FldDocpath, filepath)
+                        .Set(CSGenioAdocums.FldVersao, (version + 1).ToString())
+                        .Where(CriteriaSet.And().Equal(CSGenioAdocums.FldCoddocums, primaryKeyValueAux));
+                    Execute(updateDocums);
                 }
             }
             catch(Exception ex)
@@ -2754,6 +2777,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         {
             if (keyValueDocums != null && keyValueDocums.ToString() != String.Empty)
             {
+                removeFileFromDisk(keyNameDocum, keyValueDocums);
                 //RS(2010.09.16) The table docums starts to gardar several verses and the author of the document
                 string tableName = "docums";
                 DeleteQuery query = new DeleteQuery()
@@ -2834,10 +2858,13 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             // RS(2010.09.16) The table docums starts to save several versions and the author of the document
             string tabelaDocums = "docums";
 
+            // MH [update] (15/03/2015) - Burning of files to disk
+            string filepath = changeFileOnDisk(keyValueDocums, file, alias, extension);
+
             UpdateQuery query = new UpdateQuery()
                 .Update(tabelaDocums)
-                .Set("document", file)
-                .Set("docpath", DBNull.Value)
+                .Set("document", null)
+                .Set("docpath", filepath)
                 .Set("nome", fileName)
                 .Set("tamanho", file.Length)
                 .Set("versao", Qversion)

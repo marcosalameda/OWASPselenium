@@ -45,6 +45,7 @@
 	import maintenance_data_quality from './Maintenance/DataQuality.vue';
 	import maintenance_change_year from './Maintenance/ChangeYear.vue';
 	import QAlert from '@/components/QAlert.vue';
+	import migrate_files from './Maintenance/MigrateFiles.vue';
 	import schedule_maintenance from './Maintenance/ScheduleMaintenance.vue';
 
 	export default {
@@ -58,6 +59,7 @@
 			maintenance_data_quality,
 			maintenance_change_year,
 			schedule_maintenance,
+			migrate_files
 		},
 		mixins: [reusableMixin],
 		data() {
@@ -125,6 +127,15 @@
 							componentId: 'maintenance_change_year',
 							name: 'change_year',
 							label: vm.$t('MUDANCA_DE_ANO09709'),
+							disabled: false,
+							isVisible: true,
+							events: { 'alert-class': vm.updateAlert }
+						},
+						{
+							id: 'migrate_files-tab',
+							componentId: 'migrate_files',
+							name: 'migrate_files',
+							label: vm.$t('MIGRATE_FILES10908'),
 							disabled: false,
 							isVisible: true,
 							events: { 'alert-class': vm.updateAlert }

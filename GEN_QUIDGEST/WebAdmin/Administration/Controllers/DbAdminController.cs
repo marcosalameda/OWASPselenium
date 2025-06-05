@@ -1685,5 +1685,350 @@ namespace Administration.Controllers
             return Json(model);
         }
 
+
+        [HttpGet]
+        public IActionResult MigrateFiles()
+        {
+            var model = new DbMigrateFilesModel();
+            model.Load(CurrentYear);
+            return Json(model);
+        }
+
+        private static ProgressBarStatus migrateFilesProgress;
+        private static List<String> failedFiles = new List<String>();
+        private static CancellationTokenSource cancelTknSrc = null;
+        private static bool isCancelled = false;
+        private static bool isAborted = false;
+
+        [HttpPost]
+        public IActionResult MigrateFiles([FromBody] DbMigrateFilesModel model)
+        {
+            DataMatrix dataTablesMatrix = null;
+            const int MAX_FILES = 1000;
+            Thread t = null;
+            dynamic obj = new System.Dynamic.ExpandoObject();
+            int qtd = 1;
+
+            try
+            {
+                var sp = CSGenio.persistence.PersistentSupport.getPersistentSupport(CurrentYear);
+                var conf = configManager.GetExistingConfig();
+
+                PathCfgEl path = conf.Paths.Find(e => e.Application.ToLower() == "webadmin");
+                if (conf.Paths.Count < 1 || path == null) {
+                    model.AlertType = AlertTypeEnum.danger;
+                    throw new BusinessException(Resources.Resources.CONFIGURATION_ERROR39184,
+                    "DbAdminController.MigrateFiles", Resources.Resources.THERE_IS_NO_FILE_PAT52274);
+                }
+                //Get Files Path
+                string filesPath = path.pathDocuments;
+                string prefix = CSGenio.framework.Configuration.Program.ToUpper();
+
+                if (String.IsNullOrEmpty(filesPath)) {
+                    model.AlertType = AlertTypeEnum.danger;
+                    throw new BusinessException(Resources.Resources.CONFIGURATION_ERROR39184,
+                    "DbAdminController.MigrateFiles", Resources.Resources.THERE_IS_NO_FILE_PAT52274);
+                }
+                migrateFilesProgress = new ProgressBarStatus();
+                migrateFilesProgress.InProcess = true;
+                migrateFilesProgress.Percent = 0;
+                migrateFilesProgress.Text = Resources.Resources.STARTING___61329;
+
+                SelectQuery countDocs = new SelectQuery()
+                            .Select(SqlFunctions.Count(CSGenioAdocums.FldCoddocums), "CNT")
+                            .From("docums")
+                            .Where(CriteriaSet.And()
+                                .Equal(CSGenioAdocums.FldDocpath, null));
+
+                countDocs.noLock = true;
+
+                int qtdDocsToMigrate = DBConversion.ToInteger(sp.ExecuteScalar(countDocs));
+
+                //Get tabels
+                SelectQuery tableQuery = new SelectQuery()
+                    .Select(CSGenioAdocums.FldTabela)
+                    .From("docums")
+                    .Where(CriteriaSet.And()
+                        .Equal(CSGenioAdocums.FldDocpath, null))
+                    .Distinct(true);
+
+                tableQuery.noLock = true;
+
+                dataTablesMatrix = sp.Execute(tableQuery);
+
+                t = new Thread(() =>
+                {
+                    DataMatrix documList = null;
+
+                    for (int a = 0; a < dataTablesMatrix.NumRows; a++)
+                    {
+                        string table = dataTablesMatrix.GetString(a, "docums.tabela");
+
+                        if (string.IsNullOrEmpty(table))
+                            continue;
+
+                        int qtdFilesInPath = 0;
+                        /* Create Area Folder */
+                        string folderPath = System.IO.Path.Combine(filesPath, prefix
+                            + table.ToUpper());
+                        System.IO.Directory.CreateDirectory(folderPath);
+
+                        System.IO.DirectoryInfo dir = new System.IO.DirectoryInfo(folderPath);
+                        List<System.IO.DirectoryInfo> dirs = new List<System.IO.DirectoryInfo>(dir.GetDirectories());
+                        // Distribute files by sub-boards
+                        string subFolder = null;
+
+                        if (dirs.Count > 0 && dirs[dirs.Count() - 1].GetFiles().Length < MAX_FILES)
+                        {
+                            qtdFilesInPath = dirs[dirs.Count() - 1].GetFiles().Length;
+                            subFolder = dirs.Count.ToString();
+                        }
+
+                        if (string.IsNullOrEmpty(subFolder)) subFolder = string.Format("{0}", dirs.Count + 1);
+
+                        //Fetch record count from db
+                        SelectQuery query = new SelectQuery()
+                            .Select(CSGenioAdocums.FldCoddocums)
+                            .From("docums")
+                            .Where(CriteriaSet.And()
+                                .Equal(CSGenioAdocums.FldDocpath, null)
+                                .Equal(CSGenioAdocums.FldTabela, table)
+                            );
+
+                        query.noLock = true;
+
+                        documList = sp.Execute(query);
+
+                        /* Start the cancellation token */
+                        cancelTknSrc = new CancellationTokenSource();
+                        CancellationToken cToken = cancelTknSrc.Token;
+                        /*------------------------------*/
+
+                        for (int i = 0; i < documList.NumRows; i++)
+                        {
+                            try
+                            {
+                                // Check if the task was cancelled
+                                //If so, change the progress message state
+                                if (cToken.IsCancellationRequested)
+                                {
+                                    cToken.ThrowIfCancellationRequested();
+                                }
+
+                                /* Fetch current record information from the DB */
+                                //In case the query times out, it retries it 5 times
+                                //If it keeps failing, then it skips it
+                                bool repeat = false;
+                                int tries = 0;
+                                DataMatrix dataMatrix = null;
+                                do
+                                {
+                                    try
+                                    {
+                                        SelectQuery recordQuery = new SelectQuery()
+										.Select(CSGenioAdocums.FldCoddocums)
+                                        .Select(CSGenioAdocums.FldDocumid)
+                                        .Select(CSGenioAdocums.FldDocument)
+                                        .Select(CSGenioAdocums.FldNome)
+                                        .Select(CSGenioAdocums.FldExtensao)
+                                        .Select(CSGenioAdocums.FldTabela)
+                                        .Select(CSGenioAdocums.FldCampo)
+                                        .From("docums")
+                                        .Where(CriteriaSet.And()
+                                            .Equal(CSGenioAdocums.FldCoddocums, documList.GetString(i, "docums.coddocums"))
+                                        );
+
+                                        recordQuery.noLock = true;
+
+                                        dataMatrix = sp.Execute(recordQuery);
+                                    }
+                                    catch
+                                    {
+                                        tries++;
+                                        repeat = true;
+                                    }
+                                } while (repeat == true && tries < 5);
+
+                                if (dataMatrix == null || dataMatrix.NumRows < 1)
+                                {
+                                    failedFiles.Add(documList.GetString(i, "docums.coddocums"));
+
+                                    if (i == documList.NumRows - 1)
+                                    {
+                                        migrateFilesProgress.Percent = 100;
+                                    }
+
+                                    continue;
+                                }
+
+                                /*-------------------------------------------*/
+
+                                if (i == documList.NumRows - 1 && a == dataTablesMatrix.NumRows - 1)
+                                {
+                                    migrateFilesProgress.Percent = 100;
+                                    model.AlertType = AlertTypeEnum.success;
+                                    migrateFilesProgress.EndMsg = Resources.Resources.ALL_FILES_WERE_MIGRA13761;
+                                }
+                                else
+                                {
+                                    migrateFilesProgress.Percent = (qtd * 100) / qtdDocsToMigrate;
+                                    migrateFilesProgress.Text = Resources.Resources.FILE07547 + " (" + qtd.ToString() + "/" + qtdDocsToMigrate + "): "
+                                    + dataMatrix.GetString(0, "docums.nome") + " [" + dataMatrix.GetString(0, "docums.tabela").ToUpper() + "->"
+                                    + dataMatrix.GetString(0, "docums.campo") + "]";
+                                }
+
+                                Byte[] file = dataMatrix.GetBinary(0, "docums.document");
+
+                                if (file == null || file.Length == 0) //In case this is a migrated value
+                                    continue;
+
+                                /* Assign a unique identifier to the file */
+                                string primaryKey = dataMatrix.GetString(0, "docums.coddocums");
+                                if (string.IsNullOrEmpty(primaryKey)) primaryKey = Guid.NewGuid().ToString();
+                                else primaryKey = primaryKey.TrimStart(' ');
+
+                                string fileName;
+                                if (String.IsNullOrEmpty(dataMatrix.GetString(0, "docums.nome")) || String.IsNullOrEmpty(dataMatrix.GetString(0, "docums.extensao")))
+                                    fileName = primaryKey;
+                                else
+                                    fileName = string.Format("{0}.{1}", primaryKey, dataMatrix.GetString(0, "docums.extensao"));
+
+                                if (qtdFilesInPath >= MAX_FILES)
+                                {
+                                    subFolder = string.Format("{0}", dirs.Count + 1);
+                                    qtdFilesInPath = 0;
+                                }
+
+                                string folderPathDoc = System.IO.Path.Combine(folderPath, subFolder);
+                                System.IO.Directory.CreateDirectory(folderPathDoc);
+
+                                // File writing on disk
+                                string fullpath = System.IO.Path.Combine(folderPathDoc, fileName);
+
+                                if (System.IO.File.Exists(fullpath))
+                                { //Delete the existing file if there is any
+                                    System.IO.File.Delete(fullpath);
+                                }
+
+                                System.IO.File.WriteAllBytes(fullpath, file);
+
+                                //Change Value on DB
+                                sp.executeQuery(String.Format("update docums set document = NULL, docpath = '{0}' where coddocums = '{1}';",
+                                    Path.Combine(prefix.ToUpper() + dataMatrix.GetString(0, "docums.tabela").ToUpper(), subFolder, fileName), primaryKey));
+
+                                qtdFilesInPath++;
+                                qtd++;
+                            }
+                            catch (OperationCanceledException)
+                            {
+                                isCancelled = true;
+
+                                break; // end task
+                            }
+                            catch (Exception ex)
+                            {
+                                //Problems with field update
+                                if (ex is PersistenceException)
+                                {
+                                    isAborted = true;
+                                    break;
+                                }
+
+                                failedFiles.Add(Resources.Resources.FILE07547 + ": "
+                                + documList.GetString(i, "docums.coddocums"));
+
+                                if (i == documList.NumRows - 1 && a == dataTablesMatrix.NumRows - 1)
+                                {
+                                    migrateFilesProgress.Percent = 100;
+                                }
+                                continue;
+                            }
+                        }
+
+                        if (isCancelled || isAborted)
+                            break;
+                    }
+                });
+            }
+            catch (GenioException e)
+            {
+                obj.Success = false;
+                obj.Message = Translations.Get(e.UserMessage, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper()) + " : " + e.Message;
+            }
+            catch (Exception e)
+            {
+                obj.Success = false;
+                obj.Message = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
+            }
+
+            if (t != null && dataTablesMatrix != null && dataTablesMatrix.NumRows > 0)
+            {
+                t.Start();
+                obj.Success = true;
+            }
+            else
+            {
+                obj.Success = false;
+                obj.AlertType = "error";
+                obj.Message = Resources.Resources.INTERNAL_ERROR__COUL23805;
+            }
+            return Json(obj);
+        }
+
+        [HttpGet]
+        public IActionResult GetFileMigrationStatus()
+        {
+            if (isCancelled)
+            {
+                ProgressBarStatus cancelbar = new ProgressBarStatus();
+                cancelbar.Percent = 100;
+                cancelbar.InProcess = false;
+                cancelbar.EndMsg = "Cancelled!";
+                return Json(cancelbar);
+            }
+
+            if(migrateFilesProgress == null)
+            {
+                return Json(new ProgressBarStatus());
+            }
+
+            if(migrateFilesProgress.Percent == 100 || !migrateFilesProgress.InProcess)
+            {
+                ProgressBarStatus tmpStatus = migrateFilesProgress;
+                migrateFilesProgress = null;
+
+                if(failedFiles != null && failedFiles.Count > 0)
+                {
+                    tmpStatus.EndMsg = Resources.Resources.THE_FOLLOWING_FILES_00202 +
+                    "<br />";
+                    foreach(string msg in failedFiles)
+                    {
+                        tmpStatus.EndMsg += "- " + msg + "<br />";
+                    }
+                }
+
+                return Json(tmpStatus);
+            }
+
+            return Json(migrateFilesProgress);
+        }
+
+        [HttpGet]
+        public IActionResult CancelMigrationTask()
+        {
+            if(cancelTknSrc == null){
+                return Json(new { Sucess = false, Message = Resources.Resources.THE_MIGRATION_TASK_I36642, AlertType = AlertTypeEnum.info });
+            }
+
+            try
+            {
+                cancelTknSrc.Cancel();
+                return Json(new { Success = true });
+            }
+            catch(Exception e)
+            {
+                return Json(new { Success = false, Message = e.Message });
+            }
+        }
     }
 }

@@ -70,16 +70,56 @@
 			},
 			SavePathCfg() {
 				var vm = this;
-				QUtils.log("SavePathCfg - Request", QUtils.apiActionURL('Config', 'SavePathCfg'))
-				QUtils.postData('Config', 'SavePathCfg', vm.Model, null, function (data) {
-					QUtils.log("SavePathCfg - Response", data)
+
+				//Check if paths are all the same
+				QUtils.log("Verify Config - Config - Backup");
+				QUtils.postData('Config', 'VerifyDocPathConfig', vm.Model, null, function (data) {
+					QUtils.log("VerifyDocPathConfig - Response", data);
 					if (data.Success) {
-						bootbox.alert(vm.Resources.ALTERACOES_EFETUADAS10166);
+						QUtils.log("SavePathCfg - Request", QUtils.apiActionURL('Config', 'SavePathCfg'));
+						QUtils.postData('Config', 'SavePathCfg', vm.Model, null, function (data) {
+							QUtils.log("SavePathCfg - Response", data);
+							if (data.Success) {
+								bootbox.alert(vm.Resources.ALTERACOES_EFETUADAS10166);
+							}
+							else {
+								bootbox.alert(data.Message)
+							}
+						})
 					}
 					else {
-						bootbox.alert(data.Message)
+						bootbox.confirm({
+							title: vm.Resources.WARNING47821,
+							message: vm.Resources.THERE_ARE_DIFFERENT_09399 +
+							'<br />' + vm.Resources.DO_YOU_WITH_TO_SAVE_09416,
+							backdrop: true,
+							buttons: {
+								confirm:
+								{
+									label: vm.Resources.GRAVAR45301
+								},
+								cancel:
+								{
+									label: vm.Resources.CANCELAR49513
+								}
+							},
+							callback: function(result) {
+								if(result) {
+								QUtils.log("SavePathCfg - Request", QUtils.apiActionURL('Config', 'SavePathCfg'))
+									QUtils.postData('Config', 'SavePathCfg', vm.Model, null, function (data) {
+										QUtils.log("SavePathCfg - Response", data)
+										if (data.Success) {
+											bootbox.alert(vm.Resources.ALTERACOES_EFETUADAS10166);
+										}
+										else {
+											bootbox.alert(data.Message)
+										}
+									})
+								}
+							}
+						});
 					}
-				})
+				});
  			}
 		},
 

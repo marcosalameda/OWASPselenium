@@ -180,8 +180,8 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(5);
 			info.Pathways.Add("airln","airln");
 			info.Pathways.Add("airpt","airpt");
-			info.Pathways.Add("airfr","airfr");
 			info.Pathways.Add("airto","airto");
+			info.Pathways.Add("airfr","airfr");
 			info.Pathways.Add("cntry","airpt");
 		}
 

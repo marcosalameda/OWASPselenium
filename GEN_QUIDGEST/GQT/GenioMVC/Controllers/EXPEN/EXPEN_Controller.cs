@@ -93,7 +93,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -166,7 +165,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -239,7 +237,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -312,7 +309,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -385,7 +381,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -458,7 +453,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{

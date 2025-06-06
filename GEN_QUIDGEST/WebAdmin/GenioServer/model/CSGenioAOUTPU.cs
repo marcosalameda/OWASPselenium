@@ -164,8 +164,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(6);
-			info.Pathways.Add("oudoc","oudoc");
 			info.Pathways.Add("wareh","wareh");
+			info.Pathways.Add("oudoc","oudoc");
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("outpt","outpt");
 			info.Pathways.Add("gitem","item");
@@ -181,8 +181,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "exits", "exitqnty", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "existenc", "exitqnty", '-', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("outpu", "item", "exits", "exitqnty", '+', true));
 
 
 

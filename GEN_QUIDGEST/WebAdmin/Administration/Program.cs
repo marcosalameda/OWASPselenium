@@ -30,7 +30,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers(options => 
     {
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
-    }).AddSessionStateTempDataProvider()
+    })
     .AddJsonOptions(options =>
     {
         options.JsonSerializerOptions.PropertyNamingPolicy = null; //leave property names unchanged
@@ -58,8 +58,6 @@ builder.WebHost.ConfigureKestrel(options =>
 
 //Add chaching service
 builder.Services.AddDistributedMemoryCache();
-
-builder.Services.AddSession();
 
 //Add SOAP service interface
 builder.Services.AddSingleton<IAdminService, WebAPI>();
@@ -118,9 +116,6 @@ app.UseCors("WebAdminCorsPolicy");
 ((IEndpointRouteBuilder) app).UseSoapEndpoint<IAdminService>("/WebAPI.asmx", new SoapEncoderOptions(), SoapSerializer.XmlSerializer, true); //cast needed to solve ambiguity
 ((IEndpointRouteBuilder) app).UseSoapEndpoint<IUserManagementService>("/UserManagement.asmx", new SoapEncoderOptions(), SoapSerializer.XmlSerializer, true);
 
-
-app.UseSession();
-
 // Configure the HTTP request pipeline.
 app.UseResponseCompression();
 
@@ -147,11 +142,6 @@ else
     app.UseDefaultFiles();
     app.UseStaticFiles();
 }
-
-// AspCore wrapper already does this, so its not needed
-//app.UseRouting();
-
-app.UseSession();
 
 //This is only needed when using the [ApiController] attributes
 app.MapControllers();

@@ -76,6 +76,7 @@
 				:data-search-type="column.searchFieldType">
 				<div
 					v-for="(cond, conditionIdx) in editFilter.conditions"
+					class="column-filter-condition"
 					:key="conditionIdx">
 					<div v-if="conditionIdx > 0">
 						{{ texts.orText }}

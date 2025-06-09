@@ -2450,14 +2450,15 @@ namespace CSGenio.business
         private void zeroDuplicar()
         {
             List<string> camposToZero = new List<string>();
-            var camposSR = new List<string>(this.RelatedSumFields ?? new string[] { }); // To simplificar o código na validação e não ter que lidar com array vazio
+            var camposSR = new List<string>(this.RelatedSumFields ?? new string[] { }); // To simplify validation code and not have to deal with empty arrays
+            var stampFields = new List<string>(this.StampFieldsAlt ?? new string[] { }); // To simplify validation code and not have to deal with empty arrays
             foreach(var campoPedido in Fields.Values)
             {
                 if (DBFields.TryGetValue(campoPedido.Name, out Field campoBD))
                 {
                     if (campoBD.ZeroDuplication
                         // Whenever a record is duplicated, every DATAMUDA/HORAMUDA/OPERMUDA should also be reseted
-                        || StampFieldsAlt.Contains(campoBD.Name)
+                        || stampFields.Contains(campoBD.Name)
                         // The target fields of the SRs must be reseted
                         || camposSR.Contains(campoBD.Name)
                         // The encrypted fields can never be duplicated!
@@ -2513,19 +2514,26 @@ namespace CSGenio.business
             List<FieldRef> fieldsToUpdate = new List<FieldRef>();
 
             // SR
-            area.RelatedSumArgs?.ForEach(rel =>
-                fieldsToUpdate.Add(new FieldRef(rel.AliasSR, rel.SRField))
-            );
+            area.RelatedSumArgs?
+                .Where(rel => rel.AliasSR == this.Alias)
+                .ToList()
+                .ForEach(rel => fieldsToUpdate.Add(new FieldRef(rel.AliasSR, rel.SRField)));
 
             //UV
-            area.LastValueArgs?.ForEach(rel =>
-            {
-                foreach (var field in rel.LVRFields)
-                    fieldsToUpdate.Add(new FieldRef(rel.AliasRUV, field));
-            });
+            area.LastValueArgs?
+                .Where(rel => rel.AliasRUV == this.Alias)
+                .ToList()
+                .ForEach(rel =>
+                {
+                    foreach (var field in rel.LVRFields)
+                        fieldsToUpdate.Add(new FieldRef(rel.AliasRUV, field));
+                });
 
             // List Aggregate
-            area.ArgsListAggregate?.ForEach(rel => fieldsToUpdate.Add(new FieldRef(rel.AliasLG, rel.LGField)));
+            area.ArgsListAggregate?
+                .Where(rel => rel.AliasLG == this.Alias)
+                .ToList()
+                .ForEach(rel => fieldsToUpdate.Add(new FieldRef(rel.AliasLG, rel.LGField)));
 
             return fieldsToUpdate;
         }

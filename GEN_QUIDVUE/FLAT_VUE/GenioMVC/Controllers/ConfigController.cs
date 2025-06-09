@@ -66,10 +66,10 @@ namespace GenioMVC.Controllers
 			// DateTime format's
 			var dateFormat = new
 			{
-				Time = Configuration.DateFormat.Time,
-				Date = Configuration.DateFormat.Date,
-				DateTime = Configuration.DateFormat.DateTime,
-				DateTimeSeconds = Configuration.DateFormat.DateTimeSeconds
+				time = Configuration.DateFormat.Time,
+				date = Configuration.DateFormat.Date,
+				dateTime = Configuration.DateFormat.DateTime,
+				dateTimeSeconds = Configuration.DateFormat.DateTimeSeconds
 			};
 
 			// Full Calendar license

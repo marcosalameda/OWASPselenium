@@ -8,7 +8,7 @@
 		<template #layout-loading-effect>
 			<q-page-busy-state
 				:processes="busyPageStateStack"
-				:resources-path="system.resourcesPath" />
+				:resources-path="$app.resourcesPath" />
 
 			<template v-if="progressBar.isVisible">
 				<teleport :to="`#${progressBar.containerId}-body`">
@@ -65,7 +65,7 @@
 						:key="mainRouteKey"
 						:route="displayRoute" />
 				</template>
-				<template v-else-if="userIsLoggedIn || (isPublicRoute && !isFullScreenPage) || layoutConfig.LoginStyle !== 'single_page'">
+				<template v-else-if="userIsLoggedIn || (isPublicRoute && !isFullScreenPage) || $app.layout.LoginStyle !== 'single_page'">
 					<div
 						v-if="showContent"
 						id="main"
@@ -114,7 +114,7 @@
 				v-bind="cookieBanner.props"
 				@set-cookie="handleSetCookie" />
 
-			<q-footer v-if="layoutConfig.FooterEnable && (showContent || isPublicRoute)" />
+			<q-footer v-if="$app.layout.FooterEnable && (showContent || isPublicRoute)" />
 		</template>
 	</q-layout>
 
@@ -154,33 +154,32 @@
 <script>
 	import 'bootstrap'
 
+	import { mapActions, mapState } from 'pinia'
+	import { v4 as uuidv4 } from 'uuid'
 	import { defineAsyncComponent, shallowRef } from 'vue'
 	import { isNavigationFailure } from 'vue-router'
-	import { mapState, mapActions } from 'pinia'
-	import { v4 as uuidv4 } from 'uuid'
 
-	import netAPI from '@/api/network'
 	import { loadResources } from '@/plugins/i18n'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
-	import mainConfigUtils from '@/api/global/mainConfigUtils.js'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import netAPI from '@quidgest/clientapp/network'
 
-	import { useGenericDataStore } from '@/stores/genericData.js'
-	import { useTracingDataStore } from '@/stores/tracingData.js'
-	import { useSystemDataStore } from '@/stores/systemData.js'
+	import { useGenericDataStore, useTracingDataStore } from '@quidgest/clientapp/stores'
 
-	import { navigateToRouteName, processRedirect as vueProcessSrvRedirect } from '@/mixins/vueNavigation.js'
-	import LayoutHandlers from '@/mixins/layoutHandlers.js'
+	import hardcodedTexts from '@/hardcodedTexts.js'
 	import AuthHandlers from '@/mixins/authHandlers.js'
 	import CavHandler from '@/mixins/cavHandler.js'
+	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import NavHandlers from '@/mixins/navHandlers.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
-	import hardcodedTexts from '@/hardcodedTexts.js'
+	import { navigateToRouteName, processRedirect as vueProcessSrvRedirect } from '@/mixins/vueNavigation.js'
+	import { removeModal, setShowCookies } from '@/utils/layout'
+	import { updateAFToken, updateMainConfig } from '@/utils/system'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
+	import QCookies from '@/components/inputs/QCookies.vue'
 	import QLayout from '@/views/layout/Layout.vue'
 	import QBreadcrumbs from '@/views/shared/Breadcrumbs.vue'
-	import QSidebar from '@/views/shared/RightSidebar.vue'
 	import QInfoMessageContainer from '@/views/shared/QInfoMessageContainer.vue'
-	import QCookies from '@/components/inputs/QCookies.vue'
+	import QSidebar from '@/views/shared/RightSidebar.vue'
 
 	export default {
 		name: 'QApp',
@@ -327,7 +326,8 @@
 				'fixedInfoMessages',
 				'relativeInfoMessages',
 				'modals',
-				'busyPageStateStack'
+				'busyPageStateStack',
+				'shouldShowCookies'
 			]),
 
 			...mapState(useTracingDataStore, [
@@ -341,11 +341,10 @@
 
 			cookieBanner()
 			{
-				const systemDataStore = useSystemDataStore()
-				const cookies = systemDataStore.cookies
+				const cookies = this.$app.cookies
 
 				return {
-					isVisible: cookies.cookieActive && cookies.shouldShowCookies,
+					isVisible: cookies.cookieActive && this.shouldShowCookies,
 					props: {
 						filePath: cookies.filePath,
 						text: this.Resources[cookies.cookieText],
@@ -415,8 +414,6 @@
 				'setFullScreenPage'
 			]),
 
-			removeModal: genericFunctions.removeModal,
-
 			/**
 			 * Changes the state of the cookies.
 			 * @param {boolean} isVisible Value to change
@@ -424,7 +421,7 @@
 			handleSetCookie(isVisible)
 			{
 				localStorage.setItem('cookieAccepted', !isVisible)
-				genericFunctions.setShowCookies(!isVisible)
+				setShowCookies(!isVisible)
 			},
 
 			/**
@@ -433,7 +430,7 @@
 			checkCookiesState()
 			{
 				const isAccepted = localStorage.getItem('cookieAccepted') ? localStorage.cookieAccepted : false
-				genericFunctions.setShowCookies(!isAccepted)
+				setShowCookies(!isAccepted)
 			},
 
 			/**
@@ -497,8 +494,8 @@
 
 				if (!userIsSame)
 				{
-					mainConfigUtils.updateAFToken()
-					mainConfigUtils.updateMainConfig()
+					updateAFToken()
+					updateMainConfig()
 				}
 			},
 
@@ -511,7 +508,7 @@
 				if (typeof modal.dismissAction === 'function')
 					modal.dismissAction()
 
-				this.removeModal(modal.id)
+				removeModal(modal.id)
 			},
 
 			/**

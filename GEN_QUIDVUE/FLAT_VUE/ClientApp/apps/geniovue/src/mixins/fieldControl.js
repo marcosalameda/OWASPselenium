@@ -1,8 +1,7 @@
-﻿import { computed, isRef, nextTick, ref, watch, watchEffect } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
-import _assignIn from 'lodash-es/assignIn'
+﻿import _assignIn from 'lodash-es/assignIn'
 import _assignInWith from 'lodash-es/assignInWith'
 import _capitalize from 'lodash-es/capitalize'
+import cloneDeep from 'lodash-es/cloneDeep'
 import _debounce from 'lodash-es/debounce'
 import _forEach from 'lodash-es/forEach'
 import _get from 'lodash-es/get'
@@ -15,22 +14,29 @@ import _mergeWith from 'lodash-es/mergeWith'
 import _some from 'lodash-es/some'
 import _toLower from 'lodash-es/toLower'
 import _unionWith from 'lodash-es/unionWith'
-import cloneDeep from 'lodash-es/cloneDeep'
+import { v4 as uuidv4 } from 'uuid'
+import { computed, isRef, nextTick, ref, watch, watchEffect } from 'vue'
 
-import netAPI from '@/api/network'
 import searchFilterData from '@/api/genio/searchFilterData.js'
-import asyncProcM from '@/api/global/asyncProcMonitoring.js'
-import eventBus from '@/api/global/eventBus.js'
-import { BlockConditionStack, HideConditionStack, RequiredConditionStack } from '@/models/fields/conditionStack.js'
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { validateFormula } from  '@/utils/formula.js'
+import { validateFormula } from '@/utils/formula.js'
+import asyncProcM from '@quidgest/clientapp/composables/async'
+import {
+	BlockConditionStack,
+	HideConditionStack,
+	RequiredConditionStack
+} from '@quidgest/clientapp/models/conditionStack'
+import netAPI from '@quidgest/clientapp/network'
+import eventBus from '@quidgest/clientapp/plugins/eventBus'
+import { useGenericDataStore, useSystemDataStore } from '@quidgest/clientapp/stores'
 
-import getSpecialRenderingControls from './customControl.js'
+import { removeModal } from '@/utils/layout.js'
+import qEnums from '@quidgest/clientapp/constants/enums'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 import controlsResources from './controlsResources.js'
+import getSpecialRenderingControls from './customControl.js'
 import formFunctions from './formFunctions.js'
-import genericFunctions from './genericFunctions.js'
 import listFunctions from './listFunctions.js'
-import qEnums from './quidgest.mainEnums.js'
+import { systemInfo } from '@/systemInfo'
 
 /**
  * Base form control
@@ -474,9 +480,9 @@ export class BaseControl
 	 * Removes from the DOM the modal with the specified id.
 	 * @param {string} modalId The id of the modal
 	 */
-	removeModal(modalId)
+	removeFieldModal(modalId)
 	{
-		genericFunctions.removeModal(modalId)
+		removeModal(modalId)
 		this.popupIsVisible = false
 	}
 
@@ -808,12 +814,12 @@ export class NumberControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
-		const systemDataStore = useSystemDataStore()
+		const genericDataStore = useGenericDataStore()
 
 		super({
 			type: 'Number',
-			thousandsSeparator: systemDataStore.system.numberFormat.thousandsSeparator,
-			decimalPoint: systemDataStore.system.numberFormat.decimalSeparator,
+			thousandsSeparator: genericDataStore.numberFormat.thousandsSeparator,
+			decimalPoint: genericDataStore.numberFormat.decimalSeparator,
 			maxDigits: 0,
 			decimalDigits: 0,
 			isDecimal: true, /* <= decimalDigits > 0 */
@@ -866,12 +872,10 @@ export class CurrencyControl extends NumberControl
 {
 	constructor(options, _vueContext)
 	{
-		const systemDataStore = useSystemDataStore()
-
 		super({
 			type: 'Number',
 			dFlexInline: true,
-			currencySymbol: computed(() => systemDataStore.system?.baseCurrency?.symbol ?? '€')
+			currencySymbol: computed(() => systemInfo.system.baseCurrency.symbol ?? '€')
 		}, _vueContext)
 
 		_merge(this, options || {})
@@ -1716,10 +1720,10 @@ export class TableListControl extends BaseControl
 				page: 1,
 				perPage: 10,
 				perPageOptions: [],
-				actionsPlacement: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.DbEditActionPlacement : 'left'),
-				paginationPlacement: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.DbEditPagerPlacement : 'left'),
-				rowActionDisplay: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.RowActionDisplay : 'dropdown'),
-				showRowActionText: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.RowActionDisplay !== 'inline' : true),
+				actionsPlacement: systemInfo.layout.DbEditActionPlacement,
+				paginationPlacement: systemInfo.layout.DbEditPagerPlacement,
+				rowActionDisplay: systemInfo.layout.RowActionDisplay,
+				showRowActionText: systemInfo.layout.RowActionDisplay !== 'inline',
 				hasTextWrap: false,
 				rowValidation: {
 					message: computed(() => tableTexts.pendingRecords),
@@ -1773,7 +1777,7 @@ export class TableListControl extends BaseControl
 					'dropdown-item': true
 				},
 				rowKeyToScroll: '',
-				resourcesPath: computed(() => systemDataStore.system?.resourcesPath ?? ''),
+				resourcesPath: systemInfo.resourcesPath,
 				navigatedRowKeyPath: null,
 				emptyRowImg: 'empty_card_container.png',
 				onLoadSelectFirst: false,
@@ -1824,10 +1828,10 @@ export class TableListControl extends BaseControl
 
 		this.isLoaded = false
 
-		const systemDataStore = useSystemDataStore()
+		const genericDataStore = useGenericDataStore()
 
 		// In maintenance mode, set server-mode tables to readonly mode
-		this.readonly = computed(() => this.isBlocked || (this.config.serverMode && systemDataStore.maintenance.isActive))
+		this.readonly = computed(() => this.isBlocked || (this.config.serverMode && genericDataStore.maintenance.isActive))
 
 		this.initEvents()
 		this.initUserConfig()
@@ -1899,7 +1903,7 @@ export class TableListControl extends BaseControl
 			resetColumnSizes: (eventData) => this.onTableListResetColumnSizes(eventData),
 			resetColumnOrdering: () => this.onTableListResetColumnOrdering(),
 			showPopup: (eventData) => this.setModal(eventData),
-			hidePopup: (eventData) => this.removeModal(eventData),
+			hidePopup: (eventData) => this.removeFieldModal(eventData),
 			setInfoMessage: (eventData) => this.setInfoMessage(eventData),
 			showAdvancedFilters: (eventData) => this.setAdvancedFiltersPopup(eventData),
 			addAdvancedFilter: (eventData) => this.addAdvancedFilter(eventData),
@@ -2398,15 +2402,13 @@ export class DocumentControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
-		const systemDataStore = useSystemDataStore()
-
 		// Init default values of control properties
 		super({
 			type: 'Document',
 			versionsInfo: [],
 			extensions: [],
 			texts: new controlsResources.DocumentResources(_vueContext.$getResource),
-			resourcesPath: computed(() => systemDataStore.system?.resourcesPath ?? ''),
+			resourcesPath: systemInfo.resourcesPath,
 			documentProperties: null,
 			documentFK: null,
 			fileProperties: {},
@@ -2488,7 +2490,7 @@ export class DocumentControl extends DatabaseControl
 			deleteHistory: () => this.deleteFile(deleteTypes.versions),
 			deleteFile: () => this.deleteFile(deleteTypes.all),
 			showPopup: (eventData) => this.setModal(eventData),
-			hidePopup: (eventData) => this.removeModal(eventData),
+			hidePopup: (eventData) => this.removeFieldModal(eventData),
 			showTemplatesPopup: (eventData) => this.handleDocumentTemplates(eventData),
 			documentTemplatesChoice: (eventData) => this.handleDocumentTemplatesChoice(eventData),
 			documentTemplatesClose: (eventData) => this.handleDocumentTemplatesClose(eventData)
@@ -2919,14 +2921,12 @@ export class ImageControl extends DatabaseControl
 {
 	constructor(options, _vueContext)
 	{
-		const systemDataStore = useSystemDataStore()
-
 		// Init default values of control properties
 		super({
 			type: 'Image',
 			image: null,
 			fullSizeImage: null,
-			defaultImage: computed(() => `${systemDataStore.system?.resourcesPath ?? ''}no_img.png?v=${systemDataStore.genio?.buildVersion ?? '1'}`),
+			defaultImage: computed(() => `${systemInfo.resourcesPath}no_img.png?v=${systemInfo.genio.buildVersion}`),
 			extensions: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.bmp'],
 			isStatic: false,
 			texts: new controlsResources.ImageResources(_vueContext.$getResource),
@@ -3007,7 +3007,7 @@ export class ImageControl extends DatabaseControl
 			submitImage: (event) => this.setImage(event),
 			deleteImage: () => this.deleteImage(),
 			showPopup: (event) => this.setModal(event),
-			hidePopup: (event) => this.removeModal(event)
+			hidePopup: (event) => this.removeFieldModal(event)
 		}
 
 		// Apply handlers without overriding. The handler can come from outside at initialization.
@@ -3124,14 +3124,12 @@ export class ManualFillingImageControl extends ImageControl
 {
 	constructor(options, _vueContext)
 	{
-		const systemDataStore = useSystemDataStore()
-
 		// Init default values of control properties
 		super({
 			type: 'ManualFillingImage',
 			image: null,
 			fullSizeImage: null,
-			defaultImage: computed(() => `${systemDataStore.system?.resourcesPath ?? ''}no_img.png?v=${systemDataStore.genio?.buildVersion ?? '1'}`),
+			defaultImage: computed(() => `${systemInfo.resourcesPath}no_img.png?v=${systemInfo.genio.buildVersion}`),
 			isStatic: true,
 			texts: new controlsResources.ImageResources(_vueContext.$getResource)
 		}, _vueContext)
@@ -3260,7 +3258,7 @@ export class TimelineControl extends TableListControl
 {
 	constructor(options, _vueContext)
 	{
-		const systemDataStore = useSystemDataStore()
+		const genericDataStore = useGenericDataStore()
 
 		// Init default values of control properties
 		super({
@@ -3271,7 +3269,7 @@ export class TimelineControl extends TableListControl
 			},
 			config: {
 				scale: '',
-				dateTimeFormat: computed(() => systemDataStore.system?.dateFormat?.dateTime)
+				dateTimeFormat: computed(() => genericDataStore.dateFormat?.dateTime)
 			},
 			texts: new controlsResources.TimelineResources(_vueContext.$getResource)
 		}, _vueContext)
@@ -3489,8 +3487,6 @@ export class FormContainerControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{
-		const systemDataStore = useSystemDataStore()
-
 		// Init default values of control properties
 		super({
 			targetTableListId: null,
@@ -3523,7 +3519,7 @@ export class FormContainerControl extends BaseControl
 			rowComponentProps: {
 				formButtonsOverride: null
 			},
-			resourcesPath: computed(() => systemDataStore.system?.resourcesPath ?? ''),
+			resourcesPath: systemInfo.resourcesPath,
 			texts: new controlsResources.FormContainerResources(_vueContext.$getResource)
 		}, _vueContext)
 
@@ -3747,8 +3743,6 @@ export class GridTableListControl extends BaseControl
 {
 	constructor(options, _vueContext)
 	{
-		const systemDataStore = useSystemDataStore()
-
 		// Init default values of control properties
 		super({
 			type: 'GridTableList',
@@ -3756,7 +3750,7 @@ export class GridTableListControl extends BaseControl
 				name: '',
 				tableTitle: undefined,
 				formName: undefined,
-				resourcesPath: computed(() => systemDataStore.system?.resourcesPath ?? '')
+				resourcesPath: systemInfo.resourcesPath
 			},
 			permissions: {
 				canDelete: true,
@@ -4016,10 +4010,10 @@ export class PropertyListControl extends BaseControl
 			name: field.name,
 			value: this.parseToServerValue(value, field.type),
 			type: field.type,
-			isRowDirty: field.props.modelValue !== field.defaultValue
+			isRowDirty: value !== field.defaultValue
 		}
 
-		if(!this.modelFieldRef.value)
+		if (!this.modelFieldRef.value)
 			this.modelFieldRef.value = {}
 
 		const propertyModel = this.modelFieldRef.value[field.id]
@@ -4033,7 +4027,7 @@ export class PropertyListControl extends BaseControl
 	{
 		const fieldTypeHandler = {
 			date: (value) => genericFunctions.dateToISOString(value),
-			default: (value) => value.toString()
+			default: (value) => value?.toString()
 		}
 
 		return (fieldTypeHandler[fieldType] || fieldTypeHandler['default'])(value)
@@ -4078,7 +4072,7 @@ export class KanbanControl extends BaseControl
 				rowClickAction: {},
 				formsDefinition: {},
 				allowColumnEdition: false,
-				rowActionDisplay: computed(() => _vueContext.layoutConfig ? _vueContext.layoutConfig.RowActionDisplay : 'dropdown'),
+				rowActionDisplay: systemInfo.layout.RowActionDisplay,
 			},
 			texts: kanbanTexts
 		}, _vueContext)

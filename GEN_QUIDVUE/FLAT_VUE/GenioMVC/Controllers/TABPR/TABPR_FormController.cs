@@ -462,12 +462,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Tabpr/Tabpr_SaveEdit
 		[HttpPost]
-		public ActionResult Tabpr_SaveEdit([FromBody]Tabpr_ViewModel model)
+		public ActionResult Tabpr_SaveEdit([FromBody] Tabpr_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Tabpr_SaveEdit",
 				ViewName = "Tabpr",
@@ -483,6 +482,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class TabprDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Tabpr_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsTabpr([FromBody] TabprDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

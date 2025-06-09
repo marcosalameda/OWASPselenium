@@ -1,5 +1,4 @@
 ﻿import axios from 'axios'
-import mockAdapter from 'axios-mock-adapter'
 
 import { handleDates } from './axiosResponseParsers'
 
@@ -31,26 +30,6 @@ axiosInstance.interceptors.request.use((config) => {
 	return config
 })
 
-export function getAxiosMockInstance(url, params, mockData)
-{
-	var axiosMockInstance = axios.create()
-
-	// Add a response interceptor
-	axiosMockInstance.interceptors.response.use((response) => {
-		// Any status code that lie within the range of 2xx cause this function to trigger
-		handleDates(response.data)
-		return response
-	})
-
-	// All requests using this instance will have a 2 seconds delay:
-	var mock = new mockAdapter(axiosMockInstance, { delayResponse: 2000 })
-
-	mock.onGet(url, params).reply(200, mockData)
-
-	return axiosMockInstance
-}
-
 export default {
-	axiosInstance,
-	getAxiosMockInstance
+	axiosInstance
 }

@@ -1,10 +1,10 @@
 ﻿import _isEmpty from 'lodash-es/isEmpty'
 
 import { loadResources } from '@/plugins/i18n.js'
-import { postData } from '@/api/network'
+import { postData } from '@quidgest/clientapp/network'
 import listFunctions from './listFunctions.js'
 import formFunctions from './formFunctions.js'
-import genericFunctions from './genericFunctions.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 import GenericMenuHandlers from './genericMenuHandlers.js'
 
 /***********************************************************************

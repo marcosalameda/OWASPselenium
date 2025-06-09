@@ -2,7 +2,7 @@
 import _forEach from 'lodash-es/forEach'
 import _isEmpty from 'lodash-es/isEmpty'
 
-import { postData } from '@/api/network'
+import { postData } from '@quidgest/clientapp/network'
 import { hydrateDashboardData, hydrateWidgetData } from './dashboardFunctions.js'
 
 /*****************************************************************
@@ -49,7 +49,7 @@ export default {
 									this.fetchWidgetData(dashboardControl, widget)
 								}
 							})
-							
+
 							resolve(true)
 						}
 						catch (error)

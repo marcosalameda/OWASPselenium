@@ -4,7 +4,7 @@
 		:data-loading="loading">
 		<slot name="layout-loading-effect"></slot>
 
-		<div 
+		<div
 			v-if="this.maintenance.isScheduled || this.maintenance.isActive"
 			class="q-maintenance-container">
 			<span>
@@ -108,7 +108,7 @@
 
 				if (!this.sidebarIsVisible ||
 					this.isFullScreenPage ||
-					!this.userIsLoggedIn && !this.isPublicRoute && this.layoutConfig.LoginStyle === 'single_page' ||
+					!this.userIsLoggedIn && !this.isPublicRoute && this.$app.layout.LoginStyle === 'single_page' ||
 					Object.keys(this.system.availableModules).length === 0)
 					classes.push('sidebar-closed')
 
@@ -129,7 +129,7 @@
 			 */
 			showContent()
 			{
-				return !this.isFullScreenPage && (this.userIsLoggedIn || this.isPublicRoute || this.layoutConfig.LoginStyle !== 'single_page')
+				return !this.isFullScreenPage && (this.userIsLoggedIn || this.isPublicRoute || this.$app.layout.LoginStyle !== 'single_page')
 			},
 
 			maintenanceMessage() {

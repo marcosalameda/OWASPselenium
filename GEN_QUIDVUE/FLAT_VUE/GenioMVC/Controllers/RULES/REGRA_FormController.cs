@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Rules/Regra_SaveEdit
 		[HttpPost]
-		public ActionResult Regra_SaveEdit([FromBody]Regra_ViewModel model)
+		public ActionResult Regra_SaveEdit([FromBody] Regra_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_SaveEdit",
 				ViewName = "Regra",
@@ -412,6 +411,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class RegraDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Regra_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsRegra([FromBody] RegraDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

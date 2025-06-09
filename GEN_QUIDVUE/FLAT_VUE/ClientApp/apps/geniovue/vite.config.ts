@@ -20,11 +20,26 @@ export default defineConfig(({ mode }) => {
 		base: './',
 		root: './',
 		resolve: {
-			alias: {
-				'@': path.resolve(__dirname, './src'),
-				'vue-i18n': 'vue-i18n/dist/vue-i18n.cjs.js'
-			},
-			extensions: ['.mjs', '.js', '.json', '.vue'],
+			alias: [
+				{ find: 'vue-i18n', replacement: 'vue-i18n/dist/vue-i18n.cjs.js' },
+				// we alias to the lib's source files in dev
+				// so we don't need to rebuild the lib over and over again
+				{
+					find: /^@quidgest\/clientapp$/,
+					replacement: isDev
+						? path.resolve(__dirname, '../../packages/clientapp/src/index.ts')
+						: '@quidgest/clientapp',
+				},
+				{
+					find: /^@quidgest\/clientapp\/(.+)$/,
+					replacement: isDev
+						? (_match, subPath) =>
+							path.resolve(__dirname, `../../packages/clientapp/src/${subPath}`)
+						: '@quidgest/clientapp/$1',
+				},
+				{ find: '@', replacement: path.resolve(__dirname, './src') }
+			],
+			extensions: ['.mjs', '.js', '.ts', '.json', '.vue'],
 			dedupe: ['vue']
 		},
 		build: {
@@ -45,9 +60,9 @@ export default defineConfig(({ mode }) => {
 						- Bundling files that should be loaded together most of the time but the algorithm failed to bundle together
 						- Groups of files that are optional, and are making other bundles bigger
 						The rest of the files should be left to the algorithm
-						*/						
+						*/
 						if (id.includes('quidgest/chatbot')) return 'chatbot'
-						if (id.includes('node_modules')) 
+						if (id.includes('node_modules'))
 							{
 								if (id.includes('leaflet')) return 'leaflet'
 								if (id.includes('ace-builds')) return 'ace'
@@ -68,12 +83,12 @@ export default defineConfig(({ mode }) => {
 						{
 							const match = id.match(/Menu([^\/]+)/)
 							return match ? 'Menu' + match[1] : null
-						}				
+						}
 						if(id.includes('dashboard')) return 'dashboard'
 						//Layout and sidebar components were not being merged by the algorithm
-						if(id.includes('Footer') || id.includes('NavigationalBar') || id.includes('LanguageItems')) return 'layout'						
-						if( id.includes("RightSidebar") || id.includes('Alerts.vue') || id.includes('QInfoMessage.vue') 
-							|| id.includes('QAnchor') || id.includes('FormActionButtons')) 
+						if(id.includes('Footer') || id.includes('NavigationalBar') || id.includes('LanguageItems')) return 'layout'
+						if( id.includes("RightSidebar") || id.includes('Alerts.vue') || id.includes('QInfoMessage.vue')
+							|| id.includes('QAnchor') || id.includes('FormActionButtons'))
 							return 'Sidebar'
 
 						if (id.includes('/components/table')) return 'QTable'

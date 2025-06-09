@@ -1,10 +1,10 @@
 ﻿<template>
 	<ul
-		v-if="layoutConfig.ModulesStyle === 'collapsible'"
+		v-if="$app.layout.ModulesStyle === 'collapsible'"
 		id="modules-tree-view"
 		class="nav nav-pills nav-sidebar n-sidebar__nav d-block collpased-modules">
 		<li :class="[{ 'menu-open': moduleMenuIsOpen }, 'nav-item', 'n-sidebar__nav-item', 'has-treeview']">
-			<a 
+			<a
 				ref="menuButton"
 				id="modules__toggle"
 				href="javascript:void(0)"
@@ -29,7 +29,7 @@
 					v-if="moduleMenuIsOpen"
 					id="collapsible-modules"
 					class="nav nav-treeview">
-					<all-modules 
+					<all-modules
 						@navigate-to-module="toggleModulesMenu"
 						@keyup="menuItemKeyup" />
 				</ul>
@@ -37,13 +37,13 @@
 		</li>
 	</ul>
 	<ul
-		v-else-if="layoutConfig.ModulesStyle === 'list'"
+		v-else-if="$app.layout.ModulesStyle === 'list'"
 		id="modules-tree-view"
 		class="nav nav-pills nav-sidebar n-sidebar__nav d-block modules-list-view">
 		<all-modules />
 	</ul>
 	<div
-		v-else-if="layoutConfig.ModulesStyle === 'dropdown'"
+		v-else-if="$app.layout.ModulesStyle === 'dropdown'"
 		id="modules-tree-view"
 		class="n-sidebar__nav-item--dropdown">
 		<ul class="nav">
@@ -73,7 +73,7 @@
 								href="javascript:void(0)"
 								:data-key="mod.id"
 								@click.prevent="navigateToModule(mod.id)">
-								<q-icon 
+								<q-icon
 									v-if="getModuleIconProps(mod)"
 									v-bind="getModuleIconProps(mod)" />
 								{{ Resources[mod.title] }}
@@ -138,7 +138,7 @@
 			{
 				//Focus on the menu toggle button
 				this.focusItem()
-				
+
 				//Close dropdown
 				this.setModuleMenuState(false)
 			},
@@ -149,7 +149,7 @@
 			menuItemKeyup(event)
 			{
 				const key = event?.key
-				
+
 				if(key === 'Escape')
 					this.closeMenuAndFocusItem()
 			},

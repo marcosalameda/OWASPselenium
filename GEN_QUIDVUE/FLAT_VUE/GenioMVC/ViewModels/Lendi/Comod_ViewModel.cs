@@ -234,9 +234,8 @@ namespace GenioMVC.ViewModels.Lendi
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Lendi model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

@@ -671,12 +671,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Prope/Prope17_SaveEdit
 		[HttpPost]
-		public ActionResult Prope17_SaveEdit([FromBody]Prope17_ViewModel model)
+		public ActionResult Prope17_SaveEdit([FromBody] Prope17_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Prope17_SaveEdit",
 				ViewName = "Prope17",
@@ -692,6 +691,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class Prope17DocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Prope17_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsPrope17([FromBody] Prope17DocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

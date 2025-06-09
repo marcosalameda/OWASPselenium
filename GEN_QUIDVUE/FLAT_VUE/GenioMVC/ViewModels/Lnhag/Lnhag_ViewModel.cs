@@ -162,9 +162,8 @@ namespace GenioMVC.ViewModels.Lnhag
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Lnhag model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

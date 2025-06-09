@@ -6,7 +6,7 @@
 			<div class="f-login__background">
 				<div class="f-login__brand">
 					<img
-						:src="`${system.resourcesPath}f-login__brand.png?v=${genio.buildVersion}`"
+						:src="`${$app.resourcesPath}f-login__brand.png?v=${$app.genio.buildVersion}`"
 						alt="" />
 					<p>{{ texts.appName }}</p>
 				</div>
@@ -79,18 +79,18 @@
 	import _isEmpty from 'lodash-es/isEmpty'
 	import _forEach from 'lodash-es/forEach'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import { useAuthDataStore } from '@/stores/authData.js'
-	import { QEventEmitter } from '@/api/global/eventBus.js'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
+	import { useAuthDataStore } from '@quidgest/clientapp/stores'
+	import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
 	import NavHandlers from '@/mixins/navHandlers.js'
 	import VueNavigation from '@/mixins/vueNavigation.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import ViewModelBase from '@/mixins/formViewModelBase.js'
+	import FormViewModelBase from '@/mixins/formViewModelBase.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 
-	class ViewModel extends ViewModelBase
+	class ViewModel extends FormViewModelBase
 	{
 		constructor(vueContext)
 		{
@@ -191,8 +191,7 @@
 
 		computed: {
 			...mapState(useSystemDataStore, [
-				'system',
-				'genio'
+				'system'
 			]),
 
 			...mapState(useAuthDataStore, [

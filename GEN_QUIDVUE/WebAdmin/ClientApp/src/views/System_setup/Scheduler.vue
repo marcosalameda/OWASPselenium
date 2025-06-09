@@ -2,15 +2,15 @@
     <row>
 		<q-card
 			class="q-card--admin-default"
-			:title="Resources.AGENDADOR40611"
+			:title="resources.schedulerTitle"
 			width="block">
 			<q-row-container>
 				<q-control-wrapper class="row-line-group">
 					<base-input-structure
 						class="i-text">
-						<q-checkbox 
+						<q-checkbox
 							v-model="model.Scheduler.Enabled"
-							:label="Resources.ATIVO_00196" />
+							:label="resources.enabledLabel" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<qtable
@@ -24,13 +24,13 @@
 						<q-button-group borderless>
 							<q-button
 								variant="text"
-								:title="Resources.EDITAR11616"
+								:title="hardcodedTexts.edit"
 								@click="changeJob(props.row)">
 								<q-icon icon="pencil" />
 							</q-button>
 							<q-button
 								variant="text"
-								:title="Resources.ELIMINAR21155"
+								:title="hardcodedTexts.delete"
 								@click="deleteJob(props.row)">
 								<q-icon icon="bin" />
 							</q-button>
@@ -40,7 +40,7 @@
 						<tr>
 							<td colspan="4">
 								<q-button
-									:label="Resources.INSERIR43365"
+									:label="hardcodedTexts.insert"
 									@click="createJob">
 									<q-icon icon="add" />
 								</q-button>
@@ -55,7 +55,7 @@
 	<q-dialog
 		id="system_setup_scheduledjob"
 		v-model="showDialog"
-		:title="Resources.TAREFA_AGENDADA03399"
+		:title="resources.scheduledTaskTitle"
 		:buttons="buttons">
 		<template #body.content>
 			<div class="q-dialog-container">
@@ -63,21 +63,21 @@
 					<q-checkbox
 						v-model="rowEnabled"
 						:readonly="inDeleteMode"
-						:label="Resources.ATIVO_00196" />
+						:label="resources.enabledLabel" />
 				</div>
 				<div>
-					<q-text-field 
+					<q-text-field
 						v-model="rowId"
-						:label="Resources.NOME47814"
+						:label="hardcodedTexts.name"
 						:readonly="inEditMode || inDeleteMode"
 						size="xlarge"
 						required />
 				</div>
 				<div>
-					<q-select 
+					<q-select
 						v-model="rowTaskType"
 						:items="ScheduledJobSelect"
-						:label="Resources.TIPO55111"
+						:label="hardcodedTexts.taskTypeLabel"
 						:readonly="inDeleteMode"
 						item-value="Value"
 						item-label="Text"
@@ -90,7 +90,7 @@
 						:isVisible="true"
 						:showPopoverButton="true"
 						:popoverTitle="'Cron Information'"
-						:popoverText="Resources._SEGUNDO_MINUTO_HORA37214">
+						:popoverText="resources.cronInfoText">
 						<q-text-field
 							v-model="rowCron"
 							ref="Cron"
@@ -99,7 +99,7 @@
 							required
 							placeholder="cron schedule" />
 					</base-input-structure>
-				</div>					
+				</div>
 				<div v-for="c in TaskList[rowTaskType]" :key="c.PropertyName">
 					<q-text-field
 						v-model="rowOptions[c.PropertyName]"
@@ -118,11 +118,13 @@
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import BaseInputStructure from '@/components/BaseInputStructure.vue'
+	import { texts } from '@/resources/hardcodedTexts.ts';
+	import { computed} from 'vue';
 
 	export default {
 		name: 'scheduler',
 
-		components: { 
+		components: {
 			BaseInputStructure
 		},
 
@@ -136,6 +138,10 @@
 			},
 			TaskList: {
 				required: false
+			},
+			resources: {
+				type: Object,
+				required: true
 			}
 		},
 
@@ -160,7 +166,7 @@
 					total_rows: 0,
 					columns: [
 					{
-						label: () => this.$t('ACOES22599'),
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -169,19 +175,19 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => "Enabled",
+						label: computed(() => this.Resources[texts.active]),
 						name: "Enabled",
 						sort: true,
 					},
 					{
-						label: () => this.$t('NOME47814'),
+						label: computed(() => this.Resources[texts.name]),
 						name: "Id",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: () => this.$t('TIPO55111'),
+						label: computed(() => this.Resources[texts.taskTypeLabel]),
 						name: "TaskType",
 						sort: true
 					},
@@ -191,7 +197,7 @@
 						sort: false
 					}],
 					config: {
-						table_title: () => this.$t('TAREFAS_AGENDADAS24414'),
+						table_title: this.resources.scheduledTasksTitle,
 						pagination: false,
 						pagination_info: false,
 						global_search: {
@@ -214,6 +220,18 @@
 					Text: x,
 					Value: x
 				}));
+			},
+			hardcodedTexts() {
+				return {
+					edit: this.Resources[texts.edit],
+					delete: this.Resources[texts.delete],
+					insert: this.Resources[texts.insert],
+					erase: this.Resources[texts.erase],
+					save: this.Resources[texts.save],
+					cancel: this.Resources[texts.cancel],
+					taskTypeLabel: this.Resources[texts.taskTypeLabel],
+					name: this.Resources[texts.name],
+				}
 			},
 		},
 
@@ -262,7 +280,7 @@
 						this.buttons.push({
 							id: 'delete-btn',
 							props: {
-								label: this.Resources.APAGAR04097,
+								label: this.hardcodedTexts.erase,
 								variant: 'bold',
 								color: 'danger'
 							},
@@ -276,7 +294,7 @@
 						this.buttons.push({
 							id: 'save-btn',
 							props: {
-								label: this.Resources.GRAVAR45301,
+								label: this.hardcodedTexts.save,
 								variant: 'bold',
 								disabled: this.invalidProps
 							},
@@ -292,7 +310,7 @@
 				this.buttons.push({
 					id: 'cancel-btn',
 					props: {
-						label: this.Resources.CANCELAR49513
+						label: this.hardcodedTexts.cancel
 					},
 					action: () => this.clearSchedulerValues()
 				})

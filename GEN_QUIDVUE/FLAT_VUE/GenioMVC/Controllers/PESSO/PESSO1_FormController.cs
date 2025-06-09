@@ -742,12 +742,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Pesso/Pesso1_SaveEdit
 		[HttpPost]
-		public ActionResult Pesso1_SaveEdit([FromBody]Pesso1_ViewModel model)
+		public ActionResult Pesso1_SaveEdit([FromBody] Pesso1_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pesso1_SaveEdit",
 				ViewName = "Pesso1",
@@ -763,6 +762,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class Pesso1DocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Pesso1_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsPesso1([FromBody] Pesso1DocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

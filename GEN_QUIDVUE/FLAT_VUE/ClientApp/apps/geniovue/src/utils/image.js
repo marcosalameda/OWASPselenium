@@ -1,4 +1,4 @@
-import { forceDownload } from '@/api/network'
+import { forceDownload } from '@quidgest/clientapp/network'
 
 /**
  * Returns the URL of the image.

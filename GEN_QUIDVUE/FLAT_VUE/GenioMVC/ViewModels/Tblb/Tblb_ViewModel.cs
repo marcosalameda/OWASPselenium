@@ -204,9 +204,8 @@ namespace GenioMVC.ViewModels.Tblb
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Tblb model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

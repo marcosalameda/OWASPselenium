@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Feeca/Fldscondpseudgridtbl__SaveEdit
 		[HttpPost]
-		public ActionResult Fldscondpseudgridtbl__SaveEdit([FromBody]Fldscondpseudgridtbl__ViewModel model)
+		public ActionResult Fldscondpseudgridtbl__SaveEdit([FromBody] Fldscondpseudgridtbl__ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__SaveEdit",
 				ViewName = "Fldscondpseudgridtbl_",
@@ -412,6 +411,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class Fldscondpseudgridtbl_DocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Fldscondpseudgridtbl__ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsFldscondpseudgridtbl_([FromBody] Fldscondpseudgridtbl_DocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

@@ -2,7 +2,7 @@
 	<li class="dropdown n-menu__aside-item">
 		<div class="d-flex align-items-center">
 			<q-button
-				v-if="userIsLoggedIn && appAlerts.length > 0"
+				v-if="userIsLoggedIn && $app.appAlerts.length > 0"
 				id="sidebar-collapse"
 				class="nav-link n-menu__aside-link"
 				href="javascript:void(0)"
@@ -114,7 +114,7 @@
 								v-if="system.currentModule === module.id"
 								class="c-sidebar__list-item">
 								<a
-									:href="`Content/Manual/${module.id}Manual.pdf?v=${genio.buildVersion}`"
+									:href="`Content/Manual/${module.id}Manual.pdf?v=${$app.genio.buildVersion}`"
 									data-toggle="tooltip"
 									target="_blank"
 									rel="noopener noreferrer"
@@ -177,9 +177,9 @@
 	import { mapState } from 'pinia'
 	import _merge from 'lodash-es/merge'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import { useGenericDataStore } from '@/stores/genericData.js'
-	import { fetchData } from '@/api/network'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
+	import { fetchData } from '@quidgest/clientapp/network'
 	import { logOff } from '@/utils/user.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import AuthHandlers from '@/mixins/authHandlers.js'
@@ -237,9 +237,7 @@
 
 		computed: {
 			...mapState(useSystemDataStore, [
-				'system',
-				'appAlerts',
-				'genio'
+				'system'
 			]),
 
 			...mapState(useGenericDataStore, [
@@ -264,7 +262,7 @@
 			{
 				if (this.model.Avatar && this.model.Avatar.image)
 					return this.model.Avatar.image
-				return `${this.system.resourcesPath}user_avatar.png?v=${this.genio.buildVersion}`
+				return `${this.$app.resourcesPath}user_avatar.png?v=${this.$app.genio.buildVersion}`
 			}
 		},
 

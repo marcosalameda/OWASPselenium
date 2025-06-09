@@ -2,7 +2,7 @@
 	<div
 		id="modules-title"
 		:class="[
-			{ 'modules-list-view': layoutConfig.ModulesStyle === 'list' },
+			{ 'modules-list-view': $app.layout.ModulesStyle === 'list' },
 			'n-sidebar__title'
 		]">
 		<q-icon icon="modules" />

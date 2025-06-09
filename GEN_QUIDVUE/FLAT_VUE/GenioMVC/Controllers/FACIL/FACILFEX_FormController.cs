@@ -533,12 +533,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Facil/Facilfex_SaveEdit
 		[HttpPost]
-		public ActionResult Facilfex_SaveEdit([FromBody]Facilfex_ViewModel model)
+		public ActionResult Facilfex_SaveEdit([FromBody] Facilfex_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Facilfex_SaveEdit",
 				ViewName = "Facilfex",
@@ -554,6 +553,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class FacilfexDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Facilfex_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsFacilfex([FromBody] FacilfexDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

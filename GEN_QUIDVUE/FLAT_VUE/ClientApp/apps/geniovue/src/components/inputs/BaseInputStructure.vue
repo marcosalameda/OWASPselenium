@@ -8,6 +8,7 @@
 		:data-draggable="reportingModeOn"
 		:data-loading="loading">
 		<div
+			v-if="hasLabelContainer"
 			style="align-items: center"
 			:class="[classObject.labelContainerFlex, ...classes]">
 			<slot
@@ -15,7 +16,7 @@
 				name="label" />
 
 			<label
-				v-if="hasLabel && !isEmpty(label)"
+				v-if="displayLabel"
 				:id="labelId"
 				v-bind="labelAttrs"
 				:for="id"
@@ -29,14 +30,14 @@
 				name="label" />
 
 			<q-popover-help
-				v-if="popoverText && !isEmpty(label)"
+				v-if="displayPopover"
 				:help-control="helpControl"
 				:id="id"
 				:label="label"
 				:texts="texts" />
 
 			<q-tooltip-help
-				v-if="tooltipText && !isEmpty(label)"
+				v-if="displayTooltip"
 				:help-control="helpControl"
 				:anchor="anchorId" />
 
@@ -49,7 +50,7 @@
 			</a>
 
 			<a
-				v-if="hasSuggestions && suggestionModeOn && !isEmpty(label)"
+				v-if="displaySuggestions"
 				href="javascript:void(0)"
 				class="suggest suggest-mode"
 				@click.stop.prevent="openSuggestionMode">
@@ -85,7 +86,7 @@
 	// Core SortableJS (without default plugins)
 	import Sortable from 'sortablejs/modular/sortable.core.esm.js'
 
-	import { labelAlignment } from '@/mixins/quidgest.mainEnums.js'
+	import { labelAlignment } from '@quidgest/clientapp/constants/enums'
 	import HelpControl from '@/mixins/helpControls.js'
 
 	export default {
@@ -320,6 +321,30 @@
 			 */
 			hasSubtext() {
 				return this.helpControl?.shortHelp.type === 'Subtext'
+			},
+
+			displayLabel() {
+				return this.hasLabel && !_isEmpty(this.label)
+			},
+
+			displayPopover() {
+				return this.popoverText && !_isEmpty(this.label)
+			},
+
+			displayTooltip() {
+				return this.popoverText && !_isEmpty(this.label)
+			},
+
+			displaySuggestions() {
+				return this.hasSuggestions && this.suggestionModeOn && !_isEmpty(this.label)
+			},
+
+			hasLabelSlot() {
+				return !!this.$slots.label;
+			},
+
+			hasLabelContainer() {
+				return this.displayLabel || this.displayPopover || this.displayTooltip || this.displaySuggestions || this.hasLabelSlot
 			}
 		},
 

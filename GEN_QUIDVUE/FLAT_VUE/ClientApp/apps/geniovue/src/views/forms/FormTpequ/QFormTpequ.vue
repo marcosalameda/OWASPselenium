@@ -49,7 +49,7 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
@@ -468,16 +468,17 @@
 
 	import FormHandlers from '@/mixins/formHandlers.js'
 	import formFunctions from '@/mixins/formFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import netAPI from '@/api/network'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import netAPI from '@quidgest/clientapp/network'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -1458,7 +1459,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.system.resourcesPath}ok.ico?v=2930`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2932`),
 							type: 'img',
 							role: 'presentation',
 						},
@@ -2002,6 +2003,24 @@
 
 				triggers: readonly([
 					{
+						id: 'UPDATE_FORMULAS',
+						event: 'P',
+						periodicity: 50,
+						condition: () => {
+							return netAPI.postData(
+								'Tpequ',
+								'TPEQU_UPDATE_FORMULAS_TriggerCondition',
+								this.model.serverObjModel,
+								undefined,
+								undefined,
+								undefined,
+								this.model.navigationId)
+						},
+						execute: () => {
+							vm.TPEQU_FormTriggers_UPDATE_FORMULAS_1(vm.primaryKeyValue)
+						}
+					},
+					{
 						id: 'FILLTYPEEQUIP',
 						event: 'PG',
 						condition: () => {
@@ -2150,12 +2169,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				applyForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
-				if (applyForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					applyForm = results.every((e) => e === true)
+					applyForm = await this.model.setDocumentChanges()
+
+					if (applyForm)
+					{
+						const results = await this.model.saveDocuments()
+						applyForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-apply-form')
@@ -2198,12 +2222,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				saveForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets()
 
-				if (saveForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					saveForm = results.every((e) => e === true)
+					saveForm = await this.model.setDocumentChanges()
+
+					if (saveForm)
+					{
+						const results = await this.model.saveDocuments()
+						saveForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-save-form')
@@ -2361,6 +2390,62 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
 				this.afterControlUpdate(controlField, fieldValue)
+			},
+
+			/**
+			 * Client-side component of action #1 (RECALC) of trigger UPDATE_FORMULAS.
+			 * @param {string} id The primary key of the record
+			 */
+			// eslint-disable-next-line
+			async TPEQU_FormTriggers_UPDATE_FORMULAS_1(id)
+			{
+				try
+				{
+					const data = await netAPI.postData(
+						'TPEQU',
+						'TPEQU_FormTriggers_UPDATE_FORMULAS_1',
+						this.model.serverObjModel,
+						undefined,
+						undefined,
+						undefined,
+						this.navigationId)
+
+					if (typeof data.success !== 'string' || typeof data.message !== 'string')
+						throw new Error('Invalid data structure.')
+
+					const result = qEnums.messageTypes[data.success]
+
+					if (!this.isEmpty(result))
+					{
+						if (result !== 'error')
+						{
+							const buttons = {
+								confirm: {
+									label: this.Resources.OK15819
+								}
+							}
+
+							genericFunctions.displayMessage(data.message, result, null, buttons)
+						}
+						else
+							genericFunctions.displayMessage(data.message, 'error')
+					}
+					else
+					{
+						this.$eventTracker.addError({
+							origin: 'Trigger UPDATE_FORMULAS',
+							message: 'Routine "TPEQU_FormTriggers" finished execution with an unknown result type: ' + data.success
+						})
+					}
+				}
+				catch (e)
+				{
+					genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
+					this.$eventTracker.addError({
+						origin: 'Trigger UPDATE_FORMULAS (catch)',
+						message: e.toString()
+					})
+				}
 			},
 
 			/**

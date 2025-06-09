@@ -62,7 +62,7 @@ namespace Administration
             bool noConnection = false;
             if (args.Exists(x => x.Key == ChannelArgs.NOCONNECTION))
             {
-                noConnection = bool.TryParse(
+                _ = bool.TryParse(
                     args.Find(x => x.Key == ChannelArgs.NOCONNECTION).Value,
                     out noConnection
                 );

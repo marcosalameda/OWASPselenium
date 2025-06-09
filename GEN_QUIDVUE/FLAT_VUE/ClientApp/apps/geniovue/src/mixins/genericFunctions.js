@@ -1,6 +1,4 @@
-﻿import { isRef } from 'vue'
-import { format, parse } from 'date-fns'
-import tinycolor from 'tinycolor2'
+﻿import { format, parse } from 'date-fns'
 import cloneDeep from 'lodash-es/cloneDeep'
 import _forEach from 'lodash-es/forEach'
 import _get from 'lodash-es/get'
@@ -9,20 +7,10 @@ import _isDate from 'lodash-es/isDate'
 import _isEmpty from 'lodash-es/isEmpty'
 import _set from 'lodash-es/set'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
+import tinycolor from 'tinycolor2'
+import { isRef } from 'vue'
 
-import { useAuthDataStore } from '@/stores/authData.js'
-import { useCustomDataStore } from '@/stores/customData.js'
-import { useGenericDataStore } from '@/stores/genericData.js'
-import { useGenericLayoutDataStore } from '@/stores/genericLayoutData.js'
-import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
-import { useLayoutDataStore } from '@/stores/layoutData.js'
-import { useNavDataStore } from '@/stores/navData.js'
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { useTracingDataStore } from '@/stores/tracingData.js'
-import { useUserDataStore } from '@/stores/userData.js'
 import { formModes } from '@/mixins/quidgest.mainEnums.js'
-import eventBus from '@/api/global/eventBus.js'
-import openQSign from '@/api/genio/qSign.js'
 
 /**
  * Determines the readable text color based on the given background color.
@@ -113,56 +101,6 @@ export function saveNavigation(routeData, updateHistory)
 	const args = normalizeRouteForSaveNavigation(routeData)
 
 	updateHistory({ options: args })
-}
-
-/**
- * Sets the configuration of the entire application.
- * @param {object} data The app data
- */
-export function setAppConfig(data)
-{
-	if (typeof data !== 'object' || data === null)
-		return
-
-	const systemDataStore = useSystemDataStore()
-	const genericDataStore = useGenericDataStore()
-	const authDataStore = useAuthDataStore()
-	const userDataStore = useUserDataStore()
-	const tracingDataStore = useTracingDataStore()
-
-	if (data.availableModules)
-		systemDataStore.setAvailableModules(data.availableModules)
-	if (data.defaultModule)
-		systemDataStore.setDefaultModule(data.defaultModule)
-	if (data.currentModule)
-		systemDataStore.setCurrentModule(data.currentModule)
-	if (data.years)
-		systemDataStore.setAvailableSystems(data.years)
-	if (data.defaultSystem)
-		systemDataStore.setDefaultSystem(data.defaultSystem)
-
-	// Internally the setCurrentSystem is protected from the assignment of an empty value or one that does not exist in the available systems.
-	systemDataStore.setCurrentSystem(data.currentSystem || data.defaultSystem)
-
-	if (data.defaultListRows)
-		systemDataStore.setDefaultListRows(data.defaultListRows)
-	if (data.numberFormat)
-		systemDataStore.setNumberFormat(data.numberFormat)
-	if (data.dateFormat)
-		systemDataStore.setDateFormat(data.dateFormat)
-	if (data.userName)
-		userDataStore.setUserData({ Name: data.userName })
-	if (data.homePages)
-		genericDataStore.setHomePages(data.homePages)
-	if (data.schedulerLicense)
-		systemDataStore.setSchedulerLicenseKey(data.schedulerLicense)
-	if (typeof data.eventTracking === 'boolean')
-		tracingDataStore.activateEventTracker(data.eventTracking)
-	if (typeof data.enableTracing === 'boolean')
-		tracingDataStore.setTracingState(data.enableTracing)
-
-	authDataStore.setUsernameAuth(data.hasUsernameAuth)
-	authDataStore.setPasswordRecovery(data.hasPasswordRecovery)
 }
 
 /**
@@ -398,16 +336,6 @@ export function displayMessage(message, icon, title, buttons, options)
 }
 
 /**
- * Sets whether the cookies are visible.
- * @param {boolean} val The value of the cookies visibility
- */
-export function setShowCookies(val)
-{
-	const systemDataStore = useSystemDataStore()
-	systemDataStore.setShowCookies(val)
-}
-
-/**
  * Scrolls to the top of the page.
  */
 export function scrollToTop()
@@ -494,20 +422,6 @@ export function focusElement(element)
 
 	// If the element can be focused, focus on it
 	element.focus?.()
-}
-
-/**
- * Removes the specified modal/popup, or the last one if no id is passed.
- * @param {string} modalId The id of the modal
- */
-export function removeModal(modalId)
-{
-	// Remove modal popup
-	const genericDataStore = useGenericDataStore()
-	const removedModal = genericDataStore.removeModal(modalId)
-
-	// Focus on the element / control that opened the popup
-	focusElement(removedModal?.returnElement)
 }
 
 /**
@@ -1097,80 +1011,6 @@ export function handleFileError(error, errorTexts = {}, extraInfo = {})
 }
 
 /**
- * Goes back to the previous navigation level, if it exists.
- * @param {string} navigationId The id of the current navigation
- * @param {boolean} hasInitialPHE Whether or not the function is being called from a place with an initial PHE
- */
-export function goBack(navigationId = 'main', hasInitialPHE = false)
-{
-	const systemDataStore = useSystemDataStore()
-	const navDataStore = useNavDataStore()
-	const navigation = navDataStore.navigation.getHistory(navigationId)
-	var currentLevelWasEmpty = false
-
-	if (navigation.currentLevel === null)
-	{
-		currentLevelWasEmpty = true
-
-		if (navDataStore.previousNav !== null && navDataStore.previousNav.currentLevel !== null)
-			navDataStore.retrievePreviousNav()
-		else
-		{
-			// In case there's nothing to go back to, it should go to main.
-			eventBus.emit('go-to-route', { name: 'main' })
-			return
-		}
-	}
-
-	// If the last route was skipped because of a "skip if just one" condition,
-	// then we need to go back to the route before that last one.
-	while (navigation.currentLevel?.params?.skipLastMenu === 'true')
-		navigation.removeNavigationLevel()
-
-	if (navigation.previousLevel === null || hasInitialPHE)
-	{
-		if (navDataStore.previousNav !== null && navDataStore.previousNav.currentLevel !== null)
-		{
-			// Replace the current navigation with the previous one.
-			navDataStore.retrievePreviousNav()
-
-			const params = {
-				...navigation.currentLevel.params,
-				culture: systemDataStore.system.currentLang, // We don't want to change the language when navigating back.
-				keepNavigation: true
-			}
-
-			eventBus.emit('go-to-route', { name: navigation.currentLevel.location, params })
-		}
-		else
-		{
-			const module = systemDataStore.system.defaultModule
-			const params = {
-				culture: systemDataStore.system.currentLang,
-				system: systemDataStore.system.currentSystem,
-				module
-			}
-
-			eventBus.emit('go-to-route', { name: `home-${module}`, params })
-		}
-	}
-	else
-	{
-		// If it's not an empty level, we can remove the current level
-		if (!currentLevelWasEmpty)
-			navigation.removeNavigationLevel()
-
-		const level = navigation.currentLevel
-		const params = {
-			...level.params,
-			culture: systemDataStore.system.currentLang // We don't want to change the language when navigating back.
-		}
-
-		eventBus.emit('go-to-route', { name: level.location, params })
-	}
-}
-
-/**
  * Checks if the user has permission to execute the specified action.
  * @param {object} permissions The button permissions
  * @param {string} actionType The action type
@@ -1238,38 +1078,6 @@ export function getModelStructureObj(row, objectStructure)
 }
 
 /**
- * Sets specific progress bar properties.
- *
- * Configuration structure:
- *   {number} props.progress - The percentage of progress.
- *   {string} props.text - The displayed text.
- *   {boolean} props.striped - Whether the progress bar should be striped.
- *   {boolean} props.animated - Whether the progress bar should be animated.
- *   {boolean} props.mini - Whether the progress bar should be minimal.
- *   {string} modalProps.title - The displayed title.
- *   {array} modalProps.buttons - A list of buttons to be made available.
- *
- * @param {object} modalProps Configuration of the progress bar container
- * @param {object} props Progress bar configuration
- * @param {object} handlers Progress bar event handlers
- */
-export function setProgressBar(modalProps, props, handlers)
-{
-	const layoutDataStore = useGenericLayoutDataStore()
-	layoutDataStore.setProgressBar(modalProps, props, handlers)
-}
-
-/**
- * Resets the progress bar to default values.
- * Mostly it will be used to close the progress bar.
- */
-export function resetProgressBar()
-{
-	const layoutDataStore = useGenericLayoutDataStore()
-	layoutDataStore.resetProgressBar()
-}
-
-/**
  * Given the field and table of the column, formats the information into a unique identifier.
  * @param {string} columnArea The area of the column's field.
  * @param {string} columnField The column's field.
@@ -1280,43 +1088,15 @@ export function formatColumnIdentifier(columnArea, columnField)
 	return `${columnArea.toLowerCase()}.${columnField.toLowerCase()}`
 }
 
-/**
- * Resets the state of all the global stores.
- */
-export function resetStoreState()
-{
-	const authDataStore = useAuthDataStore()
-	const customDataStore = useCustomDataStore()
-	const genericDataStore = useGenericDataStore()
-	const userDataStore = useUserDataStore()
-	const navDataStore = useNavDataStore()
-	const genericLayoutDataStore = useGenericLayoutDataStore()
-	const layoutDataStore = useLayoutDataStore()
-	const globalTablesDataStore = useGlobalTablesDataStore()
-
-	// Tracing data store is deliberately being left out, since it might be useful to keep it's data.
-	authDataStore.resetStore()
-	customDataStore.resetStore()
-	genericDataStore.resetStore()
-	userDataStore.resetStore()
-	navDataStore.resetStore()
-	genericLayoutDataStore.resetStore()
-	layoutDataStore.resetStore()
-	globalTablesDataStore.resetStore()
-}
-
 export default {
-	openQSign,
 	getReadableTextColor,
 	setNavigationState,
 	normalizeDataInNavigationParams,
 	normalizeRouteForSaveNavigation,
 	saveNavigation,
-	setAppConfig,
 	buildHumanKey,
 	getLayoutVariables,
 	displayMessage,
-	setShowCookies,
 	scrollToTop,
 	scrollToBottom,
 	scrollYStart,
@@ -1347,14 +1127,9 @@ export default {
 	validateTexts,
 	validateFileExtAndSize,
 	handleFileError,
-	goBack,
 	btnHasPermission,
 	getModelStructureObj,
-	setProgressBar,
-	resetProgressBar,
 	formatColumnIdentifier,
-	resetStoreState,
 	focusElement,
-	removeModal,
 	getDefaultFormModesForMode
 }

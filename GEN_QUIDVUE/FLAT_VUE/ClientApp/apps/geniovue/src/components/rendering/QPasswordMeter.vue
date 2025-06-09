@@ -15,7 +15,7 @@
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {

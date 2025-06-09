@@ -14,7 +14,7 @@
 
 <script>
 	import { defineAsyncComponent } from 'vue'
-	import { imageObjToSrc, validateTexts } from '@/mixins/genericFunctions.js'
+	import { imageObjToSrc, validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	const DEFAULT_TEXTS = {
 		close: 'Close',

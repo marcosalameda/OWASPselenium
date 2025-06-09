@@ -1,7 +1,7 @@
-import { computed } from 'vue'
 import _merge from 'lodash-es/merge'
+import { computed } from 'vue'
 
-import { useSystemDataStore } from '@/stores/systemData.js'
+import { useGenericDataStore, useSystemDataStore } from '@quidgest/clientapp/stores'
 
 export class BaseProperty {
 	/**
@@ -10,7 +10,7 @@ export class BaseProperty {
 	 * @param {object} vueContext
 	 */
 	constructor(options, vueContext)
-	{	
+	{
 		this.getResource = vueContext.$getResource,
 
 		this.rowId = ''
@@ -20,7 +20,7 @@ export class BaseProperty {
 		this.label = ''
 		this.description = ''
 		this.group = ''
-		this.isDirty = false
+		this.isRowDirty = false
 		this.defaultValue = ''
 		this.props = {
 			modelValue: undefined,
@@ -82,11 +82,12 @@ export class DateProperty extends BaseProperty {
 	constructor(options, vueContext)
 	{
 		const systemDataStore = useSystemDataStore()
+		const genericDataStore = useGenericDataStore()
 
 		super({
 			component: 'q-date-time-picker',
 			type: 'date',
-			dateFormat: systemDataStore.system.dateFormat.date,
+			dateFormat: genericDataStore.dateFormat.date,
 			props: {
 				format: 'date',
 				locale: computed(() => systemDataStore.system.currentLang)
@@ -94,7 +95,7 @@ export class DateProperty extends BaseProperty {
 		}, vueContext)
 
 		_merge(this, options)
-	} 
+	}
 }
 
 export class ArrayProperty extends BaseProperty {
@@ -118,7 +119,7 @@ export class ArrayProperty extends BaseProperty {
 
 	get elements() {
 		return this.array.elements
-	}	
+	}
 
 	get groups() {
 		return this.array.groups
@@ -148,7 +149,7 @@ export class ArrayProperty extends BaseProperty {
 			return {
 				key: element.key,
 				group: element.group ?? '',
-				icon: element.icon ?? {},
+				icon: element.icon ?? null,
 				value: computed(() => this.getResource(element.resourceId))
 			}
 		})
@@ -157,16 +158,16 @@ export class ArrayProperty extends BaseProperty {
 
 export class NumberProperty extends BaseProperty {
 	constructor(options, vueContext)
-	{	
-		const systemDataStore = useSystemDataStore()
+	{
+		const genericDataStore = useGenericDataStore()
 
 		super({
 			component: 'q-numeric-input',
 			type: 'number',
 			defaultValue: 0,
 			props: {
-				thousandsSeparator: systemDataStore.system.numberFormat.thousandsSeparator,
-				decimalPoint: systemDataStore.system.numberFormat.decimalSeparator,
+				thousandsSeparator: genericDataStore.numberFormat.thousandsSeparator,
+				decimalPoint: genericDataStore.numberFormat.decimalSeparator,
 				maxDigits: 0,
 				decimalDigits: 0,
 				isDecimal: true,
@@ -178,7 +179,7 @@ export class NumberProperty extends BaseProperty {
 	}
 }
 
-export default { 
+export default {
 	BaseProperty,
 	BooleanProperty,
 	DateProperty,

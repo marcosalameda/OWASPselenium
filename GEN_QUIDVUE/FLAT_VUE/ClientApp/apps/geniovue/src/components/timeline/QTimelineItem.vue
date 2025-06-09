@@ -60,7 +60,7 @@
 </template>
 
 <script>
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 	export default {
 		name: 'QTimelineItem',

@@ -531,12 +531,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Flds/Fldstbl_SaveEdit
 		[HttpPost]
-		public ActionResult Fldstbl_SaveEdit([FromBody]Fldstbl_ViewModel model)
+		public ActionResult Fldstbl_SaveEdit([FromBody] Fldstbl_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldstbl_SaveEdit",
 				ViewName = "Fldstbl",
@@ -552,6 +551,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class FldstblDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Fldstbl_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsFldstbl([FromBody] FldstblDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

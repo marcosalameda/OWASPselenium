@@ -3,31 +3,31 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="Resources.SISTEMA_DE_DADOS_ATU09110"
+				:title="resources.currentDataSystemTitle"
 				width=block>
 				<q-row-container>
 					<q-text-field
 						v-model="model.Server"
-						:label="Resources.NOME_DO_SERVIDOR13641"
+						:label="resources.serverName"
 						required
 						size="xlarge"
 						:isReadOnly="isTestingConnection">
 						<template #extras>
 							<q-icon icon="information-outline" />
-							{{ Resources.O_NOME_DO_SERVIDOR_E58624 }}
+							{{ resources.serverNameInfo }}
 						</template>
 					</q-text-field>
 					<numeric-input
 						v-model="model.Port"
 						size="xlarge"
-						:label="Resources.PORTA55707"
+						:label="hardcodedTexts.port"
 						:isReadOnly="isTestingConnection">
 					</numeric-input>
 					<q-select
 						v-model="model.ServerType"
 						v-if="model.SelectLists"
 						:items="model.SelectLists.DBMS"
-						:label="Resources.TIPO_DE_SERVIDOR_DE_25581"
+						:label="resources.databaseServerTypeLabel"
 						required
 						size="xlarge"
 						item-value="Value"
@@ -36,27 +36,27 @@
 					<div v-if="model.ServerType == 2">
 						<q-text-field
 							v-model="model.Service"
-							:label="Resources.IDENTIFICADOR_DO_SER22713"
+							:label="resources.serviceIdentifierLabel"
 							size="xlarge"
 							:readonly="isTestingConnection" />
 						<q-text-field
 							v-model="model.ServiceName"
-							:label="Resources.NOME_DO_SERVICO32188"
+							:label="resources.serviceNameLabel"
 							size="xlarge"
 							:readonly="isTestingConnection" />
 					</div>
 					<q-text-field
 						v-model="model.Schema"
-						:label="Resources.NOME_DA_BASE_DE_DADO25105"
+						:label="resources.databaseName"
 						required
 						size="xlarge"
 						:readonly="isTestingConnection">
 						<template #extras>
 							<q-icon icon="information-outline" />
-							{{ Resources._SISTEMA__ANO__E_G__40394 }}
+							{{ resources.databaseNameInfo }}
 						</template>
 					</q-text-field>
-					<q-checkbox 
+					<q-checkbox
 						v-model="model.DatabaseSidePk"
 						label="Database-side primary key"
 						:readonly="isTestingConnection" />
@@ -66,19 +66,19 @@
 
 		<row>
 			<q-card
-				:title="Resources.AUTENTICACAO_DE__BAS42362"
+				:title="resources.databaseConnectionTitle"
 				class="q-card--admin-default"
 				width="block">
 				<q-row-container>
 					<q-text-field
 						v-model="model.DbUser"
-						:label="Resources.LOGIN_DE_ACESSO_A_BA52816"
+						:label="resources.databaseLoginLabel"
 						required
 						size="xlarge"
 						:readonly="isTestingConnection" />
 					<password-input
 						v-model="model.DbPsw"
-						:label="Resources.PALAVRA_PASSE44126"
+						:label="hardcodedTexts.password"
 						is-required
 						:showFiller="model.HasDbPsw"
 						size="xlarge"
@@ -86,47 +86,47 @@
 					</password-input>
 					<password-input
 						v-model="model.DbCheckPsw"
-						:label="Resources.CONFIRMAR_PALAVRA_PA30977"
+						:label="hardcodedTexts.password"
 						is-required
 						size="xlarge"
 						:isReadOnly="isTestingConnection">
 					</password-input>
 					<q-checkbox
 						v-model="model.ConnEncrypt"
-						:label="Resources.ENCRIPTAR_LIGACAO12834"
+						:label="resources.encryptConnectionLabel"
 						:readonly="isTestingConnection" />
 					<q-checkbox
 						v-model="model.ConnWithDomainUser"
-						:label="Resources.UTILIZADOR_DE_DOMINI41043"
+						:label="resources.domainUserLabel"
 						:readonly="isTestingConnection" />
 					<q-button
 						id="testServer"
-						:label="Resources.TESTAR_CONEXAO_COM_O06434"
+						:label="resources.testServerConnectionButton"
 						:disabled="isTestingConnection"
 						size="xlarge"
 						@click="TestServerConection"
 						:loading="showLoader" />
 					<hr />
 					<h5>
-						{{ 'GQP ' + Resources.TABELAS_PARTILHADAS29704 }}
+						{{ 'GQP ' +  resources.sharedTablesLabel }}
 					</h5>
 					<q-text-field
 						v-model="model.GQP_Schema"
-						:label="Resources.NOME_DA_BASE_DE_DADO25105"
+						:label="resources.databaseName"
 						required
 						size="xlarge"
 						:readonly="isTestingConnection">
 						<template #extras>
 							<q-icon icon="information-outline" />
-							{{ Resources._SISTEMA__ANO__E_G__40394 }}
+							{{ resources.databaseNameInfo }}
 						</template>
 					</q-text-field>
 					<q-checkbox
 						v-model="model.GQP_ConnEncrypt"
-						:label="Resources.ENCRIPTAR_LIGACAO12834" />
+						:label="resources.encryptConnectionLabel" />
 					<q-checkbox
 						v-model="model.GQP_ConnWithDomainUser"
-						:label="Resources.UTILIZADOR_DE_DOMINI41043" />
+						:label="resources.domainUserLabel" />
 				</q-row-container>
 			</q-card>
 		</row>
@@ -134,21 +134,21 @@
 		<row>
 			<q-collapsible
 				class="q-collapsible--admin-default"
-				:title="Resources.SISTEMA_DE_DADOS_DE_45948"
+				:title="resources.dataSystemLog"
 				width="block">
 				<q-text-field
 					v-model="model.Log_Server"
-					:label="Resources.NOME_DO_SERVIDOR13641"
+					:label="resources.serverName"
 					size="xlarge"
 					:readonly="isTestingConnection">
 					<template #extras>
 						<q-icon icon="information-outline" />
-						{{ Resources.O_NOME_DO_SERVIDOR_E58624 }}
+						{{ resources.serverNameInfo }}
 					</template>
 				</q-text-field>
 				<numeric-input
 					v-model="model.Log_Port"
-					:label="Resources.PORTA55707"
+					:label="hardcodedTexts.port"
 					:isReadOnly="isTestingConnection"
 					size="xlarge">
 				</numeric-input>
@@ -156,7 +156,7 @@
 					v-model="model.Log_ServerType"
 					v-if="model.SelectLists"
 					:items="model.SelectLists.DBMS"
-					:label="Resources.TIPO_DE_SERVIDOR_DE_25581"
+					:label="resources.databaseServerTypeLabel"
 					size="xlarge"
 					item-value="Value"
 					item-label="Text"
@@ -164,52 +164,52 @@
 				<div v-if="model.Log_ServerType == 2">
 						<q-text-field
 							v-model="model.Log_Service"
-							:label="Resources.IDENTIFICADOR_DO_SER22713"
+							:label="resources.serviceIdentifierLabel"
 							size="xlarge"
 							:readonly="isTestingConnection" />
 						<q-text-field
 							v-model="model.Log_ServiceName"
-							:label="Resources.NOME_DO_SERVICO32188"
+							:label="resources.serviceNameLabel"
 							size="xlarge"
 							:readonly="isTestingConnection" />
 				</div>
 				<q-text-field
 					v-model="model.Log_Schema"
-					:label="Resources.NOME_DA_BASE_DE_DADO25105"
+					:label="resources.databaseName"
 					required
 					size="xlarge"
 					:readonly="isTestingConnection">
 					<template #extras>
 						<q-icon icon="information-outline" />
-						{{ Resources._SISTEMA__ANO__E_G__40394 }}
+						{{ resources.databaseNameInfo }}
 					</template>
 				</q-text-field>
 				<hr />
 				<q-text-field
 					v-model="model.Log_DbUser"
-					:label="Resources.LOGIN_DE_ACESSO_A_BA52816"
+					:label="resources.databaseLoginLabel"
 					size="xlarge"
 					:readonly="isTestingConnection" />
 				<password-input
 					v-model="model.Log_DbPsw"
-					:label="Resources.PALAVRA_PASSE44126"
+					:label="hardcodedTexts.password"
 					:showFiller="model.Log_HasDbPsw"
 					size="xlarge"
 					:isReadOnly="isTestingConnection">
 				</password-input>
 				<password-input
 					v-model="model.Log_DbCheckPsw"
-					:label="Resources.CONFIRMAR_PALAVRA_PA30977"
+					:label="hardcodedTexts.confirmPasswordLabel"
 					size="xlarge"
 					:isReadOnly="isTestingConnection">
 				</password-input>
 				<q-checkbox
 					v-model="model.Log_ConnEncrypt"
-					:label="Resources.ENCRIPTAR_LIGACAO12834"
+					:label="resources.encryptConnectionLabel"
 					:readonly="isTestingConnection" />
 				<q-checkbox
 					v-model="model.Log_ConnWithDomainUser"
-					:label="Resources.UTILIZADOR_DE_DOMINI41043"
+					:label="resources.domainUserLabel"
 					:readonly="isTestingConnection" />
 			</q-collapsible>
 		</row>
@@ -217,26 +217,35 @@
 		<row class="footer-btn">
 			<q-button
 				variant="bold"
-				:label="Resources.GRAVAR_CONFIGURACAO36308"
+				:label="hardcodedTexts.saveConfiguration"
 				:disabled="isTestingConnection"
 				@click="saveConfigDatabase" />
 
 			<data-system-badge
-				:title="Resources.SISTEMA_DE_DADOS_ATU09110" />
+				:title="resources.currentDataSystemTitle" />
 		</row>
 	</div>
 </template>
 
 <script>
-// @ is an alias to /src
-import { reusableMixin } from '@/mixins/mainMixin';
-import { QUtils } from '@/utils/mainUtils';
+	// @ is an alias to /src
+	import { reusableMixin } from '@/mixins/mainMixin';
+	import { QUtils } from '@/utils/mainUtils';
+	import { texts } from '@/resources/hardcodedTexts.ts';
 
 export default {
 	name: 'database',
 
 	props: {
 		model: {
+			required: true
+		},
+
+		/**
+		* WebAdmin texts.
+		*/
+		resources: {
+			type: Object,
 			required: true
 		}
 	},
@@ -255,13 +264,29 @@ export default {
 		}
 	},
 
+	computed: {
+		hardcodedTexts() {
+			return {
+				port: this.Resources[texts.port],
+				password: this.Resources[texts.password],
+				confirmPasswordLabel: this.Resources[texts.confirmPasswordLabel],
+				saveConfiguration: this.Resources[texts.saveConfiguration],
+				fillRequiredFields: this.Resources[texts.fillRequiredFields],
+				redirectingIn3Seconds: this.Resources[texts.redirectingIn3Seconds],
+				serverName: this.Resources[texts.serverName],
+				databaseName: this.Resources[texts.databaseName],
+				changesSavedSuccess: this.Resources[texts.changesSavedSuccess],
+			}
+		},
+	},
+
 	methods: {
 		saveConfigDatabase() {
 			//let hasConfig = vm.model.HasConfig;
 			QUtils.log("SaveConfigDatabase - Request", QUtils.apiActionURL('Config', 'SaveConfigDatabase'));
 			QUtils.postData('Config', 'SaveConfigDatabase', this.model, null, (data) => {
 				QUtils.log("SaveConfigDatabase - Response", data);
-				if (data.ResultMsg === this.Resources.FICHEIRO_DE_CONFIGUR18806 + " " + this.Resources.SERA_REDIRECIONADO_E06592) {
+				if (data.ResultMsg ===  this.hardcodedTexts.changesSavedSuccess + " " +  this.hardcodedTexts.redirectingIn3Seconds) {
 					this.$emit('update-model', data);
 					this.redirectTimeout = setTimeout(() => {
 						this.$router.push({ name: 'dashboard', params: { culture: this.currentLang, system: this.currentYear } });
@@ -281,7 +306,7 @@ export default {
 		TestServerConection() {
 			// Verify that essential data is present
 			if (!this.model.Server || !this.model.Schema || !this.model.DbUser || !this.model.DbPsw) {
-				this.$emit('alert-class', { ResultMsg: this.Resources.POR_FAVOR__PREENCHA_05829, AlertType: 'danger' });
+				this.$emit('alert-class', { ResultMsg: this.hardcodedTexts.fillRequiredFields, AlertType: 'danger' });
 				return;
 			}
 

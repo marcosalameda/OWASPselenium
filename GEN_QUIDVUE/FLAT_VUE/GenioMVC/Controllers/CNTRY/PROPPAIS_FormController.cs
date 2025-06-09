@@ -460,12 +460,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Cntry/Proppais_SaveEdit
 		[HttpPost]
-		public ActionResult Proppais_SaveEdit([FromBody]Proppais_ViewModel model)
+		public ActionResult Proppais_SaveEdit([FromBody] Proppais_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Proppais_SaveEdit",
 				ViewName = "Proppais",
@@ -481,6 +480,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class ProppaisDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Proppais_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsProppais([FromBody] ProppaisDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

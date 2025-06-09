@@ -614,7 +614,7 @@ namespace GenioMVC.Controllers
 		/// <returns>
 		/// Success message
 		/// </returns>
-		public ActionResult Repar_BT_CATEG_AI_REPAIR_AGENT_1([FromBody]Repar_ViewModel vm)
+		public ActionResult Repar_BT_CATEG_AI_REPAIR_AGENT_1([FromBody] Repar_ViewModel vm)
 		{
 			var key = vm.ValCodrepar;
 
@@ -658,9 +658,8 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				sp.rollbackTransaction();
 				return Json(
@@ -685,20 +684,19 @@ namespace GenioMVC.Controllers
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		[ActionName("Repar_ValTipoarea")]
-		public ActionResult Repar_ValTipoarea([FromBody]RequestIdModel requestModel)
+		public ActionResult Repar_ValTipoarea([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Repar_ViewModel(m_userContext, id, false, [CSGenioArepar.FldTipoarea.Field]);
+			string id = requestModel.Id;
+			Repar_ViewModel model = new(m_userContext, id, false, [CSGenioArepar.FldTipoarea.Field]);
 
 			return JsonOK(new { model.ValTipoarea });
 		}
 
-
 		// POST: /Repar/Repar_SaveEdit
 		[HttpPost]
-		public ActionResult Repar_SaveEdit([FromBody]Repar_ViewModel model)
+		public ActionResult Repar_SaveEdit([FromBody] Repar_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_SaveEdit",
 				ViewName = "Repar",
@@ -714,6 +712,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class ReparDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Repar_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsRepar([FromBody] ReparDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

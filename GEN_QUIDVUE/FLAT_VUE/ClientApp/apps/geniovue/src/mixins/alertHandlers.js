@@ -1,10 +1,10 @@
 ﻿import { mapActions, mapState } from 'pinia'
 
-import netAPI from '@/api/network'
+import netAPI from '@quidgest/clientapp/network'
 import VueNavigation from '@/mixins/vueNavigation.js'
-import { useGenericDataStore } from '@/stores/genericData.js'
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { useUserDataStore } from '@/stores/userData.js'
+import { useGenericDataStore } from '@quidgest/clientapp/stores'
+import { useSystemDataStore } from '@quidgest/clientapp/stores'
+import { useUserDataStore } from '@quidgest/clientapp/stores'
 import { hydrateAlert } from './alertFunctions.js'
 
 export default {
@@ -14,8 +14,7 @@ export default {
 
 	computed: {
 		...mapState(useSystemDataStore, [
-			'system',
-			'appAlerts'
+			'system'
 		]),
 
 		...mapState(useUserDataStore, [

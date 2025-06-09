@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Flds/Listacam_SaveEdit
 		[HttpPost]
-		public ActionResult Listacam_SaveEdit([FromBody]Listacam_ViewModel model)
+		public ActionResult Listacam_SaveEdit([FromBody] Listacam_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_SaveEdit",
 				ViewName = "Listacam",
@@ -412,6 +411,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class ListacamDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Listacam_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsListacam([FromBody] ListacamDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

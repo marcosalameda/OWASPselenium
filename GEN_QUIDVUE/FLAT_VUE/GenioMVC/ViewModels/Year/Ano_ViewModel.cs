@@ -150,9 +150,8 @@ namespace GenioMVC.ViewModels.Year
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Year model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

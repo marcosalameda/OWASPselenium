@@ -154,7 +154,7 @@
 <script>
 	import _map from 'lodash-es/map'
 
-	import { btnHasPermission } from '@/mixins/genericFunctions.js'
+	import { btnHasPermission } from '@quidgest/clientapp/utils/genericFunctions'
 	import { numArrayVisibleActions } from '@/mixins/listFunctions.js'
 
 	import QToggleDropdown from '@/components/QToggleDropdown.vue'

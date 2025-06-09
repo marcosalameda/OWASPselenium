@@ -3,8 +3,7 @@
   "include": [
     "**/package.json",
     "**/vite.config.*",
-    "**/vitest.config.*",
-    "**/vitest.workspace.*"
+    "**/vitest.config.*"
   ],
   "compilerOptions": {
     "composite": true,

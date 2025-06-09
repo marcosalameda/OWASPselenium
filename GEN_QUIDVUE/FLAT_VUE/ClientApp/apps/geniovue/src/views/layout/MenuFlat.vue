@@ -10,16 +10,16 @@
 		<div class="n-sidebar__brand">
 			<q-router-link link="/">
 				<img
-					:src="`${system.resourcesPath}Q_icon.png?v=${genio.buildVersion}`"
+					:src="`${$app.resourcesPath}Q_icon.png?v=${$app.genio.buildVersion}`"
 					:alt="texts.initialPage"
 					class="n-sidebar__img" />
 
-				<template v-if="layoutConfig.MenuBrand === 'Text'">
+				<template v-if="$app.layout.MenuBrand === 'Text'">
 					<span class="brand-text n-sidebar__brand-text">{{ texts.appName }}</span>
 				</template>
 				<template v-else>
 					<img
-						:src="`${system.resourcesPath}logotipo_header.png?v=${genio.buildVersion}`"
+						:src="`${$app.resourcesPath}logotipo_header.png?v=${$app.genio.buildVersion}`"
 						:alt="texts.initialPage"
 						class="n-sidebar__img brand-image" />
 				</template>
@@ -38,7 +38,7 @@
 			<div
 				v-if="moduleCount > 1"
 				class="n-sidebar__section">
-				<module-header v-if="layoutConfig.ModulesStyle === 'list'" />
+				<module-header v-if="$app.layout.ModulesStyle === 'list'" />
 
 				<modules />
 			</div>
@@ -46,7 +46,7 @@
 			<div class="n-sidebar__section">
 				<template v-if="moduleCount > 1">
 					<div
-						v-if="layoutConfig.ModulesStyle === 'list'"
+						v-if="$app.layout.ModulesStyle === 'list'"
 						id="module-items-title"
 						class="n-sidebar__title">
 						<q-icon icon="menu-hamburger" />
@@ -161,7 +161,7 @@
 		computed: {
 			menuColor()
 			{
-				return this.layoutConfig.MenuBackgroundColor === 'light' ? 'sidebar-light' : ''
+				return this.$app.layout.MenuBackgroundColor === 'light' ? 'sidebar-light' : ''
 			},
 
 			moduleCount()
@@ -218,7 +218,7 @@
 			{
 				/**
 				 * If the nav bar is being closed, set the actual value for visibility to false.
-				 * It must be done here, after the transition ends 
+				 * It must be done here, after the transition ends
 				 * so it doesn't disappear before the transition is done.
 				 */
 				if (!this.sidebarIsVisible)

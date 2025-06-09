@@ -235,9 +235,8 @@ namespace GenioMVC.ViewModels.Pesso
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Pesso model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

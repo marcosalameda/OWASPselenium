@@ -2,12 +2,12 @@
     <row>
 		<q-card
 			class="q-card--admin-border-top q-card--admin-compact"
-			:title="Resources.CORRETOR_DE_MENSAGEN22044"
+			:title="resources.messageBrokerTitle"
 			width="block">
 			<q-row-container>
 				<q-checkbox
 					v-model="Messaging.Enabled"
-					:label="Resources.ATIVO_00196" />
+					:label="resources.enabledLabel" />
 				<q-text-field
 					v-model="Messaging.Host.Provider"
 					label="Provider"
@@ -20,11 +20,11 @@
 					size="xlarge" />
 				<q-text-field
 					v-model="Messaging.Host.Username"
-					:label="Resources.NOME_DE_UTILIZADOR58858"
+					:label="hardcodedTexts.username"
 					size="xlarge" />
 				<password-input
 					v-model="Messaging.Host.Password"
-					:label="Resources.PALAVRA_PASSE44126"
+					:label="hardcodedTexts.password"
 					show-filler
 					size="xlarge" />
 			</q-row-container>
@@ -33,7 +33,7 @@
 	<row>
 		<q-card
 			class="q-card--admin-border-top q-card--admin-compact"
-			:title="Resources.PUBLICAR52698"
+			:title="resources.publishTitle"
 			width="block">
 			<q-row-container>
 				<div v-for="pub in EnabledPublications">
@@ -48,7 +48,7 @@
 	<row>
 		<q-card
 			class="q-card--admin-border-top q-card--admin-compact"
-			:title="Resources.INSCREVER_SE07499"
+			:title="resources.subscribeTitle"
 			width="block">
 			<q-row-container>
 				<template v-for="sub in EnabledSubscriptions">
@@ -67,6 +67,7 @@
 <script>
 	import { QUtils } from '@/utils/mainUtils';
 	import { reusableMixin } from '@/mixins/mainMixin';
+	import { texts } from '@/resources/hardcodedTexts.ts';
 
 	export default {
 		name: 'message',
@@ -84,13 +85,17 @@
 			},
 			Messaging: {
 				required: true
+			},
+			resources: {
+				type: Object,
+				required: true
 			}
 		},
 
 		computed: {
 			EnabledPublications() {
 				let vm = this;
-				return this.Metadata.Publishers.map(p => { 
+				return this.Metadata.Publishers.map(p => {
 					return {
 						id: p.Id,
 						description: p.Description,
@@ -100,7 +105,7 @@
 			},
 			EnabledSubscriptions() {
 				let vm = this;
-				return this.Metadata.Subscribers.map(p => { 
+				return this.Metadata.Subscribers.map(p => {
 					return {
 						id: p.Id,
 						description: p.Description,
@@ -108,8 +113,14 @@
 					}
 				});
 			},
+			hardcodedTexts() {
+				return {
+					username: this.Resources[texts.username],
+					password: this.Resources[texts.password],
+				}
+			},
 		},
-		
+
 		methods: {
 			togglePub(pub, checked) {
 				this.makeSetHave(this.model.EnabledPublications, pub.id, checked);

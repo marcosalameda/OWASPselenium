@@ -529,12 +529,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Kinde/Kinde_SaveEdit
 		[HttpPost]
-		public ActionResult Kinde_SaveEdit([FromBody]Kinde_ViewModel model)
+		public ActionResult Kinde_SaveEdit([FromBody] Kinde_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Kinde_SaveEdit",
 				ViewName = "Kinde",
@@ -550,6 +549,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class KindeDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Kinde_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsKinde([FromBody] KindeDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

@@ -12,12 +12,12 @@ import _unionWith from 'lodash-es/unionWith'
 import { isRef, markRaw, reactive, ref, shallowReactive, toValue, unref } from 'vue'
 
 import searchFilterData from '@/api/genio/searchFilterData.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
-import { documentViewTypeMode, formModes, tableViewManagementModes } from '@/mixins/quidgest.mainEnums.js'
-import { geographicDisplay, geographicShapeDisplay } from '@/utils/geography.js'
+import { documentViewTypeMode, formModes, tableViewManagementModes } from '@quidgest/clientapp/constants/enums'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+import { geographicDisplay, geographicShapeDisplay } from '@quidgest/clientapp/utils/geography'
 
 import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
-import { useSystemDataStore } from '@/stores/systemData.js'
+import { useGenericDataStore } from '@quidgest/clientapp/stores'
 
 /**
  * Hydrates the table data.
@@ -2017,8 +2017,8 @@ export function getFilterName(filterOperators, filter, searchableColumns, orText
 			// Format dates
 			if (column.searchFieldType === 'date')
 			{
-				const systemDataStore = useSystemDataStore()
-				const dateFormat = systemDataStore.system.dateFormat[column.dateTimeType]
+				const genericDataStore = useGenericDataStore()
+				const dateFormat = genericDataStore.dateFormat[column.dateTimeType]
 
 				for (let idx in condition.values)
 					conditionValues[idx] = genericFunctions.dateDisplay(condition.values[idx], dateFormat, column.dateTimeType, false)

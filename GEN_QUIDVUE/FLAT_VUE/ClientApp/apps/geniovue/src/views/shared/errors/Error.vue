@@ -2,7 +2,7 @@
 	<div class="error-container">
 		<p v-if="imageName">
 			<img
-				:src="`${system.resourcesPath}${imageName}?v=${genio.buildVersion}`"
+				:src="`${$app.resourcesPath}${imageName}?v=${$app.genio.buildVersion}`"
 				:alt="errorTitle" />
 		</p>
 
@@ -37,9 +37,6 @@
 </template>
 
 <script>
-	import { mapState } from 'pinia'
-
-	import { useSystemDataStore } from '@/stores/systemData.js'
 	import NavHandlers from '@/mixins/navHandlers.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 
@@ -103,11 +100,6 @@
 		},
 
 		computed: {
-			...mapState(useSystemDataStore, [
-				'system',
-				'genio'
-			]),
-
 			/**
 			 * Computed property to get localized text for the 'Go Back' button label.
 			 */

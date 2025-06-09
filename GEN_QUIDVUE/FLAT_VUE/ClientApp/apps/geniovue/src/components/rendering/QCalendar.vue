@@ -63,7 +63,7 @@
 	import pbrLocale from '@fullcalendar/core/locales/pt-br'
 	import eusLocale from '@fullcalendar/core/locales/eu'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	import qCalendarObj from './fullcalendar/QFullCalendarObjects.js'
 	import { themePlugin/*, QFullCalendarTheme*/ } from './fullcalendar/QFullCalendarTheme.js'

@@ -4,7 +4,7 @@
 			id="system_setup_reporting_container"
 			width="block"
 			class="q-card--admin-default"
-			:title="Resources.RELATORIOS37339">
+			:title="resources.reportsTitle">
 			<q-row-container>
 				<row>
 					<q-card
@@ -14,23 +14,23 @@
 							<div class="q-help__info-banner">
 								<div class="q-help__info-banner-header">
 									<q-icon icon="information-outline" />
-									<h5>{{ Resources.CAMINHO_PARA_RELATOR05547 }}</h5>
+									<h5>{{ resources.reportsPathLabel }}</h5>
 								</div>
 								<div class="q-help__info-banner-body">
 									<span style="white-space: pre-line">
-										{{ Resources.ESPECIFICA_O_CAMINHO51946 }}<br>
-										<b>{{ Resources.CRYSTAL_REPORTS15382 }}</b><br>
-										{{ Resources.UTILIZADO_PARA_CARRE49850 }}<br>
-										<b>{{ Resources.REPORTING_SERVICES45145 }}</b><br>
-										{{ Resources.PERMITE_VERIFICAR_NO39154 }}<br>
+										{{ resources.reportsPathInfo }}<br>
+										<b>{{ resources.crystalReportsLabel }}</b><br>
+										{{ resources.crystalReportsInfo }}<br>
+										<b>{{ resources.reportingServicesLabel }}</b><br>
+										{{ resources.reportingServicesInfo }}<br>
 									</span>
 								</div>
 							</div>
 							<q-control-wrapper class="control-row-group">
-							<q-text-field
-								v-model="model.pathReports"
-								:label="Resources.CAMINHO_PARA_RELATOR05547"
-								size="xlarge" />
+								<q-text-field
+									v-model="model.pathReports"
+									:label="resources.reportsPathLabel"
+									size="xlarge" />
 							</q-control-wrapper>
 						</q-row-container>
 					</q-card>
@@ -38,31 +38,31 @@
 				<row>
 					<q-card
 						class="q-card--admin-border-top q-card--admin-compact"
-						:title="Resources.SQL_SERVER_REPORTING62106"
+						:title="resources.sqlServerReportingServicesTitle"
 						width="block">
 						<q-row-container>
 							<q-text-field
 								v-model="model.ssrsServer"
-								:label="Resources.URL05719"
+								:label="hardcodedTexts.url"
 								size="xlarge" />
 							<q-text-field
 								v-model="model.ssrsServerPath"
-								:label="Resources.CAMINHO18436"
+								:label="hardcodedTexts.path"
 								size="xlarge" />
 							<q-checkbox
 								v-model="model.isLocalReports"
-								:label="Resources.SAO_OS_RELATORIOS_LO04230" />
+								:label="resources.isLocalReportsLabel" />
 							<q-text-field
 								v-model="model.ssrsServerDomain"
-								:label="Resources.DOMINIO33043"
+								:label="hardcodedTexts.domain"
 								size="xlarge" />
 							<q-text-field
 								v-model="model.ssrsServerUsername"
-								:label="Resources.NOME_DE_UTILIZADOR58858"
+								:label="hardcodedTexts.username"
 								size="xlarge" />
 							<password-input
 								v-model="model.ssrsServerPassword"
-								:label="Resources.PALAVRA_PASSE44126"
+								:label="hardcodedTexts.password"
 								:showFiller="model.hasSsrsServerPassword"
 								size="xlarge">
 							</password-input>
@@ -78,6 +78,7 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
+	import { texts } from '@/resources/hardcodedTexts.ts';
 
 	export default {
 		name: 'reports',
@@ -86,7 +87,23 @@
 			model: {
 				required: true
 			},
+			resources: {
+				type: Object,
+				required: true
+			}
 		},
-		mixins: [reusableMixin]
+		mixins: [reusableMixin],
+
+		computed: {
+			hardcodedTexts() {
+				return {
+					domain: this.Resources[texts.domain],
+					username: this.Resources[texts.username],
+					url: this.Resources[texts.url],
+					path: this.Resources[texts.path],
+					password: this.Resources[texts.password]
+				}
+			}
+		}
 	};
 </script>

@@ -9,7 +9,7 @@
 	import { computed } from 'vue'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import GenericMenuHandlers from '@/mixins/genericMenuHandlers.js'
 	import DashboardHandlers from '@/mixins/dashboardHandlers.js'
 	import { DashboardControl } from '@/mixins/dashboardControl.js'

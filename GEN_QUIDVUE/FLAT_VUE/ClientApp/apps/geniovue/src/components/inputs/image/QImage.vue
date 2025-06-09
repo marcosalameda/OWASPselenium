@@ -93,7 +93,7 @@
 <script>
 	import { defineAsyncComponent } from 'vue'
 
-	import { displayMessage, validateFileExtAndSize, validateImageFormat, validateTexts } from '@/mixins/genericFunctions.js'
+	import { displayMessage, validateFileExtAndSize, validateImageFormat, validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 	import { getImageURL } from  '@/utils/image.js'
 
 	// The texts needed by the component.

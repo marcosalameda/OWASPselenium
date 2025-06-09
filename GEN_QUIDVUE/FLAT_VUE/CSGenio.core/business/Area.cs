@@ -1014,7 +1014,12 @@ namespace CSGenio.business
                 if (Alias == area)
                 {
                     var fieldInfo = DBFields[name];
-                    if (fieldInfo.IsClientSide)
+                    var primaryKeyField = DBFields[this.PrimaryKeyName];
+
+                    if (
+                        fieldInfo.IsClientSide &&
+                        !primaryKeyField.isEmptyValue(this.QPrimaryKey)                       
+                    )
                     {
                         //queries inside these calculations are not supported
                         //using fields from other tables inside these calculations is not supported

@@ -2599,9 +2599,9 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
                 if (area.Information.DocumsForeignKeys != null)
                 {
-                    object valorChavePrimariaAux = area.QPrimaryKey;
+                    object primaryKeyValueAux = area.QPrimaryKey;
                     if (area.DBFields[area.PrimaryKeyName].FieldType == FieldType.KEY_GUID)
-                        valorChavePrimariaAux = valorChavePrimariaAux.ToString().Replace("-", "");
+                        primaryKeyValueAux = primaryKeyValueAux.ToString().Replace("-", "");
 
                     var formatacaoChaveDocums = CSGenioAdocums.GetInformation().KeyType;
                     foreach(var documForeignKey in area.Information.DocumsForeignKeys)
@@ -2644,7 +2644,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                                 insert.Value(CSGenioAdocums.FldDocument, matrix.GetBinary(0, CSGenioAdocums.FldDocument));
                                 insert.Value(CSGenioAdocums.FldTabela, matrix.GetString(0, CSGenioAdocums.FldTabela));
                                 insert.Value(CSGenioAdocums.FldCampo, matrix.GetString(0, CSGenioAdocums.FldCampo));
-                                insert.Value(CSGenioAdocums.FldChave, valorChavePrimariaAux);
+                                insert.Value(CSGenioAdocums.FldChave, primaryKeyValueAux);
                                 insert.Value(CSGenioAdocums.FldDatacria, DateTime.Now);
                                 insert.Value(CSGenioAdocums.FldNome, matrix.GetString(0, CSGenioAdocums.FldNome));
                                 // if it is to checkout the status is "CHECKOUT"

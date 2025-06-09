@@ -8,9 +8,9 @@
 					v-if="Object.keys(system.availableModules).length > 0"
 					class="navbar-nav c-header__content--sidebar">
 					<li class="nav-item c-header__item--sidebar">
-						<q-button 
+						<q-button
 							id="main-menu-toggle"
-							class="nav-link c-header__link--sidebar action-item" 
+							class="nav-link c-header__link--sidebar action-item"
 							:title="texts.mainMenu"
 							:aria-expanded="!sidebarIsCollapsed"
 							@click.stop.prevent="toggleSidebar">
@@ -46,7 +46,7 @@
 						placement="bottom"
 						:text="texts.systemYears" />
 
-					<language-items v-if="layoutConfig.LanguagePlacement === 'in_header'" />
+					<language-items v-if="$app.layout.LanguagePlacement === 'in_header'" />
 
 					<embedded-menu />
 				</div>
@@ -60,13 +60,13 @@
 </template>
 
 <script>
-	import { defineAsyncComponent, computed } from 'vue'
 	import { mapActions, mapState } from 'pinia'
+	import { computed, defineAsyncComponent } from 'vue'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import mainConfigUtils from '@/api/global/mainConfigUtils.js'
-	import LayoutHandlers from '@/mixins/layoutHandlers'
 	import hardcodedTexts from '@/hardcodedTexts.js'
+	import LayoutHandlers from '@/mixins/layoutHandlers'
+	import { updateMainConfig } from '@/utils/system'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
 
 	import EmbeddedMenu from '@/views/shared/EmbeddedMenu.vue'
 	import MenuFlat from './MenuFlat.vue'
@@ -154,7 +154,7 @@
 			{
 				this.setCurrentSystem(selectedSystem)
 				// Before opening the home page, we must update the configuration to have the menu list for this system.
-				mainConfigUtils.updateMainConfig(() => {
+				updateMainConfig(() => {
 					this.$router.push({
 						name: 'home',
 						params: {

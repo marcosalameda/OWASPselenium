@@ -54,17 +54,17 @@
 					<q-dropdown-menu
 						v-if="showConfigMenu"
 						:id="configMenuId"
-						icon="table-configuration"
 						:texts="{ title: texts.tableConfig }"
 						:options="configOptionsUse"
 						:button-options="{ borderless: true }"
 						:button-classes="['dropdown-toggle']"
 						@selected="emitConfigAction">
-						<span
-							v-if="confirmChanges"
-							class="e-badge e-badge--highlight">
-							<span aria-hidden="true"></span>
-						</span>
+						<component
+							:is="confirmChanges ? 'q-badge-indicator' : 'v-fragment'"
+							color="highlight"
+							placement="top-right">
+							<q-icon icon="table-configuration" />
+						</component>
 					</q-dropdown-menu>
 					<!-- END: Configuration menu / button -->
 					<!-- BEGIN: Toggle show/hide filters -->
@@ -624,7 +624,7 @@
 
 	import Sortable from 'sortablejs'
 
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import HelpControl from '@/mixins/helpControls.js'
 

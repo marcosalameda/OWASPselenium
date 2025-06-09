@@ -144,8 +144,8 @@
 	import QMarkdownViewer from './QMarkdownViewer.vue'
 
 	import { MarkdownOptions, DEFAULT_TEXTS, viewModes } from './markdown.js'
-	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { inputSize } from '@quidgest/clientapp/constants/enums'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	/**
 	 * QMarkdownEditor

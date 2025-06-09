@@ -53,8 +53,8 @@
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
-	import { formModes } from '@/mixins/quidgest.mainEnums.js'
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { formModes } from '@quidgest/clientapp/constants/enums'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 	import { NestedFormConfig } from '@/mixins/fieldControl.js'
 
 	// The texts needed by the component.

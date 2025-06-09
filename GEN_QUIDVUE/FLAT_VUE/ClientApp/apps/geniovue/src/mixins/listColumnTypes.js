@@ -1,15 +1,16 @@
-﻿import { computed, nextTick, ref, unref, watch } from 'vue'
-import _assignIn from 'lodash-es/assignIn'
+﻿import _assignIn from 'lodash-es/assignIn'
+import cloneDeep from 'lodash-es/cloneDeep'
 import _get from 'lodash-es/get'
 import _keyBy from 'lodash-es/keyBy'
 import _toString from 'lodash-es/toString'
-import cloneDeep from 'lodash-es/cloneDeep'
+import { computed, nextTick, ref, unref, watch } from 'vue'
 
-import { QEventEmitter } from '@/api/global/eventBus.js'
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { validateFormula } from  '@/utils/formula.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
 import listFunctions from '@/mixins/listFunctions.js'
+import { systemInfo } from '@/systemInfo'
+import { validateFormula } from '@/utils/formula.js'
+import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
+import { useGenericDataStore } from '@quidgest/clientapp/stores'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 export class BaseColumn
 {
@@ -178,7 +179,7 @@ export class NumericColumn extends BaseColumn
 {
 	constructor(options, modelCtx, eventEmitter, init)
 	{
-		const systemDataStore = useSystemDataStore()
+		const genericDataStore = useGenericDataStore()
 
 		super(_assignIn({
 			dataType: 'Numeric',
@@ -188,8 +189,8 @@ export class NumericColumn extends BaseColumn
 			maxDigits: 0,
 			decimalPlaces: 0,
 			numberFormat: {
-				decimalSeparator: systemDataStore.system.numberFormat.decimalSeparator,
-				groupSeparator: systemDataStore.system.numberFormat.thousandsSeparator,
+				decimalSeparator: genericDataStore.numberFormat.decimalSeparator,
+				groupSeparator: genericDataStore.numberFormat.thousandsSeparator,
 			},
 			showTotal: true,
 			columnClasses: 'c-table__cell-numeric row-numeric',
@@ -214,15 +215,13 @@ export class CurrencyColumn extends NumericColumn
 {
 	constructor(options, modelCtx, eventEmitter, init)
 	{
-		const systemDataStore = useSystemDataStore()
-
 		super(_assignIn({
 			dataType: 'Currency',
 			searchFieldType: 'num',
 			dataDisplay: listFunctions.currencyDisplayCell,
 			dataDisplayText: listFunctions.currencyDisplayCell,
-			currency: systemDataStore.system.baseCurrency.code,
-			currencySymbol: systemDataStore.system.baseCurrency.symbol
+			currency: systemInfo.system.baseCurrency.code,
+			currencySymbol: systemInfo.system.baseCurrency.symbol
 		}, options), modelCtx, eventEmitter, init)
 	}
 }
@@ -231,13 +230,13 @@ export class DateColumn extends BaseColumn
 {
 	constructor(options, modelCtx, eventEmitter, init)
 	{
-		const systemDataStore = useSystemDataStore()
+		const genericDataStore = useGenericDataStore()
 
 		super(_assignIn({
 			dataType: 'Date',
 			searchFieldType: 'date',
 			dateTimeType: 'dateTime',
-			dateFormats: systemDataStore.system.dateFormat,
+			dateFormats: genericDataStore.dateFormat,
 			dataDisplay: listFunctions.dateDisplayCell,
 			dataDisplayText: listFunctions.dateDisplayCell
 		}, options), modelCtx, eventEmitter, init)
@@ -250,10 +249,10 @@ export class DateColumn extends BaseColumn
 	 */
 	getNormalizedValue(value)
 	{
-		const systemDataStore = useSystemDataStore()
+		const genericDataStore = useGenericDataStore()
 
 		// Get date format based on the column
-		const dateFormat = systemDataStore.system.dateFormat[this.dateTimeType]
+		const dateFormat = genericDataStore.dateFormat[this.dateTimeType]
 
 		// Convert to date object
 		let parsedDate = genericFunctions.stringToDate(value, dateFormat)
@@ -344,15 +343,15 @@ export class GeographicColumn extends BaseColumn
 {
 	constructor(options, modelCtx, eventEmitter, init)
 	{
-		const systemDataStore = useSystemDataStore()
+		const genericDataStore = useGenericDataStore()
 
 		super(_assignIn({
 			dataType: 'Geographic',
 			dataDisplay: listFunctions.geographicDisplayCell,
 			dataDisplayText: listFunctions.geographicDisplayCell,
 			numberFormat: {
-				decimalSeparator: systemDataStore.system.numberFormat.decimalSeparator,
-				groupSeparator: systemDataStore.system.numberFormat.thousandsSeparator,
+				decimalSeparator: genericDataStore.numberFormat.decimalSeparator,
+				groupSeparator: genericDataStore.numberFormat.thousandsSeparator,
 			}
 		}, options), modelCtx, eventEmitter, init)
 	}

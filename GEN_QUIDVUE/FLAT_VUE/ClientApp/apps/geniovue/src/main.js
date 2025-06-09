@@ -1,18 +1,22 @@
-﻿import { createApp } from 'vue'
+﻿
 import { createPinia } from 'pinia'
+import { createApp } from 'vue'
 
-import { setAppConfig } from './mixins/genericFunctions.js'
-import { setExternalAppsPlugin } from './integratedApps.js'
-import { setupI18n, resourcesMixin } from './plugins/i18n.js'
-import eventTracker from './plugins/eventTracker.js'
-import { simpleFetch } from './api/network'
-import { setupRouter } from './router'
+import { simpleFetch } from '@quidgest/clientapp/network'
+import eventBus from '@quidgest/clientapp/plugins/eventBus'
+
+import App from './App.vue'
 import components from './components'
 import formComponents from './components/formComponents.js'
 import gridTableListFormComponents from './components/gridTableListFormComponents.js'
-import eventBus from './api/global/eventBus.js'
-import App from './App.vue'
-import framework from './plugins/quidgest-ui'
+import { setExternalAppsPlugin } from './integratedApps.js'
+import eventTracker from './plugins/eventTracker.js'
+import { resourcesMixin, setupI18n } from './plugins/i18n.js'
+import clientappFramework from './plugins/quidgest-clientapp'
+import uiFramework from './plugins/quidgest-ui'
+import { setupRouter } from './router'
+import { systemInfo } from './systemInfo'
+import { setAppConfig } from './utils/system'
 
 // Global CSS
 import './assets/styles/quidgest.scss'
@@ -20,9 +24,12 @@ import './assets/styles/quidgest.scss'
 const pinia = createPinia()
 const app = createApp(App)
 
-app.use(framework)
+app.use(uiFramework)
 app.use(pinia)
 app.use(eventTracker)
+app.use(clientappFramework)
+
+app.config.globalProperties.$app = systemInfo
 
 const i18n = setupI18n()
 app.config.globalProperties.$__i18n = i18n

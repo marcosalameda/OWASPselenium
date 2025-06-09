@@ -4,7 +4,7 @@
     <ShouldRunNpmInstall>false</ShouldRunNpmInstall>
 
     <JavaScriptTestRoot>.\</JavaScriptTestRoot>
-    <JavaScriptTestFramework>Jest</JavaScriptTestFramework>
+    <JavaScriptTestFramework>Vitest</JavaScriptTestFramework>
     <!-- Allows the build (or compile) script located on package.json to run on Build -->
     <ShouldRunBuildScript>false</ShouldRunBuildScript>
 
@@ -31,5 +31,10 @@
     </Exec>
     <Touch Files="$(NpmInstallCheck)" Condition="'$(ErrorCodeNpmInstall)' == '0'" AlwaysCreate="true" />
   </Target>
-
+  <ItemGroup>
+    <None Remove="**\dist\**" />
+    <None Remove="**\coverage\**" />
+    <TypeScriptConfiguration Remove="**\dist\**" />
+    <TypeScriptConfiguration Remove="**\coverage\**" />
+  </ItemGroup>
 </Project>

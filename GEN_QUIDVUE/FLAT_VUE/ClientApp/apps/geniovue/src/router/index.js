@@ -1,17 +1,20 @@
 ﻿import { createRouter, createWebHashHistory } from 'vue-router'
 
+import { fetchData, postData } from '@quidgest/clientapp/network'
+import {
+	useGenericDataStore,
+	useNavDataStore,
+	useSystemDataStore,
+	useUserDataStore
+} from '@quidgest/clientapp/stores'
+
 import { setI18nLanguage } from '@/plugins/i18n'
-import { fetchData, postData } from '@/api/network'
+import { systemInfo } from '@/systemInfo'
 
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { useGenericDataStore } from '@/stores/genericData.js'
-import { useUserDataStore } from '@/stores/userData.js'
-import { useNavDataStore } from '@/stores/navData.js'
-
-import getMainRoutes from './main.js'
-import getUserRoutes from './user.js'
-import getMenusRoutes from './menus.js'
 import getFormsRoutes from './forms.js'
+import getMainRoutes from './main.js'
+import getMenusRoutes from './menus.js'
+import getUserRoutes from './user.js'
 
 export function setupRouter(i18n)
 {
@@ -68,7 +71,7 @@ export function setupRouter(i18n)
 		}
 
 		// Check locale.
-		if (locale && !systemDataStore.system.supportedLangs.find(lang => lang.language === locale))
+		if (locale && !systemInfo.locale.availableLocales.find(lang => lang.language === locale))
 		{
 			next(false)
 			return

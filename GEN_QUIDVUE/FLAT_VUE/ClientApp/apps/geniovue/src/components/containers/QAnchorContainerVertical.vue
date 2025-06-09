@@ -21,7 +21,7 @@
 <script>
 	import _cloneDeep from 'lodash-es/cloneDeep'
 
-	import genericFunctions from '@/mixins/genericFunctions'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 	import QAnchorElement from './QAnchorElement.vue'
 

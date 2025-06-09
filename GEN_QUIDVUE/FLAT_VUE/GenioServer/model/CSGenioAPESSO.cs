@@ -1229,7 +1229,6 @@ namespace CSGenio.business
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
             return StatusMessage.OK();
 		}
 

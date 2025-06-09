@@ -159,9 +159,8 @@ namespace GenioMVC.ViewModels.Regio
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Regio model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

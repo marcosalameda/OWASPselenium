@@ -159,9 +159,8 @@ namespace GenioMVC.ViewModels.Locat
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Locat model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

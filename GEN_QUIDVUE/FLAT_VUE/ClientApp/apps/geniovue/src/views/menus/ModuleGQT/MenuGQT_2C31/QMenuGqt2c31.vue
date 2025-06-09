@@ -73,21 +73,21 @@
 	import { computed } from 'vue'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import { QEventEmitter } from '@/api/global/eventBus.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 
 	import MarkItemsMenuHandlers from '@/mixins/markItemsMenuHandlers.js'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import formFunctions from '@/mixins/formFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import controlClass from '@/mixins/fieldControl.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
 
-	import netAPI from '@/api/network'
+	import netAPI from '@quidgest/clientapp/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import qEnums from '@quidgest/clientapp/constants/enums'
 	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_2C31ViewModel.js'

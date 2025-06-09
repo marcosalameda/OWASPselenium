@@ -386,11 +386,11 @@
 	import _isEmpty from 'lodash-es/isEmpty'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import { displayMessage } from '@/mixins/genericFunctions.js'
-	import { postData, fetchData } from '@/api/network'
+	import { displayMessage } from '@quidgest/clientapp/utils/genericFunctions'
+	import { postData, fetchData } from '@quidgest/clientapp/network'
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
-	import { useSystemDataStore } from '@/stores/systemData.js'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
 
 	import QToggleDropdown from '@/components/QToggleDropdown.vue'
 
@@ -504,8 +504,8 @@
 		computed: {
 			inMaintenance()
 			{
-				const systemDataStore = useSystemDataStore()
-				return systemDataStore.maintenance.isActive
+				const genericDataStore = useGenericDataStore()
+				return genericDataStore.maintenance.isActive
 			}
 		},
 

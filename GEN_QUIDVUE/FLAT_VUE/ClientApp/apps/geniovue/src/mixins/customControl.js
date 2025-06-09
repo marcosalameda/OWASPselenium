@@ -1,18 +1,18 @@
-﻿import { computed, reactive, watch } from 'vue'
+﻿import _assignInWith from 'lodash-es/assignInWith'
 import cloneDeep from 'lodash-es/cloneDeep'
-import _assignInWith from 'lodash-es/assignInWith'
 import _debounce from 'lodash-es/debounce'
 import _isArray from 'lodash-es/isArray'
 import _isEmpty from 'lodash-es/isEmpty'
 import _isUndefined from 'lodash-es/isUndefined'
 import _merge from 'lodash-es/merge'
 import _mergeWith from 'lodash-es/mergeWith'
+import { computed, reactive, watch } from 'vue'
 
-import { useSystemDataStore } from '@/stores/systemData.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
+import { systemInfo } from '@/systemInfo'
 import getCustomControl from './custom-controls/customControlImport.js'
 import listFunctions from './listFunctions.js'
-import genericFunctions from './genericFunctions.js'
 
 /**
  * Mixin with properties and methods common to all kinds of special renderings
@@ -332,12 +332,10 @@ const customControlMixin = {
 	 */
 	async setMappedImage(mappedVal, image, usesFullSizeImg = false)
 	{
-		const systemDataStore = useSystemDataStore()
-
 		if (image === null)
 		{
-			mappedVal.value = `${systemDataStore.system.resourcesPath}no_img.png`
-			mappedVal.previewData = `${systemDataStore.system.resourcesPath}unknown.png`
+			mappedVal.value = `${systemInfo.resourcesPath}no_img.png`
+			mappedVal.previewData = `${systemInfo.resourcesPath}unknown.png`
 		}
 		else
 		{

@@ -6,9 +6,9 @@ import _some from 'lodash-es/some'
 import CustomControl from './baseControl.js'
 import CalendarResources from './resources/calendarResources.js'
 
-import { useSystemDataStore } from '@/stores/systemData.js'
+import { useSystemDataStore } from '@quidgest/clientapp/stores'
 
-import { dateToISOString } from '@/mixins/genericFunctions.js'
+import { dateToISOString } from '@quidgest/clientapp/utils/genericFunctions'
 
 /**
  * Calendar control

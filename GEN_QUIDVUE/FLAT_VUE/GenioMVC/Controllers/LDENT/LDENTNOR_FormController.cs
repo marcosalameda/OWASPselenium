@@ -604,12 +604,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Ldent/Ldentnor_SaveEdit
 		[HttpPost]
-		public ActionResult Ldentnor_SaveEdit([FromBody]Ldentnor_ViewModel model)
+		public ActionResult Ldentnor_SaveEdit([FromBody] Ldentnor_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ldentnor_SaveEdit",
 				ViewName = "Ldentnor",
@@ -625,6 +624,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class LdentnorDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Ldentnor_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsLdentnor([FromBody] LdentnorDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

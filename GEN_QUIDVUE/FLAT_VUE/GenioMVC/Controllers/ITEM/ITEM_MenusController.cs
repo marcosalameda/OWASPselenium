@@ -113,7 +113,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET 441]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -217,7 +224,14 @@ namespace GenioMVC.Controllers
 				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));
 			}
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -324,7 +338,14 @@ namespace GenioMVC.Controllers
 				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));
 			}
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -429,7 +450,14 @@ namespace GenioMVC.Controllers
 				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));
 			}
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -533,7 +561,14 @@ namespace GenioMVC.Controllers
 				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));
 			}
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -613,7 +648,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET LIST_DB_MC_F]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -723,7 +765,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET LIST_DB_MB_MC_F]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -833,7 +882,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET LIST_DB_MC_R]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -939,7 +995,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET LIST_DB_MB_MC_R]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

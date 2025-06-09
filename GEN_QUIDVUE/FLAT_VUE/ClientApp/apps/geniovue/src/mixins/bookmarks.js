@@ -1,8 +1,8 @@
 ﻿/**
  * Class responsible for bookmarks actions (Read, add and remove).
  */
-import { postData } from '@/api/network'
-import { displayMessage } from '@/mixins/genericFunctions'
+import { postData } from '@quidgest/clientapp/network'
+import { displayMessage } from '@quidgest/clientapp/utils/genericFunctions'
 
 import _isEmpty from 'lodash-es/isEmpty'
 

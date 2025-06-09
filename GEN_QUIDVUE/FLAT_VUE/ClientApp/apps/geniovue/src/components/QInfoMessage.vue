@@ -43,7 +43,7 @@
 <script>
 	import isEmpty from 'lodash-es/isEmpty'
 
-	import { messageTypes } from '@/mixins/quidgest.mainEnums.js'
+	import { messageTypes } from '@quidgest/clientapp/constants/enums'
 
 	export default {
 		name: 'QInfoMessage',

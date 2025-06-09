@@ -208,9 +208,8 @@ namespace GenioMVC.ViewModels.Inpgr
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Inpgr model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

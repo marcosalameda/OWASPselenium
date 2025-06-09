@@ -2,7 +2,7 @@
 	<div id="system_setup_integration_container">
 		<row>
 			<q-card
-				:title="Resources.SISTEMA_DE_MENSAGENS07077"
+				:title="resources.messagingSystemTitle"
 				width="block"
 				class="q-card--admin-default">
 				<q-row-container>
@@ -10,6 +10,7 @@
 						:Messaging="Messaging"
 						:Metadata="Metadata"
 						:model="model"
+						:resources="resources"
 						@alert-class="forwardAlert"
 					/>
 				</q-row-container>
@@ -20,10 +21,11 @@
 			<q-card
 				width="block"
 				class="q-card--admin-default"
-				:title="Resources.MENSAGENS_QUEUE_SERV62690">
+				:title="resources.messagingQueueServerTitle">
 				<q-row-container>
 					<queue
 						:model="model"
+						:resources="resources"
 						@update-model="forwardUpdate"
 						@alert-class="forwardAlert" />
 				</q-row-container>
@@ -32,7 +34,7 @@
 		<row class="footer-btn">
 			<q-button
 				variant="bold"
-				:label="Resources.GRAVAR_CONFIGURACAO36308"
+				:label="hardcodedTexts.saveConfiguration"
 				@click="SaveIntegrationConfig" />
 		</row>
 	</div>
@@ -42,6 +44,7 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
+	import { texts } from '@/resources/hardcodedTexts.ts';
 	import QAlert from '@/components/QAlert.vue';
 	import message from './Message';
 	import queue from './Queue';
@@ -67,6 +70,10 @@
 			},
 			Messaging: {
 				required: true
+			},
+			resources: {
+				type: Object,
+				required: true
 			}
 		},
 
@@ -81,7 +88,15 @@
 				}
 			};
 		},
-		
+
+		computed: {
+			hardcodedTexts() {
+				return {
+					saveConfiguration: this.Resources[texts.saveConfiguration]
+				}
+			},
+		},
+
 		methods: {
 			forwardAlert(alertData) {
 				this.$emit('alert-class', alertData)

@@ -7,7 +7,7 @@
 				<div class="f-login__background">
 					<div class="f-login__brand">
 						<img
-							:src="`${system.resourcesPath}f-login__brand.png?v=${genio.buildVersion}`"
+							:src="`${$app.resourcesPath}f-login__brand.png?v=${$app.genio.buildVersion}`"
 							:alt="texts.enter" />
 						<p>{{ texts.appName }}</p>
 					</div>
@@ -62,7 +62,7 @@
 								:placeholder="texts.password"
 								@update:model-value="updatePasswordValue"
 								@keyup-enter="executeLogon"
-								:readonly="!layoutConfig.ShowPasswordToggle">
+								:readonly="!$app.layout.ShowPasswordToggle">
 								<template #prepend>
 									<span>
 										<q-icon icon="lock" />
@@ -91,9 +91,9 @@
 									@click="executeLogon" />
 
 								<q-register-button
-									v-if="allowRegistration && layoutConfig.UserRegisterStyle === 'button'"
-									:registration-types="userRegistration.registrationTypes"
-									:display-style="layoutConfig.UserRegisterStyle"
+									v-if="allowRegistration && $app.layout.UserRegisterStyle === 'button'"
+									:registration-types="$app.userRegistration.registrationTypes"
+									:display-style="$app.layout.UserRegisterStyle"
 									@navigate-to-register-route="navigateToRegisterRoute" />
 							</div>
 						</template>
@@ -107,15 +107,15 @@
 								class="f-login__link"
 								:link="{
 									name: 'password-recovery',
-									params: { culture: system.currentLang }
+									params: { culture: system.currentLang, system: system.currentSystem, module: system.currentModule }
 								}">
 								{{ texts.forgotPassword }}
 							</q-router-link>
 
 							<q-register-button
-								v-if="allowRegistration && layoutConfig.UserRegisterStyle === 'hyperlink'"
-								:registration-types="userRegistration.registrationTypes"
-								:display-style="layoutConfig.UserRegisterStyle" />
+								v-if="allowRegistration && $app.layout.UserRegisterStyle === 'hyperlink'"
+								:registration-types="$app.userRegistration.registrationTypes"
+								:display-style="$app.layout.UserRegisterStyle" />
 						</div>
 					</div>
 				</div>
@@ -126,17 +126,17 @@
 
 <script>
 	import { computed } from 'vue'
-	import { mapState } from 'pinia'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import { useUserDataStore } from '@/stores/userData.js'
-	import { postData, fetchData } from '@/api/network'
-	import mainConfigUtils from '@/api/global/mainConfigUtils.js'
-	import { displayMessage, resetStoreState } from '@/mixins/genericFunctions.js'
-	import LayoutHandlers from '@/mixins/layoutHandlers.js'
-	import AuthHandlers from '@/mixins/authHandlers.js'
-	import VueNavigation from '@/mixins/vueNavigation.js'
+	import { fetchData, postData } from '@quidgest/clientapp/network'
+	import { useUserDataStore } from '@quidgest/clientapp/stores'
+	import { displayMessage } from '@quidgest/clientapp/utils/genericFunctions'
+
 	import hardcodedTexts from '@/hardcodedTexts.js'
+	import AuthHandlers from '@/mixins/authHandlers.js'
+	import LayoutHandlers from '@/mixins/layoutHandlers.js'
+	import VueNavigation from '@/mixins/vueNavigation.js'
+	import { updateAFToken, updateMainConfig } from '@/utils/system'
+	import { resetStoreState } from '@/utils/user'
 
 	import QRouterLink from '@/views/shared/QRouterLink.vue'
 	import QRegisterButton from '@/views/shared/RegisterButton.vue'
@@ -203,7 +203,7 @@
 					if (
 						!this.hasUsernameAuth &&
 						this.model.AuthRedirectMethods.length === 1 &&
-						this.layoutConfig.LoginStyle === 'single_page' &&
+						this.$app.layout.LoginStyle === 'single_page' &&
 						!this.allowRegistration
 					)
 						this.authRedirectButtonClick(this.model.AuthRedirectMethods[0])
@@ -213,7 +213,7 @@
 		mounted()
 		{
 			if (
-				this.layoutConfig.LoginStyle === 'embeded_page' ||
+				this.$app.layout.LoginStyle === 'embeded_page' ||
 				(this.isPublicRoute && !this.isFullScreenPage)
 			)
 				window.addEventListener('mousedown', this.hideLogon)
@@ -222,15 +222,13 @@
 		beforeUnmount()
 		{
 			if (
-				this.layoutConfig.LoginStyle === 'embeded_page' ||
+				this.$app.layout.LoginStyle === 'embeded_page' ||
 				(this.isPublicRoute && !this.isFullScreenPage)
 			)
 				window.removeEventListener('mousedown', this.hideLogon)
 		},
 
 		computed: {
-			...mapState(useSystemDataStore, ['userRegistration']),
-
 			passwordFieldType()
 			{
 				return this.isPasswordVisible ? 'text' : 'password'
@@ -267,7 +265,7 @@
 
 			allowRegistration()
 			{
-				return this.userRegistration.allowRegistration && this.userRegistration.registrationTypes.length > 0
+				return this.$app.userRegistration.allowRegistration && this.$app.userRegistration.registrationTypes.length > 0
 			},
 
 			logonClasses()
@@ -275,7 +273,7 @@
 				const classes = ['d-block']
 
 				if (
-					this.layoutConfig.LoginStyle === 'embeded_page' ||
+					this.$app.layout.LoginStyle === 'embeded_page' ||
 					(this.isPublicRoute && !this.isFullScreenPage)
 				)
 				{
@@ -342,7 +340,7 @@
 					const module = route.params?.module
 
 					// Check locale.
-					if (locale && !this.system.supportedLangs.find((lang) => lang.language === locale))
+					if (locale && !this.$app.locale.availableLocales.find((lang) => lang.language === locale))
 						return false
 
 					// Check system.
@@ -367,7 +365,7 @@
 				const routeParams = {
 					name: 'home',
 					params: {
-						culture: this.system.defaultLang,
+						culture: this.$app.locale.defaultLocale,
 						system: this.system.defaultSystem,
 						module: this.system.defaultModule
 					}
@@ -385,8 +383,8 @@
 				resetStoreState()
 
 				Promise.all([
-					mainConfigUtils.updateAFToken(),
-					mainConfigUtils.updateMainConfig()
+					updateAFToken(),
+					updateMainConfig()
 				]).then(() => {
 					const userData = {
 						Name: this.currentUser
@@ -489,7 +487,7 @@
 			navigateToRegisterRoute()
 			{
 				const params = {
-					id: this.userRegistration.registrationTypes[0].id
+					id: this.$app.userRegistration.registrationTypes[0].id
 				}
 
 				this.navigateToRouteName('user-register', params)

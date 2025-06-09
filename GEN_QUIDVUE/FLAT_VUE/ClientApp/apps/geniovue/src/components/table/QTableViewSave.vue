@@ -81,7 +81,7 @@
 </template>
 
 <script>
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 	import QControlWrapper from '@/components/ControlWrapper.vue'
 	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'

@@ -167,9 +167,8 @@ namespace GenioMVC.ViewModels.Manua
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Manua model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

@@ -492,4 +492,60 @@ namespace GenioMVC.ViewModels
 		[JsonPropertyName("isRowDirty")]
 		public bool IsDirty { get; set; }
 	}
+
+	public enum VersionSubmitAction
+	{
+		Insert, Submit, UnlockFile
+	}
+
+	public enum VersionDeleteAction
+	{
+		LastVersion, Historic, All
+	}
+
+	public class RequestDocumGetTicketsModel
+	{
+		public string FieldName { get; set; } = string.Empty;
+		public string KeyValue { get; set; } = string.Empty;
+	}
+
+	public class RequestDocumFieldTicket
+	{
+		[JsonPropertyName("fieldId")]
+		public string FieldId { get; set; }
+		[JsonPropertyName("ticket")]
+		public string Ticket { get; set; }
+	}
+
+	public class RequestDocumValidateTickets
+	{
+		public List<RequestDocumFieldTicket> Tickets { get; set; }
+		public bool IsApply { get; set; }
+	}
+
+	public class RequestDocumGetModel
+	{
+		public string? Ticket { get; set; }
+		public DocumentViewTypeMode ViewType { get; set; } = DocumentViewTypeMode.Print;
+	}
+
+	public class RequestDocumChangeModel : RequestDocumGetModel
+	{
+		public VersionDeleteAction DeleteType { get; set; } = VersionDeleteAction.All;
+		public bool Delete { get; set; }
+		public bool Editing { get; set; }
+		public string CurrentVersion { get; set; }
+	}
+
+	public class RequestDocumsChangeModel
+	{
+		public List<RequestDocumChangeModel> Documents { get; set; }
+	}
+
+	public class RequestDocumsCreateModel
+	{
+		public string Ticket { get; set; }
+		public VersionSubmitAction Mode { get; set; } = VersionSubmitAction.Insert;
+		public string Version { get; set; } = "1";
+	}
 }

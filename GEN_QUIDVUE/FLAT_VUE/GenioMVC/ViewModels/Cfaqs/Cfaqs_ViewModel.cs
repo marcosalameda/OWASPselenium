@@ -150,9 +150,8 @@ namespace GenioMVC.ViewModels.Cfaqs
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Cfaqs model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

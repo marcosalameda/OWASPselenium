@@ -4,12 +4,12 @@
 			<q-row-container>
 				<numeric-input
 					v-model="model.MQueues.Journaltimeout"
-					:label="Resources.JOURNAL_TIMEOUT__MIN38634"
+					:label="resources.journalTimeoutLabel"
 					size="xlarge"
 					integer-only />
 				<numeric-input
 					v-model="model.MQueues.Maxsendnumber"
-					:label="Resources.NUMERO_MAXIMO_DE_TEN51201"
+					:label="resources.maxSendNumberLabel"
 					size="xlarge"
 					integer-only />
 			</q-row-container>
@@ -24,25 +24,25 @@
 					class="q-table--borderless">
 				<template #actions="props">
 					<q-button-group borderless>
-					<q-button
-						variant="text"
-						:title="Resources.EDITAR11616"
-						@click="changeQueue(props.row)">
-						<q-icon icon="pencil" />
-					</q-button>
-					<q-button
-						variant="text"
-						:title="Resources.ELIMINAR21155"
-						@click="deleteQueue(props.row)">
-						<q-icon icon="bin" />
-					</q-button>
+						<q-button
+							variant="text"
+							:title="hardcodedTexts.edit"
+							@click="changeQueue(props.row)">
+							<q-icon icon="pencil" />
+						</q-button>
+						<q-button
+							variant="text"
+							:title="hardcodedTexts.delete"
+							@click="deleteQueue(props.row)">
+							<q-icon icon="bin" />
+						</q-button>
 					</q-button-group>
 				</template>
 				<template #table-footer>
 					<tr>
 						<td colspan="8">
 							<q-button
-								:label="Resources.INSERIR43365"
+								:label="hardcodedTexts.insert"
 								@click="createQueue">
 								<q-icon icon="add" />
 							</q-button>
@@ -62,13 +62,13 @@
 					<q-button-group borderless>
 					<q-button
 						variant="text"
-						:title="Resources.EDITAR11616"
+						:title="hardcodedTexts.edit"
 						@click="changeAck(props.row)">
 						<q-icon icon="pencil" />
 					</q-button>
 					<q-button
 						variant="text"
-						:title="Resources.ELIMINAR21155"
+						:title="hardcodedTexts.delete"
 						@click="deleteAck(props.row)">
 						<q-icon icon="bin" />
 					</q-button>
@@ -78,7 +78,7 @@
 					<tr>
 						<td colspan="3">
 							<q-button
-								:label="Resources.INSERIR43365"
+								:label="hardcodedTexts.insert"
 								@click="createAck">
 								<q-icon icon="add" />
 							</q-button>
@@ -90,61 +90,61 @@
 
 		<q-dialog
 			v-model="showDialog"
-			:title="Resources.QUEUE45251"
+			:title="resources.queueTitle"
 			:buttons="buttons">
 			<template #body.content>
 				<div class="q-dialog-container">
 					<div>
 						<q-text-field
 							v-model="queueData.queue"
-							:label="Resources.NOME_DA_QUEUE56594"
+							:label="resources.queueNameLabel"
 							:readonly="blockFormQueue"
 							size="large" />
 					</div>
 					<div>
 						<q-text-field
 							v-model="queueData.queueChannel"
-							:label="Resources.CANAL_DA_QUEUE34934"
+							:label="resources.queueChannelLabel"
 							:readonly="blockFormQueue"
 							size="large" />
 					</div>
 					<div>
 						<q-text-field
 							v-model="queueData.path"
-							:label="Resources.TRAJETO_DA_QUEUE07185"
+							:label="resources.queuePathLabel"
 							:readonly="blockFormQueue"
 							size="large" />
 					</div>
 					<div>
 						<q-text-field
 							v-model="queueData.Qyear"
-							:label="Resources.ANO33022"
+							:label="hardcodedTexts.yearLabel"
 							:readonly="blockFormQueue"
 							size="large" />
 					</div>
 					<div>
 						<numeric-input
 							v-model="queueData.Blocksize"
-							:label="Resources.TAMANHO_DO_BLOCO42316"
+							:label="resources.blockSizeLabel"
 							:isReadOnly="blockFormQueue"
 							size="large" />
 					</div>
 					<div>
                         <q-checkbox
                             v-model="queueData.Unicode"
-                            :label="Resources.UNICODE63246"
+                            :label="resources.unicodeLabel"
                             :readonly="blockFormQueue" />
                     </div>
                     <div>
                         <q-checkbox
                             v-model="queueData.UsesMsmq"
-                            :label="Resources.USA_MSMQ18528"
+                            :label="resources.usesMsmqLabel"
                             :readonly="blockFormQueue" />
                     </div>
                     <div>
                         <q-checkbox
                             v-model="queueData.Journal"
-                            :label="Resources.JOURNAL20931"
+                            :label="resources.journalLabel"
                             :readonly="blockFormQueue" />
                     </div>
 				</div>
@@ -160,21 +160,21 @@
 					<div>
 						<q-text-field
 							v-model="ackData.source"
-							:label="Resources.QUEUE_ORIGEM31278"
+							:label="resources.sourceQueueLabel"
 							:readonly="blockFormQueueACK"
 							size="large" />
 					</div>
 					<div>
                         <q-text-field
 							v-model="ackData.ackQueue"
-							:label="Resources.QUEUE_ACK30680"
+							:label="resources.sourceQueueLabel"
 							:readonly="blockFormQueueACK"
 							size="large" />
                     </div>
                     <div>
                         <numeric-input
 							v-model="ackData.Blocksize"
-							:label="Resources.TAMANHO_DO_BLOCO42316"
+							:label="resources.blockSizeLabel"
 							:isReadOnly="blockFormQueueACK"
 							size="large" />
                     </div>
@@ -188,6 +188,8 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
+	import { texts } from '@/resources/hardcodedTexts.ts';
+	import { computed } from 'vue';
 
 	export default {
 		name: 'integration',
@@ -198,6 +200,10 @@
 
 		props: {
 			model: {
+				required: true
+			},
+			resources: {
+				type: Object,
 				required: true
 			}
 		},
@@ -238,7 +244,7 @@
 					rows: [],
 					total_rows: 0,
 					columns: [{
-						label: () => this.$t('ACOES22599'),
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -247,49 +253,49 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => this.$t('NOME_DA_QUEUE56594'),
+						label: this.resources.queueNameLabel,
 						name: "queue",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: () => this.$t('CANAL_DA_QUEUE34934'),
+						label: this.resources.queueChannelLabel,
 						name: "queueChannel",
 						sort: true
 					},
 					{
-						label: () => this.$t('TRAJETO_DA_QUEUE07185'),
+						label: this.resources.queuePathLabel,
 						name: "path",
 						sort: true
 					},
 					{
-						label: () => this.$t('ANO33022'),
+						label: computed(() => this.Resources[texts.yearLabel]),
 						name: "Qyear",
 						sort: true
 					},
 					{
-						label: () => this.$t('UNICODE63246'),
+						label: this.resources.unicodeLabel,
 						name: "Unicode",
 						sort: true
 					},
 					{
-						label: () => this.$t('USA_MSMQ18528'),
+						label: this.resources.usesMsmqLabel,
 						name: "UsesMsmq",
 						sort: true
 					},
 					{
-						label: () => this.$t('JOURNAL20931'),
+						label: this.resources.journalLabel,
 						name: "Journal",
 						sort: true
 					},
 					{
-						label: () => this.$t('TAMANHO_DO_BLOCO42316'),
+						label: this.resources.blockSizeLabel,
 						name: "Blocksize",
 						sort: true
 					}],
 					config: {
-						table_title: () => this.$t('LISTA_DE_MENSAGENS31887'),
+						table_title: this.resources.messageListTitle,
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
@@ -302,7 +308,7 @@
 					rows: [],
 					total_rows: 0,
 					columns: [{
-						label: () => this.$t('ACOES22599'),
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -311,24 +317,24 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => this.$t('QUEUE_ORIGEM31278'),
+						label: this.resources.sourceQueueLabel,
 						name: "source",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: () => this.$t('QUEUE_ACK30680'),
+						label: this.resources.ackQueueLabel,
 						name: "ackQueue",
 						sort: true
 					},
 					{
-						label: () => this.$t('TAMANHO_DO_BLOCO42316'),
+						label: this.resources.blockSizeLabel,
 						name: "Blocksize",
 						sort: true
 					}],
 					config: {
-						table_title: () => this.$t('CONFIGURACAO_DE_ACKS49550'),
+						table_title: this.resources.acksConfigTitle,
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
@@ -345,20 +351,20 @@
 					total_rows: 0,
 					columns: [
 						{
-							label: this.$t('RELATORIO62426'),
+							label: this.resources.reportLabel,
 							name: "Rep",
 							sort: true,
 							initial_sort: true,
 							initial_sort_order: "asc"
 						},
 						{
-							label: this.$t('LINGUAGEM43329'),
+							label: computed(() => this.Resources[texts.languageLabel]),
 							name: "Lang",
 							sort: true
 						}
 					],
 					config: {
-						table_title: this.$t('RELATORIOS_POR_LINGU35356'),
+						table_title: this.resources.reportsByLanguageTitle,
 						pagination : false,
 						global_search: {visibility : false},
 						highlight_row_hover: false,
@@ -373,7 +379,19 @@
             },
 			blockFormQueueACK() {
                 return this.dialogModeAck === 'delete';
-            }
+            },
+			hardcodedTexts() {
+				return {
+					edit: this.Resources[texts.edit],
+					delete: this.Resources[texts.delete],
+					insert: this.Resources[texts.insert],
+					erase: this.Resources[texts.erase],
+					save: this.Resources[texts.save],
+					cancel: this.Resources[texts.cancel],
+					yearLabel: this.Resources[texts.yearLabel],
+					languageLabel: this.Resources[texts.languageLabel],
+				}
+			}
         },
 		methods: {
 			clearQueueValues(){
@@ -411,13 +429,13 @@
 					this.showQueueModal('new');
 				});
 			},
-			getQueueButtons() {	
+			getQueueButtons() {
 				switch(this.dialogModeQueue) {
 					case 'delete':
 						this.buttons.push({
 							id: 'delete-btn',
 							props: {
-								label: this.Resources.APAGAR04097,
+								label: this.hardcodedTexts.erase,
 								variant: 'bold',
 								color: 'danger'
 							},
@@ -431,7 +449,7 @@
 						this.buttons.push({
 							id: 'save-btn',
 							props: {
-								label: this.Resources.GRAVAR45301,
+								label: this.hardcodedTexts.save,
 								variant: 'bold'
 							},
 							action: () => {
@@ -446,7 +464,7 @@
 				this.buttons.push({
 					id: 'cancel-btn',
 					props: {
-						label: this.Resources.CANCELAR49513
+						label: this.hardcodedTexts.cancel
 					},
 					action: () => this.clearQueueValues()
 				})
@@ -495,13 +513,13 @@
 					this.showAckModal('new');
 				});
 			},
-			getAckButtons() {	
+			getAckButtons() {
 				switch(this.dialogModeAck) {
 					case 'delete':
 						this.buttonsConfig.push({
 							id: 'delete-btn',
 							props: {
-								label: this.Resources.APAGAR04097,
+								label: this.hardcodedTexts.erase,
 								variant: 'bold',
 								color: 'danger'
 							},
@@ -515,7 +533,7 @@
 						this.buttonsConfig.push({
 							id: 'save-btn',
 							props: {
-								label: this.Resources.GRAVAR45301,
+								label: this.hardcodedTexts.save,
 								variant: 'bold'
 							},
 							action: () => {
@@ -530,7 +548,7 @@
 				this.buttonsConfig.push({
 					id: 'cancel-btn',
 					props: {
-						label: this.Resources.CANCELAR49513
+						label: this.hardcodedTexts.cancel
 					},
 					action: () => this.clearAckValues()
 				})

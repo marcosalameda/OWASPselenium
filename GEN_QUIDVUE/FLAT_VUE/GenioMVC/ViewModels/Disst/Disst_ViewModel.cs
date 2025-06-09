@@ -149,9 +149,8 @@ namespace GenioMVC.ViewModels.Disst
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Disst model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

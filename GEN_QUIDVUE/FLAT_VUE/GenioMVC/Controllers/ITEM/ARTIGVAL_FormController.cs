@@ -533,12 +533,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Item/Artigval_SaveEdit
 		[HttpPost]
-		public ActionResult Artigval_SaveEdit([FromBody]Artigval_ViewModel model)
+		public ActionResult Artigval_SaveEdit([FromBody] Artigval_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Artigval_SaveEdit",
 				ViewName = "Artigval",
@@ -554,6 +553,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class ArtigvalDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Artigval_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsArtigval([FromBody] ArtigvalDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

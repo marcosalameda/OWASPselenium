@@ -9,8 +9,8 @@ import { defineStore } from 'pinia'
 
 import _some from 'lodash-es/some'
 
+import { EventTracker } from '@/mixins/eventTracker.js'
 import { TraceEventType } from '@/mixins/tracingEvents.js'
-import { EventTracker  } from '@/mixins/eventTracker.js'
 
 //----------------------------------------------------------------
 // State variables

@@ -1,5 +1,5 @@
-﻿import { simpleFetch } from '@/api/network'
-import { setAppConfig } from '@/mixins/genericFunctions.js'
+﻿import { simpleFetch } from '@/api/network/apiClient'
+import { setAppConfig } from '@/utils/system'
 import { useSystemDataStore } from '@/stores/systemData.js'
 
 /**

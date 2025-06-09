@@ -70,7 +70,7 @@
 </template>
 
 <script>
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	import QTimelineSummary from './QTimelineSummary.vue'
 	import QTimelineItem from './QTimelineItem.vue'

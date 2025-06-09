@@ -1,6 +1,6 @@
-﻿import { useSystemDataStore } from '@/stores/systemData.js'
-import { useTracingDataStore } from '@/stores/tracingData.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
+﻿import { useSystemDataStore } from '@quidgest/clientapp/stores'
+import { useTracingDataStore } from '@quidgest/clientapp/stores'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 function getMenu(menuEntry)
 {

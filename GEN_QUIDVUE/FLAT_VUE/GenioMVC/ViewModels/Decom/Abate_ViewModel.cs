@@ -145,9 +145,8 @@ namespace GenioMVC.ViewModels.Decom
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Decom model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

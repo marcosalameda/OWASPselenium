@@ -602,12 +602,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Regio/Regia_on_SaveEdit
 		[HttpPost]
-		public ActionResult Regia_on_SaveEdit([FromBody]Regia_on_ViewModel model)
+		public ActionResult Regia_on_SaveEdit([FromBody] Regia_on_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regia_on_SaveEdit",
 				ViewName = "Regia_on",
@@ -623,6 +622,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class Regia_onDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Regia_on_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsRegia_on([FromBody] Regia_onDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

@@ -462,12 +462,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Feeca/Feeca_SaveEdit
 		[HttpPost]
-		public ActionResult Feeca_SaveEdit([FromBody]Feeca_ViewModel model)
+		public ActionResult Feeca_SaveEdit([FromBody] Feeca_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Feeca_SaveEdit",
 				ViewName = "Feeca",
@@ -483,6 +482,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class FeecaDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Feeca_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsFeeca([FromBody] FeecaDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

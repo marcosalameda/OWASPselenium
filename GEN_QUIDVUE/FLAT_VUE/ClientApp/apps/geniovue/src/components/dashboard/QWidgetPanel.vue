@@ -55,7 +55,7 @@
 </template>
 
 <script>
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {

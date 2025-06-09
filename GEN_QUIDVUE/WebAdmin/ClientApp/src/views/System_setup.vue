@@ -2,7 +2,7 @@
 	<div id="system_setup_container">
 		<div class="q-stack--column">
 			<h1 class="f-header__title">
-				{{ Resources.CONFIGURACAO_DO_SIST39343 }}
+				{{ hardcodedTexts.databaseLabel }}
 			</h1>
 		</div>
 		<hr />
@@ -13,7 +13,7 @@
             :type="alert.alertType"
             :text="alert.message"
             :icon="alert.icon"
-			:title="Resources.ESTADO_DA_OPERACAO38065"
+			:title="systemConfigTexts.estadoDaOperacao"
 			:dismissTime="4"
 			@message-dismissed="handleAlertDismissed" />
 
@@ -48,6 +48,8 @@
 	import system from './System_setup/System.vue';
 	import extra from './System_setup/Extra.vue';
 	import QAlert from '@/components/QAlert.vue';
+	import { texts } from '@/resources/hardcodedTexts.ts';
+	import { SystemConfigTexts } from '@/resources/viewResources.ts';
 
 	export default {
 		name: 'system_setup',
@@ -85,22 +87,25 @@
 							id: 'database-tab',
 							componentId: 'database',
 							name: 'database',
-							label: vm.$t('BASE_DE_DADOS58234'),
+							label: '',
 							disabled: false,
 							isVisible: true,
-							props: { model: computed(() => vm.Model) },
+							props: {
+								model: computed(() => vm.Model),
+								resources: computed(() => vm.systemConfigTexts)
+							},
 							events: { 'connection-tested': vm.handleConnectionTested, 'update-model': vm.setModel, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'datasystems-tab',
 							componentId: 'datasystems',
 							name: 'datasystems',
-							label: vm.$t('SISTEMAS_DE_DADOS45551'),
+							label: '',
 							disabled: false,
 							isVisible: true,
 							props: {
 								model: computed(() => vm.Model),
-								texts: computed(() => vm.Resources)
+								resources: computed(() => vm.systemConfigTexts)
 							},
 							events: { 'changeTab': vm.changeTab, 'alert-class': vm.updateAlert }
 						},
@@ -108,51 +113,56 @@
 							id: 'system-tab',
 							componentId: 'system',
 							name: 'system',
-							label: vm.$t('SISTEMA05814'),
+							label: '',
 							disabled: false,
 							isVisible: true,
-							props: { model: computed(() => vm.Model), Scheduler: computed(() => vm.Model?.Scheduler), TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList) },
+							props: {
+								model: computed(() => vm.Model),
+								Scheduler: computed(() => vm.Model?.Scheduler),
+								TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList),
+								resources: computed(() => vm.systemConfigTexts)
+							},
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'display-tab',
 							componentId: 'display',
 							name: 'display',
-							label: vm.$t('DEFINICOES_DO_ECRA09420'), 
+							label: '',
 							disabled: false,
 							isVisible: true,
-							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
+							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists), resources: computed(() => vm.systemConfigTexts) },
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'externalservices-tab',
 							componentId: 'externalservices',
 							name: 'externalservices',
-							label: vm.$t('IA_E_SERVICOS_EXTERN49145'),
+							label: '',
 							disabled: false,
 							isVisible: true,
-							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists) },
+							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists), resources: computed(() => vm.systemConfigTexts) },
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'integration-tab',
 							componentId: 'integration',
 							name: 'integration',
-							label: vm.$t('INTEGRACAO28978'),
+							label: '',
 							disabled: false,
 							isVisible: true,
 							props: { model: computed(() => vm.Model), Messaging: computed(() => vm.Model?.Messaging),
-								Metadata: computed(() => vm.Model?.MessagingMetadata), reloadMQueues: vm.reloadMQueues },
+								Metadata: computed(() => vm.Model?.MessagingMetadata), reloadMQueues: vm.reloadMQueues, resources: computed(() => vm.systemConfigTexts) },
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
 							id: 'extra-tab',
 							componentId: 'extra',
 							name: 'extra',
-							label: vm.$t('PROPRIEDADES_EXTRA18082'),
+							label: '',
 							disabled: false,
 							isVisible: true,
-							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
+							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists), resources: computed(() => vm.systemConfigTexts) },
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 					]
@@ -168,7 +178,16 @@
 			},
 			Cores() {
 				return this.currentApp && this.Model.Cores ? this.Model.Cores[this.currentApp] : null;
-			}
+			},
+			hardcodedTexts() {
+				return {
+					databaseLabel: this.Resources[texts.databaseLabel],
+					systemLabel: this.Resources[texts.systemLabel],
+				};
+			},
+			systemConfigTexts() {
+				return new SystemConfigTexts(this);
+			},
 		},
 		methods: {
 			fetchData() {
@@ -206,7 +225,7 @@
 							data.SelectLists.PropertyList[item].translatedHelpVerbose = computed(() => this.Resources[listProperties.TextHelpResourceVerboseId])
 						else
 							data.SelectLists.PropertyList[item].translatedHelpVerbose = undefined
-					}						
+					}
 				}
 
 				this.Model = { ...data };
@@ -256,9 +275,9 @@
 			},
 			handleConnectionTested(result) {
 				if (result.Success) {
-					this.setAlert('success', 'Connection success');
+					this.setAlert('success', this.hardcodedTexts.connectionSuccess);
 				} else {
-					this.setAlert('danger', result.message || 'Connection failed');
+					this.setAlert('danger', result.message || this.hardcodedTexts.connectionFailed);
 				}
 			},
 			setAlert(type, message) {
@@ -277,6 +296,14 @@
 			}
 		},
 		mounted() {
+			this.tabGroup.tabsList[0].label = this.hardcodedTexts.databaseLabel;
+			this.tabGroup.tabsList[1].label = this.systemConfigTexts.sistemasDeDados;
+			this.tabGroup.tabsList[2].label = this.hardcodedTexts.systemLabel;
+			this.tabGroup.tabsList[3].label = this.systemConfigTexts.definicoesDoEcra;
+			this.tabGroup.tabsList[4].label = this.systemConfigTexts.iaEServicosExternos;
+			this.tabGroup.tabsList[5].label = this.systemConfigTexts.integracao;
+			this.tabGroup.tabsList[6].label = this.systemConfigTexts.propriedadesExtra;
+
 			this.observer = new MutationObserver(mutations => {
 				for (const m of mutations) {
 					const newValue = m.target.getAttribute(m.attributeName);
@@ -304,7 +331,7 @@
 				},
 				deep: true
 			}
-			
+
 		}
 	};
 </script>

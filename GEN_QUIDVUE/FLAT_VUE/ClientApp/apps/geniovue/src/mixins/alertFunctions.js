@@ -1,6 +1,6 @@
 import isEmpty from 'lodash-es/isEmpty'
 
-import { useSystemDataStore } from '@/stores/systemData.js'
+import { systemInfo } from '@/systemInfo'
 
 /**
  * Retrieves app alert information based on the provided ID.
@@ -10,9 +10,7 @@ import { useSystemDataStore } from '@/stores/systemData.js'
  */
 export function getAppAlert(id)
 {
-	const systemDataStore = useSystemDataStore()
-
-	const appAlert = systemDataStore.appAlerts.find((alert) => alert.id === id)
+	const appAlert = systemInfo.appAlerts.find((alert) => alert.id === id)
 
 	if (isEmpty(appAlert.module))
 		return undefined

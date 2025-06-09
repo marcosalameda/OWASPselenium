@@ -167,9 +167,8 @@ namespace GenioMVC.ViewModels.Assma
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Assma model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

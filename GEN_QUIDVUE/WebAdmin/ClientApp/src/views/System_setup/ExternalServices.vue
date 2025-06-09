@@ -3,34 +3,36 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="Resources.CONFIGURACOES_DE_INT56161"
+				:title="resources.integrationSettingsAI"
 				width="block">
 				<q-row-container>
 					<q-text-field
 						v-model="model.UrlAPIBackend"
-						:label="Resources.URL_DO_BACKEND_DA_AP53038">
+						:label="resources.urlAPIBackendLabel">
 						<template #extras>
 							<div class="q-field__extras">
 								<q-icon icon="information-outline" />
-								{{ Resources.DEVERA_COLOCAR_O_END10058 }}
+								{{ resources.urlAPIBackendInfo }}
 							</div>
 						</template>
-					</q-text-field>						
+					</q-text-field>
 				</q-row-container>
 			</q-card>
 		</row>
 		<elasticsearch
             :model="model"
+			:resources="resources"
 			:Cores="Cores"
 			:SelectLists="SelectLists"
             @alert-class="forwardAlert" />
         <reports
             :model="model"
+			:resources="resources"
             @alert-class="forwardAlert" />
 		<row class="footer-btn">
 			<q-button
 				variant="bold"
-				:label="Resources.GRAVAR_CONFIGURACAO36308"
+				:label="resources.saveConfigurationButton"
 				@click="saveConfigOthers" />
 		</row>
 	</div>
@@ -42,6 +44,7 @@
 	import { QUtils } from '@/utils/mainUtils';
 	import elasticsearch from './Elasticsearch';
 	import reports from './Reports';
+	import { texts } from '@/resources/hardcodedTexts.ts';
 
 	export default {
 		name: 'externalservices',
@@ -55,6 +58,10 @@
 			},
 			SelectLists: {
 				required: true
+			},
+			resources: {
+				type: Object,
+				required: true
 			}
 		},
 
@@ -62,13 +69,22 @@
 
 		emits: ['update-model', 'alert-class'],
 
+		computed: {
+
+			hardcodedTexts() {
+				return {
+					changesSavedSuccess: this.Resources[texts.changesSavedSuccess]
+				}
+			}
+		},
+
 		methods: {
 			saveConfigOthers() {
 				QUtils.log("SaveConfigOthers - Request", QUtils.apiActionURL('Config', 'SaveConfigOthers'));
 				QUtils.postData('Config', 'SaveConfigOthers', this.model, null, (data) => {
 					QUtils.log("SaveConfigOthers - Response", data);
 						this.$emit('alert-class', {
-						ResultMsg: data.Success ? this.Resources.ALTERACOES_EFETUADAS10166 : data.Message,
+						ResultMsg: data.Success ? this.hardcodedTexts.changesSavedSuccess : data.Message,
 						AlertType: data.Success ? 'success' : 'danger'
 					});
 				});

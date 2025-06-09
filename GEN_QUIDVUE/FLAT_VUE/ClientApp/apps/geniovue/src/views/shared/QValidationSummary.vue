@@ -13,11 +13,11 @@
 				</div>
 			</li>
 		</ul>
-	</div>       
+	</div>
 </template>
 
 <script>
-	import { scrollToTop } from '@/mixins/genericFunctions.js'
+	import { scrollToTop } from '@quidgest/clientapp/utils/genericFunctions'
 
 	export default {
 		name: 'QValidationSummary',
@@ -76,13 +76,13 @@
 			wrapperClasses() {
 				const classes = ['validation-summary']
 
-				if (this.type === "error") 
+				if (this.type === "error")
 					classes.push('validation-summary-errors')
-				
-				else if (this.type === "warning") 
+
+				else if (this.type === "warning")
 					classes.push('validation-summary-warnings')
 
-				else if (this.type === "info") 
+				else if (this.type === "info")
 					classes.push('validation-summary-info')
 
 				return classes
@@ -92,14 +92,14 @@
 			 * Computes the icon to show based on the props and type
 			 */
 			iconToDisplay() {
-				if (this.icon) 
+				if (this.icon)
 					return this.icon
 
-				else if (this.type === 'info') 
+				else if (this.type === 'info')
 					return 'information'
-				
+
 				return 'error'
-				
+
 			}
 		},
 

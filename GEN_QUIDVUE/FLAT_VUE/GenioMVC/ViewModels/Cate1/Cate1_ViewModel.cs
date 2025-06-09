@@ -145,9 +145,8 @@ namespace GenioMVC.ViewModels.Cate1
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Cate1 model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

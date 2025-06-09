@@ -15,7 +15,7 @@
 		</span>
 
 		<span
-			v-if="!isEmpty(breadcrumb.humanKey) && layoutConfig.BreadcrumbsContent === 'detailed'"
+			v-if="!isEmpty(breadcrumb.humanKey) && $app.layout.BreadcrumbsContent === 'detailed'"
 			class="n-breadcrumb__text">
 			> <b>{{ breadcrumb.humanKey }}</b>
 		</span>

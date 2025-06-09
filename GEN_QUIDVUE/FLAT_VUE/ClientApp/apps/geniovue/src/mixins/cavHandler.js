@@ -1,6 +1,6 @@
 ﻿import { mapState, mapActions } from 'pinia'
 
-import { useGenericDataStore } from '@/stores/genericData.js'
+import { useGenericDataStore } from '@quidgest/clientapp/stores'
 
 export default {
 	data()

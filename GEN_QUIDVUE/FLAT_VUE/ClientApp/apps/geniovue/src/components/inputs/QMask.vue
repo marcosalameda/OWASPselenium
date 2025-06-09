@@ -22,7 +22,7 @@
 	import _isEmpty from 'lodash-es/isEmpty'
 	import _assignIn from 'lodash-es/assignIn'
 
-	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
+	import { inputSize } from '@quidgest/clientapp/constants/enums'
 
 	export default {
 		name: 'QMask',

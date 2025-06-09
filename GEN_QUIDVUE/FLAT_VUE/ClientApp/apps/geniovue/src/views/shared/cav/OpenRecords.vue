@@ -38,9 +38,9 @@
 	import { computed } from 'vue'
 	import { mapActions } from 'pinia'
 
-	import { useGenericDataStore } from '@/stores/genericData.js'
-	import { removeModal } from '@/mixins/genericFunctions.js'
-	import { fetchData } from '@/api/network'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
+	import { removeModal } from '@/utils/layout'
+	import { fetchData } from '@quidgest/clientapp/network'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	export default {

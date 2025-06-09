@@ -13,7 +13,7 @@
 			class="nav-icon n-sidebar__icon q-icon section-header-icon icon-custom">
 			<img
 				height="14"
-				:src="`${system.resourcesPath}${menu.ImageVUE}?v=${genio.buildVersion}`" />
+				:src="`${$app.resourcesPath}${menu.ImageVUE}?v=${$app.genio.buildVersion}`" />
 		</i>
 		<i
 			v-else-if="menu.Font"

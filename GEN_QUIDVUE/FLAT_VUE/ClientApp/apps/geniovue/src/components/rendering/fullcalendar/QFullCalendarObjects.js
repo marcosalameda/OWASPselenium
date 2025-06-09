@@ -6,7 +6,7 @@ import _isUndefined from 'lodash-es/isUndefined'
 import _omitBy from 'lodash-es/omitBy'
 import _unionBy from 'lodash-es/unionBy'
 
-import genericFunctions from '@/mixins/genericFunctions.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 /**
  * Event class for FullCalendar v5.

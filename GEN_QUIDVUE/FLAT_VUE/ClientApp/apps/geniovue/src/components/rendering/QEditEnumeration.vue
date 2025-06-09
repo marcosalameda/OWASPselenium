@@ -24,8 +24,8 @@
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
-	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import { inputSize } from '@quidgest/clientapp/constants/enums'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 
 	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'
 	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'

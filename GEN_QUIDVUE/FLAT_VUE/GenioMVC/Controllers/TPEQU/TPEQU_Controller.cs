@@ -32,13 +32,11 @@ namespace GenioMVC.Controllers
 {
 	public partial class TpequController : ControllerBase
 	{
-
 		private IChatbotService _aiService;
-		public TpequController(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		public TpequController(UserContextService userContext, IChatbotService aiService) : base(userContext)
 		{
 			_aiService = aiService;
 		}
-
 
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION TPEQU]/
 
@@ -224,6 +222,30 @@ namespace GenioMVC.Controllers
 
 
 
+		// POST: /Tpequ/TPEQU_UPDATE_FORMULAS_TriggerCondition
+		[HttpPost]
+		public JsonResult TPEQU_UPDATE_FORMULAS_TriggerCondition([FromBody] ViewModels.Tpequ.Tpequ_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Tpequ(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: isEmptyC([TPEQU->TIPOEQUI]) && HasRole("A")
+				var result = (((string)p.ValTipoequi) == "")&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
 
 
 		/// <summary>
@@ -269,6 +291,66 @@ namespace GenioMVC.Controllers
 			}
 
 			return Json(new { Success = false, Message = "Error" });
+		}
+
+		/// <summary>
+		/// Gets the necessary tickets to interact with the given document
+		/// </summary>
+		/// <param name="requestModel">The request model with the table, field and the primary key of the record</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult GetDocumsTickets([FromBody] RequestDocumGetTicketsModel requestModel)
+		{
+			return base.GetDocumsTickets("TPEQU", requestModel.FieldName, requestModel.KeyValue);
+		}
+
+		/// <summary>
+		/// Gets the versions of the specified document
+		/// </summary>
+		/// <param name="requestModel">The request model with the ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult GetFileVersions([FromBody] RequestDocumGetModel requestModel)
+		{
+			return base.GetFileVersions(requestModel.Ticket);
+		}
+
+		/// <summary>
+		/// Gets the properties of the specified document
+		/// </summary>
+		/// <param name="requestModel">The request model with the ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult GetFileProperties([FromBody] RequestDocumGetModel requestModel)
+		{
+			return base.GetFileProperties(requestModel.Ticket);
+		}
+
+		/// <summary>
+		/// Gets the binary file associated to the specified document
+		/// </summary>
+		/// <param name="requestModel">The request model with the ticket and view type</param>
+		/// <returns>A File object with the content of the document</returns>
+		public ActionResult GetFile([FromBody] RequestDocumGetModel requestModel)
+		{
+			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
+		}
+
+		/// <summary>
+		/// Stores a new document in the Docums table
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFile([FromForm] RequestDocumsCreateModel requestModel)
+		{
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version);
+		}
+
+		/// <summary>
+		/// Changes the state/properties of a given document
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of changes</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFilesState([FromBody] RequestDocumsChangeModel requestModel)
+		{
+			return base.SetFilesState(requestModel.Documents);
 		}
 	}
 }

@@ -1,14 +1,13 @@
-﻿import { computed, reactive } from 'vue'
-import _isEmpty from 'lodash-es/isEmpty'
+﻿import { forceDownload } from '@quidgest/clientapp/network'
 import domToImage from 'dom-to-image'
+import _isEmpty from 'lodash-es/isEmpty'
+import { computed, reactive } from 'vue'
 
-import { forceDownload } from '@/api/network'
-import { geographicDisplay, validateCoordinate } from '@/utils/geography.js'
 import { GeographicShapeColumn } from '@/mixins/listColumnTypes.js'
+import { systemInfo } from '@/systemInfo'
+import { geographicDisplay, validateCoordinate } from '@quidgest/clientapp/utils/geography'
 import CustomControl from './baseControl.js'
 import MapResources from './resources/mapResources.js'
-
-import { useSystemDataStore } from '@/stores/systemData.js'
 
 /**
  * Map control
@@ -42,11 +41,9 @@ export default class MapControl extends CustomControl
 	 */
 	getProps(viewMode)
 	{
-		const systemDataStore = useSystemDataStore()
 		const isTable = this.controlContext.type === 'TableSpecialRendering'
 		const mappedValues = viewMode.mappedValues
 
-		const resourcesPath = systemDataStore.system.resourcesPath
 		const isDrawableMap = this.controlContext.isGeographicShape ?? false
 		const isEuclideanCoord = (
 			isTable && mappedValues?.length > 0 && mappedValues[0].geographicData?.length > 0
@@ -86,7 +83,7 @@ export default class MapControl extends CustomControl
 			overlays: this.customProperties.overlays,
 			customFunctions: this.customProperties.customFunctions,
 			tokens,
-			resourcesPath
+			resourcesPath: systemInfo.resourcesPath
 		}
 	}
 

@@ -2,6 +2,16 @@
 
 // Controls
 @import './controls/q-list-editor.scss';
+@import './controls/multiselect.scss';
+@import './controls/meter.scss';
+
+// Controls - Table
+@import './controls/table/q-table.scss';
+@import './controls/table/q-table-filters.scss';
+@import './controls/table/q-table-filters-multiselect.scss';
+
+// D3 Graphs
+@import './plugins/d3-graphs.scss';
 
 .textRight {
     text-align: right;
@@ -32,7 +42,6 @@
 
 .i-text,
 .i-image,
-.i-dbedit,
 .i-date-picker,
 .i-radio__control {
     margin-right: 0.25rem;
@@ -43,18 +52,6 @@
 
 hr{
     margin: .75rem 0 1rem 0;
-}
-
-input[type="text"].multiselect__input, input[type="text"].multiselect__single {
-    border: none;
-}
-
-td > div > .multiselect__tags {
-    border: none;
-}
-
-.multiselect__tags:hover {
-    cursor: pointer;
 }
 
 .assigned > td {

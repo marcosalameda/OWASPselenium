@@ -2,15 +2,16 @@
 import { mapState, mapActions } from 'pinia'
 import _isEmpty from 'lodash-es/isEmpty'
 
-import { useGenericDataStore } from '@/stores/genericData.js'
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { useUserDataStore } from '@/stores/userData.js'
+import { useGenericDataStore } from '@quidgest/clientapp/stores'
+import { useSystemDataStore } from '@quidgest/clientapp/stores'
+import { useUserDataStore } from '@quidgest/clientapp/stores'
 
-import netAPI from '@/api/network'
-import { QEventEmitter } from '@/api/global/eventBus.js'
+import netAPI from '@quidgest/clientapp/network'
+import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
 import { logOff } from '@/utils/user.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 import hardcodedTexts from '@/hardcodedTexts.js'
+import { removeModal } from '@/utils/layout'
 
 import VueNavigation from '@/mixins/vueNavigation.js'
 import NavHandlers from '@/mixins/navHandlers.js'
@@ -134,7 +135,7 @@ export default {
 			'addPHEChoice'
 		]),
 
-		removeModal: genericFunctions.removeModal,
+		removeModal,
 
 		isEmpty: genericFunctions.isEmpty,
 

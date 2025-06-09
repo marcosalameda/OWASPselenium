@@ -1,4 +1,4 @@
-﻿import { useSystemDataStore } from '@/stores/systemData.js'
+﻿import { useSystemDataStore } from '@quidgest/clientapp/stores'
 
 export default function getMainRoutes()
 {

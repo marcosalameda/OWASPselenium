@@ -49,23 +49,25 @@
 
 <script>
 	/* eslint-disable no-unused-vars */
+	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import netAPI from '@quidgest/clientapp/network'
+	import openQSign from '@quidgest/clientapp/plugins/qSign'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import { computed, readonly } from 'vue'
 
 	import MenuHandlers from '@/mixins/menuHandlers.js'
 	import controlClass from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
 	import hardcodedTexts from '@/hardcodedTexts'
-	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_1311ViewModel.js'
@@ -428,7 +430,7 @@
 								defaultValue: '1'
 							},
 						],
-						globalEvents: ['changed-LENDI', 'changed-EQUIP', 'changed-PESS2', 'changed-PESS1'],
+						globalEvents: ['changed-EQUIP', 'changed-PESS2', 'changed-PESS1', 'changed-LENDI'],
 						uuid: '7c5b168c-36e1-428a-b409-4b372e706c23',
 						allSelectedRows: 'false',
 						headerLevel: 1,

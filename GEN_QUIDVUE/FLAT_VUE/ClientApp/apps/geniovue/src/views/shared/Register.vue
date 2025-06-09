@@ -78,16 +78,16 @@
 	import _assignIn from 'lodash-es/assignIn'
 	import _forEach from 'lodash-es/forEach'
 	import _isEmpty from 'lodash-es/isEmpty'
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import { useGenericDataStore } from '@/stores/genericData.js'
-	import { messageTypes } from '@/mixins/quidgest.mainEnums.js'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
+	import { messageTypes } from '@quidgest/clientapp/constants/enums'
 	import NavHandlers from '@/mixins/navHandlers.js'
 	import VueNavigation from '@/mixins/vueNavigation.js'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
-	import ViewModelBase from '@/mixins/formViewModelBase.js'
+	import FormViewModelBase from '@/mixins/formViewModelBase.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	export default {
@@ -144,8 +144,8 @@
 
 				// It is not possible to use the model initially received because it has some fields that cannot be mapped on the server side.
 				modelToSend: {
-					FormPswData: new ViewModelBase(this),
-					FormData: new ViewModelBase(this)
+					FormPswData: new FormViewModelBase(this),
+					FormData: new FormViewModelBase(this)
 				},
 
 				controls: {
@@ -197,7 +197,7 @@
 		},
 
 		computed: {
-			...mapState(useSystemDataStore, ['userRegistration', 'system']),
+			...mapState(useSystemDataStore, ['system']),
 
 			formsOrdered()
 			{
@@ -350,7 +350,7 @@
 				_assignIn(this.model, modelValue)
 
 				const id = this.$route.params.id
-				const registrationType = this.userRegistration.registrationTypes.find(x => x.id === id)
+				const registrationType = this.$app.userRegistration.registrationTypes.find(x => x.id === id)
 
 				this.controls.secondForm.supportForm = {
 					name: this.model.partialViewJS,
@@ -408,7 +408,7 @@
 			fetchData()
 			{
 				const id = this.$route.params.id
-				const registrationType = this.userRegistration.registrationTypes.find((x) => x.id === id)
+				const registrationType = this.$app.userRegistration.registrationTypes.find((x) => x.id === id)
 
 				const params = {
 					Form: registrationType.form,

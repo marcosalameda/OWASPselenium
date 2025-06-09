@@ -38,9 +38,9 @@
 </template>
 
 <script>
-	import { useNavDataStore } from '@/stores/navData.js'
+	import { useNavDataStore } from '@quidgest/clientapp/stores'
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import { formModes, breadcrumbTypes } from '@/mixins/quidgest.mainEnums.js'
+	import { formModes, breadcrumbTypes } from '@quidgest/clientapp/constants/enums'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 
 	import BreadcrumbsContent from '@/views/shared/BreadcrumbsContent.vue'
@@ -82,7 +82,7 @@
 			 */
 			hasBreadcrumbs()
 			{
-				return this.isVisible && this.layoutConfig.BreadcrumbsContent !== 'hidden' && this.breadcrumbsData.length > 1
+				return this.isVisible && this.$app.layout.BreadcrumbsContent !== 'hidden' && this.breadcrumbsData.length > 1
 			},
 
 			/**

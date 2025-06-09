@@ -35,7 +35,7 @@
   <ItemGroup>
     <ProjectReference Include="..\GenioServer\GenioServer.csproj" />
     <ProjectReference Include="..\CSGenio.reporting\CSGenio.reporting.csproj" />
-    <ProjectReference Include="..\ClientApp\ClientApp.esproj">
+    <ProjectReference Include="..\ClientApp\ClientApp.esproj" Condition="'$(SkipClientApp)'!='true'">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

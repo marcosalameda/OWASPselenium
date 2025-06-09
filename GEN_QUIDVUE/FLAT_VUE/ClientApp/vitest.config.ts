@@ -8,6 +8,7 @@ export default defineConfig({
 			exclude: ['dist/', 'storybook-static/', ...coverageConfigDefaults.exclude]
 		},
 		outputFile: 'coverage/junit.xml',
-		reporters: ['default', 'junit']
+		reporters: ['default', 'junit'],
+		projects: ['apps/*', 'packages/*']
 	}
 })

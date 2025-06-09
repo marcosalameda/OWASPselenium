@@ -53,7 +53,8 @@
 					v-slot="scopeFromQWidget"
 					v-bind="widget.customProps"
 					@delete-widget="deleteWidget(widget.uuid)"
-					@record-change="onRecordChange(widget.uuid, $event)">
+					@record-change="onRecordChange(widget.uuid, $event)"
+					@fetch-data="onFetchData(widget.uuid)">
 					<component
 						:is="widget.component"
 						v-bind="scopeFromQWidget"
@@ -103,7 +104,7 @@
 	import _forEach from 'lodash-es/forEach'
 	import { defineAsyncComponent, ref } from 'vue'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	import QWidgetPanel from './QWidgetPanel.vue'
 	import QWidget from './widgets/QWidget.vue'
@@ -532,6 +533,19 @@
 					widget.Rowkey = rowKey
 
 				this.isDirty = true
+			},
+
+			/**
+			 * Handles the fetch data event for a widget.
+			 * @param {string} uuid - The UUID of the widget.
+			 */
+			onFetchData(uuid) {
+				const widget = this.getWidget(uuid)
+
+				if (widget) {
+					widget.data = null
+					this.$emit('fetch-data', widget)
+				}
 			},
 
 			/**

@@ -1,4 +1,4 @@
-﻿import netAPI from '@/api/network'
+﻿import { postData } from '@/api/network/apiClient'
 import { WarningEvent, ErrorEvent } from './tracingEvents'
 
 export class TelemetryHandler
@@ -78,7 +78,7 @@ export class TelemetryHandler
 
 		try
 		{
-			await netAPI.postData(
+			await postData(
 				'InternalProcess',
 				'RegisterTelemetry',
 				{ events: eventsToSend },
@@ -86,8 +86,7 @@ export class TelemetryHandler
 					// eslint-disable-next-line no-console
 					console.log('Batch sent successfully:', data)
 				},
-				undefined,
-				{ skipTracing: true })
+				undefined)
 		}
 		catch (error)
 		{

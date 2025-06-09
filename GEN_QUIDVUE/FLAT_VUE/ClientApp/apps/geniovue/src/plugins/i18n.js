@@ -1,21 +1,20 @@
-﻿import { createI18n } from 'vue-i18n'
-import _forEach from 'lodash-es/forEach'
+﻿import _forEach from 'lodash-es/forEach'
+import { createI18n } from 'vue-i18n'
 
-import { useSystemDataStore } from '@/stores/systemData.js'
-import eventBus from '@/api/global/eventBus.js'
-import axios from '@/api/network/axiosInstance.js'
+import { axiosInstance } from '@quidgest/clientapp/network'
+import eventBus from '@quidgest/clientapp/plugins/eventBus'
+
+import { systemInfo } from '@/systemInfo'
 
 export function setupI18n(options)
 {
 	if (typeof options !== 'object')
 	{
-		const systemDataStore = useSystemDataStore()
-
 		options = {
 			globalInjection: true,
 			legacy: false,
-			locale: systemDataStore.system.defaultLang, // Set locale
-			fallbackLocale: systemDataStore.system.defaultLang // Set fallback locale
+			locale: systemInfo.locale.defaultLocale, // Set locale
+			fallbackLocale: systemInfo.locale.defaultLocale // Set fallback locale
 		}
 	}
 
@@ -96,8 +95,6 @@ export function loadResources(vm, resourcesIds)
 	const i18n = vm.$__i18n,
 		locale = i18n.global.locale.value
 
-	const systemDataStore = useSystemDataStore()
-
 	let promises = []
 
 	_forEach(resourcesIds, (resourceId) => {
@@ -108,9 +105,9 @@ export function loadResources(vm, resourcesIds)
 			_alreadyLoadedResources.push(resourceName)
 
 			promises.push(new Promise((resolve) => {
-				const version = systemDataStore.genio.buildVersion
+				const version = systemInfo.genio.buildVersion
 
-				axios.axiosInstance.get(`translations/resources.${resourceName}.json?v=${version}`)
+				axiosInstance.get(`translations/resources.${resourceName}.json?v=${version}`)
 					.then(
 						(response) => {
 							// When the file is not found it receives HTML

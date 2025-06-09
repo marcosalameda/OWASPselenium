@@ -198,32 +198,6 @@ namespace GenioMVC.Models
 		public string Fldname { get; set; } = string.Empty;
 	}
 
-	public class RequestDocumGetTicketsModel
-	{
-		public string TableName { get; set; } = string.Empty;
-		public string FieldName { get; set; } = string.Empty;
-		public string KeyValue { get; set; } = string.Empty;
-	}
-
-	public class RequestDocumGetModel
-	{
-		public string? Ticket { get; set; }
-		public DocumentViewTypeMode ViewType { get; set; } = DocumentViewTypeMode.Print;
-	}
-
-	public class RequestDocumChangeModel : RequestDocumGetModel
-	{
-		public Controllers.ControllerBase.VersionDeleteAction DeleteType { get; set; } = Controllers.ControllerBase.VersionDeleteAction.All;
-		public bool Delete { get; set; }
-		public bool Editing { get; set; }
-		public string CurrentVersion { get; set; }
-	}
-
-	public class RequestDocumsChangeModel
-	{
-		public List<RequestDocumChangeModel> Documents { get; set; }
-	}
-
 	public class RequestWidgetModel
 	{
 		public WidgetType WidgetType { get; set; }
@@ -296,5 +270,13 @@ namespace GenioMVC.Models
 	public class TelemetryEvents
 	{
 		public List<TelemetryEvent> Events { get; set; }
+	}
+
+	public class DocumTicketProperties
+	{
+		public string Username { get; set; }
+		public string Location { get; set; }
+		public Resource Resource { get; set; }
+		public bool IsWritable { get; set; }
 	}
 }

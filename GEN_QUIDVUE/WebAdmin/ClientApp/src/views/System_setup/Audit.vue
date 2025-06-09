@@ -3,20 +3,20 @@
         <q-card
             width="block"
             class="q-card--admin-default"
-            :title="Resources.AUDITORIA29703">
+            :title="resources.auditTitle">
             <q-row-container>
                 <q-checkbox
                     v-model="model.RegistLoginOut"
-                    :label="Resources.AUDITORIA_DE_LOGIN_D00905" />
+                    :label="resources.auditLoginLabel" />
                 <q-checkbox
                     v-model="model.RegistActions"
-                    :label="Resources.AUDITORIA_DE_ACOES_D42106" />
+                    :label="resources.auditActionsLabel" />
                 <q-checkbox
                     v-model="model.AuditInterface"
-                    :label="Resources.AUDITORIA_DO_SISTEMA08460" />
+                    :label="resources.auditSystemLabel" />
                 <q-checkbox
                     v-model="model.EventTracking"
-                    :label="Resources.REGISTO_DE_EVENTOS65341" />
+                    :label="resources.eventTrackingLabel" />
             </q-row-container>
         </q-card>
     </row>
@@ -36,7 +36,11 @@
         props: {
 			model: {
 				required: true
+			},
+			resources: {
+				type: Object,
+				required: true
 			}
-		}
+		},
     }
 </script>

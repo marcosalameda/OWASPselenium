@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ControlQueryDefinitionSurrogate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Distinct>false</Distinct>
+  <SelectFields>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>wareh</TableAlias><ColumnName>codwareh</ColumnName></Column>
+      <Alias>wareh.codwareh</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>wareh</TableAlias><ColumnName>warehdes</ColumnName></Column>
+      <Alias>wareh.warehdes</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>wareh</TableAlias><ColumnName>warehcod</ColumnName></Column>
+      <Alias>wareh.warehcod</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>wareh</TableAlias><ColumnName>activity</ColumnName></Column>
+      <Alias>wareh.activity</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>wareh</TableAlias><ColumnName>showreco</ColumnName></Column>
+      <Alias>wareh.showreco</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>wareh</TableAlias><ColumnName>num_employee</ColumnName></Column>
+      <Alias>wareh.num_employee</Alias>
+    </SelectFieldSurrogate>
+  </SelectFields>
+  <FromTable>
+	  <TableName>gqtwareh</TableName>
+    <TableAlias>wareh</TableAlias>
+    <SchemaName>gqt</SchemaName>
+  </FromTable>
+  <Joins>
+  </Joins>
+  <WhereConditions><Operation>And</Operation><Criterias><CriteriaSurrogate><Operation>Equal</Operation><LeftColumn><TableAlias>wareh</TableAlias><ColumnName>zzState</ColumnName></LeftColumn><RightValue xsi:type="xsd:int">0</RightValue></CriteriaSurrogate></Criterias><SubSets /></WhereConditions>
+</ControlQueryDefinitionSurrogate>

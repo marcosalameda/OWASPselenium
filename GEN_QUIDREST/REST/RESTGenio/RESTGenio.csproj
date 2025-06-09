@@ -1,0 +1,48 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	<GenerateDocumentationFile>true</GenerateDocumentationFile>
+	<NoWarn>$(NoWarn);1591;NU1701</NoWarn>
+	<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+  	<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+  	<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  	<GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+  	<GenerateAssemblyTitleAttribute>false</GenerateAssemblyTitleAttribute>
+  	<GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.11" />
+    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.2.3" />
+    <PackageReference Include="Swashbuckle.AspNetCore.Annotations" Version="6.3.1" />
+    <PackageReference Include="System.ServiceModel.Web" Version="1.0.0" />
+	
+  </ItemGroup>
+
+  <ItemGroup>
+  
+  </ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\Quidgest.Persistence\Quidgest.Persistence.csproj">
+			<Project>{A2AEB65C-1B92-4756-99BB-CD7ED88024D8}</Project>
+			<Name>Quidgest.Persistence</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\CSGenio.core\CSGenio.core.csproj">
+			<Project>{5207bd41-ba8a-497b-8bff-a7b51a339138}</Project>
+			<Name>CSGenio.core</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\CSGenio.framework\CSGenio.framework.csproj">
+			<Project>{831883c9-c9a9-44d8-aa04-25d276b0772a}</Project>
+			<Name>CSGenio.framework</Name>
+		</ProjectReference>
+		<ProjectReference Include="..\GenioServer\GenioServer.csproj">
+			<Project>{BD00DFF9-9C9D-4002-A8FD-F273F34A0AC8}</Project>
+			<Name>GenioServer</Name>
+		</ProjectReference>
+	</ItemGroup>
+	
+</Project>

@@ -245,6 +245,33 @@ namespace CSGenio.business.Triggers
 	}
 
 	/// <summary>
+	/// Trigger UPDATE_FORMULAS
+	/// </summary>
+	/// <seealso cref="CSGenio.business.Trigger" />
+	public class TriggerUpdateFormulas : Trigger
+	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TriggerUpdateFormulas" /> class.
+		/// </summary>
+		/// <param name="context">The context.</param>
+		public TriggerUpdateFormulas(TriggerContext context) : base(context)
+		{
+			_id = "UPDATE_FORMULAS";
+
+			List<ByAreaArguments> argumentsListByArea;
+
+			argumentsListByArea = new List<ByAreaArguments>();
+			argumentsListByArea.Add(new ByAreaArguments(new string[] {"tipoequi"}, new int[] {0}, "tpequ", "codtpequ"));
+			context.Condition = new ConditionFormula(argumentsListByArea, 1, delegate(object[] args, User user, string module, PersistentSupport sp) {
+				return (((string)args[0]) == "")&&GlobalFunctions.HasRole(user,"A");
+			});
+
+			// Actions
+			AddAction(1, new RecalcTableAction(context, "pesso"));
+		}
+	}
+
+	/// <summary>
 	/// Trigger TEST1
 	/// </summary>
 	/// <seealso cref="CSGenio.business.Trigger" />

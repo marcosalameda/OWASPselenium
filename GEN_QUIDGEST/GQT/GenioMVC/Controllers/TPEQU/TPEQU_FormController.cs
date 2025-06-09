@@ -1196,5 +1196,78 @@ GetCarga_unico(model.ValCodtpequ);
 
 			return GenericHandlePostFormApply(eventSink, model);
 		}
+
+		/// <summary>
+		/// Server-side component of action #1 (RECALC) of trigger UPDATE_FORMULAS
+		/// Button ${field.Ajcampo.ToUpper()}
+		/// </summary>
+		/// <param name="data">The client-side context of the trigger.</param>
+		/// <returns>
+		/// Success message
+		/// </returns>
+		[AuthorizeForUsers]
+		public ActionResult Tpequ_BT_${field.Ajcampo.ToUpper()}_UPDATE_FORMULAS_1(string key, Tpequ_ViewModel vm)
+		{
+			User user = UserContext.Current.User;
+			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+
+			try 
+			{
+				var model = Models.Tpequ.Find(key, "F${field.Form.ToUpper()}");
+				vm.MapToModel(model);
+				// Context
+				var context = new CSGenio.business.Triggers.TriggerContext()
+				{
+					Area = model.klass,
+					PersistentSupport = sp,
+					User = user,
+				};
+
+				// Should open a local transaction
+				// if the context did not provide an open transaction.
+				bool openLocalTransaction = sp.TransactionIsClosed;
+
+				// Should keep the connection alive
+				// if the context provided an open connection but not an open transaction.
+				bool keepConnectionAlive = !sp.ConnectionIsClosed && sp.TransactionIsClosed;
+
+				if (openLocalTransaction)
+					sp.openTransaction();
+
+				// Trigger UPDATE_FORMULAS
+				CSGenio.business.Triggers.ITrigger trigger_UPDATE_FORMULAS = new CSGenio.business.Triggers.TriggerUpdateFormulas(context);
+				CSGenio.business.Triggers.IAction action = trigger_UPDATE_FORMULAS.GetAction(1);
+				trigger_UPDATE_FORMULAS.ExecuteAction(action);
+
+				// If a local transaction was opened, it should also be closed.
+				if (openLocalTransaction)
+				{
+					sp.closeTransaction();
+
+					// Reopen the connection if it needs to be kept alive.
+					if (keepConnectionAlive)
+						sp.openConnection();
+				}
+			}
+			catch(Exception)
+			{
+				sp.rollbackTransaction();
+				return Json(
+					new {
+						success = "E",
+						message = Resources.Resources.PEDIMOS_DESCULPA__OC63848
+					},
+                    JsonRequestBehavior.AllowGet
+				);
+			}
+
+			return Json(
+				new {
+					success = "OK",
+					message = Resources.Resources.A_OPERACAO_FOI_CONCL36721
+				},
+				JsonRequestBehavior.AllowGet
+			);
+		}
 	}
 }

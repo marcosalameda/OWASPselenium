@@ -240,6 +240,29 @@ namespace GenioMVC.Controllers
 
         #region Recalculate Formulas (server side)
 
+		// POST: /Tpequ/TPEQU_UPDATE_FORMULAS_TriggerCondition
+		[HttpPost]
+		[AuthorizeForUsers]
+		public JsonResult TPEQU_UPDATE_FORMULAS_TriggerCondition(Tpequ_ViewModel form_data)
+		{
+			try
+			{
+				// Create a model from form data only to avoid database queries
+				var p = new Models.Tpequ();
+
+				// Map client-side form data into the model
+				form_data.MapToModel(p);
+
+				// Formula: isEmptyC([TPEQU->TIPOEQUI]) && HasRole("A")
+				var result = (((string)p.ValTipoequi) == "")&&CSGenio.business.GlobalFunctions.HasRole(GenioMVC.Models.Navigation.UserContext.Current.User,"A");
+				return Json(new { Success = true, Result = result });
+			}
+			catch (Exception ex)
+			{
+				return Json(new { Success = false, Message = ex.Message });
+			}
+		}
+
         /// <summary>
         /// Recalculate formulas of the "Tpequ" form. (++, CT, SR, CL and U1)
         /// </summary>

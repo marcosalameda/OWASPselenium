@@ -186,8 +186,8 @@ else {
 
 		@Html.HiddenFor(model=> model.SpeciValAreatecn, new { @pers_cs_area = "Speci", @pers_cs_field = "ValAreatecn", @data_identifier = "LED_REPAR___SPECIAREATECN" })
 
-			@Html.HiddenFor(model => model.ValCodempre, new { @pers_cs_field="ValCodempre", @pers_cs_area="Repar", @data_value = Model.ValCodempre, @db_field="ValCodempre", @trelate="Cmpny", @tfrelate="Codempre", @data_identifier="LED_REPAR___CMPNYCODEMPRE" })
 			@Html.HiddenFor(model => model.ValCodcateg, new { @pers_cs_field="ValCodcateg", @pers_cs_area="Repar", @data_value = Model.ValCodcateg, @db_field="ValCodcateg", @trelate="Cate1", @tfrelate="Codcateg", @data_identifier="LED_REPAR___CATE1CODCATEG" })
+			@Html.HiddenFor(model => model.ValCodempre, new { @pers_cs_field="ValCodempre", @pers_cs_area="Repar", @data_value = Model.ValCodempre, @db_field="ValCodempre", @trelate="Cmpny", @tfrelate="Codempre", @data_identifier="LED_REPAR___CMPNYCODEMPRE" })
 
 			@Html.HiddenFor(model => model.ValCodrepar, new { @pers_cs_field="ValCodrepar", @pers_cs_area="Repar", data_refresh = "true", @form_area="true", @data_value = Model.ValCodrepar, @data_identifier = "LED_REPAR___REPARCODREPAR" })
 

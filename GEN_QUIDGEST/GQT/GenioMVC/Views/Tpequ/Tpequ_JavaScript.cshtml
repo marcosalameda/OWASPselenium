@@ -376,6 +376,20 @@
 	function TPEQU_FormTriggers(id)
 	{
 		const verifyCondition = () => {
+			return (( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValTipoequi', $('[data-form="Tpequ"]'))) == "")&&qApi.HasRole("A"))
+		}
+		
+
+		const periodicalRefreshInterval = 50; // in seconds
+
+		const run = () => {
+			setInterval(() => { 
+				if (verifyCondition()) TPEQU_FormTriggers_UPDATE_FORMULAS_1(id);
+			}, periodicalRefreshInterval * 1000);
+		}
+
+		run()
+		const verifyCondition = () => {
 			return (( getFieldValue($(':not([elem-identifier="Multiform"]) > #ValTipoequi', $('[data-form="Tpequ"]'))) == ""))
 		}
 		
@@ -383,6 +397,24 @@
 		const run = () => { if (verifyCondition()) TPEQU_FormTriggers_FILLTYPEEQUIP_1(id); }
 
 		run()
+	}
+
+	/// <summary>
+	/// Client-side component of action #1 (RECALC) of trigger UPDATE_FORMULAS.
+	/// <param name="id">The primary key of the record.</param>
+	/// </summary>
+	function TPEQU_FormTriggers_UPDATE_FORMULAS_1(id)
+	{
+
+		$.ajax({
+			url: '@Url.Action("TPEQU_FormTriggers_UPDATE_FORMULAS_1")',
+			type: "POST",
+			data: $.extend({ key: id }, getInputsForNestedForm($(window.Form_Tpequ.element)))
+		}).done(function(data) {
+			bootbox.alert(data.message);
+		}).fail(function(data) {
+			bootbox.alert(data.message);
+		});
 	}
 
 	/// <summary>

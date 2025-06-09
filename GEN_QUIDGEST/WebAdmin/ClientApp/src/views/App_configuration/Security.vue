@@ -11,7 +11,7 @@
 						v-if="SelectLists"
 						size="large"
 						:items="SelectLists.AuthenticationMode"
-						:label="appConfigTexts.authenticationMode"
+						:label="resources.authenticationMode"
 						item-value="Value"
 						item-label="Text" />
 					<q-select
@@ -19,23 +19,23 @@
 						v-if="SelectLists"
 						size="large"
 						:items="SelectLists.MultisessionMode"
-						:label="appConfigTexts.concurrentSessionsPolicy"
+						:label="resources.concurrentSessionsPolicy"
 						item-value="Value"
 						item-label="Text" />
 					<q-checkbox
 						v-model="Security.AllowAuthenticationRecovery"
-						:label="appConfigTexts.allowAuthenticationRecovery" />
+						:label="resources.allowAuthenticationRecovery" />
 					<q-checkbox
 						v-model="Security.Activate2FA"
-						:label="appConfigTexts.activateTwoFactorAuth" />
+						:label="resources.activateTwoFactorAuth" />
 					<q-checkbox
 						v-if="Security.Activate2FA"
 						v-model="Security.Mandatory2FA"
-						:label="appConfigTexts.mandatoryTwoFactorAuth" />
+						:label="resources.mandatoryTwoFactorAuth" />
 					<numeric-input
 						v-model="Security.SessionTimeOut"
 						size="large"
-						:label="appConfigTexts.sessionTimeout">
+						:label="resources.sessionTimeout">
 					</numeric-input>
 				</q-row-container>
 			</q-card>
@@ -44,48 +44,48 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="appConfigTexts.passwordPolicy"
+				:title="resources.passwordPolicy"
 				width="block">
 				<q-row-container>
 					<numeric-input
 						v-model="Security.MinCharacters"
 						size="large"
-						:label="appConfigTexts.minCharacters">
+						:label="resources.minCharacters">
 					</numeric-input>
 					<q-select
 						v-model="Security.PasswordStrength"
 						v-if="SelectLists"
 						size="large"
 						:items="SelectLists.PasswordStrength"
-						:label="appConfigTexts.authenticationMode"
+						:label="resources.authenticationMode"
 						item-value="Value"
 						item-label="Text" />
 					<numeric-input
 						v-model="Security.MaxAttempts"
 						size="large"
-						:label="appConfigTexts.maxLoginAttempts">
+						:label="resources.maxLoginAttempts">
 					</numeric-input>
 					<q-checkbox
 						v-model="Security.ExpirationDateBool"
-						:label="appConfigTexts.passwordExpirationDays" />
+						:label="resources.passwordExpirationDays" />
 					<q-text-field
 						v-model="Security.ExpirationDate"
 						size="large"
-						:label="appConfigTexts.daysToExpiration" />
+						:label="resources.daysToExpiration" />
 					<q-select
 						v-model="Security.PasswordAlgorithms"
 						v-if="SelectLists"
 						size="large"
 						:items="SelectLists.PasswordAlgorithms"
-						:label="appConfigTexts.encryptionAlgorithm"
+						:label="resources.encryptionAlgorithm"
 						item-value="Value"
 						item-label="Text" />
 					<q-checkbox
 						v-model="Security.UsePasswordBlacklist"
-						:label="appConfigTexts.usePasswordBlacklist" />
+						:label="resources.usePasswordBlacklist" />
 					<q-button
 						v-if="Security.UsePasswordBlacklist"
-						:label="appConfigTexts.managePasswordBlacklist"
+						:label="resources.managePasswordBlacklist"
 						@click="showManageBlacklist" />
 				</q-row-container>
 			</q-card>
@@ -231,7 +231,7 @@
 		<q-dialog
 			id="manage_blacklist"
 			v-model="showBlacklistDialog"
-			:title="appConfigTexts.managePasswordBlacklist"
+			:title="resources.managePasswordBlacklist"
 			:buttons="buttonsBlacklist">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -241,10 +241,10 @@
 						:type="alert.alertType"
 						:text="alert.message"
 						:icon="alert.icon"
-						:title="appConfigTexts.operationStatus"
+						:title="resources.operationStatus"
 						:dismissTime="5"
 						@message-dismissed="handleAlertDismissed" />
-					<div>{{ appConfigTexts.blacklistedPasswordsInDb }}: {{ numPasswords }}</div>
+					<div>{{ resources.blacklistedPasswordsInDb }}: {{ numPasswords }}</div>
 					<row>
 						<div class="q-button-container">
 							<input
@@ -263,7 +263,7 @@
 								@click="exportB" />
 						</div>
 					</row>
-					<div>{{ appConfigTexts.deleteAllBlacklistedPasswords }}</div>
+					<div>{{ resources.deleteAllBlacklistedPasswords }}</div>
 					<row>
 						<q-button
 							variant="bold"
@@ -312,7 +312,7 @@
 		<q-dialog
 			id="identity_provider"
 			v-model="showIdentityDialog"
-			:title="appConfigTexts.identityProvider"
+			:title="resources.identityProvider"
 			:buttons="buttons">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -363,7 +363,7 @@
 
 		<q-dialog
 			v-model="showRoleDialog"
-			:title="appConfigTexts.roleProvider"
+			:title="resources.roleProvider"
 			:buttons="buttons">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -389,7 +389,7 @@
 					</base-input-structure>
 					<q-text-field
 						v-model="rolePrecond"
-						:label="appConfigTexts.precondition"
+						:label="resources.precondition"
 						:readonly="inDeleteMode"
 						size="large" />
 					<div v-for="c in tempConfig" :key="c.PropertyName">
@@ -412,7 +412,7 @@
 
 		<q-dialog
 			v-model="showUserDialog"
-			:title="appConfigTexts.fixedUser"
+			:title="resources.fixedUser"
 			:buttons="buttons">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -425,7 +425,7 @@
 						size="large">
 						<template #extras v-if="isSameName">
 							<q-icon icon="information-outline" />
-							{{ appConfigTexts.thisNameAlreadyExists }}
+							{{ resources.thisNameAlreadyExists }}
 						</template>
 					</q-text-field>
 					<q-select
@@ -440,7 +440,7 @@
 						size="large" />
 					<q-checkbox
 						v-model="userAutoLogin"
-						:label="appConfigTexts.autoLogin"
+						:label="resources.autoLogin"
 						:readonly="inDeleteMode" />
 					<password-input
 						v-model="userPassword"
@@ -458,10 +458,9 @@
 	// @ is an alias to /src
 	import { reusableMixin, NormalizeValue, ReadProviderConfig } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
-	import { reactive } from 'vue';
+	import { reactive, computed } from 'vue';
 	import QAlert from '@/components/QAlert.vue';
 	import { texts } from '@/resources/hardcodedTexts.ts';
-	import { AppConfigTexts } from '@/resources/viewResources.ts';
 
 	export default {
 		name: 'security',
@@ -472,6 +471,10 @@
 				required: true
 			},
 			SelectLists: {
+				required: true
+			},
+			resources: {
+				type: Object,
 				required: true
 			}
 		},
@@ -517,7 +520,7 @@
 					rows: [],
 					columns: [
 					{
-						label: '',
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -526,24 +529,24 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => '',
+						label: computed(() => this.Resources[texts.name]),
 						name: "Name",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: () => '',
+						label: computed(() => this.Resources[texts.type]),
 						name: "Type",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: computed(() => this.Resources[texts.configuration]),
 						name: "Config",
 						sort: true
 					}],
 					config: {
-						table_title: () => '',
+						table_title: this.resources.identityProvidersTitle,
 						pagination: false,
 						pagination_info: false,
 						global_search: {
@@ -555,7 +558,7 @@
 					rows: [],
 					columns: [
 					{
-						label: '',
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -564,29 +567,29 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => '',
+						label: computed(() => this.Resources[texts.name]),
 						name: "Name",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: () => '',
+						label: computed(() => this.Resources[texts.type]),
 						name: "Type",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: computed(() => this.Resources[texts.configuration]),
 						name: "Config",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: this.resources.precondition,
 						name: "Precond",
 						sort: true
 					}],
 					config: {
-						table_title: () => '',
+						table_title: this.resources.roleProvidersTitle,
 						pagination: false,
 						pagination_info: false,
 						global_search: {
@@ -598,7 +601,7 @@
 					rows: [],
 					columns: [
 						{
-							label: '',
+							label: this.resources.actions,
 							name: "actions",
 							slot_name: "actions",
 							sort: false,
@@ -607,26 +610,26 @@
 							column_text_alignment: 'text-center'
 						},
 						{
-							label: () => '',
+							label: computed(() => this.Resources[texts.name]),
 							name: "Name",
 							sort: true,
 							initial_sort: true,
 							initial_sort_order: "asc"
 						},
 						{
-							label: () => '',
+							label: computed(() => this.Resources[texts.type]),
 							name: "Type",
 							slot_name: 'Text',
 							sort: true
 						},
 						{
-							label: () => '',
+							label: this.resources.autoLogin,
 							name: "AutoLogin",
 							slot_name: 'AutoLogin',
 							sort: true
 						}],
 					config: {
-						table_title: () => '',
+						table_title: this.resources.fixedUsersTitle,
 						pagination: false,
 						pagination_info: false,
 						global_search: {
@@ -679,7 +682,6 @@
 					insert: this.Resources[texts.insert],
 					edit: this.Resources[texts.edit],
 					delete: this.Resources[texts.delete],
-					actions: this.Resources[texts.actions],
 					name: this.Resources[texts.name],
 					taskTypeLabel: this.Resources[texts.taskTypeLabel],
 					description: this.Resources[texts.description],
@@ -704,9 +706,6 @@
 					fixedUsersTitle: this.Resources[texts.fixedUsersTitle],
 					authentication: this.Resources[texts.authentication]
 				};
-			},
-			appConfigTexts() {
-				return new AppConfigTexts(this);
 			},
 		},
 		methods: {
@@ -1281,28 +1280,6 @@
 			this.userRows = this.Security.Users || [];
 			this.identityProvidersRows = this.Security.IdentityProviders || [];
 			this.roleRows = this.Security.RoleProviders || [];
-
-			this.tIdentityProviders.columns[0].label = this.hardcodedTexts.actions;
-			this.tIdentityProviders.columns[1].label = this.hardcodedTexts.name;
-			this.tIdentityProviders.columns[2].label = this.hardcodedTexts.type;
-			this.tIdentityProviders.columns[3].label = this.hardcodedTexts.configuration;
-
-			this.tIdentityProviders.config.table_title = this.appConfigTexts.identityProvidersTitle;
-
-			this.tRoleProviders.columns[0].label = this.hardcodedTexts.actions;
-			this.tRoleProviders.columns[1].label = this.hardcodedTexts.name;
-			this.tRoleProviders.columns[2].label = this.hardcodedTexts.type;
-			this.tRoleProviders.columns[3].label = this.hardcodedTexts.configuration;
-			this.tRoleProviders.columns[4].label = this.appConfigTexts.precondition;
-
-			this.tRoleProviders.config.table_title = this.appConfigTexts.roleProvidersTitle;
-
-			this.tUsers.columns[0].label = this.hardcodedTexts.actions;
-			this.tUsers.columns[1].label = this.hardcodedTexts.name;
-			this.tUsers.columns[2].label = this.hardcodedTexts.type;
-			this.tUsers.columns[3].label = this.appConfigTexts.autoLogin;
-
-			this.tUsers.config.table_title = this.appConfigTexts.fixedUsersTitle;
 		},
 		watch: {
 			'Security.Activate2FA': function (val) {

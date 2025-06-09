@@ -9,11 +9,11 @@
 					<q-text-field
 						v-model="Model.pathApp"
 						size="xlarge"
-						:label="appConfigTexts.pathAppLabel" />
+						:label="resources.pathAppLabel" />
 					<q-text-field
 						v-model="Model.pathDocuments"
 						size="xlarge"
-						:label="appConfigTexts.pathDocumentsLabel" />
+						:label="resources.pathDocumentsLabel" />
 				</q-row-container>
 			</q-card>
 		</row>
@@ -28,7 +28,7 @@
 		<row>
 			<q-card
 				class="q-card--admin-border-top q-card--admin-compact"
-				:title="appConfigTexts.downloadConfigFile"
+				:title="resources.downloadConfigFile"
 				variant="minor"
 				width="block">
 				<q-button
@@ -45,13 +45,16 @@
 	import { QUtils } from '@/utils/mainUtils';
 	import bootbox from 'bootbox';
 	import { texts } from '@/resources/hardcodedTexts.ts';
-	import { AppConfigTexts } from '@/resources/viewResources.ts';
 
 	export default {
 		name: 'paths',
 
 		props: {
 			model: {
+				required: true
+			},
+			resources: {
+				type: Object,
 				required: true
 			}
 		},
@@ -135,9 +138,6 @@
 				return {
 					saveConfiguration: this.Resources[texts.saveConfiguration]
 				};
-			},
-			appConfigTexts() {
-				return new AppConfigTexts(this);
 			}
 		}
 	};

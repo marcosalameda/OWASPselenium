@@ -3,16 +3,16 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="systemConfigTexts.integrationSettingsAI"
+				:title="resources.integrationSettingsAI"
 				width="block">
 				<q-row-container>
 					<q-text-field
 						v-model="model.UrlAPIBackend"
-						:label="systemConfigTexts.urlAPIBackendLabel">
+						:label="resources.urlAPIBackendLabel">
 						<template #extras>
 							<div class="q-field__extras">
 								<q-icon icon="information-outline" />
-								{{ systemConfigTexts.urlAPIBackendInfo }}
+								{{ resources.urlAPIBackendInfo }}
 							</div>
 						</template>
 					</q-text-field>
@@ -21,16 +21,18 @@
 		</row>
 		<elasticsearch
             :model="model"
+			:resources="resources"
 			:Cores="Cores"
 			:SelectLists="SelectLists"
             @alert-class="forwardAlert" />
         <reports
             :model="model"
+			:resources="resources"
             @alert-class="forwardAlert" />
 		<row class="footer-btn">
 			<q-button
 				variant="bold"
-				:label="systemConfigTexts.saveConfigurationButton"
+				:label="resources.saveConfigurationButton"
 				@click="saveConfigOthers" />
 		</row>
 	</div>
@@ -42,7 +44,6 @@
 	import { QUtils } from '@/utils/mainUtils';
 	import elasticsearch from './Elasticsearch';
 	import reports from './Reports';
-	import { SystemConfigTexts } from '@/resources/viewResources.ts';
 	import { texts } from '@/resources/hardcodedTexts.ts';
 
 	export default {
@@ -57,6 +58,10 @@
 			},
 			SelectLists: {
 				required: true
+			},
+			resources: {
+				type: Object,
+				required: true
 			}
 		},
 
@@ -65,9 +70,6 @@
 		emits: ['update-model', 'alert-class'],
 
 		computed: {
-			systemConfigTexts() {
-				return new SystemConfigTexts(this)
-			},
 
 			hardcodedTexts() {
 				return {

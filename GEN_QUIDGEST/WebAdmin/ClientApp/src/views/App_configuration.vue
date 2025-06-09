@@ -57,7 +57,7 @@ export default {
 						label: '',
 						disabled: false,
 						isVisible: true,
-						props: { model: computed(() => vm.Model?.Security), SelectLists: computed(() => vm.Model?.SelectLists) },
+						props: { model: computed(() => vm.Model?.Security), SelectLists: computed(() => vm.Model?.SelectLists), resources: computed(() => vm.appConfigTexts) },
 						events: { 'update-model': vm.fetchData, 'update-users': vm.updateUsers }
 					},
 					{
@@ -67,7 +67,7 @@ export default {
 						label: '',
 						disabled: false,
 						isVisible: true,
-						props: { model: computed(() => vm.Paths) },
+						props: { model: computed(() => vm.Paths), resources: computed(() => vm.appConfigTexts) },
 						events: { 'update-model': vm.setModel }
 					}
 				]

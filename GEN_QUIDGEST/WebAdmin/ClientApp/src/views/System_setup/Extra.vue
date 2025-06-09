@@ -46,7 +46,7 @@
 
 		<q-dialog
 			v-model="showDialogAdvanced"
-			:title="systemConfigTexts.property"
+			:title="resources.property"
 			:buttons="buttonsAdvanced">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -66,7 +66,7 @@
 						</div>
 						<q-button v-if="!inDeleteModeAdvanced"
 							@click="showNewKeyInput=true"
-							:label="systemConfigTexts.insertNewKey">
+							:label="resources.insertNewKey">
 								<q-icon icon="pencil" />
 						</q-button>
 						<q-select
@@ -83,7 +83,7 @@
 					<div v-else>
 						<q-button
 							@click="showNewKeyInput=false"
-							:label="systemConfigTexts.listDefaultKeys"
+							:label="resources.listDefaultKeys"
 							v-if="hasInitProperties && !inDeleteModeAdvanced">
 								<q-icon icon="list" />
 						</q-button>
@@ -121,10 +121,10 @@
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import QAlert from '@/components/QAlert.vue';
-	import { QTextField, QCheckbox, QPasswordField} from '@quidgest/ui/components';
 	import numeric_input from '@/components/Numeric_input.vue';
 	import { texts } from '@/resources/hardcodedTexts.ts';
-    import { SystemConfigTexts } from '@/resources/viewResources.ts';
+	import { QTextField, QCheckbox, QPasswordField} from '@quidgest/ui/components';
+	import { computed } from 'vue';
 
 	export default {
 		name: 'extra',
@@ -133,8 +133,7 @@
 			QAlert,
 			QTextField,
 			QCheckbox,
-			QPasswordField,
-			numeric_input
+			QPasswordField
 		},
 
 		mixins: [reusableMixin],
@@ -146,6 +145,10 @@
 				required: true
 			},
 			SelectLists: {
+				required: true
+			},
+			resources: {
+				type: Object,
 				required: true
 			}
 		},
@@ -166,7 +169,7 @@
 				tAdvP: {
 					rows: [],
 					columns: [{
-						label: '',
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -175,19 +178,19 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: '',
+						label: computed(() => this.Resources[texts.key]),
 						name: "Key",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: '',
+						label: computed(() => this.Resources[texts.value]),
 						name: "Val",
 						sort: true
 					}],
 					config: {
-						table_title: ''
+						table_title: this.resources.advancedProperties
 					}
 				},
 				valueComponent: QTextField,
@@ -217,7 +220,6 @@
 					insert: this.Resources[texts.insert],
 					delete: this.Resources[texts.delete],
 					edit: this.Resources[texts.edit],
-					actions: this.Resources[texts.actions],
 					key: this.Resources[texts.key],
 					value: this.Resources[texts.value],
 					thisKeyAlreadyExists: this.Resources[texts.thisKeyAlreadyExists],
@@ -228,9 +230,6 @@
 					cancel: this.Resources[texts.cancel],
 				};
 			},
-            systemConfigTexts() {
-                return new SystemConfigTexts(this);
-            }
 		},
 
 		methods: {
@@ -344,12 +343,6 @@
 		},
 		mounted() {
 			this.advancedProps = this.model.AdvancedProperties || [];
-
-			this.tAdvP.columns[0].label = this.hardcodedTexts.actions;
-			this.tAdvP.columns[1].label = this.hardcodedTexts.key;
-			this.tAdvP.columns[2].label = this.hardcodedTexts.value;
-			this.tAdvP.config.table_title = this.systemConfigTexts.advancedProperties;
-
 		},
 		watch: {
 			invalidProps(newValue) {

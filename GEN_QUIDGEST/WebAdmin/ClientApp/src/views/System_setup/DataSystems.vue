@@ -2,25 +2,25 @@
 	<div v-if="!(showDefaultDialog && isErrorDialog)">
 		<q-card
 			class="q-card--admin-default"
-			:title="texts.EXIBICAO16445"
+			:title="resources.displayTexts"
 			width="block">
 			<div class="data-systems__inputs">
 				<q-select
 					v-model="model.DefaultYear"
 					size="small"
 					:items="defaultDsItems"
-					:label="texts.SISTEMA_DE_DADOS_PAD13413">
+					:label="resources.defaultDataSystem">
 					<template #extras>
 						<q-icon icon="information-outline" />
-						{{ texts.O_SISTEMA_DE_DADOS_U47595 }}
+						{{ resources.defaultDataSystemInfo }}
 					</template>
 				</q-select>
 				<q-checkbox
 					v-model="model.HideYears"
-					:label="texts.OCULTAR_SISTEMAS_DE_60940">
+					:label="resources.hideDataSystems">
 					<template #extras>
 						<q-icon icon="information-outline" />
-						{{ texts.QUANDO_SELECIONADO__16895 }}
+						{{ resources.hideDataSystemsInfo }}
 					</template>
 				</q-checkbox>
 			</div>
@@ -32,11 +32,12 @@
 			<q-alert
 				type="warning"
 				:dismissTime="1.5"
-				:title="texts.SISTEMAS_DE_DADOS_IN53544"
-				:text="texts.DEVE_CONCLUIR_A_CONF15894" />
+				:title="resources.invalidDataSystems"
+				:text="resources.invalidDataSystemsAlert" />
 		</div>
 
-		<qtable :rows="dataSystems"
+		<qtable
+			:rows="dataSystems"
 			:columns="tableConfig.columns"
 			:config="tableConfig.config"
 			:classes="dsTableRowClasses"
@@ -46,19 +47,19 @@
 				<div class="q-table__actions-btns">
 					<q-button
 						variant="text"
-						:title="texts.CONFIGURAR09280"
+						:title="hardcodedTexts.configure"
 						@click="configureDataSystem(props.row)">
 						<q-icon icon="pencil" />
 					</q-button>
 					<q-button
 						variant="text"
-						:title="texts.DUPLICAR09748"
+						:title="hardcodedTexts.duplicate"
 						@click="duplicateDataSystem(props.row)">
 						<q-icon icon="duplicate" />
 					</q-button>
 					<q-button
 						variant="text"
-						:title="texts.APAGAR04097"
+						:title="hardcodedTexts.erase"
 						:disabled="props.row.Year === configDefaultDs"
 						@click="confirmDelete(props.row)">
 						<q-icon icon="bin" />
@@ -68,7 +69,7 @@
 			<template #table-footer>
 				<tr>
 					<td colspan="5">
-						<q-button :label="texts.CRIAR_UM_NOVO_SISTEM49777"
+						<q-button :label="resources.createNewDataSystem"
 							@click="showDataSystemDialog" />
 					</td>
 				</tr>
@@ -80,21 +81,21 @@
 		<row>
 			<q-button
 				variant="bold"
-				:label="texts.GRAVAR_CONFIGURACAO36308"
+				:label="hardcodedTexts.saveConfiguration"
 				@click="SaveConfigDataSystems" />
 		</row>
 	</div>
 
 	<q-dialog
 		v-model="showDefaultDialog"
-		:title="isErrorDialog ? texts.ERRO38355 : ''"
+		:title="isErrorDialog ? hardcodedTexts.error : ''"
 		:icon="defaultDialogIcon"
 		:text="defaultDialogText"
 		:buttons="defaultDialogButtons" />
 
 	<q-dialog
 		v-model="showNewSystemDialog"
-		:title="texts.CRIAR_UM_NOVO_SISTEM49777"
+		:title="resources.createNewDataSystem"
 		:buttons="newSystemDialogButtons">
 		<template #body.content>
 			<div
@@ -103,20 +104,20 @@
 					v-model="newDsName"
 					:class="{ 'data-systems__inputs--with-errors': invalidNewDataSystemName }"
 					size="block"
-					:label="texts.NOME_DO_SISTEMA_DE_D18974">
+					:label="resources.dataSystemName">
 					<template #extras v-if="invalidNewDataSystemName">
 						<q-icon icon="information-outline" />
-						{{ texts.OS_NOMES_DOS_SISTEMA01515 }}
+						{{ resources.dataSystemNameUniqueInfo }}
 					</template>
 				</q-text-field>
 				<q-text-field
 					v-model="newDsSchema"
 					:class="{ 'data-systems__inputs--with-errors': invalidNewDbName }"
 					size="block"
-					:label="texts.NOME_DA_BASE_DE_DADO25105">
+					:label="resources.databaseName">
 					<template #extras v-if="invalidNewDbName">
 						<q-icon icon="information-outline" />
-						{{ texts.OS_NOMES_DAS_BASES_D40646 }}
+						{{ resources.databaseNameUniqueInfo }}
 					</template>
 				</q-text-field>
 			</div>
@@ -126,12 +127,17 @@
 </template>
 <script>
 	// Utils
+	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils'
+
+	import { texts } from '@/resources/hardcodedTexts.ts';
 
 	export default {
 		name: 'datasystems',
 
 		emits: ['change-tab', 'alert-class'],
+
+		mixins: [reusableMixin],
 
 		data() {
 			return {
@@ -212,7 +218,7 @@
 				tableConfig: {
 					columns: [
 						{
-							label: this.texts.ACOES22599,
+							label: this.resources.actions,
 							name: 'actions',
 							sort: false,
 							column_classes: 'thead-actions',
@@ -220,24 +226,24 @@
 							column_text_alignment: 'text-center'
 						},
 						{
-							label: this.texts.NOME_DO_SISTEMA_DE_D18974,
+							label: this.resources.dataSystemName,
 							name: 'Year',
 							sort: true,
 							initial_sort: true,
 							initial_sort_order: "asc"
 						},
 						{
-							label: this.texts.NOME_DA_BASE_DE_DADO25105,
+							label: this.resources.databaseName,
 							name: 'DbName',
 							sort: true
 						},
 						{
-							label: this.texts.NOME_DO_SERVIDOR13641,
+							label: this.resources.serverName,
 							name: 'DbServer',
 							sort: true
 						},
 						{
-							label: this.texts.DATABASE_VERSION15344,
+							label: this.resources.databaseVersion,
 							name: 'DbVersion',
 							sort: false
 						},
@@ -255,7 +261,7 @@
 						}
 					],
 					config: {
-						table_title: this.texts.SISTEMAS_DE_DADOS45551,
+						table_title: this.resources.dataSystems,
 						pagination: this.showDsTablePagination,
 						pagination_info: this.showDsTablePagination,
 						per_page: 5,
@@ -278,9 +284,9 @@
 			},
 
 			/**
-			 * Hardcoded WebAdmin texts.
+			 * WebAdmin texts.
 			 */
-			texts: {
+			resources: {
 				type: Object,
 				required: true
 			}
@@ -349,6 +355,20 @@
 					|| this.invalidNewDbName
 					|| this.newDsName === ''
 					|| this.newDsSchema === ''
+			},
+
+			hardcodedTexts() {
+				return {
+					configure: this.Resources[texts.configure],
+					duplicate: this.Resources[texts.duplicate],
+					erase: this.Resources[texts.erase],
+					saveConfiguration: this.Resources[texts.saveConfiguration],
+					error: this.Resources[texts.error],
+					cancel: this.Resources[texts.cancel],
+					ok: this.Resources[texts.ok],
+					changesSavedSuccess: this.Resources[texts.changesSavedSuccess],
+					create: this.Resources[texts.create]
+				}
 			}
 		},
 
@@ -363,7 +383,7 @@
 						id: 'create-ds-btn',
 						props: {
 							variant: 'bold',
-							label: this.texts.CRIAR24836,
+							label: this.hardcodedTexts.create,
 							disabled: this.invalidNewDataSystem
 						},
 						action: () => this.createDataSystem()
@@ -371,7 +391,7 @@
 					{
 						id: 'cancel-ds-btn',
 						props: {
-							label: this.texts.CANCELAR49513
+							label: this.hardcodedTexts.cancel
 						},
 						action: () => this.clearNewDataSystemInfo()
 					}
@@ -399,7 +419,7 @@
 							id: 'close-dialog-btn',
 							props: {
 								variant: 'bold',
-								label: this.texts.OK15819
+								label: this.hardcodedTexts.ok
 							},
 							action: () => {
 								this.$router.push({
@@ -425,7 +445,7 @@
 
 					if (data.Success) {
 						this.configDefaultDs = this.model.DefaultYear
-						this.$emit('alert-class', { ResultMsg: this.texts.ALTERACOES_EFETUADAS10166, AlertType: 'success' });
+						this.$emit('alert-class', { ResultMsg: this.hardcodedTexts.changesSavedSuccess, AlertType: 'success' });
 					}
 					else
 						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
@@ -485,13 +505,13 @@
 						return
 					}
 
-					this.dataSystems = this.dataSystems.filter(ds => ds.Year != data.system)
-					let message = this.texts.O_SISTEMA_DE_DADOS_F39849
+					this.dataSystem = this.dataSystems.filter(ds => ds.Year != data.system)
+					let message = this.resources.dataSystemDeletedSuccess
 
 					// Swap to default data system if needed
 					if (this.currentYear == data.system) {
 						this.$router.replace({ name: 'system_setup', params: { culture: this.currentLang, system: this.model.DefaultYear } })
-						message += ` ${this.texts.O_SISTEMA_DE_DADOS_A48279}`
+						message += ` ${this.resources.currentDataSystemDefault}`
 					}
 
 					this.updateDataSystemList()
@@ -529,14 +549,14 @@
 			},
 
 			confirmDelete(row) {
-				const message = `${this.texts.TEM_A_CERTEZA_QUE_QU16920} <b>${row.Year}</b>?`
+				const message = `${this.resources.confirmDeleteDataSystem} <b>${row.Year}</b>?`
 				const buttons = [
 					{
 						id: 'delete-btn',
 						props: {
 							variant: 'bold',
 							color: 'danger',
-							label: this.texts.APAGAR04097
+							label: this.hardcodedTexts.erase
 						},
 						icon: { icon: 'bin' },
 						action: () => this.deleteDataSystem(row.Year)
@@ -544,7 +564,7 @@
 					{
 						id: 'cancel-btn',
 						props: {
-							label: this.texts.CANCELAR49513
+							label: this.hardcodedTexts.cancel
 						},
 						icon: { icon: 'cancel' }
 					},
@@ -582,7 +602,7 @@
 						id: 'ok-btn',
 						props: {
 							variant: 'bold',
-							label: this.texts.OK15819
+							label: this.hardcodedTexts.ok
 						}
 					}
 				]

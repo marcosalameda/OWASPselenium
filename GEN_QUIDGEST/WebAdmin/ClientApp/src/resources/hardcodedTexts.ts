@@ -7,7 +7,6 @@
 	modules: 'MODULOS17298',
 	roles: 'ROLES61449',
 	role: 'ROLE60946',
-	actions: 'ACOES22599',
 	edit: 'EDITAR11616',
 	delete: 'ELIMINAR21155',
 	available: 'DISPONIVEIS47523',
@@ -59,5 +58,6 @@
 	description: 'DESCRICAO07528',
 	configuration: 'CONFIGURACAO10928',
 	passwordVulnerableToKnownPasswords: 'PASSWORD_VULNERAVEL_00083',
-	authentication: 'AUTENTICACAO37999'
+	authentication: 'AUTENTICACAO37999',
+	active: 'ATIVO30536',
 }

@@ -169,7 +169,10 @@ namespace CSGenio.core.scheduler
                 if(state.Process != null)
                     try 
                     {
-                        await state.Process.Process(state.Job.Options ?? new SerializableDictionary<string, string>(), stoppingToken);
+                        using (var _ = CSGenio.framework.Log.SetContext("ActionName", "SchedulerService." + state.Job.Id))
+                        {
+                            await state.Process.Process(state.Job.Options ?? new SerializableDictionary<string, string>(), stoppingToken);
+                        }
                     }
                     catch(Exception ex)
                     {

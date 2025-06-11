@@ -1199,21 +1199,20 @@ GetCarga_unico(model.ValCodtpequ);
 
 		/// <summary>
 		/// Server-side component of action #1 (RECALC) of trigger UPDATE_FORMULAS
-		/// Button ${field.Ajcampo.ToUpper()}
 		/// </summary>
 		/// <param name="data">The client-side context of the trigger.</param>
 		/// <returns>
 		/// Success message
 		/// </returns>
 		[AuthorizeForUsers]
-		public ActionResult Tpequ_BT_${field.Ajcampo.ToUpper()}_UPDATE_FORMULAS_1(string key, Tpequ_ViewModel vm)
+		public ActionResult Tpequ_FormTriggers_UPDATE_FORMULAS_1(string key, Tpequ_ViewModel vm)
 		{
 			User user = UserContext.Current.User;
 			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
 
 			try 
 			{
-				var model = Models.Tpequ.Find(key, "F${field.Form.ToUpper()}");
+				var model = Models.Tpequ.Find(key, "FTPEQU");
 				vm.MapToModel(model);
 				// Context
 				var context = new CSGenio.business.Triggers.TriggerContext()

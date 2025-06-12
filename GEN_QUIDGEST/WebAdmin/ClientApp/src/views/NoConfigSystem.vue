@@ -68,10 +68,7 @@ export default {
 			QUtils.FetchData(QUtils.apiActionURL('Dashboard', 'Index')).done(function (data) {
 				QUtils.log("Fetch data - OK (Dashboard)", data);
 				$.each(data.model, function (propName, value) { vm.Model[propName] = value; });
-				QUtils.FetchData(QUtils.apiActionURL('Users', 'GetUserList', vm.queryParams)).done(function (data) {
-					vm.UsersCount = data.recordsTotal;
-					vm.loaded = true;
-				});
+				vm.loaded = true;
 			});
 		},
 		needsBasicConfig() {
@@ -92,7 +89,7 @@ export default {
 						bootbox.alert(vm.Resources.THERE_WAS_AN_ERROR_C44163 + "<br>" + data.Message);
 					}
 					vm.fetchData();
-			});               
+			});
 		}
 	},
 	created() {

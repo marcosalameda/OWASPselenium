@@ -283,6 +283,7 @@ export default {
 	methods: {
 		saveConfigDatabase() {
 			//let hasConfig = vm.model.HasConfig;
+			this.model.Port = this.model.Port.toString()
 			QUtils.log("SaveConfigDatabase - Request", QUtils.apiActionURL('Config', 'SaveConfigDatabase'));
 			QUtils.postData('Config', 'SaveConfigDatabase', this.model, null, (data) => {
 				QUtils.log("SaveConfigDatabase - Response", data);

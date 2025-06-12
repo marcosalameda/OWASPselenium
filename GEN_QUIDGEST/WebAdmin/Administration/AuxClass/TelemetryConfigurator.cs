@@ -30,6 +30,7 @@ namespace Administration.AuxClass
                 else
                 {
                     serviceInstanceId = Guid.NewGuid().ToString();
+                    Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"));
                     File.WriteAllText(ifile, serviceInstanceId);
                 }
             }

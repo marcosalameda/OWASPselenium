@@ -2734,245 +2734,11 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Type of article"
-        /// </summary>
-        public static string TYPE_OF_ARTICLE43082 {
-            get {
-                return ResourceManager.GetString("TYPE_OF_ARTICLE43082", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Planeada"
-        /// </summary>
-        public static string PLANEADA29857 {
-            get {
-                return ResourceManager.GetString("PLANEADA29857", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Erro"
-        /// </summary>
-        public static string ERRO38355 {
-            get {
-                return ResourceManager.GetString("ERRO38355", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Não existe CC (contabilidade de custos)"
-        /// </summary>
-        public static string NAO_EXISTE_CC__CONTA42559 {
-            get {
-                return ResourceManager.GetString("NAO_EXISTE_CC__CONTA42559", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Address Type Code"
-        /// </summary>
-        public static string ADDRESS_TYPE_CODE33992 {
-            get {
-                return ResourceManager.GetString("ADDRESS_TYPE_CODE33992", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Overview"
-        /// </summary>
-        public static string OVERVIEW09715 {
-            get {
-                return ResourceManager.GetString("OVERVIEW09715", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Official No."
-        /// </summary>
-        public static string OFFICIAL_NO_34819 {
-            get {
-                return ResourceManager.GetString("OFFICIAL_NO_34819", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Unused items"
-        /// </summary>
-        public static string UNUSED_ITEMS37130 {
-            get {
-                return ResourceManager.GetString("UNUSED_ITEMS37130", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Goal"
-        /// </summary>
-        public static string GOAL08717 {
-            get {
-                return ResourceManager.GetString("GOAL08717", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  119"
-        /// </summary>
-        public static string __11906282 {
-            get {
-                return ResourceManager.GetString("__11906282", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "1115"
-        /// </summary>
-        public static string _111536184 {
-            get {
-                return ResourceManager.GetString("_111536184", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Related Table (Basic)"
-        /// </summary>
-        public static string RELATED_TABLE__BASIC33628 {
-            get {
-                return ResourceManager.GetString("RELATED_TABLE__BASIC33628", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Training Exercise 09"
-        /// </summary>
-        public static string TRAINING_EXERCISE_0963949 {
-            get {
-                return ResourceManager.GetString("TRAINING_EXERCISE_0963949", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Ordem Pai"
-        /// </summary>
-        public static string ORDEM_PAI14279 {
-            get {
-                return ResourceManager.GetString("ORDEM_PAI14279", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "collapsible group -> q-group-collapsible--audit"
-        /// </summary>
-        public static string COLLAPSIBLE_GROUP___31279 {
-            get {
-                return ResourceManager.GetString("COLLAPSIBLE_GROUP___31279", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Anos"
-        /// </summary>
-        public static string ANOS65117 {
-            get {
-                return ResourceManager.GetString("ANOS65117", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to " 1087"
         /// </summary>
         public static string _108747561 {
             get {
                 return ResourceManager.GetString("_108747561", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Group markers in cluster"
-        /// </summary>
-        public static string GROUP_MARKERS_IN_CLU31341 {
-            get {
-                return ResourceManager.GetString("GROUP_MARKERS_IN_CLU31341", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "   23"
-        /// </summary>
-        public static string ___2311854 {
-            get {
-                return ResourceManager.GetString("___2311854", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Período Seguinte"
-        /// </summary>
-        public static string PERIODO_SEGUINTE40793 {
-            get {
-                return ResourceManager.GetString("PERIODO_SEGUINTE40793", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Outubro"
-        /// </summary>
-        public static string OUTUBRO17690 {
-            get {
-                return ResourceManager.GetString("OUTUBRO17690", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  341"
-        /// </summary>
-        public static string __34125738 {
-            get {
-                return ResourceManager.GetString("__34125738", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Priority"
-        /// </summary>
-        public static string PRIORITY31140 {
-            get {
-                return ResourceManager.GetString("PRIORITY31140", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "List of x,y coordinates separated by ; that determine the points of a polygon"
-        /// </summary>
-        public static string LIST_OF_X_Y_COORDINA12532 {
-            get {
-                return ResourceManager.GetString("LIST_OF_X_Y_COORDINA12532", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "COMPANY"
-        /// </summary>
-        public static string COMPANY20759 {
-            get {
-                return ResourceManager.GetString("COMPANY20759", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Dispatch of goods"
-        /// </summary>
-        public static string DISPATCH_OF_GOODS21495 {
-            get {
-                return ResourceManager.GetString("DISPATCH_OF_GOODS21495", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Gantt - Scale"
-        /// </summary>
-        public static string GANTT___SCALE29829 {
-            get {
-                return ResourceManager.GetString("GANTT___SCALE29829", resourceCulture);
             }
         }
 
@@ -3243,6 +3009,15 @@ namespace Administration.Resources {
         public static string PASSWORD_DATE16593 {
             get {
                 return ResourceManager.GetString("PASSWORD_DATE16593", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Ordem Pai"
+        /// </summary>
+        public static string ORDEM_PAI14279 {
+            get {
+                return ResourceManager.GetString("ORDEM_PAI14279", resourceCulture);
             }
         }
 
@@ -3643,6 +3418,249 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Image thumbnail"
+        /// </summary>
+        public static string IMAGE_THUMBNAIL01682 {
+            get {
+                return ResourceManager.GetString("IMAGE_THUMBNAIL01682", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Quantity of transactions"
+        /// </summary>
+        public static string QUANTITY_OF_TRANSACT63133 {
+            get {
+                return ResourceManager.GetString("QUANTITY_OF_TRANSACT63133", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Building age"
+        /// </summary>
+        public static string BUILDING_AGE27311 {
+            get {
+                return ResourceManager.GetString("BUILDING_AGE27311", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Multiform"
+        /// </summary>
+        public static string MULTIFORM41286 {
+            get {
+                return ResourceManager.GetString("MULTIFORM41286", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Specific path with conditions popup afte MB"
+        /// </summary>
+        public static string SPECIFIC_PATH_WITH_C62619 {
+            get {
+                return ResourceManager.GetString("SPECIFIC_PATH_WITH_C62619", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "   78"
+        /// </summary>
+        public static string ___7840086 {
+            get {
+                return ResourceManager.GetString("___7840086", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "A cancelar"
+        /// </summary>
+        public static string A_CANCELAR43988 {
+            get {
+                return ResourceManager.GetString("A_CANCELAR43988", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Process info"
+        /// </summary>
+        public static string PROCESS_INFO62044 {
+            get {
+                return ResourceManager.GetString("PROCESS_INFO62044", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Home Team"
+        /// </summary>
+        public static string HOME_TEAM06029 {
+            get {
+                return ResourceManager.GetString("HOME_TEAM06029", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Parada"
+        /// </summary>
+        public static string PARADA59671 {
+            get {
+                return ResourceManager.GetString("PARADA59671", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Locais da regra"
+        /// </summary>
+        public static string LOCAIS_DA_REGRA25886 {
+            get {
+                return ResourceManager.GetString("LOCAIS_DA_REGRA25886", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Training Exercise 01"
+        /// </summary>
+        public static string TRAINING_EXERCISE_0161013 {
+            get {
+                return ResourceManager.GetString("TRAINING_EXERCISE_0161013", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Interested party"
+        /// </summary>
+        public static string INTERESTED_PARTY36855 {
+            get {
+                return ResourceManager.GetString("INTERESTED_PARTY36855", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Lado"
+        /// </summary>
+        public static string LADO49085 {
+            get {
+                return ResourceManager.GetString("LADO49085", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Date of birth"
+        /// </summary>
+        public static string DATE_OF_BIRTH63058 {
+            get {
+                return ResourceManager.GetString("DATE_OF_BIRTH63058", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Spent in Hours"
+        /// </summary>
+        public static string SPENT_IN_HOURS19366 {
+            get {
+                return ResourceManager.GetString("SPENT_IN_HOURS19366", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Tabs"
+        /// </summary>
+        public static string TABS03209 {
+            get {
+                return ResourceManager.GetString("TABS03209", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Products"
+        /// </summary>
+        public static string PRODUCTS34689 {
+            get {
+                return ResourceManager.GetString("PRODUCTS34689", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Tipo Scorecard"
+        /// </summary>
+        public static string TIPO_SCORECARD22393 {
+            get {
+                return ResourceManager.GetString("TIPO_SCORECARD22393", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Order line"
+        /// </summary>
+        public static string ORDER_LINE50035 {
+            get {
+                return ResourceManager.GetString("ORDER_LINE50035", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Organism"
+        /// </summary>
+        public static string ORGANISM39461 {
+            get {
+                return ResourceManager.GetString("ORGANISM39461", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Anos"
+        /// </summary>
+        public static string ANOS65117 {
+            get {
+                return ResourceManager.GetString("ANOS65117", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Organic Unit"
+        /// </summary>
+        public static string ORGANIC_UNIT48997 {
+            get {
+                return ResourceManager.GetString("ORGANIC_UNIT48997", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Interno"
+        /// </summary>
+        public static string INTERNO52273 {
+            get {
+                return ResourceManager.GetString("INTERNO52273", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Modified by"
+        /// </summary>
+        public static string MODIFIED_BY02094 {
+            get {
+                return ResourceManager.GetString("MODIFIED_BY02094", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Team of players"
+        /// </summary>
+        public static string TEAM_OF_PLAYERS02382 {
+            get {
+                return ResourceManager.GetString("TEAM_OF_PLAYERS02382", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Nome do Artigo"
+        /// </summary>
+        public static string NOME_DO_ARTIGO38127 {
+            get {
+                return ResourceManager.GetString("NOME_DO_ARTIGO38127", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Year (numbers)"
         /// </summary>
         public static string YEAR__NUMBERS_29394 {
@@ -3693,15 +3711,6 @@ namespace Administration.Resources {
         public static string SANTANDER27925 {
             get {
                 return ResourceManager.GetString("SANTANDER27925", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Parada"
-        /// </summary>
-        public static string PARADA59671 {
-            get {
-                return ResourceManager.GetString("PARADA59671", resourceCulture);
             }
         }
 
@@ -5335,15 +5344,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Team of players"
-        /// </summary>
-        public static string TEAM_OF_PLAYERS02382 {
-            get {
-                return ResourceManager.GetString("TEAM_OF_PLAYERS02382", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Output formats"
         /// </summary>
         public static string OUTPUT_FORMATS51278 {
@@ -5749,6 +5749,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Outubro"
+        /// </summary>
+        public static string OUTUBRO17690 {
+            get {
+                return ResourceManager.GetString("OUTUBRO17690", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Training Exercise 02"
         /// </summary>
         public static string TRAINING_EXERCISE_0261088 {
@@ -6105,6 +6114,15 @@ namespace Administration.Resources {
         public static string CAMPO_AUXILIAR_CONTA42402 {
             get {
                 return ResourceManager.GetString("CAMPO_AUXILIAR_CONTA42402", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Não existe CC (contabilidade de custos)"
+        /// </summary>
+        public static string NAO_EXISTE_CC__CONTA42559 {
+            get {
+                return ResourceManager.GetString("NAO_EXISTE_CC__CONTA42559", resourceCulture);
             }
         }
 
@@ -6712,6 +6730,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Gantt - Scale"
+        /// </summary>
+        public static string GANTT___SCALE29829 {
+            get {
+                return ResourceManager.GetString("GANTT___SCALE29829", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "No Disponible"
         /// </summary>
         public static string NO_DISPONIBLE08299 {
@@ -7140,15 +7167,6 @@ namespace Administration.Resources {
         public static string DESTINATION_Y32304 {
             get {
                 return ResourceManager.GetString("DESTINATION_Y32304", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Home Team"
-        /// </summary>
-        public static string HOME_TEAM06029 {
-            get {
-                return ResourceManager.GetString("HOME_TEAM06029", resourceCulture);
             }
         }
 
@@ -7626,15 +7644,6 @@ namespace Administration.Resources {
         public static string VAT_NUMBER24236 {
             get {
                 return ResourceManager.GetString("VAT_NUMBER24236", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Date of birth"
-        /// </summary>
-        public static string DATE_OF_BIRTH63058 {
-            get {
-                return ResourceManager.GetString("DATE_OF_BIRTH63058", resourceCulture);
             }
         }
 
@@ -8526,6 +8535,15 @@ namespace Administration.Resources {
         public static string DELETE_MULTIPLE_RECO17551 {
             get {
                 return ResourceManager.GetString("DELETE_MULTIPLE_RECO17551", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Planeada"
+        /// </summary>
+        public static string PLANEADA29857 {
+            get {
+                return ResourceManager.GetString("PLANEADA29857", resourceCulture);
             }
         }
 
@@ -12715,942 +12733,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "  395"
-        /// </summary>
-        public static string __39563476 {
-            get {
-                return ResourceManager.GetString("__39563476", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Facility"
-        /// </summary>
-        public static string FACILITY55206 {
-            get {
-                return ResourceManager.GetString("FACILITY55206", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "35"
-        /// </summary>
-        public static string _3534512 {
-            get {
-                return ResourceManager.GetString("_3534512", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Rule"
-        /// </summary>
-        public static string RULE61609 {
-            get {
-                return ResourceManager.GetString("RULE61609", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Responsibles for the Indicators"
-        /// </summary>
-        public static string RESPONSIBLES_FOR_THE21020 {
-            get {
-                return ResourceManager.GetString("RESPONSIBLES_FOR_THE21020", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Local da regra"
-        /// </summary>
-        public static string LOCAL_DA_REGRA49987 {
-            get {
-                return ResourceManager.GetString("LOCAL_DA_REGRA49987", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Canceled by"
-        /// </summary>
-        public static string CANCELED_BY01167 {
-            get {
-                return ResourceManager.GetString("CANCELED_BY01167", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "First incorporated facility"
-        /// </summary>
-        public static string FIRST_INCORPORATED_F63789 {
-            get {
-                return ResourceManager.GetString("FIRST_INCORPORATED_F63789", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Delete"
-        /// </summary>
-        public static string DELETE48637 {
-            get {
-                return ResourceManager.GetString("DELETE48637", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  436"
-        /// </summary>
-        public static string __43617008 {
-            get {
-                return ResourceManager.GetString("__43617008", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Enough rate"
-        /// </summary>
-        public static string ENOUGH_RATE29092 {
-            get {
-                return ResourceManager.GetString("ENOUGH_RATE29092", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Período"
-        /// </summary>
-        public static string PERIODO18539 {
-            get {
-                return ResourceManager.GetString("PERIODO18539", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Muito Boa"
-        /// </summary>
-        public static string MUITO_BOA49280 {
-            get {
-                return ResourceManager.GetString("MUITO_BOA49280", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Scorecard appearance"
-        /// </summary>
-        public static string SCORECARD_APPEARANCE36559 {
-            get {
-                return ResourceManager.GetString("SCORECARD_APPEARANCE36559", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "    9"
-        /// </summary>
-        public static string ____921651 {
-            get {
-                return ResourceManager.GetString("____921651", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Tax identification"
-        /// </summary>
-        public static string TAX_IDENTIFICATION51190 {
-            get {
-                return ResourceManager.GetString("TAX_IDENTIFICATION51190", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Equipment purchased"
-        /// </summary>
-        public static string EQUIPMENT_PURCHASED62596 {
-            get {
-                return ResourceManager.GetString("EQUIPMENT_PURCHASED62596", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Flight"
-        /// </summary>
-        public static string FLIGHT55228 {
-            get {
-                return ResourceManager.GetString("FLIGHT55228", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Date:"
-        /// </summary>
-        public static string DATE_55218 {
-            get {
-                return ResourceManager.GetString("DATE_55218", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Nome do Artigo"
-        /// </summary>
-        public static string NOME_DO_ARTIGO38127 {
-            get {
-                return ResourceManager.GetString("NOME_DO_ARTIGO38127", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to " 1123"
-        /// </summary>
-        public static string _112319369 {
-            get {
-                return ResourceManager.GetString("_112319369", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Hora de criação"
-        /// </summary>
-        public static string HORA_DE_CRIACAO40754 {
-            get {
-                return ResourceManager.GetString("HORA_DE_CRIACAO40754", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to " 1109"
-        /// </summary>
-        public static string _110955308 {
-            get {
-                return ResourceManager.GetString("_110955308", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Output quantity:"
-        /// </summary>
-        public static string OUTPUT_QUANTITY_59942 {
-            get {
-                return ResourceManager.GetString("OUTPUT_QUANTITY_59942", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Facility type"
-        /// </summary>
-        public static string FACILITY_TYPE44577 {
-            get {
-                return ResourceManager.GetString("FACILITY_TYPE44577", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Latitude and Longitude"
-        /// </summary>
-        public static string LATITUDE_AND_LONGITU45730 {
-            get {
-                return ResourceManager.GetString("LATITUDE_AND_LONGITU45730", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Passengers"
-        /// </summary>
-        public static string PASSENGERS17599 {
-            get {
-                return ResourceManager.GetString("PASSENGERS17599", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Digital Attachements"
-        /// </summary>
-        public static string DIGITAL_ATTACHEMENTS44886 {
-            get {
-                return ResourceManager.GetString("DIGITAL_ATTACHEMENTS44886", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "KPI graphics color"
-        /// </summary>
-        public static string KPI_GRAPHICS_COLOR32907 {
-            get {
-                return ResourceManager.GetString("KPI_GRAPHICS_COLOR32907", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "End-of-period"
-        /// </summary>
-        public static string END_OF_PERIOD44616 {
-            get {
-                return ResourceManager.GetString("END_OF_PERIOD44616", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "PT12345678901234567890123"
-        /// </summary>
-        public static string PT12345678901234567820477 {
-            get {
-                return ResourceManager.GetString("PT12345678901234567820477", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Sales (phases)"
-        /// </summary>
-        public static string SALES__PHASES_20442 {
-            get {
-                return ResourceManager.GetString("SALES__PHASES_20442", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "   20"
-        /// </summary>
-        public static string ___2006071 {
-            get {
-                return ResourceManager.GetString("___2006071", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Sub-goal of indicator"
-        /// </summary>
-        public static string SUB_GOAL_OF_INDICATO52089 {
-            get {
-                return ResourceManager.GetString("SUB_GOAL_OF_INDICATO52089", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Floor"
-        /// </summary>
-        public static string FLOOR19993 {
-            get {
-                return ResourceManager.GetString("FLOOR19993", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Criado por:"
-        /// </summary>
-        public static string CRIADO_POR_18536 {
-            get {
-                return ResourceManager.GetString("CRIADO_POR_18536", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Text Color"
-        /// </summary>
-        public static string TEXT_COLOR63426 {
-            get {
-                return ResourceManager.GetString("TEXT_COLOR63426", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "string"
-        /// </summary>
-        public static string STRING29433 {
-            get {
-                return ResourceManager.GetString("STRING29433", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Uppercase"
-        /// </summary>
-        public static string UPPERCASE48238 {
-            get {
-                return ResourceManager.GetString("UPPERCASE48238", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "No rumour in the Company"
-        /// </summary>
-        public static string NO_RUMOUR_IN_THE_COM15248 {
-            get {
-                return ResourceManager.GetString("NO_RUMOUR_IN_THE_COM15248", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Country of Birth"
-        /// </summary>
-        public static string COUNTRY_OF_BIRTH53244 {
-            get {
-                return ResourceManager.GetString("COUNTRY_OF_BIRTH53244", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Entity"
-        /// </summary>
-        public static string ENTITY62049 {
-            get {
-                return ResourceManager.GetString("ENTITY62049", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Agent Information"
-        /// </summary>
-        public static string AGENT_INFORMATION14294 {
-            get {
-                return ResourceManager.GetString("AGENT_INFORMATION14294", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Lista de campos de Aeroporto"
-        /// </summary>
-        public static string LISTA_DE_CAMPOS_DE_A02814 {
-            get {
-                return ResourceManager.GetString("LISTA_DE_CAMPOS_DE_A02814", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Imóveis numa Região"
-        /// </summary>
-        public static string IMOVEIS_NUMA_REGIAO28637 {
-            get {
-                return ResourceManager.GetString("IMOVEIS_NUMA_REGIAO28637", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to ">EXIT DOCUMENT"
-        /// </summary>
-        public static string _EXIT_DOCUMENT48701 {
-            get {
-                return ResourceManager.GetString("_EXIT_DOCUMENT48701", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Ano construído"
-        /// </summary>
-        public static string ANO_CONSTRUIDO64369 {
-            get {
-                return ResourceManager.GetString("ANO_CONSTRUIDO64369", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Information elements"
-        /// </summary>
-        public static string INFORMATION_ELEMENTS50322 {
-            get {
-                return ResourceManager.GetString("INFORMATION_ELEMENTS50322", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Type of segment used"
-        /// </summary>
-        public static string TYPE_OF_SEGMENT_USED13810 {
-            get {
-                return ResourceManager.GetString("TYPE_OF_SEGMENT_USED13810", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Groupbox"
-        /// </summary>
-        public static string GROUPBOX00384 {
-            get {
-                return ResourceManager.GetString("GROUPBOX00384", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Prospecting carried out"
-        /// </summary>
-        public static string PROSPECTING_CARRIED_08979 {
-            get {
-                return ResourceManager.GetString("PROSPECTING_CARRIED_08979", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Internal"
-        /// </summary>
-        public static string INTERNAL04894 {
-            get {
-                return ResourceManager.GetString("INTERNAL04894", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to " 1097"
-        /// </summary>
-        public static string _109732431 {
-            get {
-                return ResourceManager.GetString("_109732431", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Facility type Parameter"
-        /// </summary>
-        public static string FACILITY_TYPE_PARAME05479 {
-            get {
-                return ResourceManager.GetString("FACILITY_TYPE_PARAME05479", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "language"
-        /// </summary>
-        public static string LANGUAGE33172 {
-            get {
-                return ResourceManager.GetString("LANGUAGE33172", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Max points"
-        /// </summary>
-        public static string MAX_POINTS36826 {
-            get {
-                return ResourceManager.GetString("MAX_POINTS36826", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Tipo de acumulação"
-        /// </summary>
-        public static string TIPO_DE_ACUMULACAO50718 {
-            get {
-                return ResourceManager.GetString("TIPO_DE_ACUMULACAO50718", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "last"
-        /// </summary>
-        public static string LAST48120 {
-            get {
-                return ResourceManager.GetString("LAST48120", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Text inputs"
-        /// </summary>
-        public static string TEXT_INPUTS37770 {
-            get {
-                return ResourceManager.GetString("TEXT_INPUTS37770", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Whole Line On"
-        /// </summary>
-        public static string WHOLE_LINE_ON08702 {
-            get {
-                return ResourceManager.GetString("WHOLE_LINE_ON08702", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "First"
-        /// </summary>
-        public static string FIRST42972 {
-            get {
-                return ResourceManager.GetString("FIRST42972", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "September"
-        /// </summary>
-        public static string SEPTEMBER29714 {
-            get {
-                return ResourceManager.GetString("SEPTEMBER29714", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Periodicidades de Recolha"
-        /// </summary>
-        public static string PERIODICIDADES_DE_RE37021 {
-            get {
-                return ResourceManager.GetString("PERIODICIDADES_DE_RE37021", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Room No:"
-        /// </summary>
-        public static string ROOM_NO_15796 {
-            get {
-                return ResourceManager.GetString("ROOM_NO_15796", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Enumeration Prop"
-        /// </summary>
-        public static string ENUMERATION_PROP24972 {
-            get {
-                return ResourceManager.GetString("ENUMERATION_PROP24972", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Field with client-side conditions"
-        /// </summary>
-        public static string FIELD_WITH_CLIENT_SI60452 {
-            get {
-                return ResourceManager.GetString("FIELD_WITH_CLIENT_SI60452", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Segment Type"
-        /// </summary>
-        public static string SEGMENT_TYPE16219 {
-            get {
-                return ResourceManager.GetString("SEGMENT_TYPE16219", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "List with columns from the Below table"
-        /// </summary>
-        public static string LIST_WITH_COLUMNS_FR36713 {
-            get {
-                return ResourceManager.GetString("LIST_WITH_COLUMNS_FR36713", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Total Activities"
-        /// </summary>
-        public static string TOTAL_ACTIVITIES31614 {
-            get {
-                return ResourceManager.GetString("TOTAL_ACTIVITIES31614", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Alternative Email"
-        /// </summary>
-        public static string ALTERNATIVE_EMAIL17444 {
-            get {
-                return ResourceManager.GetString("ALTERNATIVE_EMAIL17444", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Recipient key 'Comodatário'"
-        /// </summary>
-        public static string RECIPIENT_KEY__COMOD31618 {
-            get {
-                return ResourceManager.GetString("RECIPIENT_KEY__COMOD31618", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Bad limit"
-        /// </summary>
-        public static string BAD_LIMIT31633 {
-            get {
-                return ResourceManager.GetString("BAD_LIMIT31633", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Logo"
-        /// </summary>
-        public static string LOGO62483 {
-            get {
-                return ResourceManager.GetString("LOGO62483", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  388"
-        /// </summary>
-        public static string __38812468 {
-            get {
-                return ResourceManager.GetString("__38812468", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Output documents"
-        /// </summary>
-        public static string OUTPUT_DOCUMENTS44871 {
-            get {
-                return ResourceManager.GetString("OUTPUT_DOCUMENTS44871", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  103"
-        /// </summary>
-        public static string __10344539 {
-            get {
-                return ResourceManager.GetString("__10344539", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Timeline Secundary"
-        /// </summary>
-        public static string TIMELINE_SECUNDARY50965 {
-            get {
-                return ResourceManager.GetString("TIMELINE_SECUNDARY50965", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Organic Unit Acronym"
-        /// </summary>
-        public static string ORGANIC_UNIT_ACRONYM17754 {
-            get {
-                return ResourceManager.GetString("ORGANIC_UNIT_ACRONYM17754", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Valor (Ano N-1)"
-        /// </summary>
-        public static string VALOR__ANO_N_1_07204 {
-            get {
-                return ResourceManager.GetString("VALOR__ANO_N_1_07204", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Id"
-        /// </summary>
-        public static string ID36840 {
-            get {
-                return ResourceManager.GetString("ID36840", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "zipcode"
-        /// </summary>
-        public static string ZIPCODE17511 {
-            get {
-                return ResourceManager.GetString("ZIPCODE17511", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Orders in group  (Integer field)"
-        /// </summary>
-        public static string ORDERS_IN_GROUP___IN07193 {
-            get {
-                return ResourceManager.GetString("ORDERS_IN_GROUP___IN07193", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Author"
-        /// </summary>
-        public static string AUTHOR21241 {
-            get {
-                return ResourceManager.GetString("AUTHOR21241", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Logo 2"
-        /// </summary>
-        public static string LOGO_236131 {
-            get {
-                return ResourceManager.GetString("LOGO_236131", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Activity:"
-        /// </summary>
-        public static string ACTIVITY_63514 {
-            get {
-                return ResourceManager.GetString("ACTIVITY_63514", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "1123_VERBOSE"
-        /// </summary>
-        public static string _1123_VERBOSE41412 {
-            get {
-                return ResourceManager.GetString("_1123_VERBOSE41412", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Valor anterior"
-        /// </summary>
-        public static string VALOR_ANTERIOR54849 {
-            get {
-                return ResourceManager.GetString("VALOR_ANTERIOR54849", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to " 1124"
-        /// </summary>
-        public static string _112414944 {
-            get {
-                return ResourceManager.GetString("_112414944", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Gauge"
-        /// </summary>
-        public static string GAUGE40223 {
-            get {
-                return ResourceManager.GetString("GAUGE40223", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Value:"
-        /// </summary>
-        public static string VALUE_48317 {
-            get {
-                return ResourceManager.GetString("VALUE_48317", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  256"
-        /// </summary>
-        public static string __25630487 {
-            get {
-                return ResourceManager.GetString("__25630487", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  105"
-        /// </summary>
-        public static string __10524173 {
-            get {
-                return ResourceManager.GetString("__10524173", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Total Bonificações"
-        /// </summary>
-        public static string TOTAL_BONIFICACOES13450 {
-            get {
-                return ResourceManager.GetString("TOTAL_BONIFICACOES13450", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Type of Sub-goals"
-        /// </summary>
-        public static string TYPE_OF_SUB_GOALS32599 {
-            get {
-                return ResourceManager.GetString("TYPE_OF_SUB_GOALS32599", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Sub-goals of indicators"
-        /// </summary>
-        public static string SUB_GOALS_OF_INDICAT18331 {
-            get {
-                return ResourceManager.GetString("SUB_GOALS_OF_INDICAT18331", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Posição X (ME)"
-        /// </summary>
-        public static string POSICAO_X__ME_08394 {
-            get {
-                return ResourceManager.GetString("POSICAO_X__ME_08394", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  205"
-        /// </summary>
-        public static string __20538415 {
-            get {
-                return ResourceManager.GetString("__20538415", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Client ip address"
-        /// </summary>
-        public static string CLIENT_IP_ADDRESS62089 {
-            get {
-                return ResourceManager.GetString("CLIENT_IP_ADDRESS62089", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "SKU"
-        /// </summary>
-        public static string SKU42303 {
-            get {
-                return ResourceManager.GetString("SKU42303", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Parent"
-        /// </summary>
-        public static string PARENT12107 {
-            get {
-                return ResourceManager.GetString("PARENT12107", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Impacto"
-        /// </summary>
-        public static string IMPACTO36269 {
-            get {
-                return ResourceManager.GetString("IMPACTO36269", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "June"
-        /// </summary>
-        public static string JUNE07845 {
-            get {
-                return ResourceManager.GetString("JUNE07845", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "1119_VERBOSE"
-        /// </summary>
-        public static string _1119_VERBOSE52944 {
-            get {
-                return ResourceManager.GetString("_1119_VERBOSE52944", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Error sending mail"
-        /// </summary>
-        public static string ERROR_SENDING_MAIL44674 {
-            get {
-                return ResourceManager.GetString("ERROR_SENDING_MAIL44674", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Intern"
         /// </summary>
         public static string INTERN65375 {
@@ -13867,191 +12949,1082 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Image thumbnail"
+        ///   Looks up a localized string similar to "  395"
         /// </summary>
-        public static string IMAGE_THUMBNAIL01682 {
+        public static string __39563476 {
             get {
-                return ResourceManager.GetString("IMAGE_THUMBNAIL01682", resourceCulture);
+                return ResourceManager.GetString("__39563476", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Quantity of transactions"
+        ///   Looks up a localized string similar to "Facility"
         /// </summary>
-        public static string QUANTITY_OF_TRANSACT63133 {
+        public static string FACILITY55206 {
             get {
-                return ResourceManager.GetString("QUANTITY_OF_TRANSACT63133", resourceCulture);
+                return ResourceManager.GetString("FACILITY55206", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Building age"
+        ///   Looks up a localized string similar to "35"
         /// </summary>
-        public static string BUILDING_AGE27311 {
+        public static string _3534512 {
             get {
-                return ResourceManager.GetString("BUILDING_AGE27311", resourceCulture);
+                return ResourceManager.GetString("_3534512", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Multiform"
+        ///   Looks up a localized string similar to "Rule"
         /// </summary>
-        public static string MULTIFORM41286 {
+        public static string RULE61609 {
             get {
-                return ResourceManager.GetString("MULTIFORM41286", resourceCulture);
+                return ResourceManager.GetString("RULE61609", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Specific path with conditions popup afte MB"
+        ///   Looks up a localized string similar to "Responsibles for the Indicators"
         /// </summary>
-        public static string SPECIFIC_PATH_WITH_C62619 {
+        public static string RESPONSIBLES_FOR_THE21020 {
             get {
-                return ResourceManager.GetString("SPECIFIC_PATH_WITH_C62619", resourceCulture);
+                return ResourceManager.GetString("RESPONSIBLES_FOR_THE21020", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "   78"
+        ///   Looks up a localized string similar to "Local da regra"
         /// </summary>
-        public static string ___7840086 {
+        public static string LOCAL_DA_REGRA49987 {
             get {
-                return ResourceManager.GetString("___7840086", resourceCulture);
+                return ResourceManager.GetString("LOCAL_DA_REGRA49987", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "A cancelar"
+        ///   Looks up a localized string similar to "Canceled by"
         /// </summary>
-        public static string A_CANCELAR43988 {
+        public static string CANCELED_BY01167 {
             get {
-                return ResourceManager.GetString("A_CANCELAR43988", resourceCulture);
+                return ResourceManager.GetString("CANCELED_BY01167", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Process info"
+        ///   Looks up a localized string similar to "First incorporated facility"
         /// </summary>
-        public static string PROCESS_INFO62044 {
+        public static string FIRST_INCORPORATED_F63789 {
             get {
-                return ResourceManager.GetString("PROCESS_INFO62044", resourceCulture);
+                return ResourceManager.GetString("FIRST_INCORPORATED_F63789", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Locais da regra"
+        ///   Looks up a localized string similar to "Delete"
         /// </summary>
-        public static string LOCAIS_DA_REGRA25886 {
+        public static string DELETE48637 {
             get {
-                return ResourceManager.GetString("LOCAIS_DA_REGRA25886", resourceCulture);
+                return ResourceManager.GetString("DELETE48637", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Training Exercise 01"
+        ///   Looks up a localized string similar to "  436"
         /// </summary>
-        public static string TRAINING_EXERCISE_0161013 {
+        public static string __43617008 {
             get {
-                return ResourceManager.GetString("TRAINING_EXERCISE_0161013", resourceCulture);
+                return ResourceManager.GetString("__43617008", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Interested party"
+        ///   Looks up a localized string similar to "Enough rate"
         /// </summary>
-        public static string INTERESTED_PARTY36855 {
+        public static string ENOUGH_RATE29092 {
             get {
-                return ResourceManager.GetString("INTERESTED_PARTY36855", resourceCulture);
+                return ResourceManager.GetString("ENOUGH_RATE29092", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Lado"
+        ///   Looks up a localized string similar to "Período"
         /// </summary>
-        public static string LADO49085 {
+        public static string PERIODO18539 {
             get {
-                return ResourceManager.GetString("LADO49085", resourceCulture);
+                return ResourceManager.GetString("PERIODO18539", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Spent in Hours"
+        ///   Looks up a localized string similar to "Muito Boa"
         /// </summary>
-        public static string SPENT_IN_HOURS19366 {
+        public static string MUITO_BOA49280 {
             get {
-                return ResourceManager.GetString("SPENT_IN_HOURS19366", resourceCulture);
+                return ResourceManager.GetString("MUITO_BOA49280", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Tabs"
+        ///   Looks up a localized string similar to "Scorecard appearance"
         /// </summary>
-        public static string TABS03209 {
+        public static string SCORECARD_APPEARANCE36559 {
             get {
-                return ResourceManager.GetString("TABS03209", resourceCulture);
+                return ResourceManager.GetString("SCORECARD_APPEARANCE36559", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Products"
+        ///   Looks up a localized string similar to "    9"
         /// </summary>
-        public static string PRODUCTS34689 {
+        public static string ____921651 {
             get {
-                return ResourceManager.GetString("PRODUCTS34689", resourceCulture);
+                return ResourceManager.GetString("____921651", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Tipo Scorecard"
+        ///   Looks up a localized string similar to "Tax identification"
         /// </summary>
-        public static string TIPO_SCORECARD22393 {
+        public static string TAX_IDENTIFICATION51190 {
             get {
-                return ResourceManager.GetString("TIPO_SCORECARD22393", resourceCulture);
+                return ResourceManager.GetString("TAX_IDENTIFICATION51190", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Order line"
+        ///   Looks up a localized string similar to "Equipment purchased"
         /// </summary>
-        public static string ORDER_LINE50035 {
+        public static string EQUIPMENT_PURCHASED62596 {
             get {
-                return ResourceManager.GetString("ORDER_LINE50035", resourceCulture);
+                return ResourceManager.GetString("EQUIPMENT_PURCHASED62596", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Organism"
+        ///   Looks up a localized string similar to "Flight"
         /// </summary>
-        public static string ORGANISM39461 {
+        public static string FLIGHT55228 {
             get {
-                return ResourceManager.GetString("ORGANISM39461", resourceCulture);
+                return ResourceManager.GetString("FLIGHT55228", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Organic Unit"
+        ///   Looks up a localized string similar to "Date:"
         /// </summary>
-        public static string ORGANIC_UNIT48997 {
+        public static string DATE_55218 {
             get {
-                return ResourceManager.GetString("ORGANIC_UNIT48997", resourceCulture);
+                return ResourceManager.GetString("DATE_55218", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Interno"
+        ///   Looks up a localized string similar to " 1123"
         /// </summary>
-        public static string INTERNO52273 {
+        public static string _112319369 {
             get {
-                return ResourceManager.GetString("INTERNO52273", resourceCulture);
+                return ResourceManager.GetString("_112319369", resourceCulture);
             }
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Modified by"
+        ///   Looks up a localized string similar to "Hora de criação"
         /// </summary>
-        public static string MODIFIED_BY02094 {
+        public static string HORA_DE_CRIACAO40754 {
             get {
-                return ResourceManager.GetString("MODIFIED_BY02094", resourceCulture);
+                return ResourceManager.GetString("HORA_DE_CRIACAO40754", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to " 1109"
+        /// </summary>
+        public static string _110955308 {
+            get {
+                return ResourceManager.GetString("_110955308", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Output quantity:"
+        /// </summary>
+        public static string OUTPUT_QUANTITY_59942 {
+            get {
+                return ResourceManager.GetString("OUTPUT_QUANTITY_59942", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Facility type"
+        /// </summary>
+        public static string FACILITY_TYPE44577 {
+            get {
+                return ResourceManager.GetString("FACILITY_TYPE44577", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Latitude and Longitude"
+        /// </summary>
+        public static string LATITUDE_AND_LONGITU45730 {
+            get {
+                return ResourceManager.GetString("LATITUDE_AND_LONGITU45730", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Passengers"
+        /// </summary>
+        public static string PASSENGERS17599 {
+            get {
+                return ResourceManager.GetString("PASSENGERS17599", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Digital Attachements"
+        /// </summary>
+        public static string DIGITAL_ATTACHEMENTS44886 {
+            get {
+                return ResourceManager.GetString("DIGITAL_ATTACHEMENTS44886", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "KPI graphics color"
+        /// </summary>
+        public static string KPI_GRAPHICS_COLOR32907 {
+            get {
+                return ResourceManager.GetString("KPI_GRAPHICS_COLOR32907", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "End-of-period"
+        /// </summary>
+        public static string END_OF_PERIOD44616 {
+            get {
+                return ResourceManager.GetString("END_OF_PERIOD44616", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "PT12345678901234567890123"
+        /// </summary>
+        public static string PT12345678901234567820477 {
+            get {
+                return ResourceManager.GetString("PT12345678901234567820477", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Sales (phases)"
+        /// </summary>
+        public static string SALES__PHASES_20442 {
+            get {
+                return ResourceManager.GetString("SALES__PHASES_20442", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "   20"
+        /// </summary>
+        public static string ___2006071 {
+            get {
+                return ResourceManager.GetString("___2006071", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Sub-goal of indicator"
+        /// </summary>
+        public static string SUB_GOAL_OF_INDICATO52089 {
+            get {
+                return ResourceManager.GetString("SUB_GOAL_OF_INDICATO52089", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Floor"
+        /// </summary>
+        public static string FLOOR19993 {
+            get {
+                return ResourceManager.GetString("FLOOR19993", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Criado por:"
+        /// </summary>
+        public static string CRIADO_POR_18536 {
+            get {
+                return ResourceManager.GetString("CRIADO_POR_18536", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Text Color"
+        /// </summary>
+        public static string TEXT_COLOR63426 {
+            get {
+                return ResourceManager.GetString("TEXT_COLOR63426", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "string"
+        /// </summary>
+        public static string STRING29433 {
+            get {
+                return ResourceManager.GetString("STRING29433", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "List of x,y coordinates separated by ; that determine the points of a polygon"
+        /// </summary>
+        public static string LIST_OF_X_Y_COORDINA12532 {
+            get {
+                return ResourceManager.GetString("LIST_OF_X_Y_COORDINA12532", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Uppercase"
+        /// </summary>
+        public static string UPPERCASE48238 {
+            get {
+                return ResourceManager.GetString("UPPERCASE48238", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "No rumour in the Company"
+        /// </summary>
+        public static string NO_RUMOUR_IN_THE_COM15248 {
+            get {
+                return ResourceManager.GetString("NO_RUMOUR_IN_THE_COM15248", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Country of Birth"
+        /// </summary>
+        public static string COUNTRY_OF_BIRTH53244 {
+            get {
+                return ResourceManager.GetString("COUNTRY_OF_BIRTH53244", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Entity"
+        /// </summary>
+        public static string ENTITY62049 {
+            get {
+                return ResourceManager.GetString("ENTITY62049", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Date"
+        /// </summary>
+        public static string DATE18475 {
+            get {
+                return ResourceManager.GetString("DATE18475", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "conditional (Boolean) (smallint) (storage: 2 byte)"
+        /// </summary>
+        public static string CONDITIONAL__BOOLEAN08919 {
+            get {
+                return ResourceManager.GetString("CONDITIONAL__BOOLEAN08919", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Closing Attempts"
+        /// </summary>
+        public static string CLOSING_ATTEMPTS65102 {
+            get {
+                return ResourceManager.GetString("CLOSING_ATTEMPTS65102", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Right"
+        /// </summary>
+        public static string RIGHT33051 {
+            get {
+                return ResourceManager.GetString("RIGHT33051", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Somatório Pts Activ"
+        /// </summary>
+        public static string SOMATORIO_PTS_ACTIV53475 {
+            get {
+                return ResourceManager.GetString("SOMATORIO_PTS_ACTIV53475", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Multiple formats"
+        /// </summary>
+        public static string MULTIPLE_FORMATS58755 {
+            get {
+                return ResourceManager.GetString("MULTIPLE_FORMATS58755", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Indicator Goal"
+        /// </summary>
+        public static string INDICATOR_GOAL37404 {
+            get {
+                return ResourceManager.GetString("INDICATOR_GOAL37404", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Starting time with inclusive boundary"
+        /// </summary>
+        public static string STARTING_TIME_WITH_I44217 {
+            get {
+                return ResourceManager.GetString("STARTING_TIME_WITH_I44217", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Sends attachment?"
+        /// </summary>
+        public static string SENDS_ATTACHMENT_64661 {
+            get {
+                return ResourceManager.GetString("SENDS_ATTACHMENT_64661", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Tipo de condição"
+        /// </summary>
+        public static string TIPO_DE_CONDICAO09986 {
+            get {
+                return ResourceManager.GetString("TIPO_DE_CONDICAO09986", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Indicator icon"
+        /// </summary>
+        public static string INDICATOR_ICON40009 {
+            get {
+                return ResourceManager.GetString("INDICATOR_ICON40009", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Optional records"
+        /// </summary>
+        public static string OPTIONAL_RECORDS50081 {
+            get {
+                return ResourceManager.GetString("OPTIONAL_RECORDS50081", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Baggage Type"
+        /// </summary>
+        public static string BAGGAGE_TYPE35947 {
+            get {
+                return ResourceManager.GetString("BAGGAGE_TYPE35947", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to " 1128"
+        /// </summary>
+        public static string _112823684 {
+            get {
+                return ResourceManager.GetString("_112823684", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Mau"
+        /// </summary>
+        public static string MAU45741 {
+            get {
+                return ResourceManager.GetString("MAU45741", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Prop"
+        /// </summary>
+        public static string PROP59653 {
+            get {
+                return ResourceManager.GetString("PROP59653", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Manuais"
+        /// </summary>
+        public static string MANUAIS00572 {
+            get {
+                return ResourceManager.GetString("MANUAIS00572", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Attachment"
+        /// </summary>
+        public static string ATTACHMENT29376 {
+            get {
+                return ResourceManager.GetString("ATTACHMENT29376", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Has login?"
+        /// </summary>
+        public static string HAS_LOGIN_58044 {
+            get {
+                return ResourceManager.GetString("HAS_LOGIN_58044", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "  385"
+        /// </summary>
+        public static string __38506503 {
+            get {
+                return ResourceManager.GetString("__38506503", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Opção 2"
+        /// </summary>
+        public static string OPCAO_214220 {
+            get {
+                return ResourceManager.GetString("OPCAO_214220", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "real estate"
+        /// </summary>
+        public static string REAL_ESTATE15399 {
+            get {
+                return ResourceManager.GetString("REAL_ESTATE15399", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Slaughtered goods"
+        /// </summary>
+        public static string SLAUGHTERED_GOODS15856 {
+            get {
+                return ResourceManager.GetString("SLAUGHTERED_GOODS15856", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Facilities map"
+        /// </summary>
+        public static string FACILITIES_MAP61803 {
+            get {
+                return ResourceManager.GetString("FACILITIES_MAP61803", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Char String"
+        /// </summary>
+        public static string CHAR_STRING32451 {
+            get {
+                return ResourceManager.GetString("CHAR_STRING32451", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Contact type"
+        /// </summary>
+        public static string CONTACT_TYPE65233 {
+            get {
+                return ResourceManager.GetString("CONTACT_TYPE65233", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Máximo Sup."
+        /// </summary>
+        public static string MAXIMO_SUP_02835 {
+            get {
+                return ResourceManager.GetString("MAXIMO_SUP_02835", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Lending:"
+        /// </summary>
+        public static string LENDING_48355 {
+            get {
+                return ResourceManager.GetString("LENDING_48355", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Async process attachments"
+        /// </summary>
+        public static string ASYNC_PROCESS_ATTACH04785 {
+            get {
+                return ResourceManager.GetString("ASYNC_PROCESS_ATTACH04785", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Thumbnail"
+        /// </summary>
+        public static string THUMBNAIL30025 {
+            get {
+                return ResourceManager.GetString("THUMBNAIL30025", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "SMTP Access Password"
+        /// </summary>
+        public static string SMTP_ACCESS_PASSWORD36535 {
+            get {
+                return ResourceManager.GetString("SMTP_ACCESS_PASSWORD36535", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Maximum Perc"
+        /// </summary>
+        public static string MAXIMUM_PERC02603 {
+            get {
+                return ResourceManager.GetString("MAXIMUM_PERC02603", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Qnty Hours"
+        /// </summary>
+        public static string QNTY_HOURS39084 {
+            get {
+                return ResourceManager.GetString("QNTY_HOURS39084", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Origin ID"
+        /// </summary>
+        public static string ORIGIN_ID32934 {
+            get {
+                return ResourceManager.GetString("ORIGIN_ID32934", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Groups (Basic)"
+        /// </summary>
+        public static string GROUPS__BASIC_25795 {
+            get {
+                return ResourceManager.GetString("GROUPS__BASIC_25795", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to " 1105_VERBOSE"
+        /// </summary>
+        public static string _1105_VERBOSE60525 {
+            get {
+                return ResourceManager.GetString("_1105_VERBOSE60525", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Type of article"
+        /// </summary>
+        public static string TYPE_OF_ARTICLE43082 {
+            get {
+                return ResourceManager.GetString("TYPE_OF_ARTICLE43082", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Erro"
+        /// </summary>
+        public static string ERRO38355 {
+            get {
+                return ResourceManager.GetString("ERRO38355", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Address Type Code"
+        /// </summary>
+        public static string ADDRESS_TYPE_CODE33992 {
+            get {
+                return ResourceManager.GetString("ADDRESS_TYPE_CODE33992", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Overview"
+        /// </summary>
+        public static string OVERVIEW09715 {
+            get {
+                return ResourceManager.GetString("OVERVIEW09715", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Official No."
+        /// </summary>
+        public static string OFFICIAL_NO_34819 {
+            get {
+                return ResourceManager.GetString("OFFICIAL_NO_34819", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Unused items"
+        /// </summary>
+        public static string UNUSED_ITEMS37130 {
+            get {
+                return ResourceManager.GetString("UNUSED_ITEMS37130", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Goal"
+        /// </summary>
+        public static string GOAL08717 {
+            get {
+                return ResourceManager.GetString("GOAL08717", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "  119"
+        /// </summary>
+        public static string __11906282 {
+            get {
+                return ResourceManager.GetString("__11906282", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "1115"
+        /// </summary>
+        public static string _111536184 {
+            get {
+                return ResourceManager.GetString("_111536184", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Related Table (Basic)"
+        /// </summary>
+        public static string RELATED_TABLE__BASIC33628 {
+            get {
+                return ResourceManager.GetString("RELATED_TABLE__BASIC33628", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Training Exercise 09"
+        /// </summary>
+        public static string TRAINING_EXERCISE_0963949 {
+            get {
+                return ResourceManager.GetString("TRAINING_EXERCISE_0963949", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "collapsible group -> q-group-collapsible--audit"
+        /// </summary>
+        public static string COLLAPSIBLE_GROUP___31279 {
+            get {
+                return ResourceManager.GetString("COLLAPSIBLE_GROUP___31279", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Group markers in cluster"
+        /// </summary>
+        public static string GROUP_MARKERS_IN_CLU31341 {
+            get {
+                return ResourceManager.GetString("GROUP_MARKERS_IN_CLU31341", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "   23"
+        /// </summary>
+        public static string ___2311854 {
+            get {
+                return ResourceManager.GetString("___2311854", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Período Seguinte"
+        /// </summary>
+        public static string PERIODO_SEGUINTE40793 {
+            get {
+                return ResourceManager.GetString("PERIODO_SEGUINTE40793", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "  341"
+        /// </summary>
+        public static string __34125738 {
+            get {
+                return ResourceManager.GetString("__34125738", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Priority"
+        /// </summary>
+        public static string PRIORITY31140 {
+            get {
+                return ResourceManager.GetString("PRIORITY31140", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "COMPANY"
+        /// </summary>
+        public static string COMPANY20759 {
+            get {
+                return ResourceManager.GetString("COMPANY20759", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Dispatch of goods"
+        /// </summary>
+        public static string DISPATCH_OF_GOODS21495 {
+            get {
+                return ResourceManager.GetString("DISPATCH_OF_GOODS21495", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Recolha direta dos Dados"
+        /// </summary>
+        public static string RECOLHA_DIRETA_DOS_D20088 {
+            get {
+                return ResourceManager.GetString("RECOLHA_DIRETA_DOS_D20088", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Mensal"
+        /// </summary>
+        public static string MENSAL53343 {
+            get {
+                return ResourceManager.GetString("MENSAL53343", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "1116_VERBOSE"
+        /// </summary>
+        public static string _1116_VERBOSE64950 {
+            get {
+                return ResourceManager.GetString("_1116_VERBOSE64950", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Notification ID that generated the message"
+        /// </summary>
+        public static string NOTIFICATION_ID_THAT61751 {
+            get {
+                return ResourceManager.GetString("NOTIFICATION_ID_THAT61751", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Cabeçalho"
+        /// </summary>
+        public static string CABECALHO50133 {
+            get {
+                return ResourceManager.GetString("CABECALHO50133", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "  383"
+        /// </summary>
+        public static string __38307745 {
+            get {
+                return ResourceManager.GetString("__38307745", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Inspection visits"
+        /// </summary>
+        public static string INSPECTION_VISITS19524 {
+            get {
+                return ResourceManager.GetString("INSPECTION_VISITS19524", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Sends email?"
+        /// </summary>
+        public static string SENDS_EMAIL_12942 {
+            get {
+                return ResourceManager.GetString("SENDS_EMAIL_12942", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Trimestral"
+        /// </summary>
+        public static string TRIMESTRAL58756 {
+            get {
+                return ResourceManager.GetString("TRIMESTRAL58756", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Please make sure you have entered email correctly"
+        /// </summary>
+        public static string PLEASE_MAKE_SURE_YOU64125 {
+            get {
+                return ResourceManager.GetString("PLEASE_MAKE_SURE_YOU64125", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Designation:"
+        /// </summary>
+        public static string DESIGNATION_35800 {
+            get {
+                return ResourceManager.GetString("DESIGNATION_35800", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Decimal (11-15) (storage: 9 byte)"
+        /// </summary>
+        public static string DECIMAL__11_15___STO64707 {
+            get {
+                return ResourceManager.GetString("DECIMAL__11_15___STO64707", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "2ª Classe"
+        /// </summary>
+        public static string _2A_CLASSE35193 {
+            get {
+                return ResourceManager.GetString("_2A_CLASSE35193", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Instant"
+        /// </summary>
+        public static string INSTANT35907 {
+            get {
+                return ResourceManager.GetString("INSTANT35907", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ">COMPANY"
+        /// </summary>
+        public static string _COMPANY02087 {
+            get {
+                return ResourceManager.GetString("_COMPANY02087", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Equipment familiy"
+        /// </summary>
+        public static string EQUIPMENT_FAMILIY58959 {
+            get {
+                return ResourceManager.GetString("EQUIPMENT_FAMILIY58959", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "  121"
+        /// </summary>
+        public static string __12157955 {
+            get {
+                return ResourceManager.GetString("__12157955", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ">TEAM PLAYING AT HOME"
+        /// </summary>
+        public static string _TEAM_PLAYING_AT_HOM03863 {
+            get {
+                return ResourceManager.GetString("_TEAM_PLAYING_AT_HOM03863", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Without financial resources"
+        /// </summary>
+        public static string WITHOUT_FINANCIAL_RE07914 {
+            get {
+                return ResourceManager.GetString("WITHOUT_FINANCIAL_RE07914", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Classe Económica"
+        /// </summary>
+        public static string CLASSE_ECONOMICA36282 {
+            get {
+                return ResourceManager.GetString("CLASSE_ECONOMICA36282", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "HTML format?"
+        /// </summary>
+        public static string HTML_FORMAT_60293 {
+            get {
+                return ResourceManager.GetString("HTML_FORMAT_60293", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Changes number"
+        /// </summary>
+        public static string CHANGES_NUMBER59897 {
+            get {
+                return ResourceManager.GetString("CHANGES_NUMBER59897", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Last"
+        /// </summary>
+        public static string LAST49207 {
+            get {
+                return ResourceManager.GetString("LAST49207", resourceCulture);
             }
         }
 
@@ -14146,11 +14119,29 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Segment Type"
+        /// </summary>
+        public static string SEGMENT_TYPE16219 {
+            get {
+                return ResourceManager.GetString("SEGMENT_TYPE16219", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Card-Centered"
         /// </summary>
         public static string CARD_CENTERED10027 {
             get {
                 return ResourceManager.GetString("CARD_CENTERED10027", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "  103"
+        /// </summary>
+        public static string __10344539 {
+            get {
+                return ResourceManager.GetString("__10344539", resourceCulture);
             }
         }
 
@@ -14227,6 +14218,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Bad limit"
+        /// </summary>
+        public static string BAD_LIMIT31633 {
+            get {
+                return ResourceManager.GetString("BAD_LIMIT31633", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Resources"
         /// </summary>
         public static string RESOURCES15862 {
@@ -14250,6 +14250,15 @@ namespace Administration.Resources {
         public static string GROUPING_OF_EQUIPMEN34190 {
             get {
                 return ResourceManager.GetString("GROUPING_OF_EQUIPMEN34190", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Room No:"
+        /// </summary>
+        public static string ROOM_NO_15796 {
+            get {
+                return ResourceManager.GetString("ROOM_NO_15796", resourceCulture);
             }
         }
 
@@ -14335,15 +14344,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Classe Económica"
-        /// </summary>
-        public static string CLASSE_ECONOMICA36282 {
-            get {
-                return ResourceManager.GetString("CLASSE_ECONOMICA36282", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Chave Primária"
         /// </summary>
         public static string CHAVE_PRIMARIA61422 {
@@ -14367,15 +14367,6 @@ namespace Administration.Resources {
         public static string ENTRIES32319 {
             get {
                 return ResourceManager.GetString("ENTRIES32319", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Instant"
-        /// </summary>
-        public static string INSTANT35907 {
-            get {
-                return ResourceManager.GetString("INSTANT35907", resourceCulture);
             }
         }
 
@@ -14452,6 +14443,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Internal"
+        /// </summary>
+        public static string INTERNAL04894 {
+            get {
+                return ResourceManager.GetString("INTERNAL04894", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Cards"
         /// </summary>
         public static string CARDS04291 {
@@ -14466,15 +14466,6 @@ namespace Administration.Resources {
         public static string VERTICAL_LAYOUT___VU34223 {
             get {
                 return ResourceManager.GetString("VERTICAL_LAYOUT___VU34223", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Indicator Goal"
-        /// </summary>
-        public static string INDICATOR_GOAL37404 {
-            get {
-                return ResourceManager.GetString("INDICATOR_GOAL37404", resourceCulture);
             }
         }
 
@@ -14830,6 +14821,123 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "List with columns from the Below table"
+        /// </summary>
+        public static string LIST_WITH_COLUMNS_FR36713 {
+            get {
+                return ResourceManager.GetString("LIST_WITH_COLUMNS_FR36713", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Total Activities"
+        /// </summary>
+        public static string TOTAL_ACTIVITIES31614 {
+            get {
+                return ResourceManager.GetString("TOTAL_ACTIVITIES31614", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Alternative Email"
+        /// </summary>
+        public static string ALTERNATIVE_EMAIL17444 {
+            get {
+                return ResourceManager.GetString("ALTERNATIVE_EMAIL17444", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Recipient key 'Comodatário'"
+        /// </summary>
+        public static string RECIPIENT_KEY__COMOD31618 {
+            get {
+                return ResourceManager.GetString("RECIPIENT_KEY__COMOD31618", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Logo"
+        /// </summary>
+        public static string LOGO62483 {
+            get {
+                return ResourceManager.GetString("LOGO62483", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "  388"
+        /// </summary>
+        public static string __38812468 {
+            get {
+                return ResourceManager.GetString("__38812468", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Output documents"
+        /// </summary>
+        public static string OUTPUT_DOCUMENTS44871 {
+            get {
+                return ResourceManager.GetString("OUTPUT_DOCUMENTS44871", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Timeline Secundary"
+        /// </summary>
+        public static string TIMELINE_SECUNDARY50965 {
+            get {
+                return ResourceManager.GetString("TIMELINE_SECUNDARY50965", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Organic Unit Acronym"
+        /// </summary>
+        public static string ORGANIC_UNIT_ACRONYM17754 {
+            get {
+                return ResourceManager.GetString("ORGANIC_UNIT_ACRONYM17754", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Valor (Ano N-1)"
+        /// </summary>
+        public static string VALOR__ANO_N_1_07204 {
+            get {
+                return ResourceManager.GetString("VALOR__ANO_N_1_07204", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Id"
+        /// </summary>
+        public static string ID36840 {
+            get {
+                return ResourceManager.GetString("ID36840", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "zipcode"
+        /// </summary>
+        public static string ZIPCODE17511 {
+            get {
+                return ResourceManager.GetString("ZIPCODE17511", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Orders in group  (Integer field)"
+        /// </summary>
+        public static string ORDERS_IN_GROUP___IN07193 {
+            get {
+                return ResourceManager.GetString("ORDERS_IN_GROUP___IN07193", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Enforce table conditions"
         /// </summary>
         public static string ENFORCE_TABLE_CONDIT17491 {
@@ -14952,15 +15060,6 @@ namespace Administration.Resources {
         public static string AIRPORT52716 {
             get {
                 return ResourceManager.GetString("AIRPORT52716", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Attachment"
-        /// </summary>
-        public static string ATTACHMENT29376 {
-            get {
-                return ResourceManager.GetString("ATTACHMENT29376", resourceCulture);
             }
         }
 
@@ -15091,15 +15190,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Designation:"
-        /// </summary>
-        public static string DESIGNATION_35800 {
-            get {
-                return ResourceManager.GetString("DESIGNATION_35800", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "  303"
         /// </summary>
         public static string __30344822 {
@@ -15159,15 +15249,6 @@ namespace Administration.Resources {
         public static string ALL_CONTACTS25646 {
             get {
                 return ResourceManager.GetString("ALL_CONTACTS25646", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Last"
-        /// </summary>
-        public static string LAST49207 {
-            get {
-                return ResourceManager.GetString("LAST49207", resourceCulture);
             }
         }
 
@@ -15249,15 +15330,6 @@ namespace Administration.Resources {
         public static string CLASS__ENUMERACAO_DE17340 {
             get {
                 return ResourceManager.GetString("CLASS__ENUMERACAO_DE17340", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Somatório Pts Activ"
-        /// </summary>
-        public static string SOMATORIO_PTS_ACTIV53475 {
-            get {
-                return ResourceManager.GetString("SOMATORIO_PTS_ACTIV53475", resourceCulture);
             }
         }
 
@@ -15447,6 +15519,15 @@ namespace Administration.Resources {
         public static string _AGGREGATOR38173 {
             get {
                 return ResourceManager.GetString("_AGGREGATOR38173", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Client ip address"
+        /// </summary>
+        public static string CLIENT_IP_ADDRESS62089 {
+            get {
+                return ResourceManager.GetString("CLIENT_IP_ADDRESS62089", resourceCulture);
             }
         }
 
@@ -15649,15 +15730,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Closing Attempts"
-        /// </summary>
-        public static string CLOSING_ATTEMPTS65102 {
-            get {
-                return ResourceManager.GetString("CLOSING_ATTEMPTS65102", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Sequence"
         /// </summary>
         public static string SEQUENCE42310 {
@@ -15681,6 +15753,15 @@ namespace Administration.Resources {
         public static string NORMAL_LIST__SHOW_WH30528 {
             get {
                 return ResourceManager.GetString("NORMAL_LIST__SHOW_WH30528", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Valor anterior"
+        /// </summary>
+        public static string VALOR_ANTERIOR54849 {
+            get {
+                return ResourceManager.GetString("VALOR_ANTERIOR54849", resourceCulture);
             }
         }
 
@@ -15717,6 +15798,15 @@ namespace Administration.Resources {
         public static string __27062379 {
             get {
                 return ResourceManager.GetString("__27062379", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "First"
+        /// </summary>
+        public static string FIRST42972 {
+            get {
+                return ResourceManager.GetString("FIRST42972", resourceCulture);
             }
         }
 
@@ -16234,20 +16324,20 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Without financial resources"
-        /// </summary>
-        public static string WITHOUT_FINANCIAL_RE07914 {
-            get {
-                return ResourceManager.GetString("WITHOUT_FINANCIAL_RE07914", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Collapsible style"
         /// </summary>
         public static string COLLAPSIBLE_STYLE24579 {
             get {
                 return ResourceManager.GetString("COLLAPSIBLE_STYLE24579", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "  205"
+        /// </summary>
+        public static string __20538415 {
+            get {
+                return ResourceManager.GetString("__20538415", resourceCulture);
             }
         }
 
@@ -16293,15 +16383,6 @@ namespace Administration.Resources {
         public static string MANUFACTURER_S_WEBSI12156 {
             get {
                 return ResourceManager.GetString("MANUFACTURER_S_WEBSI12156", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  385"
-        /// </summary>
-        public static string __38506503 {
-            get {
-                return ResourceManager.GetString("__38506503", resourceCulture);
             }
         }
 
@@ -16648,15 +16729,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Facilities map"
-        /// </summary>
-        public static string FACILITIES_MAP61803 {
-            get {
-                return ResourceManager.GetString("FACILITIES_MAP61803", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "  170"
         /// </summary>
         public static string __17057400 {
@@ -16999,15 +17071,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Equipment familiy"
-        /// </summary>
-        public static string EQUIPMENT_FAMILIY58959 {
-            get {
-                return ResourceManager.GetString("EQUIPMENT_FAMILIY58959", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Decimal places"
         /// </summary>
         public static string DECIMAL_PLACES62575 {
@@ -17323,6 +17386,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to " 1097"
+        /// </summary>
+        public static string _109732431 {
+            get {
+                return ResourceManager.GetString("_109732431", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Apartment type"
         /// </summary>
         public static string APARTMENT_TYPE01925 {
@@ -17355,6 +17427,15 @@ namespace Administration.Resources {
         public static string PALAVRA_CHAVE_ACESSO43416 {
             get {
                 return ResourceManager.GetString("PALAVRA_CHAVE_ACESSO43416", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Information elements"
+        /// </summary>
+        public static string INFORMATION_ELEMENTS50322 {
+            get {
+                return ResourceManager.GetString("INFORMATION_ELEMENTS50322", resourceCulture);
             }
         }
 
@@ -17935,15 +18016,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Inspection visits"
-        /// </summary>
-        public static string INSPECTION_VISITS19524 {
-            get {
-                return ResourceManager.GetString("INSPECTION_VISITS19524", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Nome da companhia aérea"
         /// </summary>
         public static string NOME_DA_COMPANHIA_AE36383 {
@@ -17967,24 +18039,6 @@ namespace Administration.Resources {
         public static string _DADATARY21139 {
             get {
                 return ResourceManager.GetString("_DADATARY21139", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Async process attachments"
-        /// </summary>
-        public static string ASYNC_PROCESS_ATTACH04785 {
-            get {
-                return ResourceManager.GetString("ASYNC_PROCESS_ATTACH04785", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Indicator icon"
-        /// </summary>
-        public static string INDICATOR_ICON40009 {
-            get {
-                return ResourceManager.GetString("INDICATOR_ICON40009", resourceCulture);
             }
         }
 
@@ -18120,24 +18174,6 @@ namespace Administration.Resources {
         public static string DATE02091 {
             get {
                 return ResourceManager.GetString("DATE02091", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "  383"
-        /// </summary>
-        public static string __38307745 {
-            get {
-                return ResourceManager.GetString("__38307745", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Notification ID that generated the message"
-        /// </summary>
-        public static string NOTIFICATION_ID_THAT61751 {
-            get {
-                return ResourceManager.GetString("NOTIFICATION_ID_THAT61751", resourceCulture);
             }
         }
 
@@ -18529,6 +18565,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "language"
+        /// </summary>
+        public static string LANGUAGE33172 {
+            get {
+                return ResourceManager.GetString("LANGUAGE33172", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Remove from the Rooms an Equipment"
         /// </summary>
         public static string REMOVE_FROM_THE_ROOM09521 {
@@ -18745,15 +18790,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Mau"
-        /// </summary>
-        public static string MAU45741 {
-            get {
-                return ResourceManager.GetString("MAU45741", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to ">>PERSON RESPONSIBLE"
         /// </summary>
         public static string __PERSON_RESPONSIBLE00553 {
@@ -18876,6 +18912,15 @@ namespace Administration.Resources {
         public static string __42333108 {
             get {
                 return ResourceManager.GetString("__42333108", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Tipo de acumulação"
+        /// </summary>
+        public static string TIPO_DE_ACUMULACAO50718 {
+            get {
+                return ResourceManager.GetString("TIPO_DE_ACUMULACAO50718", resourceCulture);
             }
         }
 
@@ -19267,15 +19312,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to ">TEAM PLAYING AT HOME"
-        /// </summary>
-        public static string _TEAM_PLAYING_AT_HOM03863 {
-            get {
-                return ResourceManager.GetString("_TEAM_PLAYING_AT_HOM03863", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Total Não Aplicáveis"
         /// </summary>
         public static string TOTAL_NAO_APLICAVEIS52564 {
@@ -19465,15 +19501,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "1116_VERBOSE"
-        /// </summary>
-        public static string _1116_VERBOSE64950 {
-            get {
-                return ResourceManager.GetString("_1116_VERBOSE64950", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Diário"
         /// </summary>
         public static string DIARIO16236 {
@@ -19515,6 +19542,15 @@ namespace Administration.Resources {
         public static string MARCH41748 {
             get {
                 return ResourceManager.GetString("MARCH41748", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to ">EXIT DOCUMENT"
+        /// </summary>
+        public static string _EXIT_DOCUMENT48701 {
+            get {
+                return ResourceManager.GetString("_EXIT_DOCUMENT48701", resourceCulture);
             }
         }
 
@@ -19578,15 +19614,6 @@ namespace Administration.Resources {
         public static string TRIGGER____T25233 {
             get {
                 return ResourceManager.GetString("TRIGGER____T25233", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to ">COMPANY"
-        /// </summary>
-        public static string _COMPANY02087 {
-            get {
-                return ResourceManager.GetString("_COMPANY02087", resourceCulture);
             }
         }
 
@@ -19771,6 +19798,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Periodicidades de Recolha"
+        /// </summary>
+        public static string PERIODICIDADES_DE_RE37021 {
+            get {
+                return ResourceManager.GetString("PERIODICIDADES_DE_RE37021", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Cellphone"
         /// </summary>
         public static string CELLPHONE19585 {
@@ -19780,128 +19816,11 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Sends attachment?"
-        /// </summary>
-        public static string SENDS_ATTACHMENT_64661 {
-            get {
-                return ResourceManager.GetString("SENDS_ATTACHMENT_64661", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Size (m2)"
         /// </summary>
         public static string SIZE__M2_57059 {
             get {
                 return ResourceManager.GetString("SIZE__M2_57059", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Date"
-        /// </summary>
-        public static string DATE18475 {
-            get {
-                return ResourceManager.GetString("DATE18475", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "conditional (Boolean) (smallint) (storage: 2 byte)"
-        /// </summary>
-        public static string CONDITIONAL__BOOLEAN08919 {
-            get {
-                return ResourceManager.GetString("CONDITIONAL__BOOLEAN08919", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Right"
-        /// </summary>
-        public static string RIGHT33051 {
-            get {
-                return ResourceManager.GetString("RIGHT33051", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Multiple formats"
-        /// </summary>
-        public static string MULTIPLE_FORMATS58755 {
-            get {
-                return ResourceManager.GetString("MULTIPLE_FORMATS58755", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Starting time with inclusive boundary"
-        /// </summary>
-        public static string STARTING_TIME_WITH_I44217 {
-            get {
-                return ResourceManager.GetString("STARTING_TIME_WITH_I44217", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Tipo de condição"
-        /// </summary>
-        public static string TIPO_DE_CONDICAO09986 {
-            get {
-                return ResourceManager.GetString("TIPO_DE_CONDICAO09986", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Optional records"
-        /// </summary>
-        public static string OPTIONAL_RECORDS50081 {
-            get {
-                return ResourceManager.GetString("OPTIONAL_RECORDS50081", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Baggage Type"
-        /// </summary>
-        public static string BAGGAGE_TYPE35947 {
-            get {
-                return ResourceManager.GetString("BAGGAGE_TYPE35947", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to " 1128"
-        /// </summary>
-        public static string _112823684 {
-            get {
-                return ResourceManager.GetString("_112823684", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Prop"
-        /// </summary>
-        public static string PROP59653 {
-            get {
-                return ResourceManager.GetString("PROP59653", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Manuais"
-        /// </summary>
-        public static string MANUAIS00572 {
-            get {
-                return ResourceManager.GetString("MANUAIS00572", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Has login?"
-        /// </summary>
-        public static string HAS_LOGIN_58044 {
-            get {
-                return ResourceManager.GetString("HAS_LOGIN_58044", resourceCulture);
             }
         }
 
@@ -20343,15 +20262,6 @@ namespace Administration.Resources {
         public static string DIGITAL_ATTACHMENTS64891 {
             get {
                 return ResourceManager.GetString("DIGITAL_ATTACHMENTS64891", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "real estate"
-        /// </summary>
-        public static string REAL_ESTATE15399 {
-            get {
-                return ResourceManager.GetString("REAL_ESTATE15399", resourceCulture);
             }
         }
 
@@ -20878,6 +20788,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Whole Line On"
+        /// </summary>
+        public static string WHOLE_LINE_ON08702 {
+            get {
+                return ResourceManager.GetString("WHOLE_LINE_ON08702", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Missão"
         /// </summary>
         public static string MISSAO57811 {
@@ -21247,6 +21166,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Ano construído"
+        /// </summary>
+        public static string ANO_CONSTRUIDO64369 {
+            get {
+                return ResourceManager.GetString("ANO_CONSTRUIDO64369", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Afetação / Contabilidade Custos"
         /// </summary>
         public static string AFETACAO___CONTABILI52162 {
@@ -21391,6 +21319,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "1119_VERBOSE"
+        /// </summary>
+        public static string _1119_VERBOSE52944 {
+            get {
+                return ResourceManager.GetString("_1119_VERBOSE52944", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Tipo de Dado"
         /// </summary>
         public static string TIPO_DE_DADO28228 {
@@ -21423,15 +21360,6 @@ namespace Administration.Resources {
         public static string ITEM_PROPERTY35988 {
             get {
                 return ResourceManager.GetString("ITEM_PROPERTY35988", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Please make sure you have entered email correctly"
-        /// </summary>
-        public static string PLEASE_MAKE_SURE_YOU64125 {
-            get {
-                return ResourceManager.GetString("PLEASE_MAKE_SURE_YOU64125", resourceCulture);
             }
         }
 
@@ -21585,15 +21513,6 @@ namespace Administration.Resources {
         public static string EVALUATION_TYPE12257 {
             get {
                 return ResourceManager.GetString("EVALUATION_TYPE12257", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "2ª Classe"
-        /// </summary>
-        public static string _2A_CLASSE35193 {
-            get {
-                return ResourceManager.GetString("_2A_CLASSE35193", resourceCulture);
             }
         }
 
@@ -21810,6 +21729,15 @@ namespace Administration.Resources {
         public static string C51806 {
             get {
                 return ResourceManager.GetString("C51806", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Type of Sub-goals"
+        /// </summary>
+        public static string TYPE_OF_SUB_GOALS32599 {
+            get {
+                return ResourceManager.GetString("TYPE_OF_SUB_GOALS32599", resourceCulture);
             }
         }
 
@@ -22246,15 +22174,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "  121"
-        /// </summary>
-        public static string __12157955 {
-            get {
-                return ResourceManager.GetString("__12157955", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "    5"
         /// </summary>
         public static string ____510167 {
@@ -22606,15 +22525,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Groups (Basic)"
-        /// </summary>
-        public static string GROUPS__BASIC_25795 {
-            get {
-                return ResourceManager.GetString("GROUPS__BASIC_25795", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Removing Equipment from a Room"
         /// </summary>
         public static string REMOVING_EQUIPMENT_F06551 {
@@ -22737,6 +22647,24 @@ namespace Administration.Resources {
         public static string PROCESS_TYPE25967 {
             get {
                 return ResourceManager.GetString("PROCESS_TYPE25967", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Imóveis numa Região"
+        /// </summary>
+        public static string IMOVEIS_NUMA_REGIAO28637 {
+            get {
+                return ResourceManager.GetString("IMOVEIS_NUMA_REGIAO28637", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Error sending mail"
+        /// </summary>
+        public static string ERROR_SENDING_MAIL44674 {
+            get {
+                return ResourceManager.GetString("ERROR_SENDING_MAIL44674", resourceCulture);
             }
         }
 
@@ -22876,11 +22804,11 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "HTML format?"
+        ///   Looks up a localized string similar to "Facility type Parameter"
         /// </summary>
-        public static string HTML_FORMAT_60293 {
+        public static string FACILITY_TYPE_PARAME05479 {
             get {
-                return ResourceManager.GetString("HTML_FORMAT_60293", resourceCulture);
+                return ResourceManager.GetString("FACILITY_TYPE_PARAME05479", resourceCulture);
             }
         }
 
@@ -22957,114 +22885,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Opção 2"
-        /// </summary>
-        public static string OPCAO_214220 {
-            get {
-                return ResourceManager.GetString("OPCAO_214220", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Slaughtered goods"
-        /// </summary>
-        public static string SLAUGHTERED_GOODS15856 {
-            get {
-                return ResourceManager.GetString("SLAUGHTERED_GOODS15856", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Char String"
-        /// </summary>
-        public static string CHAR_STRING32451 {
-            get {
-                return ResourceManager.GetString("CHAR_STRING32451", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Contact type"
-        /// </summary>
-        public static string CONTACT_TYPE65233 {
-            get {
-                return ResourceManager.GetString("CONTACT_TYPE65233", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Máximo Sup."
-        /// </summary>
-        public static string MAXIMO_SUP_02835 {
-            get {
-                return ResourceManager.GetString("MAXIMO_SUP_02835", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Lending:"
-        /// </summary>
-        public static string LENDING_48355 {
-            get {
-                return ResourceManager.GetString("LENDING_48355", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Thumbnail"
-        /// </summary>
-        public static string THUMBNAIL30025 {
-            get {
-                return ResourceManager.GetString("THUMBNAIL30025", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "SMTP Access Password"
-        /// </summary>
-        public static string SMTP_ACCESS_PASSWORD36535 {
-            get {
-                return ResourceManager.GetString("SMTP_ACCESS_PASSWORD36535", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Maximum Perc"
-        /// </summary>
-        public static string MAXIMUM_PERC02603 {
-            get {
-                return ResourceManager.GetString("MAXIMUM_PERC02603", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Qnty Hours"
-        /// </summary>
-        public static string QNTY_HOURS39084 {
-            get {
-                return ResourceManager.GetString("QNTY_HOURS39084", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Origin ID"
-        /// </summary>
-        public static string ORIGIN_ID32934 {
-            get {
-                return ResourceManager.GetString("ORIGIN_ID32934", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to " 1105_VERBOSE"
-        /// </summary>
-        public static string _1105_VERBOSE60525 {
-            get {
-                return ResourceManager.GetString("_1105_VERBOSE60525", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Monitorização"
         /// </summary>
         public static string MONITORIZACAO41068 {
@@ -23083,11 +22903,29 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Value:"
+        /// </summary>
+        public static string VALUE_48317 {
+            get {
+                return ResourceManager.GetString("VALUE_48317", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Ordered"
         /// </summary>
         public static string ORDERED04034 {
             get {
                 return ResourceManager.GetString("ORDERED04034", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "last"
+        /// </summary>
+        public static string LAST48120 {
+            get {
+                return ResourceManager.GetString("LAST48120", resourceCulture);
             }
         }
 
@@ -23290,15 +23128,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Cabeçalho"
-        /// </summary>
-        public static string CABECALHO50133 {
-            get {
-                return ResourceManager.GetString("CABECALHO50133", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "  204"
         /// </summary>
         public static string __20437552 {
@@ -23308,11 +23137,11 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Mensal"
+        ///   Looks up a localized string similar to "  256"
         /// </summary>
-        public static string MENSAL53343 {
+        public static string __25630487 {
             get {
-                return ResourceManager.GetString("MENSAL53343", resourceCulture);
+                return ResourceManager.GetString("__25630487", resourceCulture);
             }
         }
 
@@ -23542,6 +23371,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Sub-goals of indicators"
+        /// </summary>
+        public static string SUB_GOALS_OF_INDICAT18331 {
+            get {
+                return ResourceManager.GetString("SUB_GOALS_OF_INDICAT18331", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Image (binary)"
         /// </summary>
         public static string IMAGE__BINARY_46903 {
@@ -23682,6 +23520,123 @@ namespace Administration.Resources {
         public static string LENDING_NO14727 {
             get {
                 return ResourceManager.GetString("LENDING_NO14727", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Author"
+        /// </summary>
+        public static string AUTHOR21241 {
+            get {
+                return ResourceManager.GetString("AUTHOR21241", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Logo 2"
+        /// </summary>
+        public static string LOGO_236131 {
+            get {
+                return ResourceManager.GetString("LOGO_236131", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Activity:"
+        /// </summary>
+        public static string ACTIVITY_63514 {
+            get {
+                return ResourceManager.GetString("ACTIVITY_63514", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "1123_VERBOSE"
+        /// </summary>
+        public static string _1123_VERBOSE41412 {
+            get {
+                return ResourceManager.GetString("_1123_VERBOSE41412", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to " 1124"
+        /// </summary>
+        public static string _112414944 {
+            get {
+                return ResourceManager.GetString("_112414944", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Gauge"
+        /// </summary>
+        public static string GAUGE40223 {
+            get {
+                return ResourceManager.GetString("GAUGE40223", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "  105"
+        /// </summary>
+        public static string __10524173 {
+            get {
+                return ResourceManager.GetString("__10524173", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Total Bonificações"
+        /// </summary>
+        public static string TOTAL_BONIFICACOES13450 {
+            get {
+                return ResourceManager.GetString("TOTAL_BONIFICACOES13450", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Posição X (ME)"
+        /// </summary>
+        public static string POSICAO_X__ME_08394 {
+            get {
+                return ResourceManager.GetString("POSICAO_X__ME_08394", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "SKU"
+        /// </summary>
+        public static string SKU42303 {
+            get {
+                return ResourceManager.GetString("SKU42303", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Parent"
+        /// </summary>
+        public static string PARENT12107 {
+            get {
+                return ResourceManager.GetString("PARENT12107", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Impacto"
+        /// </summary>
+        public static string IMPACTO36269 {
+            get {
+                return ResourceManager.GetString("IMPACTO36269", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "June"
+        /// </summary>
+        public static string JUNE07845 {
+            get {
+                return ResourceManager.GetString("JUNE07845", resourceCulture);
             }
         }
 
@@ -24127,15 +24082,6 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Recolha direta dos Dados"
-        /// </summary>
-        public static string RECOLHA_DIRETA_DOS_D20088 {
-            get {
-                return ResourceManager.GetString("RECOLHA_DIRETA_DOS_D20088", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Boolean Prop"
         /// </summary>
         public static string BOOLEAN_PROP13266 {
@@ -24379,20 +24325,20 @@ namespace Administration.Resources {
         }
 
         /// <summary>
-        ///   Looks up a localized string similar to "Sends email?"
-        /// </summary>
-        public static string SENDS_EMAIL_12942 {
-            get {
-                return ResourceManager.GetString("SENDS_EMAIL_12942", resourceCulture);
-            }
-        }
-
-        /// <summary>
         ///   Looks up a localized string similar to "Card-Img-Top"
         /// </summary>
         public static string CARD_IMG_TOP51356 {
             get {
                 return ResourceManager.GetString("CARD_IMG_TOP51356", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Type of segment used"
+        /// </summary>
+        public static string TYPE_OF_SEGMENT_USED13810 {
+            get {
+                return ResourceManager.GetString("TYPE_OF_SEGMENT_USED13810", resourceCulture);
             }
         }
 
@@ -24420,33 +24366,6 @@ namespace Administration.Resources {
         public static string LOGIN_NAME03494 {
             get {
                 return ResourceManager.GetString("LOGIN_NAME03494", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Trimestral"
-        /// </summary>
-        public static string TRIMESTRAL58756 {
-            get {
-                return ResourceManager.GetString("TRIMESTRAL58756", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Decimal (11-15) (storage: 9 byte)"
-        /// </summary>
-        public static string DECIMAL__11_15___STO64707 {
-            get {
-                return ResourceManager.GetString("DECIMAL__11_15___STO64707", resourceCulture);
-            }
-        }
-
-        /// <summary>
-        ///   Looks up a localized string similar to "Changes number"
-        /// </summary>
-        public static string CHANGES_NUMBER59897 {
-            get {
-                return ResourceManager.GetString("CHANGES_NUMBER59897", resourceCulture);
             }
         }
 
@@ -24771,6 +24690,15 @@ namespace Administration.Resources {
         public static string FEEDBACK52855 {
             get {
                 return ResourceManager.GetString("FEEDBACK52855", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Groupbox"
+        /// </summary>
+        public static string GROUPBOX00384 {
+            get {
+                return ResourceManager.GetString("GROUPBOX00384", resourceCulture);
             }
         }
 
@@ -25891,6 +25819,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Max points"
+        /// </summary>
+        public static string MAX_POINTS36826 {
+            get {
+                return ResourceManager.GetString("MAX_POINTS36826", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "É obrigatório preencher a descrição: Regra do form com apply"
         /// </summary>
         public static string E_OBRIGATORIO_PREENC62370 {
@@ -26067,6 +26004,69 @@ namespace Administration.Resources {
         public static string HOURLY_PRICE48005 {
             get {
                 return ResourceManager.GetString("HOURLY_PRICE48005", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Agent Information"
+        /// </summary>
+        public static string AGENT_INFORMATION14294 {
+            get {
+                return ResourceManager.GetString("AGENT_INFORMATION14294", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Lista de campos de Aeroporto"
+        /// </summary>
+        public static string LISTA_DE_CAMPOS_DE_A02814 {
+            get {
+                return ResourceManager.GetString("LISTA_DE_CAMPOS_DE_A02814", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Prospecting carried out"
+        /// </summary>
+        public static string PROSPECTING_CARRIED_08979 {
+            get {
+                return ResourceManager.GetString("PROSPECTING_CARRIED_08979", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Text inputs"
+        /// </summary>
+        public static string TEXT_INPUTS37770 {
+            get {
+                return ResourceManager.GetString("TEXT_INPUTS37770", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "September"
+        /// </summary>
+        public static string SEPTEMBER29714 {
+            get {
+                return ResourceManager.GetString("SEPTEMBER29714", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Enumeration Prop"
+        /// </summary>
+        public static string ENUMERATION_PROP24972 {
+            get {
+                return ResourceManager.GetString("ENUMERATION_PROP24972", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Field with client-side conditions"
+        /// </summary>
+        public static string FIELD_WITH_CLIENT_SI60452 {
+            get {
+                return ResourceManager.GetString("FIELD_WITH_CLIENT_SI60452", resourceCulture);
             }
         }
 

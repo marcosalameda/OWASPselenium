@@ -897,10 +897,16 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// Adiciona um Qfield à table
+        /// Sets the value of a field
         /// </summary>
-        /// <param name="nomeCampo">Name do Qfield</param>
-        /// <param name="valorCampo">Value do Qfield</param>
+        /// <param name="fieldName">
+        /// The name of the field to update. Supports both "area.field" (fully qualified) and "field" formats.
+        /// If the field has a database name, it is expected to be provided instead of the field id.
+        /// </param>
+        /// <param name="valorCampo">The value to assign to the field.</param>
+        /// <exception cref="BusinessException">
+        /// Thrown if the specified field does not exist or if an error occurs during the update.
+        /// </exception>
         public void insertNameValueField(string fieldName, object fieldValue)
         {
             try

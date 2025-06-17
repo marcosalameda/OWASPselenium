@@ -1,9 +1,9 @@
 ﻿import _assignIn from 'lodash-es/assignIn'
 
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { forceDownload, getFileNameFromRequest, postData } from '@/api/network'
-import eventBus from '@/api/global/eventBus.js'
-import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+import asyncProcM from '@quidgest/clientapp/composables/async'
+import { forceDownload, getFileNameFromRequest, postData } from '@quidgest/clientapp/network'
+import eventBus from '@quidgest/clientapp/plugins/eventBus'
+import { useSystemDataStore } from '@quidgest/clientapp/stores'
 
 export default {
 	methods: {

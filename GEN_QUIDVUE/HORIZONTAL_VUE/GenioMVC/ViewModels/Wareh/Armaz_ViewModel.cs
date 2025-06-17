@@ -162,10 +162,10 @@ namespace GenioMVC.ViewModels.Wareh
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Wareh model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
+			Models.Wareh model = Model;
 			Models.Wareh areaWareh = model;
 			try
 			{

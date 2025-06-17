@@ -5,13 +5,13 @@ import _foreach from 'lodash-es/forEach'
 import _get from 'lodash-es/get'
 import _isEmpty from 'lodash-es/isEmpty'
 
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { useGenericLayoutDataStore } from '@/stores/genericLayoutData.js'
+import { useSystemDataStore } from '@quidgest/clientapp/stores'
+import { useGenericLayoutDataStore } from '@quidgest/clientapp/stores'
 
-import netAPI from '@/api/network'
-import genericFunctions from '@/mixins/genericFunctions.js'
+import netAPI from '@quidgest/clientapp/network'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 import listFunctions from '@/mixins/listFunctions.js'
-import qEnums from '@/mixins/quidgest.mainEnums.js'
+import qEnums from '@quidgest/clientapp/constants/enums'
 
 /*****************************************************************
  * This mixin aggregates operations over lists, which can be     *
@@ -118,7 +118,7 @@ export default {
 				listControl.controller,
 				listControl.action,
 				actionParams,
-				(data) => {
+				(data, response) => {
 					// When loading additional data for the page ViewModel
 					if (typeof fnHydrateViewModel === 'function')
 						fnHydrateViewModel(data, listControl)
@@ -146,6 +146,10 @@ export default {
 						listControl.isLoaded = true
 
 						listControl.afterLoaded()
+					}
+
+					if (response.data && response.data.Success === false && response.data.Message) {
+						genericFunctions.displayMessage(response.data.Message, 'warning')
 					}
 				},
 				undefined,

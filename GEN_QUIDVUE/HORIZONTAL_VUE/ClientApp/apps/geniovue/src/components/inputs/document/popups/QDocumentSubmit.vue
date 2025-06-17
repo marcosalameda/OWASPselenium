@@ -15,7 +15,7 @@
 						:title="texts.chooseFileLabel"
 						:disabled="versionSubmitMode === versionSubmitModes.unlock"
 						@click="handleFileUpload">
-						<q-icon icon="choose-file" />
+						<q-icon icon="upload-img" />
 					</q-button>
 				</template>
 			</q-input-group>
@@ -68,7 +68,7 @@
 				:label="texts.submitLabel"
 				:title="texts.submitLabel"
 				@click="submitFileVersion">
-				<q-icon icon="submit" />
+				<q-icon icon="upload-img" />
 			</q-button>
 
 			<q-button
@@ -82,7 +82,7 @@
 </template>
 
 <script>
-	import { displayMessage } from '@/mixins/genericFunctions.js'
+	import { displayMessage } from '@quidgest/clientapp/utils/genericFunctions'
 
 	export default {
 		name: 'QDocumentSubmit',

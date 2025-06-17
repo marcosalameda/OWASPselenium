@@ -33,7 +33,7 @@
 <script>
 	import { loadResources } from '@/plugins/i18n'
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import GenericMenuHandlers from '@/mixins/genericMenuHandlers.js'
 
 	import { QArrayGender } from '@/api/genio/projectArrays.js'

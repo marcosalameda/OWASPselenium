@@ -54,11 +54,6 @@ public class PessosepForm : Form
 	public DateInputControl PessoDtultcat => new DateInputControl(driver, ContainerLocator, "#PESSOSEPPESSODTULTCAT");
 
 	/// <summary>
-	/// Curriculum
-	/// </summary>
-	public DocumentControl PessoCurricul => new DocumentControl(driver, ContainerLocator, "PESSOSEPPESSOCURRICUL");
-
-	/// <summary>
 	/// @required
 	/// </summary>
 	public IWebElement PseudObrigato => throw new NotImplementedException();

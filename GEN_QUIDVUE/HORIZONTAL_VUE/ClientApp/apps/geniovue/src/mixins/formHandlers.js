@@ -5,20 +5,22 @@ import _forEach from 'lodash-es/forEach'
 import _isEmpty from 'lodash-es/isEmpty'
 import _some from 'lodash-es/some'
 
-import { useGenericDataStore } from '@/stores/genericData.js'
+import { useGenericDataStore } from '@quidgest/clientapp/stores'
 import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
-import { useNavDataStore } from '@/stores/navData.js'
+import { useNavDataStore } from '@quidgest/clientapp/stores'
 
-import netAPI from '@/api/network'
-import { QEventEmitter } from '@/api/global/eventBus.js'
+import netAPI from '@quidgest/clientapp/network'
+import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
 import hardcodedTexts from '@/hardcodedTexts.js'
 import formFunctions from '@/mixins/formFunctions.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
-import modelFieldType from '@/mixins/formModelFieldTypes.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+import modelFieldType from '@quidgest/clientapp/models/fields'
 import fieldControlClass from '@/mixins/fieldControl.js'
 import formControlClass from '@/mixins/formControl.js'
-import { formModes, labelAlignment, messageTypes } from '@/mixins/quidgest.mainEnums.js'
+import { formModes, labelAlignment, messageTypes } from '@quidgest/clientapp/constants/enums'
 import { loadResources } from '@/plugins/i18n.js'
+import { removeModal } from '@/utils/layout'
+import { systemInfo } from '@/systemInfo'
 
 import LayoutHandlers from '@/mixins/layoutHandlers.js'
 import ListHandlers from '@/mixins/listHandlers.js'
@@ -332,7 +334,7 @@ export default {
 		 */
 		isAnchorsButtonVisible()
 		{
-			if (this.layoutConfig.FormAnchorsPosition !== 'form-header')
+			if (systemInfo.layout.FormAnchorsPosition !== 'form-header')
 				return false
 			return Object.values(this.controls).some((x) => x.anchored === true)
 		},
@@ -375,7 +377,7 @@ export default {
 		 */
 		isStickyTop()
 		{
-			return !this.isNested && !this.isPopup && this.pageScroll >= this.stickyThreshold && (_isEmpty(this.layoutConfig.ContainerWidth) || this.layoutConfig.ContainerWidth === 'whole_page')
+			return !this.isNested && !this.isPopup && this.pageScroll >= this.stickyThreshold && (_isEmpty(systemInfo.layout.ContainerWidth) || systemInfo.layout.ContainerWidth === 'whole_page')
 		},
 
 		/**
@@ -586,7 +588,7 @@ export default {
 			'storeValues'
 		]),
 
-		removeModal: genericFunctions.removeModal,
+		removeModal,
 
 		isEmpty: genericFunctions.isEmpty,
 

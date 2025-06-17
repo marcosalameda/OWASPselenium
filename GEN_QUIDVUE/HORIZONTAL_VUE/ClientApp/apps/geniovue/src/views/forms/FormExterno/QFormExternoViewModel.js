@@ -2,12 +2,12 @@
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
-import ViewModelBase from '@/mixins/formViewModelBase.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
-import modelFieldType from '@/mixins/formModelFieldTypes.js'
+import FormViewModelBase from '@/mixins/formViewModelBase.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+import modelFieldType from '@quidgest/clientapp/models/fields'
 
 import hardcodedTexts from '@/hardcodedTexts.js'
-import netAPI from '@/api/network'
+import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
@@ -15,9 +15,9 @@ import qProjArrays from '@/api/genio/projectArrays.js'
 
 /**
  * Represents a ViewModel class.
- * @extends ViewModelBase
+ * @extends FormViewModelBase
  */
-export default class ViewModel extends ViewModelBase
+export default class ViewModel extends FormViewModelBase
 {
 	/**
 	 * Creates a new instance of the ViewModel.
@@ -32,12 +32,13 @@ export default class ViewModel extends ViewModelBase
 		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
-		/** The view model metadata */
+		// The view model metadata
 		_merge(this.modelInfo, {
 			name: 'EXTERNO',
 			area: 'PESSO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_EXTERNO'
+				recalculateFormulas: 'RecalculateFormulas_EXTERNO',
+				updateFilesTickets: 'UpdateFilesTicketsEXTERNO'
 			}
 		})
 
@@ -52,17 +53,6 @@ export default class ViewModel extends ViewModelBase
 		watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('pesso.codpesso', this.ValCodpesso, newValue, oldValue))
 
 		/** The hidden foreign keys. */
-		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodcateg',
-			originId: 'ValCodcateg',
-			area: 'PESSO',
-			field: 'CODCATEG',
-			relatedArea: 'CATEG',
-			isFixed: true,
-			description: computed(() => this.Resources._LAST_CATEGORY61019),
-		}).cloneFrom(values?.ValCodcateg))
-		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('pesso.codcateg', this.ValCodcateg, newValue, oldValue))
-
 		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodregia',
 			originId: 'ValCodregia',
@@ -95,6 +85,17 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.PERSON_S_PARENTS05687),
 		}).cloneFrom(values?.ValCodcntry))
 		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('pesso.codcntry', this.ValCodcntry, newValue, oldValue))
+
+		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodcateg',
+			originId: 'ValCodcateg',
+			area: 'PESSO',
+			field: 'CODCATEG',
+			relatedArea: 'CATEG',
+			isFixed: true,
+			description: computed(() => this.Resources._LAST_CATEGORY61019),
+		}).cloneFrom(values?.ValCodcateg))
+		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('pesso.codcateg', this.ValCodcateg, newValue, oldValue))
 
 		/** The used foreign keys. */
 		this.ValCodempre = reactive(new modelFieldType.ForeignKey({

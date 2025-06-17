@@ -18,7 +18,7 @@
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
-	import genericFunctions from '@/mixins/genericFunctions'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 	export default {
 		name: 'QAnchorContainerHorizontal',

@@ -386,16 +386,16 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(12);
-			info.Pathways.Add("decom","decom");
 			info.Pathways.Add("wareh","wareh");
+			info.Pathways.Add("decom","decom");
 			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("room1","room1");
-			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("item","item");
+			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("pess1","pess1");
 			info.Pathways.Add("famil","tpequ");
-			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("gitem","item");
+			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
 		}

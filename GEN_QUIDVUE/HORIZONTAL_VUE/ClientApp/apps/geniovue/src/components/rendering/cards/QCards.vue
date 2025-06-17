@@ -127,7 +127,7 @@
 <script>
 	import { defineAsyncComponent } from 'vue'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	import QCardView from '@/components/containers/QCard.vue'
 

@@ -1,6 +1,6 @@
 ﻿import _isEmpty from 'lodash-es/isEmpty'
 
-import { postData, fetchData } from '@/api/network'
+import { postData, fetchData } from '@quidgest/clientapp/network'
 
 /*****************************************************************
  * This mixin defines methods to be reused by wizard components. *

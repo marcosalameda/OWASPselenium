@@ -289,7 +289,7 @@ namespace GenioMVC.ViewModels.Psw
 
 		protected override void LoadDefaultValues() { /* Method intentionally left empty. */ }
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply) => null;
+		public override StatusMessage EvaluateWriteConditions(bool isApply) => null;
 
 		protected override void LoadDocumentsProperties(Models.Psw model) { /* Method intentionally left empty. */ }
 

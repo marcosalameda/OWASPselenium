@@ -13,8 +13,8 @@
 	import { computed } from 'vue'
 	import { mapActions } from 'pinia'
 
-	import { useGenericDataStore } from '@/stores/genericData.js'
-	import { postData } from '@/api/network'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
+	import { postData } from '@quidgest/clientapp/network'
 	import hardcodedTexts from '@/hardcodedTexts'
 
 	import _merge from 'lodash-es/merge'

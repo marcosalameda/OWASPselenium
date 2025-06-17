@@ -141,9 +141,8 @@ namespace GenioMVC.ViewModels.C_add
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.C_add model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

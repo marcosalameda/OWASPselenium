@@ -62,17 +62,37 @@ describe('QDocument.vue', () => {
 
 	it('Options are disabled if the value is empty', async () => {
 		const wrapper = renderDocument()
+
+		const optionsButton = wrapper.getByTestId('options-button')
+		expect(optionsButton.disabled).not.toBeTruthy()
+		expect(optionsButton.getAttribute('title')).to.equal('Attach')
+
+		const fileInput = wrapper.getByTestId('document-input')
+		expect(fileInput.value).toBe('')
+		expect(fileInput.disabled).toBe(false)
+	})
+
+	it('Dropdown shows options enabled when modelValue is not empty', async () => {
+		const wrapper = renderDocument({ modelValue: 'test.pdf' })
+
 		await openDocumentOptions(wrapper)
 
 		const downloadOption = wrapper.getByTestId('document-download')
 		const attachOption = wrapper.getByTestId('document-attach')
 		const deleteOption = wrapper.getByTestId('document-delete')
 		const editOption = wrapper.queryByTestId('document-edit')
+		const fileInput = wrapper.getByTestId('document-input')
 
-		expect(downloadOption.disabled).toBeTruthy()
-		expect(deleteOption.disabled).toBeTruthy()
+		expect(downloadOption).not.toBeNull()
 		expect(attachOption).not.toBeNull()
+		expect(deleteOption).not.toBeNull()
 		expect(editOption).toBeNull()
+		expect(fileInput.value).toBe('test.pdf')
+
+		expect(downloadOption.disabled).toBe(false)
+		expect(deleteOption.disabled).toBe(false)
+		expect(attachOption.disabled).toBe(false)
+		expect(fileInput.readOnly).toBe(true)
 	})
 
 	it('New file is successfully uploaded', async () => {

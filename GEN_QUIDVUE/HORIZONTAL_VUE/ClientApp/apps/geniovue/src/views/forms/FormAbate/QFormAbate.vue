@@ -49,7 +49,7 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
@@ -168,16 +168,17 @@
 
 	import FormHandlers from '@/mixins/formHandlers.js'
 	import formFunctions from '@/mixins/formFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import netAPI from '@/api/network'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import netAPI from '@quidgest/clientapp/network'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -495,6 +496,74 @@
 						controlLimits: [
 						],
 					}, this),
+					ABATE___DECOMNOTE____: new fieldControlClass.MultilineStringControl({
+						modelField: 'ValNote',
+						valueChangeEvent: 'fieldChange:decom.note',
+						id: 'ABATE___DECOMNOTE____',
+						name: 'NOTE',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.NOTES05274),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						rows: 3,
+						cols: 85,
+						controlLimits: [
+						],
+					}, this),
+					ABATE___DECOMCREATDAT: new fieldControlClass.DateControl({
+						modelField: 'ValCreatdat',
+						valueChangeEvent: 'fieldChange:decom.creatdat',
+						id: 'ABATE___DECOMCREATDAT',
+						name: 'CREATDAT',
+						size: 'medium',
+						label: computed(() => this.Resources.CREATION_DATE51875),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						format: 'date',
+						controlLimits: [
+						],
+					}, this),
+					ABATE___DECOMCREATOPE: new fieldControlClass.StringControl({
+						modelField: 'ValCreatope',
+						valueChangeEvent: 'fieldChange:decom.creatope',
+						id: 'ABATE___DECOMCREATOPE',
+						name: 'CREATOPE',
+						size: 'large',
+						label: computed(() => this.Resources.CREATED_BY12292),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxLength: 20,
+						labelId: 'label_ABATE___DECOMCREATOPE',
+						controlLimits: [
+						],
+					}, this),
+					ABATE___DECOMCHNGDATE: new fieldControlClass.DateControl({
+						modelField: 'ValChngdate',
+						valueChangeEvent: 'fieldChange:decom.chngdate',
+						id: 'ABATE___DECOMCHNGDATE',
+						name: 'CHNGDATE',
+						size: 'small',
+						label: computed(() => this.Resources.CHANGED_ON19727),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						format: 'date',
+						controlLimits: [
+						],
+					}, this),
+					ABATE___DECOMOPERCHNG: new fieldControlClass.StringControl({
+						modelField: 'ValOperchng',
+						valueChangeEvent: 'fieldChange:decom.operchng',
+						id: 'ABATE___DECOMOPERCHNG',
+						name: 'OPERCHNG',
+						size: 'large',
+						label: computed(() => this.Resources.CHANGED_BY08967),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxLength: 20,
+						labelId: 'label_ABATE___DECOMOPERCHNG',
+						controlLimits: [
+						],
+					}, this),
 				},
 
 				model: new FormViewModel(this, {
@@ -518,10 +587,20 @@
 				 */
 				dataApi: {
 					Decom: {
+						get ValChngdate() { return vm.model.ValChngdate.value },
+						set ValChngdate(value) { vm.model.ValChngdate.updateValue(value) },
+						get ValCreatdat() { return vm.model.ValCreatdat.value },
+						set ValCreatdat(value) { vm.model.ValCreatdat.updateValue(value) },
+						get ValCreatope() { return vm.model.ValCreatope.value },
+						set ValCreatope(value) { vm.model.ValCreatope.updateValue(value) },
 						get ValDecomnr() { return vm.model.ValDecomnr.value },
 						set ValDecomnr(value) { vm.model.ValDecomnr.updateValue(value) },
 						get ValDtdeco() { return vm.model.ValDtdeco.value },
 						set ValDtdeco(value) { vm.model.ValDtdeco.updateValue(value) },
+						get ValNote() { return vm.model.ValNote.value },
+						set ValNote(value) { vm.model.ValNote.updateValue(value) },
+						get ValOperchng() { return vm.model.ValOperchng.value },
+						set ValOperchng(value) { vm.model.ValOperchng.updateValue(value) },
 					},
 					keys: {
 						/** The primary key of the DECOM table */
@@ -623,12 +702,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				applyForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
-				if (applyForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					applyForm = results.every((e) => e === true)
+					applyForm = await this.model.setDocumentChanges()
+
+					if (applyForm)
+					{
+						const results = await this.model.saveDocuments()
+						applyForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-apply-form')
@@ -671,12 +755,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				saveForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets()
 
-				if (saveForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					saveForm = results.every((e) => e === true)
+					saveForm = await this.model.setDocumentChanges()
+
+					if (saveForm)
+					{
+						const results = await this.model.saveDocuments()
+						saveForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-save-form')

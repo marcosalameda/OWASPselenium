@@ -1,16 +1,16 @@
 ﻿<template>
 	<div
-		v-if="layoutConfig.BookmarkEnable && userIsLoggedIn"
+		v-if="$app.layout.BookmarkEnable && userIsLoggedIn"
 		class="n-sidebar__section bookmarks__container">
 		<ul
 			id="bookmarks-tree-view"
 			class="nav nav-pills nav-sidebar n-sidebar__nav d-block">
 			<li :class="[{ 'menu-open': bookmarkMenuIsOpen }, 'nav-item', 'n-sidebar__nav-item', 'has-treeview']">
-				<a 
+				<a
 					ref="menuButton"
 					id="bookmarks__toggle"
 					href="javascript:void(0)"
-					:class="['nav-link n-sidebar__nav-link', 'has-icon', 'bookmarks__menu-text']" 
+					:class="['nav-link n-sidebar__nav-link', 'has-icon', 'bookmarks__menu-text']"
 					@click.stop.prevent="toggleBookmarksMenu"
 					@keyup="menuItemKeyup">
 					<q-icon
@@ -89,7 +89,7 @@
 			{
 				//Focus on the menu toggle button
 				this.focusItem()
-				
+
 				//Close dropdown
 				this.setBookmarkMenuState(false)
 			},
@@ -100,7 +100,7 @@
 			menuItemKeyup(event)
 			{
 				const key = event?.key
-				
+
 				if(key === 'Escape')
 					this.closeMenuAndFocusItem()
 			}

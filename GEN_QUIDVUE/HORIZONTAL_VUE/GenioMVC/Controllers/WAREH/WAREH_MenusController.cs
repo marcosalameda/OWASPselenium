@@ -115,7 +115,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET MODAL]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -195,7 +202,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET ALERTS]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -276,7 +290,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET AUTH]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -386,7 +407,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET BTNFORM]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -496,7 +524,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET MULTIFORM]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -606,7 +641,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET EXTENDFORM]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -716,7 +758,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET EXPOSETABLE]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -826,7 +875,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET TIMELIN]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -935,7 +991,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MENU_GET 461]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -1015,7 +1078,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT MENU_GET 491]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

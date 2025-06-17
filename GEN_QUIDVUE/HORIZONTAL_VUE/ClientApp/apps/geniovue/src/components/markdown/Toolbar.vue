@@ -15,7 +15,7 @@
 					size="20" />
 			</q-button>
 			<template v-else>
-				<q-button 
+				<q-button
 					class="q-markdown-editor__toolbar-btn q-markdown-editor__toolbar-btn--options"
 					borderless
 					:key="btn.name"
@@ -41,7 +41,7 @@
 <script>
 	import { ref } from 'vue'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 	import { MarkdownOptions, DEFAULT_TEXTS } from './markdown.js'
 	import { QDropdownMenu } from '@quidgest/ui/components'
 

@@ -3,18 +3,18 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="resources.currentDataSystemTitle"
+				:title="systemConfigTexts.currentDataSystemTitle"
 				width=block>
 				<q-row-container>
 					<q-text-field
 						v-model="model.Server"
-						:label="resources.serverName"
+						:label="systemConfigTexts.serverName"
 						required
 						size="xlarge"
 						:isReadOnly="isTestingConnection">
 						<template #extras>
 							<q-icon icon="information-outline" />
-							{{ resources.serverNameInfo }}
+							{{ systemConfigTexts.serverNameInfo }}
 						</template>
 					</q-text-field>
 					<numeric-input
@@ -27,7 +27,7 @@
 						v-model="model.ServerType"
 						v-if="model.SelectLists"
 						:items="model.SelectLists.DBMS"
-						:label="resources.databaseServerTypeLabel"
+						:label="systemConfigTexts.databaseServerTypeLabel"
 						required
 						size="xlarge"
 						item-value="Value"
@@ -36,24 +36,24 @@
 					<div v-if="model.ServerType == 2">
 						<q-text-field
 							v-model="model.Service"
-							:label="resources.serviceIdentifierLabel"
+							:label="systemConfigTexts.serviceIdentifierLabel"
 							size="xlarge"
 							:readonly="isTestingConnection" />
 						<q-text-field
 							v-model="model.ServiceName"
-							:label="resources.serviceNameLabel"
+							:label="systemConfigTexts.serviceNameLabel"
 							size="xlarge"
 							:readonly="isTestingConnection" />
 					</div>
 					<q-text-field
 						v-model="model.Schema"
-						:label="resources.databaseName"
+						:label="systemConfigTexts.databaseName"
 						required
 						size="xlarge"
 						:readonly="isTestingConnection">
 						<template #extras>
 							<q-icon icon="information-outline" />
-							{{ resources.databaseNameInfo }}
+							{{ systemConfigTexts.databaseNameInfo }}
 						</template>
 					</q-text-field>
 					<q-checkbox
@@ -66,13 +66,13 @@
 
 		<row>
 			<q-card
-				:title="resources.databaseConnectionTitle"
+				:title="systemConfigTexts.databaseConnectionTitle"
 				class="q-card--admin-default"
 				width="block">
 				<q-row-container>
 					<q-text-field
 						v-model="model.DbUser"
-						:label="resources.databaseLoginLabel"
+						:label="systemConfigTexts.databaseLoginLabel"
 						required
 						size="xlarge"
 						:readonly="isTestingConnection" />
@@ -93,40 +93,40 @@
 					</password-input>
 					<q-checkbox
 						v-model="model.ConnEncrypt"
-						:label="resources.encryptConnectionLabel"
+						:label="systemConfigTexts.encryptConnectionLabel"
 						:readonly="isTestingConnection" />
 					<q-checkbox
 						v-model="model.ConnWithDomainUser"
-						:label="resources.domainUserLabel"
+						:label="systemConfigTexts.domainUserLabel"
 						:readonly="isTestingConnection" />
 					<q-button
 						id="testServer"
-						:label="resources.testServerConnectionButton"
+						:label="systemConfigTexts.testServerConnectionButton"
 						:disabled="isTestingConnection"
 						size="xlarge"
 						@click="TestServerConection"
 						:loading="showLoader" />
 					<hr />
 					<h5>
-						{{ 'GQP ' +  resources.sharedTablesLabel }}
+						{{ 'GQP ' +  systemConfigTexts.sharedTablesLabel }}
 					</h5>
 					<q-text-field
 						v-model="model.GQP_Schema"
-						:label="resources.databaseName"
+						:label="systemConfigTexts.databaseName"
 						required
 						size="xlarge"
 						:readonly="isTestingConnection">
 						<template #extras>
 							<q-icon icon="information-outline" />
-							{{ resources.databaseNameInfo }}
+							{{ systemConfigTexts.databaseNameInfo }}
 						</template>
 					</q-text-field>
 					<q-checkbox
 						v-model="model.GQP_ConnEncrypt"
-						:label="resources.encryptConnectionLabel" />
+						:label="systemConfigTexts.encryptConnectionLabel" />
 					<q-checkbox
 						v-model="model.GQP_ConnWithDomainUser"
-						:label="resources.domainUserLabel" />
+						:label="systemConfigTexts.domainUserLabel" />
 				</q-row-container>
 			</q-card>
 		</row>
@@ -134,16 +134,16 @@
 		<row>
 			<q-collapsible
 				class="q-collapsible--admin-default"
-				:title="resources.dataSystemLog"
+				:title="systemConfigTexts.dataSystemLog"
 				width="block">
 				<q-text-field
 					v-model="model.Log_Server"
-					:label="resources.serverName"
+					:label="systemConfigTexts.serverName"
 					size="xlarge"
 					:readonly="isTestingConnection">
 					<template #extras>
 						<q-icon icon="information-outline" />
-						{{ resources.serverNameInfo }}
+						{{ systemConfigTexts.serverNameInfo }}
 					</template>
 				</q-text-field>
 				<numeric-input
@@ -156,7 +156,7 @@
 					v-model="model.Log_ServerType"
 					v-if="model.SelectLists"
 					:items="model.SelectLists.DBMS"
-					:label="resources.databaseServerTypeLabel"
+					:label="systemConfigTexts.databaseServerTypeLabel"
 					size="xlarge"
 					item-value="Value"
 					item-label="Text"
@@ -164,30 +164,30 @@
 				<div v-if="model.Log_ServerType == 2">
 						<q-text-field
 							v-model="model.Log_Service"
-							:label="resources.serviceIdentifierLabel"
+							:label="systemConfigTexts.serviceIdentifierLabel"
 							size="xlarge"
 							:readonly="isTestingConnection" />
 						<q-text-field
 							v-model="model.Log_ServiceName"
-							:label="resources.serviceNameLabel"
+							:label="systemConfigTexts.serviceNameLabel"
 							size="xlarge"
 							:readonly="isTestingConnection" />
 				</div>
 				<q-text-field
 					v-model="model.Log_Schema"
-					:label="resources.databaseName"
+					:label="systemConfigTexts.databaseName"
 					required
 					size="xlarge"
 					:readonly="isTestingConnection">
 					<template #extras>
 						<q-icon icon="information-outline" />
-						{{ resources.databaseNameInfo }}
+						{{ systemConfigTexts.databaseNameInfo }}
 					</template>
 				</q-text-field>
 				<hr />
 				<q-text-field
 					v-model="model.Log_DbUser"
-					:label="resources.databaseLoginLabel"
+					:label="systemConfigTexts.databaseLoginLabel"
 					size="xlarge"
 					:readonly="isTestingConnection" />
 				<password-input
@@ -205,11 +205,11 @@
 				</password-input>
 				<q-checkbox
 					v-model="model.Log_ConnEncrypt"
-					:label="resources.encryptConnectionLabel"
+					:label="systemConfigTexts.encryptConnectionLabel"
 					:readonly="isTestingConnection" />
 				<q-checkbox
 					v-model="model.Log_ConnWithDomainUser"
-					:label="resources.domainUserLabel"
+					:label="systemConfigTexts.domainUserLabel"
 					:readonly="isTestingConnection" />
 			</q-collapsible>
 		</row>
@@ -222,7 +222,7 @@
 				@click="saveConfigDatabase" />
 
 			<data-system-badge
-				:title="resources.currentDataSystemTitle" />
+				:title="systemConfigTexts.currentDataSystemTitle" />
 		</row>
 	</div>
 </template>
@@ -232,20 +232,13 @@
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import { texts } from '@/resources/hardcodedTexts.ts';
+	import { SystemConfigTexts } from '@/resources/viewResources.ts';
 
 export default {
 	name: 'database',
 
 	props: {
 		model: {
-			required: true
-		},
-
-		/**
-		* WebAdmin texts.
-		*/
-		resources: {
-			type: Object,
 			required: true
 		}
 	},
@@ -278,6 +271,9 @@ export default {
 				changesSavedSuccess: this.Resources[texts.changesSavedSuccess],
 			}
 		},
+		systemConfigTexts() {
+			return new SystemConfigTexts(this)
+		}
 	},
 
 	methods: {

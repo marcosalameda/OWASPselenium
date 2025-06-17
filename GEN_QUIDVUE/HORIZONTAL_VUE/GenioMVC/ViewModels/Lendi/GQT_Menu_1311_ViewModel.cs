@@ -54,7 +54,7 @@ namespace GenioMVC.ViewModels.Lendi
 			{
 				CriteriaSet conditions = CriteriaSet.And();
 				// Limitations
-				conditions.Equal(CSGenioAlendi.FldCodpess1, "");
+				conditions.Equal(CSGenioAlendi.FldCodpess1, "4B5F4D2D-36F8-4B8A-971E-0A27F1095009");
 
 				return conditions;
 			}

@@ -1,24 +1,24 @@
 ﻿<template>
 	<div
-		v-if="layoutConfig.BookmarkEnable && userIsLoggedIn"
+		v-if="$app.layout.BookmarkEnable && userIsLoggedIn"
 		class="bookmarks__container">
 		<ul class="nav">
 			<li
 				ref="menuContainer"
 				class="dropdown"
 				@focusout="onFocusoutMenu">
-				<a 
+				<a
 					ref="menuButton"
-					class="bookmarks__header" 
+					class="bookmarks__header"
 					href="javascript:void(0)"
-					:aria-expanded="bookmarkMenuIsOpen" 
-					:title="texts.favorites" 
+					:aria-expanded="bookmarkMenuIsOpen"
+					:title="texts.favorites"
 					@click.stop.prevent="toggleMenu"
 					@keyup="menuItemKeyup">
 					<q-icon icon="bookmark" />
 				</a>
 
-				<bookmarks-content 
+				<bookmarks-content
 					:classes="['dropdown-menu', { 'show': bookmarkMenuIsOpen }, 'bookmarks__content']"
 					@menu-action="setBookmarkMenuState(false)"
 					@add="setBookmarkMenuState(false)"
@@ -93,7 +93,7 @@
 			{
 				//Focus on the menu toggle button
 				this.focusItem()
-				
+
 				//Close dropdown
 				this.setBookmarkMenuState(false)
 			},
@@ -104,7 +104,7 @@
 			menuItemKeyup(event)
 			{
 				const key = event?.key
-				
+
 				if(key === 'Escape')
 					this.closeMenuAndFocusItem()
 			},
@@ -116,7 +116,7 @@
 			{
 				//Toggle bookmarks menu
 				this.toggleBookmarksMenu()
-				
+
 				//Signal if opening
 				if(this.bookmarkMenuIsOpen)
 					this.$emit('open-menu')

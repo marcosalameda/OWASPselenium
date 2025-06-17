@@ -2,24 +2,13 @@
 	Resources: Record<string, object>
 }
 
-class BaseResources
+class UsersTexts
 {
 	private readonly resources: Record<string, object>
 
 	constructor(vueContext: VueContext)
 	{
 		this.resources = vueContext.Resources
-	}
-
-		get actions() {
-			return this.resources.ACOES22599
-		}
-}
-
-class UsersTexts extends BaseResources
-{
-	constructor(vueContext: VueContext) {
-		super(vueContext);
 	}
 		get assignRolesQuickly() {
 			return this.resources.ATRIBUIR_RAPIDAMENTE15967
@@ -56,10 +45,13 @@ class UsersTexts extends BaseResources
 		}
 }
 
-class SystemConfigTexts extends BaseResources
+class SystemConfigTexts
 {
-	constructor(vueContext: VueContext) {
-		super(vueContext);
+	private readonly resources: Record<string, object>
+
+	constructor(vueContext: VueContext)
+	{
+		this.resources = vueContext.Resources
 	}
 		get assignRolesQuickly() {
 			return this.resources.ATRIBUIR_RAPIDAMENTE15967
@@ -375,10 +367,13 @@ class SystemConfigTexts extends BaseResources
 		}
 }
 
-class AppConfigTexts extends BaseResources
+class AppConfigTexts
 {
-	constructor(vueContext: VueContext) {
-		super(vueContext);
+	private readonly resources: Record<string, object>
+
+	constructor(vueContext: VueContext)
+	{
+		this.resources = vueContext.Resources
 	}
 		get appConfigurationTitle() {
 			return this.resources.CONFIGURACAO_DA_APLI59110

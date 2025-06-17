@@ -1,7 +1,7 @@
 ﻿import { mapState, mapActions } from 'pinia'
 
-import { useAuthDataStore } from '@/stores/authData.js'
-import { useUserDataStore } from '@/stores/userData.js'
+import { useAuthDataStore } from '@quidgest/clientapp/stores'
+import { useUserDataStore } from '@quidgest/clientapp/stores'
 
 /***************************************************************************
  * This mixin defines methods to be reused in authentication components.   *

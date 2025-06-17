@@ -13,7 +13,7 @@
 </template>
 
 <script>
-	import { documentViewTypeMode } from '@/mixins/quidgest.mainEnums.js'
+	import { documentViewTypeMode } from '@quidgest/clientapp/constants/enums'
 
 	export default {
 		name: 'QRenderDocument',

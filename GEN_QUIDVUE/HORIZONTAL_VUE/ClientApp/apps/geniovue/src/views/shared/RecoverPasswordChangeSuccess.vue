@@ -4,7 +4,7 @@
 			<div class="f-login__background">
 				<div class="f-login__brand">
 					<img
-						:src="`${system.resourcesPath}f-login__brand.png?v=${genio.buildVersion}`"
+						:src="`${$app.resourcesPath}f-login__brand.png?v=${$app.genio.buildVersion}`"
 						alt="" />
 					<p>{{ texts.appName }}</p>
 				</div>
@@ -23,9 +23,7 @@
 
 <script>
 	import { computed } from 'vue'
-	import { mapState } from 'pinia'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import QRouterLink from '@/views/shared/QRouterLink.vue'
@@ -48,13 +46,6 @@
 					backToLogin: computed(() => this.Resources[hardcodedTexts.backToLogin])
 				}
 			}
-		},
-
-		computed: {
-			...mapState(useSystemDataStore, [
-				'system',
-				'genio'
-			])
 		}
 	}
 </script>

@@ -49,7 +49,7 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
@@ -91,10 +91,12 @@
 			data-key="PESSOSEP"
 			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.PESSOSEPPSEUDNOVOGR02.isVisible || controls.PESSOSEPPSEUDOBRIGATO.isVisible">
+				<q-row-container
+					v-show="controls.PESSOSEPPSEUDNOVOGR02.isVisible || controls.PESSOSEPPSEUDOBRIGATO.isVisible"
+					is-large>
 					<q-control-wrapper
 						v-show="controls.PESSOSEPPSEUDNOVOGR02.isVisible"
-						class="control-join-group">
+						class="row-line-group">
 						<q-group-box-container
 							id="PESSOSEPPSEUDNOVOGR02"
 							v-bind="controls.PESSOSEPPSEUDNOVOGR02"
@@ -239,24 +241,6 @@
 											:model-value="model.ValDtultcat.value"
 											@reset-icon-click="model.ValDtultcat.fnUpdateValue(model.ValDtultcat.originalValue ?? new Date())"
 											@update:model-value="model.ValDtultcat.fnUpdateValue($event ?? '')" />
-									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PESSOSEPPESSOCURRICUL.isVisible">
-								<q-control-wrapper
-									v-show="controls.PESSOSEPPESSOCURRICUL.isVisible"
-									class="control-join-group">
-									<base-input-structure
-										class="i-text"
-										v-bind="controls.PESSOSEPPESSOCURRICUL"
-										v-on="controls.PESSOSEPPESSOCURRICUL.handlers"
-										:loading="controls.PESSOSEPPESSOCURRICUL.props.loading"
-										:reporting-mode-on="reportingModeCAV"
-										:suggestion-mode-on="suggestionModeOn">
-										<q-document
-											v-if="controls.PESSOSEPPESSOCURRICUL.isVisible"
-											v-bind="controls.PESSOSEPPESSOCURRICUL.props"
-											v-on="controls.PESSOSEPPESSOCURRICUL.handlers" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -507,16 +491,17 @@
 
 	import FormHandlers from '@/mixins/formHandlers.js'
 	import formFunctions from '@/mixins/formFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import netAPI from '@/api/network'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import netAPI from '@quidgest/clientapp/network'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -810,13 +795,13 @@
 					PESSOSEPPSEUDNOVOGR02: new fieldControlClass.GroupControl({
 						id: 'PESSOSEPPSEUDNOVOGR02',
 						name: 'NOVOGR02',
-						size: 'xxlarge',
+						size: 'block',
 						label: computed(() => this.Resources.IDENTIFICATION40793),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						directChildren: ['PESSOSEPPESSOIDFUNCIO', 'PESSOSEPPESSONAME____', 'PESSOSEPPESSODTNASCIM', 'PESSOSEPPESSOGENDER__', 'PESSOSEPPESSOINTERNA_', 'PESSOSEPPESSOEXTERNA_', 'PESSOSEPCATEGCATEGORY', 'PESSOSEPPESSODTULTCAT', 'PESSOSEPPESSOCURRICUL'],
+						directChildren: ['PESSOSEPPESSOIDFUNCIO', 'PESSOSEPPESSONAME____', 'PESSOSEPPESSODTNASCIM', 'PESSOSEPPESSOGENDER__', 'PESSOSEPPESSOINTERNA_', 'PESSOSEPPESSOEXTERNA_', 'PESSOSEPCATEGCATEGORY', 'PESSOSEPPESSODTULTCAT'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -876,7 +861,7 @@
 						size: 'mini',
 						label: computed(() => this.Resources.GENDER44172),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						maxLength: 1,
 						labelId: 'label_PESSOSEPPESSOGENDER__',
@@ -893,7 +878,7 @@
 						size: 'mini',
 						label: computed(() => this.Resources.INTERN65375),
 						placeholder: '',
-						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						controlLimits: [
 						],
@@ -906,7 +891,7 @@
 						size: 'small',
 						label: computed(() => this.Resources.EXTERNAL13375),
 						placeholder: '',
-						labelPosition: computed(() => this.layoutConfig.CheckboxLabelAlignment),
+						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						controlLimits: [
 						],
@@ -977,22 +962,6 @@
 							dependencyEvents: ['fieldChange:pesso.interna'],
 							isServerRecalc: false,
 						},
-					}, this),
-					PESSOSEPPESSOCURRICUL: new fieldControlClass.MaskControl({
-						modelField: 'ValCurricul',
-						valueChangeEvent: 'fieldChange:pesso.curricul',
-						id: 'PESSOSEPPESSOCURRICUL',
-						name: 'CURRICUL',
-						size: 'xxlarge',
-						label: computed(() => this.Resources.CURRICULUM51182),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						container: 'PESSOSEPPSEUDNOVOGR02',
-						extensions: [],
-						maxFileSize: 10485760, // In bytes.
-						maxFileSizeLabel: '10 MB',
-						controlLimits: [
-						],
 					}, this),
 					PESSOSEPPSEUDOBRIGATO: new fieldControlClass.BaseControl({
 						id: 'PESSOSEPPSEUDOBRIGATO',
@@ -1560,7 +1529,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
+						globalEvents: ['changed-TPCON', 'changed-CONTA', 'changed-PESSO', 'changed-GENRE'],
 						uuid: 'Pessos01_ValContacto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1629,8 +1598,6 @@
 						set ValCodpaise(value) { vm.model.ValCodpaise.updateValue(value) },
 						get ValCodregia() { return vm.model.ValCodregia.value },
 						set ValCodregia(value) { vm.model.ValCodregia.updateValue(value) },
-						get ValCurricul() { return vm.model.ValCurricul.value },
-						set ValCurricul(value) { vm.model.ValCurricul.updateValue(value) },
 						get ValDtnascim() { return vm.model.ValDtnascim.value },
 						set ValDtnascim(value) { vm.model.ValDtnascim.updateValue(value) },
 						get ValDtultcat() { return vm.model.ValDtultcat.value },
@@ -1764,12 +1731,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				applyForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
-				if (applyForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					applyForm = results.every((e) => e === true)
+					applyForm = await this.model.setDocumentChanges()
+
+					if (applyForm)
+					{
+						const results = await this.model.saveDocuments()
+						applyForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-apply-form')
@@ -1812,12 +1784,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				saveForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets()
 
-				if (saveForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					saveForm = results.every((e) => e === true)
+					saveForm = await this.model.setDocumentChanges()
+
+					if (saveForm)
+					{
+						const results = await this.model.saveDocuments()
+						saveForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-save-form')

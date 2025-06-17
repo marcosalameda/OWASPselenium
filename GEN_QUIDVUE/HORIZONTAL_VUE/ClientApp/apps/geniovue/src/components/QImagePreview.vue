@@ -36,7 +36,7 @@
 
 <script>
 	import { getImageURL, downloadImage } from '@/utils/image.js'
-	import { validateImageFormat, validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateImageFormat, validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	const DEFAULT_TEXTS = {
 		close: 'Close',

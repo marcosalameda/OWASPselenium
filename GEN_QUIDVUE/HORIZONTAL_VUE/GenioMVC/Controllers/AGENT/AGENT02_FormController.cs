@@ -394,7 +394,7 @@ namespace GenioMVC.Controllers
 
 		// POST: /Agent/Agent02_SaveEdit
 		[HttpPost]
-		public ActionResult Agent02_SaveEdit([FromBody]Agent02_ViewModel model)
+		public ActionResult Agent02_SaveEdit([FromBody] Agent02_ViewModel model)
 		{
 			var eventSink = new EventSink()
 			{
@@ -412,6 +412,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class Agent02DocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Agent02_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsAgent02([FromBody] Agent02DocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

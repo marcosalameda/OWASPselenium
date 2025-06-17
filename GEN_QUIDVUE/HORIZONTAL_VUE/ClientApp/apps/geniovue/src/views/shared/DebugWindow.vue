@@ -195,12 +195,13 @@
 	import _join from 'lodash-es/join'
 	import _isEmpty from 'lodash-es/isEmpty'
 
-	import { dateDisplay, removeModal } from '@/mixins/genericFunctions.js'
+	import { dateDisplay } from '@quidgest/clientapp/utils/genericFunctions'
+	import { removeModal } from '@/utils/layout'
 
-	import { useTracingDataStore } from '@/stores/tracingData.js'
-	import { useGenericDataStore } from '@/stores/genericData.js'
+	import { useTracingDataStore } from '@quidgest/clientapp/stores'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
 
-	import { TraceEventType } from '@/mixins/tracingEvents.js'
+	import { TraceEventType } from '@quidgest/clientapp/telemetry'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	export default {

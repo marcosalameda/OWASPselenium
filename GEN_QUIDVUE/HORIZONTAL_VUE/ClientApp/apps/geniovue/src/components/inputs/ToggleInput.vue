@@ -37,7 +37,7 @@
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
-	import { labelDisplay } from '@/mixins/quidgest.mainEnums'
+	import { labelDisplay } from '@quidgest/clientapp/constants/enums'
 
 	/**
 	 * Boolean value toggler. Provides labels for the true and false values.

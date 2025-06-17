@@ -607,7 +607,7 @@ namespace GenioMVC.Controllers
 
 		// POST: /Conta/Conta_SaveEdit
 		[HttpPost]
-		public ActionResult Conta_SaveEdit([FromBody]Conta_ViewModel model)
+		public ActionResult Conta_SaveEdit([FromBody] Conta_ViewModel model)
 		{
 			var eventSink = new EventSink()
 			{
@@ -625,6 +625,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class ContaDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Conta_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsConta([FromBody] ContaDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

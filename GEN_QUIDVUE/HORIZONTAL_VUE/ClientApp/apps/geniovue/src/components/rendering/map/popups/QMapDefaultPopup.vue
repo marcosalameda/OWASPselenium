@@ -76,7 +76,7 @@
 <script>
 	import { defineAsyncComponent } from 'vue'
 
-	import { formModes } from '@/mixins/quidgest.mainEnums.js'
+	import { formModes } from '@quidgest/clientapp/constants/enums'
 
 	export default {
 		name: 'QMapDefaultPopup',

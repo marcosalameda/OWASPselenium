@@ -1,14 +1,13 @@
-﻿import { markRaw } from 'vue'
+﻿import { Base, Document } from '@quidgest/clientapp/models/fields'
+import { postData, uploadFile } from '@quidgest/clientapp/network'
+import { useTracingDataStore } from '@quidgest/clientapp/stores'
 import _forEach from 'lodash-es/forEach'
 import _isEmpty from 'lodash-es/isEmpty'
 import _isEqual from 'lodash-es/isEqual'
-import _some from 'lodash-es/some'
 import _set from 'lodash-es/set'
+import _some from 'lodash-es/some'
+import { markRaw } from 'vue'
 
-import { useTracingDataStore } from '@/stores/tracingData.js'
-
-import { postData, uploadFile } from '@/api/network'
-import modelFieldType from '@/mixins/formModelFieldTypes.js'
 import ViewModelBase from '@/mixins/viewModelBase.js'
 
 export default class FormViewModelBase extends ViewModelBase
@@ -58,7 +57,7 @@ export default class FormViewModelBase extends ViewModelBase
 		{
 			const fieldObj = this[modelField]
 
-			if (fieldObj instanceof modelFieldType.Base &&
+			if (fieldObj instanceof Base &&
 				fieldObj.isDirty)
 				dirtyFields.push(fieldObj)
 		}
@@ -79,7 +78,7 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	get isDirty()
 	{
-		return _some(this, (modelField) => modelField instanceof modelFieldType.Base && modelField.isDirty)
+		return _some(this, (modelField) => modelField instanceof Base && modelField.isDirty)
 	}
 
 	/**
@@ -157,7 +156,7 @@ export default class FormViewModelBase extends ViewModelBase
 						if (_isEmpty(fieldObj.area) || _isEmpty(fieldObj.field))
 							continue
 
-						if (fieldObj instanceof modelFieldType.Base)
+						if (fieldObj instanceof Base)
 						{
 							const fieldArea = fieldObj.area.toLowerCase()
 							const fieldName = fieldObj.field.toLowerCase()
@@ -268,7 +267,7 @@ export default class FormViewModelBase extends ViewModelBase
 		let modelValidations = {}
 
 		_forEach(this, (modelField, modelFieldName) => {
-			if (modelField instanceof modelFieldType.Base)
+			if (modelField instanceof Base)
 			{
 				_set(modelValidations, modelFieldName, {
 					fieldName: modelFieldName,
@@ -284,13 +283,90 @@ export default class FormViewModelBase extends ViewModelBase
 	}
 
 	/**
+	 * Updates the documents tickets with write permissions, in case the form's view model is valid.
+	 * @param {boolean} isApply True if the method is being called during an apply, false if it's a save
+	 * @returns A boolean with the result of the server request.
+	 */
+	async updateFilesTickets(isApply = false)
+	{
+		if (_isEmpty(this.modelInfo.actions.updateFilesTickets))
+			return false
+
+		const tickets = [],
+			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
+
+		for (let field of documentFields)
+		{
+			const currentDocument = field.currentDocument.value
+			const ticketInfo = {
+				fieldId: field.id,
+				ticket: currentDocument.ticket
+			}
+			tickets.push(ticketInfo)
+		}
+
+		if (tickets.length > 0)
+		{
+			const params = {
+				tickets,
+				model: this.serverObjModel,
+				isApply
+			}
+
+			const promise = new Promise((resolve) => {
+				postData(
+					this.modelInfo.area,
+					this.modelInfo.actions.updateFilesTickets,
+					params,
+					(data, request) => {
+						if (request.data?.Success)
+						{
+							for (let ticketInfo of data.tickets)
+							{
+								const currentDocument = this[ticketInfo.fieldId].currentDocument.value
+								currentDocument.ticket = ticketInfo.ticket
+							}
+
+							resolve(true)
+						}
+						else
+						{
+							const tracingDataStore = useTracingDataStore()
+							tracingDataStore.addError({
+								origin: 'updateFilesTickets',
+								message: `Error found while trying to validate the model of form "${this.modelInfo.name}".`,
+								contextData: request.data
+							})
+
+							// If something goes wrong, reset the tickets.
+							for (let field of documentFields)
+							{
+								const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
+								field.setTickets(areaKeyField.value, this.navigationId)
+							}
+
+							resolve(false)
+						}
+					},
+					undefined,
+					undefined,
+					this.navigationId)
+			})
+
+			return await Promise.resolve(promise)
+		}
+
+		return true
+	}
+
+	/**
 	 * Saves the newly uploaded files in document fields, if the form has any.
 	 * @returns A list with the results of the requests sent to the server.
 	 */
 	async saveDocuments()
 	{
 		const promises = [],
-			documentFields = Object.values(this).filter((e) => e instanceof modelFieldType.Document && e.isDirty && e.type !== 'Lookup')
+			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
 
 		for (let field of documentFields)
 		{
@@ -308,7 +384,7 @@ export default class FormViewModelBase extends ViewModelBase
 					currentDocument.value.fileData,
 					currentDocument.dataToSubmit,
 					(data) => {
-						// As long as there is no "success": true/false, it is just a progress response.
+						// As long as there is no "success": true/false, it's just a progress response.
 						if (data?.success === true)
 						{
 							field.properties.updateValue(data.properties)
@@ -331,8 +407,11 @@ export default class FormViewModelBase extends ViewModelBase
 									data
 								}
 							})
+
 							resolve(false)
 						}
+						else if (data.validModel === false)
+							resolve(true)
 					},
 					(error) => {
 						const tracingDataStore = useTracingDataStore()
@@ -362,7 +441,7 @@ export default class FormViewModelBase extends ViewModelBase
 	async setDocumentChanges()
 	{
 		const unsavedChanges = [],
-			documentFields = Object.values(this).filter((e) => e instanceof modelFieldType.Document && e.isDirty && e.type !== 'Lookup')
+			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
 
 		for (let field of documentFields)
 		{
@@ -405,7 +484,7 @@ export default class FormViewModelBase extends ViewModelBase
 								const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
 								field.setTickets(areaKeyField.value, this.navigationId)
 
-								// Only reset if not also submitting a new file to replace the one that was deleted
+								// Only reset if not also submitting a new file to replace the one that was deleted.
 								if (field.currentDocument.value.submitMode === -1)
 									field.currentDocument.reset()
 							}
@@ -416,7 +495,7 @@ export default class FormViewModelBase extends ViewModelBase
 						{
 							const tracingDataStore = useTracingDataStore()
 							tracingDataStore.addError({
-								origin: 'saveDocuments',
+								origin: 'setDocumentChanges',
 								message: `Error found while trying to set document properties in form "${this.modelInfo.name}".`,
 								contextData: request.data
 							})

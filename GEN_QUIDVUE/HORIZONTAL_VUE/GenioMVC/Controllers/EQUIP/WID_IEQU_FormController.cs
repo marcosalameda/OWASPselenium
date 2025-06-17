@@ -536,7 +536,7 @@ namespace GenioMVC.Controllers
 
 		// POST: /Equip/Wid_iequ_SaveEdit
 		[HttpPost]
-		public ActionResult Wid_iequ_SaveEdit([FromBody]Wid_iequ_ViewModel model)
+		public ActionResult Wid_iequ_SaveEdit([FromBody] Wid_iequ_ViewModel model)
 		{
 			var eventSink = new EventSink()
 			{
@@ -554,6 +554,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class Wid_iequDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Wid_iequ_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsWid_iequ([FromBody] Wid_iequDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

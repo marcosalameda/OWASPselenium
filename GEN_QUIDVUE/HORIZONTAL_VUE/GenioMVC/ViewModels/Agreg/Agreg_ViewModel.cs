@@ -162,9 +162,8 @@ namespace GenioMVC.ViewModels.Agreg
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Agreg model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

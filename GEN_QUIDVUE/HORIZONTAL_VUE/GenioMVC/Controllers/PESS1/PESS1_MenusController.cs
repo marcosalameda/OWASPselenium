@@ -110,7 +110,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET 3H1]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -190,7 +197,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET 511]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -270,7 +284,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET 5211]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -350,7 +371,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET 5221]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -430,7 +458,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET 5231]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -510,7 +545,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET 531]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

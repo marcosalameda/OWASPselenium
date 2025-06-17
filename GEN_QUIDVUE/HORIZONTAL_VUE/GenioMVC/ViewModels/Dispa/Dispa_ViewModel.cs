@@ -190,9 +190,8 @@ namespace GenioMVC.ViewModels.Dispa
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Dispa model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

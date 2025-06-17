@@ -197,9 +197,8 @@ namespace GenioMVC.ViewModels.Messa
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Messa model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

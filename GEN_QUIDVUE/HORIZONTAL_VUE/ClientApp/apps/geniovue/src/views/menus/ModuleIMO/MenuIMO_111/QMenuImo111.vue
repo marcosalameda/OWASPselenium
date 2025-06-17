@@ -49,23 +49,25 @@
 
 <script>
 	/* eslint-disable no-unused-vars */
+	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import netAPI from '@quidgest/clientapp/network'
+	import openQSign from '@quidgest/clientapp/plugins/qSign'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import { computed, readonly } from 'vue'
 
 	import MenuHandlers from '@/mixins/menuHandlers.js'
 	import controlClass from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
 	import hardcodedTexts from '@/hardcodedTexts'
-	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuIMO_111ViewModel.js'
@@ -438,7 +440,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
+						globalEvents: ['changed-CNTRY', 'changed-REGIO', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO', 'changed-PAIS1'],
 						uuid: '5d7b8c5d-ac05-4bf4-b866-40e2585c681e',
 						allSelectedRows: 'false',
 						headerLevel: 1,

@@ -52,7 +52,7 @@
 </template>
 
 <script>
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	const DEFAULT_TEXTS = {
 		addItem: 'Insert',
@@ -96,16 +96,16 @@
 				default: () => DEFAULT_TEXTS
 			},
 		},
-	
+
 		emits: ['click:add', 'update:position'],
-	
+
 		data() {
 			return {
 				draggingCard: null,
 				ghostElement: null,
 			}
 		},
-	
+
 		computed: {
 			sortedColumns() {
 				return this.columns.slice().sort((a, b) => a.order - b.order)
@@ -128,7 +128,7 @@
 				}, {})
 			},
 		},
-	
+
 		mounted() {
 			// Prevent dropping outside allowed areas
 			window.addEventListener(
@@ -159,13 +159,13 @@
 			},
 			handleDragStart(event, card) {
 				this.draggingCard = card
-	
+
 				// Set up the drag ghost
 				const draggedItem = event.target
 				if (!draggedItem) return
 				const slotContent =
 					draggedItem.querySelector('[slot]') || draggedItem
-	
+
 				this.ghostElement = slotContent.cloneNode(true)
 				if (!this.ghostElement) return
 				this.ghostElement.style.width =
@@ -184,12 +184,12 @@
 					this.ghostElement.remove()
 					this.ghostElement = null
 				}
-	
+
 				const card = { ...this.draggingCard }
 				this.draggingCard = null
-	
+
 				if (!card) return
-	
+
 				card.column = column.id
 				this.$emit('update:position', card)
 			},

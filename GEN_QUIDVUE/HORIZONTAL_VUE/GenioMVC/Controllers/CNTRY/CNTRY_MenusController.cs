@@ -145,7 +145,14 @@ namespace GenioMVC.Controllers
 				return Json(GetJsonForDownloadExportFile(file, importType));
 			}
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -346,7 +353,14 @@ namespace GenioMVC.Controllers
 				return Json(GetJsonForDownloadExportFile(file, importType));
 			}
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -520,7 +534,14 @@ namespace GenioMVC.Controllers
 				return Json(GetJsonForDownloadExportFile(file, importType));
 			}
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -657,7 +678,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL WMS MENU_GET 4271]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

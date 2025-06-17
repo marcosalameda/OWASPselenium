@@ -1,5 +1,5 @@
-﻿import netAPI from '@/api/network'
-import { displayMessage } from '@/mixins/genericFunctions.js'
+﻿import netAPI from '@quidgest/clientapp/network'
+import { displayMessage } from '@quidgest/clientapp/utils/genericFunctions'
 
 // From: https://github.com/abergs/fido2-net-lib
 

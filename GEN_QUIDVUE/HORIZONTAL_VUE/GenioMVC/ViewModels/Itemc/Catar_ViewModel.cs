@@ -159,9 +159,8 @@ namespace GenioMVC.ViewModels.Itemc
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Itemc model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

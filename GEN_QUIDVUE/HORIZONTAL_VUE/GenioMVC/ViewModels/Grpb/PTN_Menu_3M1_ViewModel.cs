@@ -375,17 +375,17 @@ namespace GenioMVC.ViewModels.Grpb
 
 // USE /[MANUAL PTN OVERRQ 3M1]/
 
-				List<string> listOfTablesBelow = ["tblb"];				
+				List<string> listOfTablesBelow = ["tblb"];
 
 				bool distinct = false;
-				int nDistinctSearchTables = tableConfig.SearchFilters.SelectMany(sf => 
-					sf.Conditions.Where(cond => 
+				int nDistinctSearchTables = tableConfig.SearchFilters.SelectMany(sf =>
+					sf.Conditions.Where(cond =>
 						_searchableColumnsRefs.ContainsKey(cond.Field)
 							? listOfTablesBelow.Contains(_searchableColumnsRefs[cond.Field].Area)
 							: false
 					)
 				).Distinct().Count();
-				
+
 				if (nDistinctSearchTables == 1)
 					distinct = true;
 				else if (nDistinctSearchTables > 1)
@@ -457,6 +457,9 @@ namespace GenioMVC.ViewModels.Grpb
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
+
+				if (nDistinctSearchTables > 1)
+					throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_EFETU17380, "PTN_Menu_3M1_ViewModel.Load", "Error: MultipleFiltersTablesBelow", null);
 			}
 		}
 

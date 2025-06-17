@@ -6,18 +6,18 @@
 <!-- eslint-enable indent, vue/html-indent, vue/script-indent -->
 		<div class="c-footer">
 			<div class="row">
-				<language-items v-if="layoutConfig.LanguagePlacement === 'in_footer'" />
+				<language-items v-if="$app.layout.LanguagePlacement === 'in_footer'" />
 
 				<div class="version-container">
 					<span class="c-footer__genio-version">
-						&copy; {{ genio.generationDate.year }}
+						&copy; {{ $app.genio.generationDate.year }}
 						<a
 							href="http://www.quidgest.com/"
 							target="_blank"
 							rel="noopener noreferrer">
 							Quidgest
 						</a>
-						| {{ version }} {{ genio.assemblyVersion }}
+						| {{ version }} {{ $app.genio.assemblyVersion }}
 					</span>
 				</div>
 			</div>
@@ -27,9 +27,7 @@
 
 <script>
 	import { defineAsyncComponent } from 'vue'
-	import { mapState } from 'pinia'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 
@@ -47,10 +45,6 @@
 		expose: [],
 
 		computed: {
-			...mapState(useSystemDataStore, [
-				'genio'
-			]),
-
 			version()
 			{
 				return this.Resources[hardcodedTexts.version]

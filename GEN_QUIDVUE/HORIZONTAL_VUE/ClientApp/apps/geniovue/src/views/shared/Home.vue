@@ -26,10 +26,10 @@
 	import { mapState } from 'pinia'
 	import _assignIn from 'lodash-es/assignIn'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import { useGenericDataStore } from '@/stores/genericData.js'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
 
-	import { fetchData } from '@/api/network'
+	import { fetchData } from '@quidgest/clientapp/network'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import NavHandlers from '@/mixins/navHandlers.js'
 

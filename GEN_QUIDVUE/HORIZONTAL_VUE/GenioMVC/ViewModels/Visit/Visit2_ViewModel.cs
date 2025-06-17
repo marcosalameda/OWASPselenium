@@ -174,9 +174,8 @@ namespace GenioMVC.ViewModels.Visit
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Visit model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

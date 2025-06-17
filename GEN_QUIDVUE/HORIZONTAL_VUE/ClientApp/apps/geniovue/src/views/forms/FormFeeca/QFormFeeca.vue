@@ -49,7 +49,7 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
@@ -91,20 +91,25 @@
 			data-key="FEECA"
 			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.FEECA___FLDS_CLASS___.isVisible">
+				<q-row-container v-show="controls.FEECA___FLDS_DESCRIP_.isVisible">
 					<q-control-wrapper
-						v-show="controls.FEECA___FLDS_CLASS___.isVisible"
+						v-show="controls.FEECA___FLDS_DESCRIP_.isVisible"
 						class="control-join-group">
 						<base-input-structure
 							class="i-text"
-							v-bind="controls.FEECA___FLDS_CLASS___"
-							v-on="controls.FEECA___FLDS_CLASS___.handlers"
-							:loading="controls.FEECA___FLDS_CLASS___.props.loading"
+							v-bind="controls.FEECA___FLDS_DESCRIP_"
+							v-on="controls.FEECA___FLDS_DESCRIP_.handlers"
+							:loading="controls.FEECA___FLDS_DESCRIP_.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
-							<q-select
-								v-if="controls.FEECA___FLDS_CLASS___.isVisible"
-								v-bind="controls.FEECA___FLDS_CLASS___.props" />
+							<q-lookup
+								v-if="controls.FEECA___FLDS_DESCRIP_.isVisible"
+								v-bind="controls.FEECA___FLDS_DESCRIP_.props"
+								v-on="controls.FEECA___FLDS_DESCRIP_.handlers" />
+							<q-see-more-feeca-flds-descrip
+								v-if="controls.FEECA___FLDS_DESCRIP_.seeMoreIsVisible"
+								v-bind="controls.FEECA___FLDS_DESCRIP_.seeMoreParams"
+								v-on="controls.FEECA___FLDS_DESCRIP_.handlers" />
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -203,16 +208,17 @@
 
 	import FormHandlers from '@/mixins/formHandlers.js'
 	import formFunctions from '@/mixins/formFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import netAPI from '@/api/network'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import netAPI from '@quidgest/clientapp/network'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -231,6 +237,7 @@
 		name: 'QFormFeeca',
 
 		components: {
+			QSeeMoreFeecaFldsDescrip: defineAsyncComponent(() => import('@/views/forms/FormFeeca/dbedits/FeecaFldsDescripSeeMore.vue')),
 		},
 
 		mixins: [
@@ -501,22 +508,33 @@
 				},
 
 				controls: {
-					FEECA___FLDS_CLASS___: new fieldControlClass.ArrayStringControl({
-						modelField: 'FldsValClass',
-						valueChangeEvent: 'fieldChange:flds.class',
-						dependentModelField: 'ValCodflds',
-						dependentChangeEvent: 'fieldChange:feeca.codflds',
-						id: 'FEECA___FLDS_CLASS___',
-						name: 'CLASS',
-						size: 'large',
-						label: computed(() => this.Resources.TEXT_ENUMERATION45668),
+					FEECA___FLDS_DESCRIP_: new fieldControlClass.LookupControl({
+						modelField: 'TableFldsDescrip',
+						valueChangeEvent: 'fieldChange:flds.descrip',
+						id: 'FEECA___FLDS_DESCRIP_',
+						name: 'DESCRIP',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.DESCRIPTION07383),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 2,
-						labelId: 'label_FEECA___FLDS_CLASS___',
-						arrayName: 'CLASS',
-						helpShortItem: '',
-						helpDetailedItem: '',
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodflds',
+							dependencyEvent: 'fieldChange:feeca.codflds'
+						},
+						dependentFields: () => ({
+							set 'flds.codflds'(value) { vm.model.ValCodflds.updateValue(value) },
+							set 'flds.descrip'(value) { vm.model.TableFldsDescrip.updateValue(value) },
+							set 'flds.attach'(value) { vm.model.FldsValAttach.updateValue(value) },
+							set 'flds.npassage'(value) { vm.model.FldsValNpassage.updateValue(value) },
+						}),
 						controlLimits: [
 						],
 					}, this),
@@ -597,8 +615,8 @@
 					Flds: {
 						get ValAttach() { return vm.model.FldsValAttach.value },
 						set ValAttach(value) { vm.model.FldsValAttach.updateValue(value) },
-						get ValClass() { return vm.model.FldsValClass.value },
-						set ValClass(value) { vm.model.FldsValClass.updateValue(value) },
+						get ValDescrip() { return vm.model.TableFldsDescrip.value },
+						set ValDescrip(value) { vm.model.TableFldsDescrip.updateValue(value) },
 						get ValNpassage() { return vm.model.FldsValNpassage.value },
 						set ValNpassage(value) { vm.model.FldsValNpassage.updateValue(value) },
 					},
@@ -704,12 +722,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				applyForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
-				if (applyForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					applyForm = results.every((e) => e === true)
+					applyForm = await this.model.setDocumentChanges()
+
+					if (applyForm)
+					{
+						const results = await this.model.saveDocuments()
+						applyForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-apply-form')
@@ -752,12 +775,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				saveForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets()
 
-				if (saveForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					saveForm = results.every((e) => e === true)
+					saveForm = await this.model.setDocumentChanges()
+
+					if (saveForm)
+					{
+						const results = await this.model.saveDocuments()
+						saveForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-save-form')

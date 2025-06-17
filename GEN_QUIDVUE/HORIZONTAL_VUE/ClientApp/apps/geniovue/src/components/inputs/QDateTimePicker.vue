@@ -48,7 +48,7 @@
 <script>
 	import Datepicker from '@vuepic/vue-datepicker'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {

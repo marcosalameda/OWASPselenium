@@ -8,7 +8,7 @@
 
 <script>
 	import { mapState } from 'pinia'
-	import { useSystemDataStore } from '@/stores/systemData.js'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
 
 	import hardcodedTexts from '@/hardcodedTexts.js'
 

@@ -66,7 +66,7 @@
 <script>
 	import searchFilterDataModule from '@/api/genio/searchFilterData'
 
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 	import QTableConfig from './QTableConfig.vue'
 	import QTableColumnConfig from './QTableColumnConfig.vue'

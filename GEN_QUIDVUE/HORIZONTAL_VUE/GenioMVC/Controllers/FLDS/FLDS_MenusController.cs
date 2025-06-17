@@ -113,7 +113,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET TABS]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -223,7 +230,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET INPTFIELD]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -333,7 +347,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET 358111]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -443,7 +464,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET 358211]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -552,7 +580,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET 261]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -632,7 +667,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET 271]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -712,7 +754,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL PTN MENU_GET 611]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -792,7 +841,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL TBS MENU_GET 1921]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

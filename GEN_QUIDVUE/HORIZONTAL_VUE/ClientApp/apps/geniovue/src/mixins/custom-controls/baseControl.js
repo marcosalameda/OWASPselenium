@@ -1,8 +1,8 @@
-﻿import { reactive } from 'vue'
-import _isEmpty from 'lodash-es/isEmpty'
+﻿import _isEmpty from 'lodash-es/isEmpty'
+import { reactive } from 'vue'
 
-import { imageObjToSrc } from '@/mixins/genericFunctions.js'
-import eventBus from '@/api/global/eventBus.js'
+import eventBus from '@quidgest/clientapp/plugins/eventBus'
+import { imageObjToSrc } from '@quidgest/clientapp/utils/genericFunctions'
 
 /**
  * Generic custom control

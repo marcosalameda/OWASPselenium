@@ -31,13 +31,11 @@ namespace GenioMVC.Controllers
 {
 	public partial class Pess2Controller : ControllerBase
 	{
-
 		private IChatbotService _aiService;
-		public Pess2Controller(UserContextService userContext, IChatbotService aiService): base(userContext) 
+		public Pess2Controller(UserContextService userContext, IChatbotService aiService) : base(userContext)
 		{
 			_aiService = aiService;
 		}
-
 
 // USE /[MANUAL GQT CONTROLLER_NAVIGATION PESS2]/
 
@@ -84,33 +82,62 @@ namespace GenioMVC.Controllers
 			return Json(new { Success = false, Message = "Error" });
 		}
 
-		public ActionResult GetDocumsTickets([FromBody]RequestDocumGetTicketsModel requestModel)
+		/// <summary>
+		/// Gets the necessary tickets to interact with the given document
+		/// </summary>
+		/// <param name="requestModel">The request model with the table, field and the primary key of the record</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult GetDocumsTickets([FromBody] RequestDocumGetTicketsModel requestModel)
 		{
-			return base.GetDocumsTickets(requestModel.TableName, requestModel.FieldName, requestModel.KeyValue);
+			return base.GetDocumsTickets("PESS2", requestModel.FieldName, requestModel.KeyValue);
 		}
 
-		public ActionResult GetFileVersions([FromBody]RequestDocumGetModel requestModel)
+		/// <summary>
+		/// Gets the versions of the specified document
+		/// </summary>
+		/// <param name="requestModel">The request model with the ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult GetFileVersions([FromBody] RequestDocumGetModel requestModel)
 		{
 			return base.GetFileVersions(requestModel.Ticket);
 		}
 
-		public ActionResult GetFileProperties([FromBody]RequestDocumGetModel requestModel)
+		/// <summary>
+		/// Gets the properties of the specified document
+		/// </summary>
+		/// <param name="requestModel">The request model with the ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult GetFileProperties([FromBody] RequestDocumGetModel requestModel)
 		{
 			return base.GetFileProperties(requestModel.Ticket);
 		}
 
-		public ActionResult GetFile([FromBody]RequestDocumGetModel requestModel)
+		/// <summary>
+		/// Gets the binary file associated to the specified document
+		/// </summary>
+		/// <param name="requestModel">The request model with the ticket and view type</param>
+		/// <returns>A File object with the content of the document</returns>
+		public ActionResult GetFile([FromBody] RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
 		}
 
-		[DisableRequestSizeLimit]
-		public new ActionResult SetFile([FromForm] string ticket, [FromForm] VersionSubmitAction mode = VersionSubmitAction.Insert, [FromForm] string version = "1")
+		/// <summary>
+		/// Stores a new document in the Docums table
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFile([FromForm] RequestDocumsCreateModel requestModel)
 		{
-			return base.SetFile(ticket, mode, version);
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version);
 		}
 
-		public ActionResult SetFilesState([FromBody]RequestDocumsChangeModel requestModel)
+		/// <summary>
+		/// Changes the state/properties of a given document
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of changes</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFilesState([FromBody] RequestDocumsChangeModel requestModel)
 		{
 			return base.SetFilesState(requestModel.Documents);
 		}

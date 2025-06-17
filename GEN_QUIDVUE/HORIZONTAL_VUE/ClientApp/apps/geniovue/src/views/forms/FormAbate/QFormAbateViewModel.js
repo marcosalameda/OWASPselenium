@@ -2,12 +2,12 @@
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
-import ViewModelBase from '@/mixins/formViewModelBase.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
-import modelFieldType from '@/mixins/formModelFieldTypes.js'
+import FormViewModelBase from '@/mixins/formViewModelBase.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+import modelFieldType from '@quidgest/clientapp/models/fields'
 
 import hardcodedTexts from '@/hardcodedTexts.js'
-import netAPI from '@/api/network'
+import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
@@ -15,9 +15,9 @@ import qProjArrays from '@/api/genio/projectArrays.js'
 
 /**
  * Represents a ViewModel class.
- * @extends ViewModelBase
+ * @extends FormViewModelBase
  */
-export default class ViewModel extends ViewModelBase
+export default class ViewModel extends FormViewModelBase
 {
 	/**
 	 * Creates a new instance of the ViewModel.
@@ -32,12 +32,13 @@ export default class ViewModel extends ViewModelBase
 		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
-		/** The view model metadata */
+		// The view model metadata
 		_merge(this.modelInfo, {
 			name: 'ABATE',
 			area: 'DECOM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ABATE'
+				recalculateFormulas: 'RecalculateFormulas_ABATE',
+				updateFilesTickets: 'UpdateFilesTicketsABATE'
 			}
 		})
 
@@ -83,6 +84,57 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.DECOMISSION14486),
 		}).cloneFrom(values?.ValDtdeco))
 		watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue))
+
+		this.ValNote = reactive(new modelFieldType.MultiLineString({
+			id: 'ValNote',
+			originId: 'ValNote',
+			area: 'DECOM',
+			field: 'NOTE',
+			description: computed(() => this.Resources.NOTES05274),
+		}).cloneFrom(values?.ValNote))
+		watch(() => this.ValNote.value, (newValue, oldValue) => this.onUpdate('decom.note', this.ValNote, newValue, oldValue))
+
+		this.ValCreatdat = reactive(new modelFieldType.Date({
+			id: 'ValCreatdat',
+			originId: 'ValCreatdat',
+			area: 'DECOM',
+			field: 'CREATDAT',
+			isFixed: true,
+			description: computed(() => this.Resources.CREATION_DATE51875),
+		}).cloneFrom(values?.ValCreatdat))
+		watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('decom.creatdat', this.ValCreatdat, newValue, oldValue))
+
+		this.ValCreatope = reactive(new modelFieldType.String({
+			id: 'ValCreatope',
+			originId: 'ValCreatope',
+			area: 'DECOM',
+			field: 'CREATOPE',
+			maxLength: 20,
+			isFixed: true,
+			description: computed(() => this.Resources.CREATED_BY12292),
+		}).cloneFrom(values?.ValCreatope))
+		watch(() => this.ValCreatope.value, (newValue, oldValue) => this.onUpdate('decom.creatope', this.ValCreatope, newValue, oldValue))
+
+		this.ValChngdate = reactive(new modelFieldType.Date({
+			id: 'ValChngdate',
+			originId: 'ValChngdate',
+			area: 'DECOM',
+			field: 'CHNGDATE',
+			isFixed: true,
+			description: computed(() => this.Resources.CHANGED_ON19727),
+		}).cloneFrom(values?.ValChngdate))
+		watch(() => this.ValChngdate.value, (newValue, oldValue) => this.onUpdate('decom.chngdate', this.ValChngdate, newValue, oldValue))
+
+		this.ValOperchng = reactive(new modelFieldType.String({
+			id: 'ValOperchng',
+			originId: 'ValOperchng',
+			area: 'DECOM',
+			field: 'OPERCHNG',
+			maxLength: 20,
+			isFixed: true,
+			description: computed(() => this.Resources.CHANGED_BY08967),
+		}).cloneFrom(values?.ValOperchng))
+		watch(() => this.ValOperchng.value, (newValue, oldValue) => this.onUpdate('decom.operchng', this.ValOperchng, newValue, oldValue))
 	}
 
 	/**

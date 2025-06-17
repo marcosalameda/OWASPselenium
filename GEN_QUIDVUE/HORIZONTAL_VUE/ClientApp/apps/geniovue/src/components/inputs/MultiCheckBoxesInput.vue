@@ -34,7 +34,7 @@
 	import _findIndex from 'lodash-es/findIndex'
 	import _map from 'lodash-es/map'
 
-	import { inputSize, labelAlignment } from '@/mixins/quidgest.mainEnums'
+	import { inputSize, labelAlignment } from '@quidgest/clientapp/constants/enums'
 
 	import QControlWrapper from '@/components/ControlWrapper.vue'
 	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'

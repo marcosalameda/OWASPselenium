@@ -32,7 +32,7 @@ export default {
 		 */
 		hasDoubleNavbar()
 		{
-			return this.layoutConfig.MenuStyle === 'double_navbar'
+			return this.$app.layout.MenuStyle === 'double_navbar'
 		},
 
 		/**
@@ -64,7 +64,6 @@ export default {
 
 	methods: {
 		...mapActions(useLayoutDataStore, [
-			'setLayoutConfig',
 			'getCollapsibleNavbarState',
 			'setCollapsibleNavbarState',
 			'setHeaderHeight',
@@ -123,18 +122,18 @@ export default {
 			this.setSidebarCollapseState(false)
 			this.$eventHub.emit('toggle-sidebar', 'expand')
 		},
-	
+
 		/**
 		 * Collapses the mobile layout sidebar.
 		 */
 		collapseSidebar() {
 			if (this.options.autoCollapseSize && window.innerWidth <= this.options.autoCollapseSize)
 				this.setSidebarVisibility(false)
-	
+
 			this.setSidebarCollapseState(true)
 			this.$eventHub.emit('toggle-sidebar', 'collapse')
 		},
-	
+
 		/**
 		 * Collapses the mobile layout sidebar when a certain screen size is reached.
 		 * @param {boolean} resize Whether or not the window is being resized
@@ -142,13 +141,13 @@ export default {
 		autoCollapseSidebar(resize = true) {
 			if (resize && !this.options.autoCollapseSize)
 				return
-	
+
 			if (this.options.autoCollapseSize && window.innerWidth <= this.options.autoCollapseSize)
 				this.collapseSidebar()
 			else
 				this.setSidebarVisibility(true)
 		},
-	
+
 		/**
 		 * Toggles the mobile layout sidebar.
 		 */
@@ -158,7 +157,7 @@ export default {
 			else
 				this.collapseSidebar()
 		},
-	
+
 		/**
 		 * Expands a dropdown menu in the mobile layout sidebar.
 		 * @param {object} menu The menu
@@ -170,16 +169,16 @@ export default {
 				for (let menuId of this.menuPath)
 					if (!menu.Order.startsWith(menuId))
 						otherMenus.push(menuId)
-	
+
 				for (let menuId of otherMenus)
 					this.removeFromMenuPath(menuId)
-	
+
 				this.removeFromMenuPath(menu.Order)
 			}
-	
+
 			this.addToMenuPath(menu.Order)
 		},
-	
+
 		/**
 		 * Collapses a dropdown menu in the mobile layout sidebar.
 		 * @param {object} menu The menu
@@ -187,7 +186,7 @@ export default {
 		collapseDropdownMenu(menu) {
 			this.removeFromMenuPath(menu.Order)
 		},
-	
+
 		/**
 		 * Toggles a dropdown menu in the mobile layout sidebar.
 		 * @param {object} menu The menu
@@ -198,7 +197,7 @@ export default {
 			else
 				this.expandDropdownMenu(menu)
 		},
-	
+
 		/**
 		 * Gets the icon for the given module.
 		 * @param {object} module The module
@@ -210,7 +209,7 @@ export default {
 				icon: defaultIcon,
 				type: 'svg'
 			}
-	
+
 			if (module.vector)
 				data.icon = module.vector
 			else if (module.font) {
@@ -223,7 +222,7 @@ export default {
 			}
 			else if (this.isEmpty(defaultIcon))
 				return undefined
-	
+
 			return data
 		},
 

@@ -465,7 +465,7 @@ namespace GenioMVC.Controllers
 
 		// POST: /Tpcon/Tpcon_SaveEdit
 		[HttpPost]
-		public ActionResult Tpcon_SaveEdit([FromBody]Tpcon_ViewModel model)
+		public ActionResult Tpcon_SaveEdit([FromBody] Tpcon_ViewModel model)
 		{
 			var eventSink = new EventSink()
 			{
@@ -483,6 +483,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class TpconDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Tpcon_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsTpcon([FromBody] TpconDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

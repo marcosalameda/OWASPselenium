@@ -40,7 +40,7 @@
 	import 'leaflet.featuregroup.subgroup'
 	import 'leaflet.markercluster'
 
-	import { imageObjToSrc } from '@/mixins/genericFunctions.js'
+	import { imageObjToSrc } from '@quidgest/clientapp/utils/genericFunctions'
 	import { addFullScreenMode } from './libraries/leaflet-fullscreen/leaflet-fullscreen.js'
 
 	// The available shape types.

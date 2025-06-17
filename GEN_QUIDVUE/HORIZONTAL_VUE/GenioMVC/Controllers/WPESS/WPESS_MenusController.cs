@@ -109,7 +109,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET IMGBACKGROUND]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -189,7 +196,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET PESSCARD]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -269,7 +283,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET CARDIMGTOP]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -349,7 +370,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET CARDIMGTHUMB]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);
@@ -430,7 +458,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL STY MENU_GET IMAGEMAGNIFIER]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;

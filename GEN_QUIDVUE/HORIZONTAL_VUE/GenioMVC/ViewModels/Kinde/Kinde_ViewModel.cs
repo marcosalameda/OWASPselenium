@@ -141,9 +141,8 @@ namespace GenioMVC.ViewModels.Kinde
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Kinde model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

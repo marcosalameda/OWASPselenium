@@ -63,7 +63,7 @@
 
 	// Utils
 	import { nextTick } from 'vue'
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	// The default component texts
 	const DEFAULT_TEXTS = {

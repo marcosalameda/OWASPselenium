@@ -43,8 +43,8 @@
 <script>
 	import { defineAsyncComponent } from 'vue'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
-	import { wizardTypes } from '@/mixins/quidgest.mainEnums.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
+	import { wizardTypes } from '@quidgest/clientapp/constants/enums'
 
 	import QWizardContent from './QWizardContent.vue'
 

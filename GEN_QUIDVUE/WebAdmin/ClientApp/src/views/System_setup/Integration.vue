@@ -2,7 +2,7 @@
 	<div id="system_setup_integration_container">
 		<row>
 			<q-card
-				:title="resources.messagingSystemTitle"
+				:title="systemConfigTexts.messagingSystemTitle"
 				width="block"
 				class="q-card--admin-default">
 				<q-row-container>
@@ -10,7 +10,6 @@
 						:Messaging="Messaging"
 						:Metadata="Metadata"
 						:model="model"
-						:resources="resources"
 						@alert-class="forwardAlert"
 					/>
 				</q-row-container>
@@ -21,11 +20,10 @@
 			<q-card
 				width="block"
 				class="q-card--admin-default"
-				:title="resources.messagingQueueServerTitle">
+				:title="systemConfigTexts.messagingQueueServerTitle">
 				<q-row-container>
 					<queue
 						:model="model"
-						:resources="resources"
 						@update-model="forwardUpdate"
 						@alert-class="forwardAlert" />
 				</q-row-container>
@@ -45,6 +43,7 @@
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import { texts } from '@/resources/hardcodedTexts.ts';
+	import { SystemConfigTexts } from '@/resources/viewResources.ts';
 	import QAlert from '@/components/QAlert.vue';
 	import message from './Message';
 	import queue from './Queue';
@@ -70,10 +69,6 @@
 			},
 			Messaging: {
 				required: true
-			},
-			resources: {
-				type: Object,
-				required: true
 			}
 		},
 
@@ -95,6 +90,9 @@
 					saveConfiguration: this.Resources[texts.saveConfiguration]
 				}
 			},
+			systemConfigTexts() {
+				return new SystemConfigTexts(this)
+			}
 		},
 
 		methods: {

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-	import { messageTypes } from '@/mixins/quidgest.mainEnums.js'
+	import { messageTypes } from '@quidgest/clientapp/constants/enums'
 
 	import QCounterWidget from './QCounterWidget.vue'
 

@@ -121,7 +121,7 @@
 
 		<!-- REGISTER CERTIFICATE -->
 		<q-row-container
-			v-if="authConfig.useCertificate"
+			v-if="$app.authConfig.useCertificate"
 			is-large>
 			<q-control-wrapper class="row-line-group">
 				<q-group-box-container :label="texts.registerCertificate">
@@ -203,7 +203,7 @@
 			is-large>
 			<q-control-wrapper class="row-line-group">
 				<q-group-box-container :label="texts.twoFactorAuth">
-					<p>{{ texts.twoFactorAuthHelp }} {{ applicationName }}</p>
+					<p>{{ texts.twoFactorAuthHelp }} {{ $app.applicationName }}</p>
 
 					<p>{{ texts.twoFactorAuthFirstStep }}</p>
 
@@ -234,22 +234,21 @@
 </template>
 
 <script>
-	import { computed } from 'vue'
-	import { mapState, mapActions } from 'pinia'
 	import _forEach from 'lodash-es/forEach'
 	import _isEmpty from 'lodash-es/isEmpty'
+	import { mapActions, mapState } from 'pinia'
+	import { computed } from 'vue'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import { useGenericDataStore } from '@/stores/genericData.js'
-	import { useAuthDataStore } from '@/stores/authData.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
-	import { messageTypes } from '@/mixins/quidgest.mainEnums.js'
-	import { displayMessage } from '@/mixins/genericFunctions.js'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import { messageTypes } from '@quidgest/clientapp/constants/enums'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
+	import { useAuthDataStore, useGenericDataStore } from '@quidgest/clientapp/stores'
+	import { displayMessage } from '@quidgest/clientapp/utils/genericFunctions'
+
+	import hardcodedTexts from '@/hardcodedTexts.js'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
 	import NavHandlers from '@/mixins/navHandlers.js'
 	import VueNavigation from '@/mixins/vueNavigation.js'
-	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	export default {
 		name: 'QProfile',
@@ -265,9 +264,6 @@
 
 		data()
 		{
-			const systemDataStore = useSystemDataStore()
-			const authConfig = systemDataStore.authConfig
-
 			return {
 				componentOnLoadProc: asyncProcM.getProcListMonitor('Profile', false),
 
@@ -337,7 +333,7 @@
 						modelField: 'ValNome',
 						valueChangeEvent: 'fieldChange:pseud.nome',
 						name: 'ValNome',
-						maxLength: authConfig.maxUsrSize,
+						maxLength: this.$app.authConfig.maxUsrSize,
 						labelId: 'label_ValNome',
 						isRequired: true,
 						size: 'medium'
@@ -350,7 +346,7 @@
 						name: 'OldPassword',
 						label: computed(() => this.Resources[hardcodedTexts.currentPassword]),
 						labelPosition: '',
-						maxLength: authConfig.maxPswSize,
+						maxLength: this.$app.authConfig.maxPswSize,
 						labelId: 'label_OldPassword',
 						isRequired: true,
 						size: 'large'
@@ -363,7 +359,7 @@
 						name: 'NewPassword',
 						label: computed(() => this.Resources[hardcodedTexts.newPassword]),
 						labelPosition: '',
-						maxLength: authConfig.maxPswSize,
+						maxLength: this.$app.authConfig.maxPswSize,
 						labelId: 'label_NewPassword',
 						isRequired: true,
 						size: 'large'
@@ -376,7 +372,7 @@
 						name: 'ConfirmPassword',
 						label: computed(() => this.Resources[hardcodedTexts.confirmPassword]),
 						labelPosition: '',
-						maxLength: authConfig.maxPswSize,
+						maxLength: this.$app.authConfig.maxPswSize,
 						labelId: 'label_ConfirmPassword',
 						isRequired: true,
 						size: 'large'
@@ -390,7 +386,7 @@
 						label: computed(() => this.Resources[hardcodedTexts.password]),
 						labelPosition: '',
 						placeholder: computed(() => this.Resources[hardcodedTexts.currentPassword]),
-						maxLength: authConfig.maxPswSize,
+						maxLength: this.$app.authConfig.maxPswSize,
 						labelId: 'label_Password',
 						isRequired: true,
 						size: 'large'
@@ -428,9 +424,7 @@
 		},
 
 		computed: {
-			...mapState(useSystemDataStore, [
-				'applicationName',
-				'authConfig',
+			...mapState(useGenericDataStore, [
 				'maintenance'
 			]),
 

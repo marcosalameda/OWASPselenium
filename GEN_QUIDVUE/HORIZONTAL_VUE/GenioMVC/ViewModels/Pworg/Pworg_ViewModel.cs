@@ -155,9 +155,8 @@ namespace GenioMVC.ViewModels.Pworg
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Pworg model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

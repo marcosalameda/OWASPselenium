@@ -2,12 +2,12 @@
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
-import ViewModelBase from '@/mixins/formViewModelBase.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
-import modelFieldType from '@/mixins/formModelFieldTypes.js'
+import FormViewModelBase from '@/mixins/formViewModelBase.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+import modelFieldType from '@quidgest/clientapp/models/fields'
 
 import hardcodedTexts from '@/hardcodedTexts.js'
-import netAPI from '@/api/network'
+import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
@@ -15,9 +15,9 @@ import qProjArrays from '@/api/genio/projectArrays.js'
 
 /**
  * Represents a ViewModel class.
- * @extends ViewModelBase
+ * @extends FormViewModelBase
  */
-export default class ViewModel extends ViewModelBase
+export default class ViewModel extends FormViewModelBase
 {
 	/**
 	 * Creates a new instance of the ViewModel.
@@ -32,12 +32,13 @@ export default class ViewModel extends ViewModelBase
 		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
-		/** The view model metadata */
+		// The view model metadata
 		_merge(this.modelInfo, {
 			name: 'FEECA',
 			area: 'FEECA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_FEECA'
+				recalculateFormulas: 'RecalculateFormulas_FEECA',
+				updateFilesTickets: 'UpdateFilesTicketsFEECA'
 			}
 		})
 
@@ -51,30 +52,27 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValCodfeeca))
 		watch(() => this.ValCodfeeca.value, (newValue, oldValue) => this.onUpdate('feeca.codfeeca', this.ValCodfeeca, newValue, oldValue))
 
-		/** The hidden foreign keys. */
+		/** The used foreign keys. */
 		this.ValCodflds = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodflds',
 			originId: 'ValCodflds',
 			area: 'FEECA',
 			field: 'CODFLDS',
 			relatedArea: 'FLDS',
-			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodflds))
 		watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('feeca.codflds', this.ValCodflds, newValue, oldValue))
 
 		/** The remaining form fields. */
-		this.FldsValClass = reactive(new modelFieldType.String({
-			id: 'FldsValClass',
-			originId: 'ValClass',
+		this.TableFldsDescrip = reactive(new modelFieldType.MultiLineString({
+			type: 'Lookup',
+			id: 'TableFldsDescrip',
+			originId: 'ValDescrip',
 			area: 'FLDS',
-			field: 'CLASS',
-			maxLength: 2,
-			isFixed: true,
-			arrayOptions: computed(() => qProjArrays.QArrayClass.setResources(vm.$getResource).elements),
-			description: computed(() => this.Resources.TEXT_ENUMERATION45668),
-		}).cloneFrom(values?.FldsValClass))
-		watch(() => this.FldsValClass.value, (newValue, oldValue) => this.onUpdate('flds.class', this.FldsValClass, newValue, oldValue))
+			field: 'DESCRIP',
+			description: computed(() => this.Resources.DESCRIPTION07383),
+		}).cloneFrom(values?.TableFldsDescrip))
+		watch(() => this.TableFldsDescrip.value, (newValue, oldValue) => this.onUpdate('flds.descrip', this.TableFldsDescrip, newValue, oldValue))
 
 		this.ValFeedback = reactive(new modelFieldType.String({
 			id: 'ValFeedback',

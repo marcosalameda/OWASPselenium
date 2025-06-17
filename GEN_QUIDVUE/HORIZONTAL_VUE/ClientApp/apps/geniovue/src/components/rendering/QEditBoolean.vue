@@ -15,7 +15,7 @@
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
-	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
+	import { inputSize } from '@quidgest/clientapp/constants/enums'
 
 	import QCheckboxInput from '@/components/inputs/CheckBoxInput.vue'
 

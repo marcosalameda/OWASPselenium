@@ -7,7 +7,7 @@
 				<div class="f-login__background">
 					<div class="f-login__brand">
 						<img
-							:src="`${system.resourcesPath}f-login__brand.png?v=${genio.buildVersion}`"
+							:src="`${$app.resourcesPath}f-login__brand.png?v=${$app.genio.buildVersion}`"
 							alt="" />
 						<p>{{ texts.appName }}</p>
 					</div>
@@ -108,13 +108,13 @@
 	import { computed } from 'vue'
 	import { mapState } from 'pinia'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import { useAuthDataStore } from '@/stores/authData.js'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
+	import { useAuthDataStore } from '@quidgest/clientapp/stores'
 	import NavHandlers from '@/mixins/navHandlers.js'
 	import VueNavigation from '@/mixins/vueNavigation.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import { v4 as uuidv4 } from 'uuid'
@@ -217,8 +217,7 @@
 
 		computed: {
 			...mapState(useSystemDataStore, [
-				'system',
-				'genio'
+				'system'
 			]),
 
 			...mapState(useAuthDataStore, [

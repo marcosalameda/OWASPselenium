@@ -6,8 +6,9 @@
 			<q-input-group :size="size">
 				<q-text-field
 					:model-value="modelValue"
-					readonly
 					data-testid="document-input"
+					:readonly="!!modelValue"
+					:placeholder="!modelValue ? texts.fileChoose : ''"
 					:class="['q-document__field', { 'q-document__field-empty': !modelValue && (readonly || disabled) }]"
 					:aria-labelledby="labelId"
 					@click="handleFieldClick" />
@@ -17,10 +18,10 @@
 						ref="optionsButton"
 						data-testid="options-button"
 						aria-haspopup="true"
-						:title="texts.actionLabel"
+						:title="modelValue? texts.documentManagement : texts.attachLabel"
 						:disabled="isOptionsButtonDisabled"
-						@click="toggleDropdown">
-						<q-icon icon="more-items" />
+						@click="onOptionsButtonClick">
+						<q-icon :icon="optionsIcon" />
 					</q-button>
 				</template>
 			</q-input-group>
@@ -99,8 +100,8 @@
 <script>
 	import { defineAsyncComponent } from 'vue'
 
-	import { displayMessage, isEmpty, validateFileExtAndSize, validateTexts } from '@/mixins/genericFunctions.js'
-	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
+	import { displayMessage, isEmpty, validateFileExtAndSize, validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
+	import { inputSize } from '@quidgest/clientapp/constants/enums'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
@@ -141,8 +142,9 @@
 		bytesLabel: 'Bytes',
 		author: 'Author',
 		deleteHeaderLabel: 'Are you sure you want to delete?',
-		actionLabel: 'Actions',
+		documentManagement: 'File Management',
 		viewAll: 'View all',
+		fileChoose: 'Choose a file...',
 		closeLabel: 'Close',
 		theLastVersionWillEliminate: 'The last version will be eliminated.\\r\\nAre you sure you want to delete?',
 		allTheVersionsExceptLastWillEliminate: 'All the versions except the last will be deleted.\\r\\nAre you sure you want to delete?',
@@ -395,6 +397,13 @@
 			isOptionsButtonDisabled()
 			{
 				return this.disabled || (this.readonly && !this.modelValue)
+			},
+
+			/**
+			 * Determine which icon to display for the options button.
+			 */
+			optionsIcon() {
+				return this.modelValue ? 'more-items' : 'upload-img'
 			}
 		},
 
@@ -677,6 +686,19 @@
 			createDocument()
 			{
 				this.$emit('show-templates-popup')
+			},
+
+			/**
+			 * If no document is currently selected, opens the file attachment dialog.
+			 * Otherwise, toggles the visibility of the options dropdown.
+			 */
+			onOptionsButtonClick() {
+				if (!this.modelValue) {
+					this.triggerFileAttach()
+				}
+				else {
+					this.toggleDropdown()
+				}
 			}
 		},
 

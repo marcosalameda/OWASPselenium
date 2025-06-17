@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Collections.Specialized;
+using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
+using CSGenio.business;
 using CSGenio.framework;
 using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
-using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
 
 namespace GenioMVC.ViewModels
 {
@@ -156,6 +157,20 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		/// <returns>A status message containing information about delete conditions.</returns>
 		StatusMessage DeleteConditions();
+
+		/// <summary>
+		/// Evaluates the write conditions.
+		/// </summary>
+		/// <param name="isApply">Whether it's an apply</param>
+		/// <returns>A status message containing information about the operation result.</returns>
+		StatusMessage EvaluateWriteConditions(bool isApply);
+
+		/// <summary>
+		/// Validates the model fields.
+		/// </summary>
+		/// <param name="isApply">Whether it's an apply</param>
+		/// <returns>A status message containing information about the operation result.</returns>
+		StatusMessage Validate(bool isApply);
 
 		/// <summary>
 		/// Loads global data into the ViewModel based on the provided query string, editable status, and additional parameters.
@@ -366,7 +381,12 @@ namespace GenioMVC.ViewModels
 
 		protected abstract void LoadDocumentsProperties(T model);
 
-		protected abstract StatusMessage EvaluateWriteConditions(bool isApply);
+		public abstract StatusMessage EvaluateWriteConditions(bool isApply);
+
+		public StatusMessage Validate(bool isApply)
+		{
+			return Validation.validateFieldsChange(Model.baseklass, m_userContext.PersistentSupport, m_userContext.User, isApply);
+		}
 
 		public virtual void LoadGlob(NameValueCollection qs, bool editable, bool ajaxRequest = false) { }
 

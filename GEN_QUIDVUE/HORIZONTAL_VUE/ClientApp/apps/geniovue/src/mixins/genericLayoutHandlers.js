@@ -1,13 +1,16 @@
-﻿import { mapState, mapActions } from 'pinia'
-import _isEmpty from 'lodash-es/isEmpty'
+﻿import _isEmpty from 'lodash-es/isEmpty'
+import { mapActions, mapState } from 'pinia'
 
-import { useGenericLayoutDataStore } from '@/stores/genericLayoutData.js'
-import { useGenericDataStore } from '@/stores/genericData.js'
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { useUserDataStore } from '@/stores/userData.js'
+import {
+	useGenericDataStore,
+	useGenericLayoutDataStore,
+	useSystemDataStore,
+	useUserDataStore
+} from '@quidgest/clientapp/stores'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
-import genericFunctions from '@/mixins/genericFunctions.js'
 import { loadResources } from '@/plugins/i18n.js'
+import { systemInfo } from '@/systemInfo'
 
 /***************************************************************************
  * Mixin with handlers to be reused by both layouts.                       *
@@ -34,9 +37,7 @@ export default {
 
 	computed: {
 		...mapState(useSystemDataStore, [
-			'system',
-			'maintenance',
-			'genio'
+			'system'
 		]),
 
 		...mapState(useGenericLayoutDataStore, [
@@ -52,6 +53,7 @@ export default {
 		]),
 
 		...mapState(useGenericDataStore, [
+			'maintenance',
 			'hasMenus',
 			'menus',
 			'menuPath',
@@ -96,25 +98,25 @@ export default {
 		 */
 		containerClasses()
 		{
-			return this.layoutConfig.ContainerWidth === 'reduced' ? 'container' : 'container-fluid'
+			return systemInfo.layout.ContainerWidth === 'reduced' ? 'container' : 'container-fluid'
 		},
 
 		authenticationClasses()
 		{
-			if (this.layoutConfig.AuthenticationStyle === 'default')
+			if (systemInfo.layout.AuthenticationStyle === 'default')
 				return []
 
-			return [`layout-${this.layoutConfig.AuthenticationStyle}`]
+			return [`layout-${systemInfo.layout.AuthenticationStyle}`]
 		},
 
 		maintenanceDate() {
-			return genericFunctions.dateDisplay(this.maintenance.schedule, this.system.dateFormat.dateTimeSeconds)
+			const genericDataStore = useGenericDataStore()
+			return genericFunctions.dateDisplay(this.maintenance.schedule, genericDataStore.dateFormat.dateTimeSeconds)
 		},
 	},
 
 	methods: {
 		...mapActions(useGenericLayoutDataStore, [
-			'setLayoutConfig',
 			'setHeaderHeight',
 			'setBookmarkMenuState',
 			'setModuleMenuState',

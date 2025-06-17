@@ -66,12 +66,12 @@ public static class GenFunctions
     /// <summary>
     /// Método que permite converter um numérico para string
     /// </summary>
-    /// <param name="Qvalue">Qvalue que vai ser convertido</param>
-    /// <param name="decimalDigits">número de digits decimais</param>
+    /// <param name="valor">Qvalue que vai ser convertido</param>
+    /// <param name="casasDecimais">número de digits decimais</param>
     /// <returns>string com o Qvalue convertido</returns>
-    public static string NumericToString(decimal Qvalue, decimal decimalDigits)
+    public static string NumericToString(decimal Qvalue, int decimalDigits)
     {
-        return Math.Round(Qvalue, (int)decimalDigits).ToString();
+        return Math.Round(Qvalue, decimalDigits).ToString();
     }
 
     /// <summary>
@@ -92,7 +92,7 @@ public static class GenFunctions
     /// <summary>
     /// Método que verifica se uma key interna está vazia
     /// </summary>
-    /// <param name="characters">verifica se uma key interna está vazia</param>
+    /// <param name="data">verifica se uma key interna está vazia</param>
     /// <returns>1 se a key interna está vazia, 0 o caso contrário</returns>
     public static int emptyG(object characters)
     {
@@ -105,7 +105,7 @@ public static class GenFunctions
     /// <summary>
     /// Função que verifica se um objecto está vazio
     /// </summary>
-    /// <param name="characters">objecto que vai ser testado</param>
+    /// <param name="caracteres">objecto que vai ser testado</param>
     /// <returns>true se está vazia, false caso contrário</returns>
     public static int emptyC(object characters)
     {
@@ -120,7 +120,7 @@ public static class GenFunctions
     /// <summary>
     /// Verifica se um numérico está vazio
     /// </summary>
-    /// <param name="Qvalue">número a ser comparado</param>
+    /// <param name="valor">número a ser comparado</param>
     /// <returns>1 se está vazio, 0 caso contrário</returns>
     public static int emptyN(object Qvalue)
     {
@@ -133,7 +133,7 @@ public static class GenFunctions
     /// <summary>
     /// verifica se uma hour está vazia
     /// </summary>
-    /// <param name="characters">hour a ser comparada</param>
+    /// <param name="caracteres">hour a ser comparada</param>
     /// <returns>true se está vazia, false caso contrário</returns>
     public static int emptyT(object characters)
     {
@@ -146,7 +146,7 @@ public static class GenFunctions
     /// <summary>
     /// verifica se um int está vazio
     /// </summary>
-    /// <param name="Qvalue">número a ser comparado</param>
+    /// <param name="valor">número a ser comparado</param>
     /// <returns>true se está vazio, false caso contrário</returns>
     public static int emptyL(object Qvalue)
     {
@@ -160,7 +160,7 @@ public static class GenFunctions
     /// <summary>
     /// Função que permite formatar uma data
     /// </summary>
-    /// <param name="Qvalue">Qvalue da data</param>
+    /// <param name="valor">Qvalue da data</param>
     /// <param name="format">formatação</param>
     /// <returns>A data formatada</returns>
     public static string FormatDate(DateTime Qvalue, string format)
@@ -172,7 +172,7 @@ public static class GenFunctions
     /// <summary>
     /// Função que tira os espaços à esquerda de uma função
     /// </summary>
-    /// <param name="Qvalue">Qvalue que queremos tirar os espaços</param>
+    /// <param name="valor">Qvalue que queremos tirar os espaços</param>
     /// <returns>a string sem os espaços à esquerda</returns>
     public static string LTRIM(string Qvalue)
     {
@@ -182,7 +182,7 @@ public static class GenFunctions
     /// <summary>
     /// Função que tira os espaços à direita de uma função
     /// </summary>
-    /// <param name="Qvalue">Qvalue que queremos tirar os espaços</param>
+    /// <param name="valor">Qvalue que queremos tirar os espaços</param>
     /// <returns>a string sem os espaços à direita</returns>
     public static string RTRIM(string Qvalue)
     {
@@ -192,7 +192,7 @@ public static class GenFunctions
     /// <summary>
     /// Função que permite obter o Qyear de uma data
     /// </summary>
-    /// <param name="Qvalue">Qvalue com a data</param>
+    /// <param name="valor">Qvalue com a data</param>
     /// <returns>o Qyear da data</returns>
     public static int Year(DateTime Qvalue)
     {
@@ -205,7 +205,7 @@ public static class GenFunctions
     /// <summary>
     /// Função que permite obter o mês de uma data
     /// </summary>
-    /// <param name="Qvalue">Qvalue com a data</param>
+    /// <param name="valor">Qvalue com a data</param>
     /// <returns>o mês da data</returns>
     public static int Month(DateTime Qvalue)
     {
@@ -218,7 +218,7 @@ public static class GenFunctions
     /// <summary>
     /// Função que permite obter o day de uma data
     /// </summary>
-    /// <param name="Qvalue">Qvalue com a data</param>
+    /// <param name="valor">Qvalue com a data</param>
     /// <returns>o day da data</returns>
     public static int Day(DateTime Qvalue)
     {
@@ -231,7 +231,7 @@ public static class GenFunctions
     /// <summary>
     /// Função que retorna string referente ao Qyear de uma data
     /// </summary>
-    /// <param name="Qvalue">Qvalue com a data</param>
+    /// <param name="valor">Qvalue com a data</param>
     /// <returns>o Qyear da data</returns>
     public static string strYear(DateTime Qvalue)
     {
@@ -276,7 +276,7 @@ public static class GenFunctions
     /// Não decresce de 00:00 ou incrementa de 23:59
     /// </summary>
     /// <param name="time">A hour em format __:__</param>
-    /// <param name="minutes">O number de minutes a adicionar</param>
+    /// <param name="minutos">O number de minutes a adicionar</param>
     /// <returns>A nova hour com os minutes adicionados</returns>
     public static string HoursAdd(string time, decimal minutes)
     {
@@ -286,7 +286,7 @@ public static class GenFunctions
     /// <summary>
     /// Transforma uma key (guid ou interna) numa string
     /// </summary>
-    /// <param name="key">O Qvalue da key</param>
+    /// <param name="chave">O Qvalue da key</param>
     /// <returns>Uma string com representado a key interna</returns>
     public static string KeyToString(string key)
     {
@@ -430,10 +430,10 @@ public static class GenFunctions
     /// <param name="minutes">Number of minutes</param>
     /// <param name="seconds">Number of seconds</param>
     /// <returns>A TimeSpan with the specified parameters</returns>
-    public static TimeSpan CreateDuration(decimal days, decimal hours, decimal minutes, decimal seconds)
+    public static TimeSpan CreateDuration(int days, int hours, int minutes, int seconds)
     {
         // TODO: add try-catch to avoid runtime exceptions
-        return new TimeSpan((int)days, (int)hours, (int)minutes, (int)seconds);
+        return new TimeSpan(days, hours, minutes, seconds);
     }
 
     /// <summary>
@@ -456,7 +456,7 @@ public static class GenFunctions
     /// <returns>Duration between startDate and endDate</returns>
     public static decimal DateDiffPart(DateTime startDate, DateTime endDate, string unit)
     {
-        if (startDate == DateTime.MinValue || endDate == DateTime.MinValue)
+        if(startDate == DateTime.MinValue || endDate == DateTime.MinValue)
             return 0;
 
         TimeSpan diff = endDate.Subtract(startDate);
@@ -481,7 +481,7 @@ public static class GenFunctions
     /// <returns>A DateTime with the specified duration added</returns>
     public static DateTime DateAddDuration(DateTime date, TimeSpan duration)
     {
-        if (date == DateTime.MinValue)
+        if(date == DateTime.MinValue) 
             return DateTime.MinValue;
         return date + duration;
     }
@@ -766,18 +766,16 @@ public static class GenFunctions
     /// <param name="arg">string</param>
     /// <param name="nrElem">nº de characters</param>
     /// <returns>nº de characters da string a count da esquerda</returns>
-    public static string LEFT(string arg, decimal nrElem)
+    public static string LEFT(string arg, int nrElem)
     {
-        int charNum = (int)nrElem;
-
         if (arg == null)
             return "";
-        if (charNum < 0)
+        if (nrElem < 0)
             return "";
-        if (charNum > arg.Length)
+        if (nrElem > arg.Length)
             return arg;
 
-        return arg.Substring(0, charNum);
+        return arg.Substring(0, nrElem);
     }
 
     /// <summary>
@@ -786,42 +784,37 @@ public static class GenFunctions
     /// <param name="arg">string</param>
     /// <param name="nrElem">nº de characters</param>
     /// <returns>nº de characters da string a count da direita</returns>
-    public static string RIGHT(string arg, decimal nrElem)
+    public static string RIGHT(string arg, int nrElem)
     {
-        int charNum = (int)nrElem;
-
         if (arg == null)
             return "";
-        if (charNum < 0)
+        if (nrElem < 0)
             return "";
-        if (charNum > arg.Length)
+        if (nrElem > arg.Length)
             return arg;
-        return arg.Substring(arg.Length - charNum, charNum);
+        return arg.Substring(arg.Length - nrElem, nrElem);
     }
 
     /// <summary>
     /// Função que dada uma string permite obter o nº de elementos a count de uma posição
     /// </summary>
     /// <param name="arg">string</param>
-    /// <param name="initialPos">posição apartir da qual se querem obter os characters</param>
+    /// <param name="inicio">posição apartir da qual se querem obter os characters</param>
     /// <param name="nrElem">nº de characters desejados</param>
     /// <returns>characters da string</returns>
-    public static string SubString(string arg, decimal initialPos, decimal nrElem)
+    public static string SubString(string arg, int start, int nrElem)
     {
-        int start = (int)initialPos;
-        int charNum = (int)nrElem;
-
         if (arg == null)
             return "";
-        if (charNum < 0)
+        if (nrElem < 0)
             return "";
         if (start < 0)
             return "";
         if (start > arg.Length)
             return "";
-        if (charNum > arg.Length - start)
-            charNum = arg.Length - start;
-        return arg.Substring(start, charNum);
+        if (nrElem > arg.Length - start)
+            nrElem = arg.Length - start;
+        return arg.Substring(start, nrElem);
     }
 
     /// <summary>
@@ -842,13 +835,13 @@ public static class GenFunctions
     /// Função que permite arredondar um numérico com o número de digits decimais definido
     /// </summary>
     /// <param name="num">número a ser arredondamento</param>
-    /// <param name="digits">número de digits decimais</param>
+    /// <param name="casas">número de digits decimais</param>
     /// <returns>o número arredondado</returns>
-    public static decimal Round(decimal num, decimal digits)
+    public static decimal Round(decimal num, int digits)
     {
         //HAP - Added casts due to diferences when field in Genio is from decimal type.
         //Discussed with Rodrigo Serafim and Joao Ferro (2024/02/28) this solutions and it works with decimal and double/float
-        return System.Math.Round(num, (int)digits, MidpointRounding.AwayFromZero);
+        return System.Math.Round(num, digits, MidpointRounding.AwayFromZero);
     }
 
     /// <summary>
@@ -864,8 +857,8 @@ public static class GenFunctions
     /// <summary>
     /// Função que compara duas datas
     /// </summary>
-    /// <param name="date1">date1</param>
-    /// <param name="date2">date2</param>
+    /// <param name="data1">date1</param>
+    /// <param name="data2">date2</param>
     /// <returns>0 se sao iguais >0 se a 1ª é maior e <0 se a 1ª é menor </returns>
     public static int CompareDates(DateTime date1, DateTime date2)
     {
@@ -885,12 +878,12 @@ public static class GenFunctions
     /// <summary>
     /// Funcao que calcula o Qvalue da Incidencia
     /// </summary>
-    /// <param name="unitValue">Qvalue unitário</param>
-    /// <param name="amount">quantidade</param>
-    /// <param name="pdiscount">percentagem de desconto</param>
+    /// <param name="valoruni">Qvalue unitário</param>
+    /// <param name="quantida">quantidade</param>
+    /// <param name="pdescont">percentagem de desconto</param>
     /// <param name="prec">digits decimais de precisão</param>
     /// <returns>o Qvalue da incidencia</returns>
-    public static decimal Incidenc(decimal unitValue, decimal amount, decimal pdiscount, decimal prec)
+    public static decimal Incidenc(decimal unitValue, decimal amount, decimal pdiscount, int prec)
     {
         decimal valorart = RoundQG(unitValue * amount, prec);
         return valorart - RoundQG(pdiscount / 100.0m * valorart, prec);
@@ -901,11 +894,11 @@ public static class GenFunctions
     /// A incidencia pode entrar com iva ou sem iva sendo discriminada pelo parametro vatprice
     /// </summary>
     /// <param name="incidenc">O Qvalue com iva ou sem iva</param>
-    /// <param name="rate_iva">taxa de IVA</param>
-    /// <param name="vatprice">1 caso o incidenc seja o preço com iva, 0 caso seja o preço sem iva</param>
+    /// <param name="taxa_iva">taxa de IVA</param>
+    /// <param name="preciva">1 caso o incidenc seja o preço com iva, 0 caso seja o preço sem iva</param>
     /// <param name="prec">precisão</param>
     /// <returns>Qvalue do IVA</returns>
-    public static decimal VATValue(decimal incidenc, decimal rate_iva, decimal vatprice, decimal prec)
+    public static decimal VATValue(decimal incidenc, decimal rate_iva, int vatprice, int prec)
     {
         return RoundQG(vatprice == 1
             ? incidenc / (1.0m + rate_iva / 100.0m) * (rate_iva / 100.0m)
@@ -920,11 +913,11 @@ public static class GenFunctions
     /// <param name="x">number a arrendondar</param>
     /// <param name="c">number de digits</param>
     /// <returns>Qvalue arredondado</returns>
-    public static decimal RoundQG(decimal x, decimal c)
+    public static decimal RoundQG(decimal x, int c)
     {
         //(RS 2010.11.03) Reimplementei to dar os mesmos resultados que no BO e no SQL
         if (c < 0) c = 0;
-        decimal folga = (decimal)(0.001 * Math.Pow(0.1, (int)c) * Math.Sign(x));
-        return Math.Round(x + folga, (int)c, MidpointRounding.AwayFromZero);
+        decimal folga = (decimal)(0.001 * Math.Pow(0.1, c) * Math.Sign(x));
+        return Math.Round(x + folga, c, MidpointRounding.AwayFromZero);
     }
 }

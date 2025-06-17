@@ -49,7 +49,7 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
@@ -298,16 +298,17 @@
 
 	import FormHandlers from '@/mixins/formHandlers.js'
 	import formFunctions from '@/mixins/formFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import netAPI from '@/api/network'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import netAPI from '@quidgest/clientapp/network'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -980,7 +981,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-DISPA', 'changed-PRODU', 'changed-DILIN'],
+						globalEvents: ['changed-PRODU', 'changed-DILIN', 'changed-DISPA'],
 						uuid: 'Dispa_ValDispatch',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1151,12 +1152,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				applyForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
-				if (applyForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					applyForm = results.every((e) => e === true)
+					applyForm = await this.model.setDocumentChanges()
+
+					if (applyForm)
+					{
+						const results = await this.model.saveDocuments()
+						applyForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-apply-form')
@@ -1199,12 +1205,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				saveForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets()
 
-				if (saveForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					saveForm = results.every((e) => e === true)
+					saveForm = await this.model.setDocumentChanges()
+
+					if (saveForm)
+					{
+						const results = await this.model.saveDocuments()
+						saveForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-save-form')

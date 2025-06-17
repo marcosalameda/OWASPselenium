@@ -154,9 +154,8 @@ namespace GenioMVC.ViewModels.Roigf
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Roigf model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

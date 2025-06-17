@@ -1,8 +1,8 @@
 ﻿import hardcodedTexts from '@/hardcodedTexts.js'
 import { loadResources } from '@/plugins/i18n.js'
 
-import { messageTypes } from './quidgest.mainEnums.js'
-import genericFunctions from './genericFunctions.js'
+import { messageTypes } from '@quidgest/clientapp/constants/enums'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 import GenericMenuHandlers from './genericMenuHandlers.js'
 
 /***********************************************************************

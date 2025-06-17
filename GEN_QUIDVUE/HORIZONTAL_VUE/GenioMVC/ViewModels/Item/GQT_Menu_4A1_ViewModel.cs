@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,53 +7,71 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Item
 {
-	public class GQT_Menu_4A1_ViewModel : ListViewModel
+	public class GQT_Menu_4A1_ViewModel : MenuListViewModel<Models.Item>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "${exposeField.Fajuda}"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<GQT_Menu_4A1_RowViewModel> Menu { get; set; }
 
-		protected override TableViewsManagementMode ViewsManagementMode { get => TableViewsManagementMode.PersistOne; }
+		protected override TableViewsManagementMode ViewsManagementMode => TableViewsManagementMode.PersistOne;
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "item"; }
+		[JsonIgnore]
+		public override string TableAlias => "item";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "026b4b45-a993-4305-9455-a3c221daa253"; }
+		public override string Uuid => "026b4b45-a993-4305-9455-a3c221daa253";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
-		/// The primary key field.
+		/// The context of the parent.
 		/// </summary>
-		public string ValCoditem { get; set; }
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
 
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -62,6 +81,12 @@ namespace GenioMVC.ViewModels.Item
 			}
 		}
 
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS 4A1]/
+
+			return crs;
+		}
 
 		public override int GetCount(User user)
 		{
@@ -69,29 +94,34 @@ namespace GenioMVC.ViewModels.Item
 			var areaBase = CSGenio.business.Area.createArea("item", user, "GQT");
 
 			//gets eph conditions to be applied in listing
-			CriteriaSet gqt_menu_4a1Conds = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4A1");
-			gqt_menu_4a1Conds.Equal(CSGenioAitem.FldZzstate, 0); //valid zzstate only
+			CriteriaSet conditions = CSGenio.business.Listing.CalculateConditionsEphGeneric(areaBase, "ML4A1");
+			conditions.Equal(CSGenioAitem.FldZzstate, 0); //valid zzstate only
 
-			//Menu fixed limits and relations:
-
-			
-
-// USE /[MANUAL GQT OVERRQ 4A1]/
+			// Fixed limits and relations:
+			conditions.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			// Checks for foreign tables in fields and conditions
 			FieldRef[] fields = new FieldRef[] { CSGenioAitem.FldCoditem, CSGenioAitem.FldZzstate, CSGenioAitem.FldItemdes, CSGenioAitem.FldItemcod, CSGenioAitem.FldValid, CSGenioAitem.FldItemtype };
 
-			ListingMVC<CSGenioAitem> listing = new ListingMVC<CSGenioAitem>(fields, null, 1, 1, false, user, true, string.Empty, false);
-			SelectQuery qs = sp.getSelectQueryFromListingMVC(gqt_menu_4a1Conds, listing);
+			ListingMVC<CSGenioAitem> listing = new(fields, null, 1, 1, false, user, true, string.Empty, false);
+			SelectQuery qs = sp.getSelectQueryFromListingMVC(conditions, listing);
 
-			//Menu relations:
+			// Menu relations:
 			if (qs.FromTable == null)
 				qs.From(areaBase.QSystem, areaBase.TableName, areaBase.Alias);
+
+
 
 
 			//operation: Count menu records
 			return CSGenio.persistence.DBConversion.ToInteger(sp.ExecuteScalar(CSGenio.persistence.QueryUtils.buildQueryCount(qs)));
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public GQT_Menu_4A1_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GQT_Menu_4A1_ViewModel" /> class.
@@ -102,15 +132,25 @@ namespace GenioMVC.ViewModels.Item
 			this.RoleToShow = CSGenio.framework.Role.ROLE_1;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="GQT_Menu_4A1_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public GQT_Menu_4A1_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
+		}
+
 		/// <inheritdoc/>
 		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
 		{
 			var columns = new List<Exports.QColumn>()
 			{
-				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXTO, Resources.Resources.ARTICLE60065, 30, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXTO, Resources.Resources.CODE49225, 15, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGICO, Resources.Resources.IN_USE42606, 1, 0, true),
-				new Exports.QColumn(CSGenioAitem.FldItemtype, FieldType.ARRAY_COD_TEXTO, Resources.Resources.TYPE00312, 1, 0, true, "TipoArti"),
+				new Exports.QColumn(CSGenioAitem.FldItemdes, FieldType.TEXT, Resources.Resources.ARTICLE60065, 30, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemcod, FieldType.TEXT, Resources.Resources.CODE49225, 15, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldValid, FieldType.LOGIC, Resources.Resources.IN_USE42606, 1, 0, true),
+				new Exports.QColumn(CSGenioAitem.FldItemtype, FieldType.ARRAY_TEXT, Resources.Resources.TYPE00312, 1, 0, true, "TipoArti"),
 			};
 
 			columns.RemoveAll(item => item == null);
@@ -159,13 +199,10 @@ namespace GenioMVC.ViewModels.Item
 
 			if (Menu == null)
 				Menu = new TablePartial<GQT_Menu_4A1_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-			allSortOrders.Add("ITEM.ITEMCOD", new OrderedDictionary());
-			allSortOrders["ITEM.ITEMCOD"].Add("ITEM.ITEMCOD", "A");
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -178,8 +215,7 @@ namespace GenioMVC.ViewModels.Item
 			crs.SubSets.Add(subfilters);
 
 
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -276,23 +312,22 @@ namespace GenioMVC.ViewModels.Item
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAitem> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Menu", "4A1"),
 				new("Module", "GQT")
-			}, "ms", "Time to load the menu.")) {
-
+			}, "ms", "Time to load the menu."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<GQT_Menu_4A1_RowViewModel>();
 
 				CriteriaSet gqt_menu_4a1Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 				allSortOrders.Add("ITEM.ITEMCOD", new OrderedDictionary());
 				allSortOrders["ITEM.ITEMCOD"].Add("ITEM.ITEMCOD", "A");
-
 
 
 
@@ -324,26 +359,24 @@ namespace GenioMVC.ViewModels.Item
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("item", "itemdes");
+					firstVisibleColumn ??= new FieldRef("item", "itemdes");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
-			//Tooltip for EPHs affecting this viewmodel list
-			{
-				Limit limit = new Limit();
-				limit.TipoLimite = LimitType.EPH;
-				CSGenioAitem model_limit_area = new CSGenioAitem(m_userContext.User);
-				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML4A1");
-				if (area_EPH_limits.Count > 0)
-					this.tableLimits.AddRange(area_EPH_limits);
-			}
+				//Tooltip for EPHs affecting this viewmodel list
+				{
+					Limit limit = new Limit();
+					limit.TipoLimite = LimitType.EPH;
+					CSGenioAitem model_limit_area = new CSGenioAitem(m_userContext.User);
+					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML4A1");
+					if (area_EPH_limits.Count > 0)
+						this.tableLimits.AddRange(area_EPH_limits);
+				}
 
 
 				if (conditions == null)
@@ -354,6 +387,8 @@ namespace GenioMVC.ViewModels.Item
 				tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ 4A1]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -382,7 +417,7 @@ namespace GenioMVC.ViewModels.Item
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, false, gqt_menu_4a1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4A1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAitem> listing = Models.ModelBase.Where<CSGenioAitem>(m_userContext, distinct, gqt_menu_4a1Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML4A1", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -390,7 +425,6 @@ namespace GenioMVC.ViewModels.Item
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -412,18 +446,12 @@ namespace GenioMVC.ViewModels.Item
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -431,7 +459,7 @@ namespace GenioMVC.ViewModels.Item
 
 		private List<GQT_Menu_4A1_RowViewModel> MapGQT_Menu_4A1(ListingMVC<CSGenioAitem> Qlisting)
 		{
-			var Elements = new List<GQT_Menu_4A1_RowViewModel>();
+			List<GQT_Menu_4A1_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -448,7 +476,6 @@ namespace GenioMVC.ViewModels.Item
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAitem row
 		/// to a GQT_Menu_4A1_RowViewModel object.
@@ -457,7 +484,9 @@ namespace GenioMVC.ViewModels.Item
 		private GQT_Menu_4A1_RowViewModel MapGQT_Menu_4A1(CSGenioAitem row)
 		{
 			var model = new GQT_Menu_4A1_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -469,32 +498,9 @@ namespace GenioMVC.ViewModels.Item
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(GQT_Menu_4A1_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -508,39 +514,45 @@ namespace GenioMVC.ViewModels.Item
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAitem> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAitem row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Item m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Item m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM GQT_MENU_4A1]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Item", "Item.ValCoditem", "Item.ValZzstate", "Item.ValItemdes", "Item.ValItemcod", "Item.ValValid", "Item.ValItemtype", "Item.ValCodgitem", "Item.ValCodwareh", "BtnPermission"
+			"Item", "Item.ValCoditem", "Item.ValZzstate", "Item.ValItemdes", "Item.ValItemcod", "Item.ValValid", "Item.ValItemtype", "Item.ValCodgitem", "Item.ValCodwareh"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
 			new TableSearchColumn("ValItemdes", CSGenioAitem.FldItemdes, typeof(string), defaultSearch : true),
 			new TableSearchColumn("ValItemcod", CSGenioAitem.FldItemcod, typeof(string)),
 			new TableSearchColumn("ValValid", CSGenioAitem.FldValid, typeof(bool)),
-			new TableSearchColumn("ValItemtype", CSGenioAitem.FldItemtype, typeof(string), array : "TipoArti")
+			new TableSearchColumn("ValItemtype", CSGenioAitem.FldItemtype, typeof(string), array : "TipoArti"),
 		];
-
-
-
 	}
 }

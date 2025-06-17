@@ -177,20 +177,20 @@
 
 	import QrcodeVue from 'qrcode.vue'
 
-	import { useGenericDataStore } from '@/stores/genericData.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
-	import { messageTypes } from '@/mixins/quidgest.mainEnums.js'
-	import { displayMessage } from '@/mixins/genericFunctions.js'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import { messageTypes } from '@quidgest/clientapp/constants/enums'
+	import { displayMessage } from '@quidgest/clientapp/utils/genericFunctions'
 	import NavHandlers from '@/mixins/navHandlers.js'
 	import VueNavigation from '@/mixins/vueNavigation.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import ViewModelBase from '@/mixins/formViewModelBase.js'
+	import FormViewModelBase from '@/mixins/formViewModelBase.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import { createRegisterWebAuth } from '@/plugins/quidgest.webauth.js'
 
-	class ViewModel extends ViewModelBase
+	class ViewModel extends FormViewModelBase
 	{
 		constructor(vueContext)
 		{

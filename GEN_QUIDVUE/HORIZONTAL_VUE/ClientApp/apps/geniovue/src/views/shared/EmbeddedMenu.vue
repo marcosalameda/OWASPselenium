@@ -61,7 +61,7 @@
 		computed: {
 			showContent()
 			{
-				return this.userIsLoggedIn || (this.isPublicRoute && !this.isFullScreenPage) || this.layoutConfig.LoginStyle === 'embeded_page'
+				return this.userIsLoggedIn || (this.isPublicRoute && !this.isFullScreenPage) || this.$app.layout.LoginStyle === 'embeded_page'
 			}
 		},
 

@@ -91,7 +91,7 @@
 	import _isEmpty from 'lodash-es/isEmpty'
 	import _forEach from 'lodash-es/forEach'
 
-	import { btnHasPermission, validateTexts } from '@/mixins/genericFunctions.js'
+	import { btnHasPermission, validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	import QRowContainer from '@/components/containers/RowContainer.vue'
 

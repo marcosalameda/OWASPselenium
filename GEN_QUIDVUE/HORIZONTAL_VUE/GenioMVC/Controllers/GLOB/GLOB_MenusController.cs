@@ -106,7 +106,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL TBS MENU_GET 171]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;
@@ -215,7 +222,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL WMS MENU_GET 4241]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 			//FOR: FORM MENU GO BACK, OVERRIDE SKIP IF JUST ONE
 			bool AllowSkipIfOnlyOne = true;

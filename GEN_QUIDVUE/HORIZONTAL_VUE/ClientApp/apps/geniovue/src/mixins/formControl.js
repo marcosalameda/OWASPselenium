@@ -2,10 +2,10 @@
 import _forEach from 'lodash-es/forEach'
 import _isEmpty from 'lodash-es/isEmpty'
 
-import { triggerEvents } from './quidgest.mainEnums.js'
+import { triggerEvents } from '@quidgest/clientapp/constants/enums'
 import formFunctions from './formFunctions.js'
 import FormViewModelBase from './formViewModelBase.js'
-import eventBus from '@/api/global/eventBus.js'
+import eventBus from '@quidgest/clientapp/plugins/eventBus'
 
 export class FormControlButton
 {

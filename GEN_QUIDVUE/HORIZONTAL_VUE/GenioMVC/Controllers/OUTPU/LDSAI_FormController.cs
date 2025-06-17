@@ -678,7 +678,7 @@ namespace GenioMVC.Controllers
 
 		// POST: /Outpu/Ldsai_SaveEdit
 		[HttpPost]
-		public ActionResult Ldsai_SaveEdit([FromBody]Ldsai_ViewModel model)
+		public ActionResult Ldsai_SaveEdit([FromBody] Ldsai_ViewModel model)
 		{
 			var eventSink = new EventSink()
 			{
@@ -696,6 +696,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class LdsaiDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Ldsai_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsLdsai([FromBody] LdsaiDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

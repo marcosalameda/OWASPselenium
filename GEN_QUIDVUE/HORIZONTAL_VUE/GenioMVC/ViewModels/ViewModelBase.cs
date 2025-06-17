@@ -196,7 +196,7 @@ namespace GenioMVC.ViewModels
 
 		//MH - refatorização dos historicos
 		[JsonIgnore]
-		public NavigationContext Navigation => m_userContext.CurrentNavigation;
+		public NavigationContext Navigation => m_userContext?.CurrentNavigation;
 
 		#endregion
 

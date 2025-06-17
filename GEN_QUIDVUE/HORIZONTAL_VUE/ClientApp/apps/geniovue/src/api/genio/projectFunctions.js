@@ -1,10 +1,10 @@
 ﻿/* eslint-disable no-unused-vars */
-import { useTracingDataStore } from '@/stores/tracingData.js'
+import { useTracingDataStore } from '@quidgest/clientapp/stores'
 
-import netAPI from '@/api/network'
+import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 /* eslint-enable no-unused-vars */
 
 /*

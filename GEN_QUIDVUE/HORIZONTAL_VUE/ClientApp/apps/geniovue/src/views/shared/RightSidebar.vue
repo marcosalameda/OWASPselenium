@@ -34,7 +34,7 @@
 						</q-button>
 
 						<q-toggle
-							v-if="isCavAvailable && !suggestionModeOn"
+							v-if="$app.isCavAvailable && !suggestionModeOn"
 							:model-value="reportingModeCAV"
 							id="advanced-report-mode-toggle"
 							:title="texts.enterInReport"
@@ -44,7 +44,7 @@
 						</q-toggle>
 
 						<q-toggle
-							v-if="showFormAnchors && !suggestionModeOn && layoutConfig.FormAnchorsPosition === 'sidebar'"
+							v-if="showFormAnchors && !suggestionModeOn && $app.layout.FormAnchorsPosition === 'sidebar'"
 							id="form-tree-toggle"
 							:model-value="isActive('form-anchors-tab')"
 							:title="texts.formAreas"
@@ -64,7 +64,7 @@
 						</q-toggle>
 
 						<q-toggle
-							v-if="appAlerts.length > 0 && !suggestionModeOn"
+							v-if="$app.appAlerts.length > 0 && !suggestionModeOn"
 							:model-value="isActive('alerts-tab')"
 							:title="texts.alerts"
 							:disabled="disableButtons"
@@ -80,7 +80,7 @@
 						</q-toggle>
 
 						<q-toggle
-							v-if="isSuggestionsAvailable"
+							v-if="$app.isSuggestionsAvailable"
 							id="suggestion-mode-toggle"
 							:model-value="suggestionModeOn"
 							:title="suggestionModeOn ? texts.closeSuggestions : texts.enterInSuggestion"
@@ -108,7 +108,7 @@
 						</q-button>
 
 						<q-toggle
-							v-if="isChatBotAvailable"
+							v-if="$app.isChatBotAvailable"
 							id="chatbot-toggle"
 							:model-value="isActive('chatbot-tab')"
 							title="ChatBot"
@@ -116,7 +116,7 @@
 							:disabled="disableButtons"
 							@click="toggleSidebarTab('chatbot-tab')">
 							<q-icon-img
-								:icon="`${system.resourcesPath}chatbot.png?v=${genio.buildVersion}`"
+								:icon="`${$app.resourcesPath}chatbot.png?v=${$app.genio.buildVersion}`"
 								alt="ChatBot" />
 						</q-toggle>
 					</div>
@@ -131,7 +131,7 @@
 					</div>
 
 					<div
-						v-if="appAlerts.length > 0"
+						v-if="$app.appAlerts.length > 0"
 						v-show="extendedTab === 'alerts-tab'"
 						id="alerts-tab">
 						<alerts
@@ -152,13 +152,13 @@
 					</div>
 
 					<div
-						v-if="isChatBotAvailable"
+						v-if="$app.isChatBotAvailable"
 						v-show="extendedTab === 'chatbot-tab'"
 						id="chatbot-tab">
 						<q-chat-bot
 							:username="userData.name"
-							:project-path="applicationName"
-							:date-format="system.dateFormat.dateTimeSeconds"
+							:project-path="$app.applicationName"
+							:date-format="dateFormat.dateTimeSeconds"
 							:api-endpoint="chatbotProxyUrl" />
 					</div>
 
@@ -175,8 +175,7 @@
 	import { computed, defineAsyncComponent } from 'vue'
 	import { mapState, mapActions } from 'pinia'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import { useGenericDataStore } from '@/stores/genericData.js'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import AlertHandlers from '@/mixins/alertHandlers.js'
@@ -263,7 +262,7 @@
 			})
 
 			// Sets the default state for the sidebar (closed or opened).
-			if (this.layoutConfig.DefaultSidebarState !== 'opened' && !this.isChatBotAvailable)
+			if (this.$app.layout.DefaultSidebarState !== 'opened' && !this.$app.isChatBotAvailable)
 				this.closeSidebar()
 
 			// Emits the initial width of the sidebar.
@@ -284,18 +283,11 @@
 		},
 
 		computed: {
-			...mapState(useSystemDataStore, [
-				'isCavAvailable',
-				'isSuggestionsAvailable',
-				'isChatBotAvailable',
-				'applicationName',
-				'genio'
-			]),
-
 			...mapState(useGenericDataStore, [
 				'reportingModeCAV',
 				'suggestionModeOn',
-				'notifications'
+				'notifications',
+				'dateFormat'
 			]),
 
 			/**
@@ -350,7 +342,7 @@
 			 */
 			hasAlerts()
 			{
-				return this.appAlerts.length > 0
+				return this.$app.appAlerts.length > 0
 			},
 
 			/**
@@ -367,9 +359,9 @@
 			isSidebarEmpty()
 			{
 				return !this.showFormActions &&
-					!this.isCavAvailable &&
-					!this.isSuggestionsAvailable &&
-					!this.isChatBotAvailable &&
+					!this.$app.isCavAvailable &&
+					!this.$app.isSuggestionsAvailable &&
+					!this.$app.isChatBotAvailable &&
 					!this.showFormAnchors &&
 					!this.disableButtons &&
 					!this.hasAlerts

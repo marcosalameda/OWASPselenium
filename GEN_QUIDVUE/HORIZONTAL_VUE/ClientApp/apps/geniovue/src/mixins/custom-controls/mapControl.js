@@ -1,14 +1,13 @@
-﻿import { computed, reactive } from 'vue'
-import _isEmpty from 'lodash-es/isEmpty'
+﻿import { forceDownload } from '@quidgest/clientapp/network'
+import { useSystemDataStore } from '@quidgest/clientapp/stores'
 import domToImage from 'dom-to-image'
+import _isEmpty from 'lodash-es/isEmpty'
+import { computed, reactive } from 'vue'
 
-import { forceDownload } from '@/api/network'
-import { geographicDisplay, validateCoordinate } from '@/utils/geography.js'
 import { GeographicShapeColumn } from '@/mixins/listColumnTypes.js'
+import { geographicDisplay, validateCoordinate } from '@quidgest/clientapp/utils/geography'
 import CustomControl from './baseControl.js'
 import MapResources from './resources/mapResources.js'
-
-import { useSystemDataStore } from '@/stores/systemData.js'
 
 /**
  * Map control

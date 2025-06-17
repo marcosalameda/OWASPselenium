@@ -394,7 +394,7 @@ namespace GenioMVC.Controllers
 
 		// POST: /Cate1/Cate1_SaveEdit
 		[HttpPost]
-		public ActionResult Cate1_SaveEdit([FromBody]Cate1_ViewModel model)
+		public ActionResult Cate1_SaveEdit([FromBody] Cate1_ViewModel model)
 		{
 			var eventSink = new EventSink()
 			{
@@ -412,6 +412,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class Cate1DocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Cate1_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsCate1([FromBody] Cate1DocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

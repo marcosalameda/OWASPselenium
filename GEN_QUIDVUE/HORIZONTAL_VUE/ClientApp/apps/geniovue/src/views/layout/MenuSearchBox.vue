@@ -52,7 +52,7 @@
 	import { computed } from 'vue'
 	import _debounce from 'lodash-es/debounce'
 
-	import { fetchData } from '@/api/network'
+	import { fetchData } from '@quidgest/clientapp/network'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import MenuAction from '@/mixins/menuAction.js'

@@ -585,6 +585,5 @@ namespace CSGenio.framework
         public abstract void ToBinaryStream(BinaryWriter writer);
         public abstract void FromBinaryStream(BinaryReader reader);
         public abstract void Sign(PersistentSupport sp, User user, byte[] file);
-		public abstract string GetDefaultErrorMessage(PersistentSupport sp, User user);
     }
 }

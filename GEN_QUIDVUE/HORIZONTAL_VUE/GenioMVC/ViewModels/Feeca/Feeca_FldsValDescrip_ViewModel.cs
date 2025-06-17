@@ -1,4 +1,5 @@
-﻿using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
+﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
 using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
@@ -6,51 +7,75 @@ using System.Globalization;
 using System.Linq;
 
 using CSGenio.business;
+using CSGenio.core.di;
 using CSGenio.framework;
 using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
 using GenioMVC.Models.Navigation;
 using Quidgest.Persistence;
 using Quidgest.Persistence.GenericQuery;
-using CSGenio.core.di;
 
 namespace GenioMVC.ViewModels.Feeca
 {
-	public class Feeca_FldsValDescrip_ViewModel : ListViewModel
+	public class Feeca_FldsValDescrip_ViewModel : MenuListViewModel<Models.Flds>
 	{
 		/// <summary>
-		/// Gets or sets the object that represents the table and its elements. List type: "DB"
+		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
 		[JsonPropertyName("Table")]
 		public TablePartial<Feeca_FldsValDescrip_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
-		public override string TableAlias { get => "flds"; }
+		[JsonIgnore]
+		public override string TableAlias => "flds";
 
 		/// <inheritdoc/>
-		public override string Uuid { get => "Feeca_FldsValDescrip"; }
+		public override string Uuid => "Feeca_FldsValDescrip";
 
 		/// <inheritdoc/>
-		protected override string[] FieldsToSerialize { get => _fieldsToSerialize; }
+		protected override string[] FieldsToSerialize => _fieldsToSerialize;
 
 		/// <inheritdoc/>
-		protected override List<TableSearchColumn> SearchableColumns { get => _searchableColumns; }
+		protected override List<TableSearchColumn> SearchableColumns => _searchableColumns;
 
 		/// <summary>
 		/// The primary key field.
 		/// </summary>
+		[JsonIgnore]
 		public string ValCodfeeca { get; set; }
 
+		/// <summary>
+		/// The context of the parent.
+		/// </summary>
+		[JsonIgnore]
+		public Models.ModelBase ParentCtx { get; set; }
+
 		/// <inheritdoc/>
+		[JsonIgnore]
+		public override CriteriaSet StaticLimits
+		{
+			get
+			{
+				CriteriaSet conditions = CriteriaSet.And();
+
+				return conditions;
+			}
+		}
+
+		/// <inheritdoc/>
+		[JsonIgnore]
 		public override CriteriaSet baseConditions
 		{
 			get
 			{
 				CriteriaSet conds = CriteriaSet.And();
+
 				return conds;
 			}
 		}
 
 		/// <inheritdoc/>
+		[JsonIgnore]
 		public override List<Relation> relations
 		{
 			get
@@ -59,10 +84,24 @@ namespace GenioMVC.ViewModels.Feeca
 				return relations;
 			}
 		}
+
+		public override CriteriaSet GetCustomizedStaticLimits(CriteriaSet crs)
+		{
+// USE /[MANUAL GQT LIST_LIMITS FEECA_FLDSDESCRIP]/
+
+			return crs;
+		}
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
 		}
+
+		/// <summary>
+		/// FOR DESERIALIZATION ONLY
+		/// </summary>
+		[Obsolete("For deserialization only")]
+		public Feeca_FldsValDescrip_ViewModel() : base(null!) { }
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Feeca_FldsValDescrip_ViewModel" /> class.
@@ -71,6 +110,16 @@ namespace GenioMVC.ViewModels.Feeca
 		public Feeca_FldsValDescrip_ViewModel(UserContext userContext) : base(userContext)
 		{
 			ValCodfeeca = userContext.CurrentNavigation.CurrentLevel.GetEntry("feeca")?.ToString();
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Feeca_FldsValDescrip_ViewModel" /> class.
+		/// </summary>
+		/// <param name="userContext">The current user request context</param>
+		/// <param name="parentCtx">The context of the parent</param>
+		public Feeca_FldsValDescrip_ViewModel(UserContext userContext, Models.ModelBase parentCtx) : this(userContext)
+		{
+			ParentCtx = parentCtx;
 		}
 
 		/// <inheritdoc/>
@@ -128,11 +177,10 @@ namespace GenioMVC.ViewModels.Feeca
 
 			if (Menu == null)
 				Menu = new TablePartial<Feeca_FldsValDescrip_RowViewModel>();
+			// Set table name (used in getting searchable column names)
+			Menu.TableName = TableAlias;
+
 			Menu.SetFilters(false, false);
-
-
-			//FOR: MENU LIST SORTING
-			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
@@ -145,9 +193,7 @@ namespace GenioMVC.ViewModels.Feeca
 			crs.SubSets.Add(subfilters);
 
 
-
-
-
+			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
 			if (isToExport)
 			{
@@ -242,20 +288,19 @@ namespace GenioMVC.ViewModels.Feeca
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAflds> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>() {
+			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
+			{
 				new("Form", "FEECA")
-			}, "ms", "Time to load the form.")) {
-
+			}, "ms", "Time to load the form."))
+			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Feeca_FldsValDescrip_RowViewModel>();
 
 				CriteriaSet feeca___flds_descrip_Conds = CriteriaSet.And();
-
 				bool tableReload = true;
 
 				//FOR: MENU LIST SORTING
 				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
 
 
 
@@ -281,16 +326,14 @@ namespace GenioMVC.ViewModels.Feeca
 				{
 					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
 
-					if (firstVisibleColumn == null)
-						firstVisibleColumn = new FieldRef("flds", "descrip");
+					firstVisibleColumn ??= new FieldRef("flds", "descrip");
 				}
 
 
 				// Limitations
-				if (this.tableLimits == null)
-					this.tableLimits = new List<Limit>();
-				//Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new LimitComparer();
+				this.tableLimits ??= [];
+				// Comparer to check if limit is already present in tableLimits
+				LimitComparer limitComparer = new();
 
 
 				if (conditions == null)
@@ -300,7 +343,9 @@ namespace GenioMVC.ViewModels.Feeca
 				feeca___flds_descrip_Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
 				tableReload &= hasAllRequiredLimits;
 
-// USE /[MANUAL GQT OVERRQ FEECA_DESCRIP]/
+// USE /[MANUAL GQT OVERRQ FEECA_FLDSDESCRIP]/
+
+				bool distinct = false;
 
 				if (isToExport)
 				{
@@ -309,14 +354,14 @@ namespace GenioMVC.ViewModels.Feeca
 
 					Qlisting = Models.ModelBase.Where<CSGenioAflds>(m_userContext, false, feeca___flds_descrip_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FEECA___FLDS_DESCRIP_", true, firstVisibleColumn: firstVisibleColumn);
 
-// USE /[MANUAL GQT OVERRQLSTEXP FEECA_DESCRIP]/
+// USE /[MANUAL GQT OVERRQLSTEXP FEECA_FLDSDESCRIP]/
 
 					return;
 				}
 
 				if (tableReload)
 				{
-// USE /[MANUAL GQT OVERRQLIST FEECA_DESCRIP]/
+// USE /[MANUAL GQT OVERRQLIST FEECA_FLDSDESCRIP]/
 
 					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_flds"];
 					CriteriaSet m_PagingPosEPHs = null;
@@ -328,7 +373,7 @@ namespace GenioMVC.ViewModels.Feeca
 							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 					}
 
-					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, false, feeca___flds_descrip_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FEECA___FLDS_DESCRIP_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
+					ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, distinct, feeca___flds_descrip_Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_FEECA___FLDS_DESCRIP_", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
 					if (listing.CurrentPage > 0)
 						pageNumber = listing.CurrentPage;
@@ -336,7 +381,6 @@ namespace GenioMVC.ViewModels.Feeca
 					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
 					if (pageNumber < 1)
 						pageNumber = 1;
-
 
 					//Set document field values to objects
 					SetDocumentFields(listing);
@@ -357,18 +401,12 @@ namespace GenioMVC.ViewModels.Feeca
 						Menu.SetTotalizers(listing.Totalizers);
 				}
 
-				//Set table limits display property
+				// Set table limits display property
 				FillTableLimitsDisplayData();
 
 				// Store table configuration so it gets sent to the client-side to be processed
 				CurrentTableConfig = tableConfig;
 
-				//Set table limits display property
-				FillTableLimitsDisplayData();
-
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
-				
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
 			}
@@ -376,7 +414,7 @@ namespace GenioMVC.ViewModels.Feeca
 
 		private List<Feeca_FldsValDescrip_RowViewModel> MapFeeca_FldsValDescrip(ListingMVC<CSGenioAflds> Qlisting)
 		{
-			var Elements = new List<Feeca_FldsValDescrip_RowViewModel>();
+			List<Feeca_FldsValDescrip_RowViewModel> Elements = [];
 			int i = 0;
 
 			if (Qlisting.Rows != null)
@@ -393,7 +431,6 @@ namespace GenioMVC.ViewModels.Feeca
 			return Elements;
 		}
 
-
 		/// <summary>
 		/// Maps a single CSGenioAflds row
 		/// to a Feeca_FldsValDescrip_RowViewModel object.
@@ -402,7 +439,9 @@ namespace GenioMVC.ViewModels.Feeca
 		private Feeca_FldsValDescrip_RowViewModel MapFeeca_FldsValDescrip(CSGenioAflds row)
 		{
 			var model = new Feeca_FldsValDescrip_RowViewModel(m_userContext, true, _fieldsToSerialize);
-			if (row == null) return model;
+			if (row == null)
+				return model;
+
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{
 				switch (Qfield.Area)
@@ -414,32 +453,9 @@ namespace GenioMVC.ViewModels.Feeca
 				}
 			}
 
-			CalculateButtonPermissions(model);
-
+			model.InitRowData();
 
 			return model;
-		}
-
-		/// <summary>
-		/// Checks CRUD conditions to determine which actions the user can perform.
-		/// </summary>
-		public void CalculateButtonPermissions(Feeca_FldsValDescrip_RowViewModel model)
-		{
-			bool canView = true;
-			bool canEdit = true;
-			bool canDelete = true;
-			bool canDuplicate = true;
-			bool canInsert = true;
-			using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport)) {
-			}
-			model.BtnPermission = new TableRowCrudButtonPermissions()
-			{
-				DeleteBtnDisabled = !canDelete,
-				EditBtnDisabled = !canEdit,
-				ViewBtnDisabled = !canView,
-				DuplicateBtnDisabled = !canDuplicate,
-				InsertBtnDisabled = !canInsert,
-			};
 		}
 
 		/// <summary>
@@ -453,36 +469,42 @@ namespace GenioMVC.ViewModels.Feeca
 			return Menu.Elements.Any(row => row.ValZzstate != 0);
 		}
 
-
 		/// <summary>
 		/// Sets the document field values to objects.
 		/// </summary>
-		/// <param name="listing">The rows.</param>
+		/// <param name="listing">The rows</param>
 		private void SetDocumentFields(ListingMVC<CSGenioAflds> listing)
 		{
-			if (listing.Rows == null)
-				return;
-
-			foreach (CSGenioAflds row in listing.Rows)
-			{
-			}
 		}
 
+		#region Mapper
+
+		/// <inheritdoc />
+		public override void MapFromModel(Models.Flds m)
+		{
+		}
+
+		/// <inheritdoc />
+		public override void MapToModel(Models.Flds m)
+		{
+		}
+
+		#endregion
+
 		#region Custom code
+
 // USE /[MANUAL GQT VIEWMODEL_CUSTOM FEECA_FLDSVALDESCRIP]/
+
 		#endregion
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Flds", "Flds.ValCodflds", "Flds.ValZzstate", "Flds.ValDescrip", "Flds.ValCodaero", "Flds.ValCodequip", "BtnPermission"
+			"Flds", "Flds.ValCodflds", "Flds.ValZzstate", "Flds.ValDescrip", "Flds.ValCodaero", "Flds.ValCodequip"
 		];
 
-		private static readonly List<TableSearchColumn> _searchableColumns = 
+		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
-			new TableSearchColumn("ValDescrip", CSGenioAflds.FldDescrip, typeof(string))
+			new TableSearchColumn("ValDescrip", CSGenioAflds.FldDescrip, typeof(string)),
 		];
-
-
-
 	}
 }

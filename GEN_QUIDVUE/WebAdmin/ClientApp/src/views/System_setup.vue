@@ -90,10 +90,7 @@
 							label: '',
 							disabled: false,
 							isVisible: true,
-							props: {
-								model: computed(() => vm.Model),
-								resources: computed(() => vm.systemConfigTexts)
-							},
+							props: { model: computed(() => vm.Model) },
 							events: { 'connection-tested': vm.handleConnectionTested, 'update-model': vm.setModel, 'alert-class': vm.updateAlert }
 						},
 						{
@@ -105,7 +102,7 @@
 							isVisible: true,
 							props: {
 								model: computed(() => vm.Model),
-								resources: computed(() => vm.systemConfigTexts)
+								texts: computed(() => vm.Resources)
 							},
 							events: { 'changeTab': vm.changeTab, 'alert-class': vm.updateAlert }
 						},
@@ -116,12 +113,7 @@
 							label: '',
 							disabled: false,
 							isVisible: true,
-							props: {
-								model: computed(() => vm.Model),
-								Scheduler: computed(() => vm.Model?.Scheduler),
-								TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList),
-								resources: computed(() => vm.systemConfigTexts)
-							},
+							props: { model: computed(() => vm.Model), Scheduler: computed(() => vm.Model?.Scheduler), TaskList: computed(() => vm.Model?.SelectLists.SchedulerTaskList) },
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
@@ -131,7 +123,7 @@
 							label: '',
 							disabled: false,
 							isVisible: true,
-							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists), resources: computed(() => vm.systemConfigTexts) },
+							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
@@ -141,7 +133,7 @@
 							label: '',
 							disabled: false,
 							isVisible: true,
-							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists), resources: computed(() => vm.systemConfigTexts) },
+							props: { model: computed(() => vm.Model), Cores: computed(() => vm.Cores), SelectLists: computed(() => vm.Model?.SelectLists) },
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
@@ -152,7 +144,7 @@
 							disabled: false,
 							isVisible: true,
 							props: { model: computed(() => vm.Model), Messaging: computed(() => vm.Model?.Messaging),
-								Metadata: computed(() => vm.Model?.MessagingMetadata), reloadMQueues: vm.reloadMQueues, resources: computed(() => vm.systemConfigTexts) },
+								Metadata: computed(() => vm.Model?.MessagingMetadata), reloadMQueues: vm.reloadMQueues },
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 						{
@@ -162,7 +154,7 @@
 							label: '',
 							disabled: false,
 							isVisible: true,
-							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists), resources: computed(() => vm.systemConfigTexts) },
+							props: { model: computed(() => vm.Model), SelectLists: computed(() => vm.Model?.SelectLists) },
 							events: { 'update-model': vm.fetchData, 'alert-class': vm.updateAlert }
 						},
 					]

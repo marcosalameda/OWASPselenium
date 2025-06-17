@@ -2031,13 +2031,13 @@ export default function getMenusRoutes()
 			}
 		},
 		{
-			path: '/:culture/:system/GQT/menu/GQT_UNUSED_ITEMS',
-			name: 'menu-GQT_UNUSED_ITEMS',
-			component: () => import('@/views/menus/ModuleGQT/MenuGQT_UNUSED_ITEMS/QMenuGqtUnusedItems.vue'),
+			path: '/:culture/:system/GQT/menu/GQT_4A1',
+			name: 'menu-GQT_4A1',
+			component: () => import('@/views/menus/ModuleGQT/MenuGQT_4A1/QMenuGqt4a1.vue'),
 			meta: {
 				routeType: 'menu',
 				module: 'GQT',
-				order: '4A11',
+				order: '4A1',
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
@@ -3288,19 +3288,6 @@ export default function getMenusRoutes()
 				routeType: 'menu',
 				module: 'PTN',
 				order: '3L1',
-				baseArea: 'Dashboard',
-				isDashboardPage: true,
-				hasInitialPHE: false
-			}
-		},
-		{
-			path: '/:culture/:system/GQT/menu/GQT_TESTDS',
-			name: 'menu-GQT_TESTDS',
-			component: () => import('@/views/menus/ModuleGQT/MenuGQT_TESTDS/QMenuGqtTestds.vue'),
-			meta: {
-				routeType: 'menu',
-				module: 'GQT',
-				order: 'C1',
 				baseArea: 'Dashboard',
 				isDashboardPage: true,
 				hasInitialPHE: false

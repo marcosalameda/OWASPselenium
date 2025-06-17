@@ -46,7 +46,7 @@
 
 		<q-dialog
 			v-model="showDialogAdvanced"
-			:title="resources.property"
+			:title="systemConfigTexts.property"
 			:buttons="buttonsAdvanced">
 			<template #body.content>
 				<div class="q-dialog-container">
@@ -66,7 +66,7 @@
 						</div>
 						<q-button v-if="!inDeleteModeAdvanced"
 							@click="showNewKeyInput=true"
-							:label="resources.insertNewKey">
+							:label="systemConfigTexts.insertNewKey">
 								<q-icon icon="pencil" />
 						</q-button>
 						<q-select
@@ -83,7 +83,7 @@
 					<div v-else>
 						<q-button
 							@click="showNewKeyInput=false"
-							:label="resources.listDefaultKeys"
+							:label="systemConfigTexts.listDefaultKeys"
 							v-if="hasInitProperties && !inDeleteModeAdvanced">
 								<q-icon icon="list" />
 						</q-button>
@@ -121,10 +121,10 @@
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import QAlert from '@/components/QAlert.vue';
+	import { QTextField, QCheckbox, QPasswordField} from '@quidgest/ui/components';
 	import numeric_input from '@/components/Numeric_input.vue';
 	import { texts } from '@/resources/hardcodedTexts.ts';
-	import { QTextField, QCheckbox, QPasswordField} from '@quidgest/ui/components';
-	import { computed } from 'vue';
+    import { SystemConfigTexts } from '@/resources/viewResources.ts';
 
 	export default {
 		name: 'extra',
@@ -133,7 +133,8 @@
 			QAlert,
 			QTextField,
 			QCheckbox,
-			QPasswordField
+			QPasswordField,
+			numeric_input
 		},
 
 		mixins: [reusableMixin],
@@ -145,10 +146,6 @@
 				required: true
 			},
 			SelectLists: {
-				required: true
-			},
-			resources: {
-				type: Object,
 				required: true
 			}
 		},
@@ -169,7 +166,7 @@
 				tAdvP: {
 					rows: [],
 					columns: [{
-						label: this.resources.actions,
+						label: '',
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -178,19 +175,19 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: computed(() => this.Resources[texts.key]),
+						label: '',
 						name: "Key",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: computed(() => this.Resources[texts.value]),
+						label: '',
 						name: "Val",
 						sort: true
 					}],
 					config: {
-						table_title: this.resources.advancedProperties
+						table_title: ''
 					}
 				},
 				valueComponent: QTextField,
@@ -204,20 +201,20 @@
 					total_rows: 0,
 					columns: [
 						{
-							label: this.resources.report,
+							label: '',
 							name: "Rep",
 							sort: true,
 							initial_sort: true,
 							initial_sort_order: "asc"
 						},
 						{
-							label: computed(() => this.Resources[texts.languageLabel]),
+							label: '',
 							name: "Lang",
 							sort: true
 						}
 					],
 					config: {
-						table_title: this.resources.reportsByLanguage,
+						table_title: '',
 						pagination : false,
 						global_search: {visibility : false},
 						highlight_row_hover: false,
@@ -248,6 +245,7 @@
 					insert: this.Resources[texts.insert],
 					delete: this.Resources[texts.delete],
 					edit: this.Resources[texts.edit],
+					actions: this.Resources[texts.actions],
 					key: this.Resources[texts.key],
 					value: this.Resources[texts.value],
 					thisKeyAlreadyExists: this.Resources[texts.thisKeyAlreadyExists],
@@ -258,6 +256,9 @@
 					cancel: this.Resources[texts.cancel],
 				};
 			},
+            systemConfigTexts() {
+                return new SystemConfigTexts(this);
+            }
 		},
 
 		methods: {
@@ -371,6 +372,15 @@
 		},
 		mounted() {
 			this.advancedProps = this.model.AdvancedProperties || [];
+
+			this.tAdvP.columns[0].label = this.hardcodedTexts.actions;
+			this.tAdvP.columns[1].label = this.hardcodedTexts.key;
+			this.tAdvP.columns[2].label = this.hardcodedTexts.value;
+			this.tAdvP.config.table_title = this.systemConfigTexts.advancedProperties;
+
+			this.tRepor.columns[0].label = this.systemConfigTexts.report;
+			this.tRepor.columns[1].label = this.hardcodedTexts.languageLabel;
+			this.tRepor.config.table_title = this.systemConfigTexts.reportsByLanguage;
 		},
 		watch: {
 			invalidProps(newValue) {

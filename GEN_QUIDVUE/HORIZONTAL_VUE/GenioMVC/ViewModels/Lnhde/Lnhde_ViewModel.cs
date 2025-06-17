@@ -203,9 +203,8 @@ namespace GenioMVC.ViewModels.Lnhde
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Lnhde model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

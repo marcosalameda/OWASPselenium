@@ -2,12 +2,12 @@
     <row>
 		<q-card
 			class="q-card--admin-border-top q-card--admin-compact"
-			:title="resources.messageBrokerTitle"
+			:title="systemConfigTexts.messageBrokerTitle"
 			width="block">
 			<q-row-container>
 				<q-checkbox
 					v-model="Messaging.Enabled"
-					:label="resources.enabledLabel" />
+					:label="systemConfigTexts.enabledLabel" />
 				<q-text-field
 					v-model="Messaging.Host.Provider"
 					label="Provider"
@@ -33,7 +33,7 @@
 	<row>
 		<q-card
 			class="q-card--admin-border-top q-card--admin-compact"
-			:title="resources.publishTitle"
+			:title="systemConfigTexts.publishTitle"
 			width="block">
 			<q-row-container>
 				<div v-for="pub in EnabledPublications">
@@ -48,7 +48,7 @@
 	<row>
 		<q-card
 			class="q-card--admin-border-top q-card--admin-compact"
-			:title="resources.subscribeTitle"
+			:title="systemConfigTexts.subscribeTitle"
 			width="block">
 			<q-row-container>
 				<template v-for="sub in EnabledSubscriptions">
@@ -68,6 +68,7 @@
 	import { QUtils } from '@/utils/mainUtils';
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { texts } from '@/resources/hardcodedTexts.ts';
+	import { SystemConfigTexts } from '@/resources/viewResources.ts'
 
 	export default {
 		name: 'message',
@@ -84,10 +85,6 @@
 				required: true
 			},
 			Messaging: {
-				required: true
-			},
-			resources: {
-				type: Object,
 				required: true
 			}
 		},
@@ -119,6 +116,9 @@
 					password: this.Resources[texts.password],
 				}
 			},
+			systemConfigTexts() {
+				return new SystemConfigTexts(this)
+			}
 		},
 
 		methods: {

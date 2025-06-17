@@ -2,12 +2,12 @@
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
-import ViewModelBase from '@/mixins/formViewModelBase.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
-import modelFieldType from '@/mixins/formModelFieldTypes.js'
+import FormViewModelBase from '@/mixins/formViewModelBase.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+import modelFieldType from '@quidgest/clientapp/models/fields'
 
 import hardcodedTexts from '@/hardcodedTexts.js'
-import netAPI from '@/api/network'
+import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
@@ -15,9 +15,9 @@ import qProjArrays from '@/api/genio/projectArrays.js'
 
 /**
  * Represents a ViewModel class.
- * @extends ViewModelBase
+ * @extends FormViewModelBase
  */
-export default class ViewModel extends ViewModelBase
+export default class ViewModel extends FormViewModelBase
 {
 	/**
 	 * Creates a new instance of the ViewModel.
@@ -32,12 +32,13 @@ export default class ViewModel extends ViewModelBase
 		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
-		/** The view model metadata */
+		// The view model metadata
 		_merge(this.modelInfo, {
 			name: 'ADDRE',
 			area: 'ADDRE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ADDRE'
+				recalculateFormulas: 'RecalculateFormulas_ADDRE',
+				updateFilesTickets: 'UpdateFilesTicketsADDRE'
 			}
 		})
 
@@ -93,13 +94,51 @@ export default class ViewModel extends ViewModelBase
 		}).cloneFrom(values?.ValAddresscity))
 		watch(() => this.ValAddresscity.value, (newValue, oldValue) => this.onUpdate('addre.addresscity', this.ValAddresscity, newValue, oldValue))
 
-		/** The form fields used only in formulas. */
+		this.ValAddressdistrict = reactive(new modelFieldType.String({
+			id: 'ValAddressdistrict',
+			originId: 'ValAddressdistrict',
+			area: 'ADDRE',
+			field: 'ADDRDIST',
+			maxLength: 50,
+			description: computed(() => this.Resources.ADDRESS_DISTRICT48524),
+		}).cloneFrom(values?.ValAddressdistrict))
+		watch(() => this.ValAddressdistrict.value, (newValue, oldValue) => this.onUpdate('addre.addressdistrict', this.ValAddressdistrict, newValue, oldValue))
+
+		this.ValAddressstate = reactive(new modelFieldType.String({
+			id: 'ValAddressstate',
+			originId: 'ValAddressstate',
+			area: 'ADDRE',
+			field: 'ADDRSTAT',
+			maxLength: 50,
+			description: computed(() => this.Resources.ADDRESS_STATE16863),
+		}).cloneFrom(values?.ValAddressstate))
+		watch(() => this.ValAddressstate.value, (newValue, oldValue) => this.onUpdate('addre.addressstate', this.ValAddressstate, newValue, oldValue))
+
+		this.ValAddresspostalcode = reactive(new modelFieldType.String({
+			id: 'ValAddresspostalcode',
+			originId: 'ValAddresspostalcode',
+			area: 'ADDRE',
+			field: 'ADDRPCOD',
+			maxLength: 50,
+			description: computed(() => this.Resources.ADDRESS_POSTAL_CODE41631),
+		}).cloneFrom(values?.ValAddresspostalcode))
+		watch(() => this.ValAddresspostalcode.value, (newValue, oldValue) => this.onUpdate('addre.addresspostalcode', this.ValAddresspostalcode, newValue, oldValue))
+
+		this.ValAddresscountry = reactive(new modelFieldType.String({
+			id: 'ValAddresscountry',
+			originId: 'ValAddresscountry',
+			area: 'ADDRE',
+			field: 'ADDRCOUN',
+			maxLength: 50,
+			description: computed(() => this.Resources.ADDRESS_COUNTRY56159),
+		}).cloneFrom(values?.ValAddresscountry))
+		watch(() => this.ValAddresscountry.value, (newValue, oldValue) => this.onUpdate('addre.addresscountry', this.ValAddresscountry, newValue, oldValue))
+
 		this.ValPeriodstart = reactive(new modelFieldType.DateTime({
 			id: 'ValPeriodstart',
 			originId: 'ValPeriodstart',
 			area: 'ADDRE',
 			field: 'PERISTAR',
-			isFixed: true,
 			description: computed(() => this.Resources.PERIOD_START07901),
 		}).cloneFrom(values?.ValPeriodstart))
 		watch(() => this.ValPeriodstart.value, (newValue, oldValue) => this.onUpdate('addre.periodstart', this.ValPeriodstart, newValue, oldValue))
@@ -109,7 +148,6 @@ export default class ViewModel extends ViewModelBase
 			originId: 'ValPeriodend',
 			area: 'ADDRE',
 			field: 'PERIEND',
-			isFixed: true,
 			description: computed(() => this.Resources.PERIOD_END31576),
 		}).cloneFrom(values?.ValPeriodend))
 		watch(() => this.ValPeriodend.value, (newValue, oldValue) => this.onUpdate('addre.periodend', this.ValPeriodend, newValue, oldValue))

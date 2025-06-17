@@ -23,7 +23,7 @@ const state = () => {
 
 		// Used to render the second level of menus in the double_navbar menu.
 		childrenMenus: {},
-		
+
 		sidebarIsCollapsed: true,
 
 		sidebarIsVisible: false,
@@ -39,21 +39,6 @@ const state = () => {
 //----------------------------------------------------------------
 
 const actions = {
-	/**
-	 * Sets the layout config.
-	 * @param {object} layoutData The configuration of the layout
-	 */
-	setLayoutConfig(layoutData)
-	{
-		if (typeof layoutData !== 'object')
-			return
-
-		this.layoutConfig = {
-			...this.layoutConfig,
-			layoutData
-		}
-	},
-
 	/**
 	 * Sets the current height of the header.
 	 * @param {number} height The current height of the header (in pixels)
@@ -132,8 +117,8 @@ const actions = {
 	},
 
 	/**
-	 * Sets the visibility of the mobile layout sidebar. 
-	 * This value is updated right away when expanding and collapsing, 
+	 * Sets the visibility of the mobile layout sidebar.
+	 * This value is updated right away when expanding and collapsing,
 	 * so it's more like the state that the sidebar should be in / is going to.
 	 * When collapsing, it will be false before the sidebar is actually invisible.
 	 * @param {boolean} isVisible Whether or not the sidebar is visible
@@ -151,7 +136,7 @@ const actions = {
 	},
 
 	/**
-	 * Sets the visibility of the mobile layout navigation bar. 
+	 * Sets the visibility of the mobile layout navigation bar.
 	 * This is used to indicate the actual visibility in real-time.
 	 * This is needed because, with transitions, the visibility should
 	 * not be changed to hidden until the transition finishes.

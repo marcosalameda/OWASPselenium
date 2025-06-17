@@ -14,7 +14,7 @@
 <script>
 	import { computed } from 'vue'
 	import _isEmpty from 'lodash-es/isEmpty'
-	import { inputSize, inputSizeCss } from '@/mixins/quidgest.mainEnums.js'
+	import { inputSize, inputSizeCss } from '@quidgest/clientapp/constants/enums'
 	import tinymce from '@tinymce/tinymce-vue'
 
 	export default {

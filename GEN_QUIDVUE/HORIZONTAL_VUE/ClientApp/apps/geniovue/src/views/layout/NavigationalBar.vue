@@ -1,6 +1,6 @@
 ﻿<template>
 	<div
-		v-if="layoutConfig.HeaderEnable || mobileLayoutActive"
+		v-if="$app.layout.HeaderEnable || mobileLayoutActive"
 		:class="headerClasses"
 		ref="topHeader">
 		<q-button
@@ -13,20 +13,20 @@
 			<q-icon-svg icon="menu-hamburger" />
 		</q-button>
 		<div
-			v-if="layoutConfig.LogoEnable && layoutConfig.HeaderEnable"
+			v-if="$app.layout.LogoEnable && $app.layout.HeaderEnable"
 			class="c-header__brand float-left">
 			<q-router-link
 				link="/"
 				:tabindex="defaultTabindex">
 				<img
-					:src="`${system.resourcesPath}logotipo_header.png?v=${genio.buildVersion}`"
+					:src="`${$app.resourcesPath}logotipo_header.png?v=${$app.genio.buildVersion}`"
 					:alt="texts.initialPage" />
 			</q-router-link>
 		</div>
 
 		<div
 			class="custom-header-text"
-			v-if="layoutConfig.MenuStyle === 'double_navbar' && !isEmpty(headerText)">
+			v-if="$app.layout.MenuStyle === 'double_navbar' && !isEmpty(headerText)">
 			<q-static-text
 				supports-html
 				:text="headerText" />
@@ -51,12 +51,12 @@
 				:text="texts.systemYears" />
 
 			<language-items
-				v-if="layoutConfig.LanguagePlacement === 'in_header'"
+				v-if="$app.layout.LanguagePlacement === 'in_header'"
 				:tabindex="defaultTabindex" />
 
 			<div class="embeddedmenu__container">
 				<embedded-menu
-					v-if="layoutConfig.LogonPlacement === 'in_header' || mobileLayoutActive"
+					v-if="$app.layout.LogonPlacement === 'in_header' || mobileLayoutActive"
 					:tabindex="defaultTabindex" />
 			</div>
 		</div>
@@ -69,11 +69,11 @@
 		@focusout="onFocusOut">
 		<div :class="[containerClasses, { 'n-menu__navbar--double-l1': hasDoubleNavbar }]">
 			<q-router-link
-				v-if="layoutConfig.BrandIconEnable"
+				v-if="$app.layout.BrandIconEnable"
 				class="navbar-brand"
 				link="/">
 				<img
-					:src="`${system.resourcesPath}Q_icon.png?v=${genio.buildVersion}`"
+					:src="`${$app.resourcesPath}Q_icon.png?v=${$app.genio.buildVersion}`"
 					:alt="texts.initialPage"
 					width="30"
 					height="30" />
@@ -96,7 +96,7 @@
 			</div>
 
 			<div
-				v-if="!mobileLayoutActive && layoutConfig.LogonPlacement === 'in_navmenu'"
+				v-if="!mobileLayoutActive && $app.layout.LogonPlacement === 'in_navmenu'"
 				class="navmenu__container">
 				<embedded-menu />
 			</div>
@@ -130,18 +130,18 @@
 </template>
 
 <script>
-	import { computed, defineAsyncComponent } from 'vue'
 	import { mapActions } from 'pinia'
+	import { computed, defineAsyncComponent } from 'vue'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import mainConfigUtils from '@/api/global/mainConfigUtils.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
+	import { updateMainConfig } from '@/utils/system'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
 
 	import Bookmarks from './Bookmarks.vue'
-	import Modules from './Modules.vue'
 	import QMenu from './Menu.vue'
 	import MenuSubItems from './MenuSubItems.vue'
+	import Modules from './Modules.vue'
 
 	import MenuFlat from './mobile/MenuFlat.vue'
 
@@ -225,7 +225,7 @@
 				const classes = ['border-bottom', 'c-header']
 
 				// When header is not enabled, apply styles like navbar on mobile
-				if (!this.layoutConfig.HeaderEnable && this.mobileLayoutActive)
+				if (!this.$app.layout.HeaderEnable && this.mobileLayoutActive)
 					classes.push('c-header__disable')
 
 				if (this.hasDoubleNavbar)
@@ -259,7 +259,7 @@
 
 			hasHeader()
 			{
-				return this.layoutConfig.HeaderEnable
+				return this.$app.layout.HeaderEnable
 			},
 
 			/**
@@ -305,7 +305,7 @@
 			{
 				this.setCurrentSystem(selectedSystem)
 				// Before opening the home page, we must update the configuration to have the menu list for this system.
-				mainConfigUtils.updateMainConfig(() => {
+				updateMainConfig(() => {
 					this.$router.push({
 						name: 'home',
 						params: {

@@ -3,14 +3,14 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="resources.qualityAssuranceTitle"
+				:title="systemConfigTexts.qualityAssuranceTitle"
 				width="block">
 				<q-checkbox
 					v-model="model.QAEnvironment"
-					:label="resources.qaEnvironmentLabel">
+					:label="systemConfigTexts.qaEnvironmentLabel">
 					<template #extras>
 						<q-icon icon="information-outline" />
-						{{ resources.qaEnvironmentInfo }}
+						{{ systemConfigTexts.qaEnvironmentInfo }}
 					</template>
 				</q-checkbox>
 			</q-card>
@@ -19,7 +19,7 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="resources.dateFormatTitle"
+				:title="systemConfigTexts.dateFormatTitle"
 				width="block">
 				<q-row-container v-if="model.DateFormat">
 					<q-text-field
@@ -45,7 +45,7 @@
 		<row>
 			<q-card
 				class="q-card--admin-default"
-				:title="resources.numberFormatTitle"
+				:title="systemConfigTexts.numberFormatTitle"
 				width="block">
 				<q-row-container v-if="SelectLists">
 					<q-select
@@ -53,13 +53,13 @@
 						:items="SelectLists.DecimalSeparator"
 						item-value="Value"
 						item-label="Text"
-						:label="resources.decimalSeparatorLabel" />
+						:label="systemConfigTexts.decimalSeparatorLabel" />
 					<q-select
 						v-model="model.GroupSeparator"
 						:items="SelectLists.GroupSeparator"
 						item-value="Value"
 						item-label="Text"
-						:label="resources.groupSeparatorLabel" />
+						:label="systemConfigTexts.groupSeparatorLabel" />
 				</q-row-container>
 			</q-card>
 		</row>
@@ -78,7 +78,7 @@
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';
 import { texts } from '@/resources/hardcodedTexts.ts';
-import { computed } from 'vue';
+import { SystemConfigTexts } from '@/resources/viewResources.ts';
 
 export default {
 	name: 'settings',
@@ -88,10 +88,6 @@ export default {
 			required: true
 		},
 		SelectLists: {
-			required: true
-		},
-		resources: {
-			type: Object,
 			required: true
 		}
 	},
@@ -121,20 +117,20 @@ export default {
 				total_rows: 0,
 				columns: [
 					{
-						label: this.resources.reportLabel,
+						label: '',
 						name: "Rep",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: computed(() =>  this.Resources[texts.languageLabel]),
+						label: '',
 						name: "Lang",
 						sort: true
 					}
 				],
 				config: {
-					table_title: this.resources.reportsByLanguageTitle,
+					table_title: '',
 					pagination : false,
 					global_search: {visibility : false},
 					highlight_row_hover: false,
@@ -155,6 +151,9 @@ export default {
 				languageLabel: this.Resources[texts.languageLabel]
 			}
 		},
+		systemConfigTexts() {
+			return new SystemConfigTexts(this)
+		}
 	},
 	methods: {
 		saveConfigOthers() {
@@ -169,6 +168,11 @@ export default {
 				}
 			});
 		},
-	}
+	},
+	mounted() {
+		this.tRepor.columns[0].label = this.systemConfigTexts.reportLabel
+		this.tRepor.columns[1].label = this.hardcodedTexts.languageLabel
+		this.tRepor.config.table_title = this.systemConfigTexts.reportsByLanguageTitle
+	},
 };
 </script>

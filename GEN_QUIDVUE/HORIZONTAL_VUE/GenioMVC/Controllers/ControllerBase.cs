@@ -457,7 +457,7 @@ namespace GenioMVC.Controllers
 					ValidateModel(model);
 
 					if (!ModelState.IsValid)
-						throw new BusinessException(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182, sink.MethodName, "The model isn't valid.");
+						throw new BusinessException(Resources.Resources.ERRO_AO_GUARDAR_O_RE65182, sink?.MethodName ?? "Validate", "The model isn't valid.");
 				}
 
 				return permission;
@@ -468,6 +468,21 @@ namespace GenioMVC.Controllers
 					sp.closeConnection();
 				throw;
 			}
+		}
+
+		protected StatusMessage Validate(ICrudViewModel model, EventSink sink = null, string id = null, bool loadModel = true)
+		{
+			FormMode formMode = Navigation.CurrentLevel.FormMode;
+
+			return formMode switch
+			{
+				FormMode.Show => ValidateView(model, sink, id),
+				FormMode.Edit => ValidateEdit(model, sink, id),
+				FormMode.Delete => ValidateDelete(model, sink, id),
+				FormMode.Duplicate => ValidateDuplicate(model, sink, id, loadModel),
+				FormMode.New => ValidateInsert(model, sink, id, loadModel),
+				_ => throw new BusinessException(Resources.Resources.OCORREU_UM_ERRO_AO_P53091, "Validate", $"Unsupported form mode: {formMode}.")
+			};
 		}
 
 		protected StatusMessage ValidateView(ICrudViewModel model, EventSink sink, string id = null)
@@ -1257,10 +1272,10 @@ namespace GenioMVC.Controllers
 					return JsonOK(imageModel);
 				}
 			}
-			catch(Exception ex)
+			catch (Exception e)
 			{
-				if (ex is not GenioException)
-					Log.Error("Error on GetImage - " + ex.Message);
+				if (e is not GenioException)
+					Log.Error("Error on GetImage - " + e.Message);
 				return JsonERROR();
 			}
 			finally
@@ -1367,6 +1382,7 @@ namespace GenioMVC.Controllers
 		/// <param name="fieldName">The name of the field in the view model</param>
 		/// <param name="keyValue">The primary key value</param>
 		/// <returns>A JSON with the list of ticket keys</returns>
+		[NonAction]
 		protected ActionResult GetDocumsTickets(string tableName, string fieldName, string keyValue)
 		{
 			try
@@ -1390,18 +1406,82 @@ namespace GenioMVC.Controllers
 						foreach (KeyValuePair<string, string> version in versions)
 						{
 							ResourceQuery versionResource = new(version.Key, areaName, fieldName, keyName, version.Value);
-							string versionTicket = QResources.CreateTicketEncryptedBase64(user.Name, user.Location, versionResource);
+							string versionTicket = QResources.CreateTicketEncryptedBase64(user.Name, user.Location, versionResource, false);
 							tickets.Add(new { id = version.Key, ticket = versionTicket });
 						}
 					}
 
 					// The current version of the file.
 					ResourceQuery resource = new(docName ?? "", tableName, fieldName, "", keyValue);
-					string ticket = QResources.CreateTicketEncryptedBase64(user.Name, user.Location, resource);
+					string ticket = QResources.CreateTicketEncryptedBase64(user.Name, user.Location, resource, false);
 					tickets.Add(new { id = "main", ticket });
 				}
 
 				return JsonOK(new { tickets, properties });
+			}
+			catch
+			{
+				return JsonERROR();
+			}
+		}
+
+		private bool CanSetFile(ICrudViewModel viewModel, bool isApply = false)
+		{
+			try
+			{
+				if (viewModel != null)
+				{
+					StatusMessage validations = StatusMessage.GetAggregator();
+					validations.MergeStatusMessage(Validate(viewModel));
+					validations.MergeStatusMessage(viewModel.EvaluateWriteConditions(isApply));
+					validations.MergeStatusMessage(viewModel.Validate(isApply));
+
+					return !validations.HasError;
+				}
+
+				return false;
+			}
+			catch
+			{
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="documTickets">A list with the document tickets</param>
+		/// <param name="viewModel">The view model of the current form</param>
+		/// <param name="isApply">Whether an apply is being performed</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		[NonAction]
+		protected ActionResult UpdateFilesTickets(List<RequestDocumFieldTicket> documTickets, ICrudViewModel viewModel, bool isApply = false)
+		{
+			try
+			{
+				if (!CanSetFile(viewModel, isApply))
+					return JsonERROR();
+
+				List<RequestDocumFieldTicket> tickets = [];
+
+				foreach (var ticketInfo in documTickets)
+				{
+					DocumTicketProperties ticketProps = GetPropertiesFromTicket(ticketInfo.Ticket);
+
+					// If the ticket is already writable, there's no need to do anything.
+					if (ticketProps == null || ticketProps.IsWritable)
+						continue;
+
+					ResourceQuery resource = ticketProps.Resource as ResourceQuery;
+
+					tickets.Add(new RequestDocumFieldTicket()
+					{
+						FieldId = ticketInfo.FieldId,
+						Ticket = QResources.CreateTicketEncryptedBase64(ticketProps.Username, ticketProps.Location, resource)
+					});
+				}
+
+				return JsonOK(new { tickets });
 			}
 			catch
 			{
@@ -1428,10 +1508,10 @@ namespace GenioMVC.Controllers
 				string? docfk = model.GetValueGeneric(recq.KeyData + "fk") as string;
 
 				NameValueCollection values = [];
-				GenioMVC.ViewModels.DocumsVersionsDBEdit_ViewModel documsDBedit = new(m_userContext, ticket, docfk, recq.Table, recq.KeyData);
-				documsDBedit.Load(Configuration.NrRegDBedit == 0 ? 10 : Configuration.NrRegDBedit, values);
+				GenioMVC.ViewModels.DocumsVersionsDBEdit_ViewModel documVersions = new(m_userContext, ticket, docfk, recq.Table, recq.KeyData);
+				documVersions.Load(Configuration.NrRegDBedit == 0 ? 10 : Configuration.NrRegDBedit, values);
 
-				return JsonOK(documsDBedit);
+				return JsonOK(documVersions);
 			}
 			catch
 			{
@@ -1476,11 +1556,6 @@ namespace GenioMVC.Controllers
 			}
 		}
 
-		public enum VersionDeleteAction
-		{
-			LastVersion, Historic, All
-		}
-
 		/// <summary>
 		/// Performs changes to the specified documents, either to delete or put them in editing state
 		/// </summary>
@@ -1493,6 +1568,9 @@ namespace GenioMVC.Controllers
 			{
 				foreach (RequestDocumChangeModel docum in documents)
 				{
+					if (!IsTicketWritable(docum.Ticket))
+						continue;
+
 					ResourceQuery recq = GetResourceQueryFromTicket(docum.Ticket);
 
 					if (recq == null)
@@ -1546,23 +1624,22 @@ namespace GenioMVC.Controllers
 			}
 		}
 
-		public enum VersionSubmitAction
-		{
-			Insert, Submit, UnlockFile
-		}
-
 		/// <summary>
 		/// Adds a new document (IB or ID)
 		/// </summary>
 		/// <param name="ticket">Encryted ticket</param>
 		/// <param name="mode">Submit file action mode</param>
 		/// <param name="version">The document version</param>
-		/// <returns>JSON response</returns>
+		/// <returns>A JSON response with the result of the operation</returns>
 		[NonAction]
 		protected ActionResult SetFile(string ticket, VersionSubmitAction mode = VersionSubmitAction.Insert, string version = "1")
 		{
 			try
 			{
+				// In case of fail here, we return an ok response, since the form save/apply request will handle the errors.
+				if (!IsTicketWritable(ticket))
+					return JsonOK(new { validModel = false });
+
 				ResourceQuery recq = GetResourceQueryFromTicket(ticket);
 
 				if (recq == null)
@@ -1766,23 +1843,51 @@ namespace GenioMVC.Controllers
 		}
 
 		/// <summary>
-		/// Gets the resource associated to the specified ticket
+		/// Gets the properties of the specified ticket
 		/// </summary>
 		/// <param name="ticket">The ticket</param>
-		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
-		private Resource GetResourceFromTicket(string ticket)
+		/// <returns>The ticket properties, or null if something is wrong with the specified ticket</returns>
+		protected DocumTicketProperties GetPropertiesFromTicket(string ticket)
 		{
 			if (string.IsNullOrEmpty(ticket))
 				return null;
 
 			object[] objs = QResources.DecryptTicketBase64(ticket);
-
 			string username = objs[0] as string;
+
+			// Validates that the ticket was emitted for the current user.
 			if (username != m_userContext.User.Name)
 				return null;
 
-			Resource rec = objs[2] as Resource;
-			return rec;
+			return new DocumTicketProperties
+			{
+				Username = username,
+				Location = objs[1] as string,
+				Resource = objs[2] as Resource,
+				IsWritable = (bool)objs[3]
+			};
+		}
+
+		/// <summary>
+		/// Gets the username associated to the specified ticket
+		/// </summary>
+		/// <param name="ticket">The ticket</param>
+		/// <returns>The username</returns>
+		protected string GetUsernameFromTicket(string ticket)
+		{
+			DocumTicketProperties ticketProps = GetPropertiesFromTicket(ticket);
+			return ticketProps?.Username ?? "";
+		}
+
+		/// <summary>
+		/// Gets the location associated to the specified ticket
+		/// </summary>
+		/// <param name="ticket">The ticket</param>
+		/// <returns>The location</returns>
+		protected string GetLocationFromTicket(string ticket)
+		{
+			DocumTicketProperties ticketProps = GetPropertiesFromTicket(ticket);
+			return ticketProps?.Location ?? "";
 		}
 
 		/// <summary>
@@ -1792,7 +1897,8 @@ namespace GenioMVC.Controllers
 		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
 		protected ResourceQuery GetResourceQueryFromTicket(string ticket)
 		{
-			Resource rec = GetResourceFromTicket(ticket);
+			DocumTicketProperties ticketProps = GetPropertiesFromTicket(ticket);
+			Resource rec = ticketProps?.Resource;
 
 			if (rec is ResourceQuery)
 				return rec as ResourceQuery;
@@ -1807,7 +1913,8 @@ namespace GenioMVC.Controllers
 		/// <returns>The resource, or null if the user doesn't have permission to access it</returns>
 		protected ResourceFile GetResourceFileFromTicket(string ticket)
 		{
-			Resource rec = GetResourceFromTicket(ticket);
+			DocumTicketProperties ticketProps = GetPropertiesFromTicket(ticket);
+			Resource rec = ticketProps?.Resource;
 
 			if (rec is ResourceFile)
 				return rec as ResourceFile;
@@ -1816,14 +1923,14 @@ namespace GenioMVC.Controllers
 		}
 
 		/// <summary>
-		/// Gets the username associated to the specified ticket
+		/// Checks if the specified ticket allows write operations
 		/// </summary>
 		/// <param name="ticket">The ticket</param>
-		/// <returns>The username</returns>
-		protected static string GetUsernameFromTicket(string ticket)
+		/// <returns>True if it does, false otherwise</returns>
+		protected bool IsTicketWritable(string ticket)
 		{
-			object[] objs = QResources.DecryptTicketBase64(ticket);
-			return objs[0] as string;
+			DocumTicketProperties ticketProps = GetPropertiesFromTicket(ticket);
+			return ticketProps?.IsWritable ?? false;
 		}
 
 		/// <summary>
@@ -1908,7 +2015,7 @@ namespace GenioMVC.Controllers
 		/// <param name="type">File type</param>
 		/// <returns>Exported file</returns>
 		[AllowAnonymous]
-		public FileResult DownloadExportFile([FromBody]RequestExportFile requestModel)
+		public FileResult DownloadExportFile([FromBody] RequestExportFile requestModel)
 		{
 			var id = requestModel.Id;
 			var type = requestModel.Type;
@@ -1938,7 +2045,7 @@ namespace GenioMVC.Controllers
 		}
 
 		[HttpPost]
-		public JsonNetResult ExecuteServerFunction([FromBody]RequestServerFunctionModel json)
+		public JsonNetResult ExecuteServerFunction([FromBody] RequestServerFunctionModel json)
 		{
 			var user = m_userContext.User;
 			var sp = m_userContext.PersistentSupport;

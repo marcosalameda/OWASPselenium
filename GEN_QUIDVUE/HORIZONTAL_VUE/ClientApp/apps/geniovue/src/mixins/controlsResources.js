@@ -823,8 +823,12 @@ class DocumentResources extends BaseResources
 			get: () => this._fnGetResource('TEM_A_CERTEZA_QUE_QU37043'),
 			enumerable: true
 		})
-		Object.defineProperty(this, 'actionLabel', {
-			get: () => this._fnGetResource('ACOES22599'),
+		Object.defineProperty(this, 'fileChoose', {
+			get: () => this._fnGetResource('ESCOLHER_UM_FICHEIRO15154'),
+			enumerable: true
+		})
+		Object.defineProperty(this, 'documentManagement', {
+			get: () => this._fnGetResource('GESTAO_DE_FICHEIROS44758'),
 			enumerable: true
 		})
 		Object.defineProperty(this, 'viewAll', {

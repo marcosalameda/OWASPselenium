@@ -46,7 +46,7 @@
 	import { computed, defineAsyncComponent } from 'vue'
 	import _debounce from 'lodash-es/debounce'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	const DEFAULT_MAP = 'leaflet-map'
 	const DEFAULT_POPUP = 'map-default-popup'

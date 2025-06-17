@@ -2,13 +2,11 @@
 	<div id="system_setup_system_container">
 		<scheduler
 			:model="model"
-			:resources="resources"
 			:TaskList="TaskList"
 			@alert-class="forwardAlert"
 			@update-model="forwardUpdate" />
 		<audit
 			:model="model"
-			:resources="resources"
 			@alert-class="forwardAlert" />
 		<row class="footer-btn">
 			<q-button
@@ -24,6 +22,7 @@
 	import { QUtils } from '@/utils/mainUtils';
 	import scheduler from './Scheduler';
 	import audit from './Audit';
+	import { SystemConfigTexts } from '@/resources/viewResources.ts';
 	import { texts } from '@/resources/hardcodedTexts.ts';
 
 	export default {
@@ -44,10 +43,6 @@
 			},
 			TaskList: {
 				required: false
-			},
-			resources: {
-				type: Object,
-				required: true
 			}
 		},
 

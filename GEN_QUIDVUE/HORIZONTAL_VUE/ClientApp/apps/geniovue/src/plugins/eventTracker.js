@@ -1,6 +1,6 @@
 ﻿import { mapActions } from 'pinia'
 
-import { useTracingDataStore } from '@/stores/tracingData.js'
+import { useTracingDataStore } from '@quidgest/clientapp/stores'
 
 export default {
 	install(app)

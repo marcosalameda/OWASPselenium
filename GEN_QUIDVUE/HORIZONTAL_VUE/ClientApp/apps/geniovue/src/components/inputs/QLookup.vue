@@ -63,8 +63,8 @@
 	import { computed, ref, watch } from 'vue'
 	import _isEmpty from 'lodash-es/isEmpty'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
-	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
+	import { inputSize } from '@quidgest/clientapp/constants/enums'
 
 	const emit = defineEmits([
 		'update:modelValue',

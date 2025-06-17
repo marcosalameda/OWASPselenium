@@ -149,9 +149,8 @@ namespace GenioMVC.ViewModels.Pedid
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Pedid model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

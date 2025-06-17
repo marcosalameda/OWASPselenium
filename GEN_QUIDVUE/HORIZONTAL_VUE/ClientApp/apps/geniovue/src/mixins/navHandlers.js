@@ -1,19 +1,20 @@
-﻿import { mapState, mapActions } from 'pinia'
-import { v4 as uuidv4 } from 'uuid'
-import _isEmpty from 'lodash-es/isEmpty'
+﻿import _isEmpty from 'lodash-es/isEmpty'
 import _merge from 'lodash-es/merge'
+import { mapActions, mapState } from 'pinia'
+import { v4 as uuidv4 } from 'uuid'
 
-import { useSystemDataStore } from '@/stores/systemData.js'
-import { useGenericDataStore } from '@/stores/genericData.js'
-import { useGenericLayoutDataStore } from '@/stores/genericLayoutData.js'
-import { useUserDataStore } from '@/stores/userData.js'
-import { useNavDataStore } from '@/stores/navData.js'
+import { MAIN_HISTORY_BRANCH_ID, NetworkAPI } from '@quidgest/clientapp/network'
+import eventBus from '@quidgest/clientapp/plugins/eventBus'
+import {
+	useGenericDataStore,
+	useNavDataStore,
+	useSystemDataStore,
+	useUserDataStore
+} from '@quidgest/clientapp/stores'
+import { normalizeRouteForSaveNavigation } from '@quidgest/clientapp/utils/genericFunctions'
 
-import { NetworkAPI } from '@/api/network'
-import eventBus from '@/api/global/eventBus.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
-
-const MAIN_HISTORY_BRANCH_ID = 'main'
+import { systemInfo } from '@/systemInfo'
+import { goBack as _goBack } from '@/utils/navigation'
 
 /**
  * Creates a new navigation level, based on the current Vue context.
@@ -24,7 +25,6 @@ function createNavigationLevel(context) {
 	const systemDataStore = useSystemDataStore()
 	const genericDataStore = useGenericDataStore()
 	const navDataStore = useNavDataStore()
-	const genericLayoutDataStore = useGenericLayoutDataStore()
 
 	let historyBranchId = MAIN_HISTORY_BRANCH_ID
 
@@ -84,10 +84,10 @@ function createNavigationLevel(context) {
 		// The route change was probably triggered by the user inserting a new url in the address bar,
 		// therefore, we clear the navigation and current menu path.
 		if (context.$route.meta.routeType === 'form' && typeof context.$route.params.modes !== 'string' && context.$route.params.isControlled !== 'true') {
-			
+
 			// In this type of menus, we need to load the first menu of the tree
 			// Because it this type of menu always has the first menu active at minimum so the double navbar won't be empty
-			const loadFirst = genericLayoutDataStore.layoutConfig.MenuStyle === "double_navbar";
+			const loadFirst = systemInfo.layout.MenuStyle === "double_navbar";
 
 			genericDataStore.resetMenuPath(loadFirst)
 			navDataStore.clearHistory()
@@ -126,7 +126,7 @@ function createNavigationLevel(context) {
 			}
 		}
 
-		let options = genericFunctions.normalizeRouteForSaveNavigation(context.$route)
+		let options = normalizeRouteForSaveNavigation(context.$route)
 		navDataStore.addHistoryLevel({ navigationId: historyBranchId, options })
 	}
 
@@ -234,7 +234,7 @@ export default {
 		 * Goes back to the previous navigation level, if it exists.
 		 */
 		goBack() {
-			genericFunctions.goBack(this.navigationId, this.$route.meta.hasInitialPHE)
+			_goBack(this.navigationId, this.$route.meta.hasInitialPHE)
 		},
 
 		/**

@@ -47,8 +47,8 @@
 	import { mapActions } from 'pinia'
 	import _merge from 'lodash-es/merge'
 
-	import { useGenericDataStore } from '@/stores/genericData.js'
-	import { useNavDataStore } from '@/stores/navData.js'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
+	import { useNavDataStore } from '@quidgest/clientapp/stores'
 	import VueNavigation from '@/mixins/vueNavigation.js'
 	import ListHandlers from '@/mixins/listHandlers.js'
 	import { navigationProperties } from '@/mixins/navHandlers.js'
@@ -57,14 +57,15 @@
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 
-	import netAPI from '@/api/network'
+	import netAPI from '@quidgest/clientapp/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import { removeModal } from '@/utils/layout'
 	/* eslint-enable no-unused-vars */
 
 	import ViewModelBase from '@/mixins/viewModelBase.js'
@@ -199,7 +200,7 @@
 			this.listCtrl.destroy()
 			this.componentOnLoadProc.destroy()
 
-			genericFunctions.removeModal('see-more-accordi-pess1name')
+			removeModal('see-more-accordi-pess1name')
 		},
 
 		computed: {

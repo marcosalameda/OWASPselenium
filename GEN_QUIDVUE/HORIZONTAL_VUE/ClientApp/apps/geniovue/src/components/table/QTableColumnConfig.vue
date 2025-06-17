@@ -91,7 +91,7 @@
 <script>
 	import _find from 'lodash-es/find'
 
-	import { inputSize } from '@/mixins/quidgest.mainEnums.js'
+	import { inputSize } from '@quidgest/clientapp/constants/enums'
 	import listFunctions from '@/mixins/listFunctions.js'
 
 	import QTable from './QTable.vue'

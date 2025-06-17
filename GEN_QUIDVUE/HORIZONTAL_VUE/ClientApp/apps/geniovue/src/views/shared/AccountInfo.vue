@@ -14,7 +14,7 @@
 							<base-input-structure
 								class="i-text"
 								v-bind="controls.Nome">
-								<q-input-group 
+								<q-input-group
 									:prepend-icon="{ icon: 'user' }"
 									size="xlarge">
 									<q-text-field
@@ -31,8 +31,8 @@
 							<base-input-structure
 								class="i-text"
 								v-bind="controls.Email">
-								<q-input-group 
-									:prepend-icon="{ icon: 'envelope' }" 
+								<q-input-group
+									:prepend-icon="{ icon: 'envelope' }"
 									size="xlarge">
 									<q-text-field
 										v-bind="controls.Email.props"
@@ -98,8 +98,7 @@
 	import { computed } from 'vue'
 	import _forEach from 'lodash-es/forEach'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 
@@ -124,8 +123,7 @@
 
 		data()
 		{
-			const systemDataStore = useSystemDataStore()
-			const authConfig = systemDataStore.authConfig
+			const authConfig = this.$app.authConfig
 
 			return {
 				model: {

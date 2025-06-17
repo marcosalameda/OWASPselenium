@@ -2,12 +2,12 @@
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
-import ViewModelBase from '@/mixins/formViewModelBase.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
-import modelFieldType from '@/mixins/formModelFieldTypes.js'
+import FormViewModelBase from '@/mixins/formViewModelBase.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+import modelFieldType from '@quidgest/clientapp/models/fields'
 
 import hardcodedTexts from '@/hardcodedTexts.js'
-import netAPI from '@/api/network'
+import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
@@ -15,9 +15,9 @@ import qProjArrays from '@/api/genio/projectArrays.js'
 
 /**
  * Represents a ViewModel class.
- * @extends ViewModelBase
+ * @extends FormViewModelBase
  */
-export default class ViewModel extends ViewModelBase
+export default class ViewModel extends FormViewModelBase
 {
 	/**
 	 * Creates a new instance of the ViewModel.
@@ -32,12 +32,13 @@ export default class ViewModel extends ViewModelBase
 		// eslint-disable-next-line no-unused-vars
 		const vm = this.vueContext
 
-		/** The view model metadata */
+		// The view model metadata
 		_merge(this.modelInfo, {
 			name: 'PESSOSEP',
 			area: 'PESSO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PESSOSEP'
+				recalculateFormulas: 'RecalculateFormulas_PESSOSEP',
+				updateFilesTickets: 'UpdateFilesTicketsPESSOSEP'
 			}
 		})
 
@@ -186,38 +187,6 @@ export default class ViewModel extends ViewModelBase
 			description: computed(() => this.Resources.SINCE47259),
 		}).cloneFrom(values?.ValDtultcat))
 		watch(() => this.ValDtultcat.value, (newValue, oldValue) => this.onUpdate('pesso.dtultcat', this.ValDtultcat, newValue, oldValue))
-
-		this.ValCurricul = reactive(new modelFieldType.Document({
-			id: 'ValCurricul',
-			originId: 'ValCurricul',
-			area: 'PESSO',
-			field: 'CURRICUL',
-			properties: computed(() => this.ValCurriculPropertiesVM),
-			documentFK: computed(() => this.ValCurriculfk),
-			currentDocument: computed(() => this.ValCurriculData),
-			description: computed(() => this.Resources.CURRICULUM51182),
-		}).cloneFrom(values?.ValCurricul))
-		watch(() => this.ValCurricul.value, (newValue, oldValue) => this.onUpdate('pesso.curricul', this.ValCurricul, newValue, oldValue))
-
-		this.ValCurriculPropertiesVM = reactive(new modelFieldType.Base({
-			id: 'ValCurriculPropertiesVM',
-			area: 'PESSO',
-			field: 'CURRICULDOCUM',
-			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValCurriculPropertiesVM))
-		this.ValCurriculfk = reactive(new modelFieldType.String({
-			id: 'ValCurriculfk',
-			area: 'PESSO',
-			field: 'CURRICULFK'
-		}).cloneFrom(values?.ValCurriculfk))
-		watch(() => this.ValCurriculfk.value, (newValue, oldValue) => this.onUpdate('pesso.curriculfk', this.ValCurriculfk, newValue, oldValue))
-		this.ValCurriculData = reactive(new modelFieldType.DocumentData({
-			id: 'ValCurriculData',
-			area: 'PESSO',
-			field: 'CURRICULDATA',
-			ignoreFldSubmit: true
-		}).cloneFrom(values?.ValCurriculData))
-		watch(() => this.ValCurriculData.value, (newValue, oldValue) => this.onUpdate('pesso.curriculdata', this.ValCurriculData, newValue, oldValue), { deep: true })
 
 		this.TableCmpnyDesignat = reactive(new modelFieldType.String({
 			type: 'Lookup',

@@ -155,9 +155,8 @@ namespace GenioMVC.ViewModels.Users
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Users model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}

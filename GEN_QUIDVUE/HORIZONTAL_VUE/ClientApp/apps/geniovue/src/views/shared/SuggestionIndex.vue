@@ -178,15 +178,17 @@
 </template>
 
 <script>
-	import { computed } from 'vue'
-	import { mapActions } from 'pinia'
 	import _isEmpty from 'lodash-es/isEmpty'
 	import _merge from 'lodash-es/merge'
+	import { mapActions } from 'pinia'
+	import { computed } from 'vue'
 
-	import { useGenericDataStore } from '@/stores/genericData.js'
-	import { postData } from '@/api/network'
-	import { displayMessage, removeModal } from '@/mixins/genericFunctions.js'
+	import { postData } from '@quidgest/clientapp/network'
+
 	import hardcodedTexts from '@/hardcodedTexts.js'
+	import { displayMessage } from '@quidgest/clientapp/utils/genericFunctions'
+	import { useGenericDataStore } from '@quidgest/clientapp/stores'
+	import { removeModal } from '@/utils/layout'
 
 	export default {
 		name: 'QSuggestionIndex',

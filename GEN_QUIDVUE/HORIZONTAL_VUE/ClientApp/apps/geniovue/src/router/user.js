@@ -1,5 +1,5 @@
-﻿import { useSystemDataStore } from '@/stores/systemData.js'
-import { useAuthDataStore } from '@/stores/authData.js'
+﻿import { useSystemDataStore } from '@quidgest/clientapp/stores'
+import { useAuthDataStore } from '@quidgest/clientapp/stores'
 
 export default function getUserRoutes()
 {
@@ -73,7 +73,7 @@ export default function getUserRoutes()
 			component: () => import('@/views/shared/TicketConfirmError.vue')
 		},
 		{
-			path: '/:culture/RecoverPassword',
+			path: '/:culture/:system/:module/RecoverPassword',
 			name: 'password-recovery',
 			meta: {
 				module: 'Public',
@@ -86,7 +86,7 @@ export default function getUserRoutes()
 			component: () => import('@/views/shared/RecoverPassword.vue')
 		},
 		{
-			path: '/:culture/RecoverPasswordChange',
+			path: '/:culture/:system/:module/RecoverPasswordChange',
 			name: 'password-recovery-change',
 			meta: {
 				module: 'Public',
@@ -99,7 +99,7 @@ export default function getUserRoutes()
 			component: () => import('@/views/shared/RecoverPasswordChange.vue')
 		},
 		{
-			path: '/:culture/RecoverPasswordChangeSuccess',
+			path: '/:culture/:system/:module/RecoverPasswordChangeSuccess',
 			name: 'password-recovery-change-success',
 			meta: {
 				module: 'Public',

@@ -101,8 +101,6 @@ public class PropertyListTests : BaseSeleniumTest
 
         list.ExecuteAction(0, CrudAction.Edit);
 
-        form = new PlistForm(Driver, FORM_MODE.EDIT);
-
         Assert.That(form.PseudPlist.Txtprop.GetValue(), Is.EqualTo(expectedValue));
     }
 

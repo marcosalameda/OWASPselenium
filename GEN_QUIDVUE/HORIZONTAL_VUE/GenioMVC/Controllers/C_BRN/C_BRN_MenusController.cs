@@ -105,7 +105,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL TRN MENU_GET T04C_BRN]/
 
 
-			model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            try
+            {
+			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+            }
+            catch(Exception e)
+            {
+                return JsonERROR(HandleException(e), model);
+            }
 
 
 			return JsonOK(model);

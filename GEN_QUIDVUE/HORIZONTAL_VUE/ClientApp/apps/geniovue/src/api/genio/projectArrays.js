@@ -2,7 +2,7 @@
 import { computed, reactive } from 'vue'
 import _merge from 'lodash-es/merge'
 
-import netAPI from '@/api/network'
+import netAPI from '@quidgest/clientapp/network'
 /* eslint-enable no-unused-vars */
 /**
  * The a_categ array.

@@ -50,7 +50,7 @@
 	import _toLower from 'lodash-es/toLower'
 	import _startsWith from 'lodash-es/startsWith'
 
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 
 	// The texts needed by the component.

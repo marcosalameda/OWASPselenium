@@ -26,7 +26,7 @@
 </template>
 
 <script>
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 	export default {
 		name: 'QProgress',
@@ -129,16 +129,14 @@
 			/**
 			 * A list of classes to apply to the progress bar's container.
 			 */
-			containerClasses()
-			{
+			containerClasses() {
 				return ['q-progress', { 'q-progress--mini': this.mini }]
 			},
 
 			/**
 			 * A list of classes to apply to the progress bar.
 			 */
-			progressClasses()
-			{
+			progressClasses() {
 				return [
 					'q-progress__bar',
 					{
@@ -151,22 +149,19 @@
 			/**
 			 * The percentage of the current progress.
 			 */
-			percentage()
-			{
+			percentage() {
 				return (((this.modelValue - this.min) / (this.max - this.min)) * 100).toFixed(2)
 			},
 
 			/**
 			 * The style to apply to the progress bar.
 			 */
-			progressBarStyle()
-			{
+			progressBarStyle() {
 				const style = {
 					width: `${this.percentage}%`
 				}
 
-				if (this.barColor)
-					style.backgroundColor = this.barColor
+				if (this.barColor) style.backgroundColor = this.barColor
 
 				return style
 			},
@@ -174,16 +169,14 @@
 			/**
 			 * The text to be displayed in the progress bar.
 			 */
-			displayText()
-			{
+			displayText() {
 				return this.text ?? (this.showValue ? this.modelValue : '')
 			},
 
 			/**
 			 * A color to apply to the text of the progress bar, based on the bar's color.
 			 */
-			textColor()
-			{
+			textColor() {
 				return {
 					color: genericFunctions.getReadableTextColor(this.barColor)
 				}

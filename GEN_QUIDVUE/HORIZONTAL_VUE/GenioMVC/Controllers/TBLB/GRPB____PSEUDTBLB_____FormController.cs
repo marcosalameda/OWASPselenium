@@ -394,7 +394,7 @@ namespace GenioMVC.Controllers
 
 		// POST: /Tblb/Grpb____pseudtblb_____SaveEdit
 		[HttpPost]
-		public ActionResult Grpb____pseudtblb_____SaveEdit([FromBody]Grpb____pseudtblb_____ViewModel model)
+		public ActionResult Grpb____pseudtblb_____SaveEdit([FromBody] Grpb____pseudtblb_____ViewModel model)
 		{
 			var eventSink = new EventSink()
 			{
@@ -412,6 +412,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class Grpb____pseudtblb____DocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Grpb____pseudtblb_____ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsGrpb____pseudtblb____([FromBody] Grpb____pseudtblb____DocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

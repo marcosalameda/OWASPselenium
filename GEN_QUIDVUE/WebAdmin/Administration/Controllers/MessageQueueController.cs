@@ -28,7 +28,8 @@ namespace Administration.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            var model = new Models.MessageQueueModel();            
+            var model = new Models.MessageQueueModel();
+            //model.ResultMsg = TempData.ContainsKey("resultMsg") ? (string)TempData["resultMsg"] : ""; //TODO: MH - verificar se é preciso
 
             try
             {

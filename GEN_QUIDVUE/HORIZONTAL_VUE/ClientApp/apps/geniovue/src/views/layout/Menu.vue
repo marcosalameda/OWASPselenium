@@ -18,7 +18,7 @@
 	</ul>
 
 	<menu-search-box
-		v-if="layoutConfig.MenuSearchEnable && hasMenus || secondLevelMenu"
+		v-if="$app.layout.MenuSearchEnable && hasMenus || secondLevelMenu"
 		v-model:collapsed="menuSearchCollapsed" />
 </template>
 
@@ -77,7 +77,7 @@
 			{
 				const classes = ['navbar-nav', 'nav']
 
-				if (this.layoutConfig.MenuAlign === 'right')
+				if (this.$app.layout.MenuAlign === 'right')
 					classes.push('ml-auto')
 				else
 				{

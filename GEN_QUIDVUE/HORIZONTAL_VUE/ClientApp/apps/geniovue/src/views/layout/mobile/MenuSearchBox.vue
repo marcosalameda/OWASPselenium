@@ -1,6 +1,6 @@
 ﻿<template>
 	<div
-		v-if="layoutConfig.MenuSearchEnable && hasMenus"
+		v-if="$app.layout.MenuSearchEnable && hasMenus"
 		class="n-sidebar__section menu-search">
 		<q-input-group size="block">
 			<q-text-field
@@ -27,7 +27,7 @@
 <script>
 	import { computed } from 'vue'
 
-	import { fetchData } from '@/api/network'
+	import { fetchData } from '@quidgest/clientapp/network'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 

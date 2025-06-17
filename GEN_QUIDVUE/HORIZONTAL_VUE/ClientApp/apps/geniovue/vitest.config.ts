@@ -8,7 +8,7 @@ export default defineConfig((configEnv) =>
 			test: {
 				include: ['**/*.spec.{js,ts}'],
 				globals: true,
-				setupFiles: ['./tests/matchers/index.js'],
+				setupFiles: ['./tests/global.mocks.js', './tests/matchers/index.js'],
 				environment: 'happy-dom'
 			}
 		})

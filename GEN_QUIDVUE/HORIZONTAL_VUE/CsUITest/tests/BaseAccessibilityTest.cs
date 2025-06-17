@@ -15,8 +15,7 @@ public class BaseAccessibilityTest : BaseSeleniumTest
 	/// </summary>
 	/// <param name="pageName">Name of the page and JSON file to log the results to</param>
 	/// <param name="cssSelector">CSS selector to specify a part of the DOM to do the accessibility scan</param>
-	/// <param name="violationsAsInfo">Whether to log violations as "Info" messages ("Warning" messages if false)</param>
-    public void AccessibilityScanAndLog(string pageName, string cssSelector = null, bool violationsAsInfo = false)
+    public void AccessibilityScanAndLog(string pageName, string cssSelector = null)
     {
         // Accessibility scan
         AxeBuilder axeBuilder = new AxeBuilder(Driver)
@@ -58,14 +57,13 @@ public class BaseAccessibilityTest : BaseSeleniumTest
         }
 
         //< Log results as items
-        string violationMessageType = violationsAsInfo ? "Info" : "Warning";
 
         // Log violations
         foreach (AxeResultItem violation in axeResult.Violations)
         {
             foreach (AxeResultNode node in violation.Nodes)
             {
-                Console.WriteLine(violationMessageType + ": " + violation.Help);
+                Console.WriteLine(MessageType.Warning + ": " + violation.Help);
                 Console.WriteLine("\t" + violation.Description);
                 Console.WriteLine("\tURL:\t" + axeResult.Url);
                 Console.WriteLine("\tTarget:\t" + node.Target);
@@ -83,7 +81,7 @@ public class BaseAccessibilityTest : BaseSeleniumTest
         {
             foreach (AxeResultNode node in incomplete.Nodes)
             {
-                Console.WriteLine("Info: (Needs manual review) " + incomplete.Help);
+                Console.WriteLine(MessageType.Warning + ": (Needs manual review) " + incomplete.Help);
                 Console.WriteLine("\t" + incomplete.Description);
                 Console.WriteLine("\tURL:\t" + axeResult.Url);
                 Console.WriteLine("\tTarget:\t" + node.Target);

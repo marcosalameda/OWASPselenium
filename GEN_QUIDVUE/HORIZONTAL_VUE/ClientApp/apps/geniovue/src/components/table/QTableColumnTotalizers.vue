@@ -20,7 +20,7 @@
 	</tr>
 </template>
 <script>
-	import genericFunctions from '@/mixins/genericFunctions'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import { getColumnTotalValueDisplay } from '@/mixins/listFunctions'
 	import isEmpty from 'lodash-es/isEmpty'
 

@@ -73,21 +73,21 @@
 	import { computed } from 'vue'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import { QEventEmitter } from '@/api/global/eventBus.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 
 	import MarkItemsMenuHandlers from '@/mixins/markItemsMenuHandlers.js'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import formFunctions from '@/mixins/formFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import controlClass from '@/mixins/fieldControl.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
 
-	import netAPI from '@/api/network'
+	import netAPI from '@quidgest/clientapp/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import qEnums from '@quidgest/clientapp/constants/enums'
 	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_231ViewModel.js'
@@ -391,7 +391,7 @@
 								defaultValue: '1'
 							},
 						],
-						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
+						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY', 'changed-PESS1', 'changed-DECOM'],
 						uuid: '1ef47b5e-55ef-4a74-adc4-a282edf007b4',
 						allSelectedRows: 'false',
 						headerLevel: 1,

@@ -536,7 +536,7 @@ namespace GenioMVC.Controllers
 
 		// POST: /Anexd/Anexd_SaveEdit
 		[HttpPost]
-		public ActionResult Anexd_SaveEdit([FromBody]Anexd_ViewModel model)
+		public ActionResult Anexd_SaveEdit([FromBody] Anexd_ViewModel model)
 		{
 			var eventSink = new EventSink()
 			{
@@ -554,6 +554,22 @@ namespace GenioMVC.Controllers
 			};
 
 			return GenericHandlePostFormApply(eventSink, model);
+		}
+
+		public class AnexdDocumValidateTickets : RequestDocumValidateTickets
+		{
+			public Anexd_ViewModel Model { get; set; }
+		}
+
+		/// <summary>
+		/// Checks if the model is valid and, if so, updates the specified tickets with write permissions
+		/// </summary>
+		/// <param name="requestModel">The request model with a list of tickets and the form model</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult UpdateFilesTicketsAnexd([FromBody] AnexdDocumValidateTickets requestModel)
+		{
+			requestModel.Model.Init(UserContext.Current);
+			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

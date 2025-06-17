@@ -98,7 +98,7 @@
 			 */
 			showContent()
 			{
-				return !this.isFullScreenPage && (this.userIsLoggedIn || this.isPublicRoute || this.layoutConfig.LoginStyle !== 'single_page')
+				return !this.isFullScreenPage && (this.userIsLoggedIn || this.isPublicRoute || this.$app.layout.LoginStyle !== 'single_page')
 			},
 
 			/**
@@ -113,11 +113,11 @@
 
 				if (this.rightSidebarIsCollapsed)
 					classes.push('right-sidebar-collapse')
-					
+
 				//< Mobile
 				if (!this.sidebarIsVisible ||
 					this.isFullScreenPage ||
-					!this.userIsLoggedIn && !this.isPublicRoute && this.layoutConfig.LoginStyle === 'single_page' ||
+					!this.userIsLoggedIn && !this.isPublicRoute && this.$app.layout.LoginStyle === 'single_page' ||
 					Object.keys(this.system.availableModules).length === 0)
 					classes.push('sidebar-closed')
 
@@ -130,7 +130,7 @@
 
 				return classes
 			},
-			
+
 			maintenanceMessage() {
 				return this.maintenance.isScheduled ? this.texts.maintenanceScheduled : this.texts.maintenanceActive
 			},
@@ -157,10 +157,10 @@
 			 */
 			showHeaderText(userIsLoggedIn)
 			{
-				if (this.isEmpty(this.headerText) && this.layoutConfig.MenuStyle === 'double_navbar' && userIsLoggedIn)
+				if (this.isEmpty(this.headerText) && this.$app.layout.MenuStyle === 'double_navbar' && userIsLoggedIn)
 					this.setCustomHeaderText()
 			},
-			
+
 			/**
 			 * Collapse the mobile menu on bigger screen sizes.
 			 */
@@ -173,15 +173,15 @@
 				}
 			}
 		},
-		
+
 		mounted() {
 			// Collapse mobile menu initially
 			this.collapseSidebar()
-			
+
 			// Add resize handler to collapse mobile menu on bigger screen sizes
 			window.addEventListener("resize", this.checkCollapseMobileMenu)
 		},
-		
+
 		unmounted() {
 			// Remove resize handler to collapse mobile menu on bigger screen sizes
 			window.removeEventListener("resize", this.checkCollapseMobileMenu)

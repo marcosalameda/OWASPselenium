@@ -73,7 +73,7 @@
 <script>
 	import { defineAsyncComponent } from 'vue'
 
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 	// Default texts
 	const DEFAULT_TEXTS = {

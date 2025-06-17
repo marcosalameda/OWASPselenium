@@ -5,23 +5,20 @@
 				<div class="f-login__background">
 					<div class="f-login__brand">
 						<img
-							:src="`${system.resourcesPath}f-login__brand.png?v=${genio.buildVersion}`"
+							:src="`${$app.resourcesPath}f-login__brand.png?v=${$app.genio.buildVersion}`"
 							alt="" />
 						<p>{{ texts.appName }}</p>
-						
+
 						<h5 class="q-logon-text">{{ texts.accountCreated }}</h5>
 					</div>
 
 					<p class="q-successful-registration">{{ texts.thanksForRegister }}</p>
 
-
-
-			
 					<q-router-link
 						class="f-login__link"
-						:link="{ 
+						:link="{
 							name: 'main',
-							params: { culture: system.currentLang } 
+							params: { culture: system.currentLang }
 						}">
 						{{ texts.backToLogin }}
 					</q-router-link>
@@ -35,7 +32,7 @@
 	import { computed } from 'vue'
 	import { mapState } from 'pinia'
 
-	import { useSystemDataStore } from '@/stores/systemData.js'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 
@@ -66,8 +63,7 @@
 
 		computed: {
 			...mapState(useSystemDataStore, [
-				'system',
-				'genio'
+				'system'
 			])
 		}
 	}

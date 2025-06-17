@@ -1,13 +1,13 @@
-﻿import { markRaw, readonly } from 'vue'
-import { v4 as uuidv4 } from 'uuid'
-import _forEach from 'lodash-es/forEach'
+﻿import _forEach from 'lodash-es/forEach'
 import _get from 'lodash-es/get'
 import _has from 'lodash-es/has'
 import _isEmpty from 'lodash-es/isEmpty'
 import _toPath from 'lodash-es/toPath'
+import { v4 as uuidv4 } from 'uuid'
+import { markRaw, readonly } from 'vue'
 
-import { QEventEmitter } from '@/api/global/eventBus.js'
-import modelFieldType from '@/mixins/formModelFieldTypes.js'
+import { Base, PrimaryKey } from '@quidgest/clientapp/models/fields'
+import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
 
 import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
 
@@ -128,7 +128,7 @@ export default class ViewModelBase
 		{
 			const fieldObj = this[modelField]
 
-			if (fieldObj instanceof modelFieldType.Base &&
+			if (fieldObj instanceof Base &&
 				fieldObj.type !== 'Lookup' &&
 				fieldObj.ignoreFldSubmit !== true)
 			{
@@ -154,7 +154,7 @@ export default class ViewModelBase
 		{
 			const fieldObj = this[modelField]
 
-			if (!(fieldObj instanceof modelFieldType.Base) ||
+			if (!(fieldObj instanceof Base) ||
 				!fieldObj.hasSameValue(otherModel[modelField]?.value))
 				return false
 		}
@@ -177,7 +177,7 @@ export default class ViewModelBase
 	hydrate(rawData)
 	{
 		for (let modelField in this)
-			if (this[modelField] instanceof modelFieldType.Base)
+			if (this[modelField] instanceof Base)
 				this.hydrateField(modelField, rawData)
 
 		// Global tables
@@ -198,7 +198,7 @@ export default class ViewModelBase
 	{
 		const fieldObj = this[modelField]
 
-		if (!(fieldObj instanceof modelFieldType.Base) || fieldObj.isReady || !_has(rawData, modelField))
+		if (!(fieldObj instanceof Base) || fieldObj.isReady || !_has(rawData, modelField))
 			return
 
 		let rawDataFieldValue = rawData[modelField]
@@ -242,7 +242,7 @@ export default class ViewModelBase
 	onUpdate(modelFieldName, modelField, newValue, oldValue)
 	{
 		// Foreign keys will also enter here, since it's a sub-class of primary key.
-		if (modelField instanceof modelFieldType.PrimaryKey)
+		if (modelField instanceof PrimaryKey)
 		{
 			if (typeof this.externalCallbacks.setFormKey === 'function')
 				this.externalCallbacks.setFormKey(modelField)
@@ -295,7 +295,7 @@ export default class ViewModelBase
 		const path = typeof key === 'string' ? _toPath(key) : key
 		const field = _get(this, path.shift())
 
-		if (field instanceof modelFieldType.Base)
+		if (field instanceof Base)
 			field.setServerErrorMessages(errors, path)
 		else
 			this.serverErrorMessages.push(...errors)
@@ -321,7 +321,7 @@ export default class ViewModelBase
 		const path = typeof key === 'string' ? _toPath(key) : key
 		const field = _get(this, path.shift())
 
-		if (field instanceof modelFieldType.Base)
+		if (field instanceof Base)
 			field.setServerWarningMessages(warnings, path)
 		else
 			this.serverWarningMessages.push(...warnings)

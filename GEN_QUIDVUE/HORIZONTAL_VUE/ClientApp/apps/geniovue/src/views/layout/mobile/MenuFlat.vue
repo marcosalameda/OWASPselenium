@@ -104,7 +104,7 @@
 		computed: {
 			menuColor()
 			{
-				return this.layoutConfig.MenuBackgroundColor === 'light' ? 'sidebar-light' : ''
+				return this.$app.layout.MenuBackgroundColor === 'light' ? 'sidebar-light' : ''
 			},
 
 			moduleCount()
@@ -161,7 +161,7 @@
 			{
 				/**
 				 * If the nav bar is being closed, set the actual value for visibility to false.
-				 * It must be done here, after the transition ends 
+				 * It must be done here, after the transition ends
 				 * so it doesn't disappear before the transition is done.
 				 */
 				if (!this.sidebarIsVisible)

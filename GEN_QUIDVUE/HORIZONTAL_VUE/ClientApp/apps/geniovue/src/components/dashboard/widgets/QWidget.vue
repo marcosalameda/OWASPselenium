@@ -72,7 +72,7 @@
 </template>
 
 <script>
-	import { validateTexts } from '@/mixins/genericFunctions.js'
+	import { validateTexts } from '@quidgest/clientapp/utils/genericFunctions'
 
 	// The texts needed by the component.
 	const DEFAULT_TEXTS = {
@@ -367,12 +367,18 @@
 			},
 
 			/**
-			 * Refreshes the widget's data and increments a version key to assist with DOM updates.
+			 * Refreshes the widget's data.
+			 * Custom widgets reload by changing a version key to force the widget form to update
+			 * Other widgets fetch the data normally.
 			 */
 			refresh()
 			{
-				this.fetchWidgetData()
-				this.domVersionKey++
+				if (this.widget.Type !== 2 && this.widget.Type !== 3) {
+					this.fetchWidgetData()
+				}
+				else {
+					this.domVersionKey++
+				}
 			}
 		},
 

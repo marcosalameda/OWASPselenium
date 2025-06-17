@@ -209,10 +209,10 @@ namespace GenioMVC.ViewModels.Rules
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Rules model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
+			Models.Rules model = Model;
 			Models.Rules areaRules = model;
 			try
 			{

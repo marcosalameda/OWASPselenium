@@ -49,7 +49,7 @@
 			</div>
 
 			<q-anchor-container-horizontal
-				v-if="layoutConfig.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
+				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
 				@focus-control="(...args) => focusControl(...args)" />
@@ -202,16 +202,17 @@
 
 	import FormHandlers from '@/mixins/formHandlers.js'
 	import formFunctions from '@/mixins/formFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
+	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import fieldControlClass from '@/mixins/fieldControl.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import hardcodedTexts from '@/hardcodedTexts.js'
-	import netAPI from '@/api/network'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import netAPI from '@quidgest/clientapp/network'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
@@ -586,6 +587,140 @@
 						controlLimits: [
 						],
 					}, this),
+					ADDRE___ADDREADDRDIST: new fieldControlClass.StringControl({
+						modelField: 'ValAddressdistrict',
+						valueChangeEvent: 'fieldChange:addre.addressdistrict',
+						id: 'ADDRE___ADDREADDRDIST',
+						name: 'ADDRDIST',
+						size: 'xxlarge',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._110050187),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1100_VERBOSE38633),
+							}
+						},
+						label: computed(() => this.Resources.ADDRESS_DISTRICT48524),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxLength: 50,
+						labelId: 'label_ADDRE___ADDREADDRDIST',
+						controlLimits: [
+						],
+					}, this),
+					ADDRE___ADDREADDRSTAT: new fieldControlClass.StringControl({
+						modelField: 'ValAddressstate',
+						valueChangeEvent: 'fieldChange:addre.addressstate',
+						id: 'ADDRE___ADDREADDRSTAT',
+						name: 'ADDRSTAT',
+						size: 'xxlarge',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._110152596),
+							},
+						},
+						label: computed(() => this.Resources.ADDRESS_STATE16863),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxLength: 50,
+						labelId: 'label_ADDRE___ADDREADDRSTAT',
+						controlLimits: [
+						],
+					}, this),
+					ADDRE___ADDREADDRPCOD: new fieldControlClass.StringControl({
+						modelField: 'ValAddresspostalcode',
+						valueChangeEvent: 'fieldChange:addre.addresspostalcode',
+						id: 'ADDRE___ADDREADDRPCOD',
+						name: 'ADDRPCOD',
+						size: 'xxlarge',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._110253217),
+							},
+						},
+						label: computed(() => this.Resources.ADDRESS_POSTAL_CODE41631),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxLength: 50,
+						labelId: 'label_ADDRE___ADDREADDRPCOD',
+						controlLimits: [
+						],
+					}, this),
+					ADDRE___ADDREADDRCOUN: new fieldControlClass.StringControl({
+						modelField: 'ValAddresscountry',
+						valueChangeEvent: 'fieldChange:addre.addresscountry',
+						id: 'ADDRE___ADDREADDRCOUN',
+						name: 'ADDRCOUN',
+						size: 'xxlarge',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._110349746),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1103_VERBOSE48229),
+							}
+						},
+						label: computed(() => this.Resources.ADDRESS_COUNTRY56159),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						maxLength: 50,
+						labelId: 'label_ADDRE___ADDREADDRCOUN',
+						controlLimits: [
+						],
+					}, this),
+					ADDRE___ADDREPERISTAR: new fieldControlClass.DateControl({
+						modelField: 'ValPeriodstart',
+						valueChangeEvent: 'fieldChange:addre.periodstart',
+						id: 'ADDRE___ADDREPERISTAR',
+						name: 'PERISTAR',
+						size: 'medium',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._110650477),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1106_VERBOSE30137),
+							}
+						},
+						label: computed(() => this.Resources.PERIOD_START07901),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						format: 'dateTime',
+						controlLimits: [
+						],
+					}, this),
+					ADDRE___ADDREPERIEND_: new fieldControlClass.DateControl({
+						modelField: 'ValPeriodend',
+						valueChangeEvent: 'fieldChange:addre.periodend',
+						id: 'ADDRE___ADDREPERIEND_',
+						name: 'PERIEND',
+						size: 'medium',
+						helpControl: {
+							shortHelp: {
+								type: 'Tooltip',
+								text: computed(() => this.Resources._110751102),
+							},
+							detailedHelp: {
+								type: 'Popover',
+								text: computed(() => this.Resources._1107_VERBOSE24939),
+							}
+						},
+						label: computed(() => this.Resources.PERIOD_END31576),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						format: 'dateTime',
+						controlLimits: [
+						],
+					}, this),
 				},
 
 				model: new FormViewModel(this, {
@@ -611,6 +746,14 @@
 					Addre: {
 						get ValAddresscity() { return vm.model.ValAddresscity.value },
 						set ValAddresscity(value) { vm.model.ValAddresscity.updateValue(value) },
+						get ValAddresscountry() { return vm.model.ValAddresscountry.value },
+						set ValAddresscountry(value) { vm.model.ValAddresscountry.updateValue(value) },
+						get ValAddressdistrict() { return vm.model.ValAddressdistrict.value },
+						set ValAddressdistrict(value) { vm.model.ValAddressdistrict.updateValue(value) },
+						get ValAddresspostalcode() { return vm.model.ValAddresspostalcode.value },
+						set ValAddresspostalcode(value) { vm.model.ValAddresspostalcode.updateValue(value) },
+						get ValAddressstate() { return vm.model.ValAddressstate.value },
+						set ValAddressstate(value) { vm.model.ValAddressstate.updateValue(value) },
 						get ValAddresstext() { return vm.model.ValAddresstext.value },
 						set ValAddresstext(value) { vm.model.ValAddresstext.updateValue(value) },
 						get ValAddresstype() { return vm.model.ValAddresstype.value },
@@ -722,12 +865,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				applyForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets(true)
 
-				if (applyForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					applyForm = results.every((e) => e === true)
+					applyForm = await this.model.setDocumentChanges()
+
+					if (applyForm)
+					{
+						const results = await this.model.saveDocuments()
+						applyForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-apply-form')
@@ -770,12 +918,17 @@
 				for (let trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				saveForm = await this.model.setDocumentChanges()
+				const canSetDocums = await this.model.updateFilesTickets()
 
-				if (saveForm)
+				if (canSetDocums)
 				{
-					const results = await this.model.saveDocuments()
-					saveForm = results.every((e) => e === true)
+					saveForm = await this.model.setDocumentChanges()
+
+					if (saveForm)
+					{
+						const results = await this.model.saveDocuments()
+						saveForm = results.every((e) => e === true)
+					}
 				}
 
 				this.emitEvent('before-save-form')

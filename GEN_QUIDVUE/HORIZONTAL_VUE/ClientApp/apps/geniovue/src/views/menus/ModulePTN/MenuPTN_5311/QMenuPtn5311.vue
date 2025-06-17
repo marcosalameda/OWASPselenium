@@ -37,21 +37,20 @@
 	import { computed } from 'vue'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import { QEventEmitter } from '@/api/global/eventBus.js'
-	import { useSystemDataStore } from '@/stores/systemData.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
+	import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
+	import { useSystemDataStore } from '@quidgest/clientapp/stores'
+	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import GenericMenuHandlers from '@/mixins/genericMenuHandlers.js'
 	import formControlClass from '@/mixins/formControl.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import formFunctions from '@/mixins/formFunctions.js'
-	import modelFieldType from '@/mixins/formModelFieldTypes.js'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 
-	import netAPI from '@/api/network'
+	import netAPI from '@quidgest/clientapp/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
+	import qEnums from '@quidgest/clientapp/constants/enums'
 	/* eslint-enable no-unused-vars */
 
 	const requiredTextResources = ['QMenuPTN_5311', 'hardcoded', 'messages']
@@ -89,8 +88,6 @@
 					order: '5311',
 					isPopup: true
 				},
-
-				resourcesPath: useSystemDataStore().system.resourcesPath, // Used for file format images
 
 				/** Limits */
 				menuLimits: [
@@ -146,7 +143,7 @@
 			 * Gets the path for the image associated to a given file extension.
 			 */
 			getImagePath(format) {
-				return `${this.resourcesPath}report_${format}.png`
+				return `${this.$app.resourcesPath}report_${format}.png`
 			},
 
 			/**
@@ -168,7 +165,7 @@
 				const preview = false
 				this.navigateToReport('Pess1', 'PTN_Report_5311', { format: format }, preview)
 					.then((success) => {
-						if (success) 
+						if (success)
 							this.goBack()
 						else
 							genericFunctions.displayMessage(this.Resources.PEDIMOS_DESCULPA__OC63848, 'error')

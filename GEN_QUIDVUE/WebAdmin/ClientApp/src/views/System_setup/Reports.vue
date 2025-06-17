@@ -4,7 +4,7 @@
 			id="system_setup_reporting_container"
 			width="block"
 			class="q-card--admin-default"
-			:title="resources.reportsTitle">
+			:title="systemConfigTexts.reportsTitle">
 			<q-row-container>
 				<row>
 					<q-card
@@ -14,22 +14,22 @@
 							<div class="q-help__info-banner">
 								<div class="q-help__info-banner-header">
 									<q-icon icon="information-outline" />
-									<h5>{{ resources.reportsPathLabel }}</h5>
+									<h5>{{ systemConfigTexts.reportsPathLabel }}</h5>
 								</div>
 								<div class="q-help__info-banner-body">
 									<span style="white-space: pre-line">
-										{{ resources.reportsPathInfo }}<br>
-										<b>{{ resources.crystalReportsLabel }}</b><br>
-										{{ resources.crystalReportsInfo }}<br>
-										<b>{{ resources.reportingServicesLabel }}</b><br>
-										{{ resources.reportingServicesInfo }}<br>
+										{{ systemConfigTexts.reportsPathInfo }}<br>
+										<b>{{ systemConfigTexts.crystalReportsLabel }}</b><br>
+										{{ systemConfigTexts.crystalReportsInfo }}<br>
+										<b>{{ systemConfigTexts.reportingServicesLabel }}</b><br>
+										{{ systemConfigTexts.reportingServicesInfo }}<br>
 									</span>
 								</div>
 							</div>
 							<q-control-wrapper class="control-row-group">
 								<q-text-field
 									v-model="model.pathReports"
-									:label="resources.reportsPathLabel"
+									:label="systemConfigTexts.reportsPathLabel"
 									size="xlarge" />
 							</q-control-wrapper>
 						</q-row-container>
@@ -38,7 +38,7 @@
 				<row>
 					<q-card
 						class="q-card--admin-border-top q-card--admin-compact"
-						:title="resources.sqlServerReportingServicesTitle"
+						:title="systemConfigTexts.sqlServerReportingServicesTitle"
 						width="block">
 						<q-row-container>
 							<q-text-field
@@ -51,7 +51,7 @@
 								size="xlarge" />
 							<q-checkbox
 								v-model="model.isLocalReports"
-								:label="resources.isLocalReportsLabel" />
+								:label="systemConfigTexts.isLocalReportsLabel" />
 							<q-text-field
 								v-model="model.ssrsServerDomain"
 								:label="hardcodedTexts.domain"
@@ -78,6 +78,7 @@
 	// @ is an alias to /src
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
+	import { SystemConfigTexts } from '@/resources/viewResources.ts';
 	import { texts } from '@/resources/hardcodedTexts.ts';
 
 	export default {
@@ -87,14 +88,13 @@
 			model: {
 				required: true
 			},
-			resources: {
-				type: Object,
-				required: true
-			}
 		},
 		mixins: [reusableMixin],
 
 		computed: {
+			systemConfigTexts() {
+				return new SystemConfigTexts(this)
+			},
 			hardcodedTexts() {
 				return {
 					domain: this.Resources[texts.domain],

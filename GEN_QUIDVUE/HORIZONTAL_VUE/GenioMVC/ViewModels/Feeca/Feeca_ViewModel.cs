@@ -31,34 +31,16 @@ namespace GenioMVC.ViewModels.Feeca
 
 		#region Foreign keys
 		/// <summary>
-		/// Title: "" | Type: "CE"
+		/// Title: "Description" | Type: "CE"
 		/// </summary>
-		[ValidateSetAccess]
 		public string ValCodflds { get; set; }
 
 		#endregion
 		/// <summary>
-		/// Title: "Text Enumeration" | Type: "AC"
+		/// Title: "Description" | Type: "MO"
 		/// </summary>
 		[ValidateSetAccess]
-		public string FldsValClass 
-		{
-			get
-			{
-				return funcFldsValClass != null ? funcFldsValClass() : _auxFldsValClass;
-			}
-			set { funcFldsValClass = () => value; }
-		}
-
-		[JsonIgnore]
-		public Func<string> funcFldsValClass { get; set; }
-
-		private string _auxFldsValClass { get; set; }
-		/// <summary>
-		/// Title: "" | Type: "PSEUD"
-		/// </summary>
-		[JsonIgnore]
-		public SelectList List_FldsValClass { get; set; }
+		public TableDBEdit<GenioMVC.Models.Flds> TableFldsDescrip { get; set; }
 		/// <summary>
 		/// Title: "Feedback" | Type: "C"
 		/// </summary>
@@ -211,9 +193,8 @@ namespace GenioMVC.ViewModels.Feeca
 			return result;
 		}
 
-		protected override StatusMessage EvaluateWriteConditions(bool isApply)
+		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
-			Models.Feeca model = Model;
 			StatusMessage result = new StatusMessage(Status.OK, "");
 			return result;
 		}
@@ -239,7 +220,6 @@ namespace GenioMVC.ViewModels.Feeca
 			try
 			{
 				ValCodflds = ViewModelConversion.ToString(m.ValCodflds);
-				funcFldsValClass = () => ViewModelConversion.ToString(m.Flds.ValClass);
 				ValFeedback = ViewModelConversion.ToString(m.ValFeedback);
 				funcFldsValAttach = () => ViewModelConversion.ToString(m.Flds.ValAttach);
 				FldsValAttachfk = ViewModelConversion.ToString(m.Flds.ValAttachfk);
@@ -270,6 +250,7 @@ namespace GenioMVC.ViewModels.Feeca
 
 			try
 			{
+				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
 				m.ValFeedback = ViewModelConversion.ToString(ValFeedback);
 				m.ValCodfeeca = ViewModelConversion.ToString(ValCodfeeca);
 
@@ -280,7 +261,6 @@ namespace GenioMVC.ViewModels.Feeca
 				if (!HasDisabledUserValuesSecurity)
 					return;
 
-				m.ValCodflds = ViewModelConversion.ToString(ValCodflds);
 			}
 			catch (Exception)
 			{
@@ -305,6 +285,9 @@ namespace GenioMVC.ViewModels.Feeca
 
 				switch (fullFieldName)
 				{
+					case "feeca.codflds":
+						this.ValCodflds = ViewModelConversion.ToString(_value);
+						break;
 					case "feeca.feedback":
 						this.ValFeedback = ViewModelConversion.ToString(_value);
 						break;
@@ -415,6 +398,7 @@ namespace GenioMVC.ViewModels.Feeca
 			// Add characteristics
 			Characs = new List<string>();
 
+			Load_Feeca___flds_descrip_(qs, lazyLoad);
 // USE /[MANUAL GQT VIEWMODEL_LOADPARTIAL FEECA]/
 		}
 
@@ -467,17 +451,208 @@ namespace GenioMVC.ViewModels.Feeca
 		{
 		}
 
+		/// <summary>
+		/// TableFldsDescrip -> (DB)
+		/// </summary>
+		/// <param name="qs"></param>
+		/// <param name="lazyLoad">Lazy loading of dropdown items</param>
+		public void Load_Feeca___flds_descrip_(NameValueCollection qs, bool lazyLoad = false)
+		{
+			bool feeca___flds_descrip_DoLoad = true;
+			CriteriaSet feeca___flds_descrip_Conds = CriteriaSet.And();
+			{
+				object hValue = Navigation.GetValue("flds", true);
+				if (hValue != null && !(hValue is Array) && !string.IsNullOrEmpty(Convert.ToString(hValue)))
+				{
+					feeca___flds_descrip_Conds.Equal(CSGenioAflds.FldCodflds, hValue);
+					this.ValCodflds = DBConversion.ToString(hValue);
+				}
+			}
+
+			TableFldsDescrip = new TableDBEdit<Models.Flds>
+			{
+				IsLazyLoad = lazyLoad
+			};
+
+			if (lazyLoad)
+			{
+				if (Navigation.CurrentLevel.GetEntry("RETURN_flds") != null)
+				{
+					this.ValCodflds = Navigation.GetStrValue("RETURN_flds");
+					Navigation.CurrentLevel.SetEntry("RETURN_flds", null);
+				}
+				FillDependant_FeecaTableFldsDescrip(lazyLoad);
+				return;
+			}
+
+			if (feeca___flds_descrip_DoLoad)
+			{
+				List<ColumnSort> sorts = new List<ColumnSort>();
+				ColumnSort requestedSort = GetRequestSort(TableFldsDescrip, "sTableFldsDescrip", "dTableFldsDescrip", qs, "flds");
+				if (requestedSort != null)
+					sorts.Add(requestedSort);
+
+				string query = "";
+				if (!string.IsNullOrEmpty(qs["TableFldsDescrip_tableFilters"]))
+					TableFldsDescrip.TableFilters = bool.Parse(qs["TableFldsDescrip_tableFilters"]);
+				else
+					TableFldsDescrip.TableFilters = false;
+
+				query = qs["qTableFldsDescrip"];
+
+				//RS 26.07.2016 O preenchimento da lista de ajuda dos Dbedits passa a basear-se apenas no campo do próprio DbEdit
+				// O interface de pesquisa rápida não fica coerente quando se visualiza apenas uma coluna mas a pesquisa faz matching com 5 ou 6 colunas diferentes
+				//  tornando confuso to o user porque determinada row foi devolvida quando o Qresult não mostra como o matching foi feito
+				CriteriaSet search_filters = CriteriaSet.And();
+				if (!string.IsNullOrEmpty(query))
+				{
+					search_filters.Like(CSGenioAflds.FldDescrip, query + "%");
+				}
+				feeca___flds_descrip_Conds.SubSet(search_filters);
+
+				string tryParsePage = qs["pTableFldsDescrip"] != null ? qs["pTableFldsDescrip"].ToString() : "1";
+				int page = !string.IsNullOrEmpty(tryParsePage) ? int.Parse(tryParsePage) : 1;
+				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
+				int offset = (page - 1) * numberItems;
+
+				FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldDescrip, CSGenioAflds.FldZzstate };
+
+// USE /[MANUAL GQT OVERRQ FEECA_FLDSDESCRIP]/
+
+				// Limitation by Zzstate
+				/*
+					Records that are currently being inserted or duplicated will also be included.
+					Client-side persistence will try to fill the "text" value of that option.
+				*/
+				if (Navigation.checkFormMode("flds", FormMode.New) || Navigation.checkFormMode("flds", FormMode.Duplicate))
+					feeca___flds_descrip_Conds.SubSet(CriteriaSet.Or()
+						.Equal(CSGenioAflds.FldZzstate, 0)
+						.Equal(CSGenioAflds.FldCodflds, Navigation.GetStrValue("flds")));
+				else
+					feeca___flds_descrip_Conds.Criterias.Add(new Criteria(new ColumnReference(CSGenioAflds.FldZzstate), CriteriaOperator.Equal, 0));
+
+				FieldRef firstVisibleColumn = new FieldRef("flds", "descrip");
+				ListingMVC<CSGenioAflds> listing = Models.ModelBase.Where<CSGenioAflds>(m_userContext, false, feeca___flds_descrip_Conds, fields, offset, numberItems, sorts, "LED_FEECA___FLDS_DESCRIP_", true, false, firstVisibleColumn: firstVisibleColumn);
+
+				TableFldsDescrip.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+				TableFldsDescrip.Query = query;
+				TableFldsDescrip.Elements = listing.RowsForViewModel<GenioMVC.Models.Flds>((r) => new GenioMVC.Models.Flds(m_userContext, r, true, _fieldsToSerialize_FEECA___FLDS_DESCRIP_));
+
+				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
+				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
+				if (Navigation.CurrentLevel.GetEntry("RETURN_flds") != null)
+				{
+					this.ValCodflds = Navigation.GetStrValue("RETURN_flds");
+					Navigation.CurrentLevel.SetEntry("RETURN_flds", null);
+				}
+
+				TableFldsDescrip.List = new SelectList(TableFldsDescrip.Elements.ToSelectList(x => x.ValDescrip, x => x.ValCodflds,  x => x.ValCodflds == this.ValCodflds), "Value", "Text", this.ValCodflds);
+				FillDependant_FeecaTableFldsDescrip();
+			}
+		}
+
+		/// <summary>
+		/// Get Dependant fields values -> TableFldsDescrip (DB)
+		/// </summary>
+		/// <param name="PKey">Primary Key of Flds</param>
+		public ConcurrentDictionary<string, object> GetDependant_FeecaTableFldsDescrip(string PKey)
+		{
+			FieldRef[] refDependantFields = [CSGenioAflds.FldCodflds, CSGenioAflds.FldDescrip, CSGenioAflds.FldAttach, CSGenioAflds.FldNpassage];
+
+			var returnEmptyDependants = false;
+			CriteriaSet wherecodition = CriteriaSet.And();
+
+			// Return default values
+			if (GenFunctions.emptyG(PKey) == 1)
+				returnEmptyDependants = true;
+
+			// Check if the limit(s) is filled if exists
+			// - - - - - - - - - - - - - - - - - - - - -
+
+			if (returnEmptyDependants)
+				return GetViewModelFieldValues(refDependantFields);
+
+			PersistentSupport sp = m_userContext.PersistentSupport;
+			User u = m_userContext.User;
+
+			CSGenioAflds tempArea = new(u);
+
+			// Fields to select
+			SelectQuery querySelect = new();
+			querySelect.PageSize(1);
+			foreach (FieldRef field in refDependantFields)
+				querySelect.Select(field);
+
+			querySelect.From(tempArea.QSystem, tempArea.TableName, tempArea.Alias)
+				.Where(wherecodition.Equal(CSGenioAflds.FldCodflds, PKey));
+
+			string[] dependantFields = refDependantFields.Select(f => f.FullName).ToArray();
+			QueryUtils.SetInnerJoins(dependantFields, null, tempArea, querySelect);
+
+			ArrayList values = sp.executeReaderOneRow(querySelect);
+			bool useDefaults = values.Count == 0;
+
+			if (useDefaults)
+				return GetViewModelFieldValues(refDependantFields);
+			return GetViewModelFieldValues(refDependantFields, values);
+		}
+
+		/// <summary>
+		/// Fill Dependant fields values -> TableFldsDescrip (DB)
+		/// </summary>
+		/// <param name="lazyLoad">Lazy loading of dropdown items</param>
+		public void FillDependant_FeecaTableFldsDescrip(bool lazyLoad = false)
+		{
+			var row = GetDependant_FeecaTableFldsDescrip(this.ValCodflds);
+			try
+			{
+				this.funcFldsValAttach = () => (string)row["flds.attach"];
+				this.funcFldsValNpassage = () => (decimal?)row["flds.npassage"];
+
+				// Fill List fields
+				this.ValCodflds = ViewModelConversion.ToString(row["flds.codflds"]);
+				TableFldsDescrip.Value = (string)row["flds.descrip"];
+				if (GenFunctions.emptyG(this.ValCodflds) == 1)
+				{
+					this.ValCodflds = "";
+					TableFldsDescrip.Value = "";
+					Navigation.ClearValue("flds");
+				}
+				else if (lazyLoad)
+				{
+					TableFldsDescrip.SetPagination(1, 0, false, false, 1);
+					TableFldsDescrip.List = new SelectList(new List<SelectListItem>()
+					{
+						new SelectListItem
+						{
+							Value = Convert.ToString(this.ValCodflds),
+							Text = Convert.ToString(TableFldsDescrip.Value),
+							Selected = true
+						}
+					}, "Value", "Text", this.ValCodflds);
+				}
+
+				TableFldsDescrip.Selected = this.ValCodflds;
+			}
+			catch (Exception ex)
+			{
+				CSGenio.framework.Log.Error(string.Format("FillDependant_Error (TableFldsDescrip): {0}; {1}", ex.Message, ex.InnerException != null ? ex.InnerException.Message : ""));
+			}
+		}
+
+		private readonly string[] _fieldsToSerialize_FEECA___FLDS_DESCRIP_ = ["Flds", "Flds.ValCodflds", "Flds.ValZzstate", "Flds.ValDescrip"];
+
 		protected override object GetViewModelValue(string identifier, object modelValue)
 		{
 			return identifier switch
 			{
 				"feeca.codflds" => ViewModelConversion.ToString(modelValue),
-				"flds.class" => ViewModelConversion.ToString(modelValue),
 				"feeca.feedback" => ViewModelConversion.ToString(modelValue),
 				"flds.attach" => ViewModelConversion.ToString(modelValue),
 				"flds.npassage" => ViewModelConversion.ToNumeric(modelValue),
 				"feeca.codfeeca" => ViewModelConversion.ToString(modelValue),
 				"flds.codflds" => ViewModelConversion.ToString(modelValue),
+				"flds.descrip" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue
 			};
 		}

@@ -39,7 +39,7 @@
 
 			<img
 				v-if="noAlerts"
-				:src="`${system.resourcesPath}no-alerts.png?v=${genio.buildVersion}`" />
+				:src="`${$app.resourcesPath}no-alerts.png?v=${$app.genio.buildVersion}`" />
 		</div>
 	</div>
 </template>

@@ -1,6 +1,6 @@
 ﻿<template>
 	<div
-		v-if="system.supportedLangs.length > 1"
+		v-if="$app.locale.availableLocales.length > 1"
 		id="language-items">
 		<ul class="n-language">
 			<li>
@@ -10,7 +10,7 @@
 			</li>
 
 			<template
-				v-for="lang in system.supportedLangs"
+				v-for="lang in $app.locale.availableLocales"
 				:key="lang.language">
 				<li
 					class="n-language__item"
@@ -23,8 +23,8 @@
 							name: currentRoute.name,
 							params: { ...currentRoute.params, culture: lang.language }
 						}">
-						<template v-if="layoutConfig.LanguagePlacement === 'in_footer'">
-							{{ lang.languageName }}
+						<template v-if="$app.layout.LanguagePlacement === 'in_footer'">
+							{{ lang.displayName }}
 						</template>
 						<template v-else>
 							{{ lang.acronym }}
@@ -64,7 +64,7 @@
 
 		mounted()
 		{
-			this.supportedLangs = this.system.supportedLangs
+			this.supportedLangs = this.$app.locale.availableLocales
 
 			this.swapArrayPos(this.supportedLangs, 0, this.getCurLangIndex())
 		},

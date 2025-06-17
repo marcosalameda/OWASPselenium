@@ -1,12 +1,12 @@
 ﻿/* eslint-disable no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 
-import ViewModelBase from '@/mixins/menuViewModelBase.js'
-import genericFunctions from '@/mixins/genericFunctions.js'
-import modelFieldType from '@/mixins/formModelFieldTypes.js'
+import MenuViewModelBase from '@/mixins/menuViewModelBase.js'
+import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+import modelFieldType from '@quidgest/clientapp/models/fields'
 
 import hardcodedTexts from '@/hardcodedTexts.js'
-import netAPI from '@/api/network'
+import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
@@ -15,9 +15,9 @@ import qProjArrays from '@/api/genio/projectArrays.js'
 
 /**
  * Represents a ViewModel class.
- * @extends ViewModelBase
+ * @extends MenuViewModelBase
  */
-export default class ViewModel extends ViewModelBase
+export default class ViewModel extends MenuViewModelBase
 {
 	/**
 	 * Creates a new instance of the ViewModel.

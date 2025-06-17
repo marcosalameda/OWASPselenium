@@ -49,23 +49,25 @@
 
 <script>
 	/* eslint-disable no-unused-vars */
+	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import netAPI from '@quidgest/clientapp/network'
+	import openQSign from '@quidgest/clientapp/plugins/qSign'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import { computed, readonly } from 'vue'
 
 	import MenuHandlers from '@/mixins/menuHandlers.js'
 	import controlClass from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
 	import hardcodedTexts from '@/hardcodedTexts'
-	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
 	/* eslint-enable no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DM_MB_RViewModel.js'
@@ -358,7 +360,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-LENDI', 'changed-EQUIP', 'changed-PESS2', 'changed-PESS1'],
+						globalEvents: ['changed-PESS1', 'changed-LENDI', 'changed-PESS2', 'changed-EQUIP'],
 						uuid: '5e4e7e69-c5b2-478b-bb88-e077baaaf55b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -441,7 +443,7 @@
 					message: 'Start of execution of the manual routine'
 				})
 
-				genericFunctions.setProgressBar({ title: computed(() => this.Resources.PROCESSING44327) })
+				setProgressBar({ title: computed(() => this.Resources.PROCESSING44327) })
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT VIEW_MANUAL_ROUTINE DELETEONEROW]/
@@ -491,7 +493,7 @@
 					params,
 					// eslint-disable-next-line
 					(data) => {
-						genericFunctions.resetProgressBar()
+						resetProgressBar()
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT DONE_ROUTINE DELETEONEROW]/
@@ -546,7 +548,7 @@
 						}
 					},
 					() => {
-						genericFunctions.resetProgressBar()
+						resetProgressBar()
 						genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
 					},
 					undefined,
@@ -634,7 +636,7 @@ this.loadList();
 					message: 'Start of execution of the manual routine'
 				})
 
-				genericFunctions.setProgressBar({ title: computed(() => this.Resources.PROCESSING44327) })
+				setProgressBar({ title: computed(() => this.Resources.PROCESSING44327) })
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT VIEW_MANUAL_ROUTINE DELETEROWS]/
@@ -671,7 +673,7 @@ this.loadList();
 					params,
 					// eslint-disable-next-line
 					(data) => {
-						genericFunctions.resetProgressBar()
+						resetProgressBar()
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT DONE_ROUTINE DELETEROWS]/
@@ -726,7 +728,7 @@ this.loadList();
 						}
 					},
 					() => {
-						genericFunctions.resetProgressBar()
+						resetProgressBar()
 						genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
 					},
 					undefined,

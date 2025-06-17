@@ -7,12 +7,12 @@ export const systemInfo = {
 	applicationName: 'Horizontal Layout - Vue',
 
 	genio: {
-		buildVersion: 2930,
+		buildVersion: 2931,
 		dbIdxVersion: 1731,
 		dbVersion: '4062',
-		genioVersion: '369,10',
+		genioVersion: '370,19',
 		trackChangesVersion: '0',
-		assemblyVersion: '369,10.4062.0.2930',
+		assemblyVersion: '370,19.4062.0.2931',
 		generationDate: {
 			year: 2025,
 			month: 6,

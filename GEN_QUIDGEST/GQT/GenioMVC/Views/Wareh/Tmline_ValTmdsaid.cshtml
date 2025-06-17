@@ -4,11 +4,14 @@
 @{ var Navigation = Model.Navigation; } @* MH - Allows unificate the generated code. And re-use some methods of the GenioAPI. *@
 
 @*List properties DBEDIT BUTTONS*@
+@if (this.Model.Menu.Elements.Count() >= 1)
+{
 <div class="row">
 	<div class="col">
 	</div>
 </div>
 
+}
 @* USE /[MANUAL GQT TABLE_FOR TMLINE_TMDSAID]/ *@
 @{ 
 

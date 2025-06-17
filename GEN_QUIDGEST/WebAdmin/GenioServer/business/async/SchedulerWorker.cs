@@ -1,48 +1,83 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using CSGenio.framework;
 using CSGenio.persistence;
-using System.IO;
 
 
 namespace CSGenio.business.async
 {
-    using Process = CSGenioAs_apr;    
- 
+    using Process = CSGenioAs_apr;
+
     public class GenioWorker
     {
-        private User user;
-        private PersistentSupport sp;
+        private const int MaxWaitTimeInMilliseconds = 5000;
 
-        private static Dictionary<string, Type> agendamentos = new Dictionary<string, Type>();
+        private readonly User user;
 
-        public GenioWorker(PersistentSupport sp, User user)
+        public GenioWorker(User user)
         {
-            this.sp = sp;
             this.user = user;
         }
 
-        public bool Work()
+        public bool Work(CancellationToken cancellationToken = default)
         {
-            SchedulerBroker scheduler = SchedulerBroker.GetBroker();
-            IGenioWork work = scheduler.GetWork(user);
-            if (work != null) // null means that there was no work to be done
+            List<Task> activeTasks = new List<Task>();
+            bool didWork = false;
+
+            while (true)
             {
-                work.DoWork(user);
-                return true;
+                if (cancellationToken.IsCancellationRequested)
+                    break;
+
+                SchedulerBroker scheduler = SchedulerBroker.GetBroker();
+                IGenioWork work = scheduler.GetWork(user);
+
+                if (work != null)
+                {
+                    didWork = true;
+
+                    var task = Task.Run(() =>
+                    {
+                        try
+                        {
+                            work.DoWork(user);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error($"Work item failed: {ex}");
+                        }
+                    }, cancellationToken);
+
+                    activeTasks.Add(task);
+                }
+
+                // Wait if no new work is immediately available
+                if (work == null)
+                {
+                    if (activeTasks.Count == 0)
+                        break;
+
+                    try
+                    {
+                        var timeoutTask = Task.Delay(MaxWaitTimeInMilliseconds, cancellationToken);
+                        var allWorkTask = Task.WhenAll(activeTasks);
+                        Task.WaitAny(new Task[] { allWorkTask, timeoutTask }, cancellationToken: cancellationToken);
+
+                        // Keep only unfinished tasks
+                        activeTasks = activeTasks.Where(t => !t.IsCompleted).ToList();
+                    }
+                    catch (OperationCanceledException)
+                    {
+                        break;
+                    }
+                }
             }
-            else
-                return false;
-        }
 
-        public PersistentSupport PersistentSupport
-        {
-            get { return sp; }
-        }
-
-        public User User
-        {
-            get { return user; }
+            return didWork;
         }
     }
 
@@ -106,7 +141,7 @@ namespace CSGenio.business.async
                             ExecuteExternalJob(workSp, user);
                         else if (job is GenioServerJob)
                             ExecuteLocalJob(workSp, user, manager);
-                        else if(job is GenioServerJobAsync)
+                        else if (job is GenioServerJobAsync)
                             ExecuteLocalJobAsync(workSp, user, manager);
                     }
                     else
@@ -123,7 +158,7 @@ namespace CSGenio.business.async
 
             }
             catch (NotAvailableWorkerException e)
-            {                
+            {
                 Log.Error(string.Format("Excepção de Negócio. [mensagem] {0} [local] {1} [causa] {2}", e.Message, "Worker.DoWork", e.Message));
                 workSp?.rollbackTransaction();
                 undoProcess = true;
@@ -141,7 +176,7 @@ namespace CSGenio.business.async
                 throw;
             }
             catch (Exception e)
-            {                
+            {
                 Log.Error(string.Format("Excepção de Negócio. [mensagem] {0} [local] {1} [causa] {2}", e.Message, "Worker.DoWork", e.Message));
                 workSp?.rollbackTransaction();
                 manager?.AbortProcess(process);
@@ -325,7 +360,7 @@ namespace CSGenio.business.async
         {
             return Job.AreRequirementsMet(sp, user);
         }
-        
+
         public int CompareTo(GenioWork other)
         {
             if (other == null)

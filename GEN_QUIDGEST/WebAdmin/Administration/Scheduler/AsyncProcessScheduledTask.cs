@@ -1,6 +1,5 @@
 ﻿using CSGenio.core.scheduler;
 using CSGenio.framework;
-using CSGenio.persistence;
 using DbAdmin;
 
 namespace Administration;
@@ -12,14 +11,15 @@ public class AsyncProcessScheduledTask : IScheduledTask
 {
 
     /// <inheritdoc/>
-    public List<ScheduledTaskOption> GetOptions() {
+    public List<ScheduledTaskOption> GetOptions()
+    {
         return [
             new ScheduledTaskOption {
                 PropertyName = "yearapp",
                 DisplayName = "Year",
                 Optional = true,
                 Description = "Database year."
-        },
+            }
         ];
     }
 
@@ -28,21 +28,18 @@ public class AsyncProcessScheduledTask : IScheduledTask
     {
         var year = ScheduledTaskExtensions.GetStringOption(options, "yearapp", Configuration.DefaultYear);
 
-        PersistentSupport sp = null;
         try
         {
             var user = SysConfiguration.CreateWebAdminUser(year);
-            sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-            sp.openTransaction();
-            CSGenio.business.async.GenioWorker worker = new CSGenio.business.async.GenioWorker(sp, user);
-            worker.Work();
-            sp.closeTransaction();
+
+            var worker = new CSGenio.business.async.GenioWorker(user);
+            worker.Work(stoppingToken);
         }
         catch (Exception ex)
         {
-            sp?.rollbackTransaction();
-            Log.Error($"Error handling WebApi call: {ex}");
+            Log.Error($"Unexpected error while processing scheduled task: {ex}");
         }
+
         return Task.CompletedTask;
     }
 }

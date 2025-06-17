@@ -1819,32 +1819,61 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="relations">A relation path from this record to the last leaf</param>
         /// <returns>True if there are any records</returns>
+        /// HAP 2025.06.12 Changes to use Union instead of OR in the JOIN condition, due to performance issues.
         private bool HasDependencies(PersistentSupport sp, List<ChildRelation> relations)
         {
-            SelectQuery query = new SelectQuery();
-            query.Select(SqlFunctions.Count("1"), "numRecords");
-            query.From(this.TableName, this.Alias);
-            string parentAlias = this.Alias;
-            string parentKey = this.PrimaryKeyName;
+            // Return false if there are no relations to check
+            if (relations == null || relations.Count == 0)
+                return false;
+
+            SelectQuery finalSubQuery = null;
+
+            // Loop through each relation to build subqueries for each foreign key
             foreach (var relation in relations)
             {
                 var area = GetInfoArea(relation.ChildArea);
-                var criteriaSet = CriteriaSet.Or();
-                foreach (var foreignKey in relation.RelatedFields)
-                    criteriaSet.Equal(parentAlias, parentKey, area.Alias, foreignKey);
 
-                query.Join(area.TableName, area.Alias, TableJoinType.Inner).On(criteriaSet);
+                foreach (var foreignKey in relation.RelatedFields)
+                {
+                    // Create a subquery to count records where the foreign key matches the current primary key
+                    var subQuery = new SelectQuery();
+                    subQuery.Select(SqlFunctions.Count("1"), "numRecords");
+                    subQuery.From(area.TableName, area.Alias);
+
+                    subQuery.Where(CriteriaSet.And().Equal(area.Alias, foreignKey, QPrimaryKey));
+
+                    // Combine subqueries using UNION
+                    if (finalSubQuery == null)
+                        finalSubQuery = subQuery;
+                    else
+                        finalSubQuery.Union(subQuery);
+                }
             }
-            query.Where(CriteriaSet.And().Equal(parentAlias, parentKey, QPrimaryKey));
+
+            // If no subqueries were created, return false
+            if (finalSubQuery == null)
+                return false;
+
+            SelectQuery finalQuery;
+
+            // If there’s only one subquery, use it directly
+            // Otherwise, sum the results of all subqueries using a wrapper query
+            if (finalSubQuery.UnionQueries.Count == 0)
+                finalQuery = finalSubQuery;
+            else
+            {
+                finalQuery = new SelectQuery();
+                finalQuery.Select(SqlFunctions.Sum("TMP", "numRecords"), "sumRecords");
+                finalQuery.From(finalSubQuery, "TMP");
+            }
 
             //JGF 2021.06.16 MySQL databases return bigint for counts so the return value may be either an int or a long.
             // Due to C# boxing and unboxing we must do this ugly multiplexing
-            var valCount = sp.ExecuteScalar(query);
+            var valCount = sp.ExecuteScalar(finalQuery);
             if (valCount is int)
-                return ((int) valCount) > 0;
+                return ((int)valCount) > 0;
             else
-                return ((long) valCount) > 0;
-
+                return ((long)valCount) > 0;
         }
 
 

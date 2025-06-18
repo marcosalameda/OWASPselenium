@@ -25,8 +25,6 @@ namespace GenioMVC.ViewModels.Wareh
 		public Tmline_ValTmdsaid_ViewModel(NavigationContext current_navigation)
 		{
 			this.Navigation = current_navigation;
-						ValCodwareh = current_navigation.CurrentLevel.GetEntry("wareh")?.ToString();
-						
 		}
 
 		public void Load(int numberListItems, bool ajaxRequest = false)
@@ -98,7 +96,6 @@ namespace GenioMVC.ViewModels.Wareh
 
 			model.Icon = "";
 			model.Escala = "un";
-			model.TipoTimeLine = "";
 
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{

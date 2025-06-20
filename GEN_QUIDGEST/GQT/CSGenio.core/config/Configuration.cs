@@ -105,12 +105,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "370.01";
+        public const string GenioVersion = "370.28";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2932;
+        public const int BuildVersionGen = 2933;
         /// <summary>
         /// Solution release version
         /// </summary>

@@ -123,6 +123,11 @@ namespace GenioMVC.Controllers
 		{
 			try
 			{
+				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new System.Diagnostics.TagList([
+					new("Name", "CONTROLLER_ROUTINE_BODY"),
+					new("Parameter", "DELETEONEROW"),
+					new("ModuleOrSystem", "GQT")
+				]), "ms", "Time to execute the manual code.")) {
 //Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DELETEONEROW | File:  | Order: 0
 //BEGIN_MANUALCODE_CODMANUA:d31ac115-e389-497a-814c-ae4776fc238a
 			
@@ -136,6 +141,8 @@ namespace GenioMVC.Controllers
 			
 			return Json(new { success = "OK", message = "Routine success" });
 //END_MANUALCODE
+				}
+
 			}
 			catch (BusinessException ex)
 			{
@@ -159,6 +166,11 @@ namespace GenioMVC.Controllers
 		{
 			try
 			{
+				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new System.Diagnostics.TagList([
+					new("Name", "CONTROLLER_ROUTINE_BODY"),
+					new("Parameter", "DELETEROWS"),
+					new("ModuleOrSystem", "GQT")
+				]), "ms", "Time to execute the manual code.")) {
 //Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DELETEROWS | File:  | Order: 0
 //BEGIN_MANUALCODE_CODMANUA:db1bb593-c309-49f0-9eee-3ee35c5c4383
 			
@@ -174,6 +186,8 @@ namespace GenioMVC.Controllers
 			
 			return Json(new { success = "OK", message = "Routine success" });
 //END_MANUALCODE
+				}
+
 			}
 			catch (BusinessException ex)
 			{

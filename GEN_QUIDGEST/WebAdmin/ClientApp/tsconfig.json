@@ -4,8 +4,8 @@
 		"composite": true,
 		"baseUrl": ".",
 		"allowJs": true,
-		"module": "NodeNext",
-		"moduleResolution": "nodenext",
+		"declaration": true,
+		"declarationMap": true,
 		"sourceMap": true,
 		"outDir": "dist",
 		"noErrorTruncation": true,
@@ -14,6 +14,7 @@
 		"noImplicitReturns": true,
 		"noFallthroughCasesInSwitch": true,
 		"isolatedModules": true,
+		"resolveJsonModule": true,
 		"paths": {
 			"@/*": [
 				"./src/*"
@@ -21,6 +22,8 @@
 		}
 	},
 	"include": [
+		"build",
+		"plugins",
 		"src/**/*",
 		"**/package.json",
 		"**/vite.config.*",

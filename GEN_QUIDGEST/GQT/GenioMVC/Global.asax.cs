@@ -27,7 +27,8 @@ namespace GenioMVC
 
     public class MvcApplication : System.Web.HttpApplication
     {
-        private IDisposable _loggerContext;
+        private IDisposable _telemetryService;
+        private MessagingService _messagingService;
         
         protected void Application_Start()
         {
@@ -35,9 +36,9 @@ namespace GenioMVC
             // this line is to hide mvc header
             MvcHandler.DisableMvcResponseHeader = true;
 
-            log4net.Config.XmlConfigurator.Configure();
             //GenioServer services
             CSGenio.GenioDIDefault.Use();
+            _telemetryService = OpenTelemetryProvider.Create();
 
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
@@ -93,9 +94,8 @@ namespace GenioMVC
         protected void Application_End()
         {
             _messagingService?.Close();
+            _telemetryService?.Dispose();
         }
-
-        private static MessagingService _messagingService;
 
         private static void RestartAppPool(object sender, System.IO.FileSystemEventArgs e)
         {
@@ -120,7 +120,7 @@ namespace GenioMVC
                 var user = UserContext.Current.User;
                 user.Location = HttpContext.Current.Request.UserHostAddress;
 
-                // Sets the language for the c# server
+                // Sets the language
                 user.Language = System.Threading.Thread.CurrentThread.CurrentCulture.Name.Replace("-","").ToUpperInvariant();
 
                 // Assign the system (year) from the route data (or default) to the user object associated with the current request.
@@ -129,15 +129,12 @@ namespace GenioMVC
                 //Check for maintenance Status
                 Maintenance.GetMaintenanceStatus(UserContext.Current.PersistentSupport);
 
-                _loggerContext = Log.SetContext(new { user = AdaptivePropertyProvider.Create("user", user.Name) });
                 CSGenio.framework.Log.Debug(Context.Request.RequestType + " " + Context.Request.Url.ToString());
             }
         }
 
         protected void Application_EndRequest(object sender, EventArgs e)
         {
-            // Dispose of the logger scope context
-            _loggerContext?.Dispose();
         }
 
         protected void Application_AcquireRequestState(object sender, EventArgs e)
@@ -255,6 +252,24 @@ namespace GenioMVC
                     filterContext.RouteData.Values["System"] = u.Year;
                 }
 
+                filterContext.HttpContext.Items["page_load_metric"] = CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+                    new("Controller", filterContext.ActionDescriptor.ControllerDescriptor.ControllerName),
+                    new("Action", filterContext.ActionDescriptor.ActionName),
+                    new("Module", u?.CurrentModule),
+                    new("Year", u?.Year)
+                ]), "ms", "Time to load the page.");
+
+                string actionId = Guid.NewGuid().ToString();
+                filterContext.HttpContext.Items["log_scope"] = CSGenio.core.di.GenioDI.Log.SetContext(
+                    AdaptivePropertyProvider.Create("user", new
+                    {
+                        user = u?.Name,
+                        user_ip = u?.Location,
+                        year = u?.Year,
+                        ActionName = filterContext.ActionDescriptor.ControllerDescriptor.ControllerName + "." + filterContext.ActionDescriptor.ActionName,
+                        ActionId = actionId
+                    }));
+
 #if DEBUG
 				//Validate the AntiForgery token
                 if (filterContext.HttpContext.Request.HttpMethod == "POST")
@@ -282,6 +297,11 @@ namespace GenioMVC
 
             public override void OnResultExecuted(ResultExecutedContext filterContext)
             {
+                //end the metrics timer
+                (filterContext.HttpContext.Items["page_load_metric"] as IDisposable)?.Dispose();
+                //remove the log scope
+                (filterContext.HttpContext.Items["log_scope"] as IDisposable)?.Dispose();
+
                 string qAjaxId = filterContext.HttpContext.Request.Headers["QAjaxIdentifier"];
                 if (!string.IsNullOrEmpty(qAjaxId))
                     filterContext.HttpContext.Response.AddHeader("QAjaxIdentifier", qAjaxId);
@@ -304,25 +324,20 @@ namespace GenioMVC
         /// Contextual logging helper for Asp.Net Applications thread agility problem
         /// http://blog.marekstoj.com/2011/12/log4net-contextual-properties-and.html
         /// </summary>
-        /// <typeparam name="T"></typeparam>
-        public class AdaptivePropertyProvider<T> : log4net.Core.IFixingRequired
+        public class AdaptivePropertyProvider : log4net.Core.IFixingRequired
         {
-            private readonly string _propertyName;
-            private readonly T _propertyValue;
-            protected internal AdaptivePropertyProvider(string propertyName, T propertyValue)
+            private const string PropertyNamePrefix = "log4net_app_";
+            private readonly string _contextItem  = "";
+            private readonly object _value;
+
+            public AdaptivePropertyProvider(string propertyName, object value)
             {
-                if (string.IsNullOrEmpty(propertyName))
-                {
-                    throw new ArgumentNullException("propertyName");
-                }
-
-                _propertyName = propertyName;
-                _propertyValue = propertyValue;
-
                 if (HttpContext.Current != null)
                 {
-                    HttpContext.Current.Items[GetPropertyName()] = propertyValue;
+                    _contextItem = PropertyNamePrefix + propertyName;
+                    HttpContext.Current.Items[propertyName] = value;
                 }
+                _value = value;
             }
 
             public object GetFixedObject()
@@ -332,33 +347,30 @@ namespace GenioMVC
 
             public override string ToString()
             {
-                if (HttpContext.Current != null)
-                {
-                    var item = HttpContext.Current.Items[GetPropertyName()];
-
-                    return item != null ? item.ToString() : string.Empty;
-                }
-
-                if (!ReferenceEquals(_propertyValue, null))
-                {
-                    return _propertyValue.ToString();
-                }
-
-                return string.Empty;
+                return HttpContext.Current
+                    ?.Items[_contextItem]?.ToString()
+                    ?? _value?.ToString() 
+                    ?? "";
             }
 
-            private string GetPropertyName()
+            public static object Create(string propertyName, object propertyValue)
             {
-                return string.Format("{0}{1}", AdaptivePropertyProvider.PropertyNamePrefix, _propertyName);
-            }
-        }
-
-        public class AdaptivePropertyProvider
-        {
-            public const string PropertyNamePrefix = "log4net_app_";
-            public static AdaptivePropertyProvider<T> Create<T>(string propertyName, T propertyValue)
-            {
-                return new AdaptivePropertyProvider<T>(propertyName, propertyValue);
+                if (propertyValue.GetType().IsPrimitive)
+                    return new AdaptivePropertyProvider(propertyName, propertyValue);
+                else if (propertyValue is Dictionary<string, object> dic)
+                {
+                    var res = new Dictionary<string, object>();
+                    foreach (var prop in dic)
+                        res.Add(prop.Key, new AdaptivePropertyProvider(propertyName, prop.Value));
+                    return res;
+                }
+                else
+                {
+                    var res = new Dictionary<string, object>();
+                    foreach (System.Reflection.PropertyInfo prop in propertyValue.GetType().GetProperties())
+                        res.Add(prop.Name, new AdaptivePropertyProvider(propertyName, prop.GetValue(propertyValue)));
+                    return res;
+                }
             }
         }
     }

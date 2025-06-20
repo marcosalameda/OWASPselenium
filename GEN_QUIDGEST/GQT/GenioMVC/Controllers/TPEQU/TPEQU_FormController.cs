@@ -309,10 +309,17 @@ namespace GenioMVC.Controllers
 				AfterOp = (sink, sp) =>
 				{
 					model.MapFromModel();
+				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new System.Diagnostics.TagList([
+					new("Name", "AFTER_SAVE_NEW"),
+					new("Parameter", "TPEQU"),
+					new("ModuleOrSystem", "GQT")
+				]), "ms", "Time to execute the manual code.")) {
 //Platform: MVC | Type: AFTER_SAVE_NEW | Module: GQT | Parameter: TPEQU | File:  | Order: 0
 //BEGIN_MANUALCODE_CODMANUA:53bb6aba-caca-4f30-9906-26bea2e0e474
 GetCarga_unico(model.ValCodtpequ);
 //END_MANUALCODE
+				}
+
 				},
 				BeforeException = (sink, sp) =>
 				{

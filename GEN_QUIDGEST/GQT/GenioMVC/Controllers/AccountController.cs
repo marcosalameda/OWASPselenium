@@ -98,6 +98,16 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CUSTOM_LOGON_POST]/
 		public ActionResult LogOn(LogOnModel model, string returnUrl)
 		{
+            JsonResult FailLogin(string message)
+            {
+                //Increment login counter
+                CSGenio.core.di.GenioDI.MetricsOtlp.IncrementCounter("login_counter", 1, new System.Diagnostics.TagList([
+                    new("Failed", true)
+                ]));
+                UserContext.Destroy();
+                return Json(new { Success = false, Message = message });
+            }
+
 			if (ModelState.IsValid)
 			{
                 User user = AuthenticateUser(model, Configuration.DefaultYear);
@@ -110,15 +120,13 @@ namespace GenioMVC.Controllers
                     if (Configuration.GetDbVersion(user.Year) != Configuration.VersionDbGen ||
                         Configuration.GetDbUpgrIndx(user.Year) < Configuration.VersionUpgrIndxGen)
                     {
-                        UserContext.Destroy();
-                        return Json(new { Success = false, Message = Resources.Resources.E_NECESSARIO_ATUALIZ49371 });
+                        return FailLogin(Resources.Resources.E_NECESSARIO_ATUALIZ49371);
                     }
 
 					//Check for Configuration Version
                     if (Configuration.ConfigVersion != GenioServer.framework.ConfigXMLMigration.CurConfigurationVerion.ToString())
                     {
-                        UserContext.Destroy();
-                        return Json(new { Success = false, Message = Resources.Resources.E_NECESSARIO_PROCEDE36325 });
+                        return FailLogin(Resources.Resources.E_NECESSARIO_PROCEDE36325);
                     }
 
 					try
@@ -131,15 +139,13 @@ namespace GenioMVC.Controllers
                         if (e is GenioException && (e as GenioException).UserMessage != null)
                             exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
 
-                        UserContext.Destroy();
-                        return Json(new { Success = false, Message = exceptionUserMessage });
+                        return FailLogin(exceptionUserMessage);
                     }
 
 					//TSX (12/04/2019) - All unsuccess have to stay here before create cookie with user because if user refresh the page the application think it is authenticated
 					if (user.Status == 2)
                     {
-                        UserContext.Destroy();
-                        return Json(new { Success = false, Message = Resources.Resources.ESTE_UTILIZADOR_ENCO01685 });
+                        return FailLogin(Resources.Resources.ESTE_UTILIZADOR_ENCO01685);
                     }
 
 					if (!user.Auth2FA)
@@ -148,7 +154,9 @@ namespace GenioMVC.Controllers
                         return Json(new { Success = true, Auth2FA = true, User = user, Redirect = returnUrl });
 				}
 				else if (!String.IsNullOrEmpty(model.UserName))
+                {
                     CSGenio.framework.Audit.registLoginOut(UserContext.Current.User, model.UserName, Resources.Resources.TENTATIVA38682, Resources.Resources.LOGIN_OU_PASSWORD_IN32183, Request.UserHostName, Request.GetClientIpAddress());
+                }
 			}
 
 			string error = "";
@@ -569,6 +577,10 @@ namespace GenioMVC.Controllers
 
 				// log login (audit)
                 CSGenio.framework.Audit.registLoginOut(user, Resources.Resources.ENTRADA31905, Resources.Resources.ENTRADA_ATRAVES_DA_P48446, Request.UserHostName, Request.GetClientIpAddress());
+                //Increment login counter
+                CSGenio.core.di.GenioDI.MetricsOtlp.IncrementCounter("login_counter", 1, new System.Diagnostics.TagList([
+                    new("Failed", false)
+                ]));
 
 				if (GenFunctions.emptyN(user.Status) == 0 && user.Status == 1 || (Configuration.Security.Mandatory2FA && !user.Auth2FA))
                 {

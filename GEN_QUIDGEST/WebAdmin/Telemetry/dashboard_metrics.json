@@ -239,7 +239,7 @@
             "calcs": [],
             "displayMode": "list",
             "placement": "bottom",
-            "showLegend": false
+            "showLegend": true
           },
           "tooltip": {
             "hideZeros": false,
@@ -252,13 +252,31 @@
           {
             "disableTextWrap": false,
             "editorMode": "code",
-            "expr": "sum(rate(request_counter_total{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__rate_interval]))",
+            "expr": "sum(rate(page_load_time_milliseconds_count{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__rate_interval]))",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "interval": "1m",
-            "legendFormat": "__auto",
+            "legendFormat": "App",
             "range": true,
-            "refId": "A",
+            "refId": "App",
+            "useBackend": false
+          },
+          {
+            "datasource": {
+              "type": "prometheus",
+              "uid": "be4mqtsjhooowd"
+            },
+            "disableTextWrap": false,
+            "editorMode": "code",
+            "expr": "sum(rate(http_server_request_duration_seconds_count{exported_job=\"$solution\", exported_instance=~\"$instance\"}[$__rate_interval]))",
+            "fullMetaSearch": false,
+            "hide": false,
+            "includeNullMetadata": true,
+            "instant": false,
+            "interval": "1m",
+            "legendFormat": "Http",
+            "range": true,
+            "refId": "Http",
             "useBackend": false
           }
         ],
@@ -339,7 +357,7 @@
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "sum by (le) (increase(page_load_time_milliseconds_bucket{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__interval]))",
+            "expr": "sum by (le) (increase(page_load_time_milliseconds_bucket{exported_job=\"$solution\", exported_instance=~\"$instance\"} [10m]))",
             "format": "heatmap",
             "fullMetaSearch": false,
             "includeNullMetadata": false,
@@ -616,12 +634,12 @@
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "topk(10, sum by (PageId) (last_over_time(page_load_time_milliseconds_sum{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range])))",
+            "expr": "topk(10, sum by (Controller, Action) (last_over_time(page_load_time_milliseconds_sum{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range])))",
             "format": "time_series",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": true,
-            "legendFormat": "{{PageId}}",
+            "legendFormat": "{{Controller}}.{{Action}}",
             "range": false,
             "refId": "A",
             "useBackend": false
@@ -696,12 +714,12 @@
             "disableTextWrap": false,
             "editorMode": "code",
             "exemplar": false,
-            "expr": "topk(10, avg by(PageId) (last_over_time(page_load_time_milliseconds_sum{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range]) /  clamp_min(last_over_time(page_load_time_milliseconds_count{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range]),1) ))",
+            "expr": "topk(10, avg by(Controller, Action) (last_over_time(page_load_time_milliseconds_sum{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range]) /  clamp_min(last_over_time(page_load_time_milliseconds_count{exported_job=\"$solution\", exported_instance=~\"$instance\"} [$__range]),1) ))",
             "format": "time_series",
             "fullMetaSearch": false,
             "includeNullMetadata": true,
             "instant": true,
-            "legendFormat": "{{PageId}}",
+            "legendFormat": "{{Controller}}.{{Action}}",
             "range": false,
             "refId": "A",
             "useBackend": false
@@ -919,14 +937,14 @@
       ]
     },
     "time": {
-      "from": "now-3h",
+      "from": "now-24h",
       "to": "now"
     },
     "timepicker": {},
     "timezone": "browser",
     "title": "Quidgest Metrics",
     "uid": "decqbb83qoa9sd",
-    "version": 56
+    "version": 61
   },
   "overwrite": true
 }

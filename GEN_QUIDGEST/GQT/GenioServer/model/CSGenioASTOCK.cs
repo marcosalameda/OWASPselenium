@@ -180,10 +180,10 @@ namespace CSGenio.business
 			info.Pathways.Add("dispa","dispa");
 			info.Pathways.Add("produ","produ");
 			info.Pathways.Add("entit","recei");
-			info.Pathways.Add("faci2","recei");
 			info.Pathways.Add("faci1","recei");
-			info.Pathways.Add("perso","dispa");
+			info.Pathways.Add("faci2","recei");
 			info.Pathways.Add("disst","dispa");
+			info.Pathways.Add("perso","dispa");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");

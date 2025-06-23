@@ -23,7 +23,7 @@ namespace AdminCLI
             try
             {
                 var parsedArgs = CommandLine.Parser.Default.ParseArguments<ReindexOptions, ListReindexScriptsOptions, WriteConfigurationOptions, 
-                    ReadConfigurationOptions, BackupOptions, RestoreOptions, RemoveBackupOptions, CreateRedirectOptions, ConfigOptions>(args);
+                    ReadConfigurationOptions, BackupOptions, RestoreOptions, RemoveBackupOptions, CreateRedirectOptions, ConfigOptions, DbStatusOptions>(args);
 
                 return parsedArgs.MapResult(
                     (ReindexOptions opts) => Reindex(opts),
@@ -35,6 +35,7 @@ namespace AdminCLI
                     (RemoveBackupOptions opts) => RemoveBackup(opts),
                     (CreateRedirectOptions opts) => CreateNewRedirect(opts),
                     (ConfigOptions opts) => HandleConfig(opts),
+                    (DbStatusOptions opts) => DbStatus(opts),
                     errs => 1);
             }
             catch (Exception e) {

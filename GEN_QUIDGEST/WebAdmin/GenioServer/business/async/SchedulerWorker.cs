@@ -30,10 +30,8 @@ namespace CSGenio.business.async
 
             while (true)
             {
-                // Exit loop if cancellation is requested, the scheduler is disabled, or maintenance is active
-                if (cancellationToken.IsCancellationRequested ||
-                    !Configuration.Scheduler.Enabled ||
-                    Maintenance.Current.IsActive)
+                // Exit loop if cancellation is requested or maintenance is active
+                if (cancellationToken.IsCancellationRequested || Maintenance.Current.IsActive)
                     break;
 
                 SchedulerBroker scheduler = SchedulerBroker.GetBroker();

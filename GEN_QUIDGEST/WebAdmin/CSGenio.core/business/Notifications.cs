@@ -471,8 +471,6 @@ namespace CSGenio.business
         {
             String system = CSGenio.framework.Configuration.Program;
             String dest_table = DatabaseFieldMapping.MessagesTable;
-            var area = CSGenio.business.Area.createArea(dest_table.ToLowerInvariant(), user, user.CurrentModule) as DbArea;
-			List<string> recordPKs = new List<string>();
 
             foreach (CSGenioAnotificationmessage msg in this.MessagesConfig)
             {
@@ -486,47 +484,22 @@ namespace CSGenio.business
                         if (final_row == null)
                             continue;
 
-                        InsertQuery insertSql = new InsertQuery();
-
-                        string recordPK = Guid.NewGuid().ToString();
-                        insertSql.Into(area.TableName);
-                        insertSql.Value(DatabaseFieldMapping.MessagesTablePKName, recordPK); //primarykey
-                        insertSql.Value("ZZSTATE", 0); //zzstate
+						var area = CSGenio.business.Area.createArea(dest_table.ToLowerInvariant(), user, user.CurrentModule) as DbArea;
+                        List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(dest_table.ToLowerInvariant()).DBFields.ToList();
 
                         foreach (FieldMap fieldmap in DatabaseFieldMapping.TableFieldMap)
                         {
-                            String queryfield = fieldmap.FieldnameQuery.Replace("[", "").Replace("]", "");
-                            String BDfield = fieldmap.FieldnameApp;
-                            object fieldvalue = null;
-
-                            fieldvalue = final_row[queryfield];
-                            if (!insertSql.Values.Contains(new ColumnAttribution(insertSql.IntoTable.TableAlias, BDfield, fieldvalue)))
-                                insertSql.Value(BDfield, fieldvalue);
-
+                            string field = fieldmap.FieldnameApp.Replace("[", "").Replace("]", "");
+                            object fieldvalue = final_row[field];
+                            if (fields.Exists(x => x.Key.ToLower() == field.ToLower()))
+                            {
+                                area.insertNameValueField(field.ToLower(), fieldvalue);
+                            }
                         }
-                        sp.Execute(insertSql);
 
-                        sp.getRecord(area, recordPK);
-                        area.UserRecord = false;
-                        area.update(sp);
-
-                        recordPKs.Add(recordPK);
+                        area.insert(sp);
                     }
                 }
-            }
-
-            //--ATUALIZA AS FORMULAS DAS NOTIFICACOES
-            if (recordPKs.Count > 0)
-            {
-                string update_formulas = "" +
-                " DECLARE @CODNOTIF KEYLISTTYPE \r\n " +
-                " INSERT INTO @CODNOTIF(ITEM) \r\n " +
-                " SELECT " + area.PrimaryKeyName + " FROM " + CSGenio.framework.Configuration.Program + DatabaseFieldMapping.MessagesTable + " WHERE " +
-                DatabaseFieldMapping.MessagesTablePKName + " IN ('" + string.Join("','", recordPKs) + "')" +
-                "\r\n" +
-                " EXEC GENIO_DEFAULT_" + DatabaseFieldMapping.MessagesTable + " @CODNOTIF \r\n " +
-                " EXEC GENIO_CALCBLOCK_" + DatabaseFieldMapping.MessagesTable + " @CODNOTIF \r\n ";
-                sp.executeQuery(update_formulas);
             }
         }
     }

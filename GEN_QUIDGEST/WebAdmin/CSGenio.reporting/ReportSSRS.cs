@@ -511,12 +511,15 @@ namespace CSGenio.reporting
 
         private void SetLimitValues(string FieldName, string[] FieldValue, string[] paramReportNames, ref List<ReportParameter> output)
         {
+			if (FieldValue == null)
+				return;
+			
             if (string.IsNullOrEmpty(FieldName) || FieldValue.Length == 0)
                 throw new BusinessException(null, "ReportSSRS.SetLimitValue", "Null or Empty argument value");
             var finalFullFieldName = FieldName.Replace('.', '_');
             if (paramReportNames.Any(x => x == finalFullFieldName))
             {
-                output.Add(new ReportParameter(finalFullFieldName, FieldValue));
+                output.Add(new ReportParameter(finalFullFieldName, string.Join(",", FieldValue)));
             }
         }
 

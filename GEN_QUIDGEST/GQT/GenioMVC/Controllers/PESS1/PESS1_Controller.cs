@@ -62,6 +62,8 @@ namespace GenioMVC.Controllers
                     throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_3H11", "Cannot access the specified record");
 
 
+
+
                 string[] historicFieldNames = new string[1]{"pess1"};
                 string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
                 Dictionary<string, string> arrayFieldsList = new Dictionary<string, string>();
@@ -90,15 +92,9 @@ namespace GenioMVC.Controllers
             }
             catch (Exception e)
             {
+				var message = e is GenioException ge ? ge.UserMessage : Resources.Resources.OCORREU_UM_ERRO_INES30674; 
                 CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
-                if (!preview)
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
-                }
-                else
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
-                }
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + message);
             }
         }
 		[AuthorizeForUsers]
@@ -123,6 +119,8 @@ namespace GenioMVC.Controllers
                 var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
                 if (record == null || record.ValZzstate != 0)
                     throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_5111", "Cannot access the specified record");
+
+
 
 
                 string[] historicFieldNames = new string[1]{"pess1"};
@@ -153,15 +151,9 @@ namespace GenioMVC.Controllers
             }
             catch (Exception e)
             {
+				var message = e is GenioException ge ? ge.UserMessage : Resources.Resources.OCORREU_UM_ERRO_INES30674; 
                 CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
-                if (!preview)
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
-                }
-                else
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
-                }
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + message);
             }
         }
 		[AuthorizeForUsers]
@@ -186,6 +178,8 @@ namespace GenioMVC.Controllers
                 var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
                 if (record == null || record.ValZzstate != 0)
                     throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_52111", "Cannot access the specified record");
+
+
 
 
                 string[] historicFieldNames = new string[1]{"pess1"};
@@ -216,15 +210,9 @@ namespace GenioMVC.Controllers
             }
             catch (Exception e)
             {
+				var message = e is GenioException ge ? ge.UserMessage : Resources.Resources.OCORREU_UM_ERRO_INES30674; 
                 CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
-                if (!preview)
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
-                }
-                else
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
-                }
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + message);
             }
         }
 		[AuthorizeForUsers]
@@ -250,6 +238,8 @@ namespace GenioMVC.Controllers
                     throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_52211", "Cannot access the specified record");
 
 
+
+
                 string[] historicFieldNames = new string[1]{"pess1"};
                 string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
                 Dictionary<string, string> arrayFieldsList = new Dictionary<string, string>();
@@ -270,7 +260,8 @@ namespace GenioMVC.Controllers
                         renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
                     }
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
-                    result = renderer.Render("PDF");
+					result = renderer.Render("PDF");
+	
                 }
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 52211]/
@@ -283,15 +274,9 @@ namespace GenioMVC.Controllers
             }
             catch (Exception e)
             {
+				var message = e is GenioException ge ? ge.UserMessage : Resources.Resources.OCORREU_UM_ERRO_INES30674; 
                 CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
-                if (!preview)
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
-                }
-                else
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
-                }
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + message);
             }
         }
 		[AuthorizeForUsers]
@@ -317,6 +302,8 @@ namespace GenioMVC.Controllers
                     throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_52311", "Cannot access the specified record");
 
 
+
+
                 string[] historicFieldNames = new string[1]{"pess1"};
                 string[] historicFieldValues = new string[1]{Navigation.GetStrValue("pess1")};
                 Dictionary<string, string> arrayFieldsList = new Dictionary<string, string>();
@@ -337,7 +324,8 @@ namespace GenioMVC.Controllers
                         renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
                     }
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
-                    result = renderer.Render("WORDOPENXML");
+					result = renderer.Render("WORDOPENXML");
+	
                 }
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 52311]/
@@ -350,20 +338,14 @@ namespace GenioMVC.Controllers
             }
             catch (Exception e)
             {
+				var message = e is GenioException ge ? ge.UserMessage : Resources.Resources.OCORREU_UM_ERRO_INES30674; 
                 CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
-                if (!preview)
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
-                }
-                else
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
-                }
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + message);
             }
         }
 		[AuthorizeForUsers]
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
-        public ActionResult PTN_Report_5311(bool allSelected = false)
+        public ActionResult PTN_Report_5311(string reportOutputFormat, bool allSelected = false)
         {
             bool preview = false;
             try
@@ -382,6 +364,8 @@ namespace GenioMVC.Controllers
                 var record = Models.Pess1.Find(id, fieldsToSerialize: new string[] { "zzstate" });
                 if (record == null || record.ValZzstate != 0)
                     throw new FrameworkException(Resources.Resources.NAO_E_POSSIVEL_ACEDE59423, "PTN_Report_5311", "Cannot access the specified record");
+
+
 
 
                 string[] historicFieldNames = new string[1]{"pess1"};
@@ -404,7 +388,8 @@ namespace GenioMVC.Controllers
                         renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
                     }
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
-                    result = renderer.Render("EXCELOPENXML");
+					result = renderer.Render(ReportSSRS.GetExportType(reportOutputFormat));
+	
                 }
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 5311]/
@@ -417,15 +402,9 @@ namespace GenioMVC.Controllers
             }
             catch (Exception e)
             {
+				var message = e is GenioException ge ? ge.UserMessage : Resources.Resources.OCORREU_UM_ERRO_INES30674; 
                 CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
-                if (!preview)
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
-                }
-                else
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
-                }
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + message);
             }
         }
 

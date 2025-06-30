@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-using System.IO;
 using System.Data;
+using System.IO;
+using System.Text;
 using System.Xml;
 
 using CSGenio.business;
 using CSGenio.persistence;
-using Quidgest.Persistence.GenericQuery;
 using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;
@@ -117,7 +117,6 @@ namespace CSGenio.framework
             return ExportList(res, exportType, filename, namedbedit);
         }
 
-
         public byte[] ExportList(DataMatrix values, List<QColumn> columns, string exportType, string filename, string namedbedit)
         {
             this.colunas = columns;
@@ -138,7 +137,6 @@ namespace CSGenio.framework
             DataMatrix values = new DataMatrix(ds);
             return ExportList(values, exportType, filename, namedbedit);
         }
-
 
         public byte[] ExportList(DataMatrix values, string exportType, string filename, string namedbedit)
         {
@@ -175,7 +173,7 @@ namespace CSGenio.framework
         {
             PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
             SelectQuery qs = sp.getSelectQueryFromListingMVC<A>(conditions, listing);
-   
+
             //get data
             sp.openConnection();
             DataMatrix res = sp.Execute(qs);
@@ -218,7 +216,7 @@ namespace CSGenio.framework
             }
         }
 
-        #region
+        #region Export
 
         private enum ExportType
         {
@@ -326,7 +324,6 @@ namespace CSGenio.framework
 
                 return visibleColumns;
             }
-
         }
 
         private class ExportToPDF
@@ -340,7 +337,6 @@ namespace CSGenio.framework
             readonly static Font TableFont = new Font("Arial", 10);
             readonly static Unit TableBorderWidth = new Unit(1);
             readonly static XGraphics DefaultGraphics = XGraphics.CreateMeasureContext(new XSize(2000, 2000), XGraphicsUnit.Point, XPageDirection.Downwards);
-
 
             private Document document;
             private Table table;
@@ -468,13 +464,8 @@ namespace CSGenio.framework
                 }
 
                 double scaleFactor = TableMaxWidth / totalColWidth;
-
-                if (scaleFactor < WidthScaleFactorMin)
-                    return false;
-                else
-                    return true;
+                return scaleFactor >= WidthScaleFactorMin;
             }
-
 
             /// <summary>
             /// Creates the static parts of the PDF document.
@@ -580,12 +571,6 @@ namespace CSGenio.framework
                 {
                     row.Cells[c].VerticalAlignment = VerticalAlignment.Center;
                     row.Cells[c].AddParagraph(AdjustIfTooWideToFitIn(row.Cells[c], columns[c].Description));
-                    /*
-                    row.Cells[c].Format.Font.Bold = true;
-                    row.Cells[0].Format.Alignment = ParagraphAlignment.Left;
-                    row.Cells[0].VerticalAlignment = VerticalAlignment.Bottom;
-                    row.Cells[0].MergeDown = 1;
-                    */
                 }
             }
 
@@ -692,13 +677,6 @@ namespace CSGenio.framework
 
         private class ExportToExcel
         {
-            private double CentimeterToPixel(double Centimeter)
-            {
-                double pixel = -1;
-                pixel = (Centimeter * 300) / 2.5399999d;
-                return (double)pixel;
-            }
-
             /// <summary>
             /// Generate Excel document with table content.
             /// </summary>
@@ -715,10 +693,6 @@ namespace CSGenio.framework
                 //fill first row with the columns name
                 for (int i = 0; i < columns.Count; i++)
                 {
-                    //double tableWidth = 27.5; //Vamos assumir a largura de uma pagina A4 menos 2,2cm de margens. Ou seja 29.7 - 2.2 = 27.5cm
-                    //double colPercent = (columns[i].Size * tableWidth) / QColumn.Sum(columns);
-                    //worksheet.Column(i + 1).Width = CentimeterToPixel(colPercent);
-                    //worksheet.Column(i + 1).AutoFit();
                     worksheet.Cells[1, i + 1].Value = columns[i].Description;
                     worksheet.Cells[1, i + 1].Style.Fill.PatternType = ExcelFillStyle.Solid;
                     worksheet.Cells[1, i + 1].Style.Fill.BackgroundColor.SetColor(System.Drawing.Color.FromArgb(0, 141, 210));
@@ -727,6 +701,7 @@ namespace CSGenio.framework
                     worksheet.Cells[1, i + 1].Style.Font.Size = 11;
                     worksheet.Cells[1, i + 1].Style.Font.Name = "Arial";
                 }
+
                 int idx = 2;
                 //run each row of the menu list
                 for(int i = 0; i < values.NumRows; i++)
@@ -796,8 +771,6 @@ namespace CSGenio.framework
                                 }
 
                                 worksheet.Cells[idx, c + 1].Style.Numberformat.Format = numberFormat;
-
-
                                 worksheet.Cells[idx, c + 1].Value = values.GetNumeric(i, columns[c].Name);
                                 break;
 
@@ -912,7 +885,7 @@ namespace CSGenio.framework
                             string text = getTextFromData(values.GetDirect(i, columns[c].Name), columns[c], user);
                             Qvalues.Add(text);
                         }
-                        CreateNode(tagname,Qvalues, writer);
+                        CreateNode(tagname, Qvalues, writer);
                     }
                     writer.WriteEndElement();
                     writer.WriteEndDocument();
@@ -933,19 +906,18 @@ namespace CSGenio.framework
                 writer.WriteStartElement("Registo");
                 for (int i = 0; i < tags.Count; i++ )
                 {
-                    writer.WriteStartElement(tags[i].Replace(" ","_"));
+                    writer.WriteStartElement(tags[i].Replace(" ", "_"));
                     writer.WriteString(Qvalues[i]);
                     writer.WriteEndElement();
                 }
                 writer.WriteEndElement();
             }
-
         }
 
         internal static string getTextFromData(object data, QColumn column, User user = null)
         {
 			string lang = "";
-			if(user != null)
+			if (user != null)
 				lang = user.Language;
             string text = Conversion.internal2String(data, column.Type);
             if ((column.Type == FieldType.ARRAY_TEXT || column.Type == FieldType.ARRAY_NUMERIC || column.Type == FieldType.ARRAY_LOGIC)
@@ -953,7 +925,7 @@ namespace CSGenio.framework
             {
                 ArrayInfo array = new ArrayInfo(column.ArrayName);
                 if (array.Elements.Contains(text))// MH [21/03/2016] - Validação se o código exists. Caso contrario provoca erro de execução.
-                    text = array.GetDescription(text, /*dbSearch.Language*/lang);
+                    text = array.GetDescription(text, lang);
                 else text = string.Empty;
             }
 
@@ -962,7 +934,7 @@ namespace CSGenio.framework
 
         #endregion
 
-       #region Import
+        #region Import
 
         public List<A> ImportList<A>(List<Exports.QColumn> columns, string exportType, byte[] file) where A : IArea
         {
@@ -987,14 +959,13 @@ namespace CSGenio.framework
                     "Exports.ImportarListagem", Translations.Get("Ficheiro com dados em formato incorreto"));
             }
 
-            if(!this.CheckIfRightFile(rows[0], columns))
+            if (!this.CheckIfRightFile(rows[0], columns))
             {
                 throw new FrameworkException(Translations.Get("Ficheiro com cabeçalho incorrecto"),
                     "Exports.ImportarListagem", Translations.Get("Ficheiro com cabeçalho incorrecto"));
             }
 
             Dictionary<String, List<Exports.QColumn>> columnsByArea = this.GetColumnsByArea(columns);
-
 
             //Process values into DbArea models
             rows.RemoveAt(0);//Start at 1 to avoid reading Header
@@ -1009,7 +980,6 @@ namespace CSGenio.framework
                     object value = row[col];
                     if (value == null)
                         continue;
-
 
                     string fieldBaseArea = columns[col].BaseArea;
 
@@ -1052,7 +1022,7 @@ namespace CSGenio.framework
             Dictionary<String, List<Exports.QColumn>> areas = new Dictionary<String, List<Exports.QColumn>>();
             foreach (Exports.QColumn column in columns)
             {
-                if(areas.ContainsKey(column.BaseArea))
+                if (areas.ContainsKey(column.BaseArea))
                 {
                     List<Exports.QColumn> columnsByArea = areas[column.BaseArea];
                     columnsByArea.Add(column);
@@ -1072,7 +1042,7 @@ namespace CSGenio.framework
             for (int col = 0; col < columns.Count; col++)
             {
                 object value = values[col];
-                if(value == null || value.ToString() != columns[col].Description)
+                if (value == null || value.ToString() != columns[col].Description)
                 {
                     return false;
                 }
@@ -1156,7 +1126,7 @@ namespace CSGenio.framework
 				// Change AM/PM to standard tt
 				.Replace("AM/PM", "tt")
 				// Excel uses lower case m for both months and minutes
-				// Change the minute characters to i so the other 
+				// Change the minute characters to i so the other
 				// lowercase m characters that are for months can be changed to uppercase
 				// and then the i characters can be changed back to m
 				.Replace(":mm", ":ii")
@@ -1165,13 +1135,13 @@ namespace CSGenio.framework
 				.Replace("i", "m")
 				// Replace tenths of a second with standard f
 				.Replace(".0", ".f")
-				// Always replace / with - since Excel is inconsistent in using these characters 
+				// Always replace / with - since Excel is inconsistent in using these characters
 				// for format strings and formatted date text
 				.Replace("/", "-");
 		}
 
 		/// <summary>
-		/// Get the parsed Excel cell value using the cell's formatting 
+		/// Get the parsed Excel cell value using the cell's formatting
 		/// or the default formatting if the cell does not have specific formatting
 		/// </summary>
 		/// <param name="cell">Cell object</param>
@@ -1229,7 +1199,7 @@ namespace CSGenio.framework
 
 				DateTimeFieldFormatter formatter = new DateTimeFieldFormatter(formatting);
 
-				// Always replace / with - since Excel is inconsistent in using these characters 
+				// Always replace / with - since Excel is inconsistent in using these characters
 				// for format strings and formatted date text
 				string cellValue = cell.Value == null ? "" : cell.Value.ToString().Replace("/", "-");
 
@@ -1281,7 +1251,6 @@ namespace CSGenio.framework
 
                 rowCount = currentSheet.Dimension.End.Row;// Here is where my issue is
 
-
                 for (int rowIterator = 0; rowIterator < rowCount; rowIterator++)
                 {
                     object[] row = new object[columnCount];
@@ -1304,7 +1273,6 @@ namespace CSGenio.framework
 
             return results;
         }
-
 
         #endregion
     }

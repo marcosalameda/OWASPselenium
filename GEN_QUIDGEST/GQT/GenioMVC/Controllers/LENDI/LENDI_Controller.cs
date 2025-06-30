@@ -69,6 +69,10 @@ namespace GenioMVC.Controllers
                     FieldType = "D"
                 });
 
+
+
+
+
                 string[] historicFieldNames = new string[0]{};
                 string[] historicFieldValues = new string[0]{};
                 Dictionary<string, string> arrayFieldsList = new Dictionary<string, string>();
@@ -89,7 +93,8 @@ namespace GenioMVC.Controllers
                         renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
                     }
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
-                    result = renderer.Render("PDF");
+					result = renderer.Render("PDF");
+	
                 }
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 1511]/
@@ -102,15 +107,9 @@ namespace GenioMVC.Controllers
             }
             catch (Exception e)
             {
+				var message = e is GenioException ge ? ge.UserMessage : Resources.Resources.OCORREU_UM_ERRO_INES30674; 
                 CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
-                if (!preview)
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
-                }
-                else
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
-                }
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + message);
             }
         }
 

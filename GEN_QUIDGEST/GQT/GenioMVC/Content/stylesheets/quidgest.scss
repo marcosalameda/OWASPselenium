@@ -705,24 +705,15 @@ input:checked + .slider:before {
     max-width: 30%;
 }
 
-.radioimage + .imgchoice {
-    cursor: pointer;
-}
-
 .imgchoice {
 	max-width: 100%;
-    border: 2px solid $container-bg-color;
+    border: 2px solid $primary;
 	border-radius: 10px;
-    filter: grayscale(100%);
-    -webkit-filter: grayscale(100%);
-    -ms-filter: grayscale(100%);
+	cursor: pointer;
 }
 
-input:checked + .imgchoice {
-    border: 2px solid $primary;
-    filter: none;
-    -webkit-filter: grayscale(0%);
-    -ms-filter: grayscale(0%);
+.imgchoice:hover {
+    filter: brightness(0.5);
 }
 
 //i-select

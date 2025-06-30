@@ -60,13 +60,18 @@ namespace GenioMVC.Controllers
                 if(crs == null && allSelected)
                     throw new FrameworkException(Resources.Resources.NAO_FOI_POSSIVEL_OBT36525, "GQT_Report_2D2141", "Could not obtain the selected records list.");
 
-                limitation.Add(new ReportLimitParameter_DM() {
-                    FullFieldName = "tpequ.codtpequ",
-                    FieldValue = allSelected
+
+				ReportLimitParameter_DM dmLimitation0 = new ReportLimitParameter_DM();
+				dmLimitation0.FullFieldName = "tpequ.codtpequ";
+				dmLimitation0.FieldValue = allSelected
                         ? GetActionIds(crs, null, CSGenio.business.Area.createArea("tpequ",
                             UserContext.Current.User, UserContext.Current.User.CurrentModule)).ToArray()
-                        : Navigation.GetValue<string[]>("tpequ_Selections")
-                });
+                        : Navigation.GetValue<string[]>("tpequ_Selections");					
+						
+
+				limitation.Add(dmLimitation0);
+
+
 
                 string[] historicFieldNames = new string[0]{};
                 string[] historicFieldValues = new string[0]{};
@@ -88,7 +93,8 @@ namespace GenioMVC.Controllers
                         renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
                     }
                     renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
-                    result = renderer.Render("PDF");
+					result = renderer.Render("PDF");
+	
                 }
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 2D2141]/
@@ -101,15 +107,9 @@ namespace GenioMVC.Controllers
             }
             catch (Exception e)
             {
+				var message = e is GenioException ge ? ge.UserMessage : Resources.Resources.OCORREU_UM_ERRO_INES30674; 
                 CSGenio.framework.Log.Error("Erro_Report: " + e.Message + "; " + (e.InnerException != null ? e.InnerException.Message : ""));
-                if (!preview)
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + e.Message);
-                }
-                else
-                {
-                    return PartialView("_ErrorReport", model: Resources.Resources.OCORREU_UM_ERRO_INES30674);
-                }
+                    return PartialView("_ErrorReport", model: Resources.Resources.FALHA_AO_GERAR_O_REL63109 + " -- " + message);
             }
         }
 

@@ -53,7 +53,7 @@
         .AddTableAction("GQT_Menu_2d2111", "Equip" , (Func<GenioMVC.Models.Tpequ, object>)(item => new { tpequ = item.ValCodtpequ }), "", @Resources.LISTA13474, isRoutine: false, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
         .AddTableAction("Tpequ_Show", "Tpequ" , (Func<GenioMVC.Models.Tpequ, object>)(item => new { id = item.ValCodtpequ }), "", @Resources.FORMULARIO39926, isRoutine: false, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
         .AddTableAction("GQT_Menu_2D21_MenuR_TEST", "Tpequ" , (Func<GenioMVC.Models.Tpequ, object>)(item => new { id = item.ValCodtpequ }), "", @Resources.ROUTINE58306, isRoutine: true, multipleSelection: true, isAjaxAction: false, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1), openInPopup: false, isBootStrapIcon: false)
-        .AddTableAction("SubmitMultiSelection", "Tpequ", null, "", @Resources.REPORT48266, isBootStrapIcon: false, isRoutine: true, multipleSelection: true, isAjaxAction: true, htmlAttributes: new { }, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1))
+	    .AddTableAction("SubmitMultiSelection2D2141", "Tpequ", null, "", @Resources.REPORT48266, isBootStrapIcon: false, isRoutine: true, multipleSelection: true, isAjaxAction: true, accesslevel: GenioMVC.Models.Navigation.UserContext.Current.User.VerifyAccess(CSGenio.framework.Role.ROLE_1))
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;
         
@@ -147,7 +147,7 @@ $(document).ready(function() {
     }
 })
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_2D21]/
-async function SubmitMultiSelection(jsonRouteValues, multipleValues = false) {
+async function SubmitMultiSelection2D2111(jsonRouteValues, multipleValues = false) {
     var url = '@Url.Action("GQT_Menu_2D21_Selections", "Tpequ", new { nav = @Navigation.NavigationId })';
 
     let promiseRes = await new Promise((resolve, reject) => {
@@ -166,8 +166,65 @@ async function SubmitMultiSelection(jsonRouteValues, multipleValues = false) {
             if(urlNext.includes('?')) urlNext = `${urlNext}&allSelected=${tblControl.isAllSelected()}`;
             else urlNext = `${urlNext}?allSelected=${tblControl.isAllSelected()}`;
 
+            QUtils.NavigateTo = urlNext;
+        });
+    });
+
+	if (promiseRes && !multipleValues) {
+		QUtils.NavigateTo = promiseRes;
+	}
+
+    return promiseRes;
+}
+async function SubmitMultiSelection2D2121(jsonRouteValues, multipleValues = false) {
+    var url = '@Url.Action("GQT_Menu_2D21_Selections", "Tpequ", new { nav = @Navigation.NavigationId })';
+
+    let promiseRes = await new Promise((resolve, reject) => {
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "POST",
+            dataType: "json",
+            data: $.param(jsonRouteValues, true)
+        }).done(function() {
+            urlNext = '@Url.Action("Tpequ_Edit", "Tpequ", new { nav = @Navigation.NavigationId })';
+
+            let tblId = "GQT_Menu_2D21";
+            let tblControl = $(`#${tblId}`).getQTableList();
+
+            if(urlNext.includes('?')) urlNext = `${urlNext}&allSelected=${tblControl.isAllSelected()}`;
+            else urlNext = `${urlNext}?allSelected=${tblControl.isAllSelected()}`;
 
             QUtils.NavigateTo = urlNext;
+        });
+    });
+
+	if (promiseRes && !multipleValues) {
+		QUtils.NavigateTo = promiseRes;
+	}
+
+    return promiseRes;
+}
+async function SubmitMultiSelection2D2141(jsonRouteValues, multipleValues = false) {
+    var url = '@Url.Action("GQT_Menu_2D21_Selections", "Tpequ", new { nav = @Navigation.NavigationId })';
+
+    let promiseRes = await new Promise((resolve, reject) => {
+        $.ajax({
+            url: url,
+            cache: false,
+            type: "POST",
+            dataType: "json",
+            data: $.param(jsonRouteValues, true)
+        }).done(function() {
+            urlNext = '@Url.Action("GQT_Report_2D2141", "Tpequ", new { nav = @Navigation.NavigationId })';
+
+            let tblId = "GQT_Menu_2D21";
+            let tblControl = $(`#${tblId}`).getQTableList();
+
+            if(urlNext.includes('?')) urlNext = `${urlNext}&allSelected=${tblControl.isAllSelected()}`;
+            else urlNext = `${urlNext}?allSelected=${tblControl.isAllSelected()}`;
+
+            QUtils.WindowOpen(urlNext, "_blank");
         });
     });
 

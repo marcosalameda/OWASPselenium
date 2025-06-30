@@ -50,7 +50,7 @@
         .MultipleSelection()
         .Filters(this.Model.Menu.Filters)
         .Form("Tpequ", false, false)
-        .AddTableAction("SubmitMultiSelection", "Tpequ", null, "glyphicons glyphicons-check tabel_action_icon", @Resources.SUBMETER21206, isBootStrapIcon:true, isRoutine: true, multipleSelection: true, isAjaxAction: true, htmlAttributes: new { })
+        .AddTableAction("SubmitMultiSelection2D111", "Tpequ", null, "glyphicons glyphicons-check tabel_action_icon", @Resources.SUBMETER21206, isBootStrapIcon:true, isRoutine: true, multipleSelection: true, isAjaxAction: true, htmlAttributes: new { })
         .Permissions(canView: true, canInsert: true, canEdit: true, canDelete: true, canDuplicate: true)
 		;
         
@@ -129,7 +129,7 @@ $(document).ready(function() {
     }
 })
 // USE /[MANUAL GQT LISTING_CODEJS GQT_MENU_2D11]/
-async function SubmitMultiSelection(jsonRouteValues, multipleValues = false) {
+async function SubmitMultiSelection2D111(jsonRouteValues, multipleValues = false) {
     var url = '@Url.Action("GQT_Menu_2D11_Selections", "Tpequ", new { nav = @Navigation.NavigationId })';
 
     let promiseRes = await new Promise((resolve, reject) => {
@@ -147,7 +147,6 @@ async function SubmitMultiSelection(jsonRouteValues, multipleValues = false) {
 
             if(urlNext.includes('?')) urlNext = `${urlNext}&allSelected=${tblControl.isAllSelected()}`;
             else urlNext = `${urlNext}?allSelected=${tblControl.isAllSelected()}`;
-
 
             QUtils.NavigateTo = urlNext;
         });

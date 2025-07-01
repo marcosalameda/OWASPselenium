@@ -18,10 +18,11 @@
 						</template>
 					</q-text-field>
 					<numeric-input
-						v-model="model.Port"
+						:model-value="portValue"
 						size="xlarge"
 						:label="hardcodedTexts.port"
-						:isReadOnly="isTestingConnection">
+						:isReadOnly="isTestingConnection"
+						@update:model-value="updateSystemPort">
 					</numeric-input>
 					<q-select
 						v-model="model.ServerType"
@@ -278,12 +279,18 @@ export default {
 				changesSavedSuccess: this.Resources[texts.changesSavedSuccess],
 			}
 		},
+
+		portValue() {
+			return parseInt(this.model.Port) || ''
+		}
 	},
 
 	methods: {
+		updateSystemPort(newVal) {
+			this.model.Port = newVal.toString()
+		},
+
 		saveConfigDatabase() {
-			//let hasConfig = vm.model.HasConfig;
-			this.model.Port = this.model.Port.toString()
 			QUtils.log("SaveConfigDatabase - Request", QUtils.apiActionURL('Config', 'SaveConfigDatabase'));
 			QUtils.postData('Config', 'SaveConfigDatabase', this.model, null, (data) => {
 				QUtils.log("SaveConfigDatabase - Response", data);
@@ -335,11 +342,12 @@ export default {
 				this.isTestingConnection = false;
 			})
 		},
-		beforeUnmount() {
-			if (this.globalClickHandler) {
-				document.removeEventListener('click', this.globalClickHandler, true);
-			}
-		},
+	},
+
+	beforeUnmount() {
+		if (this.globalClickHandler) {
+			document.removeEventListener('click', this.globalClickHandler, true);
+		}
 	}
 };
 </script>

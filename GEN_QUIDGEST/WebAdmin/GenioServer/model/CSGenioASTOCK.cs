@@ -179,16 +179,16 @@ namespace CSGenio.business
 			info.Pathways.Add("dispa","dispa");
 			info.Pathways.Add("recei","recei");
 			info.Pathways.Add("produ","produ");
-			info.Pathways.Add("perso","dispa");
 			info.Pathways.Add("disst","dispa");
+			info.Pathways.Add("perso","dispa");
 			info.Pathways.Add("entit","dispa");
-			info.Pathways.Add("faci2","dispa");
 			info.Pathways.Add("faci1","dispa");
+			info.Pathways.Add("faci2","dispa");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");
-			info.Pathways.Add("facty","produ");
 			info.Pathways.Add("cntry","produ");
+			info.Pathways.Add("facty","produ");
 		}
 
 		/// <summary>

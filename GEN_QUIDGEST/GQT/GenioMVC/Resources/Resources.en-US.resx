@@ -1326,6 +1326,81 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	<data name="IMAGE_THUMBNAIL01682" xml:space="preserve">
 		<value>Image thumbnail</value>
 	</data>
+	<data name="QUANTITY_OF_TRANSACT63133" xml:space="preserve">
+		<value>Quantity of transactions</value>
+	</data>
+	<data name="BUILDING_AGE27311" xml:space="preserve">
+		<value>Building age</value>
+	</data>
+	<data name="MULTIFORM41286" xml:space="preserve">
+		<value>Multiform</value>
+	</data>
+	<data name="SPECIFIC_PATH_WITH_C62619" xml:space="preserve">
+		<value>Specific path with conditions popup afte MB</value>
+	</data>
+	<data name="___7840086" xml:space="preserve">
+		<value>Field filled in automatically from the sum of penalties for late completion of Initiative / Project activities.</value>
+	</data>
+	<data name="A_CANCELAR43988" xml:space="preserve">
+		<value>A cancelar</value>
+	</data>
+	<data name="PROCESS_INFO62044" xml:space="preserve">
+		<value>Process info</value>
+	</data>
+	<data name="HOME_TEAM06029" xml:space="preserve">
+		<value>Home Team</value>
+	</data>
+	<data name="PARADA59671" xml:space="preserve">
+		<value>Parada</value>
+	</data>
+	<data name="LOCAIS_DA_REGRA25886" xml:space="preserve">
+		<value>Locais da regra</value>
+	</data>
+	<data name="TRAINING_EXERCISE_0161013" xml:space="preserve">
+		<value>Training Exercise 01</value>
+	</data>
+	<data name="INTERESTED_PARTY36855" xml:space="preserve">
+		<value>Interested party</value>
+	</data>
+	<data name="LADO49085" xml:space="preserve">
+		<value>Lado</value>
+	</data>
+	<data name="DATE_OF_BIRTH63058" xml:space="preserve">
+		<value>Date of birth</value>
+	</data>
+	<data name="SPENT_IN_HOURS19366" xml:space="preserve">
+		<value>Spent in Hours</value>
+	</data>
+	<data name="TABS03209" xml:space="preserve">
+		<value>Tabs</value>
+	</data>
+	<data name="PRODUCTS34689" xml:space="preserve">
+		<value>Products</value>
+	</data>
+	<data name="TIPO_SCORECARD22393" xml:space="preserve">
+		<value>Tipo Scorecard</value>
+	</data>
+	<data name="ORDER_LINE50035" xml:space="preserve">
+		<value>Order line</value>
+	</data>
+	<data name="ORGANISM39461" xml:space="preserve">
+		<value>Organism</value>
+	</data>
+	<data name="ORGANIC_UNIT48997" xml:space="preserve">
+		<value>Organic Unit</value>
+	</data>
+	<data name="INTERNO52273" xml:space="preserve">
+		<value>Interno</value>
+	</data>
+	<data name="MODIFIED_BY02094" xml:space="preserve">
+		<value>Modified by</value>
+	</data>
+	<data name="TEAM_OF_PLAYERS02382" xml:space="preserve">
+		<value>Team of players</value>
+	</data>
+	<data name="NOME_DO_ARTIGO38127" xml:space="preserve">
+		<value>Nome do Artigo</value>
+	</data>
 	<data name="YEAR__NUMBERS_29394" xml:space="preserve">
 		<value>Year (numbers)</value>
 	</data>
@@ -1343,9 +1418,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	</data>
 	<data name="SANTANDER27925" xml:space="preserve">
 		<value>Santander</value>
-	</data>
-	<data name="PARADA59671" xml:space="preserve">
-		<value>Parada</value>
 	</data>
 	<data name="START00919" xml:space="preserve">
 		<value>Start</value>
@@ -1833,6 +1905,93 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	<data name="___9508268" xml:space="preserve">
 		<value>Default value as a percentage of the target for the lower limit of the &apos;Exceeded&apos; range. This range is intended to highlight realised values that are clearly above the target, from the point of view of being clearly exceeded.</value>
 	</data>
+	<data name="__22919394" xml:space="preserve">
+		<value>Mostra os mapas que já foram fechados.</value>
+	</data>
+	<data name="EXTERNAL_API_ADDRESS59205" xml:space="preserve">
+		<value>External API address</value>
+	</data>
+	<data name="PONDERACOES_SIADAP16568" xml:space="preserve">
+		<value>Ponderações SIADAP</value>
+	</data>
+	<data name="SEGMENTS__INSTANCE_53220" xml:space="preserve">
+		<value>Segments (Instance)</value>
+	</data>
+	<data name="EXECUTED_BY_EXTERNAL36156" xml:space="preserve">
+		<value>Executed by external app</value>
+	</data>
+	<data name="DECOMISSION_04392" xml:space="preserve">
+		<value>Decomission:</value>
+	</data>
+	<data name="PROGRAMA08229" xml:space="preserve">
+		<value>Programa</value>
+	</data>
+	<data name="ALERT_55243" xml:space="preserve">
+		<value>Alert?</value>
+	</data>
+	<data name="JULY41219" xml:space="preserve">
+		<value>July</value>
+	</data>
+	<data name="NO_BATE21045" xml:space="preserve">
+		<value>No bate</value>
+	</data>
+	<data name="__10927577" xml:space="preserve">
+		<value>Detailed description of the objective.</value>
+	</data>
+	<data name="RECORRENTE45302" xml:space="preserve">
+		<value>Recorrente</value>
+	</data>
+	<data name="DOCUMENTS_REQUIRED_D11605" xml:space="preserve">
+		<value>Documents Required Duplicated</value>
+	</data>
+	<data name="GTIN45487" xml:space="preserve">
+		<value>GTIN</value>
+	</data>
+	<data name="MANAGER18024" xml:space="preserve">
+		<value>MANAGER</value>
+	</data>
+	<data name="MAXIMO52072" xml:space="preserve">
+		<value>Máximo</value>
+	</data>
+	<data name="LIMITE_MINIMO41607" xml:space="preserve">
+		<value>Limite Mínimo</value>
+	</data>
+	<data name="BOM_SUP_56812" xml:space="preserve">
+		<value>Bom Sup.</value>
+	</data>
+	<data name="_1122_VERBOSE40655" xml:space="preserve">
+		<value>Help in the Menu verbose</value>
+	</data>
+	<data name="OUTPUT_FORMATS51278" xml:space="preserve">
+		<value>Output formats</value>
+	</data>
+	<data name="SERVIDOR_SMTP03820" xml:space="preserve">
+		<value>Servidor SMTP</value>
+	</data>
+	<data name="TECHNICAL_AREAS40861" xml:space="preserve">
+		<value>Technical areas</value>
+	</data>
+	<data name="BACKGROUND45121" xml:space="preserve">
+		<value>Background</value>
+	</data>
+	<data name="BIRTH21799" xml:space="preserve">
+		<value>Birth</value>
+	</data>
+	<data name="REFERENCE_DATE47300" xml:space="preserve">
+		<value>Reference date</value>
+	</data>
+	<data name="VALOR_UNICO39183" xml:space="preserve">
+		<value>Valor Único</value>
+	</data>
+	<data name="IMAGE_TOP34930" xml:space="preserve">
+		<value>Image Top</value>
+	</data>
+	<data name="ANEXOS_DIGITAIS01954" xml:space="preserve">
+		<value>Anexos digitais</value>
+	</data>
+	<data name="CAMPOS_COM_CONDICOES25291" xml:space="preserve">
+		<value>Fields with form conditions</value>
+	</data>
 	<data name="_109335067" xml:space="preserve">
 		<value>Mailing addresses - PO Boxes and care-of addresses.</value>
 	</data>
@@ -2169,9 +2328,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	<data name="__32923151" xml:space="preserve">
 		<value>Valor usado no relatório QUAR para o ano N-1</value>
 	</data>
-	<data name="__10927577" xml:space="preserve">
-		<value>Detailed description of the objective.</value>
-	</data>
 	<data name="ASSET_PARAMETERS20615" xml:space="preserve">
 		<value>Asset parameters</value>
 	</data>
@@ -2406,9 +2562,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	<data name="DESTINATION_Y32304" xml:space="preserve">
 		<value>Destination Y</value>
 	</data>
-	<data name="HOME_TEAM06029" xml:space="preserve">
-		<value>Home Team</value>
-	</data>
 	<data name="TICKET59503" xml:space="preserve">
 		<value>Ticket</value>
 	</data>
@@ -2465,69 +2618,6 @@ Period is not used for a duration (a measure of elapsed time).</value>
 	<data name="NOTES05274" xml:space="preserve">
 		<value>Notes</value>
 	</data>
-	<data name="FALHOU_CONDICAO_DE_E17481" xml:space="preserve">
-		<value>Falhou condição de edição na tabela</value>
-	</data>
-	<data name="PRIORIDADE64497" xml:space="preserve">
-		<value>Prioridade</value>
-	</data>
-	<data name="CLOSING_OF_THE_SALE05493" xml:space="preserve">
-		<value>Closing of the sale</value>
-	</data>
-	<data name="DATA_ORIGIN43107" xml:space="preserve">
-		<value>Data Origin</value>
-	</data>
-	<data name="__13030578" xml:space="preserve">
-		<value>Chave estrangeira do Indicador Pai</value>
-	</data>
-	<data name="NENHUMA23117" xml:space="preserve">
-		<value>Nenhuma</value>
-	</data>
-	<data name="INFORMACAO_DO_AGENTE51492" xml:space="preserve">
-		<value>Informação do agente</value>
-	</data>
-	<data name="___3862804" xml:space="preserve">
-		<value>This help is for a field of type Creation: User</value>
-	</data>
-	<data name="___6249523" xml:space="preserve">
-		<value>Type of indicator, in terms of whether it is a Results / Lag indicator or an Anticipation / Lead indicator. A Lead indicator is one whose impact on results and Vision will manifest itself later, while a Lag indicator has an immediate impact. While the former will be associated with Objectives from the Resources and Processes perspectives, the latter predominate in Objectives from the Customers and Financial perspectives.</value>
-	</data>
-	<data name="SMTP_PORT50933" xml:space="preserve">
-		<value>SMTP Port</value>
-	</data>
-	<data name="PERSON10446" xml:space="preserve">
-		<value>Person</value>
-	</data>
-	<data name="GENERATED_BY_FORMULA23837" xml:space="preserve">
-		<value>Generated by formulas</value>
-	</data>
-	<data name="WITHOUT_FINANCIAL_RE10399" xml:space="preserve">
-		<value>Without Financial Resources</value>
-	</data>
-	<data name="EDITOR_MULTILINE_TEX05556" xml:space="preserve">
-		<value>Editor Multiline text</value>
-	</data>
-	<data name="GENERATION32809" xml:space="preserve">
-		<value>Generation</value>
-	</data>
-	<data name="VIEW62547" xml:space="preserve">
-		<value>View</value>
-	</data>
-	<data name="CONCLUIDA26734" xml:space="preserve">
-		<value>Concluída</value>
-	</data>
-	<data name="PROJECTO50142" xml:space="preserve">
-		<value>Projecto</value>
-	</data>
-	<data name="POTENTIAL_BUYERS56564" xml:space="preserve">
-		<value>Potential Buyers</value>
-	</data>
-	<data name="ALTERADO_EM23573" xml:space="preserve">
-		<value>Alterado em</value>
-	</data>
-	<data name="EXEMPLO_DE_MATRIX_LI55766" xml:space="preserve">
-		<value>Exemplo de Matrix List</value>
-	</data>
 	<data name="ACTIVITY02681" xml:space="preserve">
 		<value>Activity</value>
 	</data>
@@ -2569,9 +2659,6 @@ Period is not used for a duration (a measure of elapsed time).</value>
 	</data>
 	<data name="VAT_NUMBER24236" xml:space="preserve">
 		<value>VAT Number</value>
-	</data>
-	<data name="DATE_OF_BIRTH63058" xml:space="preserve">
-		<value>Date of birth</value>
 	</data>
 	<data name="__41949435" xml:space="preserve">
 		<value>Factible: El indicador se puede medir a través de las operaciones estadísticas existentes actualmente.
@@ -2874,9 +2961,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="TIMELINE_YEARS__ARMA39069" xml:space="preserve">
 		<value>Timeline Years- Armazém</value>
-	</data>
-	<data name="NO_BATE21045" xml:space="preserve">
-		<value>No bate</value>
 	</data>
 	<data name="_109235148" xml:space="preserve">
 		<value>An address expressed using postal conventions (as opposed to GPS or other location definition formats)</value>
@@ -3277,11 +3361,11 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="_114429549" xml:space="preserve">
 		<value>Help in numeric enumeration field</value>
 	</data>
+	<data name="GENERATION32809" xml:space="preserve">
+		<value>Generation</value>
+	</data>
 	<data name="DATA_FECHO61581" xml:space="preserve">
 		<value>Data Fecho</value>
-	</data>
-	<data name="BOM_SUP_56812" xml:space="preserve">
-		<value>Bom Sup.</value>
 	</data>
 	<data name="TWO16230" xml:space="preserve">
 		<value>Two</value>
@@ -3336,9 +3420,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="LINE_41181" xml:space="preserve">
 		<value>Line:</value>
-	</data>
-	<data name="PROGRAMA08229" xml:space="preserve">
-		<value>Programa</value>
 	</data>
 	<data name="SITE06486" xml:space="preserve">
 		<value>Site</value>
@@ -3523,9 +3604,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="DAYS41432" xml:space="preserve">
 		<value>Days</value>
 	</data>
-	<data name="DECOMISSION_04392" xml:space="preserve">
-		<value>Decomission:</value>
-	</data>
 	<data name="FACILITY_NAME19514" xml:space="preserve">
 		<value>Facility name</value>
 	</data>
@@ -3581,9 +3659,6 @@ c:\very-long-folder-name  =&gt; MAX Length=(260-12-1) = 247. The trailing minus 
 Then, you can create a file in this folder with a name like this: 12345678.txt
 
 So, we have our 260 chars for the whole path, including the file name, the extension, and the NUL terminator.</value>
-	</data>
-	<data name="OUTPUT_FORMATS51278" xml:space="preserve">
-		<value>Output formats</value>
 	</data>
 	<data name="ROLES61449" xml:space="preserve">
 		<value>Roles</value>
@@ -3654,9 +3729,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="__17858752" xml:space="preserve">
 		<value>Aqui é escolhida a qualidade dos dados que estamos a recolher</value>
 	</data>
-	<data name="__22919394" xml:space="preserve">
-		<value>Mostra os mapas que já foram fechados.</value>
-	</data>
 	<data name="ORDERS_IN_GROUP___FL17142" xml:space="preserve">
 		<value>Orders in group  (Float field)</value>
 	</data>
@@ -3668,9 +3740,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="__16711219" xml:space="preserve">
 		<value>Campo para indicar se o dado é proveniente de Projecto ou não</value>
-	</data>
-	<data name="EXECUTED_BY_EXTERNAL36156" xml:space="preserve">
-		<value>Executed by external app</value>
 	</data>
 	<data name="FIXED_MENU_NAME38578" xml:space="preserve">
 		<value>Fixed menu name</value>
@@ -3795,6 +3864,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="ROW_ORDER_GROUP_LEVE17934" xml:space="preserve">
 		<value>Row order group level 1</value>
 	</data>
+	<data name="EDITOR_MULTILINE_TEX05556" xml:space="preserve">
+		<value>Editor Multiline text</value>
+	</data>
 	<data name="NUMERIC__9_0___INTEG03994" xml:space="preserve">
 		<value>Numeric  9.0 - integer (storage: 4 byte)</value>
 	</data>
@@ -3857,6 +3929,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="DATA_RESPONSIBLE21952" xml:space="preserve">
 		<value>Data Responsible</value>
+	</data>
+	<data name="DATA_ORIGIN43107" xml:space="preserve">
+		<value>Data Origin</value>
 	</data>
 	<data name="ORGANISM_CODE46857" xml:space="preserve">
 		<value>Organism code</value>
@@ -4031,9 +4106,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="DATA_DADOS41767" xml:space="preserve">
 		<value>Data dados</value>
-	</data>
-	<data name="ANEXOS_DIGITAIS01954" xml:space="preserve">
-		<value>Anexos digitais</value>
 	</data>
 	<data name="ENTRIES_07375" xml:space="preserve">
 		<value>Entries:</value>
@@ -4224,9 +4296,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="THIS_HELP_IS_FOR_A_F41403" xml:space="preserve">
 		<value>This help is for a field of type Logical</value>
 	</data>
-	<data name="MAXIMO52072" xml:space="preserve">
-		<value>Máximo</value>
-	</data>
 	<data name="YEARS39740" xml:space="preserve">
 		<value>Years</value>
 	</data>
@@ -4411,9 +4480,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="FIRST_INCORPORATED_F63789" xml:space="preserve">
 		<value>First incorporated facility</value>
 	</data>
-	<data name="SEGMENTS__INSTANCE_53220" xml:space="preserve">
-		<value>Segments (Instance)</value>
-	</data>
 	<data name="DELETE48637" xml:space="preserve">
 		<value>Delete</value>
 	</data>
@@ -4446,9 +4512,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="DATE_55218" xml:space="preserve">
 		<value>Date:</value>
-	</data>
-	<data name="NOME_DO_ARTIGO38127" xml:space="preserve">
-		<value>Nome do Artigo</value>
 	</data>
 	<data name="_112319369" xml:space="preserve">
 		<value>Help in table list</value>
@@ -4516,311 +4579,288 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="ENTITY62049" xml:space="preserve">
 		<value>Entity</value>
 	</data>
-	<data name="BONIFICACOES_AUTOMAT45559" xml:space="preserve">
-		<value>Bonificações Automáticas</value>
+	<data name="_INTERESTED_PARTY56973" xml:space="preserve">
+		<value>&gt;INTERESTED PARTY</value>
 	</data>
-	<data name="NOTIFICATION_MESSAGE60981" xml:space="preserve">
-		<value>Notification Messages</value>
+	<data name="ICONE_DO_INDICADOR37745" xml:space="preserve">
+		<value>Ícone do indicador</value>
 	</data>
-	<data name="CAMPO_COM_CONDICAO_D59708" xml:space="preserve">
-		<value>Field with Fill when condition</value>
+	<data name="_1141_VERBOSE60151" xml:space="preserve">
+		<value>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;
+&lt;/head&gt;
+&lt;body&gt;
+&lt;p&gt;This zone has verbose help.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</value>
 	</data>
-	<data name="DAYS_FOR_RETURN_PERI04559" xml:space="preserve">
-		<value>Days for return period</value>
+	<data name="LOGOTIPO_MINISTERIO43307" xml:space="preserve">
+		<value>Logotipo Ministério</value>
 	</data>
-	<data name="REVERSE_34696" xml:space="preserve">
-		<value>Reverse?</value>
+	<data name="PHOTO51874" xml:space="preserve">
+		<value>Photo</value>
 	</data>
-	<data name="TYPE00312" xml:space="preserve">
-		<value>Type</value>
+	<data name="BEGINNING18124" xml:space="preserve">
+		<value>Beginning</value>
 	</data>
-	<data name="__28729421" xml:space="preserve">
-		<value>Data da última notificação enviada</value>
+	<data name="SEGMENT32557" xml:space="preserve">
+		<value>Segment</value>
 	</data>
-	<data name="_111418227" xml:space="preserve">
-		<value>Help in the zone</value>
+	<data name="_112823684" xml:space="preserve">
+		<value>Valor mínimo para esta meta (corresponde ao valor mínimo da barra). Para indicadores QUAR de polaridade decrescente este campo corresponde ao Valor Crítico.</value>
 	</data>
-	<data name="ACRONYM00872" xml:space="preserve">
-		<value>Acronym</value>
+	<data name="APRESENTACAO15975" xml:space="preserve">
+		<value>Apresentação</value>
 	</data>
-	<data name="APPROACH06577" xml:space="preserve">
-		<value>Approach</value>
+	<data name="NUMBER_OF_EXPECTED_H57082" xml:space="preserve">
+		<value>Number of expected hours</value>
 	</data>
-	<data name="TIPO_DE_EQUIPAMENTO_06967" xml:space="preserve">
-		<value>Tipo de equipamento em árvore</value>
+	<data name="__17959155" xml:space="preserve">
+		<value>If the data is entered on a pre-established date (single date) you must tick the box.</value>
 	</data>
-	<data name="INITIALS22754" xml:space="preserve">
-		<value>Initials</value>
+	<data name="FALHOU_CONDICAO_DE_E17481" xml:space="preserve">
+		<value>Falhou condição de edição na tabela</value>
 	</data>
-	<data name="OBJECTTYPECODE_DISPL38583" xml:space="preserve">
-		<value>objectTypeCode_display</value>
+	<data name="SUPPLIER17230" xml:space="preserve">
+		<value>Supplier</value>
 	</data>
-	<data name="CATALOG_ITEMS20029" xml:space="preserve">
-		<value>Catalog Items</value>
+	<data name="PRIORIDADE64497" xml:space="preserve">
+		<value>Prioridade</value>
 	</data>
-	<data name="CONTACT_TYPE40756" xml:space="preserve">
-		<value>CONTACT TYPE</value>
+	<data name="CLOSING_OF_THE_SALE05493" xml:space="preserve">
+		<value>Closing of the sale</value>
 	</data>
-	<data name="ZOOM_LEVEL17268" xml:space="preserve">
-		<value>Zoom level</value>
+	<data name="__13030578" xml:space="preserve">
+		<value>Chave estrangeira do Indicador Pai</value>
 	</data>
-	<data name="PATH03888" xml:space="preserve">
-		<value>Path</value>
+	<data name="NENHUMA23117" xml:space="preserve">
+		<value>Nenhuma</value>
 	</data>
-	<data name="GOOD_LIMIT_PERC_34406" xml:space="preserve">
-		<value>Good Limit Perc.</value>
+	<data name="INFORMACAO_DO_AGENTE51492" xml:space="preserve">
+		<value>Informação do agente</value>
+	</data>
+	<data name="___3862804" xml:space="preserve">
+		<value>This help is for a field of type Creation: User</value>
+	</data>
+	<data name="___6249523" xml:space="preserve">
+		<value>Type of indicator, in terms of whether it is a Results / Lag indicator or an Anticipation / Lead indicator. A Lead indicator is one whose impact on results and Vision will manifest itself later, while a Lag indicator has an immediate impact. While the former will be associated with Objectives from the Resources and Processes perspectives, the latter predominate in Objectives from the Customers and Financial perspectives.</value>
+	</data>
+	<data name="SMTP_PORT50933" xml:space="preserve">
+		<value>SMTP Port</value>
+	</data>
+	<data name="PERSON10446" xml:space="preserve">
+		<value>Person</value>
+	</data>
+	<data name="GENERATED_BY_FORMULA23837" xml:space="preserve">
+		<value>Generated by formulas</value>
+	</data>
+	<data name="WITHOUT_FINANCIAL_RE10399" xml:space="preserve">
+		<value>Without Financial Resources</value>
+	</data>
+	<data name="VIEW62547" xml:space="preserve">
+		<value>View</value>
+	</data>
+	<data name="CONCLUIDA26734" xml:space="preserve">
+		<value>Concluída</value>
+	</data>
+	<data name="PROJECTO50142" xml:space="preserve">
+		<value>Projecto</value>
+	</data>
+	<data name="POTENTIAL_BUYERS56564" xml:space="preserve">
+		<value>Potential Buyers</value>
+	</data>
+	<data name="ALTERADO_EM23573" xml:space="preserve">
+		<value>Alterado em</value>
+	</data>
+	<data name="EXEMPLO_DE_MATRIX_LI55766" xml:space="preserve">
+		<value>Exemplo de Matrix List</value>
+	</data>
+	<data name="XXXX_XXX51420" xml:space="preserve">
+		<value>xxxx-xxx</value>
+	</data>
+	<data name="____510167" xml:space="preserve">
+		<value>Notification to lessees to return equipment</value>
+	</data>
+	<data name="AUTOMATIC_BONUSES26672" xml:space="preserve">
+		<value>Automatic bonuses</value>
+	</data>
+	<data name="NUMERIC__INTEGER_50289" xml:space="preserve">
+		<value>Numeric (Integer)</value>
+	</data>
+	<data name="__27461951" xml:space="preserve">
+		<value>Inserir valor inicial.</value>
+	</data>
+	<data name="CENTRADA33827" xml:space="preserve">
+		<value>Centrada</value>
+	</data>
+	<data name="_4033029" xml:space="preserve">
+		<value>40</value>
+	</data>
+	<data name="FORMULA_DESCRIPTION51162" xml:space="preserve">
+		<value>Formula Description</value>
+	</data>
+	<data name="TEXT_ENUMERATION45668" xml:space="preserve">
+		<value>Text Enumeration</value>
+	</data>
+	<data name="TIMELINE___DAYS09927" xml:space="preserve">
+		<value>Timeline - Days</value>
+	</data>
+	<data name="NAME_23841" xml:space="preserve">
+		<value>Name:</value>
+	</data>
+	<data name="SUFFICIENT_INDICATOR48127" xml:space="preserve">
+		<value>Sufficient Indicators</value>
+	</data>
+	<data name="REGRA09608" xml:space="preserve">
+		<value>Regra</value>
+	</data>
+	<data name="ENTID_KEY04396" xml:space="preserve">
+		<value>Entid key</value>
+	</data>
+	<data name="USERS13319" xml:space="preserve">
+		<value>Users</value>
+	</data>
+	<data name="__27265157" xml:space="preserve">
+		<value>Superou os limites.</value>
+	</data>
+	<data name="TABLE_LIST_ONE_ACTIO48776" xml:space="preserve">
+		<value>Table List One action</value>
+	</data>
+	<data name="INVERSE_39989" xml:space="preserve">
+		<value>Inverse?</value>
+	</data>
+	<data name="ACTIVIDADE44684" xml:space="preserve">
+		<value>Actividade</value>
+	</data>
+	<data name="YES34196" xml:space="preserve">
+		<value>Yes</value>
+	</data>
+	<data name="CODE49225" xml:space="preserve">
+		<value>Code</value>
+	</data>
+	<data name="ALERT_PERC_15762" xml:space="preserve">
+		<value>Alert Perc.</value>
 	</data>
 	<data name="_110253217" xml:space="preserve">
 		<value>A postal code designating a region defined by the postal service.</value>
 	</data>
-	<data name="NATURALNESS33189" xml:space="preserve">
-		<value>Naturalness</value>
+	<data name="DESIGNACAO_DE_INDICA64780" xml:space="preserve">
+		<value>Indicator designation</value>
 	</data>
-	<data name="LOCAL02842" xml:space="preserve">
-		<value>Local</value>
+	<data name="Y__STRATEGIC_MAP_62787" xml:space="preserve">
+		<value>Y (Strategic Map)</value>
 	</data>
-	<data name="AVAILABLE_FROM53703" xml:space="preserve">
-		<value>Available from</value>
+	<data name="DOCUMENTS_PATH59714" xml:space="preserve">
+		<value>Documents path</value>
 	</data>
-	<data name="ORIGIN_POINT61939" xml:space="preserve">
-		<value>Origin point</value>
+	<data name="TYPE_OF_INDICATOR33247" xml:space="preserve">
+		<value>Type of Indicator</value>
 	</data>
-	<data name="PROD__E_CRESC_35758" xml:space="preserve">
-		<value>Prod. e Cresc.</value>
+	<data name="E_MAIL_SENT51699" xml:space="preserve">
+		<value>E-mail sent</value>
 	</data>
-	<data name="FIELD_FEEDBACK53085" xml:space="preserve">
-		<value>Field feedback</value>
+	<data name="PROJECTOS14756" xml:space="preserve">
+		<value>Projectos</value>
 	</data>
-	<data name="CARD_IMG_TOP51356" xml:space="preserve">
-		<value>Card-Img-Top</value>
+	<data name="LOCATIONS14064" xml:space="preserve">
+		<value>Locations</value>
 	</data>
-	<data name="BAGGAGES58641" xml:space="preserve">
-		<value>Baggages</value>
+	<data name="SMALL_INTEGER__STORA54196" xml:space="preserve">
+		<value>small integer (storage: 2 byte)</value>
 	</data>
-	<data name="NATIONAL_MEASUREMENT59425" xml:space="preserve">
-		<value>National Measurement Feasibility</value>
+	<data name="DRIVE03517" xml:space="preserve">
+		<value>Drive</value>
 	</data>
-	<data name="_1AVIAGEM10982" xml:space="preserve">
-		<value>1ªViagem</value>
+	<data name="INITIATIVE_DESIGNATI04322" xml:space="preserve">
+		<value>Initiative designation</value>
 	</data>
-	<data name="TO_REVIEW46268" xml:space="preserve">
-		<value>To review</value>
+	<data name="NUMERO_DE_CASA_DE_BA10087" xml:space="preserve">
+		<value>Numero de Casa de banhos</value>
 	</data>
-	<data name="MANUFACTURER_S_WEBSI11084" xml:space="preserve">
-		<value>Manufacturer&apos;s website</value>
+	<data name="E_MAIL41236" xml:space="preserve">
+		<value>e-mail</value>
 	</data>
-	<data name="END_TIME_WITH_INCLUS19241" xml:space="preserve">
-		<value>End time with inclusive boundary, if not ongoing</value>
+	<data name="RECOLHA_DIRETA_DOS_D20088" xml:space="preserve">
+		<value>Recolha direta dos Dados</value>
 	</data>
-	<data name="GENIO_L228302" xml:space="preserve">
-		<value>GENIO L2</value>
+	<data name="POTENTIAL_POINTS10046" xml:space="preserve">
+		<value>Potential points</value>
 	</data>
-	<data name="PHONE56703" xml:space="preserve">
-		<value>Phone</value>
+	<data name="BOOLEAN_PROP13266" xml:space="preserve">
+		<value>Boolean Prop</value>
 	</data>
-	<data name="LISTS54900" xml:space="preserve">
-		<value>Lists</value>
+	<data name="TIMELINE_WEEKS__ARMA08729" xml:space="preserve">
+		<value>Timeline Weeks- Armazém</value>
 	</data>
-	<data name="BUSINESS_INTELLIGENC63897" xml:space="preserve">
-		<value>Business intelligence</value>
+	<data name="FORM54242" xml:space="preserve">
+		<value>Form</value>
 	</data>
-	<data name="Y_DE_DESTINO21846" xml:space="preserve">
-		<value>Y de Destino</value>
+	<data name="___1238797" xml:space="preserve">
+		<value>15-day loan</value>
 	</data>
-	<data name="EMPLOYEE_NUMBER05861" xml:space="preserve">
-		<value>Employee Number</value>
+	<data name="DURACAO_VIAGEM00021" xml:space="preserve">
+		<value>Duração Viagem</value>
 	</data>
-	<data name="TIMELINE___MONTHS37278" xml:space="preserve">
-		<value>Timeline - Months</value>
+	<data name="INITIALS22754" xml:space="preserve">
+		<value>Initials</value>
 	</data>
-	<data name="COD__POSTAL04857" xml:space="preserve">
-		<value>Postal code</value>
+	<data name="CONTACT_TYPE_27897" xml:space="preserve">
+		<value>Contact Type:</value>
 	</data>
-	<data name="FECHO_DA_VENDA48081" xml:space="preserve">
-		<value>Fecho da venda</value>
+	<data name="MINISTERIO28390" xml:space="preserve">
+		<value>Ministério</value>
 	</data>
-	<data name="QUANTITY_OF_TRANSACT63133" xml:space="preserve">
-		<value>Quantity of transactions</value>
+	<data name="COLLECTION52862" xml:space="preserve">
+		<value>Collection</value>
 	</data>
-	<data name="BUILDING_AGE27311" xml:space="preserve">
-		<value>Building age</value>
+	<data name="IMOVEIS09219" xml:space="preserve">
+		<value>Imóveis</value>
 	</data>
-	<data name="MULTIFORM41286" xml:space="preserve">
-		<value>Multiform</value>
+	<data name="INPUT_DOCUMENTS05982" xml:space="preserve">
+		<value>Input documents</value>
 	</data>
-	<data name="SPECIFIC_PATH_WITH_C62619" xml:space="preserve">
-		<value>Specific path with conditions popup afte MB</value>
+	<data name="ENUM___FEMALE_PEOPLE19941" xml:space="preserve">
+		<value>Enum - Female people</value>
 	</data>
-	<data name="___7840086" xml:space="preserve">
-		<value>Field filled in automatically from the sum of penalties for late completion of Initiative / Project activities.</value>
+	<data name="GLOBAL_PARAMETERS41637" xml:space="preserve">
+		<value>Global parameters</value>
 	</data>
-	<data name="A_CANCELAR43988" xml:space="preserve">
-		<value>A cancelar</value>
+	<data name="TIME50904" xml:space="preserve">
+		<value>time</value>
 	</data>
-	<data name="PROCESS_INFO62044" xml:space="preserve">
-		<value>Process info</value>
+	<data name="FALHOU_CONDICAO_DE_V12527" xml:space="preserve">
+		<value>Falhou condição de visualização na tabela</value>
 	</data>
-	<data name="LOCAIS_DA_REGRA25886" xml:space="preserve">
-		<value>Locais da regra</value>
+	<data name="FLIGHT_SCALE13079" xml:space="preserve">
+		<value>Flight Scale</value>
 	</data>
-	<data name="TRAINING_EXERCISE_0161013" xml:space="preserve">
-		<value>Training Exercise 01</value>
+	<data name="FILTRAR_RESPONSAVEIS06812" xml:space="preserve">
+		<value>Filtrar Responsáveis</value>
 	</data>
-	<data name="INTERESTED_PARTY36855" xml:space="preserve">
-		<value>Interested party</value>
+	<data name="MORE____C_GROUPBOX__22286" xml:space="preserve">
+		<value>More -&gt; c-groupbox--minor</value>
 	</data>
-	<data name="LADO49085" xml:space="preserve">
-		<value>Lado</value>
-	</data>
-	<data name="SPENT_IN_HOURS19366" xml:space="preserve">
-		<value>Spent in Hours</value>
-	</data>
-	<data name="TABS03209" xml:space="preserve">
-		<value>Tabs</value>
-	</data>
-	<data name="PRODUCTS34689" xml:space="preserve">
-		<value>Products</value>
-	</data>
-	<data name="TIPO_SCORECARD22393" xml:space="preserve">
-		<value>Tipo Scorecard</value>
-	</data>
-	<data name="ORDER_LINE50035" xml:space="preserve">
-		<value>Order line</value>
-	</data>
-	<data name="ORGANISM39461" xml:space="preserve">
-		<value>Organism</value>
-	</data>
-	<data name="ORGANIC_UNIT48997" xml:space="preserve">
-		<value>Organic Unit</value>
-	</data>
-	<data name="INTERNO52273" xml:space="preserve">
-		<value>Interno</value>
-	</data>
-	<data name="MODIFIED_BY02094" xml:space="preserve">
-		<value>Modified by</value>
-	</data>
-	<data name="TEAM_OF_PLAYERS02382" xml:space="preserve">
-		<value>Team of players</value>
-	</data>
-	<data name="EXTERNAL_API_ADDRESS59205" xml:space="preserve">
-		<value>External API address</value>
-	</data>
-	<data name="PONDERACOES_SIADAP16568" xml:space="preserve">
-		<value>Ponderações SIADAP</value>
-	</data>
-	<data name="ALERT_55243" xml:space="preserve">
-		<value>Alert?</value>
-	</data>
-	<data name="JULY41219" xml:space="preserve">
-		<value>July</value>
-	</data>
-	<data name="RECORRENTE45302" xml:space="preserve">
-		<value>Recorrente</value>
-	</data>
-	<data name="DOCUMENTS_REQUIRED_D11605" xml:space="preserve">
-		<value>Documents Required Duplicated</value>
-	</data>
-	<data name="GTIN45487" xml:space="preserve">
-		<value>GTIN</value>
-	</data>
-	<data name="MANAGER18024" xml:space="preserve">
-		<value>MANAGER</value>
-	</data>
-	<data name="LIMITE_MINIMO41607" xml:space="preserve">
-		<value>Limite Mínimo</value>
-	</data>
-	<data name="_1122_VERBOSE40655" xml:space="preserve">
-		<value>Help in the Menu verbose</value>
-	</data>
-	<data name="SERVIDOR_SMTP03820" xml:space="preserve">
-		<value>Servidor SMTP</value>
-	</data>
-	<data name="TECHNICAL_AREAS40861" xml:space="preserve">
-		<value>Technical areas</value>
-	</data>
-	<data name="BACKGROUND45121" xml:space="preserve">
-		<value>Background</value>
-	</data>
-	<data name="BIRTH21799" xml:space="preserve">
-		<value>Birth</value>
-	</data>
-	<data name="REFERENCE_DATE47300" xml:space="preserve">
-		<value>Reference date</value>
-	</data>
-	<data name="VALOR_UNICO39183" xml:space="preserve">
-		<value>Valor Único</value>
-	</data>
-	<data name="IMAGE_TOP34930" xml:space="preserve">
-		<value>Image Top</value>
-	</data>
-	<data name="CAMPOS_COM_CONDICOES25291" xml:space="preserve">
-		<value>Fields with form conditions</value>
+	<data name="QTD_OUTPUT12876" xml:space="preserve">
+		<value>Qtd output</value>
 	</data>
 	<data name="PERIOD_END31576" xml:space="preserve">
 		<value>Period End</value>
 	</data>
-	<data name="DEPARTURE_HOUR28390" xml:space="preserve">
-		<value>Departure hour</value>
+	<data name="JA_VIAJOU_ANTES_22497" xml:space="preserve">
+		<value>já viajou antes?</value>
 	</data>
-	<data name="CAMPOS_COM_CONDICOES38548" xml:space="preserve">
-		<value>Fields with table conditions</value>
+	<data name="BIG_INTEGER__STORAGE28249" xml:space="preserve">
+		<value>big integer (storage: 8 byte)</value>
 	</data>
-	<data name="ANOTHER00311" xml:space="preserve">
-		<value>Another</value>
+	<data name="TYPE__TEXT_50814" xml:space="preserve">
+		<value>Type (Text)</value>
 	</data>
-	<data name="FUNCIONARIOS50597" xml:space="preserve">
-		<value>Funcionários</value>
+	<data name="RELATIONS__STRATEGIC44939" xml:space="preserve">
+		<value>Relations (Strategic Map)</value>
 	</data>
-	<data name="LEAFLET16035" xml:space="preserve">
-		<value>Leaflet</value>
-	</data>
-	<data name="SHADOW_WIDTH01769" xml:space="preserve">
-		<value>Shadow width</value>
-	</data>
-	<data name="PROSPECCAO_EFECTUADA42558" xml:space="preserve">
-		<value>Prospecção efectuada</value>
-	</data>
-	<data name="LATITUDES_RANGE_FROM48085" xml:space="preserve">
-		<value>Latitudes range from -90 to 90.</value>
-	</data>
-	<data name="NOTIFICATION_ID25507" xml:space="preserve">
-		<value>Notification ID</value>
-	</data>
-	<data name="AUXILIARY_FIELD_CONT53966" xml:space="preserve">
-		<value>Auxiliary Field Cont</value>
-	</data>
-	<data name="CATALOG_ARTICLES06740" xml:space="preserve">
-		<value>Catalog articles</value>
-	</data>
-	<data name="HISTOGRAM12232" xml:space="preserve">
-		<value>Histogram</value>
-	</data>
-	<data name="NOT_IN_USE41845" xml:space="preserve">
-		<value>Not in use</value>
-	</data>
-	<data name="PERC__LIMITE_BOM02469" xml:space="preserve">
-		<value>Perc. Limite Bom</value>
-	</data>
-	<data name="_109131109" xml:space="preserve">
-		<value>An address to be used to send bills, invoices, receipts etc.</value>
-	</data>
-	<data name="ORGANIZATION_SALES23156" xml:space="preserve">
-		<value>Organization Sales</value>
-	</data>
-	<data name="LISTA_DE_CAMPOS37609" xml:space="preserve">
-		<value>Lista de campos</value>
-	</data>
-	<data name="OWNER09558" xml:space="preserve">
-		<value>Owner</value>
-	</data>
-	<data name="IT_IS_NEST_WITHIN_TH02373" xml:space="preserve">
-		<value>It is nest within the second zone and it has the default style</value>
-	</data>
-	<data name="___3261074" xml:space="preserve">
-		<value>This help is for a field of type DATE</value>
-	</data>
-	<data name="RECEIPTS_OF_GOODS02355" xml:space="preserve">
-		<value>Receipts of goods</value>
+	<data name="ORIGEM_DOS_DADOS05511" xml:space="preserve">
+		<value>Origem dos Dados</value>
 	</data>
 	<data name="META_REAL47614" xml:space="preserve">
 		<value>Meta Real</value>
@@ -5005,8 +5045,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="HEADER35023" xml:space="preserve">
 		<value>Header</value>
 	</data>
-	<data name="PHOTO51874" xml:space="preserve">
-		<value>Photo</value>
+	<data name="OWNER09558" xml:space="preserve">
+		<value>Owner</value>
 	</data>
 	<data name="PERC__MIN55014" xml:space="preserve">
 		<value>Perc. Min</value>
@@ -5082,9 +5122,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="HOMEWORK_DONE45166" xml:space="preserve">
 		<value>Homework done</value>
-	</data>
-	<data name="XXXX_XXX51420" xml:space="preserve">
-		<value>xxxx-xxx</value>
 	</data>
 	<data name="SUB_CATEGORY06342" xml:space="preserve">
 		<value>Sub category</value>
@@ -5227,9 +5264,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="PERPSPECTIVE16685" xml:space="preserve">
 		<value>Perpspective</value>
 	</data>
-	<data name="TYPE__TEXT_50814" xml:space="preserve">
-		<value>Type (Text)</value>
-	</data>
 	<data name="NORMAL_LIST29699" xml:space="preserve">
 		<value>Normal List</value>
 	</data>
@@ -5262,9 +5296,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="ENUMERATION__TEXT_15855" xml:space="preserve">
 		<value>Enumeration (Text)</value>
-	</data>
-	<data name="CENTRADA33827" xml:space="preserve">
-		<value>Centrada</value>
 	</data>
 	<data name="CURRICULUM51182" xml:space="preserve">
 		<value>Resume</value>
@@ -5332,11 +5363,17 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="_113633700" xml:space="preserve">
 		<value>Valor de alerta, abaixo do qual é emitido um alerta ao responsáveis.</value>
 	</data>
+	<data name="_1AVIAGEM10982" xml:space="preserve">
+		<value>1ªViagem</value>
+	</data>
 	<data name="_AGGREGATOR38173" xml:space="preserve">
 		<value>&gt;AGGREGATOR</value>
 	</data>
 	<data name="CLIENT_IP_ADDRESS62089" xml:space="preserve">
 		<value>Client ip address</value>
+	</data>
+	<data name="_111418227" xml:space="preserve">
+		<value>Help in the zone</value>
 	</data>
 	<data name="CHECKIN_DATE_TIME16655" xml:space="preserve">
 		<value>Checkin Date/Time</value>
@@ -5467,6 +5504,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="BACKGROUND_COLOR47883" xml:space="preserve">
 		<value>Background color</value>
 	</data>
+	<data name="CATALOG_ITEMS20029" xml:space="preserve">
+		<value>Catalog Items</value>
+	</data>
 	<data name="SHOW_CLOSED_MAPS39302" xml:space="preserve">
 		<value>Show Closed Maps</value>
 	</data>
@@ -5488,6 +5528,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="MOTIVE13407" xml:space="preserve">
 		<value>Motive</value>
 	</data>
+	<data name="TO_REVIEW46268" xml:space="preserve">
+		<value>To review</value>
+	</data>
 	<data name="__13130913" xml:space="preserve">
 		<value>Sigla do Indicador Pai deste Indicador</value>
 	</data>
@@ -5499,6 +5542,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="GAME57681" xml:space="preserve">
 		<value>Game</value>
+	</data>
+	<data name="EMPLOYEE_NUMBER05861" xml:space="preserve">
+		<value>Employee Number</value>
 	</data>
 	<data name="FIELDS_WITH_TABLE_AN24395" xml:space="preserve">
 		<value>Fields with table and form conditions</value>
@@ -5529,9 +5575,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="PASSENGER_CAPACITY_O45867" xml:space="preserve">
 		<value>Passenger capacity on the plane</value>
-	</data>
-	<data name="PROJECTOS14756" xml:space="preserve">
-		<value>Projectos</value>
 	</data>
 	<data name="MANUAL_NAME60077" xml:space="preserve">
 		<value>Manual name</value>
@@ -5644,9 +5687,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="Y_DE_ORIGEM46845" xml:space="preserve">
 		<value>Y de Origem</value>
 	</data>
-	<data name="QTD_OUTPUT12876" xml:space="preserve">
-		<value>Qtd output</value>
-	</data>
 	<data name="TOLERANCIA56961" xml:space="preserve">
 		<value>Tolerância</value>
 	</data>
@@ -5664,9 +5704,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="OU_ACRONYM61307" xml:space="preserve">
 		<value>OU Acronym</value>
-	</data>
-	<data name="INPUT_DOCUMENTS05982" xml:space="preserve">
-		<value>Input documents</value>
 	</data>
 	<data name="COMPANY_22615" xml:space="preserve">
 		<value>Company:</value>
@@ -5698,6 +5735,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="_112514035" xml:space="preserve">
 		<value>help radio button opçao 2</value>
 	</data>
+	<data name="MANUFACTURER_S_WEBSI11084" xml:space="preserve">
+		<value>Manufacturer&apos;s website</value>
+	</data>
 	<data name="ACTIVE_36249" xml:space="preserve">
 		<value>Active?</value>
 	</data>
@@ -5706,9 +5746,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="__18665343" xml:space="preserve">
 		<value>É a justificação referente ao alvo que se pretende alcançar.</value>
-	</data>
-	<data name="NAME_23841" xml:space="preserve">
-		<value>Name:</value>
 	</data>
 	<data name="ALL_THE_EXPENSES38264" xml:space="preserve">
 		<value>All the expenses</value>
@@ -5857,9 +5894,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="PARAMETERS28294" xml:space="preserve">
 		<value>Parameters</value>
 	</data>
-	<data name="__17959155" xml:space="preserve">
-		<value>If the data is entered on a pre-established date (single date) you must tick the box.</value>
-	</data>
 	<data name="TEXT_PROP21994" xml:space="preserve">
 		<value>Text Prop</value>
 	</data>
@@ -5998,9 +6032,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
 	<data name="FACILITIES08876" xml:space="preserve">
 		<value>Facilities</value>
 	</data>
-	<data name="ICONE_DO_INDICADOR37745" xml:space="preserve">
-		<value>Ícone do indicador</value>
-	</data>
 	<data name="BAD_POINTS44459" xml:space="preserve">
 		<value>Bad points</value>
 	</data>
@@ -6090,6 +6121,9 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
 	</data>
 	<data name="ABRIL58220" xml:space="preserve">
 		<value>Abril</value>
+	</data>
+	<data name="AVAILABLE_FROM53703" xml:space="preserve">
+		<value>Available from</value>
 	</data>
 	<data name="EXPERT27393" xml:space="preserve">
 		<value>Expert</value>
@@ -6223,9 +6257,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
 	<data name="PHOTOS_42586" xml:space="preserve">
 		<value>Photos:</value>
 	</data>
-	<data name="FORM54242" xml:space="preserve">
-		<value>Form</value>
-	</data>
 	<data name="EQUIPMENTE_FAMILIES20990" xml:space="preserve">
 		<value>Equipmente families</value>
 	</data>
@@ -6295,51 +6326,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
 	<data name="ORGANIC_UNITS18795" xml:space="preserve">
 		<value>Organic Units</value>
 	</data>
-	<data name="CONTACT_TYPE_27897" xml:space="preserve">
-		<value>Contact Type:</value>
-	</data>
-	<data name="MINISTERIO28390" xml:space="preserve">
-		<value>Ministério</value>
-	</data>
-	<data name="COLLECTION52862" xml:space="preserve">
-		<value>Collection</value>
-	</data>
-	<data name="IMOVEIS09219" xml:space="preserve">
-		<value>Imóveis</value>
-	</data>
-	<data name="ENUM___FEMALE_PEOPLE19941" xml:space="preserve">
-		<value>Enum - Female people</value>
-	</data>
-	<data name="GLOBAL_PARAMETERS41637" xml:space="preserve">
-		<value>Global parameters</value>
-	</data>
-	<data name="TIME50904" xml:space="preserve">
-		<value>time</value>
-	</data>
-	<data name="FALHOU_CONDICAO_DE_V12527" xml:space="preserve">
-		<value>Falhou condição de visualização na tabela</value>
-	</data>
-	<data name="FLIGHT_SCALE13079" xml:space="preserve">
-		<value>Flight Scale</value>
-	</data>
-	<data name="FILTRAR_RESPONSAVEIS06812" xml:space="preserve">
-		<value>Filtrar Responsáveis</value>
-	</data>
-	<data name="MORE____C_GROUPBOX__22286" xml:space="preserve">
-		<value>More -&gt; c-groupbox--minor</value>
-	</data>
-	<data name="JA_VIAJOU_ANTES_22497" xml:space="preserve">
-		<value>já viajou antes?</value>
-	</data>
-	<data name="BIG_INTEGER__STORAGE28249" xml:space="preserve">
-		<value>big integer (storage: 8 byte)</value>
-	</data>
-	<data name="RELATIONS__STRATEGIC44939" xml:space="preserve">
-		<value>Relations (Strategic Map)</value>
-	</data>
-	<data name="ORIGEM_DOS_DADOS05511" xml:space="preserve">
-		<value>Origem dos Dados</value>
-	</data>
 	<data name="REPORT48266" xml:space="preserve">
 		<value>Report</value>
 	</data>
@@ -6384,9 +6370,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="__32120439" xml:space="preserve">
 		<value>Logotipo do ministério</value>
 	</data>
-	<data name="ACTIVIDADE44684" xml:space="preserve">
-		<value>Actividade</value>
-	</data>
 	<data name="LAYER_NAME49545" xml:space="preserve">
 		<value>Layer name</value>
 	</data>
@@ -6422,9 +6405,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="NUMERIC_DECIMAL37352" xml:space="preserve">
 		<value>Numeric Decimal</value>
-	</data>
-	<data name="INVERSE_39989" xml:space="preserve">
-		<value>Inverse?</value>
 	</data>
 	<data name="CALCULATIONS_EXCLUSI63239" xml:space="preserve">
 		<value>Calculations exclusively with working days?</value>
@@ -6504,9 +6484,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="SPECIFIC_BUTTONS____08735" xml:space="preserve">
 		<value>Specific buttons -&gt; DB + MB + F</value>
 	</data>
-	<data name="ALERT_PERC_15762" xml:space="preserve">
-		<value>Alert Perc.</value>
-	</data>
 	<data name="MOSTRAR_ANOS_ANTERIO34446" xml:space="preserve">
 		<value>Mostrar Anos Anteriores</value>
 	</data>
@@ -6546,9 +6523,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="CURRENCY__DECIMAL_11718" xml:space="preserve">
 		<value>Currency (Decimal)</value>
 	</data>
-	<data name="SEGMENT32557" xml:space="preserve">
-		<value>Segment</value>
-	</data>
 	<data name="TAB41839" xml:space="preserve">
 		<value>Tab</value>
 	</data>
@@ -6563,6 +6537,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="NO_HORAS_ESPERADAS06950" xml:space="preserve">
 		<value>Nº Horas Esperadas</value>
+	</data>
+	<data name="NOTIFICATION_MESSAGE60981" xml:space="preserve">
+		<value>Notification Messages</value>
 	</data>
 	<data name="_1143_VERBOSE20952" xml:space="preserve">
 		<value>&lt;!DOCTYPE html&gt;
@@ -6586,11 +6563,11 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="MAXIMUM48308" xml:space="preserve">
 		<value>Maximum</value>
 	</data>
-	<data name="REGRA09608" xml:space="preserve">
-		<value>Regra</value>
-	</data>
 	<data name="MES61580" xml:space="preserve">
 		<value>Mês</value>
+	</data>
+	<data name="PROSPECCAO_EFECTUADA42558" xml:space="preserve">
+		<value>Prospecção efectuada</value>
 	</data>
 	<data name="CHOSEN_CATEGORIES47546" xml:space="preserve">
 		<value>Chosen Categories</value>
@@ -6718,9 +6695,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="EDITAR11616" xml:space="preserve">
 		<value>Edit</value>
 	</data>
-	<data name="__27461951" xml:space="preserve">
-		<value>Inserir valor inicial.</value>
-	</data>
 	<data name="BUILDING_TYPES23872" xml:space="preserve">
 		<value>Building types</value>
 	</data>
@@ -6744,12 +6718,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="DOES_NOT_ERASE39880" xml:space="preserve">
 		<value>Does not erase</value>
-	</data>
-	<data name="TYPE_OF_INDICATOR33247" xml:space="preserve">
-		<value>Type of Indicator</value>
-	</data>
-	<data name="SUFFICIENT_INDICATOR48127" xml:space="preserve">
-		<value>Sufficient Indicators</value>
 	</data>
 	<data name="SHELF59898" xml:space="preserve">
 		<value>Shelf</value>
@@ -6829,9 +6797,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="BAGGAGE_TYPE35947" xml:space="preserve">
 		<value>Baggage Type</value>
 	</data>
-	<data name="_112823684" xml:space="preserve">
-		<value>Valor mínimo para esta meta (corresponde ao valor mínimo da barra). Para indicadores QUAR de polaridade decrescente este campo corresponde ao Valor Crítico.</value>
-	</data>
 	<data name="PROP59653" xml:space="preserve">
 		<value>Prop</value>
 	</data>
@@ -6840,9 +6805,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	</data>
 	<data name="HAS_LOGIN_58044" xml:space="preserve">
 		<value>Has login?</value>
-	</data>
-	<data name="POTENTIAL_POINTS10046" xml:space="preserve">
-		<value>Potential points</value>
 	</data>
 	<data name="JUSTIFICATION14675" xml:space="preserve">
 		<value>Justification</value>
@@ -6982,6 +6944,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="DETAILS19591" xml:space="preserve">
 		<value>Details</value>
 	</data>
+	<data name="FIELD_FEEDBACK53085" xml:space="preserve">
+		<value>Field feedback</value>
+	</data>
 	<data name="DIGITAL_ATTACHMENTS64891" xml:space="preserve">
 		<value>Digital Attachments</value>
 	</data>
@@ -7060,6 +7025,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
 	<data name="_113734103" xml:space="preserve">
 		<value>Percentagem do valor objectivo a que corresponde o valor do limite bom.</value>
 	</data>
+	<data name="COD__POSTAL04857" xml:space="preserve">
+		<value>Postal code</value>
+	</data>
 	<data name="____114843" xml:space="preserve">
 		<value>What or who lends a non-fungible thing in order to receive it again; what or who lends by way of lending
 
@@ -7118,6 +7086,9 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="IDENTIFICATION_NUMBE11999" xml:space="preserve">
 		<value>Identification number</value>
+	</data>
+	<data name="ANOTHER00311" xml:space="preserve">
+		<value>Another</value>
 	</data>
 	<data name="GEOGRAPHIC_COORDINAT42880" xml:space="preserve">
 		<value>Geographic Coordinates</value>
@@ -7224,9 +7195,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	<data name="RECEIPT_DATE00996" xml:space="preserve">
 		<value>Receipt date</value>
 	</data>
-	<data name="NUMERIC__INTEGER_50289" xml:space="preserve">
-		<value>Numeric (Integer)</value>
-	</data>
 	<data name="FIELDS36500" xml:space="preserve">
 		<value>Fields</value>
 	</data>
@@ -7314,9 +7282,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	<data name="ASYNC_PROCESS_ATTACH34417" xml:space="preserve">
 		<value>Async process attachment</value>
 	</data>
-	<data name="_4033029" xml:space="preserve">
-		<value>40</value>
-	</data>
 	<data name="NIVEL_III58608" xml:space="preserve">
 		<value>Nivel III</value>
 	</data>
@@ -7365,6 +7330,9 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	<data name="INDIVIDUAL_NOTIFICAT44867" xml:space="preserve">
 		<value>Individual Notifications</value>
 	</data>
+	<data name="TIMELINE___MONTHS37278" xml:space="preserve">
+		<value>Timeline - Months</value>
+	</data>
 	<data name="__PRODUCT04710" xml:space="preserve">
 		<value>&gt;&gt;PRODUCT</value>
 	</data>
@@ -7373,6 +7341,9 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="EDITOR_DADOS_PESSOAI56223" xml:space="preserve">
 		<value>Editor dados pessoais</value>
+	</data>
+	<data name="LEAFLET16035" xml:space="preserve">
+		<value>Leaflet</value>
 	</data>
 	<data name="CAMPO_AUXILIAR_CONT_21578" xml:space="preserve">
 		<value>Campo Auxiliar Cont NA</value>
@@ -7385,6 +7356,12 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="__30442719" xml:space="preserve">
 		<value>Telefone</value>
+	</data>
+	<data name="CONTACT_TYPE40756" xml:space="preserve">
+		<value>CONTACT TYPE</value>
+	</data>
+	<data name="BONIFICACOES_AUTOMAT45559" xml:space="preserve">
+		<value>Bonificações Automáticas</value>
 	</data>
 	<data name="COMPLETION_DATE22888" xml:space="preserve">
 		<value>Completion Date</value>
@@ -7412,6 +7389,9 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="__13431422" xml:space="preserve">
 		<value>Tipo de meta para os Segmentos. Se os segmentos são Acumulados por Média ou por Somatório.</value>
+	</data>
+	<data name="LATITUDES_RANGE_FROM48085" xml:space="preserve">
+		<value>Latitudes range from -90 to 90.</value>
 	</data>
 	<data name="FLAG51937" xml:space="preserve">
 		<value>Flag</value>
@@ -7445,9 +7425,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	</data>
 	<data name="MOTIVE_64781" xml:space="preserve">
 		<value>Motive:</value>
-	</data>
-	<data name="_INTERESTED_PARTY56973" xml:space="preserve">
-		<value>&gt;INTERESTED PARTY</value>
 	</data>
 	<data name="__29940285" xml:space="preserve">
 		<value>Unidade orgânica</value>
@@ -7557,9 +7534,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	<data name="__33658680" xml:space="preserve">
 		<value>Dia de recolha dos dados. Insira o dia em que os dados devem ser carregados, conforme a periocidade de recolha definida e o Tipo a definir. Exemplo: para uma periodicidade mensal, o dia 10 e o Tipo “Período seguinte” significa que os dados devem ser carregados até ao dia 10 do mês seguinte.</value>
 	</data>
-	<data name="NUMBER_OF_EXPECTED_H57082" xml:space="preserve">
-		<value>Number of expected hours</value>
-	</data>
 	<data name="___2612289" xml:space="preserve">
 		<value>This help is for a field of type conditional</value>
 	</data>
@@ -7614,39 +7588,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
 	<data name="__12157955" xml:space="preserve">
 		<value>Created by</value>
 	</data>
-	<data name="____510167" xml:space="preserve">
-		<value>Notification to lessees to return equipment</value>
-	</data>
-	<data name="AUTOMATIC_BONUSES26672" xml:space="preserve">
-		<value>Automatic bonuses</value>
-	</data>
-	<data name="FORMULA_DESCRIPTION51162" xml:space="preserve">
-		<value>Formula Description</value>
-	</data>
-	<data name="TEXT_ENUMERATION45668" xml:space="preserve">
-		<value>Text Enumeration</value>
-	</data>
-	<data name="TIMELINE___DAYS09927" xml:space="preserve">
-		<value>Timeline - Days</value>
-	</data>
-	<data name="ENTID_KEY04396" xml:space="preserve">
-		<value>Entid key</value>
-	</data>
-	<data name="USERS13319" xml:space="preserve">
-		<value>Users</value>
-	</data>
-	<data name="__27265157" xml:space="preserve">
-		<value>Superou os limites.</value>
-	</data>
-	<data name="TABLE_LIST_ONE_ACTIO48776" xml:space="preserve">
-		<value>Table List One action</value>
-	</data>
-	<data name="YES34196" xml:space="preserve">
-		<value>Yes</value>
-	</data>
-	<data name="CODE49225" xml:space="preserve">
-		<value>Code</value>
-	</data>
 	<data name="GOOD_LIMIT_258360" xml:space="preserve">
 		<value>Good limit 2</value>
 	</data>
@@ -7689,6 +7630,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
 	</data>
 	<data name="DATE_OF_THE_LAST_DAT10062" xml:space="preserve">
 		<value>Date of the last data</value>
+	</data>
+	<data name="LISTA_DE_CAMPOS37609" xml:space="preserve">
+		<value>Lista de campos</value>
 	</data>
 	<data name="SELLER36870" xml:space="preserve">
 		<value>Seller</value>
@@ -7816,6 +7760,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
 	<data name="QUIDGEST56322" xml:space="preserve">
 		<value>QUIDGEST</value>
 	</data>
+	<data name="PROD__E_CRESC_35758" xml:space="preserve">
+		<value>Prod. e Cresc.</value>
+	</data>
 	<data name="_ARMAZEM43996" xml:space="preserve">
 		<value>&gt;ARMAZEM</value>
 	</data>
@@ -7915,6 +7862,51 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="INICIO_DO_ANO45675" xml:space="preserve">
 		<value>Início do Ano</value>
+	</data>
+	<data name="DEPARTURE_HOUR28390" xml:space="preserve">
+		<value>Departure hour</value>
+	</data>
+	<data name="CAMPOS_COM_CONDICOES38548" xml:space="preserve">
+		<value>Fields with table conditions</value>
+	</data>
+	<data name="FUNCIONARIOS50597" xml:space="preserve">
+		<value>Funcionários</value>
+	</data>
+	<data name="SHADOW_WIDTH01769" xml:space="preserve">
+		<value>Shadow width</value>
+	</data>
+	<data name="NOTIFICATION_ID25507" xml:space="preserve">
+		<value>Notification ID</value>
+	</data>
+	<data name="AUXILIARY_FIELD_CONT53966" xml:space="preserve">
+		<value>Auxiliary Field Cont</value>
+	</data>
+	<data name="CATALOG_ARTICLES06740" xml:space="preserve">
+		<value>Catalog articles</value>
+	</data>
+	<data name="HISTOGRAM12232" xml:space="preserve">
+		<value>Histogram</value>
+	</data>
+	<data name="NOT_IN_USE41845" xml:space="preserve">
+		<value>Not in use</value>
+	</data>
+	<data name="PERC__LIMITE_BOM02469" xml:space="preserve">
+		<value>Perc. Limite Bom</value>
+	</data>
+	<data name="_109131109" xml:space="preserve">
+		<value>An address to be used to send bills, invoices, receipts etc.</value>
+	</data>
+	<data name="ORGANIZATION_SALES23156" xml:space="preserve">
+		<value>Organization Sales</value>
+	</data>
+	<data name="IT_IS_NEST_WITHIN_TH02373" xml:space="preserve">
+		<value>It is nest within the second zone and it has the default style</value>
+	</data>
+	<data name="___3261074" xml:space="preserve">
+		<value>This help is for a field of type DATE</value>
+	</data>
+	<data name="RECEIPTS_OF_GOODS02355" xml:space="preserve">
+		<value>Receipts of goods</value>
 	</data>
 	<data name="SPECIFIC_PATH_WITH_C42725" xml:space="preserve">
 		<value>Specific path with conditions -&gt; DB + MB + MC + F</value>
@@ -8018,6 +8010,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="IMAGE__BINARY_46903" xml:space="preserve">
 		<value>Image (binary)</value>
 	</data>
+	<data name="TIPO_DE_EQUIPAMENTO_06967" xml:space="preserve">
+		<value>Tipo de equipamento em árvore</value>
+	</data>
 	<data name="FOREIGN_KEY39588" xml:space="preserve">
 		<value>Foreign Key</value>
 	</data>
@@ -8029,6 +8024,12 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="TIPO_DE_EDIFICIO02279" xml:space="preserve">
 		<value>Tipo de edifício</value>
+	</data>
+	<data name="DAYS_FOR_RETURN_PERI04559" xml:space="preserve">
+		<value>Days for return period</value>
+	</data>
+	<data name="REVERSE_34696" xml:space="preserve">
+		<value>Reverse?</value>
 	</data>
 	<data name="MULTIPLE_SELECT_LIST41638" xml:space="preserve">
 		<value>Multiple Select List</value>
@@ -8156,9 +8157,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="REGIONS_OF_A_COUNTRY19071" xml:space="preserve">
 		<value>Regions of a country</value>
 	</data>
-	<data name="APRESENTACAO15975" xml:space="preserve">
-		<value>Apresentação</value>
-	</data>
 	<data name="WHAREHOUSE_API10412" xml:space="preserve">
 		<value>Wharehouse api</value>
 	</data>
@@ -8210,51 +8208,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="REGISTO48087" xml:space="preserve">
 		<value>registo</value>
 	</data>
-	<data name="DESIGNACAO_DE_INDICA64780" xml:space="preserve">
-		<value>Indicator designation</value>
-	</data>
-	<data name="Y__STRATEGIC_MAP_62787" xml:space="preserve">
-		<value>Y (Strategic Map)</value>
-	</data>
-	<data name="DOCUMENTS_PATH59714" xml:space="preserve">
-		<value>Documents path</value>
-	</data>
-	<data name="E_MAIL_SENT51699" xml:space="preserve">
-		<value>E-mail sent</value>
-	</data>
-	<data name="LOCATIONS14064" xml:space="preserve">
-		<value>Locations</value>
-	</data>
-	<data name="SMALL_INTEGER__STORA54196" xml:space="preserve">
-		<value>small integer (storage: 2 byte)</value>
-	</data>
-	<data name="DRIVE03517" xml:space="preserve">
-		<value>Drive</value>
-	</data>
-	<data name="INITIATIVE_DESIGNATI04322" xml:space="preserve">
-		<value>Initiative designation</value>
-	</data>
-	<data name="NUMERO_DE_CASA_DE_BA10087" xml:space="preserve">
-		<value>Numero de Casa de banhos</value>
-	</data>
-	<data name="E_MAIL41236" xml:space="preserve">
-		<value>e-mail</value>
-	</data>
-	<data name="RECOLHA_DIRETA_DOS_D20088" xml:space="preserve">
-		<value>Recolha direta dos Dados</value>
-	</data>
-	<data name="BOOLEAN_PROP13266" xml:space="preserve">
-		<value>Boolean Prop</value>
-	</data>
-	<data name="TIMELINE_WEEKS__ARMA08729" xml:space="preserve">
-		<value>Timeline Weeks- Armazém</value>
-	</data>
-	<data name="___1238797" xml:space="preserve">
-		<value>15-day loan</value>
-	</data>
-	<data name="DURACAO_VIAGEM00021" xml:space="preserve">
-		<value>Duração Viagem</value>
-	</data>
 	<data name="NO_14817" xml:space="preserve">
 		<value>No.</value>
 	</data>
@@ -8304,9 +8257,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="ANTECEDENCIA11137" xml:space="preserve">
 		<value>Antecedência</value>
 	</data>
-	<data name="SUPPLIER17230" xml:space="preserve">
-		<value>Supplier</value>
-	</data>
 	<data name="PROJECTS49194" xml:space="preserve">
 		<value>Projects</value>
 	</data>
@@ -8330,6 +8280,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="SENDS_EMAIL_12942" xml:space="preserve">
 		<value>Sends email?</value>
+	</data>
+	<data name="CARD_IMG_TOP51356" xml:space="preserve">
+		<value>Card-Img-Top</value>
 	</data>
 	<data name="TYPE_OF_SEGMENT_USED13810" xml:space="preserve">
 		<value>Type of segment used</value>
@@ -8390,6 +8343,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="LOCAL_ONDE_EXECUTA12798" xml:space="preserve">
 		<value>Local onde executa</value>
+	</data>
+	<data name="OBJECTTYPECODE_DISPL38583" xml:space="preserve">
+		<value>objectTypeCode_display</value>
 	</data>
 	<data name="UPPER_CASE31324" xml:space="preserve">
 		<value>Upper case</value>
@@ -8538,6 +8494,33 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	<data name="ENUMERATION__NUMERIC44708" xml:space="preserve">
 		<value>Enumeration (Numeric)</value>
 	</data>
+	<data name="CAMPO_COM_CONDICAO_D59708" xml:space="preserve">
+		<value>Field with Fill when condition</value>
+	</data>
+	<data name="TYPE00312" xml:space="preserve">
+		<value>Type</value>
+	</data>
+	<data name="__28729421" xml:space="preserve">
+		<value>Data da última notificação enviada</value>
+	</data>
+	<data name="ACRONYM00872" xml:space="preserve">
+		<value>Acronym</value>
+	</data>
+	<data name="APPROACH06577" xml:space="preserve">
+		<value>Approach</value>
+	</data>
+	<data name="ZOOM_LEVEL17268" xml:space="preserve">
+		<value>Zoom level</value>
+	</data>
+	<data name="PATH03888" xml:space="preserve">
+		<value>Path</value>
+	</data>
+	<data name="GOOD_LIMIT_PERC_34406" xml:space="preserve">
+		<value>Good Limit Perc.</value>
+	</data>
+	<data name="NATURALNESS33189" xml:space="preserve">
+		<value>Naturalness</value>
+	</data>
 	<data name="GOAL_TYPE29368" xml:space="preserve">
 		<value>Goal type</value>
 	</data>
@@ -8573,6 +8556,39 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="PHONE_NUMBER20774" xml:space="preserve">
 		<value>Phone number</value>
+	</data>
+	<data name="LOCAL02842" xml:space="preserve">
+		<value>Local</value>
+	</data>
+	<data name="ORIGIN_POINT61939" xml:space="preserve">
+		<value>Origin point</value>
+	</data>
+	<data name="BAGGAGES58641" xml:space="preserve">
+		<value>Baggages</value>
+	</data>
+	<data name="NATIONAL_MEASUREMENT59425" xml:space="preserve">
+		<value>National Measurement Feasibility</value>
+	</data>
+	<data name="END_TIME_WITH_INCLUS19241" xml:space="preserve">
+		<value>End time with inclusive boundary, if not ongoing</value>
+	</data>
+	<data name="GENIO_L228302" xml:space="preserve">
+		<value>GENIO L2</value>
+	</data>
+	<data name="PHONE56703" xml:space="preserve">
+		<value>Phone</value>
+	</data>
+	<data name="LISTS54900" xml:space="preserve">
+		<value>Lists</value>
+	</data>
+	<data name="BUSINESS_INTELLIGENC63897" xml:space="preserve">
+		<value>Business intelligence</value>
+	</data>
+	<data name="Y_DE_DESTINO21846" xml:space="preserve">
+		<value>Y de Destino</value>
+	</data>
+	<data name="FECHO_DA_VENDA48081" xml:space="preserve">
+		<value>Fecho da venda</value>
 	</data>
 	<data name="AIRLINE57868" xml:space="preserve">
 		<value>Airline</value>
@@ -8666,22 +8682,6 @@ The end value includes any matching date/time. For example, the period 2011-05-2
 	</data>
 	<data name="X_DE_DESTINO17092" xml:space="preserve">
 		<value>X de Destino</value>
-	</data>
-	<data name="_1141_VERBOSE60151" xml:space="preserve">
-		<value>&lt;!DOCTYPE html&gt;
-&lt;html&gt;
-&lt;head&gt;
-&lt;/head&gt;
-&lt;body&gt;
-&lt;p&gt;This zone has verbose help.&lt;/p&gt;
-&lt;/body&gt;
-&lt;/html&gt;</value>
-	</data>
-	<data name="LOGOTIPO_MINISTERIO43307" xml:space="preserve">
-		<value>Logotipo Ministério</value>
-	</data>
-	<data name="BEGINNING18124" xml:space="preserve">
-		<value>Beginning</value>
 	</data>
 	<data name="MULTIPLE_VALUES_EXTE07457" xml:space="preserve">
 		<value>Multiple Values Extended</value>

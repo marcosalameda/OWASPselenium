@@ -777,7 +777,8 @@ namespace CSGenio.framework
                             case FieldFormatting.CARACTERES:
                             default:
                                 string text = getTextFromData(values.GetDirect(i, columns[c].Name), columns[c], user);
-                                worksheet.Cells[idx, c + 1].Value = text;
+                                string sanitizedText = SanitizeForSpreadsheet(text);
+                                worksheet.Cells[idx, c + 1].Value = sanitizedText;
                                 break;
                         }
                     }
@@ -839,7 +840,8 @@ namespace CSGenio.framework
                     for (int c = 0; c < columns.Count; c++)
                     {
                         string text = getTextFromData(values.GetDirect(i, columns[c].Name), columns[c], user);
-                        conteudoCSV.Append(memo2String(text) + ";");
+                        string sanitizedText = SanitizeForSpreadsheet(text);
+                        conteudoCSV.Append(memo2String(sanitizedText) + ";");
                     }
                     conteudoCSV.Append(";\r\n");
                 }
@@ -921,7 +923,7 @@ namespace CSGenio.framework
 				lang = user.Language;
             string text = Conversion.internal2String(data, column.Type);
             if ((column.Type == FieldType.ARRAY_TEXT || column.Type == FieldType.ARRAY_NUMERIC || column.Type == FieldType.ARRAY_LOGIC)
-                && !String.IsNullOrEmpty(column.ArrayName) && !String.IsNullOrEmpty(text))
+                && !string.IsNullOrEmpty(column.ArrayName) && !string.IsNullOrEmpty(text))
             {
                 ArrayInfo array = new ArrayInfo(column.ArrayName);
                 if (array.Elements.Contains(text))// MH [21/03/2016] - Validação se o código exists. Caso contrario provoca erro de execução.
@@ -930,6 +932,44 @@ namespace CSGenio.framework
             }
 
             return text;
+        }
+
+        /// <summary>
+        /// Sanitizes text to prevent CSV/XLS formula injection attacks when the text is used in those files.
+        /// This function wraps the text in double quotes, prepends with a single quote, and escapes
+        /// any existing double quotes to ensure the content is treated as literal text by spreadsheet applications.
+        /// </summary>
+        /// <param name="input">The text to sanitize</param>
+        /// <returns>Sanitized text safe for spreadsheet output</returns>
+        internal static string SanitizeForSpreadsheet(string input)
+        {
+            // Handle null or empty input.
+            if (string.IsNullOrEmpty(input))
+                return input;
+
+            // Check if input starts with dangerous characters or contains field separators/quotes.
+            bool needsSanitization = input.Length > 0 &&
+                (input[0] == '=' ||
+                input[0] == '+' ||
+                input[0] == '-' ||
+                input[0] == '@' ||
+                input[0] == '\t' ||  // Tab (0x09)
+                input[0] == '\r' ||  // Carriage return (0x0D)
+                input.Contains(",") ||
+                input.Contains(";") ||
+                input.Contains("\"") ||
+                input.Contains("'"));
+
+            if (needsSanitization)
+            {
+                // Escape any existing double quotes by doubling them.
+                string escaped = input.Replace("\"", "\"\"");
+
+                // Prepend with single quote and wrap in double quotes.
+                return "\"'" + escaped + "\"";
+            }
+
+            return input;
         }
 
         #endregion
@@ -984,7 +1024,7 @@ namespace CSGenio.framework
                     string fieldBaseArea = columns[col].BaseArea;
 
                     //Check if foreign Key
-                    if (fieldBaseArea != area.Alias )
+                    if (fieldBaseArea != area.Alias)
                     {
                         if (importedUpperTables.Contains(fieldBaseArea)) // upper table searched already
                             continue;
@@ -994,7 +1034,7 @@ namespace CSGenio.framework
                         string alias = area.Alias + '.' + relation.SourceRelField;
 
                         importedUpperTables.Add(fieldBaseArea);
-                        List <QColumn> searchColumns= columnsByArea[fieldBaseArea];
+                        List<QColumn> searchColumns = columnsByArea[fieldBaseArea];
 
                         //Get values from this row that come from upper table
                         List<object> upperValues = this.GetValuesFromRow(row, columns, fieldBaseArea);
@@ -1004,7 +1044,8 @@ namespace CSGenio.framework
                         value = this.ImportFromParent(upperValues, parentTable, searchColumns);
 
                         area.insertNameValueField(alias, value);
-                    } else
+                    }
+                    else
                     {
                         area.insertNameValueField(columns[col].Name, value);
                     }

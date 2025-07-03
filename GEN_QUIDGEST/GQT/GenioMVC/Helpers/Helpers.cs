@@ -1289,7 +1289,7 @@ namespace GenioMVC.Helpers
                             span.AddCssClass("i-radio__field");
                             radio.InnerHtml += span;
 
-                             label.InnerHtml += radio;
+                            label.InnerHtml += radio;
                             //li.InnerHtml += label;
 
                             sb.Append(label.ToString());

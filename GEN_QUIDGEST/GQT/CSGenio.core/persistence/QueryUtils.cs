@@ -269,9 +269,10 @@ namespace CSGenio.persistence
         public static void fillQueryUpdate(UpdateQuery query, IArea area)
         {
             string QtableName = area.TableName.Trim();
+            object pkVal = ToValidDbValue(area.QPrimaryKey, area.DBFields[area.PrimaryKeyName]);
             query.Update(area.QSystem, QtableName);
             query.Where(CriteriaSet.And()
-                .Equal(QtableName, area.PrimaryKeyName, area.returnValueField(area.Alias + "." + area.PrimaryKeyName)));
+                .Equal(QtableName, area.PrimaryKeyName, pkVal));
 
             foreach (var campoPedido in area.Fields.Values)
             {

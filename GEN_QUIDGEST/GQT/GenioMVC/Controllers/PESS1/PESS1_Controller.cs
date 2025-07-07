@@ -43,7 +43,6 @@ namespace GenioMVC.Controllers
         [AddHeader("X-Frame-Options", "SAMEORIGIN")]
         public ActionResult PTN_Report_3H11(bool allSelected = false)
         {
-            bool preview = false;
             try
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
@@ -102,7 +101,6 @@ namespace GenioMVC.Controllers
         [AddHeader("X-Frame-Options", "SAMEORIGIN")]
         public ActionResult PTN_Report_5111(bool allSelected = false)
         {
-            bool preview = false;
             try
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
@@ -161,7 +159,6 @@ namespace GenioMVC.Controllers
         [AddHeader("X-Frame-Options", "SAMEORIGIN")]
         public ActionResult PTN_Report_52111(bool allSelected = false)
         {
-            bool preview = false;
             try
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
@@ -219,7 +216,6 @@ namespace GenioMVC.Controllers
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
         public ActionResult PTN_Report_52211(bool allSelected = false)
         {
-            bool preview = false;
             try
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
@@ -283,7 +279,6 @@ namespace GenioMVC.Controllers
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
         public ActionResult PTN_Report_52311(bool allSelected = false)
         {
-            bool preview = false;
             try
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;
@@ -347,7 +342,6 @@ namespace GenioMVC.Controllers
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
         public ActionResult PTN_Report_5311(string reportOutputFormat, bool allSelected = false)
         {
-            bool preview = false;
             try
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;

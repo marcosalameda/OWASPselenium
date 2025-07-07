@@ -42,7 +42,6 @@ namespace GenioMVC.Controllers
         [ActionSessionState(System.Web.SessionState.SessionStateBehavior.ReadOnly)]
         public ActionResult GQT_Report_1511(bool allSelected = false)
         {
-            bool preview = true;
             try
             {
                 var isServerReports = !Configuration.SSRSServer.isLocalReports;

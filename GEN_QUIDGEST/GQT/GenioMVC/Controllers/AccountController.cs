@@ -661,7 +661,7 @@ namespace GenioMVC.Controllers
 			if (registrationFormList.ContainsKey(registrationID))
 			{
 				List<string> formlist = registrationFormList[registrationID];
-				if (formlist.Count == 2) 
+				if (formlist.Count == 2)
 				{
 					if (formlist[0].Equals(form))
 						return 1;

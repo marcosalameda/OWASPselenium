@@ -29,7 +29,7 @@ namespace GenioMVC
     {
         private IDisposable _telemetryService;
         private MessagingService _messagingService;
-        
+
         protected void Application_Start()
         {
 
@@ -145,6 +145,8 @@ namespace GenioMVC
                 CurrentNavigation.Destroy();
                 //Limpar cache do user no start do pedido
                 UserContext.Current.User = null;
+                // Set the current module as the one coming from the URL.
+                UserContext.Current.User.CurrentModule = Context.Request.RequestContext.RouteData.Values["module"] as string;
 
 
                 //Create by [TMV] (30.09.2020)
@@ -236,7 +238,7 @@ namespace GenioMVC
             public override void OnActionExecuting(ActionExecutingContext filterContext)
             {
                 var u = UserContext.Current.User;
-                string value = filterContext.RouteData.Values["Module"] as string;
+                string value = filterContext.RouteData.Values["module"] as string;
 
                 //If its an authenticated user and our module is still Public, them initialize module to the first available
                 if (!String.IsNullOrEmpty(value) && u != null)
@@ -349,7 +351,7 @@ namespace GenioMVC
             {
                 return HttpContext.Current
                     ?.Items[_contextItem]?.ToString()
-                    ?? _value?.ToString() 
+                    ?? _value?.ToString()
                     ?? "";
             }
 

@@ -255,8 +255,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("gitem","gitem");
+			info.Pathways.Add("wareh","wareh");
 		}
 
 		/// <summary>

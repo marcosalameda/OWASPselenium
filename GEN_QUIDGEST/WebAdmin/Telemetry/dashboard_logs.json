@@ -25,13 +25,13 @@
     "editable": true,
     "fiscalYearStartMonth": 0,
     "graphTooltip": 0,
-    "id": 2,
+    "id": null,
     "links": [],
     "panels": [
       {
         "datasource": {
           "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
+          "uid": "quidgest-loki-v2-50243"
         },
         "fieldConfig": {
           "defaults": {
@@ -197,7 +197,7 @@
       {
         "datasource": {
           "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
+          "uid": "quidgest-loki-v2-50243"
         },
         "description": "Top 10 code sites that emitted an error",
         "fieldConfig": {
@@ -303,7 +303,7 @@
           {
             "datasource": {
               "type": "loki",
-              "uid": "be4mqv5ty1zi8b"
+              "uid": "quidgest-loki-v2-50243"
             },
             "direction": "backward",
             "editorMode": "code",
@@ -333,7 +333,7 @@
       {
         "datasource": {
           "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
+          "uid": "quidgest-loki-v2-50243"
         },
         "description": "Request handlers of the application that were running when an error occurred inside them",
         "fieldConfig": {
@@ -455,7 +455,7 @@
           {
             "datasource": {
               "type": "loki",
-              "uid": "be4mqv5ty1zi8b"
+              "uid": "quidgest-loki-v2-50243"
             },
             "direction": "backward",
             "editorMode": "code",
@@ -485,7 +485,7 @@
       {
         "datasource": {
           "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
+          "uid": "quidgest-loki-v2-50243"
         },
         "description": "Live logs is a like 'tail -f' in a real time",
         "fieldConfig": {
@@ -515,7 +515,7 @@
           {
             "datasource": {
               "type": "loki",
-              "uid": "be4mqv5ty1zi8b"
+              "uid": "quidgest-loki-v2-50243"
             },
             "direction": "backward",
             "editorMode": "code",
@@ -544,7 +544,7 @@
           },
           "datasource": {
             "type": "loki",
-            "uid": "be4mqv5ty1zi8b"
+            "uid": "quidgest-loki-v2-50243"
           },
           "definition": "",
           "description": "A solution is a group of services that supply a business need.",
@@ -569,7 +569,7 @@
           },
           "datasource": {
             "type": "loki",
-            "uid": "be4mqv5ty1zi8b"
+            "uid": "quidgest-loki-v2-50243"
           },
           "definition": "",
           "description": "A service is a part of the solution that can be installed in one or more servers.",
@@ -593,7 +593,7 @@
           },
           "datasource": {
             "type": "loki",
-            "uid": "be4mqv5ty1zi8b"
+            "uid": "quidgest-loki-v2-50243"
           },
           "definition": "",
           "description": "An instance is a specific installation of a service on a server.",
@@ -666,7 +666,7 @@
     },
     "timezone": "",
     "title": "Quidgest Logging",
-    "uid": "fRIvzUZMzTEST",
+    "uid": "quidgest-logs-v2-32948",
     "version": 47
   },
   "overwrite": true

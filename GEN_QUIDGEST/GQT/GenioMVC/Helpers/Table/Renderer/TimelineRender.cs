@@ -85,8 +85,6 @@ namespace GenioMVC.Helpers.Table.Renderer
 
             CultureInfo cul = CultureInfo.CurrentCulture;
 
-            int num = 0;
-
             if (Builder.Data.Count() >= 1)
             {
                 Models.TimelineItem last = Builder.Data.Last() as Models.TimelineItem;

@@ -464,9 +464,6 @@ class AppConfigTexts extends BaseResources
 		get fixedUsersTitle() {
 			return this.resources.UTILIZADORES_FIXOS00716
 		}
-		get appConfigurationTitle() {
-			return this.resources.CONFIGURACAO_DA_APLI59110
-		}
 		get pathAppLabel() {
 			return this.resources.CAMINHO_PARA_A_APLIC44450
 		}

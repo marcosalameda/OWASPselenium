@@ -474,6 +474,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
                         new SpecialRenderingVariable { Variable = "zoom-level", Value = "6" },
                         new SpecialRenderingVariable { Variable = "disable-controls", Value = "true" },
                         new SpecialRenderingVariable { Variable = "center-coord", Value = "POINT(-8.5 39)" },
+                        new SpecialRenderingVariable { Variable = "allow-legend", Value = "false" },
                         new SpecialRenderingVariable { Variable = "external-layer-url", Value = "" },
                         new SpecialRenderingVariable { Variable = "external-layer-name", Value = "" },
                         new SpecialRenderingVariable { Variable = "external-layer-config", Value = "" },

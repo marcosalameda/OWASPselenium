@@ -421,8 +421,8 @@ namespace CSGenio.business
                         if(Fields.TryGetValue(Qfield.FullName, out RequestedField reqField))
                             hasEmptyValue = Qfield.isEmptyValue(reqField.Value);
 
-                        // Ignore fields with default of the type "FIXO" when this field is already filled.
-                        if (Qfield.DefaultValue.tpDefault == DefaultValue.DefaultType.FIXO && !hasEmptyValue)
+                        // Ignore fields with default of the type "FIXO" and "OP_INT" when this field is already filled.
+                        if ((Qfield.DefaultValue.tpDefault == DefaultValue.DefaultType.FIXO || Qfield.DefaultValue.tpDefault == DefaultValue.DefaultType.OP_INT) && !hasEmptyValue)
                             continue;
 
                         // Skip fields that are not empty when duplicating records

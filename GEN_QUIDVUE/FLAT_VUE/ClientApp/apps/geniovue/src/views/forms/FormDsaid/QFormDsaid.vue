@@ -747,7 +747,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2933`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2934`),
 							type: 'img',
 							role: 'presentation',
 						},

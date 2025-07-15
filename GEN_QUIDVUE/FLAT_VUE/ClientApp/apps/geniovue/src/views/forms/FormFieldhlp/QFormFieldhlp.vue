@@ -1375,7 +1375,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR06',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=2933`),
+							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=2934`),
 							type: 'img',
 						},
 						height: 0,

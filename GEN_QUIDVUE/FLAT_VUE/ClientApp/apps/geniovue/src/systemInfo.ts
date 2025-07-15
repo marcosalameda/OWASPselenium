@@ -7,12 +7,12 @@ export const systemInfo = {
 	applicationName: 'Vertical layout - Vue',
 
 	genio: {
-		buildVersion: 2934,
-		dbIdxVersion: 1762,
-		dbVersion: '4091',
+		buildVersion: 2935,
+		dbIdxVersion: 1770,
+		dbVersion: '4099',
 		genioVersion: '371,25',
 		trackChangesVersion: '0',
-		assemblyVersion: '371,25.4091.0.2934',
+		assemblyVersion: '371,25.4099.0.2935',
 		generationDate: {
 			year: 2025,
 			month: 7,

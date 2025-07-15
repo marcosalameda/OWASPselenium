@@ -6072,6 +6072,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Coin</PTPT>
     <ENUS>Coin</ENUS>
   </msg>
+  <msg id="None TestText" code="NONE_TESTTEXT37319">
+    <PTPT>None TestText</PTPT>
+  </msg>
   <msg id="Grouping of Equipment Types" code="GROUPING_OF_EQUIPMEN34190">
     <PTPT>Grouping of Equipment Types</PTPT>
     <ENUS>Grouping of Equipment Types</ENUS>

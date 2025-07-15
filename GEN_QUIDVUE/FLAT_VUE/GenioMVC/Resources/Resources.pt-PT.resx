@@ -4709,6 +4709,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	<data name="COIN00085" xml:space="preserve">
 		<value>Coin</value>
 	</data>
+	<data name="NONE_TESTTEXT37319" xml:space="preserve">
+		<value>None TestText</value>
+	</data>
 	<data name="GROUPING_OF_EQUIPMEN34190" xml:space="preserve">
 		<value>Grouping of Equipment Types</value>
 	</data>

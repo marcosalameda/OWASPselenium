@@ -526,7 +526,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2934`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2935`),
 							type: 'img',
 							role: 'presentation',
 						},

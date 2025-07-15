@@ -13716,6 +13716,15 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
+		///   Looks up a localized string similar to "None TestText"
+		/// </summary>
+		public static string NONE_TESTTEXT37319 {
+			get {
+				return ResourceManager.GetString("NONE_TESTTEXT37319", resourceCulture);
+			}
+		}
+
+		/// <summary>
 		///   Looks up a localized string similar to "Grouping of Equipment Types"
 		/// </summary>
 		public static string GROUPING_OF_EQUIPMEN34190 {

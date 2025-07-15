@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CITY03',
 			area: 'CITY',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_CITY03',
-				updateFilesTickets: 'UpdateFilesTicketsCITY03'
+				recalculateFormulas: 'RecalculateFormulas_City03',
+				updateFilesTickets: 'UpdateFilesTicketsCity03',
+				setFile: 'SetFileCity03'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCITY',
 			description: '',
 		}).cloneFrom(values?.ValCodcity))
-		watch(() => this.ValCodcity.value, (newValue, oldValue) => this.onUpdate('city.codcity', this.ValCodcity, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcity.value, (newValue, oldValue) => this.onUpdate('city.codcity', this.ValCodcity, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodctry = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'CTRY',
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.ValCodctry))
-		watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('city.codctry', this.ValCodctry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('city.codctry', this.ValCodctry, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValCity = reactive(new modelFieldType.String({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.CITY42505),
 		}).cloneFrom(values?.ValCity))
-		watch(() => this.ValCity.value, (newValue, oldValue) => this.onUpdate('city.city', this.ValCity, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCity.value, (newValue, oldValue) => this.onUpdate('city.city', this.ValCity, newValue, oldValue)))
 
 		this.TableCtryCountry = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.TableCtryCountry))
-		watch(() => this.TableCtryCountry.value, (newValue, oldValue) => this.onUpdate('ctry.country', this.TableCtryCountry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableCtryCountry.value, (newValue, oldValue) => this.onUpdate('ctry.country', this.TableCtryCountry, newValue, oldValue)))
 	}
 
 	/**

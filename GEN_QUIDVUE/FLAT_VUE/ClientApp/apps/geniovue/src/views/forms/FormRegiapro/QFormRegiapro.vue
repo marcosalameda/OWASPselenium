@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -157,6 +157,7 @@
 							v-on="controls.REGIAPROPSEUDIMOVEISS.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.REGIAPROPSEUDIMOVEISS"
+							:filter-operators="controls.REGIAPROPSEUDIMOVEISS.filterOperators"
 							v-on="controls.REGIAPROPSEUDIMOVEISS.handlers" />
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -168,6 +169,7 @@
 							v-on="controls.REGIAPROPSEUDIMOVEISL.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.REGIAPROPSEUDIMOVEISL"
+							:filter-operators="controls.REGIAPROPSEUDIMOVEISL.filterOperators"
 							v-on="controls.REGIAPROPSEUDIMOVEISL.handlers" />
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -179,6 +181,7 @@
 							v-on="controls.REGIAPROPSEUDIMOVEISG.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.REGIAPROPSEUDIMOVEISG"
+							:filter-operators="controls.REGIAPROPSEUDIMOVEISG.filterOperators"
 							v-on="controls.REGIAPROPSEUDIMOVEISG.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -817,7 +820,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Regiapro_ValImoveiss',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1056,7 +1059,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Regiapro_ValImoveisl',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1268,7 +1271,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Regiapro_ValImoveisg',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1368,6 +1371,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS REGIAPRO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT REGIAPRO]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

@@ -123,23 +123,19 @@ namespace GenioMVC.ViewModels.Pesso
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAhpess.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 				new Exports.QColumn(CSGenioAhpess.FldDate, FieldType.DATETIMESECONDS, Resources.Resources.DATE18475, 8, 0, true),
 				new Exports.QColumn(CSGenioAhpess.FldAuthor, FieldType.TEXT, Resources.Resources.AUTHOR21241, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAhpess> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -295,11 +291,6 @@ namespace GenioMVC.ViewModels.Pesso
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAhpess> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Form", "PESSOHIS")
-			}, "ms", "Time to load the form."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Pessohis_ValField001_RowViewModel>();
 
@@ -427,7 +418,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<Pessohis_ValField001_RowViewModel> MapPessohis_ValField001(ListingMVC<CSGenioAhpess> Qlisting)

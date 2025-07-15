@@ -144,11 +144,10 @@ namespace GenioMVC.ViewModels.Facil
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
-				!ajaxRequest ? new Exports.QColumn(CSGenioAfacil.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE65174, 3, 1, true):null,
+			return
+			[
 				new Exports.QColumn(CSGenioAentit.FldName, FieldType.TEXT, Resources.Resources.LEGAL_NAME42902, 30, 0, true),
 				new Exports.QColumn(CSGenioAfacil.FldIncorpor, FieldType.DATE, Resources.Resources.INCORPORATION10135, 8, 0, true),
 				new Exports.QColumn(CSGenioAfacil.FldName, FieldType.TEXT, Resources.Resources.FACILITY_NAME19514, 30, 0, true),
@@ -157,16 +156,12 @@ namespace GenioMVC.ViewModels.Facil
 				new Exports.QColumn(CSGenioAfacil.FldLatitude, FieldType.NUMERIC, Resources.Resources.LATITUDE11291, 10, 6, true),
 				new Exports.QColumn(CSGenioAfacil.FldLongitud, FieldType.NUMERIC, Resources.Resources.LONGITUDE01015, 10, 6, true),
 				new Exports.QColumn(CSGenioAfacil.FldGeocoord, FieldType.GEOGRAPHY_POINT, Resources.Resources.GEOGRAPHICAL_COORDIN45869, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAfacil> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -318,12 +313,6 @@ namespace GenioMVC.ViewModels.Facil
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAfacil> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "4221"),
-				new("Module", "WMS")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_4221_RowViewModel>();
 
@@ -460,7 +449,6 @@ namespace GenioMVC.ViewModels.Facil
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<WMS_Menu_4221_RowViewModel> MapWMS_Menu_4221(ListingMVC<CSGenioAfacil> Qlisting)

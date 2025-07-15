@@ -172,7 +172,7 @@
 					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)

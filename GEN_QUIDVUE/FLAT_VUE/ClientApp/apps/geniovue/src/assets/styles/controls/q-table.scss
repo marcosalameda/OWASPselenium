@@ -501,7 +501,7 @@
 			}
 			position: sticky;
 			top: -1px;
-			z-index: 1;
+			z-index: 2;
 
 			th {
 				font-size: 0.75rem;
@@ -549,19 +549,6 @@
 					outline-offset: -2px;
 					outline: $action-focus-width $action-focus-style rgb(var(--q-theme-primary-rgb) / 0.25);
 					border-radius: $border-radius;
-				}
-
-				.i-radio {
-					padding-left: 10px;
-
-					&:focus-within {
-						outline: $action-focus-width $action-focus-style rgb(var(--q-theme-primary-rgb) / 0.25);
-						border-radius: $border-radius;
-					}
-
-					&__control {
-						width: auto;
-					}
 				}
 			}
 

@@ -143,23 +143,19 @@ namespace GenioMVC.ViewModels.Indoc
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAindoc.FldDocumenr, FieldType.NUMERIC, Resources.Resources.NO_14817, 10, 0, true),
 				new Exports.QColumn(CSGenioAindoc.FldDhdocume, FieldType.DATETIME, Resources.Resources.DATE18475, 16, 0, true),
 				new Exports.QColumn(CSGenioAware1.FldWarehdes, FieldType.TEXT, Resources.Resources.WAREHOUSE51864, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAindoc> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -311,12 +307,6 @@ namespace GenioMVC.ViewModels.Indoc
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAindoc> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "431"),
-				new("Module", "GQT")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<GQT_Menu_431_RowViewModel>();
 
@@ -453,7 +443,6 @@ namespace GenioMVC.ViewModels.Indoc
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<GQT_Menu_431_RowViewModel> MapGQT_Menu_431(ListingMVC<CSGenioAindoc> Qlisting)

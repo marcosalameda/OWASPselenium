@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ABATE',
 			area: 'DECOM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ABATE',
-				updateFilesTickets: 'UpdateFilesTicketsABATE'
+				recalculateFormulas: 'RecalculateFormulas_Abate',
+				updateFilesTickets: 'UpdateFilesTicketsAbate',
+				setFile: 'SetFileAbate'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODDECO',
 			description: '',
 		}).cloneFrom(values?.ValCoddeco))
-		watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('decom.coddeco', this.ValCoddeco, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('decom.coddeco', this.ValCoddeco, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValDecomnr = reactive(new modelFieldType.Number({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_BATE21045),
 		}).cloneFrom(values?.ValDecomnr))
-		watch(() => this.ValDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.ValDecomnr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.ValDecomnr, newValue, oldValue)))
 
 		this.ValDtdeco = reactive(new modelFieldType.DateTime({
 			id: 'ValDtdeco',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.DECOMISSION14486),
 		}).cloneFrom(values?.ValDtdeco))
-		watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue)))
 	}
 
 	/**

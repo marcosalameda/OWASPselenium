@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'AERO',
 			area: 'AERO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_AERO',
-				updateFilesTickets: 'UpdateFilesTicketsAERO'
+				recalculateFormulas: 'RecalculateFormulas_Aero',
+				updateFilesTickets: 'UpdateFilesTicketsAero',
+				setFile: 'SetFileAero'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODAERO',
 			description: '',
 		}).cloneFrom(values?.ValCodaero))
-		watch(() => this.ValCodaero.value, (newValue, oldValue) => this.onUpdate('aero.codaero', this.ValCodaero, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodaero.value, (newValue, oldValue) => this.onUpdate('aero.codaero', this.ValCodaero, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.AIRLINE_NAME55130),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('aero.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('aero.name', this.ValName, newValue, oldValue)))
 
 		this.ValCodcmaer = reactive(new modelFieldType.Number({
 			id: 'ValCodcmaer',
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.ValCodcmaer))
-		watch(() => this.ValCodcmaer.value, (newValue, oldValue) => this.onUpdate('aero.codcmaer', this.ValCodcmaer, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcmaer.value, (newValue, oldValue) => this.onUpdate('aero.codcmaer', this.ValCodcmaer, newValue, oldValue)))
 	}
 
 	/**

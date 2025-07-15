@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FAQS',
 			area: 'FAQS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_FAQS',
-				updateFilesTickets: 'UpdateFilesTicketsFAQS'
+				recalculateFormulas: 'RecalculateFormulas_Faqs',
+				updateFilesTickets: 'UpdateFilesTicketsFaqs',
+				setFile: 'SetFileFaqs'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFAQS',
 			description: '',
 		}).cloneFrom(values?.ValCodfaqs))
-		watch(() => this.ValCodfaqs.value, (newValue, oldValue) => this.onUpdate('faqs.codfaqs', this.ValCodfaqs, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodfaqs.value, (newValue, oldValue) => this.onUpdate('faqs.codfaqs', this.ValCodfaqs, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodcfaqs = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodcfaqs))
-		watch(() => this.ValCodcfaqs.value, (newValue, oldValue) => this.onUpdate('faqs.codcfaqs', this.ValCodcfaqs, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcfaqs.value, (newValue, oldValue) => this.onUpdate('faqs.codcfaqs', this.ValCodcfaqs, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValQuestion = reactive(new modelFieldType.MultiLineString({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'QUESTION',
 			description: computed(() => this.Resources.QUESTION00194),
 		}).cloneFrom(values?.ValQuestion))
-		watch(() => this.ValQuestion.value, (newValue, oldValue) => this.onUpdate('faqs.question', this.ValQuestion, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValQuestion.value, (newValue, oldValue) => this.onUpdate('faqs.question', this.ValQuestion, newValue, oldValue)))
 
 		this.ValAnswer = reactive(new modelFieldType.MultiLineString({
 			type: 'TextEditor',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ANSWER',
 			description: computed(() => this.Resources.ANSWER22961),
 		}).cloneFrom(values?.ValAnswer))
-		watch(() => this.ValAnswer.value, (newValue, oldValue) => this.onUpdate('faqs.answer', this.ValAnswer, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAnswer.value, (newValue, oldValue) => this.onUpdate('faqs.answer', this.ValAnswer, newValue, oldValue)))
 	}
 
 	/**

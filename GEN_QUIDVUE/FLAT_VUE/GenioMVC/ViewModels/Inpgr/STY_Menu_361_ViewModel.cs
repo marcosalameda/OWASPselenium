@@ -141,13 +141,13 @@ namespace GenioMVC.ViewModels.Inpgr
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAinpgr.FldNumbgro, FieldType.NUMERIC, Resources.Resources.VAT_NUMBER24236, 9, 0, true),
 				new Exports.QColumn(CSGenioAinpgr.FldTextgro, FieldType.TEXT, Resources.Resources.TEXT_FIELD41810, 30, 0, true),
-				new Exports.QColumn(CSGenioAinpgr.FldButtngro, FieldType.TEXT, String.Empty, 30, 0, true),
+				new Exports.QColumn(CSGenioAinpgr.FldButtngro, FieldType.TEXT, string.Empty, 30, 0, true),
 				new Exports.QColumn(CSGenioAinpgr.FldSpangro, FieldType.TEXT, Resources.Resources.PROFILE65433, 30, 0, true),
 				new Exports.QColumn(CSGenioAinpgr.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 				new Exports.QColumn(CSGenioAinpgr.FldLastname, FieldType.TEXT, Resources.Resources.LAST_NAME63426, 30, 0, true),
@@ -161,16 +161,12 @@ namespace GenioMVC.ViewModels.Inpgr
 				new Exports.QColumn(CSGenioAinpgr.FldTextspan, FieldType.TEXT, Resources.Resources.TEXT04938, 30, 0, true),
 				new Exports.QColumn(CSGenioAinpgr.FldDirectio, FieldType.TEXT, Resources.Resources.ADRESS39816, 30, 0, true),
 				new Exports.QColumn(CSGenioAinpgr.FldBankcomp, FieldType.ARRAY_TEXT, Resources.Resources.ENTITY62049, 2, 0, true, "bankComp"),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAinpgr> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -322,12 +318,6 @@ namespace GenioMVC.ViewModels.Inpgr
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAinpgr> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "361"),
-				new("Module", "STY")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<STY_Menu_361_RowViewModel>();
 
@@ -464,7 +454,6 @@ namespace GenioMVC.ViewModels.Inpgr
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<STY_Menu_361_RowViewModel> MapSTY_Menu_361(ListingMVC<CSGenioAinpgr> Qlisting)

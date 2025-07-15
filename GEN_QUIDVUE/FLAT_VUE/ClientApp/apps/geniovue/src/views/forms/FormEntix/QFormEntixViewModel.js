@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ENTIX',
 			area: 'ENTIT',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ENTIX',
-				updateFilesTickets: 'UpdateFilesTicketsENTIX'
+				recalculateFormulas: 'RecalculateFormulas_Entix',
+				updateFilesTickets: 'UpdateFilesTicketsEntix',
+				setFile: 'SetFileEntix'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODENTIT',
 			description: '',
 		}).cloneFrom(values?.ValCodentit))
-		watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('entit.codentit', this.ValCodentit, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('entit.codentit', this.ValCodentit, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValFirstfacilitie = reactive(new modelFieldType.ForeignKey({
@@ -74,7 +75,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.FIRST_INCORPORATED_F63789),
 		}).cloneFrom(values?.ValFirstfacilitie))
-		watch(() => this.ValFirstfacilitie.value, (newValue, oldValue) => this.onUpdate('entit.firstfacilitie', this.ValFirstfacilitie, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFirstfacilitie.value, (newValue, oldValue) => this.onUpdate('entit.firstfacilitie', this.ValFirstfacilitie, newValue, oldValue)))
 
 		this.ValLastfacilitie = reactive(new modelFieldType.ForeignKey({
 			id: 'ValLastfacilitie',
@@ -97,7 +98,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.LAST_INCORPORATED_FA29541),
 		}).cloneFrom(values?.ValLastfacilitie))
-		watch(() => this.ValLastfacilitie.value, (newValue, oldValue) => this.onUpdate('entit.lastfacilitie', this.ValLastfacilitie, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValLastfacilitie.value, (newValue, oldValue) => this.onUpdate('entit.lastfacilitie', this.ValLastfacilitie, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -108,7 +109,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.ValName, newValue, oldValue)))
 
 		this.ValFounded = reactive(new modelFieldType.Date({
 			id: 'ValFounded',
@@ -117,7 +118,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'FOUNDED',
 			description: computed(() => this.Resources.FOUNDED_IN54120),
 		}).cloneFrom(values?.ValFounded))
-		watch(() => this.ValFounded.value, (newValue, oldValue) => this.onUpdate('entit.founded', this.ValFounded, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFounded.value, (newValue, oldValue) => this.onUpdate('entit.founded', this.ValFounded, newValue, oldValue)))
 
 		this.ValInitials = reactive(new modelFieldType.String({
 			id: 'ValInitials',
@@ -127,7 +128,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.COMPANY_INITIALS56204),
 		}).cloneFrom(values?.ValInitials))
-		watch(() => this.ValInitials.value, (newValue, oldValue) => this.onUpdate('entit.initials', this.ValInitials, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValInitials.value, (newValue, oldValue) => this.onUpdate('entit.initials', this.ValInitials, newValue, oldValue)))
 
 		this.ValRegistra = reactive(new modelFieldType.String({
 			id: 'ValRegistra',
@@ -137,7 +138,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 30,
 			description: computed(() => this.Resources.LEGAL_REGISTRATION04413),
 		}).cloneFrom(values?.ValRegistra))
-		watch(() => this.ValRegistra.value, (newValue, oldValue) => this.onUpdate('entit.registra', this.ValRegistra, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValRegistra.value, (newValue, oldValue) => this.onUpdate('entit.registra', this.ValRegistra, newValue, oldValue)))
 
 		this.ValTaxnumbe = reactive(new modelFieldType.String({
 			id: 'ValTaxnumbe',
@@ -147,7 +148,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 30,
 			description: computed(() => this.Resources.VAT_NUMBER24236),
 		}).cloneFrom(values?.ValTaxnumbe))
-		watch(() => this.ValTaxnumbe.value, (newValue, oldValue) => this.onUpdate('entit.taxnumbe', this.ValTaxnumbe, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTaxnumbe.value, (newValue, oldValue) => this.onUpdate('entit.taxnumbe', this.ValTaxnumbe, newValue, oldValue)))
 
 		this.ValIban = reactive(new modelFieldType.String({
 			id: 'ValIban',
@@ -157,7 +158,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 33,
 			description: computed(() => this.Resources.IBAN__INTERNATIONAL_45066),
 		}).cloneFrom(values?.ValIban))
-		watch(() => this.ValIban.value, (newValue, oldValue) => this.onUpdate('entit.iban', this.ValIban, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIban.value, (newValue, oldValue) => this.onUpdate('entit.iban', this.ValIban, newValue, oldValue)))
 
 		this.ValPhonenum = reactive(new modelFieldType.String({
 			id: 'ValPhonenum',
@@ -167,7 +168,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.PHONE_NUMBER20774),
 		}).cloneFrom(values?.ValPhonenum))
-		watch(() => this.ValPhonenum.value, (newValue, oldValue) => this.onUpdate('entit.phonenum', this.ValPhonenum, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPhonenum.value, (newValue, oldValue) => this.onUpdate('entit.phonenum', this.ValPhonenum, newValue, oldValue)))
 
 		this.ValOwner = reactive(new modelFieldType.String({
 			id: 'ValOwner',
@@ -177,7 +178,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.OWNER09558),
 		}).cloneFrom(values?.ValOwner))
-		watch(() => this.ValOwner.value, (newValue, oldValue) => this.onUpdate('entit.owner', this.ValOwner, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValOwner.value, (newValue, oldValue) => this.onUpdate('entit.owner', this.ValOwner, newValue, oldValue)))
 
 		this.ValCarrier = reactive(new modelFieldType.Boolean({
 			id: 'ValCarrier',
@@ -186,7 +187,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CARRIER',
 			description: computed(() => this.Resources.CARRIER64855),
 		}).cloneFrom(values?.ValCarrier))
-		watch(() => this.ValCarrier.value, (newValue, oldValue) => this.onUpdate('entit.carrier', this.ValCarrier, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCarrier.value, (newValue, oldValue) => this.onUpdate('entit.carrier', this.ValCarrier, newValue, oldValue)))
 
 		this.ValSupplier = reactive(new modelFieldType.Boolean({
 			id: 'ValSupplier',
@@ -195,7 +196,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'SUPPLIER',
 			description: computed(() => this.Resources.SUPPLIER17230),
 		}).cloneFrom(values?.ValSupplier))
-		watch(() => this.ValSupplier.value, (newValue, oldValue) => this.onUpdate('entit.supplier', this.ValSupplier, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSupplier.value, (newValue, oldValue) => this.onUpdate('entit.supplier', this.ValSupplier, newValue, oldValue)))
 
 		this.ValManufact = reactive(new modelFieldType.Boolean({
 			id: 'ValManufact',
@@ -204,7 +205,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'MANUFACT',
 			description: computed(() => this.Resources.MANUFACTURER50759),
 		}).cloneFrom(values?.ValManufact))
-		watch(() => this.ValManufact.value, (newValue, oldValue) => this.onUpdate('entit.manufact', this.ValManufact, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValManufact.value, (newValue, oldValue) => this.onUpdate('entit.manufact', this.ValManufact, newValue, oldValue)))
 
 		this.ValTelephon = reactive(new modelFieldType.String({
 			id: 'ValTelephon',
@@ -214,7 +215,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.TELEPHONE28697),
 		}).cloneFrom(values?.ValTelephon))
-		watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('entit.telephon', this.ValTelephon, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('entit.telephon', this.ValTelephon, newValue, oldValue)))
 
 		this.ValFax = reactive(new modelFieldType.String({
 			id: 'ValFax',
@@ -224,7 +225,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.FAX08532),
 		}).cloneFrom(values?.ValFax))
-		watch(() => this.ValFax.value, (newValue, oldValue) => this.onUpdate('entit.fax', this.ValFax, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFax.value, (newValue, oldValue) => this.onUpdate('entit.fax', this.ValFax, newValue, oldValue)))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -234,7 +235,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 254,
 			description: computed(() => this.Resources.EMAIL25170),
 		}).cloneFrom(values?.ValEmail))
-		watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('entit.email', this.ValEmail, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('entit.email', this.ValEmail, newValue, oldValue)))
 
 		this.ValWebsite = reactive(new modelFieldType.String({
 			id: 'ValWebsite',
@@ -244,7 +245,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 254,
 			description: computed(() => this.Resources.WEB_SITE06263),
 		}).cloneFrom(values?.ValWebsite))
-		watch(() => this.ValWebsite.value, (newValue, oldValue) => this.onUpdate('entit.website', this.ValWebsite, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValWebsite.value, (newValue, oldValue) => this.onUpdate('entit.website', this.ValWebsite, newValue, oldValue)))
 
 		this.ValPerson = reactive(new modelFieldType.String({
 			id: 'ValPerson',
@@ -254,7 +255,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.PERSON_DEPARTMENT_TO28777),
 		}).cloneFrom(values?.ValPerson))
-		watch(() => this.ValPerson.value, (newValue, oldValue) => this.onUpdate('entit.person', this.ValPerson, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPerson.value, (newValue, oldValue) => this.onUpdate('entit.person', this.ValPerson, newValue, oldValue)))
 
 		this.ValContact = reactive(new modelFieldType.String({
 			id: 'ValContact',
@@ -264,7 +265,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 30,
 			description: computed(() => this.Resources.CONTACT_TELEPHONE_NU12694),
 		}).cloneFrom(values?.ValContact))
-		watch(() => this.ValContact.value, (newValue, oldValue) => this.onUpdate('entit.contact', this.ValContact, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValContact.value, (newValue, oldValue) => this.onUpdate('entit.contact', this.ValContact, newValue, oldValue)))
 
 		this.ValLanguage = reactive(new modelFieldType.String({
 			id: 'ValLanguage',
@@ -274,7 +275,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 2,
 			description: computed(() => this.Resources.LANGUAGE16872),
 		}).cloneFrom(values?.ValLanguage))
-		watch(() => this.ValLanguage.value, (newValue, oldValue) => this.onUpdate('entit.language', this.ValLanguage, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValLanguage.value, (newValue, oldValue) => this.onUpdate('entit.language', this.ValLanguage, newValue, oldValue)))
 
 		this.ValCurrency = reactive(new modelFieldType.String({
 			id: 'ValCurrency',
@@ -284,7 +285,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 3,
 			description: computed(() => this.Resources.CURRENCY13881),
 		}).cloneFrom(values?.ValCurrency))
-		watch(() => this.ValCurrency.value, (newValue, oldValue) => this.onUpdate('entit.currency', this.ValCurrency, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCurrency.value, (newValue, oldValue) => this.onUpdate('entit.currency', this.ValCurrency, newValue, oldValue)))
 
 		this.ValBuilding = reactive(new modelFieldType.String({
 			id: 'ValBuilding',
@@ -294,7 +295,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 25,
 			description: computed(() => this.Resources.BUILDING_HOUSE_NUMBE20738),
 		}).cloneFrom(values?.ValBuilding))
-		watch(() => this.ValBuilding.value, (newValue, oldValue) => this.onUpdate('entit.building', this.ValBuilding, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValBuilding.value, (newValue, oldValue) => this.onUpdate('entit.building', this.ValBuilding, newValue, oldValue)))
 
 		this.ValStreet = reactive(new modelFieldType.String({
 			id: 'ValStreet',
@@ -304,7 +305,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.STREET44324),
 		}).cloneFrom(values?.ValStreet))
-		watch(() => this.ValStreet.value, (newValue, oldValue) => this.onUpdate('entit.street', this.ValStreet, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValStreet.value, (newValue, oldValue) => this.onUpdate('entit.street', this.ValStreet, newValue, oldValue)))
 
 		this.ValTown = reactive(new modelFieldType.String({
 			id: 'ValTown',
@@ -314,7 +315,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TOWN_CITY16259),
 		}).cloneFrom(values?.ValTown))
-		watch(() => this.ValTown.value, (newValue, oldValue) => this.onUpdate('entit.town', this.ValTown, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTown.value, (newValue, oldValue) => this.onUpdate('entit.town', this.ValTown, newValue, oldValue)))
 
 		this.ValCounty = reactive(new modelFieldType.String({
 			id: 'ValCounty',
@@ -324,7 +325,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COUNTY_PROVINCE34285),
 		}).cloneFrom(values?.ValCounty))
-		watch(() => this.ValCounty.value, (newValue, oldValue) => this.onUpdate('entit.county', this.ValCounty, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCounty.value, (newValue, oldValue) => this.onUpdate('entit.county', this.ValCounty, newValue, oldValue)))
 
 		this.ValState = reactive(new modelFieldType.String({
 			id: 'ValState',
@@ -334,7 +335,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.STATE_PROVINCE28516),
 		}).cloneFrom(values?.ValState))
-		watch(() => this.ValState.value, (newValue, oldValue) => this.onUpdate('entit.state', this.ValState, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValState.value, (newValue, oldValue) => this.onUpdate('entit.state', this.ValState, newValue, oldValue)))
 
 		this.ValPostalco = reactive(new modelFieldType.String({
 			id: 'ValPostalco',
@@ -344,7 +345,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.ZIP_POSTAL_CODE55613),
 		}).cloneFrom(values?.ValPostalco))
-		watch(() => this.ValPostalco.value, (newValue, oldValue) => this.onUpdate('entit.postalco', this.ValPostalco, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPostalco.value, (newValue, oldValue) => this.onUpdate('entit.postalco', this.ValPostalco, newValue, oldValue)))
 
 		this.ValPobox = reactive(new modelFieldType.String({
 			id: 'ValPobox',
@@ -354,7 +355,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 5,
 			description: computed(() => this.Resources.POST_OFFICE_BOX06223),
 		}).cloneFrom(values?.ValPobox))
-		watch(() => this.ValPobox.value, (newValue, oldValue) => this.onUpdate('entit.pobox', this.ValPobox, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPobox.value, (newValue, oldValue) => this.onUpdate('entit.pobox', this.ValPobox, newValue, oldValue)))
 
 		this.TableFaci1Name = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -366,7 +367,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.FACILITY_NAME19514),
 		}).cloneFrom(values?.TableFaci1Name))
-		watch(() => this.TableFaci1Name.value, (newValue, oldValue) => this.onUpdate('faci1.name', this.TableFaci1Name, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableFaci1Name.value, (newValue, oldValue) => this.onUpdate('faci1.name', this.TableFaci1Name, newValue, oldValue)))
 
 		this.TableFaci2Name = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -378,7 +379,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.FACILITY_NAME19514),
 		}).cloneFrom(values?.TableFaci2Name))
-		watch(() => this.TableFaci2Name.value, (newValue, oldValue) => this.onUpdate('faci2.name', this.TableFaci2Name, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableFaci2Name.value, (newValue, oldValue) => this.onUpdate('faci2.name', this.TableFaci2Name, newValue, oldValue)))
 	}
 
 	/**

@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -315,6 +315,7 @@
 																v-on="controls.EQUIP02_PSEUDATTACHME.handlers" />
 															<q-table-extra-extension
 																:list-ctrl="controls.EQUIP02_PSEUDATTACHME"
+																:filter-operators="controls.EQUIP02_PSEUDATTACHME.filterOperators"
 																v-on="controls.EQUIP02_PSEUDATTACHME.handlers" />
 														</q-control-wrapper>
 													</q-row-container>
@@ -351,6 +352,7 @@
 																v-on="controls.EQUIP03_PSEUDDOCUMENT.handlers" />
 															<q-table-extra-extension
 																:list-ctrl="controls.EQUIP03_PSEUDDOCUMENT"
+																:filter-operators="controls.EQUIP03_PSEUDDOCUMENT.filterOperators"
 																v-on="controls.EQUIP03_PSEUDDOCUMENT.handlers" />
 														</q-control-wrapper>
 													</q-row-container>
@@ -425,6 +427,7 @@
 																v-on="controls.EQUIP04_PSEUDPARAMETE.handlers" />
 															<q-table-extra-extension
 																:list-ctrl="controls.EQUIP04_PSEUDPARAMETE"
+																:filter-operators="controls.EQUIP04_PSEUDPARAMETE.filterOperators"
 																v-on="controls.EQUIP04_PSEUDPARAMETE.handlers" />
 														</q-control-wrapper>
 													</q-row-container>
@@ -1556,7 +1559,7 @@
 								dataLength: 1,
 								scrollData: 1,
 								isVisible: false,
-								array: computed(() => qProjArrays.QArrayDatatype.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayDatatype(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayDatatype.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1878,6 +1881,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS EQUIPM]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT EQUIPM]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

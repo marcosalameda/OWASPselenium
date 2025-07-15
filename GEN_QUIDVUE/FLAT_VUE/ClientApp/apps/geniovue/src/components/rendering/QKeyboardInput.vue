@@ -143,19 +143,13 @@
 
 		mounted()
 		{
-			document.addEventListener('mousedown', (event) => {
-				if (event.target && !this.$refs.keyboardContainer.contains(event.target))
-					this.togglePopupOff()
-			})
+			document.addEventListener('mousedown', this.onMousedown)
 		},
 
 		beforeUnmount()
 		{
 			// Hook to remove event listener when the component is destroyed, to avoid potential memory leaks.
-			document.removeEventListener('mousedown', (event) => {
-				if (event.target && !this.$refs.keyboardContainer.contains(event.target))
-					this.togglePopupOff()
-			})
+			document.removeEventListener('mousedown', this.onMousedown)
 		},
 
 		computed: {
@@ -195,6 +189,12 @@
 		},
 
 		methods: {
+			onMousedown(event)
+			{
+				if (event.target && !this.$refs.keyboardContainer.contains(event.target))
+					this.togglePopupOff()
+			},
+
 			inputDigit(digit)
 			{
 				if (digit === 'q-keyboard--backspace')

@@ -271,25 +271,9 @@
 			this.$eventHub.on('navigation-id-change', this.updateNavigationId)
 
 			// Listens for requests of full quality images.
-			this.$eventHub.on(
-				'image-request',
-				({ baseArea, params, callback }) => {
-					netAPI.retrieveImage(
-						baseArea,
-						params,
-						(data) => {
-							if (callback)
-								callback(data)
-						})
-				})
+			this.$eventHub.on('image-request', this.onImageRequest)
 
-			this.$eventHub.on(
-				'show-suggestion-popup',
-				(component, params) => {
-					this.suggestionsPopupData.component = component
-					this.suggestionsPopupData.params = params
-					this.suggestionsKey++
-				})
+			this.$eventHub.on('show-suggestion-popup', this.onShowSuggestionPopup)
 
 			if (this.isEventTracingActive)
 				document.addEventListener('keydown', this.handleKeyPress)
@@ -310,8 +294,8 @@
 			this.$eventHub.off('open-external-app')
 			this.$eventHub.off('closed-external-app')
 			this.$eventHub.off('navigation-id-change', this.updateNavigationId)
-			this.$eventHub.off('image-request')
-			this.$eventHub.off('show-suggestion-popup')
+			this.$eventHub.off('image-request', this.onImageRequest)
+			this.$eventHub.off('show-suggestion-popup', this.onShowSuggestionPopup)
 
 			this.mainAppLoadMonitor.destroy()
 			this.menuLoadMonitor.destroy()
@@ -413,6 +397,23 @@
 				'setPublicRoute',
 				'setFullScreenPage'
 			]),
+
+			onShowSuggestionPopup(component, params)
+			{
+				this.suggestionsPopupData.component = component
+				this.suggestionsPopupData.params = params
+				this.suggestionsKey++
+			},
+
+			onImageRequest({ baseArea, params, callback }) {
+				netAPI.retrieveImage(
+					baseArea,
+					params,
+					(data) => {
+						if (callback)
+							callback(data)
+					})
+			},
 
 			/**
 			 * Changes the state of the cookies.

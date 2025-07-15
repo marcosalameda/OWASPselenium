@@ -66,8 +66,15 @@ export default {
 	beforeUnmount()
 	{
 		this.$eventHub.off('modal-is-ready', this.setMenuModalReady)
-		if (this.componentOnLoadProc)
+
+		this.internalEvents?.removeAllListeners()
+		this.internalEvents = null
+
+		if(typeof this.componentOnLoadProc?.destroy === 'function')
+		{
 			this.componentOnLoadProc.destroy()
+			this.componentOnLoadProc = null
+		}
 	},
 
 	computed: {

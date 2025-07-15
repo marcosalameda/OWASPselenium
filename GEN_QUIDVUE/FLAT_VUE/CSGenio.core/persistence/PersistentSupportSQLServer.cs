@@ -869,11 +869,27 @@ namespace CSGenio.persistence
             //copy.WriteToServer(reader);
 
             //SqlBulkCopy is case sensitive in the column mappings if you use manual mappings
-            //We will let the datatable do the mapping for us and that auto-mapping appears to handle case-sensitivity
-            //foreach (var col in info.DBFields)
-            //    copy.ColumnMappings.Add(col.Key, col.Key.ToUpperInvariant());
+            //SqlBulkCopy is order sensitive in the column mappings if you use auto mappings
+            //So we need to fetch the real names of the columns in the database for the mapping to work correctly
+            // This is a specialized query for SQL server only
+            Dictionary<string, string> realNames = QCache.Instance.AdminReindexation.Get("bulk_schema_" + info.TableName) as Dictionary<string, string>;
+            if (realNames is null)
+            {
+                realNames = new Dictionary<string, string>();
+                using (var cmd = CreateCommand("SELECT name FROM sys.columns WHERE object_id = OBJECT_ID(@p1) ORDER BY column_id", [
+                    CreateParameter("p1", info.TableName)
+                    ]))
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                        realNames.Add(reader.GetString(0).ToLowerInvariant(), reader.GetString(0));
+                }
+                QCache.Instance.AdminReindexation.Put("bulk_schema_" + info.TableName, realNames);
+            }
+            foreach (var col in info.DBFields)
+                copy.ColumnMappings.Add(col.Key, realNames[col.Key]);
 
-            DataTable dt = SetupBulkDataTable(rows, info, true);
+            DataTable dt = SetupBulkDataTable(rows, info);
 
             //execute the bulk copy
             long st = DateTime.Now.Ticks;
@@ -882,21 +898,13 @@ namespace CSGenio.persistence
             if (Log.IsDebugEnabled) Log.Debug("[bulkInsert] " + (DateTime.Now.Ticks - st) / TimeSpan.TicksPerMillisecond + "ms");
         }
 
-        private static DataTable SetupBulkDataTable(IEnumerable<IArea> rows, AreaInfo info, bool changeDatatypes = false)
+        private static DataTable SetupBulkDataTable(IEnumerable<IArea> rows, AreaInfo info)
         {
             DataTable dt = new DataTable();
             //Setup the schema
             foreach (var col in info.DBFields)
             {
                 var dataType = col.Value.FieldType.GetExternalType();
-
-                if (changeDatatypes)
-                {
-                    //SqlBulkCopy does not handle implicit conversion unless you set the correct type
-                    if (col.Value.isKey() && info.KeyType == FieldType.KEY_GUID)
-                        dataType = typeof(Guid);
-                }
-
                 dt.Columns.Add(col.Key, dataType);
             }
             //Setup the data

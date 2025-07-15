@@ -8,15 +8,15 @@ export const systemInfo = {
 
 	genio: {
 		buildVersion: 2932,
-		dbIdxVersion: 1752,
-		dbVersion: '4082',
+		dbIdxVersion: 1762,
+		dbVersion: '4091',
 		genioVersion: '370,01',
 		trackChangesVersion: '0',
-		assemblyVersion: '370,01.4082.0.2932',
+		assemblyVersion: '370,01.4091.0.2932',
 		generationDate: {
 			year: 2025,
-			month: 6,
-			day: 9
+			month: 7,
+			day: 15
 		}
 	},
 

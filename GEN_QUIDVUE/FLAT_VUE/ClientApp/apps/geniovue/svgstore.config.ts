@@ -2,37 +2,41 @@
 import { dirname, extname, join, parse } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-//@ts-expect-error svgstore does not export types
+// @ts-expect-error svgstore does not export types
 import svgstore from 'svgstore'
 
 /**
- * Specific bundling setup for this project.
+ * Bundles all SVG icons in a directory into a single sprite sheet.
  */
-function ProjectPack() {
-	const __filename = fileURLToPath(import.meta.url)
-	const __dirname = dirname(__filename)
-
-	PackSvg(join(__dirname, './public/Content/svg/'), join(__dirname, './public/Content/svgbundle.svg'))
-}
-
-/**
- * Bundles all the svg files found in a souce directory into an single svg output file.
- * @param dirname - The path to the directory containing all the svgs to be bundled
- * @param output - The full filename of the desired output bundle
- */
-function PackSvg(dirname: string, output: string) {
-	let sprites = svgstore()
-	const files = readdirSync(dirname)
+function bundleSvgIcons(sourceDir: string, outputFile: string) {
+	const files = readdirSync(sourceDir)
+	const sprites = svgstore()
 
 	files.forEach((file) => {
 		if (extname(file) === '.svg') {
-			let id = parse(file).name
-			let content = readFileSync(join(dirname, file), 'utf8')
+			const id = parse(file).name
+			const content = readFileSync(join(sourceDir, file), 'utf8')
 			sprites.add(id, content)
 		}
 	})
 
-	writeFileSync(output, sprites.toString())
+	writeFileSync(outputFile, sprites.toString())
 }
 
-export default ProjectPack
+/**
+ * Project-specific bundler that generates the final SVG sprite file.
+ */
+export function generateSvgSpriteBundle() {
+	const __filename = fileURLToPath(import.meta.url)
+	const __dirname = dirname(__filename)
+
+	bundleSvgIcons(
+		join(__dirname, './public/Content/svg/'),
+		join(__dirname, './public/Content/svgbundle.svg')
+	)
+
+	console.log(
+	'\x1b[36m%s\x1b[0m',
+		`✅ SVG sprite bundle generated successfully at: ./public/Content/svgbundle.svg`
+	)
+}

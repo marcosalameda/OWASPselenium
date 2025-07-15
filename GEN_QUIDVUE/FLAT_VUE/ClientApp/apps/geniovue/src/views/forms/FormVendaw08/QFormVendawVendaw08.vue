@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -624,7 +624,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDAW08PSEUDNOVOGR08',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -718,6 +718,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS VENDAW08]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT VENDAW08]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

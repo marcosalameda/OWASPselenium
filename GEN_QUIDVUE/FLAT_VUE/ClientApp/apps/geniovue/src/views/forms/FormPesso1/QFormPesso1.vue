@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -290,7 +290,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.PESSO1__PSEUDNOVOGR06.isVisible || controls.PESSO1__PSEUDOBRIGATO.isVisible"
+					v-show="controls.PESSO1__PSEUDNOVOGR06.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.PESSO1__PSEUDNOVOGR06.isVisible"
@@ -375,6 +375,7 @@
 																v-on="controls.PESSO1__PSEUDCONTACTO.handlers" />
 															<q-table-extra-extension
 																:list-ctrl="controls.PESSO1__PSEUDCONTACTO"
+																:filter-operators="controls.PESSO1__PSEUDCONTACTO.filterOperators"
 																v-on="controls.PESSO1__PSEUDCONTACTO.handlers" />
 														</q-control-wrapper>
 													</q-row-container>
@@ -471,6 +472,7 @@
 																v-on="controls.PESSO1__PSEUDEVOLUCAO.handlers" />
 															<q-table-extra-extension
 																:list-ctrl="controls.PESSO1__PSEUDEVOLUCAO"
+																:filter-operators="controls.PESSO1__PSEUDEVOLUCAO.filterOperators"
 																v-on="controls.PESSO1__PSEUDEVOLUCAO.handlers" />
 														</q-control-wrapper>
 													</q-row-container>
@@ -522,6 +524,8 @@
 							<!-- End PESSO1__PSEUDNOVOGR06 -->
 						</q-group-box-container>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.PESSO1__PSEUDOBRIGATO.isVisible">
 					<q-control-wrapper
 						v-show="controls.PESSO1__PSEUDOBRIGATO.isVisible"
 						class="control-join-group">
@@ -986,7 +990,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR02',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1103,7 +1107,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 						showWhen: {
@@ -1373,7 +1377,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-GENRE', 'changed-CONTA', 'changed-TPCON', 'changed-PESSO'],
+						globalEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
 						uuid: 'Pesso1_ValContacto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1666,7 +1670,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-CATE1', 'changed-EVCAT'],
+						globalEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
 						uuid: 'Pesso1_ValEvolucao',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1880,6 +1884,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PESSO1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PESSO1]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

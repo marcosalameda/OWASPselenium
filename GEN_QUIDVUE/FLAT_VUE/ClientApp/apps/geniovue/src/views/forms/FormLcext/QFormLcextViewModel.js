@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'LCEXT',
 			area: 'LCEXT',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_LCEXT',
-				updateFilesTickets: 'UpdateFilesTicketsLCEXT'
+				recalculateFormulas: 'RecalculateFormulas_Lcext',
+				updateFilesTickets: 'UpdateFilesTicketsLcext',
+				setFile: 'SetFileLcext'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODLCEXT',
 			description: '',
 		}).cloneFrom(values?.ValCodlcext))
-		watch(() => this.ValCodlcext.value, (newValue, oldValue) => this.onUpdate('lcext.codlcext', this.ValCodlcext, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlcext.value, (newValue, oldValue) => this.onUpdate('lcext.codlcext', this.ValCodlcext, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodlocat = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'LOCAT',
 			description: '',
 		}).cloneFrom(values?.ValCodlocat))
-		watch(() => this.ValCodlocat.value, (newValue, oldValue) => this.onUpdate('lcext.codlocat', this.ValCodlocat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlocat.value, (newValue, oldValue) => this.onUpdate('lcext.codlocat', this.ValCodlocat, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableLocatGln = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
 		}).cloneFrom(values?.TableLocatGln))
-		watch(() => this.TableLocatGln.value, (newValue, oldValue) => this.onUpdate('locat.gln', this.TableLocatGln, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableLocatGln.value, (newValue, oldValue) => this.onUpdate('locat.gln', this.TableLocatGln, newValue, oldValue)))
 
 		this.ValGlnext = reactive(new modelFieldType.String({
 			id: 'ValGlnext',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
 		}).cloneFrom(values?.ValGlnext))
-		watch(() => this.ValGlnext.value, (newValue, oldValue) => this.onUpdate('lcext.glnext', this.ValGlnext, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValGlnext.value, (newValue, oldValue) => this.onUpdate('lcext.glnext', this.ValGlnext, newValue, oldValue)))
 
 		this.ValSpacetyp = reactive(new modelFieldType.String({
 			id: 'ValSpacetyp',
@@ -91,10 +92,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'LCEXT',
 			field: 'SPACETYP',
 			maxLength: 1,
-			arrayOptions: computed(() => qProjArrays.QArraySpacetyp.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArraySpacetyp(vm.$getResource).elements),
 			description: computed(() => this.Resources.SPACE_TYPE42493),
 		}).cloneFrom(values?.ValSpacetyp))
-		watch(() => this.ValSpacetyp.value, (newValue, oldValue) => this.onUpdate('lcext.spacetyp', this.ValSpacetyp, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSpacetyp.value, (newValue, oldValue) => this.onUpdate('lcext.spacetyp', this.ValSpacetyp, newValue, oldValue)))
 
 		this.ValSpaceobs = reactive(new modelFieldType.String({
 			id: 'ValSpaceobs',
@@ -126,7 +127,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.SPACE62433),
 		}).cloneFrom(values?.ValSpaceobs))
-		watch(() => this.ValSpaceobs.value, (newValue, oldValue) => this.onUpdate('lcext.spaceobs', this.ValSpaceobs, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSpaceobs.value, (newValue, oldValue) => this.onUpdate('lcext.spaceobs', this.ValSpaceobs, newValue, oldValue)))
 	}
 
 	/**

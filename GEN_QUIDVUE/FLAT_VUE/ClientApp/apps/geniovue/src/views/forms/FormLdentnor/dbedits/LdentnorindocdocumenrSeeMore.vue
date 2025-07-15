@@ -172,7 +172,7 @@
 					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -259,7 +259,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WARE1', 'changed-PESSO', 'changed-CMPNY', 'changed-INDOC', 'changed-CNTRY'],
+						globalEvents: ['changed-WARE1', 'changed-PESSO', 'changed-CMPNY', 'changed-CNTRY', 'changed-INDOC'],
 						uuid: 'Ldentnor_Ldentnor_IndocValDocumenr',
 						allSelectedRows: 'false',
 						handlers: {

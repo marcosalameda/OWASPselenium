@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CATEG',
 			area: 'CATEG',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_CATEG',
-				updateFilesTickets: 'UpdateFilesTicketsCATEG'
+				recalculateFormulas: 'RecalculateFormulas_Categ',
+				updateFilesTickets: 'UpdateFilesTicketsCateg',
+				setFile: 'SetFileCateg'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCATEG',
 			description: '',
 		}).cloneFrom(values?.ValCodcateg))
-		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('categ.codcateg', this.ValCodcateg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('categ.codcateg', this.ValCodcateg, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValCategoria = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
 		}).cloneFrom(values?.ValCategoria))
-		watch(() => this.ValCategoria.value, (newValue, oldValue) => this.onUpdate('categ.categoria', this.ValCategoria, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCategoria.value, (newValue, oldValue) => this.onUpdate('categ.categoria', this.ValCategoria, newValue, oldValue)))
 
 		this.ValAbbreviation = reactive(new modelFieldType.String({
 			id: 'ValAbbreviation',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.ABBREVIATION31267),
 		}).cloneFrom(values?.ValAbbreviation))
-		watch(() => this.ValAbbreviation.value, (newValue, oldValue) => this.onUpdate('categ.abbreviation', this.ValAbbreviation, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAbbreviation.value, (newValue, oldValue) => this.onUpdate('categ.abbreviation', this.ValAbbreviation, newValue, oldValue)))
 	}
 
 	/**

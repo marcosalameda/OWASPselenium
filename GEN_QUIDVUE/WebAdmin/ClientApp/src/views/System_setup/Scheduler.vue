@@ -2,7 +2,7 @@
     <row>
 		<q-card
 			class="q-card--admin-default"
-			:title="systemConfigTexts.schedulerTitle"
+			:title="resources.schedulerTitle"
 			width="block">
 			<q-row-container>
 				<q-control-wrapper class="row-line-group">
@@ -10,7 +10,7 @@
 						class="i-text">
 						<q-checkbox
 							v-model="model.Scheduler.Enabled"
-							:label="systemConfigTexts.enabledLabel" />
+							:label="resources.enabledLabel" />
 					</base-input-structure>
 				</q-control-wrapper>
 				<qtable
@@ -55,7 +55,7 @@
 	<q-dialog
 		id="system_setup_scheduledjob"
 		v-model="showDialog"
-		:title="systemConfigTexts.scheduledTaskTitle"
+		:title="resources.scheduledTaskTitle"
 		:buttons="buttons">
 		<template #body.content>
 			<div class="q-dialog-container">
@@ -63,7 +63,7 @@
 					<q-checkbox
 						v-model="rowEnabled"
 						:readonly="inDeleteMode"
-						:label="systemConfigTexts.enabledLabel" />
+						:label="resources.enabledLabel" />
 				</div>
 				<div>
 					<q-text-field
@@ -90,7 +90,7 @@
 						:isVisible="true"
 						:showPopoverButton="true"
 						:popoverTitle="'Cron Information'"
-						:popoverText="systemConfigTexts.cronInfoText">
+						:popoverText="resources.cronInfoText">
 						<q-text-field
 							v-model="rowCron"
 							ref="Cron"
@@ -119,7 +119,7 @@
 	import { QUtils } from '@/utils/mainUtils';
 	import BaseInputStructure from '@/components/BaseInputStructure.vue'
 	import { texts } from '@/resources/hardcodedTexts.ts';
-	import { SystemConfigTexts } from '@/resources/viewResources.ts';
+	import { computed} from 'vue';
 
 	export default {
 		name: 'scheduler',
@@ -138,6 +138,10 @@
 			},
 			TaskList: {
 				required: false
+			},
+			resources: {
+				type: Object,
+				required: true
 			}
 		},
 
@@ -162,7 +166,7 @@
 					total_rows: 0,
 					columns: [
 					{
-						label: '',
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -171,19 +175,19 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => "Enabled",
+						label: computed(() => this.Resources[texts.active]),
 						name: "Enabled",
 						sort: true,
 					},
 					{
-						label: '',
+						label: computed(() => this.Resources[texts.name]),
 						name: "Id",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: '',
+						label: computed(() => this.Resources[texts.taskTypeLabel]),
 						name: "TaskType",
 						sort: true
 					},
@@ -193,7 +197,7 @@
 						sort: false
 					}],
 					config: {
-						table_title: '',
+						table_title: this.resources.scheduledTasksTitle,
 						pagination: false,
 						pagination_info: false,
 						global_search: {
@@ -217,20 +221,16 @@
 					Value: x
 				}));
 			},
-			systemConfigTexts() {
-				return new SystemConfigTexts(this)
-			},
 			hardcodedTexts() {
 				return {
-					actions: this.Resources[texts.actions],
 					edit: this.Resources[texts.edit],
 					delete: this.Resources[texts.delete],
 					insert: this.Resources[texts.insert],
 					erase: this.Resources[texts.erase],
 					save: this.Resources[texts.save],
 					cancel: this.Resources[texts.cancel],
+					taskTypeLabel: this.Resources[texts.taskTypeLabel],
 					name: this.Resources[texts.name],
-					taskTypeLabel: this.Resources[texts.taskTypeLabel]
 				}
 			},
 		},
@@ -345,11 +345,6 @@
 
 		mounted() {
 			this.jobs = this.model.Scheduler.Jobs || [];
-
-			this.tJobs.columns[0].label = this.hardcodedTexts.actions;
-			this.tJobs.columns[2].label = this.hardcodedTexts.name;
-			this.tJobs.columns[3].label = this.hardcodedTexts.taskTypeLabel;
-			this.tJobs.config.table_title = this.systemConfigTexts.scheduledTasksTitle;
 		},
 
 		watch: {

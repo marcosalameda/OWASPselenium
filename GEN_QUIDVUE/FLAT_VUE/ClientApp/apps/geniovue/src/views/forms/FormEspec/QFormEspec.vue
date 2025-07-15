@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -123,15 +123,14 @@
 							:suggestion-mode-on="suggestionModeOn">
 							<q-radio-group
 								v-if="controls.ESPEC___SPECIAREATECN.isVisible"
-								id="ESPEC___SPECIAREATECN"
-								:model-value="model.ValAreatecn.value"
-								deselect-radio
-								:label-left-side="controls.ESPEC___SPECIAREATECN.labelPosition === labelAlignment.left"
-								:number-of-columns="controls.ESPEC___SPECIAREATECN.columnNumber"
-								:is-required="controls.ESPEC___SPECIAREATECN.isRequired"
-								:readonly="controls.ESPEC___SPECIAREATECN.readonly"
-								:options-list="controls.ESPEC___SPECIAREATECN.items"
-								@update:model-value="model.ValAreatecn.fnUpdateValue" />
+								v-bind="controls.ESPEC___SPECIAREATECN.props"
+								v-on="controls.ESPEC___SPECIAREATECN.handlers">
+								<q-radio-button
+									v-for="radio in controls.ESPEC___SPECIAREATECN.items"
+									:key="radio.key"
+									:label="radio.value"
+									:value="radio.key" />
+							</q-radio-group>
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -494,14 +493,13 @@
 						valueChangeEvent: 'fieldChange:speci.areatecn',
 						id: 'ESPEC___SPECIAREATECN',
 						name: 'AREATECN',
-						size: 'small',
 						label: computed(() => this.Resources.TECHNICAL__AREA15929),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
 						maxLength: 1,
 						labelId: 'label_ESPEC___SPECIAREATECN',
 						arrayName: 'AreaTecn',
-						columnNumber: 4,
+						columns: 4,
 						controlLimits: [
 						],
 					}, this),
@@ -576,6 +574,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS ESPEC]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ESPEC]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

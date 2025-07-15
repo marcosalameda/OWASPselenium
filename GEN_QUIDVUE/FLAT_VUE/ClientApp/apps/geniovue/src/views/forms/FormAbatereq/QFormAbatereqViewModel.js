@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ABATEREQ',
 			area: 'DECOM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ABATEREQ',
-				updateFilesTickets: 'UpdateFilesTicketsABATEREQ'
+				recalculateFormulas: 'RecalculateFormulas_Abatereq',
+				updateFilesTickets: 'UpdateFilesTicketsAbatereq',
+				setFile: 'SetFileAbatereq'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODDECO',
 			description: '',
 		}).cloneFrom(values?.ValCoddeco))
-		watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('decom.coddeco', this.ValCoddeco, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('decom.coddeco', this.ValCoddeco, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValDecomnr = reactive(new modelFieldType.Number({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_BATE21045),
 		}).cloneFrom(values?.ValDecomnr))
-		watch(() => this.ValDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.ValDecomnr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.ValDecomnr, newValue, oldValue)))
 
 		this.ValNote = reactive(new modelFieldType.MultiLineString({
 			id: 'ValNote',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NOTE',
 			description: computed(() => this.Resources.NOTES05274),
 		}).cloneFrom(values?.ValNote))
-		watch(() => this.ValNote.value, (newValue, oldValue) => this.onUpdate('decom.note', this.ValNote, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNote.value, (newValue, oldValue) => this.onUpdate('decom.note', this.ValNote, newValue, oldValue)))
 
 		this.ValDtdeco = reactive(new modelFieldType.DateTime({
 			id: 'ValDtdeco',
@@ -92,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.DECOMISSION14486),
 		}).cloneFrom(values?.ValDtdeco))
-		watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue)))
 	}
 
 	/**

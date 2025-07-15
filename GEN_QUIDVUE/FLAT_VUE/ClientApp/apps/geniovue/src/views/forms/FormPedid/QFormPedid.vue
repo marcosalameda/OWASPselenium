@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -151,6 +151,7 @@
 							v-on="controls.PEDID___PSEUDLINHAS__.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PEDID___PSEUDLINHAS__"
+							:filter-operators="controls.PEDID___PSEUDLINHAS__.filterOperators"
 							v-on="controls.PEDID___PSEUDLINHAS__.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -164,6 +165,7 @@
 							v-on="controls.PEDID___PSEUDDESAGREG.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PEDID___PSEUDDESAGREG"
+							:filter-operators="controls.PEDID___PSEUDDESAGREG.filterOperators"
 							v-on="controls.PEDID___PSEUDDESAGREG.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -177,6 +179,7 @@
 							v-on="controls.PEDID___PSEUDAGRUPAME.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PEDID___PSEUDAGRUPAME"
+							:filter-operators="controls.PEDID___PSEUDAGRUPAME.filterOperators"
 							v-on="controls.PEDID___PSEUDAGRUPAME.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -529,7 +532,7 @@
 						label: computed(() => this.Resources.DATE_55218),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1123,7 +1126,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-LNHAG', 'changed-PEDID', 'changed-TPEQ1'],
+						globalEvents: ['changed-PEDID', 'changed-TPEQ1', 'changed-LNHAG'],
 						uuid: 'Pedid_ValAgrupame',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1211,6 +1214,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PEDID]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PEDID]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TPCON',
 			area: 'TPCON',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_TPCON',
-				updateFilesTickets: 'UpdateFilesTicketsTPCON'
+				recalculateFormulas: 'RecalculateFormulas_Tpcon',
+				updateFilesTickets: 'UpdateFilesTicketsTpcon',
+				setFile: 'SetFileTpcon'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTPCON',
 			description: '',
 		}).cloneFrom(values?.ValCodtpcon))
-		watch(() => this.ValCodtpcon.value, (newValue, oldValue) => this.onUpdate('tpcon.codtpcon', this.ValCodtpcon, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtpcon.value, (newValue, oldValue) => this.onUpdate('tpcon.codtpcon', this.ValCodtpcon, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodgenre = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'GENRE',
 			description: '',
 		}).cloneFrom(values?.ValCodgenre))
-		watch(() => this.ValCodgenre.value, (newValue, oldValue) => this.onUpdate('tpcon.codgenre', this.ValCodgenre, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodgenre.value, (newValue, oldValue) => this.onUpdate('tpcon.codgenre', this.ValCodgenre, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableGenreGender = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.GENRE63303),
 		}).cloneFrom(values?.TableGenreGender))
-		watch(() => this.TableGenreGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.TableGenreGender, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableGenreGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.TableGenreGender, newValue, oldValue)))
 
 		this.ValTipocont = reactive(new modelFieldType.String({
 			id: 'ValTipocont',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.DESIGNATION35876),
 		}).cloneFrom(values?.ValTipocont))
-		watch(() => this.ValTipocont.value, (newValue, oldValue) => this.onUpdate('tpcon.tipocont', this.ValTipocont, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTipocont.value, (newValue, oldValue) => this.onUpdate('tpcon.tipocont', this.ValTipocont, newValue, oldValue)))
 	}
 
 	/**

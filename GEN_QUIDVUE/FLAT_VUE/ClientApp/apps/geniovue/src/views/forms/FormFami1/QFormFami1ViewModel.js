@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FAMI1',
 			area: 'FAMI1',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_FAMI1',
-				updateFilesTickets: 'UpdateFilesTicketsFAMI1'
+				recalculateFormulas: 'RecalculateFormulas_Fami1',
+				updateFilesTickets: 'UpdateFilesTicketsFami1',
+				setFile: 'SetFileFami1'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFAMIL',
 			description: '',
 		}).cloneFrom(values?.ValCodfamil))
-		watch(() => this.ValCodfamil.value, (newValue, oldValue) => this.onUpdate('fami1.codfamil', this.ValCodfamil, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodfamil.value, (newValue, oldValue) => this.onUpdate('fami1.codfamil', this.ValCodfamil, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValFamily = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.EQUIPMENT_FAMILY41883),
 		}).cloneFrom(values?.ValFamily))
-		watch(() => this.ValFamily.value, (newValue, oldValue) => this.onUpdate('fami1.family', this.ValFamily, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFamily.value, (newValue, oldValue) => this.onUpdate('fami1.family', this.ValFamily, newValue, oldValue)))
 	}
 
 	/**

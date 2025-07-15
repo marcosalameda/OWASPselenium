@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FEECA',
 			area: 'FEECA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_FEECA',
-				updateFilesTickets: 'UpdateFilesTicketsFEECA'
+				recalculateFormulas: 'RecalculateFormulas_Feeca',
+				updateFilesTickets: 'UpdateFilesTicketsFeeca',
+				setFile: 'SetFileFeeca'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFEECA',
 			description: '',
 		}).cloneFrom(values?.ValCodfeeca))
-		watch(() => this.ValCodfeeca.value, (newValue, oldValue) => this.onUpdate('feeca.codfeeca', this.ValCodfeeca, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodfeeca.value, (newValue, oldValue) => this.onUpdate('feeca.codfeeca', this.ValCodfeeca, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodflds = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'FLDS',
 			description: '',
 		}).cloneFrom(values?.ValCodflds))
-		watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('feeca.codflds', this.ValCodflds, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('feeca.codflds', this.ValCodflds, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableFldsDescrip = reactive(new modelFieldType.MultiLineString({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESCRIP',
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.TableFldsDescrip))
-		watch(() => this.TableFldsDescrip.value, (newValue, oldValue) => this.onUpdate('flds.descrip', this.TableFldsDescrip, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableFldsDescrip.value, (newValue, oldValue) => this.onUpdate('flds.descrip', this.TableFldsDescrip, newValue, oldValue)))
 
 		this.ValFeedback = reactive(new modelFieldType.String({
 			id: 'ValFeedback',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.FEEDBACK52855),
 		}).cloneFrom(values?.ValFeedback))
-		watch(() => this.ValFeedback.value, (newValue, oldValue) => this.onUpdate('feeca.feedback', this.ValFeedback, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFeedback.value, (newValue, oldValue) => this.onUpdate('feeca.feedback', this.ValFeedback, newValue, oldValue)))
 
 		this.FldsValAttach = reactive(new modelFieldType.Document({
 			id: 'FldsValAttach',
@@ -95,7 +96,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.DOCUMENT00695),
 		}).cloneFrom(values?.FldsValAttach))
-		watch(() => this.FldsValAttach.value, (newValue, oldValue) => this.onUpdate('flds.attach', this.FldsValAttach, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.FldsValAttach.value, (newValue, oldValue) => this.onUpdate('flds.attach', this.FldsValAttach, newValue, oldValue)))
 
 		this.FldsValAttachPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'FldsValAttachPropertiesVM',
@@ -110,7 +111,7 @@ export default class ViewModel extends FormViewModelBase
 			area: 'FLDS',
 			field: 'ATTACHFK'
 		}).cloneFrom(values?.FldsValAttachfk))
-		watch(() => this.FldsValAttachfk.value, (newValue, oldValue) => this.onUpdate('flds.attachfk', this.FldsValAttachfk, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.FldsValAttachfk.value, (newValue, oldValue) => this.onUpdate('flds.attachfk', this.FldsValAttachfk, newValue, oldValue)))
 		this.FldsValAttachData = reactive(new modelFieldType.DocumentData({
 			id: 'FldsValAttachData',
 			isFixed: true,
@@ -118,7 +119,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ATTACHDATA',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.FldsValAttachData))
-		watch(() => this.FldsValAttachData.value, (newValue, oldValue) => this.onUpdate('flds.attachdata', this.FldsValAttachData, newValue, oldValue), { deep: true })
+		this.stopWatchers.push(watch(() => this.FldsValAttachData.value, (newValue, oldValue) => this.onUpdate('flds.attachdata', this.FldsValAttachData, newValue, oldValue), { deep: true }))
 
 		this.FldsValNpassage = reactive(new modelFieldType.Number({
 			id: 'FldsValNpassage',
@@ -130,7 +131,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.NUMERIC19292),
 		}).cloneFrom(values?.FldsValNpassage))
-		watch(() => this.FldsValNpassage.value, (newValue, oldValue) => this.onUpdate('flds.npassage', this.FldsValNpassage, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.FldsValNpassage.value, (newValue, oldValue) => this.onUpdate('flds.npassage', this.FldsValNpassage, newValue, oldValue)))
 	}
 
 	/**

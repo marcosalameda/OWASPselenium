@@ -81,6 +81,7 @@ export default class MapControl extends CustomControl
 			readonly: computed(() => viewMode.readonly),
 			listConfig: this.controlContext.config,
 			overlays: this.customProperties.overlays,
+			legends: this.customProperties.legends,
 			customFunctions: this.customProperties.customFunctions,
 			tokens,
 			resourcesPath: systemInfo.resourcesPath

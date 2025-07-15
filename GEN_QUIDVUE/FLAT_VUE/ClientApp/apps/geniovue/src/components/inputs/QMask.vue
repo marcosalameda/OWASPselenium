@@ -138,6 +138,13 @@
 
 		expose: [],
 
+		setup()
+		{
+			return {
+				maskaInstance: null
+			}
+		},
+
 		data()
 		{
 			return {
@@ -147,7 +154,14 @@
 
 		mounted()
 		{
-			create(this.$refs.field?.inputRef, this.getTokens())
+			this.maskaInstance = create(this.$refs.field?.inputRef, this.getTokens())
+		},
+
+		beforeUnmount()
+		{
+			if(typeof this.maskaInstance?.destroy === 'function')
+				this.maskaInstance.destroy()
+			this.maskaInstance = null
 		},
 
 		computed: {

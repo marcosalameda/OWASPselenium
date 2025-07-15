@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'SALAS',
 			area: 'ROOMS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_SALAS',
-				updateFilesTickets: 'UpdateFilesTicketsSALAS'
+				recalculateFormulas: 'RecalculateFormulas_Salas',
+				updateFilesTickets: 'UpdateFilesTicketsSalas',
+				setFile: 'SetFileSalas'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODROOMS',
 			description: '',
 		}).cloneFrom(values?.ValCodrooms))
-		watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('rooms.codrooms', this.ValCodrooms, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('rooms.codrooms', this.ValCodrooms, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValRoomnr = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.N_R__ROOM43805),
 		}).cloneFrom(values?.ValRoomnr))
-		watch(() => this.ValRoomnr.value, (newValue, oldValue) => this.onUpdate('rooms.roomnr', this.ValRoomnr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValRoomnr.value, (newValue, oldValue) => this.onUpdate('rooms.roomnr', this.ValRoomnr, newValue, oldValue)))
 
 		this.ValDesignat = reactive(new modelFieldType.String({
 			id: 'ValDesignat',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.ROOM_DESIGNATION37895),
 		}).cloneFrom(values?.ValDesignat))
-		watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('rooms.designat', this.ValDesignat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('rooms.designat', this.ValDesignat, newValue, oldValue)))
 	}
 
 	/**

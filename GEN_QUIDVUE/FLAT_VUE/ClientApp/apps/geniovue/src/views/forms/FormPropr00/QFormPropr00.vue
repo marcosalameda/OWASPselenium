@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -101,7 +101,7 @@
 							:is-visible="controls.PROPR00_PSEUDNOVOGR04.isVisible">
 							<!-- Start PROPR00_PSEUDNOVOGR04 -->
 							<q-row-container
-								v-show="controls.PROPR00_PSEUDNOVOGR02.isVisible || controls.PROPR00_PESSONAME____.isVisible"
+								v-show="controls.PROPR00_PSEUDNOVOGR02.isVisible"
 								is-large>
 								<q-control-wrapper
 									v-show="controls.PROPR00_PSEUDNOVOGR02.isVisible"
@@ -183,6 +183,8 @@
 										<!-- End PROPR00_PSEUDNOVOGR02 -->
 									</q-group-box-container>
 								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PROPR00_PESSONAME____.isVisible">
 								<q-control-wrapper
 									v-show="controls.PROPR00_PESSONAME____.isVisible"
 									class="control-join-group">
@@ -338,7 +340,7 @@
 										role="tabpanel"
 										aria-labelledby="tab-container-PROPR00_PSEUDPROPR01_">
 										<q-row-container
-											v-show="controls.PROPR01_PSEUDNOVOGR01.isVisible || controls.PROPR01_PROPRCOORDGEO.isVisible"
+											v-show="controls.PROPR01_PSEUDNOVOGR01.isVisible"
 											is-large>
 											<q-control-wrapper
 												v-show="controls.PROPR01_PSEUDNOVOGR01.isVisible"
@@ -457,6 +459,8 @@
 													<!-- End PROPR01_PSEUDNOVOGR01 -->
 												</q-group-box-container>
 											</q-control-wrapper>
+										</q-row-container>
+										<q-row-container v-show="controls.PROPR01_PROPRCOORDGEO.isVisible">
 											<q-control-wrapper
 												v-show="controls.PROPR01_PROPRCOORDGEO.isVisible"
 												class="control-join-group">
@@ -1101,7 +1105,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'PROPR00_PSEUDPROPR02_',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1426,6 +1430,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PROPR00]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PROPR00]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

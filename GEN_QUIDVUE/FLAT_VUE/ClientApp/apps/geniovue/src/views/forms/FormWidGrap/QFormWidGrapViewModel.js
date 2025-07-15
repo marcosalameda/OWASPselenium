@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'WID_GRAP',
 			area: 'Home',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_WID_GRAP',
-				updateFilesTickets: 'UpdateFilesTicketsWID_GRAP'
+				recalculateFormulas: 'RecalculateFormulas_Wid_grap',
+				updateFilesTickets: 'UpdateFilesTicketsWid_grap',
+				setFile: 'SetFileWid_grap'
 			}
 		})
 

@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'IDIOM',
 			area: 'LANGU',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_IDIOM',
-				updateFilesTickets: 'UpdateFilesTicketsIDIOM'
+				recalculateFormulas: 'RecalculateFormulas_Idiom',
+				updateFilesTickets: 'UpdateFilesTicketsIdiom',
+				setFile: 'SetFileIdiom'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODLANG',
 			description: '',
 		}).cloneFrom(values?.ValCodlang))
-		watch(() => this.ValCodlang.value, (newValue, oldValue) => this.onUpdate('langu.codlang', this.ValCodlang, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlang.value, (newValue, oldValue) => this.onUpdate('langu.codlang', this.ValCodlang, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValLangua = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.LANGUAGE16872),
 		}).cloneFrom(values?.ValLangua))
-		watch(() => this.ValLangua.value, (newValue, oldValue) => this.onUpdate('langu.langua', this.ValLangua, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValLangua.value, (newValue, oldValue) => this.onUpdate('langu.langua', this.ValLangua, newValue, oldValue)))
 
 		this.ValAcron = reactive(new modelFieldType.String({
 			id: 'ValAcron',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 5,
 			description: computed(() => this.Resources.ACRONYM00872),
 		}).cloneFrom(values?.ValAcron))
-		watch(() => this.ValAcron.value, (newValue, oldValue) => this.onUpdate('langu.acron', this.ValAcron, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAcron.value, (newValue, oldValue) => this.onUpdate('langu.acron', this.ValAcron, newValue, oldValue)))
 	}
 
 	/**

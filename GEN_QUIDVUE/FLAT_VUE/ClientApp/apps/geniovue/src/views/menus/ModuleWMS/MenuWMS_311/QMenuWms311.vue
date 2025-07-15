@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -269,7 +270,7 @@
 								field: 'IN_USE',
 								label: computed(() => this.Resources.IN_USE42606),
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayYesno.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayYesno(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayYesno.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
@@ -452,6 +453,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_311]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

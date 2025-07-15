@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -299,7 +299,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible || controls.ENTIX___PSEUDNOVOGR06.isVisible"
+					v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible"
@@ -307,12 +307,13 @@
 						<q-accordion
 							v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible"
 							id="ENTIX___PSEUDNOVOGR05"
+							v-model="controls.ENTIX___PSEUDNOVOGR05.openChild"
 							v-bind="controls.ENTIX___PSEUDNOVOGR05">
 							<!-- Start ENTIX___PSEUDNOVOGR05 -->
-							<q-group-collapsible
-								id="ENTIX___PSEUDNOVOGR02"
-								v-bind="controls.ENTIX___PSEUDNOVOGR02"
-								v-on="controls.ENTIX___PSEUDNOVOGR02.handlers">
+							<q-accordion-item
+								id="ENTIX___PSEUDNOVOGR02-container"
+								value="ENTIX___PSEUDNOVOGR02"
+								:title="controls.ENTIX___PSEUDNOVOGR02.label">
 								<!-- Start ENTIX___PSEUDNOVOGR02 -->
 								<q-row-container v-show="controls.ENTIX___ENTITTELEPHON.isVisible || controls.ENTIX___ENTITFAX_____.isVisible">
 									<q-control-wrapper
@@ -453,11 +454,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End ENTIX___PSEUDNOVOGR02 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="ENTIX___PSEUDNOVOGR03"
-								v-bind="controls.ENTIX___PSEUDNOVOGR03"
-								v-on="controls.ENTIX___PSEUDNOVOGR03.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="ENTIX___PSEUDNOVOGR03-container"
+								value="ENTIX___PSEUDNOVOGR03"
+								:title="controls.ENTIX___PSEUDNOVOGR03.label">
 								<!-- Start ENTIX___PSEUDNOVOGR03 -->
 								<q-row-container v-show="controls.ENTIX___ENTITBUILDING.isVisible">
 									<q-control-wrapper
@@ -586,11 +587,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End ENTIX___PSEUDNOVOGR03 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="ENTIX___PSEUDNOVOGR04"
-								v-bind="controls.ENTIX___PSEUDNOVOGR04"
-								v-on="controls.ENTIX___PSEUDNOVOGR04.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="ENTIX___PSEUDNOVOGR04-container"
+								value="ENTIX___PSEUDNOVOGR04"
+								:title="controls.ENTIX___PSEUDNOVOGR04.label">
 								<!-- Start ENTIX___PSEUDNOVOGR04 -->
 								<q-row-container v-show="controls.ENTIX___FACI1NAME____.isVisible || controls.ENTIX___FACI2NAME____.isVisible">
 									<q-control-wrapper
@@ -627,10 +628,12 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End ENTIX___PSEUDNOVOGR04 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End ENTIX___PSEUDNOVOGR05 -->
 						</q-accordion>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ENTIX___PSEUDNOVOGR06.isVisible">
 					<q-control-wrapper
 						v-show="controls.ENTIX___PSEUDNOVOGR06.isVisible"
 						class="control-join-group">
@@ -650,6 +653,7 @@
 										v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.ENTIX___PSEUDFACILITE"
+										:filter-operators="controls.ENTIX___PSEUDFACILITE.filterOperators"
 										v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
 								</q-control-wrapper>
 							</q-row-container>
@@ -1037,7 +1041,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1191,6 +1195,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ENTIX___ENTITTELEPHON', 'ENTIX___ENTITFAX_____', 'ENTIX___ENTITEMAIL___', 'ENTIX___ENTITWEBSITE_', 'ENTIX___ENTITPERSON__', 'ENTIX___ENTITCONTACT_', 'ENTIX___ENTITLANGUAGE', 'ENTIX___ENTITCURRENCY'],
@@ -1325,6 +1330,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ENTIX___ENTITBUILDING', 'ENTIX___ENTITSTREET__', 'ENTIX___ENTITTOWN____', 'ENTIX___ENTITCOUNTY__', 'ENTIX___ENTITSTATE___', 'ENTIX___ENTITPOSTALCO', 'ENTIX___ENTITPOBOX___'],
@@ -1444,6 +1450,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ENTIX___FACI1NAME____', 'ENTIX___FACI2NAME____'],
@@ -1746,7 +1753,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-ENTIT', 'changed-FACIL'],
+						globalEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-FACIL', 'changed-ENTIT'],
 						uuid: 'Entix_ValFacilite',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1900,6 +1907,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS ENTIX]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ENTIX]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -156,15 +156,14 @@
 										:suggestion-mode-on="suggestionModeOn">
 										<q-radio-group
 											v-if="controls.PESSOSEPPESSOGENDER__.isVisible"
-											id="PESSOSEPPESSOGENDER__"
-											:model-value="model.ValGender.value"
-											deselect-radio
-											:label-left-side="controls.PESSOSEPPESSOGENDER__.labelPosition === labelAlignment.left"
-											:number-of-columns="controls.PESSOSEPPESSOGENDER__.columnNumber"
-											:is-required="controls.PESSOSEPPESSOGENDER__.isRequired"
-											:readonly="controls.PESSOSEPPESSOGENDER__.readonly"
-											:options-list="controls.PESSOSEPPESSOGENDER__.items"
-											@update:model-value="model.ValGender.fnUpdateValue" />
+											v-bind="controls.PESSOSEPPESSOGENDER__.props"
+											v-on="controls.PESSOSEPPESSOGENDER__.handlers">
+											<q-radio-button
+												v-for="radio in controls.PESSOSEPPESSOGENDER__.items"
+												:key="radio.key"
+												:label="radio.value"
+												:value="radio.key" />
+										</q-radio-group>
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -338,12 +337,13 @@
 												<q-accordion
 													v-if="controls.PESSOS01PSEUDNOVOGR06.isVisible"
 													id="PESSOS01PSEUDNOVOGR06"
+													v-model="controls.PESSOS01PSEUDNOVOGR06.openChild"
 													v-bind="controls.PESSOS01PSEUDNOVOGR06">
 													<!-- Start PESSOS01PSEUDNOVOGR06 -->
-													<q-group-collapsible
-														id="PESSOS01PSEUDNOVOGR03"
-														v-bind="controls.PESSOS01PSEUDNOVOGR03"
-														v-on="controls.PESSOS01PSEUDNOVOGR03.handlers">
+													<q-accordion-item
+														id="PESSOS01PSEUDNOVOGR03-container"
+														value="PESSOS01PSEUDNOVOGR03"
+														:title="controls.PESSOS01PSEUDNOVOGR03.label">
 														<!-- Start PESSOS01PSEUDNOVOGR03 -->
 														<q-row-container v-show="controls.PESSOS01PESSOTELEPHON.isVisible || controls.PESSOS01PESSOEMAIL___.isVisible">
 															<q-control-wrapper
@@ -380,11 +380,11 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End PESSOS01PSEUDNOVOGR03 -->
-													</q-group-collapsible>
-													<q-group-collapsible
-														id="PESSOS01PSEUDNOVOGR04"
-														v-bind="controls.PESSOS01PSEUDNOVOGR04"
-														v-on="controls.PESSOS01PSEUDNOVOGR04.handlers">
+													</q-accordion-item>
+													<q-accordion-item
+														id="PESSOS01PSEUDNOVOGR04-container"
+														value="PESSOS01PSEUDNOVOGR04"
+														:title="controls.PESSOS01PSEUDNOVOGR04.label">
 														<!-- Start PESSOS01PSEUDNOVOGR04 -->
 														<q-row-container v-show="controls.PESSOS01PESSOPHOTOGRA.isVisible">
 															<q-control-wrapper
@@ -405,11 +405,11 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End PESSOS01PSEUDNOVOGR04 -->
-													</q-group-collapsible>
-													<q-group-collapsible
-														id="PESSOS01PSEUDNOVOGR05"
-														v-bind="controls.PESSOS01PSEUDNOVOGR05"
-														v-on="controls.PESSOS01PSEUDNOVOGR05.handlers">
+													</q-accordion-item>
+													<q-accordion-item
+														id="PESSOS01PSEUDNOVOGR05-container"
+														value="PESSOS01PSEUDNOVOGR05"
+														:title="controls.PESSOS01PSEUDNOVOGR05.label">
 														<!-- Start PESSOS01PSEUDNOVOGR05 -->
 														<q-row-container v-show="controls.PESSOS01PSEUDEVOLUCAO.isVisible">
 															<q-control-wrapper
@@ -421,6 +421,7 @@
 																	v-on="controls.PESSOS01PSEUDEVOLUCAO.handlers" />
 																<q-table-extra-extension
 																	:list-ctrl="controls.PESSOS01PSEUDEVOLUCAO"
+																	:filter-operators="controls.PESSOS01PSEUDEVOLUCAO.filterOperators"
 																	v-on="controls.PESSOS01PSEUDEVOLUCAO.handlers" />
 															</q-control-wrapper>
 														</q-row-container>
@@ -435,11 +436,11 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End PESSOS01PSEUDNOVOGR05 -->
-													</q-group-collapsible>
-													<q-group-collapsible
-														id="PESSOS01PSEUDNOVOGR07"
-														v-bind="controls.PESSOS01PSEUDNOVOGR07"
-														v-on="controls.PESSOS01PSEUDNOVOGR07.handlers">
+													</q-accordion-item>
+													<q-accordion-item
+														id="PESSOS01PSEUDNOVOGR07-container"
+														value="PESSOS01PSEUDNOVOGR07"
+														:title="controls.PESSOS01PSEUDNOVOGR07.label">
 														<!-- Start PESSOS01PSEUDNOVOGR07 -->
 														<q-row-container v-show="controls.PESSOS01PSEUDCONTACTO.isVisible">
 															<q-control-wrapper
@@ -451,11 +452,12 @@
 																	v-on="controls.PESSOS01PSEUDCONTACTO.handlers" />
 																<q-table-extra-extension
 																	:list-ctrl="controls.PESSOS01PSEUDCONTACTO"
+																	:filter-operators="controls.PESSOS01PSEUDCONTACTO.filterOperators"
 																	v-on="controls.PESSOS01PSEUDCONTACTO.handlers" />
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End PESSOS01PSEUDNOVOGR07 -->
-													</q-group-collapsible>
+													</q-accordion-item>
 													<!-- End PESSOS01PSEUDNOVOGR06 -->
 												</q-accordion>
 											</q-control-wrapper>
@@ -865,7 +867,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOSEPPSEUDNOVOGR02',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -874,7 +876,6 @@
 						valueChangeEvent: 'fieldChange:pesso.gender',
 						id: 'PESSOSEPPESSOGENDER__',
 						name: 'GENDER',
-						size: 'mini',
 						label: computed(() => this.Resources.GENDER44172),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -882,7 +883,7 @@
 						maxLength: 1,
 						labelId: 'label_PESSOSEPPESSOGENDER__',
 						arrayName: 'Genero',
-						columnNumber: 3,
+						columns: 3,
 						controlLimits: [
 						],
 					}, this),
@@ -965,7 +966,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 						showWhen: {
@@ -1081,6 +1082,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PESSOS01PESSOTELEPHON', 'PESSOS01PESSOEMAIL___'],
@@ -1128,6 +1130,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PESSOS01PESSOPHOTOGRA'],
@@ -1160,6 +1163,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PESSOS01PSEUDEVOLUCAO', 'PESSOS01PSEUDFICHACAR'],
@@ -1367,7 +1371,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-CATE1', 'changed-EVCAT'],
+						globalEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
 						uuid: 'Pessos01_ValEvolucao',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1409,6 +1413,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PESSOS01PSEUDCONTACTO'],
@@ -1561,7 +1566,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-GENRE', 'changed-CONTA', 'changed-TPCON', 'changed-PESSO'],
+						globalEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
 						uuid: 'Pessos01_ValContacto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1708,6 +1713,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PESSOSEP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PESSOSEP]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

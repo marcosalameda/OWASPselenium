@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PESS1',
 			area: 'PESS1',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PESS1',
-				updateFilesTickets: 'UpdateFilesTicketsPESS1'
+				recalculateFormulas: 'RecalculateFormulas_Pess1',
+				updateFilesTickets: 'UpdateFilesTicketsPess1',
+				setFile: 'SetFilePess1'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPESSO',
 			description: '',
 		}).cloneFrom(values?.ValCodpesso))
-		watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('pess1.codpesso', this.ValCodpesso, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('pess1.codpesso', this.ValCodpesso, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources._LAST_CATEGORY61019),
 		}).cloneFrom(values?.ValCodcateg))
-		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('pess1.codcateg', this.ValCodcateg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('pess1.codcateg', this.ValCodcateg, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'CMPNY',
 			description: computed(() => this.Resources._COMPANY02087),
 		}).cloneFrom(values?.ValCodempre))
-		watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('pess1.codempre', this.ValCodempre, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('pess1.codempre', this.ValCodempre, newValue, oldValue)))
 
 		this.ValCodparte = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodparte',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'STAKE',
 			description: computed(() => this.Resources._INTERESTED_PARTY56973),
 		}).cloneFrom(values?.ValCodparte))
-		watch(() => this.ValCodparte.value, (newValue, oldValue) => this.onUpdate('pess1.codparte', this.ValCodparte, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodparte.value, (newValue, oldValue) => this.onUpdate('pess1.codparte', this.ValCodparte, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableCmpnyDesignat = reactive(new modelFieldType.String({
@@ -95,7 +96,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
 		}).cloneFrom(values?.TableCmpnyDesignat))
-		watch(() => this.TableCmpnyDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.TableCmpnyDesignat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableCmpnyDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.TableCmpnyDesignat, newValue, oldValue)))
 
 		this.TableStakeDesignat = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -106,7 +107,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
 		}).cloneFrom(values?.TableStakeDesignat))
-		watch(() => this.TableStakeDesignat.value, (newValue, oldValue) => this.onUpdate('stake.designat', this.TableStakeDesignat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableStakeDesignat.value, (newValue, oldValue) => this.onUpdate('stake.designat', this.TableStakeDesignat, newValue, oldValue)))
 
 		this.ValName = reactive(new modelFieldType.String({
 			id: 'ValName',
@@ -116,7 +117,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('pess1.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('pess1.name', this.ValName, newValue, oldValue)))
 
 		this.ValGender = reactive(new modelFieldType.String({
 			id: 'ValGender',
@@ -124,10 +125,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'PESS1',
 			field: 'GENDER',
 			maxLength: 1,
-			arrayOptions: computed(() => qProjArrays.QArrayGenero.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
 			description: computed(() => this.Resources.GENRE63303),
 		}).cloneFrom(values?.ValGender))
-		watch(() => this.ValGender.value, (newValue, oldValue) => this.onUpdate('pess1.gender', this.ValGender, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValGender.value, (newValue, oldValue) => this.onUpdate('pess1.gender', this.ValGender, newValue, oldValue)))
 
 		this.ValDtnascim = reactive(new modelFieldType.Date({
 			id: 'ValDtnascim',
@@ -136,7 +137,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTNASCIM',
 			description: computed(() => this.Resources.BIRTH21799),
 		}).cloneFrom(values?.ValDtnascim))
-		watch(() => this.ValDtnascim.value, (newValue, oldValue) => this.onUpdate('pess1.dtnascim', this.ValDtnascim, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtnascim.value, (newValue, oldValue) => this.onUpdate('pess1.dtnascim', this.ValDtnascim, newValue, oldValue)))
 
 		this.ValIdfuncio = reactive(new modelFieldType.Number({
 			id: 'ValIdfuncio',
@@ -147,7 +148,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.OFFICIAL_NO_34819),
 		}).cloneFrom(values?.ValIdfuncio))
-		watch(() => this.ValIdfuncio.value, (newValue, oldValue) => this.onUpdate('pess1.idfuncio', this.ValIdfuncio, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIdfuncio.value, (newValue, oldValue) => this.onUpdate('pess1.idfuncio', this.ValIdfuncio, newValue, oldValue)))
 
 		this.ValTelephon = reactive(new modelFieldType.String({
 			id: 'ValTelephon',
@@ -157,7 +158,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.PHONE56703),
 		}).cloneFrom(values?.ValTelephon))
-		watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('pess1.telephon', this.ValTelephon, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('pess1.telephon', this.ValTelephon, newValue, oldValue)))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -167,7 +168,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 254,
 			description: computed(() => this.Resources.EMAIL25170),
 		}).cloneFrom(values?.ValEmail))
-		watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('pess1.email', this.ValEmail, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('pess1.email', this.ValEmail, newValue, oldValue)))
 
 		this.ValEmail2 = reactive(new modelFieldType.String({
 			id: 'ValEmail2',
@@ -177,7 +178,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 254,
 			description: computed(() => this.Resources.EMAIL25170),
 		}).cloneFrom(values?.ValEmail2))
-		watch(() => this.ValEmail2.value, (newValue, oldValue) => this.onUpdate('pess1.email2', this.ValEmail2, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValEmail2.value, (newValue, oldValue) => this.onUpdate('pess1.email2', this.ValEmail2, newValue, oldValue)))
 
 		this.ValPhotogra = reactive(new modelFieldType.Image({
 			id: 'ValPhotogra',
@@ -186,7 +187,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PHOTOGRA',
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.ValPhotogra))
-		watch(() => this.ValPhotogra.value, (newValue, oldValue) => this.onUpdate('pess1.photogra', this.ValPhotogra, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPhotogra.value, (newValue, oldValue) => this.onUpdate('pess1.photogra', this.ValPhotogra, newValue, oldValue)))
 
 		this.ValDtultcat = reactive(new modelFieldType.Date({
 			id: 'ValDtultcat',
@@ -195,7 +196,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTULTCAT',
 			description: computed(() => this.Resources.SINCE47259),
 		}).cloneFrom(values?.ValDtultcat))
-		watch(() => this.ValDtultcat.value, (newValue, oldValue) => this.onUpdate('pess1.dtultcat', this.ValDtultcat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtultcat.value, (newValue, oldValue) => this.onUpdate('pess1.dtultcat', this.ValDtultcat, newValue, oldValue)))
 
 		this.ValExterna = reactive(new modelFieldType.Boolean({
 			id: 'ValExterna',
@@ -204,7 +205,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'EXTERNA',
 			description: computed(() => this.Resources.EXTERNAL13375),
 		}).cloneFrom(values?.ValExterna))
-		watch(() => this.ValExterna.value, (newValue, oldValue) => this.onUpdate('pess1.externa', this.ValExterna, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValExterna.value, (newValue, oldValue) => this.onUpdate('pess1.externa', this.ValExterna, newValue, oldValue)))
 
 		this.ValInterna = reactive(new modelFieldType.Boolean({
 			id: 'ValInterna',
@@ -213,7 +214,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'INTERNA',
 			description: computed(() => this.Resources.INTERNAL04894),
 		}).cloneFrom(values?.ValInterna))
-		watch(() => this.ValInterna.value, (newValue, oldValue) => this.onUpdate('pess1.interna', this.ValInterna, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValInterna.value, (newValue, oldValue) => this.onUpdate('pess1.interna', this.ValInterna, newValue, oldValue)))
 
 		this.ValIdade = reactive(new modelFieldType.Number({
 			id: 'ValIdade',
@@ -224,7 +225,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.AGE28663),
 		}).cloneFrom(values?.ValIdade))
-		watch(() => this.ValIdade.value, (newValue, oldValue) => this.onUpdate('pess1.idade', this.ValIdade, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIdade.value, (newValue, oldValue) => this.onUpdate('pess1.idade', this.ValIdade, newValue, oldValue)))
 	}
 
 	/**

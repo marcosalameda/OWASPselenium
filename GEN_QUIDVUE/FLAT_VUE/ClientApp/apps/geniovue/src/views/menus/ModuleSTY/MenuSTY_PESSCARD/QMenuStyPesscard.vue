@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -170,7 +171,7 @@
 								label: computed(() => this.Resources.SEXO52099),
 								dataLength: 9,
 								scrollData: 9,
-								array: computed(() => qProjArrays.QArraySexo.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArraySexo(vm.$getResource).elements),
 								arrayType: qProjArrays.QArraySexo.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -490,6 +491,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS STY_MENU_PESSCARD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT STY_MENU_PESSCARD]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

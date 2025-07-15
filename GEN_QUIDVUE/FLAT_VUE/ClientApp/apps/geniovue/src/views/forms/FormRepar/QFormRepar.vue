@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -195,15 +195,14 @@
 							:suggestion-mode-on="suggestionModeOn">
 							<q-radio-group
 								v-if="controls.REPAR___REPARTIPOAREA.isVisible"
-								id="REPAR___REPARTIPOAREA"
-								:model-value="model.ValTipoarea.value"
-								deselect-radio
-								:label-left-side="controls.REPAR___REPARTIPOAREA.labelPosition === labelAlignment.left"
-								:number-of-columns="controls.REPAR___REPARTIPOAREA.columnNumber"
-								:is-required="controls.REPAR___REPARTIPOAREA.isRequired"
-								:readonly="controls.REPAR___REPARTIPOAREA.readonly"
-								:options-list="controls.REPAR___REPARTIPOAREA.items"
-								@update:model-value="model.ValTipoarea.fnUpdateValue" />
+								v-bind="controls.REPAR___REPARTIPOAREA.props"
+								v-on="controls.REPAR___REPARTIPOAREA.handlers">
+								<q-radio-button
+									v-for="radio in controls.REPAR___REPARTIPOAREA.items"
+									:key="radio.key"
+									:label="radio.value"
+									:value="radio.key" />
+							</q-radio-group>
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -723,7 +722,7 @@
 						label: computed(() => this.Resources.REPAIRED_ON23617),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -748,14 +747,13 @@
 						valueChangeEvent: 'fieldChange:repar.tipoarea',
 						id: 'REPAR___REPARTIPOAREA',
 						name: 'TIPOAREA',
-						size: 'medium',
 						label: computed(() => this.Resources.TECHNICAL_AREA50773),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_REPAR___REPARTIPOAREA',
 						arrayName: 'AreaTecn',
-						columnNumber: 4,
+						columns: 4,
 						controlLimits: [
 						],
 					}, this),
@@ -989,6 +987,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS REPAR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT REPAR]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -515,15 +515,14 @@
 													:suggestion-mode-on="suggestionModeOn">
 													<q-radio-group
 														v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
-														id="CAMENUM_FLDS_CLASSNUM"
-														:model-value="model.ValClassnum.value"
-														deselect-radio
-														:label-left-side="controls.CAMENUM_FLDS_CLASSNUM.labelPosition === labelAlignment.left"
-														:number-of-columns="controls.CAMENUM_FLDS_CLASSNUM.columnNumber"
-														:is-required="controls.CAMENUM_FLDS_CLASSNUM.isRequired"
-														:readonly="controls.CAMENUM_FLDS_CLASSNUM.readonly"
-														:options-list="controls.CAMENUM_FLDS_CLASSNUM.items"
-														@update:model-value="model.ValClassnum.fnUpdateValue" />
+														v-bind="controls.CAMENUM_FLDS_CLASSNUM.props"
+														v-on="controls.CAMENUM_FLDS_CLASSNUM.handlers">
+														<q-radio-button
+															v-for="radio in controls.CAMENUM_FLDS_CLASSNUM.items"
+															:key="radio.key"
+															:label="radio.value"
+															:value="radio.key" />
+													</q-radio-group>
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -1245,7 +1244,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMDATE_',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1265,7 +1264,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMDATE_',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1285,7 +1284,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMDATE_',
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -1305,7 +1304,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMDATE_',
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1434,7 +1433,6 @@
 						valueChangeEvent: 'fieldChange:flds.classnum',
 						id: 'CAMENUM_FLDS_CLASSNUM',
 						name: 'CLASSNUM',
-						size: 'small',
 						helpControl: {
 							shortHelp: {
 								type: 'Subtext',
@@ -1448,7 +1446,7 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'CLASSNUM',
-						columnNumber: 3,
+						columns: 3,
 						controlLimits: [
 						],
 					}, this),
@@ -1568,7 +1566,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMAUDIT',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1582,7 +1580,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMAUDIT',
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1596,7 +1594,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMAUDIT',
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -1753,6 +1751,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS LISTACAM]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT LISTACAM]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

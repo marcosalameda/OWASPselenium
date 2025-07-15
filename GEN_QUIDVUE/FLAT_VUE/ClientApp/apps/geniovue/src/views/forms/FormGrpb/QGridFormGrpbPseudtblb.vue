@@ -379,7 +379,7 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -392,7 +392,7 @@
 						label: computed(() => this.Resources.DATETIME__MINUTES_59352),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -405,7 +405,7 @@
 						label: computed(() => this.Resources.DATETIME__SECONDS_49861),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -418,7 +418,7 @@
 						label: computed(() => this.Resources.TIME__HOURS_MINUTES_01660),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -507,6 +507,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GRPB____PSEUDTBLB____]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GRPB____PSEUDTBLB____]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

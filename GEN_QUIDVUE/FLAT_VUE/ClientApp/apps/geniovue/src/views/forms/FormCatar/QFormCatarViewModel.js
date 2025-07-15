@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CATAR',
 			area: 'ITEMC',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_CATAR',
-				updateFilesTickets: 'UpdateFilesTicketsCATAR'
+				recalculateFormulas: 'RecalculateFormulas_Catar',
+				updateFilesTickets: 'UpdateFilesTicketsCatar',
+				setFile: 'SetFileCatar'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCATAR',
 			description: '',
 		}).cloneFrom(values?.ValCodcatar))
-		watch(() => this.ValCodcatar.value, (newValue, oldValue) => this.onUpdate('itemc.codcatar', this.ValCodcatar, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcatar.value, (newValue, oldValue) => this.onUpdate('itemc.codcatar', this.ValCodcatar, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCoditem = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ITEM',
 			description: '',
 		}).cloneFrom(values?.ValCoditem))
-		watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('itemc.coditem', this.ValCoditem, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('itemc.coditem', this.ValCoditem, newValue, oldValue)))
 
 		this.ValCodtpcat = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodtpcat',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'CATTP',
 			description: '',
 		}).cloneFrom(values?.ValCodtpcat))
-		watch(() => this.ValCodtpcat.value, (newValue, oldValue) => this.onUpdate('itemc.codtpcat', this.ValCodtpcat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtpcat.value, (newValue, oldValue) => this.onUpdate('itemc.codtpcat', this.ValCodtpcat, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableItemItemdes = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.ARTICLE60065),
 		}).cloneFrom(values?.TableItemItemdes))
-		watch(() => this.TableItemItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.TableItemItemdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableItemItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.TableItemItemdes, newValue, oldValue)))
 
 		this.TableCattpTpcatego = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.CATEGORY_TYPE23058),
 		}).cloneFrom(values?.TableCattpTpcatego))
-		watch(() => this.TableCattpTpcatego.value, (newValue, oldValue) => this.onUpdate('cattp.tpcatego', this.TableCattpTpcatego, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableCattpTpcatego.value, (newValue, oldValue) => this.onUpdate('cattp.tpcatego', this.TableCattpTpcatego, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.ValTpcateg = reactive(new modelFieldType.String({
@@ -119,7 +120,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.CATEGORY_TYPE23058),
 		}).cloneFrom(values?.ValTpcateg))
-		watch(() => this.ValTpcateg.value, (newValue, oldValue) => this.onUpdate('itemc.tpcateg', this.ValTpcateg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTpcateg.value, (newValue, oldValue) => this.onUpdate('itemc.tpcateg', this.ValTpcateg, newValue, oldValue)))
 	}
 
 	/**

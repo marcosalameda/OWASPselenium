@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -237,15 +237,14 @@
 							:suggestion-mode-on="suggestionModeOn">
 							<q-radio-group
 								v-if="controls.FACIL___FACILGPSINPUT.isVisible"
-								id="FACIL___FACILGPSINPUT"
-								:model-value="model.ValGpsinput.value"
-								deselect-radio
-								:label-left-side="controls.FACIL___FACILGPSINPUT.labelPosition === labelAlignment.left"
-								:number-of-columns="controls.FACIL___FACILGPSINPUT.columnNumber"
-								:is-required="controls.FACIL___FACILGPSINPUT.isRequired"
-								:readonly="controls.FACIL___FACILGPSINPUT.readonly"
-								:options-list="controls.FACIL___FACILGPSINPUT.items"
-								@update:model-value="model.ValGpsinput.fnUpdateValue" />
+								v-bind="controls.FACIL___FACILGPSINPUT.props"
+								v-on="controls.FACIL___FACILGPSINPUT.handlers">
+								<q-radio-button
+									v-for="radio in controls.FACIL___FACILGPSINPUT.items"
+									:key="radio.key"
+									:label="radio.value"
+									:value="radio.key" />
+							</q-radio-group>
 						</base-input-structure>
 					</q-control-wrapper>
 				</q-row-container>
@@ -680,7 +679,7 @@
 						label: computed(() => this.Resources.INCORPORATION10135),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -777,14 +776,13 @@
 						valueChangeEvent: 'fieldChange:facil.gpsinput',
 						id: 'FACIL___FACILGPSINPUT',
 						name: 'GPSINPUT',
-						size: 'medium',
 						label: computed(() => this.Resources.GPS_INPUT13625),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
 						labelId: 'label_FACIL___FACILGPSINPUT',
 						arrayName: 'GpsInput',
-						columnNumber: 1,
+						columns: 1,
 						controlLimits: [
 						],
 					}, this),
@@ -969,6 +967,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS FACIL]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FACIL]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

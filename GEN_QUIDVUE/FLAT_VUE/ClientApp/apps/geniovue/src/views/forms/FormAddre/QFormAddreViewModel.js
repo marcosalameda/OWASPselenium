@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ADDRE',
 			area: 'ADDRE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ADDRE',
-				updateFilesTickets: 'UpdateFilesTicketsADDRE'
+				recalculateFormulas: 'RecalculateFormulas_Addre',
+				updateFilesTickets: 'UpdateFilesTicketsAddre',
+				setFile: 'SetFileAddre'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODADDRE',
 			description: '',
 		}).cloneFrom(values?.ValCodaddre))
-		watch(() => this.ValCodaddre.value, (newValue, oldValue) => this.onUpdate('addre.codaddre', this.ValCodaddre, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodaddre.value, (newValue, oldValue) => this.onUpdate('addre.codaddre', this.ValCodaddre, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValAddressuse = reactive(new modelFieldType.String({
@@ -59,10 +60,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'ADDRE',
 			field: 'ADDRUSE',
 			maxLength: 7,
-			arrayOptions: computed(() => qProjArrays.QArrayAddressu.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayAddressu(vm.$getResource).elements),
 			description: computed(() => this.Resources.ADDRESS_USE16014),
 		}).cloneFrom(values?.ValAddressuse))
-		watch(() => this.ValAddressuse.value, (newValue, oldValue) => this.onUpdate('addre.addressuse', this.ValAddressuse, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAddressuse.value, (newValue, oldValue) => this.onUpdate('addre.addressuse', this.ValAddressuse, newValue, oldValue)))
 
 		this.ValAddresstype = reactive(new modelFieldType.String({
 			id: 'ValAddresstype',
@@ -70,10 +71,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'ADDRE',
 			field: 'ADDRTYPE',
 			maxLength: 8,
-			arrayOptions: computed(() => qProjArrays.QArrayAddresst.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayAddresst(vm.$getResource).elements),
 			description: computed(() => this.Resources.ADDRESS_TYPE12455),
 		}).cloneFrom(values?.ValAddresstype))
-		watch(() => this.ValAddresstype.value, (newValue, oldValue) => this.onUpdate('addre.addresstype', this.ValAddresstype, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAddresstype.value, (newValue, oldValue) => this.onUpdate('addre.addresstype', this.ValAddresstype, newValue, oldValue)))
 
 		this.ValAddresstext = reactive(new modelFieldType.MultiLineString({
 			id: 'ValAddresstext',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ADDRTEXT',
 			description: computed(() => this.Resources.ENTIRE_ADDRESS64248),
 		}).cloneFrom(values?.ValAddresstext))
-		watch(() => this.ValAddresstext.value, (newValue, oldValue) => this.onUpdate('addre.addresstext', this.ValAddresstext, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAddresstext.value, (newValue, oldValue) => this.onUpdate('addre.addresstext', this.ValAddresstext, newValue, oldValue)))
 
 		this.ValAddresscity = reactive(new modelFieldType.String({
 			id: 'ValAddresscity',
@@ -92,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.ADDRESS_CITY41109),
 		}).cloneFrom(values?.ValAddresscity))
-		watch(() => this.ValAddresscity.value, (newValue, oldValue) => this.onUpdate('addre.addresscity', this.ValAddresscity, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAddresscity.value, (newValue, oldValue) => this.onUpdate('addre.addresscity', this.ValAddresscity, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.ValPeriodstart = reactive(new modelFieldType.DateTime({
@@ -103,7 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.PERIOD_START07901),
 		}).cloneFrom(values?.ValPeriodstart))
-		watch(() => this.ValPeriodstart.value, (newValue, oldValue) => this.onUpdate('addre.periodstart', this.ValPeriodstart, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPeriodstart.value, (newValue, oldValue) => this.onUpdate('addre.periodstart', this.ValPeriodstart, newValue, oldValue)))
 
 		this.ValPeriodend = reactive(new modelFieldType.DateTime({
 			id: 'ValPeriodend',
@@ -113,7 +114,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.PERIOD_END31576),
 		}).cloneFrom(values?.ValPeriodend))
-		watch(() => this.ValPeriodend.value, (newValue, oldValue) => this.onUpdate('addre.periodend', this.ValPeriodend, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPeriodend.value, (newValue, oldValue) => this.onUpdate('addre.periodend', this.ValPeriodend, newValue, oldValue)))
 	}
 
 	/**

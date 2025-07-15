@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'REGIA',
 			area: 'REGIO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_REGIA',
-				updateFilesTickets: 'UpdateFilesTicketsREGIA'
+				recalculateFormulas: 'RecalculateFormulas_Regia',
+				updateFilesTickets: 'UpdateFilesTicketsRegia',
+				setFile: 'SetFileRegia'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODREGIA',
 			description: '',
 		}).cloneFrom(values?.ValCodregia))
-		watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('regio.codregia', this.ValCodregia, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('regio.codregia', this.ValCodregia, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodpais1 = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodpais1))
-		watch(() => this.ValCodpais1.value, (newValue, oldValue) => this.onUpdate('regio.codpais1', this.ValCodpais1, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpais1.value, (newValue, oldValue) => this.onUpdate('regio.codpais1', this.ValCodpais1, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'CNTRY',
 			description: '',
 		}).cloneFrom(values?.ValCodcntry))
-		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('regio.codcntry', this.ValCodcntry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('regio.codcntry', this.ValCodcntry, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableCntryCountry = reactive(new modelFieldType.String({
@@ -85,7 +86,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.TableCntryCountry))
-		watch(() => this.TableCntryCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.TableCntryCountry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableCntryCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.TableCntryCountry, newValue, oldValue)))
 
 		this.ValRegiao = reactive(new modelFieldType.String({
 			id: 'ValRegiao',
@@ -95,7 +96,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.REGION12723),
 		}).cloneFrom(values?.ValRegiao))
-		watch(() => this.ValRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.ValRegiao, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.ValRegiao, newValue, oldValue)))
 	}
 
 	/**

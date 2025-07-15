@@ -29,9 +29,13 @@
 						<q-radio-group
 							id="cav-save-query-access"
 							v-model="accessType"
-							deselect-radio
-							:label-left-side="false"
-							:options-list="accessTypes" />
+							:value="accessTypes">
+							<q-radio-button
+								v-for="radio in accessTypes"
+								:key="radio.key"
+								:value="radio.key"
+								:label="radio.label" />
+						</q-radio-group>
 					</base-input-structure>
 				</q-control-wrapper>
 			</q-row-container>

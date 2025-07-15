@@ -38,8 +38,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'GRPB',
 			area: 'GRPB',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_GRPB',
-				updateFilesTickets: 'UpdateFilesTicketsGRPB'
+				recalculateFormulas: 'RecalculateFormulas_Grpb',
+				updateFilesTickets: 'UpdateFilesTicketsGrpb',
+				setFile: 'SetFileGrpb'
 			}
 		})
 
@@ -51,7 +52,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODGRPB',
 			description: '',
 		}).cloneFrom(values?.ValCodgrpb))
-		watch(() => this.ValCodgrpb.value, (newValue, oldValue) => this.onUpdate('grpb.codgrpb', this.ValCodgrpb, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodgrpb.value, (newValue, oldValue) => this.onUpdate('grpb.codgrpb', this.ValCodgrpb, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('grpb.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('grpb.name', this.ValName, newValue, oldValue)))
 		/** The Grid Table List value. */
 		this.ValTblb = reactive(new modelFieldType.GridTableList({
 			id: 'ValTblb',
@@ -70,9 +71,9 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TBLB',
 			viewModelClass: DNFormViewModelGrpbPseudtblb,
 		}, this.vueContext).cloneFrom(values?.ValTblb))
-		watch(() => this.ValTblb.value?.newElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true })
-		watch(() => this.ValTblb.value?.editedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true })
-		watch(() => this.ValTblb.value?.removedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true })
+		this.stopWatchers.push(watch(() => this.ValTblb.value?.newElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true }))
+		this.stopWatchers.push(watch(() => this.ValTblb.value?.editedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true }))
+		this.stopWatchers.push(watch(() => this.ValTblb.value?.removedElements, () => this.onUpdate('pseud.tblb', this.ValTblb, this.ValTblb.value), { deep: true }))
 	}
 
 	/**

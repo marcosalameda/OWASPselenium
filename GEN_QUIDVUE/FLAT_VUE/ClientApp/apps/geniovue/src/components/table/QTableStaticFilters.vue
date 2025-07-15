@@ -39,7 +39,7 @@
 					:id="dateValueFilter.id"
 					:model-value="dateValueFilter.value"
 					:size="dateValueFilter.type === 'date' ? 'small' : 'medium'"
-					:format="dateValueFilter.type"
+					:format="dateFormat"
 					:locale="locale"
 					@update:model-value="updateActiveFilterDateValue" />
 			</base-input-structure>
@@ -80,9 +80,14 @@
 			<q-radio-group
 				v-else
 				:model-value="entry.value"
-				:options-list="entry.filters"
-				:number-of-columns="entry.filters.length"
-				@update:model-value="updateGroupFilterValue(groupIndex, $event)" />
+				orientation="horizontal"
+				@update:model-value="updateGroupFilterValue(groupIndex, $event)">
+				<q-radio-button
+					v-for="radio in entry.filters"
+					:key="radio.key"
+					:value="radio.key"
+					:label="radio.value" />
+			</q-radio-group>
 			<!-- END: Radio button options -->
 		</div>
 		<!-- END: Group Filters -->
@@ -140,7 +145,16 @@
 			locale: {
 				type: String,
 				default: 'en-US'
+			},
+
+			/**
+			 * Date formats
+			 */
+			dateFormats: {
+				type: Object,
+				required: true
 			}
+
 		},
 
 		expose: [],
@@ -153,6 +167,15 @@
 			{
 				return !this.hasActiveFilters ? { value: '' } : this.activeFilters.dateValue
 			},
+
+			/**
+			 * The date format.
+			 */
+			dateFormat()
+			{
+				return this.dateFormats[this.dateValueFilter.type]
+			},
+
 
 			/**
 			 * True if there's an active filter, false otherwise.

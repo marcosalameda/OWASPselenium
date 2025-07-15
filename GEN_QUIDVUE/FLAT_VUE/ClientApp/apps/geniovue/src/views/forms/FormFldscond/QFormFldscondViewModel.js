@@ -38,8 +38,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FLDSCOND',
 			area: 'FLDS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_FLDSCOND',
-				updateFilesTickets: 'UpdateFilesTicketsFLDSCOND'
+				recalculateFormulas: 'RecalculateFormulas_Fldscond',
+				updateFilesTickets: 'UpdateFilesTicketsFldscond',
+				setFile: 'SetFileFldscond'
 			}
 		})
 
@@ -51,7 +52,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFLDS',
 			description: '',
 		}).cloneFrom(values?.ValCodflds))
-		watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('flds.codflds', this.ValCodflds, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('flds.codflds', this.ValCodflds, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
@@ -63,7 +64,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodequip))
-		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('flds.codequip', this.ValCodequip, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('flds.codequip', this.ValCodequip, newValue, oldValue)))
 
 		this.ValCodaero = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodaero',
@@ -74,7 +75,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.COMPANY_NAME10342),
 		}).cloneFrom(values?.ValCodaero))
-		watch(() => this.ValCodaero.value, (newValue, oldValue) => this.onUpdate('flds.codaero', this.ValCodaero, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodaero.value, (newValue, oldValue) => this.onUpdate('flds.codaero', this.ValCodaero, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValCond = reactive(new modelFieldType.String({
@@ -83,10 +84,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'FLDS',
 			field: 'COND',
 			maxLength: 8,
-			arrayOptions: computed(() => qProjArrays.QArrayAcondtst.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayAcondtst(vm.$getResource).elements),
 			description: computed(() => this.Resources.FIELD_STATE03599),
 		}).cloneFrom(values?.ValCond))
-		watch(() => this.ValCond.value, (newValue, oldValue) => this.onUpdate('flds.cond', this.ValCond, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCond.value, (newValue, oldValue) => this.onUpdate('flds.cond', this.ValCond, newValue, oldValue)))
 
 		this.ValTblcond = reactive(new modelFieldType.Boolean({
 			id: 'ValTblcond',
@@ -95,7 +96,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TBLCOND',
 			description: computed(() => this.Resources.ENFORCE_TABLE_CONDIT17491),
 		}).cloneFrom(values?.ValTblcond))
-		watch(() => this.ValTblcond.value, (newValue, oldValue) => this.onUpdate('flds.tblcond', this.ValTblcond, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTblcond.value, (newValue, oldValue) => this.onUpdate('flds.tblcond', this.ValTblcond, newValue, oldValue)))
 
 		this.ValFormcond = reactive(new modelFieldType.Boolean({
 			id: 'ValFormcond',
@@ -104,7 +105,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'FORMCOND',
 			description: computed(() => this.Resources.ENFORCE_FORM_CONDITI41813),
 		}).cloneFrom(values?.ValFormcond))
-		watch(() => this.ValFormcond.value, (newValue, oldValue) => this.onUpdate('flds.formcond', this.ValFormcond, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFormcond.value, (newValue, oldValue) => this.onUpdate('flds.formcond', this.ValFormcond, newValue, oldValue)))
 
 		this.ValFclient1 = reactive(new modelFieldType.String({
 			id: 'ValFclient1',
@@ -136,7 +137,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.FIELD_WITH_CLIENT_SI60452),
 		}).cloneFrom(values?.ValFclient1))
-		watch(() => this.ValFclient1.value, (newValue, oldValue) => this.onUpdate('flds.fclient1', this.ValFclient1, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFclient1.value, (newValue, oldValue) => this.onUpdate('flds.fclient1', this.ValFclient1, newValue, oldValue)))
 
 		this.ValFfillwhn = reactive(new modelFieldType.String({
 			id: 'ValFfillwhn',
@@ -157,7 +158,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.FIELD_WITH_FILL_WHEN40052),
 		}).cloneFrom(values?.ValFfillwhn))
-		watch(() => this.ValFfillwhn.value, (newValue, oldValue) => this.onUpdate('flds.ffillwhn', this.ValFfillwhn, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFfillwhn.value, (newValue, oldValue) => this.onUpdate('flds.ffillwhn', this.ValFfillwhn, newValue, oldValue)))
 
 		this.ValFserver1 = reactive(new modelFieldType.DateTime({
 			id: 'ValFserver1',
@@ -200,7 +201,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.FIELD_WITH_SERVER_SI13554),
 		}).cloneFrom(values?.ValFserver1))
-		watch(() => this.ValFserver1.value, (newValue, oldValue) => this.onUpdate('flds.fserver1', this.ValFserver1, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFserver1.value, (newValue, oldValue) => this.onUpdate('flds.fserver1', this.ValFserver1, newValue, oldValue)))
 
 		this.ValFclient2 = reactive(new modelFieldType.Boolean({
 			id: 'ValFclient2',
@@ -209,7 +210,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'FCLIENT2',
 			description: computed(() => this.Resources.FIELD_WITH_CLIENT_SI60452),
 		}).cloneFrom(values?.ValFclient2))
-		watch(() => this.ValFclient2.value, (newValue, oldValue) => this.onUpdate('flds.fclient2', this.ValFclient2, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFclient2.value, (newValue, oldValue) => this.onUpdate('flds.fclient2', this.ValFclient2, newValue, oldValue)))
 
 		this.ValFserver2 = reactive(new modelFieldType.Number({
 			id: 'ValFserver2',
@@ -220,7 +221,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.FIELD_WITH_SERVER_SI13554),
 		}).cloneFrom(values?.ValFserver2))
-		watch(() => this.ValFserver2.value, (newValue, oldValue) => this.onUpdate('flds.fserver2', this.ValFserver2, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFserver2.value, (newValue, oldValue) => this.onUpdate('flds.fserver2', this.ValFserver2, newValue, oldValue)))
 
 		this.ValFclient3 = reactive(new modelFieldType.Document({
 			id: 'ValFclient3',
@@ -254,7 +255,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.FIELD_WITH_CLIENT_SI60452),
 		}).cloneFrom(values?.ValFclient3))
-		watch(() => this.ValFclient3.value, (newValue, oldValue) => this.onUpdate('flds.fclient3', this.ValFclient3, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFclient3.value, (newValue, oldValue) => this.onUpdate('flds.fclient3', this.ValFclient3, newValue, oldValue)))
 
 		this.ValFclient3PropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValFclient3PropertiesVM',
@@ -267,14 +268,14 @@ export default class ViewModel extends FormViewModelBase
 			area: 'FLDS',
 			field: 'FCLIENT3FK'
 		}).cloneFrom(values?.ValFclient3fk))
-		watch(() => this.ValFclient3fk.value, (newValue, oldValue) => this.onUpdate('flds.fclient3fk', this.ValFclient3fk, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFclient3fk.value, (newValue, oldValue) => this.onUpdate('flds.fclient3fk', this.ValFclient3fk, newValue, oldValue)))
 		this.ValFclient3Data = reactive(new modelFieldType.DocumentData({
 			id: 'ValFclient3Data',
 			area: 'FLDS',
 			field: 'FCLIENT3DATA',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.ValFclient3Data))
-		watch(() => this.ValFclient3Data.value, (newValue, oldValue) => this.onUpdate('flds.fclient3data', this.ValFclient3Data, newValue, oldValue), { deep: true })
+		this.stopWatchers.push(watch(() => this.ValFclient3Data.value, (newValue, oldValue) => this.onUpdate('flds.fclient3data', this.ValFclient3Data, newValue, oldValue), { deep: true }))
 
 		this.ValFserver3 = reactive(new modelFieldType.Image({
 			id: 'ValFserver3',
@@ -317,7 +318,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.FIELD_WITH_SERVER_SI13554),
 		}).cloneFrom(values?.ValFserver3))
-		watch(() => this.ValFserver3.value, (newValue, oldValue) => this.onUpdate('flds.fserver3', this.ValFserver3, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFserver3.value, (newValue, oldValue) => this.onUpdate('flds.fserver3', this.ValFserver3, newValue, oldValue)))
 		/** The Grid Table List value. */
 		this.ValGridtbl = reactive(new modelFieldType.GridTableList({
 			id: 'ValGridtbl',
@@ -325,9 +326,9 @@ export default class ViewModel extends FormViewModelBase
 			field: 'GRIDTBL',
 			viewModelClass: DNFormViewModelFldscondpseudgridtbl,
 		}, this.vueContext).cloneFrom(values?.ValGridtbl))
-		watch(() => this.ValGridtbl.value?.newElements, () => this.onUpdate('pseud.gridtbl', this.ValGridtbl, this.ValGridtbl.value), { deep: true })
-		watch(() => this.ValGridtbl.value?.editedElements, () => this.onUpdate('pseud.gridtbl', this.ValGridtbl, this.ValGridtbl.value), { deep: true })
-		watch(() => this.ValGridtbl.value?.removedElements, () => this.onUpdate('pseud.gridtbl', this.ValGridtbl, this.ValGridtbl.value), { deep: true })
+		this.stopWatchers.push(watch(() => this.ValGridtbl.value?.newElements, () => this.onUpdate('pseud.gridtbl', this.ValGridtbl, this.ValGridtbl.value), { deep: true }))
+		this.stopWatchers.push(watch(() => this.ValGridtbl.value?.editedElements, () => this.onUpdate('pseud.gridtbl', this.ValGridtbl, this.ValGridtbl.value), { deep: true }))
+		this.stopWatchers.push(watch(() => this.ValGridtbl.value?.removedElements, () => this.onUpdate('pseud.gridtbl', this.ValGridtbl, this.ValGridtbl.value), { deep: true }))
 
 		/** The form fields used only in formulas. */
 		this.ValDescrip = reactive(new modelFieldType.MultiLineString({
@@ -338,7 +339,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescrip))
-		watch(() => this.ValDescrip.value, (newValue, oldValue) => this.onUpdate('flds.descrip', this.ValDescrip, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDescrip.value, (newValue, oldValue) => this.onUpdate('flds.descrip', this.ValDescrip, newValue, oldValue)))
 	}
 
 	/**

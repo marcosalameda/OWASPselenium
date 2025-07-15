@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'MLTFORM',
 			area: 'WAREH',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_MLTFORM',
-				updateFilesTickets: 'UpdateFilesTicketsMLTFORM'
+				recalculateFormulas: 'RecalculateFormulas_Mltform',
+				updateFilesTickets: 'UpdateFilesTicketsMltform',
+				setFile: 'SetFileMltform'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODWAREH',
 			description: '',
 		}).cloneFrom(values?.ValCodwareh))
-		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValWarehdes = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
 		}).cloneFrom(values?.ValWarehdes))
-		watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue)))
 
 		this.ValWarehcod = reactive(new modelFieldType.String({
 			id: 'ValWarehcod',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.ACRONYM00872),
 		}).cloneFrom(values?.ValWarehcod))
-		watch(() => this.ValWarehcod.value, (newValue, oldValue) => this.onUpdate('wareh.warehcod', this.ValWarehcod, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValWarehcod.value, (newValue, oldValue) => this.onUpdate('wareh.warehcod', this.ValWarehcod, newValue, oldValue)))
 	}
 
 	/**

@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'USERS',
 			area: 'USERS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_USERS',
-				updateFilesTickets: 'UpdateFilesTicketsUSERS'
+				recalculateFormulas: 'RecalculateFormulas_Users',
+				updateFilesTickets: 'UpdateFilesTicketsUsers',
+				setFile: 'SetFileUsers'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODUSERS',
 			description: '',
 		}).cloneFrom(values?.ValCodusers))
-		watch(() => this.ValCodusers.value, (newValue, oldValue) => this.onUpdate('users.codusers', this.ValCodusers, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodusers.value, (newValue, oldValue) => this.onUpdate('users.codusers', this.ValCodusers, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodpsw = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PSW',
 			description: computed(() => this.Resources.__LOGIN09030),
 		}).cloneFrom(values?.ValCodpsw))
-		watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('users.codpsw', this.ValCodpsw, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('users.codpsw', this.ValCodpsw, newValue, oldValue)))
 
 		this.ValCodperso = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodperso',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PERSO',
 			description: computed(() => this.Resources.__PERSON30342),
 		}).cloneFrom(values?.ValCodperso))
-		watch(() => this.ValCodperso.value, (newValue, oldValue) => this.onUpdate('users.codperso', this.ValCodperso, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodperso.value, (newValue, oldValue) => this.onUpdate('users.codperso', this.ValCodperso, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TablePswNome = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 100,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TablePswNome))
-		watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue)))
 
 		this.TablePersoName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.PERSON_NAME40980),
 		}).cloneFrom(values?.TablePersoName))
-		watch(() => this.TablePersoName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.TablePersoName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePersoName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.TablePersoName, newValue, oldValue)))
 	}
 
 	/**

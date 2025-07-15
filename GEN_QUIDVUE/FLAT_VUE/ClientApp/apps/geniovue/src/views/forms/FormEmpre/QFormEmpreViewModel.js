@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'EMPRE',
 			area: 'CMPNY',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_EMPRE',
-				updateFilesTickets: 'UpdateFilesTicketsEMPRE'
+				recalculateFormulas: 'RecalculateFormulas_Empre',
+				updateFilesTickets: 'UpdateFilesTicketsEmpre',
+				setFile: 'SetFileEmpre'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODEMPRE',
 			description: computed(() => this.Resources.COMPANIES04875),
 		}).cloneFrom(values?.ValCodempre))
-		watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('cmpny.codempre', this.ValCodempre, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('cmpny.codempre', this.ValCodempre, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'CNTRY',
 			description: '',
 		}).cloneFrom(values?.ValCodcntry))
-		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('cmpny.codcntry', this.ValCodcntry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('cmpny.codcntry', this.ValCodcntry, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValLogo = reactive(new modelFieldType.Image({
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'LOGO',
 			description: computed(() => this.Resources.LOGO62483),
 		}).cloneFrom(values?.ValLogo))
-		watch(() => this.ValLogo.value, (newValue, oldValue) => this.onUpdate('cmpny.logo', this.ValLogo, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValLogo.value, (newValue, oldValue) => this.onUpdate('cmpny.logo', this.ValLogo, newValue, oldValue)))
 
 		this.ValDesignat = reactive(new modelFieldType.String({
 			id: 'ValDesignat',
@@ -81,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
 		}).cloneFrom(values?.ValDesignat))
-		watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.ValDesignat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.ValDesignat, newValue, oldValue)))
 
 		this.ValAcronym = reactive(new modelFieldType.String({
 			id: 'ValAcronym',
@@ -91,7 +92,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 15,
 			description: computed(() => this.Resources.ACRONYM00872),
 		}).cloneFrom(values?.ValAcronym))
-		watch(() => this.ValAcronym.value, (newValue, oldValue) => this.onUpdate('cmpny.acronym', this.ValAcronym, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAcronym.value, (newValue, oldValue) => this.onUpdate('cmpny.acronym', this.ValAcronym, newValue, oldValue)))
 
 		this.ValNif = reactive(new modelFieldType.String({
 			id: 'ValNif',
@@ -101,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 15,
 			description: computed(() => this.Resources.TAX_IDENTIFICATION51190),
 		}).cloneFrom(values?.ValNif))
-		watch(() => this.ValNif.value, (newValue, oldValue) => this.onUpdate('cmpny.nif', this.ValNif, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNif.value, (newValue, oldValue) => this.onUpdate('cmpny.nif', this.ValNif, newValue, oldValue)))
 
 		this.ValTelephon = reactive(new modelFieldType.String({
 			id: 'ValTelephon',
@@ -111,7 +112,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.PHONE56703),
 		}).cloneFrom(values?.ValTelephon))
-		watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('cmpny.telephon', this.ValTelephon, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('cmpny.telephon', this.ValTelephon, newValue, oldValue)))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -121,7 +122,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 254,
 			description: computed(() => this.Resources.EMAIL25170),
 		}).cloneFrom(values?.ValEmail))
-		watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('cmpny.email', this.ValEmail, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('cmpny.email', this.ValEmail, newValue, oldValue)))
 
 		this.TableCntryCountry = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -132,7 +133,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.TableCntryCountry))
-		watch(() => this.TableCntryCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.TableCntryCountry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableCntryCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.TableCntryCountry, newValue, oldValue)))
 
 		this.ValQtdpesso = reactive(new modelFieldType.Number({
 			id: 'ValQtdpesso',
@@ -144,7 +145,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.NUMBER_OF_PEOPLE08859),
 		}).cloneFrom(values?.ValQtdpesso))
-		watch(() => this.ValQtdpesso.value, (newValue, oldValue) => this.onUpdate('cmpny.qtdpesso', this.ValQtdpesso, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValQtdpesso.value, (newValue, oldValue) => this.onUpdate('cmpny.qtdpesso', this.ValQtdpesso, newValue, oldValue)))
 
 		this.ValHeadloc = reactive(new modelFieldType.Coordinate({
 			id: 'ValHeadloc',
@@ -153,7 +154,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'HEADLOC',
 			description: computed(() => this.Resources.HEADQUARTER_LOCATION30734),
 		}).cloneFrom(values?.ValHeadloc))
-		watch(() => this.ValHeadloc.value, (newValue, oldValue) => this.onUpdate('cmpny.headloc', this.ValHeadloc, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValHeadloc.value, (newValue, oldValue) => this.onUpdate('cmpny.headloc', this.ValHeadloc, newValue, oldValue)))
 	}
 
 	/**

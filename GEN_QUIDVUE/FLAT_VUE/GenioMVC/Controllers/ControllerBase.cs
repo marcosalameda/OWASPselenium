@@ -235,6 +235,11 @@ namespace GenioMVC.Controllers
 			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "menu-routine", menuId, routineName, routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
 		}
 
+		protected JsonNetResult RedirectToReport(string controller, string reportAction, string skipsPreview, object routeValues = null, object model = null)
+		{
+			return _jsonResult(new { statusCode = System.Net.HttpStatusCode.Redirect, type = "report", controller, reportAction, preview = (skipsPreview=="0"), routeValues, Data = model, NavigationData = GetHistoryToUpdateClientSide(), eTracker = GetServerErrorsToClientSide() });
+		}
+
 		private string _getRedirectUrlToVue(string page, object queryParameters = null, bool includeCulture = true, bool includeSystemAndModule = false, string module = null)
 		{
 			var culture = includeCulture ? string.Format("{0}/", CultureInfo.CurrentCulture.Name) : string.Empty;
@@ -1630,9 +1635,10 @@ namespace GenioMVC.Controllers
 		/// <param name="ticket">Encryted ticket</param>
 		/// <param name="mode">Submit file action mode</param>
 		/// <param name="version">The document version</param>
+		/// <param name="extensions">A collection with the allowed extensions</param>
 		/// <returns>A JSON response with the result of the operation</returns>
 		[NonAction]
-		protected ActionResult SetFile(string ticket, VersionSubmitAction mode = VersionSubmitAction.Insert, string version = "1")
+		protected ActionResult SetFile(string ticket, VersionSubmitAction mode = VersionSubmitAction.Insert, string version = "1", ICollection<string> extensions = null)
 		{
 			try
 			{
@@ -1645,7 +1651,7 @@ namespace GenioMVC.Controllers
 				if (recq == null)
 					return PermissionError(Resources.Resources.O_REGISTO_PEDIDO_NAO63869);
 
-				var model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, m_userContext, "");
+				ModelBase model = ModelBase.FindGeneric(recq.Table, recq.KeyValue, m_userContext, "");
 
 				CSGenio.business.DBFile file = null;
 				string contentRangeHeader = Request.Headers.ContentRange;
@@ -1704,6 +1710,12 @@ namespace GenioMVC.Controllers
 						return JsonOK(new { message = "Chunk processed successfully.", startByte, endByte });
 					}
 				}
+
+				// Ensure the provided file has an allowed extension.
+				if (extensions != null &&
+					extensions.Count > 0 &&
+					!extensions.Select(e => e.ToLower()).Contains(file.Extension.ToLower()))
+					return JsonERROR($"{Resources.Resources.EXTENSAO_INVALIDA__E46375} {string.Join(", ", extensions)}.");
 
 				GenioMVC.ViewModels.DocumsProperties_ViewModel properties = model.GetInfoDoc(recq.KeyData);
 

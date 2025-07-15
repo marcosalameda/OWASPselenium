@@ -263,7 +263,7 @@
 					}, this)
 				}
 				else
-					this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+					this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -363,7 +363,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FAMI1', 'changed-TPEQ1'],
+						globalEvents: ['changed-TPEQ1', 'changed-FAMI1'],
 						uuid: 'Lnhde_Lnhde_Tpeq1ValTipoequi',
 						allSelectedRows: 'false',
 						handlers: {

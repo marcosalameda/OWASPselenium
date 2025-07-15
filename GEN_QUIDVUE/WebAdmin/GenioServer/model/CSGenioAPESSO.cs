@@ -430,6 +430,20 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "curricul", FieldType.DOCUMENT);
+			Qfield.FieldDescription = "Resume";
+			Qfield.FieldSize =  50;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "CURRICULUM51182";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+ 			Qfield = new Field(info.Alias, "curriculfk", FieldType.KEY_GUID);
+			Qfield.FieldSize = 16;
+			Qfield.FieldDescription = "Chave estrangeira para o documento";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
@@ -479,10 +493,10 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(5);
-			info.Pathways.Add("cntry","cntry");
 			info.Pathways.Add("categ","categ");
-			info.Pathways.Add("pais1","pais1");
+			info.Pathways.Add("cntry","cntry");
 			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("pais1","pais1");
 			info.Pathways.Add("regi1","regi1");
 		}
 
@@ -597,6 +611,10 @@ namespace CSGenio.business
 
             // Documents in DB
             //------------------------------
+			info.DocumsForeignKeys = new List<String> {
+			 "curriculfk"
+			};
+			info.HasVersionManagment = true; //a true por omissão, quando o Qfield no genio tiver criado preencher por esse Qvalue
 
             // Historics
             //------------------------------
@@ -1056,6 +1074,28 @@ namespace CSGenio.business
 			set { insertNameValueField(FldCanexpor, value); }
 		}
 
+		/// <summary>Field : "Curriculum" Tipo: "IB" Formula:  ""</summary>
+		public static FieldRef FldCurricul { get { return m_fldCurricul; } }
+		private static FieldRef m_fldCurricul = new FieldRef("pesso", "curricul");
+
+		/// <summary>Field : "Curriculum" Tipo: "IB" Formula:  ""</summary>
+		public string ValCurricul
+		{
+			get { return (string)returnValueField(FldCurricul); }
+			set { insertNameValueField(FldCurricul, value); }
+		}
+
+		/// <summary>Field : "Curriculum FK" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCurriculfk { get { return m_fldCurriculfk; } }
+		private static FieldRef m_fldCurriculfk = new FieldRef("pesso", "curriculfk");
+
+		/// <summary>Field : "Curriculum FK" Tipo: "CE" Formula:  ""</summary>
+		public string ValCurriculfk
+		{
+			get { return (string)returnValueField(FldCurriculfk); }
+			set { insertNameValueField(FldCurriculfk, value); }
+		}
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("pesso", "zzstate");
@@ -1189,7 +1229,6 @@ namespace CSGenio.business
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
             return StatusMessage.OK();
 		}
 
@@ -1199,7 +1238,7 @@ namespace CSGenio.business
 
      
 
-                                       
+                                        
 
 	}
 }

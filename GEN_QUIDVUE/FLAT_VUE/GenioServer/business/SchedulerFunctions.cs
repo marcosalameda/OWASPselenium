@@ -478,7 +478,7 @@ namespace GenioServer.business
             QueueResponse response = new QueueResponse();
             try
             {              
-                CSGenio.business.async.GenioWorker worker = new CSGenio.business.async.GenioWorker(sp, user);
+                CSGenio.business.async.GenioWorker worker = new CSGenio.business.async.GenioWorker(user);
                 worker.Work();
 
                 response.Ack = business.MQueueACK.ReplyOK;

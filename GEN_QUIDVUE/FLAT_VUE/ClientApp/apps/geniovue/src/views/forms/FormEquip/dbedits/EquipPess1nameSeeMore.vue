@@ -263,7 +263,7 @@
 					}, this)
 				}
 				else
-					this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+					this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -383,7 +383,7 @@
 								defaultValue: ''
 							},
 						],
-						globalEvents: ['changed-PESS1', 'changed-STAKE', 'changed-CMPNY', 'changed-CATE2'],
+						globalEvents: ['changed-PESS1', 'changed-CATE2', 'changed-STAKE', 'changed-CMPNY'],
 						uuid: 'Equip_Equip_Pess1ValName',
 						allSelectedRows: 'false',
 						handlers: {

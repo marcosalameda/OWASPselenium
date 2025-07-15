@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'IMGMAGN',
 			area: 'WPESS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_IMGMAGN',
-				updateFilesTickets: 'UpdateFilesTicketsIMGMAGN'
+				recalculateFormulas: 'RecalculateFormulas_Imgmagn',
+				updateFilesTickets: 'UpdateFilesTicketsImgmagn',
+				setFile: 'SetFileImgmagn'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPESS',
 			description: '',
 		}).cloneFrom(values?.ValCodpess))
-		watch(() => this.ValCodpess.value, (newValue, oldValue) => this.onUpdate('wpess.codpess', this.ValCodpess, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpess.value, (newValue, oldValue) => this.onUpdate('wpess.codpess', this.ValCodpess, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodwareh))
-		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wpess.codwareh', this.ValCodwareh, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wpess.codwareh', this.ValCodwareh, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValFtbackgr = reactive(new modelFieldType.Image({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'FTBACKGR',
 			description: computed(() => this.Resources.IMAGE_BACKGROUND07216),
 		}).cloneFrom(values?.ValFtbackgr))
-		watch(() => this.ValFtbackgr.value, (newValue, oldValue) => this.onUpdate('wpess.ftbackgr', this.ValFtbackgr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFtbackgr.value, (newValue, oldValue) => this.onUpdate('wpess.ftbackgr', this.ValFtbackgr, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -84,7 +85,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('wpess.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('wpess.name', this.ValName, newValue, oldValue)))
 	}
 
 	/**

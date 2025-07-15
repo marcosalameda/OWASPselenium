@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -945,7 +945,7 @@
 						label: computed(() => this.Resources.DEPARTURE_DATE__DD_M27418),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -958,7 +958,7 @@
 						label: computed(() => this.Resources.DEPARTURE_DATE__HOUR17284),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -971,7 +971,7 @@
 						label: computed(() => this.Resources.DEPARTURE_DATE__SECO42491),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -984,7 +984,7 @@
 						label: computed(() => this.Resources.DEPARTURE_HOUR28390),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1132,7 +1132,7 @@
 						label: computed(() => this.Resources.CREATION_DATE__DD_MM48834),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1145,7 +1145,7 @@
 						label: computed(() => this.Resources.CREATION_DATE32161),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1158,7 +1158,7 @@
 						label: computed(() => this.Resources.COMPLETE_CREATION_DA42963),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -1287,6 +1287,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS CAMPO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT CAMPO]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

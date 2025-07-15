@@ -1,26 +1,35 @@
 ﻿<template>
 	<div
-		class="c-timeline__item-content"
+		:class="tlItem.TipoTimeLine ==='S'
+			? 'c-simple_timeline__item-content'
+			: 'c-timeline__item-content'"
 		:style="contentStyle">
 		<div
-			class="c-timeline__item-header"
-			:style="headerStyle">
-			<span class="c-timeline__item-datetime e-badge e-badge--dark">
+			:class="tlItem.TipoTimeLine ==='S'
+				? 'c-simple_timeline__item-header'
+				: 'c-timeline__item-header'"
+			:style="tlItem.TipoTimeLine === 'S' ? simpleHeaderStyle : headerStyle">
+			<span
+				:class="tlItem.TipoTimeLine ==='S'
+					? 'c-simple_timeline__item-datetime e-badge e-badge--primary'
+					: 'c-timeline__item-datetime e-badge e-badge--dark'"
+				:style="textColor">
 				{{ formatedDated }}
 			</span>
 			<span
-				class="c-timeline__item-title"
+				:class="{
+					'c-simple_timeline__item-title': tlItem.TipoTimeLine === 'S',
+					'c-timeline__item-title': tlItem.TipoTimeLine !== 'S'}"
 				:style="textColor">
 				{{ tlItem.Texto }}
 			</span>
 		</div>
-
-		<div class="c-timeline__item-text">
-			<!--Iterate all row fields (not image kind) -->
+		<div :class="tlItem.TipoTimeLine === 'S' ? 'c-simple_timeline__item-text' : 'c-timeline__item-text'">
+			<!--Iterate all row fields (not image kind)--> 
 			<span
 				v-for="col in tlItem.Columns"
 				:key="col.order"
-				class="c-timeline__item-field">
+				:class="tlItem.TipoTimeLine === 'S' ? 'c-simple_timeline__item-field' : 'c-timeline__item-field'">
 				<template v-if="col.Valor !== ''">
 					<i
 						v-if="col.Icone"
@@ -30,8 +39,7 @@
 					<br />
 				</template>
 			</span>
-
-			<!--Images columns in row-->
+			<!--Images columns in row--> 
 			<div v-if="tlItem.ImagesColumns.length > 0">
 				<div
 					class="mt-1 mb-1"
@@ -42,7 +50,6 @@
 						:src="img.Image" />
 				</div>
 			</div>
-
 			<!-- Popup Data-Form Btn -->
 			<a
 				v-if="tlItem.Url"

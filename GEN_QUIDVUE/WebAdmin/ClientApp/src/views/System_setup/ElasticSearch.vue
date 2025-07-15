@@ -2,7 +2,7 @@
 	<row>
 		<q-card
 			id="system_setup_elasticsearch_container"
-			:title="systemConfigTexts.elasticsearchTitle"
+			:title="resources.elasticsearchTitle"
 			width="block"
 			class="q-card--admin-default">
 			<q-row-container>
@@ -46,7 +46,7 @@
 
 	<q-dialog
 		v-model="showDialog"
-		:title="systemConfigTexts.elasticsearchSearchEngineTitle"
+		:title="resources.elasticsearchSearchEngineTitle"
 		:buttons="buttons">
 		<template #body.content>
 			<div class="q-dialog-container">
@@ -69,7 +69,7 @@
 					size="large" />
 				<q-text-field
 					v-model="rowUrlfscrawler"
-					:label="systemConfigTexts.fscrawlerLabel"
+					:label="resources.fscrawlerLabel"
 					:readonly="inDeleteMode"
 					size="large" />
 				<q-text-field
@@ -98,7 +98,7 @@
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import { texts } from '@/resources/hardcodedTexts.ts';
-	import { SystemConfigTexts } from '@/resources/viewResources.ts';
+	import { computed } from 'vue';
 
 	export default {
 		name: 'elasticsearch',
@@ -111,6 +111,10 @@
 				required: true
 			},
 			SelectLists: {
+				required: true
+			},
+			resources: {
+				type: Object,
 				required: true
 			}
 		},
@@ -136,7 +140,7 @@
 				cfgCores: {
 					rows: [],
 					columns: [{
-						label: '',
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -145,37 +149,37 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: '',
+						label: computed(() => this.Resources[texts.indexLabel]),
 						name: "Index",
 						sort: false
 					},
 					{
-						label: '',
+						label: computed(() => this.Resources[texts.id]),
 						name: "Id",
 						sort: false
 					},
 					{
-						label: '',
+						label: computed(() => this.Resources[texts.areaLabel]),
 						name: "Area",
 						sort: false
 					},
 					{
-						label: '',
+						label: this.resources.fscrawlerLabel,
 						name: "Urlfscrawler",
 						sort: false
 					},
 					{
-						label: '',
+						label: computed(() => this.Resources[texts.url]),
 						name: "Url",
 						sort: false
 					},
 					{
-						label: '',
+						label: computed(() => this.Resources[texts.user]),
 						name: "ElasticUser",
 						sort: false
 					}],
 					config: {
-						table_title: '',
+						table_title: this.resources.elasticsearchSearchEngineTitle,
 						global_search: {
 						classes: "qtable-global-search",
 						showRefreshButton: true,
@@ -199,20 +203,20 @@
 					],
 					columns: [
 						{
-							label: '',
+							label: this.resources.reportLabel,
 							name: "Rep",
 							sort: true,
 							initial_sort: true,
 							initial_sort_order: "asc"
 						},
 						{
-							label: '',
+							label: computed(() => this.Resources[texts.languageLabel]),
 							name: "Lang",
 							sort: true
 						}
 					],
 					config: {
-						table_title: '',
+						table_title: this.resources.reportsByLanguageTitle,
 						pagination : false,
 						global_search: {visibility : false},
 						highlight_row_hover: false,
@@ -239,16 +243,9 @@
 					url: this.Resources[texts.url],
 					erase: this.Resources[texts.erase],
 					save: this.Resources[texts.save],
-					cancel: this.Resources[texts.cancel],
-					actions: this.Resources[texts.actions],
-					languageLabel: this.Resources[texts.languageLabel],
-					indexLabel: this.Resources[texts.indexLabel],
-					areaLabel: this.Resources[texts.areaLabel],
+					cancel: this.Resources[texts.cancel]
 				}
 			},
-			systemConfigTexts() {
-				return new SystemConfigTexts(this)
-			}
 		},
 		methods: {
 			showCoreModal(mode) {
@@ -394,18 +391,6 @@
 			}
 		},
 		mounted() {
-			this.cfgCores.columns[0].label = this.hardcodedTexts.actions;
-			this.cfgCores.columns[1].label = this.hardcodedTexts.indexLabel;
-			this.cfgCores.columns[2].label = this.hardcodedTexts.id;
-			this.cfgCores.columns[3].label = this.hardcodedTexts.areaLabel;
-			this.cfgCores.columns[4].label = this.systemConfigTexts.fscrawlerLabel;
-			this.cfgCores.columns[5].label = this.hardcodedTexts.url;
-			this.cfgCores.columns[6].label = this.hardcodedTexts.user;
-			this.cfgCores.config.table_title = this.systemConfigTexts.elasticsearchSearchEngineTitle;
-			this.tRepor.columns[0].label = this.systemConfigTexts.reportLabel
-			this.tRepor.columns[0].label = this.hardcodedTexts.languageLabel
-			this.tRepor.config.table_title = this.systemConfigTexts.reportsByLanguageTitle
-
 			this.core = this.model.Cores || [];
 		}
 	};

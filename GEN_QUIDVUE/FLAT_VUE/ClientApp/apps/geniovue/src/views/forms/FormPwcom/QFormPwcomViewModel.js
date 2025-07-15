@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PWCOM',
 			area: 'PWCOM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PWCOM',
-				updateFilesTickets: 'UpdateFilesTicketsPWCOM'
+				recalculateFormulas: 'RecalculateFormulas_Pwcom',
+				updateFilesTickets: 'UpdateFilesTicketsPwcom',
+				setFile: 'SetFilePwcom'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPWCOM',
 			description: '',
 		}).cloneFrom(values?.ValCodpwcom))
-		watch(() => this.ValCodpwcom.value, (newValue, oldValue) => this.onUpdate('pwcom.codpwcom', this.ValCodpwcom, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpwcom.value, (newValue, oldValue) => this.onUpdate('pwcom.codpwcom', this.ValCodpwcom, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodpsw = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PSW',
 			description: '',
 		}).cloneFrom(values?.ValCodpsw))
-		watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pwcom.codpsw', this.ValCodpsw, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pwcom.codpsw', this.ValCodpsw, newValue, oldValue)))
 
 		this.ValCodpess1 = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodpess1',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PESS1',
 			description: computed(() => this.Resources._COMOMODOR01469),
 		}).cloneFrom(values?.ValCodpess1))
-		watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('pwcom.codpess1', this.ValCodpess1, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('pwcom.codpess1', this.ValCodpess1, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TablePswNome = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 100,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TablePswNome))
-		watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue)))
 
 		this.TablePess1Name = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TablePess1Name))
-		watch(() => this.TablePess1Name.value, (newValue, oldValue) => this.onUpdate('pess1.name', this.TablePess1Name, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePess1Name.value, (newValue, oldValue) => this.onUpdate('pess1.name', this.TablePess1Name, newValue, oldValue)))
 
 		this.ValFoto = reactive(new modelFieldType.Image({
 			id: 'ValFoto',
@@ -103,7 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'FOTO',
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.ValFoto))
-		watch(() => this.ValFoto.value, (newValue, oldValue) => this.onUpdate('pwcom.foto', this.ValFoto, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFoto.value, (newValue, oldValue) => this.onUpdate('pwcom.foto', this.ValFoto, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -128,7 +129,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('pwcom.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('pwcom.name', this.ValName, newValue, oldValue)))
 	}
 
 	/**

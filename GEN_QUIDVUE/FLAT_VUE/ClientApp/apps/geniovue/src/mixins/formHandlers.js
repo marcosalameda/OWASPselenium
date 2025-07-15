@@ -1,4 +1,4 @@
-﻿import { readonly } from 'vue'
+import { readonly } from 'vue'
 import { isNavigationFailure } from 'vue-router'
 import { mapActions, mapState } from 'pinia'
 import _forEach from 'lodash-es/forEach'
@@ -231,7 +231,13 @@ export default {
 		const canLoad = await this.beforeLoad()
 		// Load form data.
 		if (canLoad)
-			this.loadFormData(true)
+			this.loadFormData(true).catch((err) => {
+				this.$eventTracker.addError({
+					origin: 'created (formHandler)',
+					message: `Error loading form data: ${err?.message}`,
+					contextData: { error: err, formInfo: this.formInfo }
+				})
+			})
 	},
 
 	mounted()
@@ -276,14 +282,17 @@ export default {
 		})
 
 		this.showExternalApp = false
-		this.internalEvents.removeAllListeners()
-		this.formControl.destroy()
+		this.internalEvents?.removeAllListeners()
+		this.internalEvents = null
+		this.formControl?.destroy()
+		this.formControl = null
 
 		this.$eventHub.off('modal-is-ready', this.setFormModalReady)
 		this.$eventHub.off('form-apply', this.formApplyCallback)
 		this.$eventHub.off('focus-control', this.focusControl)
 
 		this.componentOnLoadProc?.destroy()
+		this.componentOnLoadProc = null
 	},
 
 	computed: {
@@ -519,7 +528,35 @@ export default {
 		 */
 		humanKey()
 		{
-			return this.isNested ? '' : this.buildHumanKey()
+			// Being a different route from the current one means the human key is probably already calculated, if not, it's because we have no way of calculating it.
+			if (this.formInfo.route !== this.$route.name || this.isNested || this.isHomePage)
+				return ''
+
+			const humanKeyFields = this.$route.meta.humanKeyFields
+
+			if (!Array.isArray(humanKeyFields) || _isEmpty(humanKeyFields) || typeof this.model !== 'object')
+				return ''
+
+			var humanKey = ''
+
+			for (let fieldId of humanKeyFields)
+			{
+				let field = this.model[fieldId]
+				if (_isEmpty(field))
+					break
+
+				let value = field.displayValue
+
+				if (_isEmpty(value))
+					continue
+
+				if (humanKey.length > 0)
+					humanKey += '; '
+
+				humanKey += `${field.description}: ${value}`
+			}
+
+			return humanKey
 		},
 
 		/**
@@ -729,7 +766,13 @@ export default {
 				if (typeof containerState === 'undefined')
 					containerState = false
 
-				container.setState(containerState)
+				if (!container.isInAccordion)
+					container.setState(containerState)
+				else if (containerState)
+				{
+					const accordion = this.controls[container.container]
+					accordion.openChild = container.id
+				}
 			}
 
 			// In case the form has tabs, selects the right one.
@@ -1069,6 +1112,21 @@ export default {
 			}
 			else
 			{
+				// If there's already a request pending, cancel it
+				if (this.formControl?.currentController) {
+					this.formControl.currentController.abort()
+				}
+
+				let axiosOptions = undefined
+				// Create a new controller for the new request
+				if (this.formControl)
+				{
+					this.formControl.currentController = new AbortController()
+					axiosOptions = {
+						signal: this.formControl.currentController.signal
+					}
+				}
+
 				await netAPI.fetchFormData(
 					this.formArea,
 					this.formInfo.name,
@@ -1125,7 +1183,13 @@ export default {
 
 						opResult = true
 					},
-					this.navigationId)
+					this.navigationId,
+					axiosOptions)
+					.finally(() => {
+						// Always clear the controller reference so GC can reclaim it
+						if (this.formControl)
+							this.formControl.currentController = null
+					})
 			}
 
 			return opResult
@@ -2106,20 +2170,6 @@ export default {
 		},
 
 		/**
-		 * Builds the human key of the current record.
-		 * @returns A string with the human key.
-		 */
-		buildHumanKey()
-		{
-			// Being a different route from the current one means the human key is probably already calculated, if not, it's because we have no way of calculating it.
-			if (this.formInfo.route !== this.$route.name || this.isNested || this.isHomePage)
-				return this.humanKey ?? ''
-
-			const humanKeyFields = this.$route.meta.humanKeyFields
-			return genericFunctions.buildHumanKey(humanKeyFields, this.model)
-		},
-
-		/**
 		 * Sets the breadcrumbs properties in the global store.
 		 */
 		setBreadcrumbProperties()
@@ -2194,7 +2244,9 @@ export default {
 			}
 
 			// Load form data.
-			await this.addBusy(this.fetchFormFields(!isFirstLoad), this.Resources[hardcodedTexts.formLoad])
+			const successFormLoad = await this.addBusy(this.fetchFormFields(!isFirstLoad), this.Resources[hardcodedTexts.formLoad])
+			if (!successFormLoad)
+				return 'Form data load failed or canceled.'
 
 			const route = this.isNested ? this.getNestedRouteData() : this.$route
 			const formInited = isFirstLoad ? this.initFormProperties(route) : true

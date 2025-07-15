@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -183,6 +183,7 @@
 							v-on="controls.WARE_WS_PSEUDXITEM___.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.WARE_WS_PSEUDXITEM___"
+							:filter-operators="controls.WARE_WS_PSEUDXITEM___.filterOperators"
 							v-on="controls.WARE_WS_PSEUDXITEM___.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -618,7 +619,7 @@
 								label: computed(() => this.Resources.TYPE00312),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayTipoarti.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayTipoarti(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTipoarti.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -705,7 +706,7 @@
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayDsiponib.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayDsiponib(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayDsiponib.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -948,6 +949,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WARE_WS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WARE_WS]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

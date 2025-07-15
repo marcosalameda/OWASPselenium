@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'GLOBFACT',
 			area: 'GLOB',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_GLOBFACT',
-				updateFilesTickets: 'UpdateFilesTicketsGLOBFACT'
+				recalculateFormulas: 'RecalculateFormulas_Globfact',
+				updateFilesTickets: 'UpdateFilesTicketsGlobfact',
+				setFile: 'SetFileGlobfact'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODGLOB',
 			description: '',
 		}).cloneFrom(values?.ValCodglob))
-		watch(() => this.ValCodglob.value, (newValue, oldValue) => this.onUpdate('glob.codglob', this.ValCodglob, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodglob.value, (newValue, oldValue) => this.onUpdate('glob.codglob', this.ValCodglob, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodfacty = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'FACTY',
 			description: '',
 		}).cloneFrom(values?.ValCodfacty))
-		watch(() => this.ValCodfacty.value, (newValue, oldValue) => this.onUpdate('glob.codfacty', this.ValCodfacty, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodfacty.value, (newValue, oldValue) => this.onUpdate('glob.codfacty', this.ValCodfacty, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableFactyType = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 25,
 			description: computed(() => this.Resources.FACILITY_TYPE44577),
 		}).cloneFrom(values?.TableFactyType))
-		watch(() => this.TableFactyType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.TableFactyType, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableFactyType.value, (newValue, oldValue) => this.onUpdate('facty.type', this.TableFactyType, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.ValHome = reactive(new modelFieldType.MultiLineString({
@@ -84,7 +85,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.HOME_TEXT11153),
 		}).cloneFrom(values?.ValHome))
-		watch(() => this.ValHome.value, (newValue, oldValue) => this.onUpdate('glob.home', this.ValHome, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValHome.value, (newValue, oldValue) => this.onUpdate('glob.home', this.ValHome, newValue, oldValue)))
 	}
 
 	/**

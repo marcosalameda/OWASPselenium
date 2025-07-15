@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -171,6 +171,7 @@
 							v-on="controls.ARMAZ___PSEUDPESSARMA.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.ARMAZ___PSEUDPESSARMA"
+							:filter-operators="controls.ARMAZ___PSEUDPESSARMA.filterOperators"
 							v-on="controls.ARMAZ___PSEUDPESSARMA.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -600,7 +601,7 @@
 								label: computed(() => this.Resources.SEXO52099),
 								dataLength: 9,
 								scrollData: 9,
-								array: computed(() => qProjArrays.QArraySexo.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArraySexo(vm.$getResource).elements),
 								arrayType: qProjArrays.QArraySexo.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -895,6 +896,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS ARMAZ]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ARMAZ]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

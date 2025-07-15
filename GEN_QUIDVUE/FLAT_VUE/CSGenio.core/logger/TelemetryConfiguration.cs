@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace CSGenio.core.logger
 {
@@ -16,6 +14,7 @@ namespace CSGenio.core.logger
         public string CollectorAddress { get; set; }
         public bool EnableTracing { get; set; }
         public bool EnableInternalMetrics { get; set; }
-        public string TelemetryAlias { get; set; }
+        public string CustomApplicationId { get; set; }
+        public string CustomInstanceId { get; set; }
     }
 }

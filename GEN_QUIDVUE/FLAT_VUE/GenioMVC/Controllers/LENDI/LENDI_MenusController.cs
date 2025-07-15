@@ -62,7 +62,7 @@ namespace GenioMVC.Controllers
 			// Static filter "order" fields that have changed
 			tableConfigOptions.StaticFiltersKeyShiftValues = new Dictionary<string, int>
 			{
-				{ "filter_GQT_Menu_111_DEVOLUCAO", 1 }
+				{ "filter_GQT_Menu_111_DEVOLUCAO", 0 }
 			};
 
 			// Determine which table configuration to use and load it

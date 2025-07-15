@@ -7,7 +7,7 @@
  */
 export function validateStoredValues(key, storeObj, formInfo)
 {
-	if (typeof key !== 'string' || key.length === 0)
+	if (typeof key !== 'string' || key.length === 0 || storeObj === null || typeof storeObj !== 'object')
 		return false
 
 	const areaName = formInfo.area
@@ -92,7 +92,15 @@ export function makeFieldVisible(controls, fieldId, skipValidation)
 	const field = controls[fieldId]
 
 	if (field.type === 'Group')
-		field.setState(true)
+	{
+		if (field.isInAccordion)
+		{
+			const accordion = controls[field.container]
+			accordion.openChild = field.id
+		}
+		else
+			field.setState(true)
+	}
 	else if (field.type === 'Tab')
 		controls.formTabs.selectTab(fieldId)
 

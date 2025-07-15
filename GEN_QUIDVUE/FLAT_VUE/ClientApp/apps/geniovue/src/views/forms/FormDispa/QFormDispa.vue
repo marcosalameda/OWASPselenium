@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -254,6 +254,7 @@
 							v-on="controls.DISPA___PSEUDDISPATCH.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.DISPA___PSEUDDISPATCH"
+							:filter-operators="controls.DISPA___PSEUDDISPATCH.filterOperators"
 							v-on="controls.DISPA___PSEUDDISPATCH.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -609,7 +610,7 @@
 						label: computed(() => this.Resources.DISPATCH_DATE54413),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -726,7 +727,7 @@
 						label: computed(() => this.Resources.PREPARED38522),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1095,6 +1096,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS DISPA]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT DISPA]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

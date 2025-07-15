@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'WARE_WS',
 			area: 'WAREH',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_WARE_WS',
-				updateFilesTickets: 'UpdateFilesTicketsWARE_WS'
+				recalculateFormulas: 'RecalculateFormulas_Ware_ws',
+				updateFilesTickets: 'UpdateFilesTicketsWare_ws',
+				setFile: 'SetFileWare_ws'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODWAREH',
 			description: '',
 		}).cloneFrom(values?.ValCodwareh))
-		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValWarehdes = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
 		}).cloneFrom(values?.ValWarehdes))
-		watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue)))
 
 		this.ValWarehcod = reactive(new modelFieldType.String({
 			id: 'ValWarehcod',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.ACRONYM00872),
 		}).cloneFrom(values?.ValWarehcod))
-		watch(() => this.ValWarehcod.value, (newValue, oldValue) => this.onUpdate('wareh.warehcod', this.ValWarehcod, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValWarehcod.value, (newValue, oldValue) => this.onUpdate('wareh.warehcod', this.ValWarehcod, newValue, oldValue)))
 
 		this.ValActivity = reactive(new modelFieldType.Number({
 			id: 'ValActivity',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ACTIVITY02681),
 		}).cloneFrom(values?.ValActivity))
-		watch(() => this.ValActivity.value, (newValue, oldValue) => this.onUpdate('wareh.activity', this.ValActivity, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValActivity.value, (newValue, oldValue) => this.onUpdate('wareh.activity', this.ValActivity, newValue, oldValue)))
 
 		this.ValShowreco = reactive(new modelFieldType.Boolean({
 			id: 'ValShowreco',
@@ -91,7 +92,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'SHOWRECO',
 			description: computed(() => this.Resources.SHOW_RECORD11620),
 		}).cloneFrom(values?.ValShowreco))
-		watch(() => this.ValShowreco.value, (newValue, oldValue) => this.onUpdate('wareh.showreco', this.ValShowreco, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValShowreco.value, (newValue, oldValue) => this.onUpdate('wareh.showreco', this.ValShowreco, newValue, oldValue)))
 
 		this.ValNum_employee = reactive(new modelFieldType.Number({
 			id: 'ValNum_employee',
@@ -103,7 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.NUMBER_OF_EMPLOYEES52067),
 		}).cloneFrom(values?.ValNum_employee))
-		watch(() => this.ValNum_employee.value, (newValue, oldValue) => this.onUpdate('wareh.num_employee', this.ValNum_employee, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNum_employee.value, (newValue, oldValue) => this.onUpdate('wareh.num_employee', this.ValNum_employee, newValue, oldValue)))
 	}
 
 	/**

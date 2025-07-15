@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -247,6 +247,7 @@
 							v-on="controls.DENTR___PSEUDENTRADAS.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.DENTR___PSEUDENTRADAS"
+							:filter-operators="controls.DENTR___PSEUDENTRADAS.filterOperators"
 							v-on="controls.DENTR___PSEUDENTRADAS.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -734,7 +735,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -763,7 +764,7 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -994,7 +995,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-INDOC', 'changed-ITEM', 'changed-LDENT'],
+						globalEvents: ['changed-WAREH', 'changed-LDENT', 'changed-ITEM', 'changed-INDOC'],
 						uuid: 'Dentr_ValEntradas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1142,6 +1143,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS DENTR]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT DENTR]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

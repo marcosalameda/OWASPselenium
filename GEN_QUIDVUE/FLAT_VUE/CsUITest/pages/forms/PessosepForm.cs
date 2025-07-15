@@ -56,7 +56,7 @@ public class PessosepForm : Form
 	/// <summary>
 	/// Curriculum
 	/// </summary>
-	public DocumentControl PessoCurricul => new DocumentControl(driver, ContainerLocator, "PESSOSEPPESSOCURRICUL");
+	public DocumentControl PessoCurricul => new DocumentControl(driver, ContainerLocator, "PESSOSEPPESSOCURRICUL-container");
 
 	/// <summary>
 	/// @required

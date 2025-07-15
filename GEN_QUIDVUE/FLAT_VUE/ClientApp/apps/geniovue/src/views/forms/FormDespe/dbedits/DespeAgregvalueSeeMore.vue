@@ -172,7 +172,7 @@
 					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -249,7 +249,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-AGREG', 'changed-PROJE', 'changed-YEAR'],
+						globalEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG'],
 						uuid: 'Despe_Despe_AgregValValue',
 						allSelectedRows: 'false',
 						handlers: {

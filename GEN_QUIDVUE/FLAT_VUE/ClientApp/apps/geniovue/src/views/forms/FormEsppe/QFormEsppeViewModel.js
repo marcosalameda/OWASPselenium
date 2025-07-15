@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ESPPE',
 			area: 'ESPPE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ESPPE',
-				updateFilesTickets: 'UpdateFilesTicketsESPPE'
+				recalculateFormulas: 'RecalculateFormulas_Esppe',
+				updateFilesTickets: 'UpdateFilesTicketsEsppe',
+				setFile: 'SetFileEsppe'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODESPPE',
 			description: '',
 		}).cloneFrom(values?.ValCodesppe))
-		watch(() => this.ValCodesppe.value, (newValue, oldValue) => this.onUpdate('esppe.codesppe', this.ValCodesppe, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodesppe.value, (newValue, oldValue) => this.onUpdate('esppe.codesppe', this.ValCodesppe, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodpesso = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PESSO',
 			description: '',
 		}).cloneFrom(values?.ValCodpesso))
-		watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('esppe.codpesso', this.ValCodpesso, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('esppe.codpesso', this.ValCodpesso, newValue, oldValue)))
 
 		this.ValCodespec = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodespec',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'SPECI',
 			description: '',
 		}).cloneFrom(values?.ValCodespec))
-		watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('esppe.codespec', this.ValCodespec, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('esppe.codespec', this.ValCodespec, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TablePessoName = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TablePessoName))
-		watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue)))
 
 		this.TableSpeciEspecial = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.SPECIALTY09304),
 		}).cloneFrom(values?.TableSpeciEspecial))
-		watch(() => this.TableSpeciEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.TableSpeciEspecial, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableSpeciEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.TableSpeciEspecial, newValue, oldValue)))
 	}
 
 	/**

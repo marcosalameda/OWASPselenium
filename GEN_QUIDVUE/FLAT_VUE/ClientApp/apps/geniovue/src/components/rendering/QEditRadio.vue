@@ -1,38 +1,18 @@
 ﻿<template>
-	<div
+	<q-radio-group
 		v-if="value"
-		:class="[...containerClasses, 'i-radio__control']">
-		<label
-			:class="[{ 'i-radio--disabled': options.readonly }, 'i-radio i-radio__label', 'i-radio--inline']"
-			:for="`${tableName}_${rowIndex}_${columnName}`">
-			{{ options.optionLabel }}
-			<span
-				v-if="!options.optionLabel"
-				class="invisible">
-				{{ rowIndex }}
-			</span>
-			<input
-				type="radio"
-				:id="`${tableName}_${rowIndex}_${columnName}`"
-				:name="options.optionGroupName"
-				:value="row.Value"
-				:classes="classes"
-				:readonly="options.readonly"
-				:checked="row.Value === options.checkedValue"
-				data-table-action-selected="false"
-				tabindex="-1"
-				:aria-label="options?.label"
-				@change="updateExternal($event)" />
-			<span class="i-radio__field"></span>
-		</label>
-	</div>
+		:class="containerClasses"
+		:model-value="options.checkedValue"
+		:name="options.optionGroupName"
+		:readonly="options.readonly"
+		@update:model-value="updateExternal($event)">
+		<q-radio-button
+			:value="row.Value"
+			:label="options.optionLabel" />
+	</q-radio-group>
 </template>
 
 <script>
-	import _isEmpty from 'lodash-es/isEmpty'
-
-	import { inputSize } from '@quidgest/clientapp/constants/enums'
-
 	export default {
 		name: 'QEditRadio',
 
@@ -45,30 +25,6 @@
 			value: {
 				type: [Boolean, Number],
 				default: false
-			},
-
-			/**
-			 * The name of the table in the database, used to construct the unique ID for the radio input.
-			 */
-			tableName: {
-				type: String,
-				required: true
-			},
-
-			/**
-			 * The index of the current row, used in conjunction with tableName and columnName to construct the unique ID.
-			 */
-			rowIndex: {
-				type: [Number, String],
-				required: true
-			},
-
-			/**
-			 * The name of the column in the database, part of the unique ID for the radio input.
-			 */
-			columnName: {
-				type: String,
-				required: true
 			},
 
 			/**
@@ -85,14 +41,6 @@
 			row: {
 				type: Object,
 				default: () => ({})
-			},
-
-			/**
-			 * Sizing class for the control based on predefined options.
-			 */
-			size: {
-				type: String,
-				validator: (value) => _isEmpty(value) || Reflect.has(inputSize, value)
 			},
 
 			/**

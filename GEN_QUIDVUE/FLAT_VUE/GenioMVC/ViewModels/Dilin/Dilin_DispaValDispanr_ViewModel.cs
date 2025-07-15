@@ -123,21 +123,17 @@ namespace GenioMVC.ViewModels.Dilin
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAdispa.FldDispanr, FieldType.NUMERIC, Resources.Resources.DISPATCH_NUMBER23616, 10, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAdispa> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -288,11 +284,6 @@ namespace GenioMVC.ViewModels.Dilin
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAdispa> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Form", "DILIN")
-			}, "ms", "Time to load the form."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Dilin_DispaValDispanr_RowViewModel>();
 
@@ -409,7 +400,6 @@ namespace GenioMVC.ViewModels.Dilin
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<Dilin_DispaValDispanr_RowViewModel> MapDilin_DispaValDispanr(ListingMVC<CSGenioAdispa> Qlisting)

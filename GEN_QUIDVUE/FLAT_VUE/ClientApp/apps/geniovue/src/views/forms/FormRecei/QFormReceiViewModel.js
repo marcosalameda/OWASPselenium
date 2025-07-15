@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'RECEI',
 			area: 'RECEI',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_RECEI',
-				updateFilesTickets: 'UpdateFilesTicketsRECEI'
+				recalculateFormulas: 'RecalculateFormulas_Recei',
+				updateFilesTickets: 'UpdateFilesTicketsRecei',
+				setFile: 'SetFileRecei'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODRECEI',
 			description: '',
 		}).cloneFrom(values?.ValCodrecei))
-		watch(() => this.ValCodrecei.value, (newValue, oldValue) => this.onUpdate('recei.codrecei', this.ValCodrecei, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodrecei.value, (newValue, oldValue) => this.onUpdate('recei.codrecei', this.ValCodrecei, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodentit = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ENTIT',
 			description: computed(() => this.Resources.__SUPPLIER62145),
 		}).cloneFrom(values?.ValCodentit))
-		watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('recei.codentit', this.ValCodentit, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodentit.value, (newValue, oldValue) => this.onUpdate('recei.codentit', this.ValCodentit, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValDtreceip = reactive(new modelFieldType.DateTime({
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTRECEIP',
 			description: computed(() => this.Resources.RECEIPT_DATE00996),
 		}).cloneFrom(values?.ValDtreceip))
-		watch(() => this.ValDtreceip.value, (newValue, oldValue) => this.onUpdate('recei.dtreceip', this.ValDtreceip, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtreceip.value, (newValue, oldValue) => this.onUpdate('recei.dtreceip', this.ValDtreceip, newValue, oldValue)))
 
 		this.ValNumber = reactive(new modelFieldType.Number({
 			id: 'ValNumber',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.RECEIPT_NUMBER31380),
 		}).cloneFrom(values?.ValNumber))
-		watch(() => this.ValNumber.value, (newValue, oldValue) => this.onUpdate('recei.number', this.ValNumber, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNumber.value, (newValue, oldValue) => this.onUpdate('recei.number', this.ValNumber, newValue, oldValue)))
 
 		this.TableEntitName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -93,7 +94,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
 		}).cloneFrom(values?.TableEntitName))
-		watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableEntitName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.TableEntitName, newValue, oldValue)))
 
 		this.ValDtcheck = reactive(new modelFieldType.DateTime({
 			id: 'ValDtcheck',
@@ -102,7 +103,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTCHECK',
 			description: computed(() => this.Resources.RECEIPT_VERIFICATION62328),
 		}).cloneFrom(values?.ValDtcheck))
-		watch(() => this.ValDtcheck.value, (newValue, oldValue) => this.onUpdate('recei.dtcheck', this.ValDtcheck, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtcheck.value, (newValue, oldValue) => this.onUpdate('recei.dtcheck', this.ValDtcheck, newValue, oldValue)))
 
 		this.ValTocheck = reactive(new modelFieldType.Boolean({
 			id: 'ValTocheck',
@@ -124,7 +125,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.TO_CHECK57511),
 		}).cloneFrom(values?.ValTocheck))
-		watch(() => this.ValTocheck.value, (newValue, oldValue) => this.onUpdate('recei.tocheck', this.ValTocheck, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTocheck.value, (newValue, oldValue) => this.onUpdate('recei.tocheck', this.ValTocheck, newValue, oldValue)))
 
 		this.ValChecked = reactive(new modelFieldType.Boolean({
 			id: 'ValChecked',
@@ -146,7 +147,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.CHECKED31708),
 		}).cloneFrom(values?.ValChecked))
-		watch(() => this.ValChecked.value, (newValue, oldValue) => this.onUpdate('recei.checked', this.ValChecked, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValChecked.value, (newValue, oldValue) => this.onUpdate('recei.checked', this.ValChecked, newValue, oldValue)))
 
 		this.ValStored = reactive(new modelFieldType.Boolean({
 			id: 'ValStored',
@@ -155,7 +156,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'STORED',
 			description: computed(() => this.Resources.STORED41854),
 		}).cloneFrom(values?.ValStored))
-		watch(() => this.ValStored.value, (newValue, oldValue) => this.onUpdate('recei.stored', this.ValStored, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValStored.value, (newValue, oldValue) => this.onUpdate('recei.stored', this.ValStored, newValue, oldValue)))
 
 		this.ValDtstorag = reactive(new modelFieldType.DateTime({
 			id: 'ValDtstorag',
@@ -164,7 +165,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTSTORAG',
 			description: computed(() => this.Resources.STORAGE_DATE59954),
 		}).cloneFrom(values?.ValDtstorag))
-		watch(() => this.ValDtstorag.value, (newValue, oldValue) => this.onUpdate('recei.dtstorag', this.ValDtstorag, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtstorag.value, (newValue, oldValue) => this.onUpdate('recei.dtstorag', this.ValDtstorag, newValue, oldValue)))
 	}
 
 	/**

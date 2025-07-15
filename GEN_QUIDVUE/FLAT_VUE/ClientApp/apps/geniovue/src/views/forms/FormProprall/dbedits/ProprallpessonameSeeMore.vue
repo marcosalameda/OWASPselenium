@@ -172,7 +172,7 @@
 					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -248,7 +248,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1', 'changed-REGI1'],
+						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
 						uuid: 'Proprall_Proprall_PessoValName',
 						allSelectedRows: 'false',
 						handlers: {

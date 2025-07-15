@@ -144,24 +144,20 @@ namespace GenioMVC.ViewModels.Lcext
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAlocat.FldGln, FieldType.TEXT, Resources.Resources.GLOBAL_LOCATION_NUMB24637, 30, 0, true),
 				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXTENSION_COMPON55869, 30, 0, true),
 				new Exports.QColumn(CSGenioAlcext.FldSpacetyp, FieldType.ARRAY_TEXT, Resources.Resources.SPACE_TYPE42493, 1, 0, true, "SpaceTyp"),
 				new Exports.QColumn(CSGenioAlcext.FldSpaceobs, FieldType.TEXT, Resources.Resources.SPACE62433, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAlcext> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -313,12 +309,6 @@ namespace GenioMVC.ViewModels.Lcext
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAlcext> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "4261"),
-				new("Module", "WMS")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_4261_RowViewModel>();
 
@@ -455,7 +445,6 @@ namespace GenioMVC.ViewModels.Lcext
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<WMS_Menu_4261_RowViewModel> MapWMS_Menu_4261(ListingMVC<CSGenioAlcext> Qlisting)

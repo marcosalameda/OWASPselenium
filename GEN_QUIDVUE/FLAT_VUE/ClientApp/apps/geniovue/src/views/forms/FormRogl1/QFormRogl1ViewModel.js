@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ROGL1',
 			area: 'ROGL1',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ROGL1',
-				updateFilesTickets: 'UpdateFilesTicketsROGL1'
+				recalculateFormulas: 'RecalculateFormulas_Rogl1',
+				updateFilesTickets: 'UpdateFilesTicketsRogl1',
+				setFile: 'SetFileRogl1'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODROGL1',
 			description: '',
 		}).cloneFrom(values?.ValCodrogl1))
-		watch(() => this.ValCodrogl1.value, (newValue, oldValue) => this.onUpdate('rogl1.codrogl1', this.ValCodrogl1, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodrogl1.value, (newValue, oldValue) => this.onUpdate('rogl1.codrogl1', this.ValCodrogl1, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValTitle = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('rogl1.title', this.ValTitle, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('rogl1.title', this.ValTitle, newValue, oldValue)))
 	}
 
 	/**

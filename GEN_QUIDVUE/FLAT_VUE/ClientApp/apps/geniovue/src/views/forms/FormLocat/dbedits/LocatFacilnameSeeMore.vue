@@ -172,7 +172,7 @@
 					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -248,7 +248,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-ENTIT', 'changed-FACIL'],
+						globalEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-FACIL', 'changed-ENTIT'],
 						uuid: 'Locat_Locat_FacilValName',
 						allSelectedRows: 'false',
 						handlers: {

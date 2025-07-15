@@ -250,7 +250,7 @@
 		 */
 		filterOperators: {
 			type: Object,
-			default: () => searchFilterDataModule.operators.elements
+			default: () => new searchFilterDataModule.SearchFilterConditionOperators()
 		},
 
 		/**

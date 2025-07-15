@@ -6,16 +6,8 @@ using GenioMVC;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
-using log4net;
-using log4net.Config;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Resources;
-using System.Diagnostics.Metrics;
-using OpenTelemetry.Metrics;
 using CSGenio.core.logger;
 using CSGenio.core.di;
-using GenioMVC.Metrics;
 using CSGenio.core.ai;
 using GenioMVC.Helpers;
 

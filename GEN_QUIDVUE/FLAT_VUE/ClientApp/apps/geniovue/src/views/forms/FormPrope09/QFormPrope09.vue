@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -183,12 +183,13 @@
 						<q-accordion
 							v-if="controls.PROPE09_PSEUDACC01___.isVisible"
 							id="PROPE09_PSEUDACC01___"
+							v-model="controls.PROPE09_PSEUDACC01___.openChild"
 							v-bind="controls.PROPE09_PSEUDACC01___">
 							<!-- Start PROPE09_PSEUDACC01___ -->
-							<q-group-collapsible
-								id="PROPE09_PSEUDLOCALIZA"
-								v-bind="controls.PROPE09_PSEUDLOCALIZA"
-								v-on="controls.PROPE09_PSEUDLOCALIZA.handlers">
+							<q-accordion-item
+								id="PROPE09_PSEUDLOCALIZA-container"
+								value="PROPE09_PSEUDLOCALIZA"
+								:title="controls.PROPE09_PSEUDLOCALIZA.label">
 								<!-- Start PROPE09_PSEUDLOCALIZA -->
 								<q-row-container v-show="controls.PROPE09_CITY_CITY____.isVisible">
 									<q-control-wrapper
@@ -231,11 +232,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE09_PSEUDLOCALIZA -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE09_PSEUDDETAILS_"
-								v-bind="controls.PROPE09_PSEUDDETAILS_"
-								v-on="controls.PROPE09_PSEUDDETAILS_.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE09_PSEUDDETAILS_-container"
+								value="PROPE09_PSEUDDETAILS_"
+								:title="controls.PROPE09_PSEUDDETAILS_.label">
 								<!-- Start PROPE09_PSEUDDETAILS_ -->
 								<q-row-container v-show="controls.PROPE09_PROPESIZE____.isVisible">
 									<q-control-wrapper
@@ -292,11 +293,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE09_PSEUDDETAILS_ -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE09_PSEUDAGENTINF"
-								v-bind="controls.PROPE09_PSEUDAGENTINF"
-								v-on="controls.PROPE09_PSEUDAGENTINF.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE09_PSEUDAGENTINF-container"
+								value="PROPE09_PSEUDAGENTINF"
+								:title="controls.PROPE09_PSEUDAGENTINF.label">
 								<!-- Start PROPE09_PSEUDAGENTINF -->
 								<q-row-container v-show="controls.PROPE09_AGENTNAME____.isVisible">
 									<q-control-wrapper
@@ -358,7 +359,7 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE09_PSEUDAGENTINF -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End PROPE09_PSEUDACC01___ -->
 						</q-accordion>
 					</q-control-wrapper>
@@ -373,6 +374,7 @@
 							v-on="controls.PROPE09_PSEUDPROPCONT.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROPE09_PSEUDPROPCONT"
+							:filter-operators="controls.PROPE09_PSEUDPROPCONT.filterOperators"
 							v-on="controls.PROPE09_PSEUDPROPCONT.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -813,6 +815,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE09_CITY_CITY____', 'PROPE09_CTRY_COUNTRY_'],
@@ -874,6 +877,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE09_PROPESIZE____', 'PROPE09_PROPEBATHRMS_', 'PROPE09_PROPEYEAR____'],
@@ -933,6 +937,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE09_AGENTNAME____', 'PROPE09_AGENTEMAIL___', 'PROPE09_AGENTPHOTO___'],
@@ -1332,6 +1337,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PROPE09]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PROPE09]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

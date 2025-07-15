@@ -37,7 +37,7 @@
 						v-if="showRemoveButton"
 						borderless
 						:title="texts.removeButtonText"
-						@click="$emit('delete-widget', widget.uuid)">
+						@click="onDeleteWidget">
 						<q-icon icon="delete" />
 					</q-button>
 
@@ -379,6 +379,11 @@
 				else {
 					this.domVersionKey++
 				}
+			},
+
+			onDeleteWidget()
+			{
+				this.$emit('delete-widget', this.widget.uuid)
 			}
 		},
 

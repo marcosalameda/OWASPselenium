@@ -172,7 +172,7 @@
 					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -216,7 +216,7 @@
 								label: computed(() => this.Resources.TECHNICAL_AREA50773),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAreatecn.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],

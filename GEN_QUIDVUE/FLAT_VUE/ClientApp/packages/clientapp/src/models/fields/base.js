@@ -355,4 +355,22 @@ export class Base {
 	clearServerWarningMessages() {
 		this.serverWarningMessages.length = 0
 	}
+
+	destroy()
+	{
+		this.showWhenConditions?.destroy?.()
+		this.showWhenConditions = null
+
+		this.blockWhenConditions?.destroy?.()
+		this.blockWhenConditions = null
+
+		this.fillWhenConditions?.destroy?.()
+		this.fillWhenConditions = null
+
+		if(this.arrayOptions?.length > 0)
+			this.arrayOptions.length = 0
+
+		delete this.arrayOptions
+		delete this.arrayGroups
+	}
 }

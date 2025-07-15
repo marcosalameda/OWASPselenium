@@ -64,6 +64,7 @@
 							v-on="controls.WID_GRAPPSEUDFIELD001.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.WID_GRAPPSEUDFIELD001"
+							:filter-operators="controls.WID_GRAPPSEUDFIELD001.filterOperators"
 							v-on="controls.WID_GRAPPSEUDFIELD001.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -627,6 +628,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WID_GRAP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WID_GRAP]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

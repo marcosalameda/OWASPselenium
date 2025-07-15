@@ -123,10 +123,10 @@ namespace GenioMVC.ViewModels.Grpb
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAtblb.FldText, FieldType.TEXT, Resources.Resources.TEXT04938, 30, 0, true),
 				new Exports.QColumn(CSGenioAtblb.FldTextml, FieldType.MEMO, Resources.Resources.MULTILINE_TEXT38013, 30, 0, true),
 				new Exports.QColumn(CSGenioAtblb.FldNumint, FieldType.NUMERIC, Resources.Resources.NUMERIC__INTEGER_50289, 10, 0, true),
@@ -140,16 +140,12 @@ namespace GenioMVC.ViewModels.Grpb
 				new Exports.QColumn(CSGenioAtblb.FldTimehm, FieldType.TIME_HOURS, Resources.Resources.TIME__HOURS_MINUTES_01660, 5, 0, true),
 				new Exports.QColumn(CSGenioAtblb.FldEnumt, FieldType.ARRAY_TEXT, Resources.Resources.ENUMERATION__TEXT_15855, 10, 0, true, "typet"),
 				new Exports.QColumn(CSGenioAtblb.FldEnumn, FieldType.ARRAY_NUMERIC, Resources.Resources.ENUMERATION__NUMERIC44708, 10, 0, true, "typen"),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAtblb> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -305,11 +301,6 @@ namespace GenioMVC.ViewModels.Grpb
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAtblb> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Form", "GRPB")
-			}, "ms", "Time to load the form."))
-			{
 				User u = m_userContext.User;
 				Menu = new GridTableList<GenioMVC.ViewModels.Tblb.Grpb____pseudtblb_____ViewModel>(m_userContext);
 
@@ -437,7 +428,6 @@ namespace GenioMVC.ViewModels.Grpb
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<GenioMVC.ViewModels.Tblb.Grpb____pseudtblb_____ViewModel> MapGrpb_ValTblb(ListingMVC<CSGenioAtblb> Qlisting)

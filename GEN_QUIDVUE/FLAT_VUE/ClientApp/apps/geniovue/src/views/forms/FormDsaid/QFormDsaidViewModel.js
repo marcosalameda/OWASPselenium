@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'DSAID',
 			area: 'OUTPT',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_DSAID',
-				updateFilesTickets: 'UpdateFilesTicketsDSAID'
+				recalculateFormulas: 'RecalculateFormulas_Dsaid',
+				updateFilesTickets: 'UpdateFilesTicketsDsaid',
+				setFile: 'SetFileDsaid'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODOUTPT',
 			description: '',
 		}).cloneFrom(values?.ValCodoutpt))
-		watch(() => this.ValCodoutpt.value, (newValue, oldValue) => this.onUpdate('outpt.codoutpt', this.ValCodoutpt, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodoutpt.value, (newValue, oldValue) => this.onUpdate('outpt.codoutpt', this.ValCodoutpt, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'WARE1',
 			description: computed(() => this.Resources.BY_OMISSION13050),
 		}).cloneFrom(values?.ValCodwareh))
-		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('outpt.codwareh', this.ValCodwareh, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('outpt.codwareh', this.ValCodwareh, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableWare1Warehdes = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
 		}).cloneFrom(values?.TableWare1Warehdes))
-		watch(() => this.TableWare1Warehdes.value, (newValue, oldValue) => this.onUpdate('ware1.warehdes', this.TableWare1Warehdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableWare1Warehdes.value, (newValue, oldValue) => this.onUpdate('ware1.warehdes', this.TableWare1Warehdes, newValue, oldValue)))
 
 		this.ValDocumenr = reactive(new modelFieldType.Number({
 			id: 'ValDocumenr',
@@ -84,7 +85,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_14817),
 		}).cloneFrom(values?.ValDocumenr))
-		watch(() => this.ValDocumenr.value, (newValue, oldValue) => this.onUpdate('outpt.documenr', this.ValDocumenr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDocumenr.value, (newValue, oldValue) => this.onUpdate('outpt.documenr', this.ValDocumenr, newValue, oldValue)))
 
 		this.ValDhdocume = reactive(new modelFieldType.DateTime({
 			id: 'ValDhdocume',
@@ -93,7 +94,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DHDOCUME',
 			description: computed(() => this.Resources.DATE18475),
 		}).cloneFrom(values?.ValDhdocume))
-		watch(() => this.ValDhdocume.value, (newValue, oldValue) => this.onUpdate('outpt.dhdocume', this.ValDhdocume, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDhdocume.value, (newValue, oldValue) => this.onUpdate('outpt.dhdocume', this.ValDhdocume, newValue, oldValue)))
 	}
 
 	/**

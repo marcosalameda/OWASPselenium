@@ -8,11 +8,12 @@
 			:is="`q-${subtype}`"
 			ref="map"
 			:key="internalMapKey"
+			v-bind="$props"
 			:markers="markers"
 			:shapes="shapes"
+			:legends="legendsData"
 			:external-layers="externalLayers"
 			:follow-up-action="followUpAction"
-			v-bind="$props"
 			@open-info-window="openInfoWindow"
 			@close-info-window="closeInfoWindow"
 			@is-ready="onMapIsReady"
@@ -288,6 +289,14 @@
 			},
 
 			/**
+			 * A list with the legends of shapes/polygons already on the map.
+			 */
+			legends: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
 			 * Necessary tokens to access some of the external services.
 			 */
 			tokens: {
@@ -322,6 +331,7 @@
 				isContainerReady: false,
 				internalMapKey: 0,
 				markers: [],
+				legendsData: [],
 				shapes: [],
 				externalLayers: [],
 				currentMarker: null,
@@ -539,6 +549,30 @@
 			},
 
 			/**
+			 * Populates the lists of legends to display on the map.
+			 */
+			setLegends()
+			{
+				if (this.legends.length > 0) {
+					this.legendsData = this.legends
+					return;
+				}
+
+				this.legendsData = []
+
+				if (this.styleVariables.allowLegend?.value) {
+					for (let mappedData of this.mappedValues) {
+						let description = mappedData.legendItemDescription?.value;
+						let color = mappedData.legendItemColor?.value;
+
+						if (description !== undefined && color !== undefined && !this.legendsData.some(i => i.color === color && i.label === description)) {
+							this.legendsData.push({ color, label: description })
+						}
+					}
+				}
+			},
+
+			/**
 			 * Populates the lists of external layers to display on the map.
 			 */
 			setExternalLayers()
@@ -610,6 +644,7 @@
 				handler()
 				{
 					this.setMarkersAndShapes()
+					this.setLegends()
 				},
 				deep: true,
 				immediate: true

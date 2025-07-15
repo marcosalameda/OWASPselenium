@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -240,7 +241,7 @@
 								scrollData: 1,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								array: computed(() => qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayFreqempr.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
@@ -439,6 +440,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS STY_MENU_TABLE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT STY_MENU_TABLE]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

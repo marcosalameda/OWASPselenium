@@ -3,7 +3,9 @@ import cloneDeep from 'lodash-es/cloneDeep'
 import _get from 'lodash-es/get'
 import _keyBy from 'lodash-es/keyBy'
 import _toString from 'lodash-es/toString'
-import { computed, nextTick, ref, unref, watch } from 'vue'
+import { nextTick, ref, unref, markRaw, toValue } from 'vue'
+import { ScopedWatch } from '@quidgest/clientapp/utils/scopedWatch'
+import { deepUnwrap } from '@quidgest/clientapp/utils/deepUnwrap'
 
 import listFunctions from '@/mixins/listFunctions.js'
 import { systemInfo } from '@/systemInfo'
@@ -14,10 +16,26 @@ import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
 export class BaseColumn
 {
+	/**
+	 * Dedicated watcher scope.
+	 * @protected
+	 * @type {ScopedWatch}
+	 */
+	_watchScope
+
 	#fnVisibility
 
 	constructor(options, modelCtx, eventEmitter, init = true)
 	{
+		// All watchers created inside this scope are collected automatically.
+		// https://vuejs.org/api/reactivity-advanced#effectscope
+		Object.defineProperty(this, '_watchScope', {
+			value: markRaw(new ScopedWatch(/* detached? */ false)),
+			enumerable: false,
+			writable: true,
+			configurable: true
+		})
+
 		this.order = 0
 		this.dataType = 'None'
 		this.searchFieldType = null
@@ -48,6 +66,8 @@ export class BaseColumn
 		this.showWhen = null
 		this.visibilityListeners = []
 
+		this._stopModelCtxWatcher = null
+
 		Object.defineProperties(this, {
 			visible: {
 				value: ref(true),
@@ -60,6 +80,29 @@ export class BaseColumn
 				configurable: true,
 				writable: true,
 				enumerable: false
+			},
+			_isVisible: {
+				value: ref(false),
+				configurable: true,
+				writable: true,
+				enumerable: false
+			},
+			/**
+			 *	Whether the column is currently visible.
+			 *	When using computed for isVisible, in newer Vue versions the update of refs and the computed value
+			 *		did not always work properly across all projects (possibly due to some "improvement" regarding circular dependencies).
+			 *	Therefore, it was replaced with an additional ref and a watcher on the other two refs, which now works better.
+			 *	Note: The computed property worked before only because there were parts of the code that overwrote the computed with a primitive value.
+			 */
+			isVisible: {
+				get() {
+					return this._isVisible
+				},
+				set(newValue) {
+					this.visible.value = !!newValue
+				},
+				configurable: true,
+				enumerable: true
 			},
 			modelCtx: {
 				value: null,
@@ -76,21 +119,17 @@ export class BaseColumn
 		})
 
 		this.#fnVisibility = async () => {
-			const isVisible = unref(this.isVisible)
+			const isVisible = toValue(this.isVisible)
 			this.visibilityEval.value = await validateFormula(this.showWhen, this.modelCtx)
 
 			// If the visibility changes, triggers the listeners.
-			if (isVisible !== unref(this.isVisible))
+			if (isVisible !== toValue(this.isVisible))
 				for (let listener of this.visibilityListeners)
-					listener(unref(this.isVisible))
+					listener(toValue(this.isVisible))
 		}
 
-		/**
-		 * Whether the column is currently visible.
-		 */
-		this.isVisible = computed({
-			get: () => this.visible.value && this.visibilityEval.value,
-			set: (newValue) => (this.visible.value = newValue)
+		this._watchScope.watch([this.visible, this.visibilityEval], ([visible, visibilityEval]) => {
+			this._isVisible.value = toValue(visible) && toValue(visibilityEval)
 		})
 
 		// Add all properties to itself
@@ -115,7 +154,9 @@ export class BaseColumn
 		if (this.showWhen && this.eventEmitter instanceof QEventEmitter)
 		{
 			this.modelCtx = unref(modelCtx)
-			watch(() => modelCtx, (value) => this.modelCtx = unref(value), { deep: true })
+			if(this._stopModelCtxWatcher)
+				this._stopModelCtxWatcher()
+			this._stopModelCtxWatcher = this._watchScope.watch(() => modelCtx, (value) => this.modelCtx = unref(value), { deep: true })
 
 			this.eventEmitter.offMany(this.showWhen.dependencyEvents, this.#fnVisibility)
 			this.eventEmitter.onMany(this.showWhen.dependencyEvents, this.#fnVisibility)
@@ -142,11 +183,19 @@ export class BaseColumn
 	 */
 	clone()
 	{
-		const clonedCol = new this.constructor(cloneDeep(this), this.modelCtx, this.eventEmitter, false)
+		const sourceWithoutReactive = deepUnwrap(this)
+		const clonedThis = cloneDeep(sourceWithoutReactive)
+		// Remove computed propperties
+		// - The reason isVisible is not protected from override is that we have generated code that overrides isVisible with primitive, on columns defined as non-visible.
+		delete clonedThis.isVisible
+		delete clonedThis._stopModelCtxWatcher
+		// TODO: Arrays after deepUnwrap lose reactivity in the Computed of translated texts.
+		// 		 Check if they need a clone with creation of the new array object.
+		const clonedCol = new this.constructor(clonedThis, this.modelCtx, this.eventEmitter, false)
 
 		// This is needed since non-enumerable properties won't be set, as "cloneDeep" will ignore them.
-		clonedCol.visible.value = unref(this.visible) ?? true
-		clonedCol.visibilityEval.value = unref(this.visibilityEval) ?? false
+		clonedCol.visible.value = toValue(this.visible) ?? true
+		clonedCol.visibilityEval.value = toValue(this.visibilityEval) ?? false
 
 		return clonedCol
 	}
@@ -159,6 +208,28 @@ export class BaseColumn
 	getNormalizedValue(value)
 	{
 		return value
+	}
+
+	destroy()
+	{
+		if(this._stopModelCtxWatcher)
+			this._stopModelCtxWatcher()
+		this._stopModelCtxWatcher = null
+
+		// to dispose all effects in the scope
+		this._watchScope?.dispose()
+		this._watchScope = null
+
+		this.modelCtx = null
+
+		this.visibilityListeners.splice(0)
+		this.visibilityListeners = null
+		if (this.showWhen && this.eventEmitter instanceof QEventEmitter)
+			this.eventEmitter.offMany(this.showWhen.dependencyEvents, this.#fnVisibility)
+		this.eventEmitter = null
+
+		delete this.label
+		delete this.array
 	}
 }
 
@@ -240,6 +311,8 @@ export class DateColumn extends BaseColumn
 			dataDisplay: listFunctions.dateDisplayCell,
 			dataDisplayText: listFunctions.dateDisplayCell
 		}, options), modelCtx, eventEmitter, init)
+
+		this.format = genericDataStore.dateFormat[options?.dateTimeType]
 	}
 
 	/**

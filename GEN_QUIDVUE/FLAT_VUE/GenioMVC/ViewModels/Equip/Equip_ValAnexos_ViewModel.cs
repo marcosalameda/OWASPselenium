@@ -141,23 +141,19 @@ namespace GenioMVC.ViewModels.Equip
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAanexd.FldDthranex, FieldType.DATETIME, Resources.Resources.ATTACHED26247, 16, 0, true),
 				new Exports.QColumn(CSGenioAanexd.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
 				new Exports.QColumn(CSGenioAanexd.FldDocument, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAanexd> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -313,11 +309,6 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAanexd> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Form", "EQUIP")
-			}, "ms", "Time to load the form."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Equip_ValAnexos_RowViewModel>();
 
@@ -445,7 +436,6 @@ namespace GenioMVC.ViewModels.Equip
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<Equip_ValAnexos_RowViewModel> MapEquip_ValAnexos(ListingMVC<CSGenioAanexd> Qlisting)

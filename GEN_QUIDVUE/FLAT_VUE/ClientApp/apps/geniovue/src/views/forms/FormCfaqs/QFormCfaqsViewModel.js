@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CFAQS',
 			area: 'CFAQS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_CFAQS',
-				updateFilesTickets: 'UpdateFilesTicketsCFAQS'
+				recalculateFormulas: 'RecalculateFormulas_Cfaqs',
+				updateFilesTickets: 'UpdateFilesTicketsCfaqs',
+				setFile: 'SetFileCfaqs'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCFAQS',
 			description: '',
 		}).cloneFrom(values?.ValCodcfaqs))
-		watch(() => this.ValCodcfaqs.value, (newValue, oldValue) => this.onUpdate('cfaqs.codcfaqs', this.ValCodcfaqs, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcfaqs.value, (newValue, oldValue) => this.onUpdate('cfaqs.codcfaqs', this.ValCodcfaqs, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValIcon = reactive(new modelFieldType.Image({
@@ -60,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ICON',
 			description: '',
 		}).cloneFrom(values?.ValIcon))
-		watch(() => this.ValIcon.value, (newValue, oldValue) => this.onUpdate('cfaqs.icon', this.ValIcon, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIcon.value, (newValue, oldValue) => this.onUpdate('cfaqs.icon', this.ValIcon, newValue, oldValue)))
 
 		this.ValCategory = reactive(new modelFieldType.MultiLineString({
 			id: 'ValCategory',
@@ -69,7 +70,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CATEGORY',
 			description: computed(() => this.Resources.CATEGORY18978),
 		}).cloneFrom(values?.ValCategory))
-		watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('cfaqs.category', this.ValCategory, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('cfaqs.category', this.ValCategory, newValue, oldValue)))
 
 		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
@@ -78,7 +79,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESCRIPT',
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescript))
-		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('cfaqs.descript', this.ValDescript, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('cfaqs.descript', this.ValDescript, newValue, oldValue)))
 	}
 
 	/**

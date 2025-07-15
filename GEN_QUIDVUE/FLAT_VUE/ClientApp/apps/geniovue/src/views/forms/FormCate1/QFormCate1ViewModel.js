@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CATE1',
 			area: 'CATE1',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_CATE1',
-				updateFilesTickets: 'UpdateFilesTicketsCATE1'
+				recalculateFormulas: 'RecalculateFormulas_Cate1',
+				updateFilesTickets: 'UpdateFilesTicketsCate1',
+				setFile: 'SetFileCate1'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCATEG',
 			description: '',
 		}).cloneFrom(values?.ValCodcateg))
-		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('cate1.codcateg', this.ValCodcateg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('cate1.codcateg', this.ValCodcateg, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValAbbreviation = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.ABBREVIATION31267),
 		}).cloneFrom(values?.ValAbbreviation))
-		watch(() => this.ValAbbreviation.value, (newValue, oldValue) => this.onUpdate('cate1.abbreviation', this.ValAbbreviation, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAbbreviation.value, (newValue, oldValue) => this.onUpdate('cate1.abbreviation', this.ValAbbreviation, newValue, oldValue)))
 
 		this.ValCategoria = reactive(new modelFieldType.String({
 			id: 'ValCategoria',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
 		}).cloneFrom(values?.ValCategoria))
-		watch(() => this.ValCategoria.value, (newValue, oldValue) => this.onUpdate('cate1.categoria', this.ValCategoria, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCategoria.value, (newValue, oldValue) => this.onUpdate('cate1.categoria', this.ValCategoria, newValue, oldValue)))
 	}
 
 	/**

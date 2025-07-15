@@ -21,7 +21,7 @@ public class ManuaForm : Form
 	/// <summary>
 	/// Digital document
 	/// </summary>
-	public DocumentControl ManuaDigdocum => new DocumentControl(driver, ContainerLocator, "MANUA___MANUADIGDOCUM");
+	public DocumentControl ManuaDigdocum => new DocumentControl(driver, ContainerLocator, "MANUA___MANUADIGDOCUM-container");
 
 	/// <summary>
 	/// Notes

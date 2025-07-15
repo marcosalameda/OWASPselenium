@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -197,7 +198,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1', 'changed-REGI1'],
+						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
 						uuid: '6fb9ec4c-b225-4a65-8a7e-fff5c440214b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -228,6 +229,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_3F211]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_3F211]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

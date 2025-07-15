@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -180,7 +180,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.EXTERNO_PSEUDNOVOGR06.isVisible || controls.EXTERNO_PSEUDOBRIGATO.isVisible"
+					v-show="controls.EXTERNO_PSEUDNOVOGR06.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.EXTERNO_PSEUDNOVOGR06.isVisible"
@@ -188,12 +188,13 @@
 						<q-accordion
 							v-if="controls.EXTERNO_PSEUDNOVOGR06.isVisible"
 							id="EXTERNO_PSEUDNOVOGR06"
+							v-model="controls.EXTERNO_PSEUDNOVOGR06.openChild"
 							v-bind="controls.EXTERNO_PSEUDNOVOGR06">
 							<!-- Start EXTERNO_PSEUDNOVOGR06 -->
-							<q-group-collapsible
-								id="EXTERNO_PSEUDNOVOGR03"
-								v-bind="controls.EXTERNO_PSEUDNOVOGR03"
-								v-on="controls.EXTERNO_PSEUDNOVOGR03.handlers">
+							<q-accordion-item
+								id="EXTERNO_PSEUDNOVOGR03-container"
+								value="EXTERNO_PSEUDNOVOGR03"
+								:title="controls.EXTERNO_PSEUDNOVOGR03.label">
 								<!-- Start EXTERNO_PSEUDNOVOGR03 -->
 								<q-row-container v-show="controls.EXTERNO_PESSOTELEPHON.isVisible || controls.EXTERNO_PESSOEMAIL___.isVisible">
 									<q-control-wrapper
@@ -230,11 +231,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End EXTERNO_PSEUDNOVOGR03 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="EXTERNO_PSEUDNOVOGR04"
-								v-bind="controls.EXTERNO_PSEUDNOVOGR04"
-								v-on="controls.EXTERNO_PSEUDNOVOGR04.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="EXTERNO_PSEUDNOVOGR04-container"
+								value="EXTERNO_PSEUDNOVOGR04"
+								:title="controls.EXTERNO_PSEUDNOVOGR04.label">
 								<!-- Start EXTERNO_PSEUDNOVOGR04 -->
 								<q-row-container v-show="controls.EXTERNO_PESSOPHOTOGRA.isVisible">
 									<q-control-wrapper
@@ -255,10 +256,12 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End EXTERNO_PSEUDNOVOGR04 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End EXTERNO_PSEUDNOVOGR06 -->
 						</q-accordion>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.EXTERNO_PSEUDOBRIGATO.isVisible">
 					<q-control-wrapper
 						v-show="controls.EXTERNO_PSEUDOBRIGATO.isVisible"
 						class="control-join-group">
@@ -732,6 +735,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EXTERNO_PESSOTELEPHON', 'EXTERNO_PESSOEMAIL___'],
@@ -776,6 +780,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EXTERNO_PESSOPHOTOGRA'],
@@ -918,6 +923,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS EXTERNO]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT EXTERNO]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

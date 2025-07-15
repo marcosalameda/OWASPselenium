@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -394,7 +395,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-YEAR', 'changed-AGREG', 'changed-EXPEN', 'changed-PROJE'],
+						globalEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: 'eba2dc82-74d0-42e8-8065-49dba77ea064',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -431,6 +432,10 @@
 		{
 			// Listener for MC action in case of redirect by Jump if just one.
 			this.$eventHub.off('EXEC-PTN_MenuMC_BUTTONTRIGGERTEST2', this.PTN_MenuMC_BUTTONTRIGGERTEST2)
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_LIST_DB_MB_MC_T]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		methods: {

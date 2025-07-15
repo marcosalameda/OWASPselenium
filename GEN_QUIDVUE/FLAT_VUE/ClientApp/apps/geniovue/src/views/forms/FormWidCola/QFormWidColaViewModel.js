@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'WID_COLA',
 			area: 'CMPNY',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_WID_COLA',
-				updateFilesTickets: 'UpdateFilesTicketsWID_COLA'
+				recalculateFormulas: 'RecalculateFormulas_Wid_cola',
+				updateFilesTickets: 'UpdateFilesTicketsWid_cola',
+				setFile: 'SetFileWid_cola'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODEMPRE',
 			description: computed(() => this.Resources.COMPANIES04875),
 		}).cloneFrom(values?.ValCodempre))
-		watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('cmpny.codempre', this.ValCodempre, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('cmpny.codempre', this.ValCodempre, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodcntry))
-		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('cmpny.codcntry', this.ValCodcntry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('cmpny.codcntry', this.ValCodcntry, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValLogo = reactive(new modelFieldType.Image({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'LOGO',
 			description: computed(() => this.Resources.LOGO62483),
 		}).cloneFrom(values?.ValLogo))
-		watch(() => this.ValLogo.value, (newValue, oldValue) => this.onUpdate('cmpny.logo', this.ValLogo, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValLogo.value, (newValue, oldValue) => this.onUpdate('cmpny.logo', this.ValLogo, newValue, oldValue)))
 
 		this.ValDesignat = reactive(new modelFieldType.String({
 			id: 'ValDesignat',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.DESIGNATION35876),
 		}).cloneFrom(values?.ValDesignat))
-		watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.ValDesignat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('cmpny.designat', this.ValDesignat, newValue, oldValue)))
 	}
 
 	/**

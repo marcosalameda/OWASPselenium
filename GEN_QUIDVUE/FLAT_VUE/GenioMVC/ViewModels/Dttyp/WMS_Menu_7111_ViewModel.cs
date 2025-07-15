@@ -144,10 +144,10 @@ namespace GenioMVC.ViewModels.Dttyp
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAdttyp.FldString, FieldType.TEXT, Resources.Resources.STRING29433, 30, 0, true),
 				new Exports.QColumn(CSGenioAdttyp.FldUppercas, FieldType.TEXT, Resources.Resources.UPPER_CASE31324, 30, 0, true),
 				new Exports.QColumn(CSGenioAdttyp.FldQrcode, FieldType.TEXT, Resources.Resources.QR_CODE12259, 30, 0, true),
@@ -169,19 +169,14 @@ namespace GenioMVC.ViewModels.Dttyp
 				new Exports.QColumn(CSGenioAdttyp.FldDtsesond, FieldType.DATETIMESECONDS, Resources.Resources.DATE_TIME_SECOND__IN55990, 19, 0, true),
 				new Exports.QColumn(CSGenioAdttyp.FldTime, FieldType.TIME_HOURS, Resources.Resources.TIME50904, 5, 0, true),
 				new Exports.QColumn(CSGenioAdttyp.FldUuid, FieldType.TEXT, Resources.Resources.UUID__AKA_GUID_13998, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAdttyp.FldImage, FieldType.IMAGE, Resources.Resources.IMAGE__BINARY_46903, 3, 1, true):null,
 				new Exports.QColumn(CSGenioAdttyp.FldStart, FieldType.DATETIME, Resources.Resources.STARTING_TIME_WITH_I44217, 16, 0, true),
 				new Exports.QColumn(CSGenioAdttyp.FldEnd, FieldType.DATETIME, Resources.Resources.END_TIME_WITH_INCLUS19241, 16, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAdttyp> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -333,12 +328,6 @@ namespace GenioMVC.ViewModels.Dttyp
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAdttyp> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "7111"),
-				new("Module", "WMS")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_7111_RowViewModel>();
 
@@ -475,7 +464,6 @@ namespace GenioMVC.ViewModels.Dttyp
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<WMS_Menu_7111_RowViewModel> MapWMS_Menu_7111(ListingMVC<CSGenioAdttyp> Qlisting)

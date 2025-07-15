@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ANO',
 			area: 'YEAR',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ANO',
-				updateFilesTickets: 'UpdateFilesTicketsANO'
+				recalculateFormulas: 'RecalculateFormulas_Ano',
+				updateFilesTickets: 'UpdateFilesTicketsAno',
+				setFile: 'SetFileAno'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODYEAR',
 			description: '',
 		}).cloneFrom(values?.ValCodyear))
-		watch(() => this.ValCodyear.value, (newValue, oldValue) => this.onUpdate('year.codyear', this.ValCodyear, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodyear.value, (newValue, oldValue) => this.onUpdate('year.codyear', this.ValCodyear, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValYear = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 4,
 			description: computed(() => this.Resources.YEAR61794),
 		}).cloneFrom(values?.ValYear))
-		watch(() => this.ValYear.value, (newValue, oldValue) => this.onUpdate('year.year', this.ValYear, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValYear.value, (newValue, oldValue) => this.onUpdate('year.year', this.ValYear, newValue, oldValue)))
 
 		this.ValYearnum = reactive(new modelFieldType.Number({
 			id: 'ValYearnum',
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.YEAR__NUMBERS_29394),
 		}).cloneFrom(values?.ValYearnum))
-		watch(() => this.ValYearnum.value, (newValue, oldValue) => this.onUpdate('year.yearnum', this.ValYearnum, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValYearnum.value, (newValue, oldValue) => this.onUpdate('year.yearnum', this.ValYearnum, newValue, oldValue)))
 
 		this.ValValue = reactive(new modelFieldType.Number({
 			id: 'ValValue',
@@ -84,7 +85,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.VALUE10285),
 		}).cloneFrom(values?.ValValue))
-		watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('year.value', this.ValValue, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('year.value', this.ValValue, newValue, oldValue)))
 	}
 
 	/**

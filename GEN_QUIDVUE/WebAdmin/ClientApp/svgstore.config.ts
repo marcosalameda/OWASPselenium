@@ -1,36 +1,42 @@
-import { readdirSync, readFileSync, writeFileSync, type PathOrFileDescriptor } from 'fs'
-import { extname, join, parse } from 'path'
+import { readdirSync, readFileSync, writeFileSync } from 'node:fs'
+import { dirname, extname, join, parse } from 'node:path'
+import { fileURLToPath } from 'node:url'
 
-// @ts-expect-error svgstore doesn't export types
+// @ts-expect-error svgstore does not export types
 import svgstore from 'svgstore'
 
 /**
- * Specific bundling setup for this project.
+ * Bundles all SVG icons in a directory into a single sprite sheet.
  */
-function PackBundle() {
-	PackSvg('./public/Content/svg/', './public/Content/svgbundle.svg')
-}
-
-/**
- * Bundles all the svg files found in a souce directory into an single svg output file.
- * @param {string} dirname - Path to svg directory
- * @param {string} output - Path to resulting svg bundle
- */
-function PackSvg(dir: string, output: PathOrFileDescriptor) {
+function bundleSvgIcons(sourceDir: string, outputFile: string) {
+	const files = readdirSync(sourceDir)
 	const sprites = svgstore()
 
-	const svgs = readdirSync(dir)
-
-	svgs.forEach((svg) => {
-		if (extname(svg) === '.svg') {
-			const iconId = parse(svg).name
-			const iconContent = readFileSync(join(dir, svg), 'utf8')
-
-			sprites.add(iconId, iconContent)
+	files.forEach((file) => {
+		if (extname(file) === '.svg') {
+			const id = parse(file).name
+			const content = readFileSync(join(sourceDir, file), 'utf8')
+			sprites.add(id, content)
 		}
 	})
 
-	writeFileSync(output, sprites.toString())
+	writeFileSync(outputFile, sprites.toString())
 }
 
-export default PackBundle
+/**
+ * Project-specific bundler that generates the final SVG sprite file.
+ */
+export function generateSvgSpriteBundle() {
+	const __filename = fileURLToPath(import.meta.url)
+	const __dirname = dirname(__filename)
+
+	bundleSvgIcons(
+		join(__dirname, './public/Content/svg/'),
+		join(__dirname, './public/Content/svgbundle.svg')
+	)
+
+	console.log(
+	'\x1b[36m%s\x1b[0m',
+		`✅ SVG sprite bundle generated successfully at: ./public/Content/svgbundle.svg`
+	)
+}

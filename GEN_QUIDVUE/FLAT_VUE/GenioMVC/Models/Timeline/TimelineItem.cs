@@ -50,7 +50,14 @@ namespace GenioMVC.Models
 		/// yy - Anos
 		/// </summary>
 		public string Escala { get; set; }
-
+		
+		/// <summary>
+		/// Type of the Timeline
+		/// S - Simple
+		/// D - Detailed
+		/// </summary>
+		public string TipoTimeLine {get;set;}
+		
 		/// <summary>
 		/// Associated icon
 		/// </summary>

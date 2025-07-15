@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CTRY03',
 			area: 'CTRY',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_CTRY03',
-				updateFilesTickets: 'UpdateFilesTicketsCTRY03'
+				recalculateFormulas: 'RecalculateFormulas_Ctry03',
+				updateFilesTickets: 'UpdateFilesTicketsCtry03',
+				setFile: 'SetFileCtry03'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCTRY',
 			description: '',
 		}).cloneFrom(values?.ValCodctry))
-		watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('ctry.codctry', this.ValCodctry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('ctry.codctry', this.ValCodctry, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValCountry = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.ValCountry))
-		watch(() => this.ValCountry.value, (newValue, oldValue) => this.onUpdate('ctry.country', this.ValCountry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCountry.value, (newValue, oldValue) => this.onUpdate('ctry.country', this.ValCountry, newValue, oldValue)))
 	}
 
 	/**

@@ -4,12 +4,12 @@
 			<q-row-container>
 				<numeric-input
 					v-model="model.MQueues.Journaltimeout"
-					:label="systemConfigTexts.journalTimeoutLabel"
+					:label="resources.journalTimeoutLabel"
 					size="xlarge"
 					integer-only />
 				<numeric-input
 					v-model="model.MQueues.Maxsendnumber"
-					:label="systemConfigTexts.maxSendNumberLabel"
+					:label="resources.maxSendNumberLabel"
 					size="xlarge"
 					integer-only />
 			</q-row-container>
@@ -90,28 +90,28 @@
 
 		<q-dialog
 			v-model="showDialog"
-			:title="systemConfigTexts.queueTitle"
+			:title="resources.queueTitle"
 			:buttons="buttons">
 			<template #body.content>
 				<div class="q-dialog-container">
 					<div>
 						<q-text-field
 							v-model="queueData.queue"
-							:label="systemConfigTexts.queueNameLabel"
+							:label="resources.queueNameLabel"
 							:readonly="blockFormQueue"
 							size="large" />
 					</div>
 					<div>
 						<q-text-field
 							v-model="queueData.queueChannel"
-							:label="systemConfigTexts.queueChannelLabel"
+							:label="resources.queueChannelLabel"
 							:readonly="blockFormQueue"
 							size="large" />
 					</div>
 					<div>
 						<q-text-field
 							v-model="queueData.path"
-							:label="systemConfigTexts.queuePathLabel"
+							:label="resources.queuePathLabel"
 							:readonly="blockFormQueue"
 							size="large" />
 					</div>
@@ -125,26 +125,26 @@
 					<div>
 						<numeric-input
 							v-model="queueData.Blocksize"
-							:label="systemConfigTexts.blockSizeLabel"
+							:label="resources.blockSizeLabel"
 							:isReadOnly="blockFormQueue"
 							size="large" />
 					</div>
 					<div>
                         <q-checkbox
                             v-model="queueData.Unicode"
-                            :label="systemConfigTexts.unicodeLabel"
+                            :label="resources.unicodeLabel"
                             :readonly="blockFormQueue" />
                     </div>
                     <div>
                         <q-checkbox
                             v-model="queueData.UsesMsmq"
-                            :label="systemConfigTexts.usesMsmqLabel"
+                            :label="resources.usesMsmqLabel"
                             :readonly="blockFormQueue" />
                     </div>
                     <div>
                         <q-checkbox
                             v-model="queueData.Journal"
-                            :label="systemConfigTexts.journalLabel"
+                            :label="resources.journalLabel"
                             :readonly="blockFormQueue" />
                     </div>
 				</div>
@@ -160,21 +160,21 @@
 					<div>
 						<q-text-field
 							v-model="ackData.source"
-							:label="systemConfigTexts.sourceQueueLabel"
+							:label="resources.sourceQueueLabel"
 							:readonly="blockFormQueueACK"
 							size="large" />
 					</div>
 					<div>
                         <q-text-field
 							v-model="ackData.ackQueue"
-							:label="systemConfigTexts.sourceQueueLabel"
+							:label="resources.sourceQueueLabel"
 							:readonly="blockFormQueueACK"
 							size="large" />
                     </div>
                     <div>
                         <numeric-input
 							v-model="ackData.Blocksize"
-							:label="systemConfigTexts.blockSizeLabel"
+							:label="resources.blockSizeLabel"
 							:isReadOnly="blockFormQueueACK"
 							size="large" />
                     </div>
@@ -189,7 +189,7 @@
 	import { reusableMixin } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import { texts } from '@/resources/hardcodedTexts.ts';
-	import { SystemConfigTexts } from '@/resources/viewResources.ts';
+	import { computed } from 'vue';
 
 	export default {
 		name: 'integration',
@@ -200,6 +200,10 @@
 
 		props: {
 			model: {
+				required: true
+			},
+			resources: {
+				type: Object,
 				required: true
 			}
 		},
@@ -240,7 +244,7 @@
 					rows: [],
 					total_rows: 0,
 					columns: [{
-						label: () => '',
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -249,49 +253,49 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => '',
+						label: this.resources.queueNameLabel,
 						name: "queue",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: '',
+						label: this.resources.queueChannelLabel,
 						name: "queueChannel",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: this.resources.queuePathLabel,
 						name: "path",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: computed(() => this.Resources[texts.yearLabel]),
 						name: "Qyear",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: this.resources.unicodeLabel,
 						name: "Unicode",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: this.resources.usesMsmqLabel,
 						name: "UsesMsmq",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: this.resources.journalLabel,
 						name: "Journal",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: this.resources.blockSizeLabel,
 						name: "Blocksize",
 						sort: true
 					}],
 					config: {
-						table_title: () => '',
+						table_title: this.resources.messageListTitle,
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
@@ -304,7 +308,7 @@
 					rows: [],
 					total_rows: 0,
 					columns: [{
-						label: () => '',
+						label: this.resources.actions,
 						name: "actions",
 						slot_name: "actions",
 						sort: false,
@@ -313,24 +317,24 @@
 						column_text_alignment: 'text-center'
 					},
 					{
-						label: () => '',
+						label: this.resources.sourceQueueLabel,
 						name: "source",
 						sort: true,
 						initial_sort: true,
 						initial_sort_order: "asc"
 					},
 					{
-						label: () => '',
+						label: this.resources.ackQueueLabel,
 						name: "ackQueue",
 						sort: true
 					},
 					{
-						label: () => '',
+						label: this.resources.blockSizeLabel,
 						name: "Blocksize",
 						sort: true
 					}],
 					config: {
-						table_title: () => '',
+						table_title: this.resources.acksConfigTitle,
 						global_search: {
 							classes: "qtable-global-search",
 							searchOnPressEnter: true,
@@ -347,20 +351,20 @@
 					total_rows: 0,
 					columns: [
 						{
-							label: '',
+							label: this.resources.reportLabel,
 							name: "Rep",
 							sort: true,
 							initial_sort: true,
 							initial_sort_order: "asc"
 						},
 						{
-							label: '',
+							label: computed(() => this.Resources[texts.languageLabel]),
 							name: "Lang",
 							sort: true
 						}
 					],
 					config: {
-						table_title: '',
+						table_title: this.resources.reportsByLanguageTitle,
 						pagination : false,
 						global_search: {visibility : false},
 						highlight_row_hover: false,
@@ -385,12 +389,8 @@
 					save: this.Resources[texts.save],
 					cancel: this.Resources[texts.cancel],
 					yearLabel: this.Resources[texts.yearLabel],
-					actions: this.Resources[texts.actions],
 					languageLabel: this.Resources[texts.languageLabel],
 				}
-			},
-			systemConfigTexts() {
-				return new SystemConfigTexts(this)
 			}
         },
 		methods: {
@@ -574,27 +574,6 @@
 		},
 		mounted() {
 			this.initQueues(this.model)
-
-			this.tQueues.columns[0].label = this.hardcodedTexts.actions;
-			this.tQueues.columns[1].label = this.systemConfigTexts.queueNameLabel;
-			this.tQueues.columns[2].label = this.systemConfigTexts.queueChannelLabel;
-			this.tQueues.columns[3].label = this.systemConfigTexts.queuePathLabel;
-			this.tQueues.columns[4].label = this.hardcodedTexts.yearLabel;
-			this.tQueues.columns[5].label = this.systemConfigTexts.unicodeLabel;
-			this.tQueues.columns[6].label = this.systemConfigTexts.usesMsmqLabel;
-			this.tQueues.columns[7].label = this.systemConfigTexts.journalLabel;
-			this.tQueues.columns[8].label = this.systemConfigTexts.blockSizeLabel;
-			this.tQueues.config.table_title = this.systemConfigTexts.messageListTitle;
-
-			this.tAcks.columns[0].label = this.hardcodedTexts.actions;
-			this.tAcks.columns[1].label = this.systemConfigTexts.sourceQueueLabel;
-			this.tAcks.columns[2].label = this.systemConfigTexts.ackQueueLabel;
-			this.tAcks.columns[3].label = this.systemConfigTexts.blockSizeLabel;
-			this.tAcks.config.table_title = this.systemConfigTexts.acksConfigTitle;
-
-			this.tRepor.columns[0].label = this.systemConfigTexts.reportLabel;
-			this.tRepor.columns[1].label = this.hardcodedTexts.languageLabel;
-			this.tRepor.config.table_title = this.systemConfigTexts.reportsByLanguageTitle;
 		},
 
 		watch: {

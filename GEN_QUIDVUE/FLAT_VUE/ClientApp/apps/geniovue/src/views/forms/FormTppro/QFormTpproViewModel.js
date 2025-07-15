@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TPPRO',
 			area: 'TPPRO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_TPPRO',
-				updateFilesTickets: 'UpdateFilesTicketsTPPRO'
+				recalculateFormulas: 'RecalculateFormulas_Tppro',
+				updateFilesTickets: 'UpdateFilesTicketsTppro',
+				setFile: 'SetFileTppro'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTPPRO',
 			description: '',
 		}).cloneFrom(values?.ValCodtppro))
-		watch(() => this.ValCodtppro.value, (newValue, oldValue) => this.onUpdate('tppro.codtppro', this.ValCodtppro, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtppro.value, (newValue, oldValue) => this.onUpdate('tppro.codtppro', this.ValCodtppro, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValTppropri = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.PROPERTY_TYPE51419),
 		}).cloneFrom(values?.ValTppropri))
-		watch(() => this.ValTppropri.value, (newValue, oldValue) => this.onUpdate('tppro.tppropri', this.ValTppropri, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTppropri.value, (newValue, oldValue) => this.onUpdate('tppro.tppropri', this.ValTppropri, newValue, oldValue)))
 	}
 
 	/**

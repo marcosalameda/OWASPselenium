@@ -250,6 +250,29 @@ export class HistoryLevel
 	{
 		this.upperLevels.forEach(upperLevel => upperLevel.destroy())
 		this.upperLevels.clear()
+
+		this.entries = null
+		this.params = null
+
+		this.containersState = null
+		this.currentControl = null
+
+		// Removal of Proxy objects from the central store so that there are no subscribers.
+		// While we have several things holding objects, a simple «this.formValues = null» keeps references in memory (based on the heap snapshot analysis).
+		for(let areaName in this.formValues) {
+			for(let dataKey in this.formValues[areaName]) {
+				for(let formName in this.formValues[areaName][dataKey]) {
+					for(let fieldName in this.formValues[areaName][dataKey][formName]) {
+						this.formValues[areaName][dataKey][formName][fieldName] = null
+					}
+					this.formValues[areaName][dataKey][formName] = null
+				}
+				this.formValues[areaName][dataKey] = null
+			}
+			this.formValues[areaName] = null
+		}
+
+		this.formValues = null
 	}
 
 	/**

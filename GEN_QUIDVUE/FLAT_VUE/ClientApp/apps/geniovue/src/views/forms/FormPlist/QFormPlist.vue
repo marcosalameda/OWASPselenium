@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -649,7 +649,7 @@
 									defaultValue: '',
 									label: computed(() => this.Resources.ENUMERATION_PROP24972),
 									group: 'GRP03',
-									array: qProjArrays.QArrayAddressu.setResources(vm.$getResource),
+									array: new qProjArrays.QArrayAddressu(vm.$getResource),
 									description: computed(() => this.Resources.___2712722),
 									props: {
 										id: 'FLD_ENUMPROP',
@@ -778,6 +778,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PLIST]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PLIST]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

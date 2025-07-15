@@ -16,10 +16,33 @@ namespace Administration.AuxClass
     {
         public static void ConfigureTelemetry(this IServiceCollection services, TelemetryConfiguration telemetryConfig, ILoggingBuilder loggingBuilder)
         {
-            string serviceName = (telemetryConfig != null && !string.IsNullOrEmpty(telemetryConfig.TelemetryAlias))
-                ? telemetryConfig.TelemetryAlias
-                : $"WebAdmin{Configuration.Program} - {Configuration.Acronym}";
-            
+            var serviceInstanceId = telemetryConfig?.CustomInstanceId;
+            if (string.IsNullOrEmpty(serviceInstanceId))
+                serviceInstanceId = Environment.GetEnvironmentVariable("TELEMETRY_CUSTOM_INSTANCE_ID");
+            if (string.IsNullOrEmpty(serviceInstanceId))
+            {
+                //Persist the instanceId so its perserved between service restarts
+                var ifile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp", "InstanceId.var");
+                if (File.Exists(ifile))
+                {
+                    serviceInstanceId = File.ReadAllText(ifile);
+                }
+                else
+                {
+                    serviceInstanceId = Guid.NewGuid().ToString();
+                    Directory.CreateDirectory(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "temp"));
+                    File.WriteAllText(ifile, serviceInstanceId);
+                }
+            }
+
+            //Setup the service naming conventions that will label the telemetry scopes
+            var serviceName = ResourceBuilder.CreateDefault().AddService(
+                !string.IsNullOrEmpty(telemetryConfig?.CustomApplicationId) ? telemetryConfig.CustomApplicationId : Configuration.Application.Id,
+                Configuration.Program + "." + Configuration.Acronym,
+                Configuration.GenAssemblyVersion,
+                false,
+                serviceInstanceId);
+
             // Configure Metrics
             ConfigureMetrics(services, telemetryConfig, serviceName);
 
@@ -30,14 +53,14 @@ namespace Administration.AuxClass
             ConfigureTracing(services, telemetryConfig, serviceName);
         }
 
-        private static void ConfigureLogging(ILoggingBuilder loggingBuilder, TelemetryConfiguration telemetryConfig, string serviceName)
+        private static void ConfigureLogging(ILoggingBuilder loggingBuilder, TelemetryConfiguration telemetryConfig, ResourceBuilder serviceName)
         {
             if (telemetryConfig != null && telemetryConfig.LoggerType == TelemetryConfiguration.LoggerConfigType.OTLP)
             {
                 loggingBuilder.AddOpenTelemetry(options =>
                 {
                     options.IncludeScopes = true;
-                    options.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName, Configuration.GenioVersion));
+                    options.SetResourceBuilder(serviceName);
                     options.AddOtlpExporter(otlpOptions => otlpOptions.Endpoint = new Uri(telemetryConfig.CollectorAddress));
                 });
             }
@@ -48,7 +71,7 @@ namespace Administration.AuxClass
             }
         }
 
-        private static void ConfigureMetrics(IServiceCollection services, TelemetryConfiguration telemetryConfig, string serviceName)
+        private static void ConfigureMetrics(IServiceCollection services, TelemetryConfiguration telemetryConfig, ResourceBuilder serviceName)
         {
             if (telemetryConfig == null)
             {
@@ -60,7 +83,7 @@ namespace Administration.AuxClass
 
             services.AddOpenTelemetry().WithMetrics(options =>
             {
-                options.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName, Configuration.GenioVersion));
+                options.SetResourceBuilder(serviceName);
                 options.AddMeter(mainMeter.Name);
                 options.AddOtlpExporter(otlpOptions => otlpOptions.Endpoint = new Uri(telemetryConfig.CollectorAddress));
 
@@ -76,13 +99,13 @@ namespace Administration.AuxClass
             GenioDI.MetricsOtlp = new MetricsOtlpImpl(mainMeter);
         }
 
-        private static void ConfigureTracing(IServiceCollection services, TelemetryConfiguration telemetryConfig, string serviceName)
+        private static void ConfigureTracing(IServiceCollection services, TelemetryConfiguration telemetryConfig, ResourceBuilder serviceName)
         {
             if (telemetryConfig == null || !telemetryConfig.EnableTracing) return;
 
             services.AddOpenTelemetry().WithTracing(builder =>
             {
-                builder.SetResourceBuilder(ResourceBuilder.CreateDefault().AddService(serviceName, Configuration.GenioVersion));
+                builder.SetResourceBuilder(serviceName);
                 builder.AddAspNetCoreInstrumentation(options =>
                 {
                     options.EnrichWithHttpResponse = (activity, httpResponse) =>

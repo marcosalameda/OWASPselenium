@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'VENDAW01',
 			area: 'SALE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_VENDAW01',
-				updateFilesTickets: 'UpdateFilesTicketsVENDAW01'
+				recalculateFormulas: 'RecalculateFormulas_Vendaw01',
+				updateFilesTickets: 'UpdateFilesTicketsVendaw01',
+				setFile: 'SetFileVendaw01'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODVENDA',
 			description: '',
 		}).cloneFrom(values?.ValCodvenda))
-		watch(() => this.ValCodvenda.value, (newValue, oldValue) => this.onUpdate('sale.codvenda', this.ValCodvenda, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodvenda.value, (newValue, oldValue) => this.onUpdate('sale.codvenda', this.ValCodvenda, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodorgan = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ORGAN',
 			description: '',
 		}).cloneFrom(values?.ValCodorgan))
-		watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('sale.codorgan', this.ValCodorgan, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('sale.codorgan', this.ValCodorgan, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableOrganOrganiza = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.ORGANIZATION64123),
 		}).cloneFrom(values?.TableOrganOrganiza))
-		watch(() => this.TableOrganOrganiza.value, (newValue, oldValue) => this.onUpdate('organ.organiza', this.TableOrganOrganiza, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableOrganOrganiza.value, (newValue, oldValue) => this.onUpdate('organ.organiza', this.TableOrganOrganiza, newValue, oldValue)))
 
 		this.ValIdentifi = reactive(new modelFieldType.String({
 			id: 'ValIdentifi',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_OF_BU58085),
 		}).cloneFrom(values?.ValIdentifi))
-		watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('sale.identifi', this.ValIdentifi, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('sale.identifi', this.ValIdentifi, newValue, oldValue)))
 
 		this.ValPotcompr = reactive(new modelFieldType.String({
 			id: 'ValPotcompr',
@@ -93,7 +94,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.POTENTIAL_BUYERS56564),
 		}).cloneFrom(values?.ValPotcompr))
-		watch(() => this.ValPotcompr.value, (newValue, oldValue) => this.onUpdate('sale.potcompr', this.ValPotcompr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPotcompr.value, (newValue, oldValue) => this.onUpdate('sale.potcompr', this.ValPotcompr, newValue, oldValue)))
 
 		this.ValProspecc = reactive(new modelFieldType.Boolean({
 			id: 'ValProspecc',
@@ -102,7 +103,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PROSPECC',
 			description: computed(() => this.Resources.PROSPECTING_CARRIED_08979),
 		}).cloneFrom(values?.ValProspecc))
-		watch(() => this.ValProspecc.value, (newValue, oldValue) => this.onUpdate('sale.prospecc', this.ValProspecc, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValProspecc.value, (newValue, oldValue) => this.onUpdate('sale.prospecc', this.ValProspecc, newValue, oldValue)))
 	}
 
 	/**

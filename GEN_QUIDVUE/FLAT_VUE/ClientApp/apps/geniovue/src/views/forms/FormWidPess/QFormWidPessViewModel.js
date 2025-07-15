@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'WID_PESS',
 			area: 'Home',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_WID_PESS',
-				updateFilesTickets: 'UpdateFilesTicketsWID_PESS'
+				recalculateFormulas: 'RecalculateFormulas_Wid_pess',
+				updateFilesTickets: 'UpdateFilesTicketsWid_pess',
+				setFile: 'SetFileWid_pess'
 			}
 		})
 

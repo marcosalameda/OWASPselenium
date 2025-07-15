@@ -4,14 +4,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import mkcert from 'vite-plugin-mkcert'
 
-import projectPack from './svgstore.config'
-
-function svgbundlePlugin() {
-	return {
-		name: 'svgbundle-plugin',
-		buildStart: projectPack
-	}
-}
+import { viteSvgSpritePlugin } from './plugins/svgbundle'
 
 export default defineConfig(({ mode }) => {
 	const isDev = mode === 'development'
@@ -105,9 +98,8 @@ export default defineConfig(({ mode }) => {
 		},
 		plugins: [
 			vue(),
-			svgbundlePlugin(),
 			visualizer(/*{ open: true, filename: 'bundle-analysis.html' }*/),
-			...(isDev ? [mkcert()] : [])
+			...(isDev ? [mkcert()] : [viteSvgSpritePlugin()])
 		],
 		css: {
 			preprocessorOptions: {

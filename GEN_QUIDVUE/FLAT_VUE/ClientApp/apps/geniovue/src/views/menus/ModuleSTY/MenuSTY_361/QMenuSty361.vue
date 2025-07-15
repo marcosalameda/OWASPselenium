@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -206,7 +207,7 @@
 								label: computed(() => this.Resources.ADDRESS_TYPE64627),
 								dataLength: 8,
 								scrollData: 8,
-								array: computed(() => qProjArrays.QArrayAddresst.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayAddresst(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAddresst.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -218,7 +219,7 @@
 								label: computed(() => this.Resources.PREFIX02493),
 								dataLength: 3,
 								scrollData: 3,
-								array: computed(() => qProjArrays.QArrayPhonepre.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayPhonepre(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayPhonepre.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -294,7 +295,7 @@
 								label: computed(() => this.Resources.ENTITY62049),
 								dataLength: 2,
 								scrollData: 2,
-								array: computed(() => qProjArrays.QArrayBankcomp.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayBankcomp(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayBankcomp.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -466,6 +467,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS STY_MENU_361]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT STY_MENU_361]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

@@ -18,12 +18,15 @@ export default class ViewModelBase
 		// The Vue context properties.
 		Object.defineProperty(this, 'vueContext', {
 			value: (vueContext || {}),
-			enumerable: false
+			enumerable: false,
+			writable: true,
+			configurable: true
 		})
 
 		Object.defineProperty(this, 'Resources', {
 			get() { return this.vueContext.Resources },
-			enumerable: false
+			enumerable: false,
+			configurable: true
 		})
 
 		Object.defineProperty(this, 'navigationId', {
@@ -41,7 +44,8 @@ export default class ViewModelBase
 		// Internal events for the formulas.
 		Object.defineProperty(this, 'internalEvents', {
 			value: markRaw(new QEventEmitter()),
-			enumerable: false
+			enumerable: false,
+			configurable: true
 		})
 
 		// External callback for invocation of external methods such as onUpdate of fields.
@@ -50,7 +54,9 @@ export default class ViewModelBase
 				onUpdate: options?.callbacks?.onUpdate,
 				setFormKey: options?.callbacks?.setFormKey
 			}),
-			enumerable: false
+			enumerable: false,
+			writable: true,
+			configurable: true
 		})
 
 		// The extra properties of the form or menu.
@@ -69,6 +75,12 @@ export default class ViewModelBase
 
 		// List of server warnings associated to the model.
 		Object.defineProperty(this, 'serverWarningMessages', {
+			value: [],
+			enumerable: false,
+			writable: true
+		})
+
+		Object.defineProperty(this, 'stopWatchers', {
 			value: [],
 			enumerable: false,
 			writable: true
@@ -342,7 +354,7 @@ export default class ViewModelBase
 	 */
 	unbindEvents()
 	{
-		this.internalEvents.removeAllListeners()
+		this.internalEvents?.removeAllListeners()
 	}
 
 	/**
@@ -351,5 +363,23 @@ export default class ViewModelBase
 	destroy()
 	{
 		this.unbindEvents()
+		this.stopWatchers.forEach(stopWatcher => {
+			stopWatcher()
+		})
+		this.stopWatchers.splice(0)
+
+		this.externalCallbacks = null
+		delete this.externalCallbacks
+
+		for (let modelField in this)
+		{
+			if (this[modelField] instanceof Base)
+				this[modelField].destroy()
+		}
+
+		delete this.Resources
+		delete this.navigationId
+		delete this.internalEvents
+		this.vueContext = null
 	}
 }

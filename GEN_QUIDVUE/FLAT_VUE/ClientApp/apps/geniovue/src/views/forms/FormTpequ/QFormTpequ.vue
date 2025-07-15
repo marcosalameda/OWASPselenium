@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -211,7 +211,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.TPEQU___PSEUDNOVOGR05.isVisible || controls.TPEQU___PSEUDUNICO___.isVisible"
+					v-show="controls.TPEQU___PSEUDNOVOGR05.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.TPEQU___PSEUDNOVOGR05.isVisible"
@@ -219,12 +219,13 @@
 						<q-accordion
 							v-if="controls.TPEQU___PSEUDNOVOGR05.isVisible"
 							id="TPEQU___PSEUDNOVOGR05"
+							v-model="controls.TPEQU___PSEUDNOVOGR05.openChild"
 							v-bind="controls.TPEQU___PSEUDNOVOGR05">
 							<!-- Start TPEQU___PSEUDNOVOGR05 -->
-							<q-group-collapsible
-								id="TPEQU___PSEUDNOVOGR04"
-								v-bind="controls.TPEQU___PSEUDNOVOGR04"
-								v-on="controls.TPEQU___PSEUDNOVOGR04.handlers">
+							<q-accordion-item
+								id="TPEQU___PSEUDNOVOGR04-container"
+								value="TPEQU___PSEUDNOVOGR04"
+								:title="controls.TPEQU___PSEUDNOVOGR04.label">
 								<!-- Start TPEQU___PSEUDNOVOGR04 -->
 								<q-row-container v-show="controls.TPEQU___TPEQUKIT_____.isVisible">
 									<q-control-wrapper
@@ -256,15 +257,16 @@
 											v-on="controls.TPEQU___PSEUDCOMPONEN.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.TPEQU___PSEUDCOMPONEN"
+											:filter-operators="controls.TPEQU___PSEUDCOMPONEN.filterOperators"
 											v-on="controls.TPEQU___PSEUDCOMPONEN.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR04 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="TPEQU___PSEUDNOVOGR03"
-								v-bind="controls.TPEQU___PSEUDNOVOGR03"
-								v-on="controls.TPEQU___PSEUDNOVOGR03.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="TPEQU___PSEUDNOVOGR03-container"
+								value="TPEQU___PSEUDNOVOGR03"
+								:title="controls.TPEQU___PSEUDNOVOGR03.label">
 								<!-- Start TPEQU___PSEUDNOVOGR03 -->
 								<q-row-container v-show="controls.TPEQU___TPEQUPRECOMAX.isVisible || controls.TPEQU___TPEQUPRECOULT.isVisible || controls.TPEQU___TPEQUSINCE___.isVisible || controls.TPEQU___PSEUDEVOLUCAO.isVisible">
 									<q-control-wrapper
@@ -326,15 +328,16 @@
 											v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.TPEQU___PSEUDEVOLUCAO"
+											:filter-operators="controls.TPEQU___PSEUDEVOLUCAO.filterOperators"
 											v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR03 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="TPEQU___PSEUDNOVOGR02"
-								v-bind="controls.TPEQU___PSEUDNOVOGR02"
-								v-on="controls.TPEQU___PSEUDNOVOGR02.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="TPEQU___PSEUDNOVOGR02-container"
+								value="TPEQU___PSEUDNOVOGR02"
+								:title="controls.TPEQU___PSEUDNOVOGR02.label">
 								<!-- Start TPEQU___PSEUDNOVOGR02 -->
 								<q-row-container v-show="controls.TPEQU___TPEQUBACKCOLO.isVisible || controls.TPEQU___TPEQUCORLETRA.isVisible">
 									<q-control-wrapper
@@ -371,11 +374,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR02 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="TPEQU___PSEUDNOVOGR06"
-								v-bind="controls.TPEQU___PSEUDNOVOGR06"
-								v-on="controls.TPEQU___PSEUDNOVOGR06.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="TPEQU___PSEUDNOVOGR06-container"
+								value="TPEQU___PSEUDNOVOGR06"
+								:title="controls.TPEQU___PSEUDNOVOGR06.label">
 								<!-- Start TPEQU___PSEUDNOVOGR06 -->
 								<q-row-container v-show="controls.TPEQU___PSEUDINSTALAC.isVisible || controls.TPEQU___PSEUDINSTALA1.isVisible">
 									<q-control-wrapper
@@ -387,6 +390,7 @@
 											v-on="controls.TPEQU___PSEUDINSTALAC.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.TPEQU___PSEUDINSTALAC"
+											:filter-operators="controls.TPEQU___PSEUDINSTALAC.filterOperators"
 											v-on="controls.TPEQU___PSEUDINSTALAC.handlers" />
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -398,14 +402,17 @@
 											v-on="controls.TPEQU___PSEUDINSTALA1.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.TPEQU___PSEUDINSTALA1"
+											:filter-operators="controls.TPEQU___PSEUDINSTALA1.filterOperators"
 											v-on="controls.TPEQU___PSEUDINSTALA1.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR06 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End TPEQU___PSEUDNOVOGR05 -->
 						</q-accordion>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.TPEQU___PSEUDUNICO___.isVisible">
 					<q-control-wrapper
 						v-show="controls.TPEQU___PSEUDUNICO___.isVisible"
 						class="control-join-group">
@@ -894,6 +901,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUKIT_____', 'TPEQU___PSEUDCOMPONEN'],
@@ -1001,7 +1009,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR03',
 						isFormulaBlocked: true,
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1240,6 +1248,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUPRECOMAX', 'TPEQU___TPEQUPRECOULT', 'TPEQU___TPEQUSINCE___', 'TPEQU___PSEUDEVOLUCAO'],
@@ -1444,6 +1453,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUBACKCOLO', 'TPEQU___TPEQUCORLETRA'],
@@ -1506,6 +1516,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___PSEUDINSTALAC', 'TPEQU___PSEUDINSTALA1'],
@@ -2112,6 +2123,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS TPEQU]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT TPEQU]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

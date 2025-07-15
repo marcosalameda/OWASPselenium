@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TPEQ1',
 			area: 'TPEQ1',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_TPEQ1',
-				updateFilesTickets: 'UpdateFilesTicketsTPEQ1'
+				recalculateFormulas: 'RecalculateFormulas_Tpeq1',
+				updateFilesTickets: 'UpdateFilesTicketsTpeq1',
+				setFile: 'SetFileTpeq1'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTPEQU',
 			description: '',
 		}).cloneFrom(values?.ValCodtpequ))
-		watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('tpeq1.codtpequ', this.ValCodtpequ, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('tpeq1.codtpequ', this.ValCodtpequ, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodfamil = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'FAMI1',
 			description: '',
 		}).cloneFrom(values?.ValCodfamil))
-		watch(() => this.ValCodfamil.value, (newValue, oldValue) => this.onUpdate('tpeq1.codfamil', this.ValCodfamil, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodfamil.value, (newValue, oldValue) => this.onUpdate('tpeq1.codfamil', this.ValCodfamil, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableFami1Family = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.EQUIPMENT_FAMILY41883),
 		}).cloneFrom(values?.TableFami1Family))
-		watch(() => this.TableFami1Family.value, (newValue, oldValue) => this.onUpdate('fami1.family', this.TableFami1Family, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableFami1Family.value, (newValue, oldValue) => this.onUpdate('fami1.family', this.TableFami1Family, newValue, oldValue)))
 
 		this.ValTpequcod = reactive(new modelFieldType.String({
 			id: 'ValTpequcod',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.ValTpequcod))
-		watch(() => this.ValTpequcod.value, (newValue, oldValue) => this.onUpdate('tpeq1.tpequcod', this.ValTpequcod, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTpequcod.value, (newValue, oldValue) => this.onUpdate('tpeq1.tpequcod', this.ValTpequcod, newValue, oldValue)))
 
 		this.ValNivel = reactive(new modelFieldType.Number({
 			id: 'ValNivel',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.LEVEL06184),
 		}).cloneFrom(values?.ValNivel))
-		watch(() => this.ValNivel.value, (newValue, oldValue) => this.onUpdate('tpeq1.nivel', this.ValNivel, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNivel.value, (newValue, oldValue) => this.onUpdate('tpeq1.nivel', this.ValNivel, newValue, oldValue)))
 
 		this.ValTipoequi = reactive(new modelFieldType.String({
 			id: 'ValTipoequi',
@@ -104,7 +105,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 		}).cloneFrom(values?.ValTipoequi))
-		watch(() => this.ValTipoequi.value, (newValue, oldValue) => this.onUpdate('tpeq1.tipoequi', this.ValTipoequi, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTipoequi.value, (newValue, oldValue) => this.onUpdate('tpeq1.tipoequi', this.ValTipoequi, newValue, oldValue)))
 
 		this.ValTpequpai = reactive(new modelFieldType.String({
 			id: 'ValTpequpai',
@@ -114,7 +115,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.DEPENDENT_ON28321),
 		}).cloneFrom(values?.ValTpequpai))
-		watch(() => this.ValTpequpai.value, (newValue, oldValue) => this.onUpdate('tpeq1.tpequpai', this.ValTpequpai, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTpequpai.value, (newValue, oldValue) => this.onUpdate('tpeq1.tpequpai', this.ValTpequpai, newValue, oldValue)))
 
 		this.ValBackcolo = reactive(new modelFieldType.String({
 			id: 'ValBackcolo',
@@ -124,7 +125,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.BACKGROUND_COLOR47883),
 		}).cloneFrom(values?.ValBackcolo))
-		watch(() => this.ValBackcolo.value, (newValue, oldValue) => this.onUpdate('tpeq1.backcolo', this.ValBackcolo, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValBackcolo.value, (newValue, oldValue) => this.onUpdate('tpeq1.backcolo', this.ValBackcolo, newValue, oldValue)))
 
 		this.ValCorletra = reactive(new modelFieldType.String({
 			id: 'ValCorletra',
@@ -134,7 +135,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.LETTER_COLOR15736),
 		}).cloneFrom(values?.ValCorletra))
-		watch(() => this.ValCorletra.value, (newValue, oldValue) => this.onUpdate('tpeq1.corletra', this.ValCorletra, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCorletra.value, (newValue, oldValue) => this.onUpdate('tpeq1.corletra', this.ValCorletra, newValue, oldValue)))
 
 		this.ValPrecomax = reactive(new modelFieldType.Number({
 			id: 'ValPrecomax',
@@ -145,7 +146,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.MAXIMUM_PRICE55489),
 		}).cloneFrom(values?.ValPrecomax))
-		watch(() => this.ValPrecomax.value, (newValue, oldValue) => this.onUpdate('tpeq1.precomax', this.ValPrecomax, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPrecomax.value, (newValue, oldValue) => this.onUpdate('tpeq1.precomax', this.ValPrecomax, newValue, oldValue)))
 
 		this.ValPrecoult = reactive(new modelFieldType.Number({
 			id: 'ValPrecoult',
@@ -156,7 +157,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.LAST_PRICE25852),
 		}).cloneFrom(values?.ValPrecoult))
-		watch(() => this.ValPrecoult.value, (newValue, oldValue) => this.onUpdate('tpeq1.precoult', this.ValPrecoult, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPrecoult.value, (newValue, oldValue) => this.onUpdate('tpeq1.precoult', this.ValPrecoult, newValue, oldValue)))
 
 		this.ValSince = reactive(new modelFieldType.DateTime({
 			id: 'ValSince',
@@ -165,7 +166,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'SINCE',
 			description: computed(() => this.Resources.IN34902),
 		}).cloneFrom(values?.ValSince))
-		watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('tpeq1.since', this.ValSince, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('tpeq1.since', this.ValSince, newValue, oldValue)))
 
 		this.ValQtdequip = reactive(new modelFieldType.Number({
 			id: 'ValQtdequip',
@@ -176,7 +177,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.AMOUNT46885),
 		}).cloneFrom(values?.ValQtdequip))
-		watch(() => this.ValQtdequip.value, (newValue, oldValue) => this.onUpdate('tpeq1.qtdequip', this.ValQtdequip, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValQtdequip.value, (newValue, oldValue) => this.onUpdate('tpeq1.qtdequip', this.ValQtdequip, newValue, oldValue)))
 
 		this.ValKit = reactive(new modelFieldType.Boolean({
 			id: 'ValKit',
@@ -185,7 +186,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'KIT',
 			description: computed(() => this.Resources.KIT27179),
 		}).cloneFrom(values?.ValKit))
-		watch(() => this.ValKit.value, (newValue, oldValue) => this.onUpdate('tpeq1.kit', this.ValKit, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValKit.value, (newValue, oldValue) => this.onUpdate('tpeq1.kit', this.ValKit, newValue, oldValue)))
 	}
 
 	/**

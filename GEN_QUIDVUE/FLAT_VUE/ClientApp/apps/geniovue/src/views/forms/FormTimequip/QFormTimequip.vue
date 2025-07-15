@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -103,6 +103,7 @@
 							v-on="controls.TIMEQUIPPSEUDREPARACO.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.TIMEQUIPPSEUDREPARACO"
+							:filter-operators="controls.TIMEQUIPPSEUDREPARACO.filterOperators"
 							v-on="controls.TIMEQUIPPSEUDREPARACO.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -509,7 +510,7 @@
 								label: computed(() => this.Resources.TECHNICAL_AREA50773),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAreatecn.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -671,7 +672,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-REPAR', 'changed-PESSO', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
+						globalEvents: ['changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
 						uuid: 'Timequip_ValReparaco',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -692,6 +693,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'EQUIP',
 						action: 'Timequip_ValPrimary',
+						tipoTimeline: '',
 						controlLimits: [
 						],
 					}, this),
@@ -704,6 +706,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'EQUIP',
 						action: 'Timequip_ValSecundar',
+						tipoTimeline: '',
 						controlLimits: [
 						],
 					}, this),
@@ -807,6 +810,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS TIMEQUIP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT TIMEQUIP]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

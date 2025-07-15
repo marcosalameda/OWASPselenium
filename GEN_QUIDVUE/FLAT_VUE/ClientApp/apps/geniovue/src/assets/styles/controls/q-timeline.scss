@@ -331,12 +331,14 @@
 			content: "";
 			width: 10px;
 			height: 10px;
-			background: white;
+			background: $primary;
 			position: absolute;
 			border-radius: 100%;
+			outline: 8px solid $primary;
 			top: 2px;
 			left: 2px;
 			display: none;
+			box-shadow: 0 0 0 0.62rem $input-focus-color;
 		}
 
 		.popupSpan {
@@ -371,6 +373,11 @@
 	&__scale {
 		margin-right: 1rem;
 	}
+}
+
+.c-simple_accordion__panel-body{
+
+    margin-left: 60px;
 }
 
 .nav-link .n-sidebar__nav-link .e-badge {

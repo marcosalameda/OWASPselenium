@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -152,7 +153,7 @@
 								label: computed(() => this.Resources.ADDRESS_USE16014),
 								dataLength: 7,
 								scrollData: 7,
-								array: computed(() => qProjArrays.QArrayAddressu.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayAddressu(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAddressu.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -163,7 +164,7 @@
 								label: computed(() => this.Resources.ADDRESS_TYPE12455),
 								dataLength: 8,
 								scrollData: 8,
-								array: computed(() => qProjArrays.QArrayAddresst.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayAddresst(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAddresst.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -405,6 +406,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_721]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_721]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

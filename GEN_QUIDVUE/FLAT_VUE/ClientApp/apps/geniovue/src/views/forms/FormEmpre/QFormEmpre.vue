@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -226,7 +226,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.EMPRE___PSEUDNOVOGR03.isVisible || controls.EMPRE___CMPNYQTDPESSO.isVisible"
+					v-show="controls.EMPRE___PSEUDNOVOGR03.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.EMPRE___PSEUDNOVOGR03.isVisible"
@@ -261,6 +261,8 @@
 							<!-- End EMPRE___PSEUDNOVOGR03 -->
 						</q-group-box-container>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.EMPRE___CMPNYQTDPESSO.isVisible">
 					<q-control-wrapper
 						v-show="controls.EMPRE___CMPNYQTDPESSO.isVisible"
 						class="control-join-group">
@@ -836,6 +838,10 @@
 								mappingVariables: readonly({
 								}),
 								styleVariables: {
+									allowLegend: {
+										rawValue: false,
+										isMapped: false
+									},
 									zoomLevel: {
 										rawValue: -1,
 										isMapped: false
@@ -1066,6 +1072,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS EMPRE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT EMPRE]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

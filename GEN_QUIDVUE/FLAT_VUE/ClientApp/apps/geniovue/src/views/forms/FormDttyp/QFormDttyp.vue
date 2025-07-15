@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -100,12 +100,13 @@
 						<q-accordion
 							v-if="controls.DTTYP___PSEUDNOVOGR06.isVisible"
 							id="DTTYP___PSEUDNOVOGR06"
+							v-model="controls.DTTYP___PSEUDNOVOGR06.openChild"
 							v-bind="controls.DTTYP___PSEUDNOVOGR06">
 							<!-- Start DTTYP___PSEUDNOVOGR06 -->
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR01"
-								v-bind="controls.DTTYP___PSEUDNOVOGR01"
-								v-on="controls.DTTYP___PSEUDNOVOGR01.handlers">
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR01-container"
+								value="DTTYP___PSEUDNOVOGR01"
+								:title="controls.DTTYP___PSEUDNOVOGR01.label">
 								<!-- Start DTTYP___PSEUDNOVOGR01 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPSTRING__.isVisible">
 									<q-control-wrapper
@@ -199,11 +200,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR01 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR02"
-								v-bind="controls.DTTYP___PSEUDNOVOGR02"
-								v-on="controls.DTTYP___PSEUDNOVOGR02.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR02-container"
+								value="DTTYP___PSEUDNOVOGR02"
+								:title="controls.DTTYP___PSEUDNOVOGR02.label">
 								<!-- Start DTTYP___PSEUDNOVOGR02 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPBOOLEAN_.isVisible">
 									<q-control-wrapper
@@ -246,11 +247,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR02 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR03"
-								v-bind="controls.DTTYP___PSEUDNOVOGR03"
-								v-on="controls.DTTYP___PSEUDNOVOGR03.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR03-container"
+								value="DTTYP___PSEUDNOVOGR03"
+								:title="controls.DTTYP___PSEUDNOVOGR03.label">
 								<!-- Start DTTYP___PSEUDNOVOGR03 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPSMALLINT.isVisible">
 									<q-control-wrapper
@@ -415,11 +416,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR03 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR04"
-								v-bind="controls.DTTYP___PSEUDNOVOGR04"
-								v-on="controls.DTTYP___PSEUDNOVOGR04.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR04-container"
+								value="DTTYP___PSEUDNOVOGR04"
+								:title="controls.DTTYP___PSEUDNOVOGR04.label">
 								<!-- Start DTTYP___PSEUDNOVOGR04 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPDATE____.isVisible">
 									<q-control-wrapper
@@ -502,11 +503,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR04 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR05"
-								v-bind="controls.DTTYP___PSEUDNOVOGR05"
-								v-on="controls.DTTYP___PSEUDNOVOGR05.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR05-container"
+								value="DTTYP___PSEUDNOVOGR05"
+								:title="controls.DTTYP___PSEUDNOVOGR05.label">
 								<!-- Start DTTYP___PSEUDNOVOGR05 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPIMAGE___.isVisible">
 									<q-control-wrapper
@@ -527,7 +528,7 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR05 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End DTTYP___PSEUDNOVOGR06 -->
 						</q-accordion>
 					</q-control-wrapper>
@@ -893,6 +894,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPSTRING__', 'DTTYP___DTTYPUPPERCAS', 'DTTYP___DTTYPUUID____', 'DTTYP___DTTYPMULTILIN', 'DTTYP___DTTYPMULTILI3'],
@@ -980,6 +982,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPBOOLEAN_', 'DTTYP___DTTYPBOOLEAN2'],
@@ -1022,6 +1025,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPSMALLINT', 'DTTYP___DTTYPINTEGER_', 'DTTYP___DTTYPBIGINT__', 'DTTYP___DTTYPREAL____', 'DTTYP___DTTYPFLOAT___', 'DTTYP___DTTYPDECIMAL_', 'DTTYP___DTTYPDECIMAL9', 'DTTYP___DTTYPMONEY___', 'DTTYP___DTTYPMONEY9__'],
@@ -1171,6 +1175,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPDATE____', 'DTTYP___DTTYPDATETIME', 'DTTYP___DTTYPDTSESOND', 'DTTYP___DTTYPTIME____'],
@@ -1187,7 +1192,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'DTTYP___PSEUDNOVOGR04',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1201,7 +1206,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'DTTYP___PSEUDNOVOGR04',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1215,7 +1220,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'DTTYP___PSEUDNOVOGR04',
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -1229,7 +1234,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'DTTYP___PSEUDNOVOGR04',
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1241,6 +1246,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPIMAGE___'],
@@ -1378,6 +1384,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS DTTYP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT DTTYP]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

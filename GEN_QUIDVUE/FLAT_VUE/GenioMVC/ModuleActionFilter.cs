@@ -24,9 +24,10 @@ public class ModuleActionFilter : IActionFilter
 		("Change2FARedirect", "Home")
 	};
 
-	UserContext m_userContext;
-	HttpContext m_httpContext;
-	IDisposable m_loggerScope;
+	private readonly UserContext m_userContext;
+	private readonly HttpContext m_httpContext;
+	private IDisposable m_loggerScope;
+	private IDisposable m_metricScope;
 
 	public ModuleActionFilter(UserContextService userContext, IHttpContextAccessor httpContextAccessor)
 	{
@@ -52,11 +53,16 @@ public class ModuleActionFilter : IActionFilter
 				vmb.Init(m_userContext);
 		}
 
-		//Increment request count metric
-		GenioDI.MetricsOtlp.IncrementCounter("request_counter", 1, new List<KeyValuePair<string, object>>() {
-				new("Controller", context.RouteData.Values["controller"]),
-				new("Action", context.RouteData.Values["action"])
-		});
+		//Measure all the controller load times
+		if(context.ActionDescriptor is Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor action)
+		{
+			m_metricScope = GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
+					new("Controller", action.ControllerName),
+					new("Action", action.ActionName),
+					new("Module", m_userContext.User?.CurrentModule),
+					new("Year", m_userContext.User?.Year)
+				]), "ms", "Time to load the page.");
+		}
 	}
 
 	/// <summary>
@@ -86,7 +92,8 @@ public class ModuleActionFilter : IActionFilter
 		}
 
 		// Dispose of the OpenTelemetry logger scope context
-		if (m_loggerScope != null) m_loggerScope.Dispose();
+		m_loggerScope?.Dispose();
+		m_metricScope?.Dispose();
 	}
 
 	private IDisposable setLoggerContext(CSGenio.framework.User user)

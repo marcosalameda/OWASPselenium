@@ -31,7 +31,7 @@
       {
         "datasource": {
           "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
+          "uid": "quidgest-loki-v2-50243"
         },
         "fieldConfig": {
           "defaults": {
@@ -45,7 +45,7 @@
               "axisLabel": "",
               "axisPlacement": "auto",
               "fillOpacity": 100,
-              "gradientMode": "none",
+              "gradientMode": "opacity",
               "hideFrom": {
                 "legend": false,
                 "tooltip": false,
@@ -64,8 +64,7 @@
               "mode": "absolute",
               "steps": [
                 {
-                  "color": "green",
-                  "value": null
+                  "color": "green"
                 }
               ]
             }
@@ -150,7 +149,7 @@
           ]
         },
         "gridPos": {
-          "h": 8,
+          "h": 6,
           "w": 24,
           "x": 0,
           "y": 0
@@ -162,27 +161,32 @@
           "fullHighlight": false,
           "groupWidth": 0.7,
           "legend": {
-            "calcs": [],
+            "calcs": [
+              "sum"
+            ],
             "displayMode": "list",
             "placement": "bottom",
             "showLegend": true
           },
           "orientation": "auto",
-          "showValue": "auto",
-          "stacking": "none",
+          "showValue": "never",
+          "stacking": "normal",
+          "text": {},
           "tooltip": {
+            "hideZeros": false,
             "mode": "single",
             "sort": "none"
           },
           "xField": "Time",
           "xTickLabelRotation": 0,
-          "xTickLabelSpacing": 100
+          "xTickLabelSpacing": 200
         },
-        "pluginVersion": "11.3.1",
+        "pluginVersion": "12.0.0",
         "targets": [
           {
+            "direction": "backward",
             "editorMode": "code",
-            "expr": "sum(\r\n  count_over_time(\r\n    {service_name=\"$service\", service_instance_id=~\"$instance\"}\r\n    | json\r\n    | detected_level=~\"error|info|warning|debug|critical\" [$__interval]\r\n  )\r\n) by (detected_level)\r\n",
+            "expr": "sum(\r\n  count_over_time(\r\n    {service_namespace=\"$solution\", service_name=\"$service\", service_instance_id=~\"$instance\"}\r\n    | detected_level=~\"error|info|warning|debug|critical\" [$__auto]\r\n  )\r\n) by (detected_level)\r\n",
             "queryType": "range",
             "refId": "A"
           }
@@ -193,262 +197,295 @@
       {
         "datasource": {
           "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
+          "uid": "quidgest-loki-v2-50243"
         },
-        "description": "Total  Count of log lines in the specified time range",
+        "description": "Top 10 code sites that emitted an error",
         "fieldConfig": {
           "defaults": {
             "color": {
               "mode": "thresholds"
             },
-            "mappings": [
-              {
-                "options": {
-                  "match": "null",
-                  "result": {
-                    "color": "rgb(31, 255, 7)",
-                    "text": "0"
-                  }
-                },
-                "type": "special"
-              }
-            ],
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto"
+              },
+              "inspect": false
+            },
+            "mappings": [],
             "thresholds": {
-              "mode": "absolute",
+              "mode": "percentage",
               "steps": [
                 {
-                  "color": "rgb(31, 255, 7)",
-                  "value": null
+                  "color": "green"
                 },
                 {
-                  "color": "rgb(31, 255, 7)",
-                  "value": 10
+                  "color": "#EAB839",
+                  "value": 50
                 },
                 {
-                  "color": "rgb(31, 255, 7)",
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Time"
+              },
+              "properties": [
+                {
+                  "id": "custom.hidden",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Value #A"
+              },
+              "properties": [
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                },
+                {
+                  "id": "displayName",
+                  "value": "Count"
+                },
+                {
+                  "id": "custom.width",
                   "value": 50
                 }
               ]
             },
-            "unit": "short"
-          },
-          "overrides": []
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "site"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Site Id"
+                }
+              ]
+            }
+          ]
         },
         "gridPos": {
-          "h": 5,
-          "w": 9,
+          "h": 11,
+          "w": 12,
           "x": 0,
-          "y": 8
+          "y": 6
         },
-        "id": 11,
-        "maxDataPoints": 100,
+        "id": 22,
         "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "horizontal",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "fields": "",
+            "reducer": [
               "sum"
             ],
-            "fields": "",
-            "values": false
+            "show": false
           },
-          "showPercentChange": false,
-          "textMode": "auto",
-          "wideLayout": true
+          "showHeader": true
         },
-        "pluginVersion": "11.3.1",
+        "pluginVersion": "12.0.0",
         "targets": [
           {
             "datasource": {
               "type": "loki",
-              "uid": "be4mqv5ty1zi8b"
+              "uid": "quidgest-loki-v2-50243"
             },
+            "direction": "backward",
             "editorMode": "code",
-            "expr": "sum(count_over_time({service_name=\"$service\", service_instance_id=~\"$instance\"} [$__interval]))",
-            "hide": false,
-            "queryType": "range",
+            "expr": "topk(10 , sum by (site) ( count_over_time( {service_namespace=\"$solution\"} | detected_level = \"error\" | pattern `<_> [site] <site> [` [$__auto])))",
+            "legendFormat": "",
+            "queryType": "instant",
             "refId": "A"
           }
         ],
-        "title": "Total  Count of logs",
-        "type": "stat"
-      },
-      {
-        "datasource": {
-          "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
-        },
-        "fieldConfig": {
-          "defaults": {
-            "mappings": [
-              {
-                "options": {
-                  "match": "null",
-                  "result": {
-                    "color": "#299c46",
-                    "text": "0"
-                  }
-                },
-                "type": "special"
-              }
-            ],
-            "max": 100,
-            "min": 0,
-            "noValue": "0",
-            "thresholds": {
-              "mode": "absolute",
-              "steps": [
+        "title": "Top 10 error sites",
+        "transformations": [
+          {
+            "id": "sortBy",
+            "options": {
+              "fields": {},
+              "sort": [
                 {
-                  "color": "#299c46",
-                  "value": null
-                },
-                {
-                  "color": "rgba(237, 129, 40, 0.89)",
-                  "value": 10
-                },
-                {
-                  "color": "#C4162A",
-                  "value": 50
+                  "desc": true,
+                  "field": "Value #A"
                 }
               ]
-            },
-            "unit": "percent"
-          },
-          "overrides": []
-        },
-        "gridPos": {
-          "h": 5,
-          "w": 5,
-          "x": 9,
-          "y": 8
-        },
-        "id": 9,
-        "maxDataPoints": 100,
-        "options": {
-          "minVizHeight": 75,
-          "minVizWidth": 75,
-          "orientation": "auto",
-          "reduceOptions": {
-            "calcs": [
-              "mean"
-            ],
-            "fields": "",
-            "values": false
-          },
-          "showThresholdLabels": false,
-          "showThresholdMarkers": false,
-          "sizing": "auto"
-        },
-        "pluginVersion": "11.3.1",
-        "targets": [
-          {
-            "datasource": {
-              "type": "loki",
-              "uid": "be4mqv5ty1zi8b"
-            },
-            "editorMode": "code",
-            "expr": "(\r\n  sum(\r\n    count_over_time(\r\n      {service_name=\"$service\", service_instance_id=~\"$instance\"}  | json | detected_level=\"error\" [$__interval]\r\n    )\r\n  ) * 100\r\n) / sum(\r\n  count_over_time(\r\n    {service_name=\"$service\", service_instance_id=~\"$instance\"} [$__interval]\r\n  )\r\n)",
-            "hide": false,
-            "queryType": "range",
-            "refId": "A"
+            }
           }
         ],
-        "title": "Error Percentage",
-        "type": "gauge"
+        "type": "table"
       },
       {
         "datasource": {
           "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
+          "uid": "quidgest-loki-v2-50243"
         },
-        "description": "Total Count: of $searchable_pattern in the specified time range",
+        "description": "Request handlers of the application that were running when an error occurred inside them",
         "fieldConfig": {
           "defaults": {
             "color": {
               "mode": "thresholds"
             },
-            "mappings": [
-              {
-                "options": {
-                  "match": "null",
-                  "result": {
-                    "color": "rgb(222, 15, 43)",
-                    "text": "0"
-                  }
-                },
-                "type": "special"
-              }
-            ],
+            "custom": {
+              "align": "auto",
+              "cellOptions": {
+                "type": "auto",
+                "wrapText": false
+              },
+              "filterable": false,
+              "inspect": false,
+              "minWidth": 60
+            },
+            "fieldMinMax": false,
+            "mappings": [],
             "thresholds": {
-              "mode": "absolute",
+              "mode": "percentage",
               "steps": [
                 {
-                  "color": "rgb(222, 15, 43)",
-                  "value": null
+                  "color": "green"
                 },
                 {
-                  "color": "rgb(222, 15, 43)",
-                  "value": 10
-                },
-                {
-                  "color": "rgb(222, 15, 43)",
+                  "color": "#EAB839",
                   "value": 50
+                },
+                {
+                  "color": "red",
+                  "value": 80
+                }
+              ]
+            }
+          },
+          "overrides": [
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "ActionName"
+              },
+              "properties": [
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "auto"
+                  }
+                },
+                {
+                  "id": "custom.minWidth",
+                  "value": 300
+                },
+                {
+                  "id": "displayName",
+                  "value": "Action Id"
                 }
               ]
             },
-            "unit": "short"
-          },
-          "overrides": []
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Time"
+              },
+              "properties": [
+                {
+                  "id": "custom.hidden",
+                  "value": true
+                }
+              ]
+            },
+            {
+              "matcher": {
+                "id": "byName",
+                "options": "Value #A"
+              },
+              "properties": [
+                {
+                  "id": "displayName",
+                  "value": "Count"
+                },
+                {
+                  "id": "custom.width",
+                  "value": 40
+                },
+                {
+                  "id": "custom.cellOptions",
+                  "value": {
+                    "type": "color-text"
+                  }
+                }
+              ]
+            }
+          ]
         },
         "gridPos": {
-          "h": 5,
-          "w": 10,
-          "x": 14,
-          "y": 8
+          "h": 11,
+          "w": 12,
+          "x": 12,
+          "y": 6
         },
-        "id": 6,
-        "maxDataPoints": 100,
+        "id": 21,
         "options": {
-          "colorMode": "value",
-          "graphMode": "area",
-          "justifyMode": "auto",
-          "orientation": "horizontal",
-          "percentChangeColorMode": "standard",
-          "reduceOptions": {
-            "calcs": [
+          "cellHeight": "sm",
+          "footer": {
+            "countRows": false,
+            "enablePagination": false,
+            "fields": "",
+            "reducer": [
               "sum"
             ],
-            "fields": "",
-            "values": false
+            "show": false
           },
-          "showPercentChange": false,
-          "textMode": "auto",
-          "wideLayout": true
+          "showHeader": true,
+          "sortBy": []
         },
-        "pluginVersion": "11.3.1",
+        "pluginVersion": "12.0.0",
         "targets": [
           {
             "datasource": {
               "type": "loki",
-              "uid": "be4mqv5ty1zi8b"
+              "uid": "quidgest-loki-v2-50243"
             },
+            "direction": "backward",
             "editorMode": "code",
-            "expr": "sum(count_over_time({service_name=\"$service\", service_instance_id=~\"$instance\"}  | json | detected_level=\"error\" [$__interval]))",
-            "hide": false,
-            "queryType": "range",
-            "refId": "A"
+            "expr": "topk(10 , sum by (ActionName) ( count_over_time({service_namespace=\"$solution\", service_name=\"$service\", service_instance_id=~\"$instance\"} | detected_level = \"error\" [$__auto])))",
+            "queryType": "instant",
+            "refId": "A",
+            "step": ""
           }
         ],
-        "title": "Total Count of Errors",
-        "type": "stat"
+        "title": "Top 10 error requests",
+        "transformations": [
+          {
+            "id": "sortBy",
+            "options": {
+              "fields": {},
+              "sort": [
+                {
+                  "desc": true,
+                  "field": "Value #A"
+                }
+              ]
+            }
+          }
+        ],
+        "type": "table"
       },
       {
         "datasource": {
           "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
+          "uid": "quidgest-loki-v2-50243"
         },
         "description": "Live logs is a like 'tail -f' in a real time",
         "fieldConfig": {
@@ -459,11 +496,12 @@
           "h": 10,
           "w": 24,
           "x": 0,
-          "y": 13
+          "y": 17
         },
         "id": 2,
         "options": {
           "dedupStrategy": "none",
+          "enableInfiniteScrolling": false,
           "enableLogDetails": true,
           "prettifyLogMessage": false,
           "showCommonLabels": false,
@@ -472,16 +510,18 @@
           "sortOrder": "Descending",
           "wrapLogMessage": false
         },
-        "pluginVersion": "11.3.1",
+        "pluginVersion": "12.0.0",
         "targets": [
           {
             "datasource": {
               "type": "loki",
-              "uid": "be4mqv5ty1zi8b"
+              "uid": "quidgest-loki-v2-50243"
             },
+            "direction": "backward",
             "editorMode": "code",
-            "expr": "{service_name=\"$service\", service_instance_id=~\"$instance\"} \r\n| detected_level=~\"(?i)$log_level\"",
+            "expr": "{service_namespace=\"$solution\", service_name=\"$service\", service_instance_id=~\"$instance\"} \r\n| detected_level=~\"(?i)$log_level\"",
             "hide": false,
+            "maxLines": 100,
             "queryType": "range",
             "refId": "A"
           }
@@ -492,26 +532,54 @@
     ],
     "preload": false,
     "refresh": "1m",
-    "schemaVersion": 40,
-    "tags": [
-      "Loki",
-      "logging"
-    ],
+    "schemaVersion": 41,
+    "tags": [],
     "templating": {
       "list": [
         {
-		"datasource": {
-          "type": "loki",
-          "uid": "be4mqv5ty1zi8b"
-        },
+          "allowCustomValue": false,
+          "current": {
+            "text": "GQT.QUIDVUE",
+            "value": "GQT.QUIDVUE"
+          },
+          "datasource": {
+            "type": "loki",
+            "uid": "quidgest-loki-v2-50243"
+          },
           "definition": "",
+          "description": "A solution is a group of services that supply a business need.",
+          "label": "Solution",
+          "name": "solution",
+          "options": [],
+          "query": {
+            "label": "service_namespace",
+            "refId": "LokiVariableQueryEditor-VariableQuery",
+            "stream": "",
+            "type": 1
+          },
+          "refresh": 1,
+          "regex": "",
+          "sort": 1,
+          "type": "query"
+        },
+        {
+          "current": {
+            "text": "WebAdmin",
+            "value": "WebAdmin"
+          },
+          "datasource": {
+            "type": "loki",
+            "uid": "quidgest-loki-v2-50243"
+          },
+          "definition": "",
+          "description": "A service is a part of the solution that can be installed in one or more servers.",
           "label": "Service",
           "name": "service",
           "options": [],
           "query": {
             "label": "service_name",
             "refId": "LokiVariableQueryEditor-VariableQuery",
-            "stream": "",
+            "stream": "{service_namespace=\"$solution\"}",
             "type": 1
           },
           "refresh": 1,
@@ -523,8 +591,12 @@
             "text": "All",
             "value": "$__all"
           },
+          "datasource": {
+            "type": "loki",
+            "uid": "quidgest-loki-v2-50243"
+          },
           "definition": "",
-          "description": "",
+          "description": "An instance is a specific installation of a service on a server.",
           "includeAll": true,
           "label": "Instance",
           "name": "instance",
@@ -532,7 +604,7 @@
           "query": {
             "label": "service_instance_id",
             "refId": "LokiVariableQueryEditor-VariableQuery",
-            "stream": "",
+            "stream": "{service_namespace=\"$solution\", service_name=\"$service\"}",
             "type": 1
           },
           "refresh": 1,
@@ -576,7 +648,7 @@
       ]
     },
     "time": {
-      "from": "now-1h",
+      "from": "now-12h",
       "to": "now"
     },
     "timepicker": {
@@ -594,8 +666,8 @@
     },
     "timezone": "",
     "title": "Quidgest Logging",
-    "uid": "fRIvzUZMzTEST",
-    "weekStart": ""
+    "uid": "quidgest-logs-v2-32948",
+    "version": 47
   },
   "overwrite": true
 }

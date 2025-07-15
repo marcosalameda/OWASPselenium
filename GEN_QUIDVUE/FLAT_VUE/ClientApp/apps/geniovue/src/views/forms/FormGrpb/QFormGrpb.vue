@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -597,7 +597,7 @@
 								label: computed(() => this.Resources.ENUMERATION__TEXT_15855),
 								dataLength: 1,
 								scrollData: 10,
-								array: computed(() => qProjArrays.QArrayTypet.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayTypet(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTypet.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -609,7 +609,7 @@
 								scrollData: 10,
 								maxDigits: 1,
 								decimalPlaces: 0,
-								array: computed(() => qProjArrays.QArrayTypen.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayTypen(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTypen.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -692,6 +692,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GRPB]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GRPB]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

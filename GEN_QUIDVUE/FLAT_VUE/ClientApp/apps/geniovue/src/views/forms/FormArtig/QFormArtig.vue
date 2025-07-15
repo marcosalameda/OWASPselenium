@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -363,7 +363,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.ARTIG___PSEUDNOVOGR05.isVisible || controls.ARTIG___PSEUDNOVOGR06.isVisible"
+					v-show="controls.ARTIG___PSEUDNOVOGR05.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.ARTIG___PSEUDNOVOGR05.isVisible"
@@ -371,12 +371,13 @@
 						<q-accordion
 							v-if="controls.ARTIG___PSEUDNOVOGR05.isVisible"
 							id="ARTIG___PSEUDNOVOGR05"
+							v-model="controls.ARTIG___PSEUDNOVOGR05.openChild"
 							v-bind="controls.ARTIG___PSEUDNOVOGR05">
 							<!-- Start ARTIG___PSEUDNOVOGR05 -->
-							<q-group-collapsible
-								id="ARTIG___PSEUDNOVOGR03"
-								v-bind="controls.ARTIG___PSEUDNOVOGR03"
-								v-on="controls.ARTIG___PSEUDNOVOGR03.handlers">
+							<q-accordion-item
+								id="ARTIG___PSEUDNOVOGR03-container"
+								value="ARTIG___PSEUDNOVOGR03"
+								:title="controls.ARTIG___PSEUDNOVOGR03.label">
 								<!-- Start ARTIG___PSEUDNOVOGR03 -->
 								<q-row-container v-show="controls.ARTIG___PSEUDCONTACOR.isVisible">
 									<q-control-wrapper
@@ -388,15 +389,16 @@
 											v-on="controls.ARTIG___PSEUDCONTACOR.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.ARTIG___PSEUDCONTACOR"
+											:filter-operators="controls.ARTIG___PSEUDCONTACOR.filterOperators"
 											v-on="controls.ARTIG___PSEUDCONTACOR.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End ARTIG___PSEUDNOVOGR03 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="ARTIG___PSEUDNOVOGR04"
-								v-bind="controls.ARTIG___PSEUDNOVOGR04"
-								v-on="controls.ARTIG___PSEUDNOVOGR04.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="ARTIG___PSEUDNOVOGR04-container"
+								value="ARTIG___PSEUDNOVOGR04"
+								:title="controls.ARTIG___PSEUDNOVOGR04.label">
 								<!-- Start ARTIG___PSEUDNOVOGR04 -->
 								<q-row-container v-show="controls.ARTIG___PSEUDLENTRADA.isVisible">
 									<q-control-wrapper
@@ -408,6 +410,7 @@
 											v-on="controls.ARTIG___PSEUDLENTRADA.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.ARTIG___PSEUDLENTRADA"
+											:filter-operators="controls.ARTIG___PSEUDLENTRADA.filterOperators"
 											v-on="controls.ARTIG___PSEUDLENTRADA.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
@@ -421,14 +424,17 @@
 											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.ARTIG___PSEUDLSAIDAS_"
+											:filter-operators="controls.ARTIG___PSEUDLSAIDAS_.filterOperators"
 											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End ARTIG___PSEUDNOVOGR04 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End ARTIG___PSEUDNOVOGR05 -->
 						</q-accordion>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.ARTIG___PSEUDNOVOGR06.isVisible">
 					<q-control-wrapper
 						v-show="controls.ARTIG___PSEUDNOVOGR06.isVisible"
 						class="control-join-group">
@@ -447,6 +453,7 @@
 										v-on="controls.ARTIG___PSEUDCATEGORI.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.ARTIG___PSEUDCATEGORI"
+										:filter-operators="controls.ARTIG___PSEUDCATEGORI.filterOperators"
 										v-on="controls.ARTIG___PSEUDCATEGORI.handlers" />
 									<base-input-structure
 										class="i-text"
@@ -465,8 +472,8 @@
 											:texts="controls.ARTIG___PSEUDESCCATEG.texts"
 											:rows-selected="controls.ARTIG___PSEUDCATEGORI.rowsSelected"
 											:disabled="controls.ARTIG___PSEUDESCCATEG.readonly"
-											@remove-label="onUnselectRow(controls.ARTIG___PSEUDCATEGORI, $event); model.List_Categori_SelectedIds.updateValue(rowKeyHashTableToArray(controls.ARTIG___PSEUDCATEGORI.rowsSelected))"
-											@on-enter="onSelectRow(controls.ARTIG___PSEUDCATEGORI, $event); model.List_Categori_SelectedIds.updateValue(rowKeyHashTableToArray(controls.ARTIG___PSEUDCATEGORI.rowsSelected))" />
+											@remove-label="controls.ARTIG___PSEUDCATEGORI.onUnselectRow($event); model.List_Categori_SelectedIds.updateValue(controls.ARTIG___PSEUDCATEGORI.rowsSelectedKeys)"
+											@on-enter="controls.ARTIG___PSEUDCATEGORI.onSelectRow($event); model.List_Categori_SelectedIds.updateValue(controls.ARTIG___PSEUDCATEGORI.rowsSelectedKeys)" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -480,6 +487,7 @@
 										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.ARTIG___PSEUDCATEGOR_"
+										:filter-operators="controls.ARTIG___PSEUDCATEGOR_.filterOperators"
 										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers" />
 								</q-control-wrapper>
 							</q-row-container>
@@ -1107,6 +1115,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ARTIG___PSEUDCONTACOR'],
@@ -1252,6 +1261,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ARTIG___PSEUDLENTRADA', 'ARTIG___PSEUDLSAIDAS_'],
@@ -1464,7 +1474,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-INDOC', 'changed-ITEM', 'changed-LDENT', 'changed-WARE1', 'changed-PESSO', 'changed-CMPNY', 'changed-CNTRY'],
+						globalEvents: ['changed-WAREH', 'changed-LDENT', 'changed-ITEM', 'changed-INDOC', 'changed-WARE1', 'changed-PESSO', 'changed-CMPNY', 'changed-CNTRY'],
 						uuid: 'Artig_ValLentrada',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1682,7 +1692,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-ITEM', 'changed-OUTPU', 'changed-OUDOC', 'changed-WAREH', 'changed-OUTPT', 'changed-WARE1'],
+						globalEvents: ['changed-ITEM', 'changed-OUTPU', 'changed-OUTPT', 'changed-OUDOC', 'changed-WAREH', 'changed-WARE1'],
 						uuid: 'Artig_ValLsaidas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1987,7 +1997,7 @@
 						label: computed(() => this.Resources.DATE18475),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -2111,6 +2121,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS ARTIG]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ARTIG]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
@@ -2400,7 +2418,7 @@
 			'controls.ARTIG___PSEUDCATEGORI.rowsSelected': {
 				handler()
 				{
-					const value = this.rowKeyHashTableToArray(this.controls.ARTIG___PSEUDCATEGORI.rowsSelected)
+					const value = this.controls.ARTIG___PSEUDCATEGORI.rowsSelectedKeys
 					this.model.List_Categori_SelectedIds.updateValue(value)
 				},
 				deep: true
@@ -2408,7 +2426,7 @@
 			'controls.ARTIG___PSEUDCATEGOR_.rowsSelected': {
 				handler()
 				{
-					const value = this.rowKeyHashTableToArray(this.controls.ARTIG___PSEUDCATEGOR_.rowsSelected)
+					const value = this.controls.ARTIG___PSEUDCATEGOR_.rowsSelectedKeys
 					this.model.List_Categor_SelectedIds.updateValue(value)
 				},
 				deep: true

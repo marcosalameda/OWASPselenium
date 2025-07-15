@@ -62,6 +62,7 @@
 							v-on="controls.WID_EQUIPSEUDWIDEQUI_.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.WID_EQUIPSEUDWIDEQUI_"
+							:filter-operators="controls.WID_EQUIPSEUDWIDEQUI_.filterOperators"
 							v-on="controls.WID_EQUIPSEUDWIDEQUI_.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -497,6 +498,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WID_EQUI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WID_EQUI]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

@@ -436,7 +436,13 @@ describe('QTableStaticFilters.vue', () => {
 			global,
 			props: {
 				groupFilters: dataFilters,
-				texts: tableTest.texts
+				texts: tableTest.texts,
+				dateFormats: {
+					date: 'dd/MM/yyyy',
+					dateTime: 'dd/MM/yyyy HH:mm',
+					dateTimeSeconds: 'dd/MM/yyyy HH:mm:ss',
+					hours: 'HH:mm',
+				}
 			}
 		})
 		const idx = 0
@@ -459,7 +465,13 @@ describe('QTableStaticFilters.vue', () => {
 			global,
 			props: {
 				groupFilters: dataFilters,
-				texts: tableTest.texts
+				texts: tableTest.texts,
+				dateFormats: {
+					date: 'dd/MM/yyyy',
+					dateTime: 'dd/MM/yyyy HH:mm',
+					dateTimeSeconds: 'dd/MM/yyyy HH:mm:ss',
+					hours: 'HH:mm',
+				}
 			}
 		})
 		const idx = 0
@@ -479,7 +491,14 @@ describe('QTableStaticFilters.vue', () => {
 			global,
 			props: {
 				activeFilters: dataFilters,
-				texts: tableTest.texts
+				texts: tableTest.texts,
+				dateFormats: {
+					date: 'dd/MM/yyyy',
+					dateTime: 'dd/MM/yyyy HH:mm',
+					dateTimeSeconds: 'dd/MM/yyyy HH:mm:ss',
+					hours: 'HH:mm',
+				}
+
 			}
 		})
 		const idx = 0

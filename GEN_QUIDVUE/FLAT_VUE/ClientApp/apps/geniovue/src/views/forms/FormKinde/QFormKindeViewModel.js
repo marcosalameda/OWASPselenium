@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'KINDE',
 			area: 'KINDE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_KINDE',
-				updateFilesTickets: 'UpdateFilesTicketsKINDE'
+				recalculateFormulas: 'RecalculateFormulas_Kinde',
+				updateFilesTickets: 'UpdateFilesTicketsKinde',
+				setFile: 'SetFileKinde'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODKINDE',
 			description: '',
 		}).cloneFrom(values?.ValCodkinde))
-		watch(() => this.ValCodkinde.value, (newValue, oldValue) => this.onUpdate('kinde.codkinde', this.ValCodkinde, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodkinde.value, (newValue, oldValue) => this.onUpdate('kinde.codkinde', this.ValCodkinde, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValDesignat = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
 		}).cloneFrom(values?.ValDesignat))
-		watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.ValDesignat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.ValDesignat, newValue, oldValue)))
 	}
 
 	/**

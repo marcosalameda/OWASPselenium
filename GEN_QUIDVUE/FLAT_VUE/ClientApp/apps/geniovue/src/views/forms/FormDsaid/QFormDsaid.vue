@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -139,6 +139,7 @@
 							v-on="controls.DSAID___PSEUDSAIDAS__.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.DSAID___PSEUDSAIDAS__"
+							:filter-operators="controls.DSAID___PSEUDSAIDAS__.filterOperators"
 							v-on="controls.DSAID___PSEUDSAIDAS__.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -725,7 +726,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ITEM', 'changed-OUTPU', 'changed-OUDOC', 'changed-WAREH', 'changed-OUTPT'],
+						globalEvents: ['changed-ITEM', 'changed-OUTPU', 'changed-OUTPT', 'changed-OUDOC', 'changed-WAREH'],
 						uuid: 'Dsaid_ValSaidas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -852,6 +853,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS DSAID]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT DSAID]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

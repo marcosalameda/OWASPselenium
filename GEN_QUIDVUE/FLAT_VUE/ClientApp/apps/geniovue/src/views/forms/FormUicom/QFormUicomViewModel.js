@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'UICOM',
 			area: 'UICOM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_UICOM',
-				updateFilesTickets: 'UpdateFilesTicketsUICOM'
+				recalculateFormulas: 'RecalculateFormulas_Uicom',
+				updateFilesTickets: 'UpdateFilesTicketsUicom',
+				setFile: 'SetFileUicom'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODUICOM',
 			description: '',
 		}).cloneFrom(values?.ValCoduicom))
-		watch(() => this.ValCoduicom.value, (newValue, oldValue) => this.onUpdate('uicom.coduicom', this.ValCoduicom, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCoduicom.value, (newValue, oldValue) => this.onUpdate('uicom.coduicom', this.ValCoduicom, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValThumbnai = reactive(new modelFieldType.Image({
@@ -60,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'THUMBNAI',
 			description: computed(() => this.Resources.THUMBNAIL30025),
 		}).cloneFrom(values?.ValThumbnai))
-		watch(() => this.ValThumbnai.value, (newValue, oldValue) => this.onUpdate('uicom.thumbnai', this.ValThumbnai, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValThumbnai.value, (newValue, oldValue) => this.onUpdate('uicom.thumbnai', this.ValThumbnai, newValue, oldValue)))
 
 		this.ValName = reactive(new modelFieldType.String({
 			id: 'ValName',
@@ -70,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('uicom.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('uicom.name', this.ValName, newValue, oldValue)))
 
 		this.ValCategory = reactive(new modelFieldType.String({
 			id: 'ValCategory',
@@ -80,7 +81,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
 		}).cloneFrom(values?.ValCategory))
-		watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('uicom.category', this.ValCategory, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('uicom.category', this.ValCategory, newValue, oldValue)))
 
 		this.ValMenuid = reactive(new modelFieldType.String({
 			id: 'ValMenuid',
@@ -90,7 +91,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 30,
 			description: computed(() => this.Resources.FIXED_MENU_NAME38578),
 		}).cloneFrom(values?.ValMenuid))
-		watch(() => this.ValMenuid.value, (newValue, oldValue) => this.onUpdate('uicom.menuid', this.ValMenuid, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValMenuid.value, (newValue, oldValue) => this.onUpdate('uicom.menuid', this.ValMenuid, newValue, oldValue)))
 	}
 
 	/**

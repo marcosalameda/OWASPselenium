@@ -27,6 +27,7 @@ namespace GenioMVC.Metrics
         private Meter meter;
         private readonly Dictionary<string, Histogram<long>> histograms = new();
         private readonly Dictionary<string, Counter<int>> counters = new();
+        private readonly InstrumentAdvice<long> default_buckets = new() { HistogramBucketBoundaries = [10, 50, 100, 500, 1000, 5000, 10000, 50000, 500000] };
 
         public MetricsOtlpImpl(Meter meter)
         {
@@ -58,7 +59,12 @@ namespace GenioMVC.Metrics
 
             if (!histograms.TryGetValue(metricName, out var histmetric))
             {
-                histmetric = meter.CreateHistogram<long>(metricName, unit, description);
+                histmetric = meter.CreateHistogram<long>(
+                    metricName,
+                    unit,
+                    description,
+                    null,
+                    default_buckets);
                 histograms[metricName] = histmetric;
             }
 
@@ -70,11 +76,20 @@ namespace GenioMVC.Metrics
             });
         }
 
-        public void RegisterTime<T>(string metricName, T time, TagList tags, string unit = null, string description = null) where T : struct
+        public void RegisterTime(string metricName, long time, TagList tags, string unit = null, string description = null)
         {
             if (!ValidateMeter()) return;
 
-            Histogram<T> histmetric = meter.CreateHistogram<T>(metricName, unit, description);
+            if (!histograms.TryGetValue(metricName, out var histmetric))
+            {
+                histmetric = meter.CreateHistogram<long>(
+                    metricName, 
+                    unit, 
+                    description,
+                    null,
+                    default_buckets);
+                histograms[metricName] = histmetric;
+            }
             histmetric.Record(time, tags);
         }
 

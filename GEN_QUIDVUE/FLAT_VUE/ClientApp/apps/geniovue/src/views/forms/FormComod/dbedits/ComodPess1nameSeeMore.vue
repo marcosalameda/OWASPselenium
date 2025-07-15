@@ -172,7 +172,7 @@
 					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -249,7 +249,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESS1', 'changed-STAKE', 'changed-CMPNY', 'changed-CATE2'],
+						globalEvents: ['changed-PESS1', 'changed-CATE2', 'changed-STAKE', 'changed-CMPNY'],
 						uuid: 'Comod_Comod_Pess1ValName',
 						allSelectedRows: 'false',
 						handlers: {

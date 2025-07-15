@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -172,7 +173,7 @@
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayDsiponib.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayDsiponib(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayDsiponib.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
@@ -304,6 +305,10 @@
 			// Listener for MC action in case of redirect by Jump if just one.
 			this.$eventHub.off('EXEC-PTN_MenuMC_LIST_DB_MC_R', this.PTN_MenuMC_LIST_DB_MC_R)
 			this.$eventHub.off('EXEC-MENU-ROUTINE-PTN_LIST_DB_MC_R', this.onExecRoutineEvent)
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_LIST_DB_MC_R]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		methods: {

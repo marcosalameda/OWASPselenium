@@ -96,7 +96,7 @@ public class CampoForm : Form
 	/// <summary>
 	/// Attachments
 	/// </summary>
-	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "CAMPO___FLDS_ATTACH__");
+	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "CAMPO___FLDS_ATTACH__-container");
 
 	/// <summary>
 	/// Created by

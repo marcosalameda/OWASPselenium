@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -202,7 +203,7 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								array: computed(() => qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayFreqempr.type,
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -373,7 +374,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-PESS2', 'changed-PESS1', 'changed-LENDI'],
+						globalEvents: ['changed-LENDI', 'changed-EQUIP', 'changed-PESS2', 'changed-PESS1'],
 						uuid: '7477a56b-438b-4cd1-9927-38bc641973fc',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -410,6 +411,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GQT_MENU_1711]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_1711]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -119,6 +119,7 @@
 							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.FAMI1___PSEUDTIPOSEQU"
+							:filter-operators="controls.FAMI1___PSEUDTIPOSEQU.filterOperators"
 							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -132,6 +133,7 @@
 							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.FAMI1___PSEUDTIPOSEQ1"
+							:filter-operators="controls.FAMI1___PSEUDTIPOSEQ1.filterOperators"
 							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -743,7 +745,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FAMI1', 'changed-TPEQ1'],
+						globalEvents: ['changed-TPEQ1', 'changed-FAMI1'],
 						uuid: 'Fami1_ValTiposequ',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -923,7 +925,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FAMI1', 'changed-TPEQ1'],
+						globalEvents: ['changed-TPEQ1', 'changed-FAMI1'],
 						uuid: 'Fami1_ValTiposeq1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1006,6 +1008,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS FAMI1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FAMI1]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

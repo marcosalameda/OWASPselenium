@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -101,6 +101,7 @@
 							v-on="controls.GMAPS___PSEUDINSTALAC.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.GMAPS___PSEUDINSTALAC"
+							:filter-operators="controls.GMAPS___PSEUDINSTALAC.filterOperators"
 							v-on="controls.GMAPS___PSEUDINSTALAC.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -764,6 +765,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GMAPS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GMAPS]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

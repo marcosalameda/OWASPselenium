@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -275,7 +276,7 @@
 								label: computed(() => this.Resources.CLASS__ENUMERACAO_DE17340),
 								dataLength: 2,
 								scrollData: 2,
-								array: computed(() => qProjArrays.QArrayClass.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayClass(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayClass.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -287,7 +288,7 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
-								array: computed(() => qProjArrays.QArrayClassnum.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayClassnum(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayClassnum.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -297,7 +298,7 @@
 								field: 'LOGICENU',
 								label: computed(() => this.Resources._1A_VIAGEM__ENUMERAC07656),
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayPrimviag.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayPrimviag(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayPrimviag.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
@@ -516,6 +517,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS STY_MENU_358211]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT STY_MENU_358211]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

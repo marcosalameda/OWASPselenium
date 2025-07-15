@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'AGREG',
 			area: 'AGREG',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_AGREG',
-				updateFilesTickets: 'UpdateFilesTicketsAGREG'
+				recalculateFormulas: 'RecalculateFormulas_Agreg',
+				updateFilesTickets: 'UpdateFilesTicketsAgreg',
+				setFile: 'SetFileAgreg'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODAGGRE',
 			description: '',
 		}).cloneFrom(values?.ValCodaggre))
-		watch(() => this.ValCodaggre.value, (newValue, oldValue) => this.onUpdate('agreg.codaggre', this.ValCodaggre, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodaggre.value, (newValue, oldValue) => this.onUpdate('agreg.codaggre', this.ValCodaggre, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodproje = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PROJE',
 			description: computed(() => this.Resources._PROJECT36907),
 		}).cloneFrom(values?.ValCodproje))
-		watch(() => this.ValCodproje.value, (newValue, oldValue) => this.onUpdate('agreg.codproje', this.ValCodproje, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodproje.value, (newValue, oldValue) => this.onUpdate('agreg.codproje', this.ValCodproje, newValue, oldValue)))
 
 		this.ValCodyear = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodyear',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'YEAR',
 			description: '',
 		}).cloneFrom(values?.ValCodyear))
-		watch(() => this.ValCodyear.value, (newValue, oldValue) => this.onUpdate('agreg.codyear', this.ValCodyear, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodyear.value, (newValue, oldValue) => this.onUpdate('agreg.codyear', this.ValCodyear, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableProjeProjecto = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.PROJECT37121),
 		}).cloneFrom(values?.TableProjeProjecto))
-		watch(() => this.TableProjeProjecto.value, (newValue, oldValue) => this.onUpdate('proje.projecto', this.TableProjeProjecto, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableProjeProjecto.value, (newValue, oldValue) => this.onUpdate('proje.projecto', this.TableProjeProjecto, newValue, oldValue)))
 
 		this.TableYearYear = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 4,
 			description: computed(() => this.Resources.YEAR61794),
 		}).cloneFrom(values?.TableYearYear))
-		watch(() => this.TableYearYear.value, (newValue, oldValue) => this.onUpdate('year.year', this.TableYearYear, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableYearYear.value, (newValue, oldValue) => this.onUpdate('year.year', this.TableYearYear, newValue, oldValue)))
 
 		this.ValValue = reactive(new modelFieldType.Number({
 			id: 'ValValue',
@@ -106,7 +107,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.VALUE10285),
 		}).cloneFrom(values?.ValValue))
-		watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('agreg.value', this.ValValue, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('agreg.value', this.ValValue, newValue, oldValue)))
 	}
 
 	/**

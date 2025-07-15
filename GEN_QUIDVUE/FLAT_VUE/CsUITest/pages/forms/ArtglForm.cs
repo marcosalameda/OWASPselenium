@@ -20,7 +20,7 @@ public class ArtglForm : PopupForm
 	/// <summary>
 	/// Catalog
 	/// </summary>
-	public DocumentControl GitemDocument => new DocumentControl(driver, ContainerLocator, "ARTGL___GITEMDOCUMENT");
+	public DocumentControl GitemDocument => new DocumentControl(driver, ContainerLocator, "ARTGL___GITEMDOCUMENT-container");
 
 	public ArtglForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ARTGL") { }

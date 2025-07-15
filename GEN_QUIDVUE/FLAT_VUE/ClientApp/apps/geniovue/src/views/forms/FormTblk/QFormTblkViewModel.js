@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TBLK',
 			area: 'TBLK',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_TBLK',
-				updateFilesTickets: 'UpdateFilesTicketsTBLK'
+				recalculateFormulas: 'RecalculateFormulas_Tblk',
+				updateFilesTickets: 'UpdateFilesTicketsTblk',
+				setFile: 'SetFileTblk'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTBLK',
 			description: '',
 		}).cloneFrom(values?.ValCodtblk))
-		watch(() => this.ValCodtblk.value, (newValue, oldValue) => this.onUpdate('tblk.codtblk', this.ValCodtblk, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtblk.value, (newValue, oldValue) => this.onUpdate('tblk.codtblk', this.ValCodtblk, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValFkey1 = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'GRPB',
 			description: computed(() => this.Resources.FOREIGN_KEY_154750),
 		}).cloneFrom(values?.ValFkey1))
-		watch(() => this.ValFkey1.value, (newValue, oldValue) => this.onUpdate('tblk.fkey1', this.ValFkey1, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFkey1.value, (newValue, oldValue) => this.onUpdate('tblk.fkey1', this.ValFkey1, newValue, oldValue)))
 
 		this.ValFkey2 = reactive(new modelFieldType.ForeignKey({
 			id: 'ValFkey2',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'TRSB',
 			description: computed(() => this.Resources.FOREIGN_KEY_255115),
 		}).cloneFrom(values?.ValFkey2))
-		watch(() => this.ValFkey2.value, (newValue, oldValue) => this.onUpdate('tblk.fkey2', this.ValFkey2, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFkey2.value, (newValue, oldValue) => this.onUpdate('tblk.fkey2', this.ValFkey2, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('tblk.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('tblk.name', this.ValName, newValue, oldValue)))
 
 		this.TableGrpbName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -93,7 +94,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TableGrpbName))
-		watch(() => this.TableGrpbName.value, (newValue, oldValue) => this.onUpdate('grpb.name', this.TableGrpbName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableGrpbName.value, (newValue, oldValue) => this.onUpdate('grpb.name', this.TableGrpbName, newValue, oldValue)))
 
 		this.TableTrsbName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -104,7 +105,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TableTrsbName))
-		watch(() => this.TableTrsbName.value, (newValue, oldValue) => this.onUpdate('trsb.name', this.TableTrsbName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableTrsbName.value, (newValue, oldValue) => this.onUpdate('trsb.name', this.TableTrsbName, newValue, oldValue)))
 	}
 
 	/**

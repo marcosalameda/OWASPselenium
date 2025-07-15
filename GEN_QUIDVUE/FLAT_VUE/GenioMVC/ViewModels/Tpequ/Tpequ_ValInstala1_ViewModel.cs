@@ -123,10 +123,10 @@ namespace GenioMVC.ViewModels.Tpequ
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAinsta.FldDesignat, FieldType.TEXT, Resources.Resources.SCHEDULING24801, 30, 0, true),
 				new Exports.QColumn(CSGenioAinsta.FldDtiniage, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
 				new Exports.QColumn(CSGenioAinsta.FldDtfimage, FieldType.DATETIME, Resources.Resources.END47577, 16, 0, true),
@@ -138,16 +138,12 @@ namespace GenioMVC.ViewModels.Tpequ
 				new Exports.QColumn(CSGenioAinsta.FldPrecohor, FieldType.CURRENCY, Resources.Resources.HOURLY_PRICE48005, 12, 0, true),
 				new Exports.QColumn(CSGenioAinsta.FldValue, FieldType.CURRENCY, Resources.Resources.VALUE10285, 12, 0, true),
 				new Exports.QColumn(CSGenioAinsta.FldCoordgeo, FieldType.GEOGRAPHY_POINT, Resources.Resources.GEOGRAPHIC_COORDINAT21394, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAinsta> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -303,11 +299,6 @@ namespace GenioMVC.ViewModels.Tpequ
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAinsta> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Form", "TPEQU")
-			}, "ms", "Time to load the form."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Tpequ_ValInstala1_RowViewModel>();
 
@@ -435,7 +426,6 @@ namespace GenioMVC.ViewModels.Tpequ
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<Tpequ_ValInstala1_RowViewModel> MapTpequ_ValInstala1(ListingMVC<CSGenioAinsta> Qlisting)

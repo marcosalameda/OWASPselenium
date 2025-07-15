@@ -264,6 +264,13 @@
 			this.setDefaultSearchColumnName()
 		},
 
+		beforeUnmount()
+		{
+			if(this.tableConf?.rows instanceof Array)
+				this.tableConf.rows.length = 0
+			this.tableConf = null
+		},
+
 		computed: {
 			visibleColumns() {
 				return this.tableConf.rows.filter((column) => {

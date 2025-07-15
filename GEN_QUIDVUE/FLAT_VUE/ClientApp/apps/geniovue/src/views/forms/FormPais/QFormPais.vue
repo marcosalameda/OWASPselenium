@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -137,7 +137,7 @@
 								</q-control-wrapper>
 							</q-row-container>
 							<q-row-container
-								v-show="controls.PAIS____PSEUDNOVOGR01.isVisible || controls.PAIS____CNTRYFLAG____.isVisible"
+								v-show="controls.PAIS____PSEUDNOVOGR01.isVisible"
 								is-large>
 								<q-control-wrapper
 									v-show="controls.PAIS____PSEUDNOVOGR01.isVisible"
@@ -200,6 +200,8 @@
 										<!-- End PAIS____PSEUDNOVOGR01 -->
 									</q-group-box-container>
 								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PAIS____CNTRYFLAG____.isVisible">
 								<q-control-wrapper
 									v-show="controls.PAIS____CNTRYFLAG____.isVisible"
 									class="control-join-group">
@@ -261,6 +263,7 @@
 													v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
 												<q-table-extra-extension
 													:list-ctrl="controls.PAIS____PSEUDPROPRIE1"
+													:filter-operators="controls.PAIS____PSEUDPROPRIE1.filterOperators"
 													v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
 											</q-control-wrapper>
 										</q-row-container>
@@ -282,6 +285,7 @@
 							v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PAIS____PSEUDPROPRIED"
+							:filter-operators="controls.PAIS____PSEUDPROPRIED.filterOperators"
 							v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -960,7 +964,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Pais_ValProprie1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1255,7 +1259,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PROPR', 'changed-TPPRO', 'changed-PESSO'],
+						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO'],
 						uuid: 'Pais_ValPropried',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1352,6 +1356,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PAIS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PAIS]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

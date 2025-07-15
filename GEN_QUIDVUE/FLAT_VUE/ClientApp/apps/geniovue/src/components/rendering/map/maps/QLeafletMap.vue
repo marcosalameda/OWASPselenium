@@ -148,6 +148,14 @@
 			},
 
 			/**
+			 * A list with the legends of shapes/polygons already on the map.
+			 */
+			legends: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
 			 * The defined style variables.
 			 */
 			styleVariables: {
@@ -237,7 +245,8 @@
 				scaleControl: null,
 				zoomControl: null,
 				searchControl: null,
-				printControl: null
+				printControl: null,
+				legendControl: null
 			}
 		},
 
@@ -529,6 +538,9 @@
 					this.map.off('enterFullscreen').on('enterFullscreen', () => this.isFullscreen = true)
 					this.map.off('exitFullscreen').on('exitFullscreen', () => this.isFullscreen = false)
 				}
+
+				// Add legend
+				this.setLegend()
 
 				// Add the search bar.
 				this.setSearchBar()
@@ -1949,6 +1961,36 @@
 					else
 						execFunction()
 				}, 100)
+			},
+			/**
+			 * Creates a list with the legend objects already on the map.
+			 */
+			setLegend() {
+				if (!this.styleVariables.allowLegend?.value || this.legends.length === 0 || this.map === null)
+					return
+
+				// Removes old subtitles if they already exist
+				if (this.legendControl) {
+					this.map.removeControl(this.legendControl)
+					this.legendControl = null
+				}
+
+				const items = this.legends
+
+				const legend = L.control({ position: 'bottomright' })
+
+				legend.onAdd = function () {
+					const div = L.DomUtil.create('div', 'leaflet-legend')
+					items.forEach(item => {
+						div.innerHTML += `
+				<i style="background: ${item.color};"></i> ${item.label}<br>
+			`
+					})
+					return div
+				}
+
+				legend.addTo(this.map)
+				this.legendControl = legend
 			}
 		},
 
@@ -1989,6 +2031,17 @@
 
 				if (newVal.length > 0 || oldVal.length > 0)
 					this.fitMapZoom()
+
+				// Add legend
+				this.setLegend()
+			},
+
+			legends: {
+				handler(newVal, oldVal) {
+					if (newVal.length > 0 || oldVal.length > 0)
+						this.setLegend()
+				},
+				deep: true
 			},
 
 			externalLayers(newVal, oldVal)

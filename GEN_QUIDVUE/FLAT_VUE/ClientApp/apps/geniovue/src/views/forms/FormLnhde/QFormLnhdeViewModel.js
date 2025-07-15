@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'LNHDE',
 			area: 'LNHDE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_LNHDE',
-				updateFilesTickets: 'UpdateFilesTicketsLNHDE'
+				recalculateFormulas: 'RecalculateFormulas_Lnhde',
+				updateFilesTickets: 'UpdateFilesTicketsLnhde',
+				setFile: 'SetFileLnhde'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODLNHDE',
 			description: '',
 		}).cloneFrom(values?.ValCodlnhde))
-		watch(() => this.ValCodlnhde.value, (newValue, oldValue) => this.onUpdate('lnhde.codlnhde', this.ValCodlnhde, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlnhde.value, (newValue, oldValue) => this.onUpdate('lnhde.codlnhde', this.ValCodlnhde, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodlnhag = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodlnhag))
-		watch(() => this.ValCodlnhag.value, (newValue, oldValue) => this.onUpdate('lnhde.codlnhag', this.ValCodlnhag, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlnhag.value, (newValue, oldValue) => this.onUpdate('lnhde.codlnhag', this.ValCodlnhag, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodpedid = reactive(new modelFieldType.ForeignKey({
@@ -86,7 +87,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: '',
 		}).cloneFrom(values?.ValCodpedid))
-		watch(() => this.ValCodpedid.value, (newValue, oldValue) => this.onUpdate('lnhde.codpedid', this.ValCodpedid, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpedid.value, (newValue, oldValue) => this.onUpdate('lnhde.codpedid', this.ValCodpedid, newValue, oldValue)))
 
 		this.ValCodlnhpd = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodlnhpd',
@@ -96,7 +97,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'LNHPD',
 			description: '',
 		}).cloneFrom(values?.ValCodlnhpd))
-		watch(() => this.ValCodlnhpd.value, (newValue, oldValue) => this.onUpdate('lnhde.codlnhpd', this.ValCodlnhpd, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlnhpd.value, (newValue, oldValue) => this.onUpdate('lnhde.codlnhpd', this.ValCodlnhpd, newValue, oldValue)))
 
 		this.ValCodtpequ = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodtpequ',
@@ -106,7 +107,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'TPEQ1',
 			description: '',
 		}).cloneFrom(values?.ValCodtpequ))
-		watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('lnhde.codtpequ', this.ValCodtpequ, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('lnhde.codtpequ', this.ValCodtpequ, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TablePedidNrpedido = reactive(new modelFieldType.Number({
@@ -119,7 +120,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_14817),
 		}).cloneFrom(values?.TablePedidNrpedido))
-		watch(() => this.TablePedidNrpedido.value, (newValue, oldValue) => this.onUpdate('pedid.nrpedido', this.TablePedidNrpedido, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePedidNrpedido.value, (newValue, oldValue) => this.onUpdate('pedid.nrpedido', this.TablePedidNrpedido, newValue, oldValue)))
 
 		this.TableLnhpdLine = reactive(new modelFieldType.Number({
 			type: 'Lookup',
@@ -131,7 +132,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.LINE27983),
 		}).cloneFrom(values?.TableLnhpdLine))
-		watch(() => this.TableLnhpdLine.value, (newValue, oldValue) => this.onUpdate('lnhpd.line', this.TableLnhpdLine, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableLnhpdLine.value, (newValue, oldValue) => this.onUpdate('lnhpd.line', this.TableLnhpdLine, newValue, oldValue)))
 
 		this.ValOrdem = reactive(new modelFieldType.Number({
 			id: 'ValOrdem',
@@ -142,7 +143,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ORDER39632),
 		}).cloneFrom(values?.ValOrdem))
-		watch(() => this.ValOrdem.value, (newValue, oldValue) => this.onUpdate('lnhde.ordem', this.ValOrdem, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValOrdem.value, (newValue, oldValue) => this.onUpdate('lnhde.ordem', this.ValOrdem, newValue, oldValue)))
 
 		this.TableTpeq1Tipoequi = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -153,7 +154,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 		}).cloneFrom(values?.TableTpeq1Tipoequi))
-		watch(() => this.TableTpeq1Tipoequi.value, (newValue, oldValue) => this.onUpdate('tpeq1.tipoequi', this.TableTpeq1Tipoequi, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableTpeq1Tipoequi.value, (newValue, oldValue) => this.onUpdate('tpeq1.tipoequi', this.TableTpeq1Tipoequi, newValue, oldValue)))
 
 		this.ValQuantida = reactive(new modelFieldType.Number({
 			id: 'ValQuantida',
@@ -164,7 +165,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.AMOUNT46885),
 		}).cloneFrom(values?.ValQuantida))
-		watch(() => this.ValQuantida.value, (newValue, oldValue) => this.onUpdate('lnhde.quantida', this.ValQuantida, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValQuantida.value, (newValue, oldValue) => this.onUpdate('lnhde.quantida', this.ValQuantida, newValue, oldValue)))
 
 		this.ValQuantdec = reactive(new modelFieldType.Number({
 			id: 'ValQuantdec',
@@ -187,7 +188,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.AMOUNT46885),
 		}).cloneFrom(values?.ValQuantdec))
-		watch(() => this.ValQuantdec.value, (newValue, oldValue) => this.onUpdate('lnhde.quantdec', this.ValQuantdec, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValQuantdec.value, (newValue, oldValue) => this.onUpdate('lnhde.quantdec', this.ValQuantdec, newValue, oldValue)))
 
 		this.ValCode = reactive(new modelFieldType.String({
 			id: 'ValCode',
@@ -197,7 +198,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.CODE49225),
 		}).cloneFrom(values?.ValCode))
-		watch(() => this.ValCode.value, (newValue, oldValue) => this.onUpdate('lnhde.code', this.ValCode, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCode.value, (newValue, oldValue) => this.onUpdate('lnhde.code', this.ValCode, newValue, oldValue)))
 
 		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
@@ -206,7 +207,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESCRIPT',
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescript))
-		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('lnhde.descript', this.ValDescript, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('lnhde.descript', this.ValDescript, newValue, oldValue)))
 
 		this.ValUrl = reactive(new modelFieldType.String({
 			id: 'ValUrl',
@@ -216,7 +217,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 250,
 			description: computed(() => this.Resources.SITE06486),
 		}).cloneFrom(values?.ValUrl))
-		watch(() => this.ValUrl.value, (newValue, oldValue) => this.onUpdate('lnhde.url', this.ValUrl, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValUrl.value, (newValue, oldValue) => this.onUpdate('lnhde.url', this.ValUrl, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.LnhpdValQuantdec = reactive(new modelFieldType.Number({
@@ -229,7 +230,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.AMOUNT46885),
 		}).cloneFrom(values?.LnhpdValQuantdec))
-		watch(() => this.LnhpdValQuantdec.value, (newValue, oldValue) => this.onUpdate('lnhpd.quantdec', this.LnhpdValQuantdec, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.LnhpdValQuantdec.value, (newValue, oldValue) => this.onUpdate('lnhpd.quantdec', this.LnhpdValQuantdec, newValue, oldValue)))
 	}
 
 	/**

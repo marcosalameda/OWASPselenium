@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -565,6 +565,7 @@
 													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers" />
 												<q-table-extra-extension
 													:list-ctrl="controls.EQUIP___PSEUDMOVIMEVV"
+													:filter-operators="controls.EQUIP___PSEUDMOVIMEVV.filterOperators"
 													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers" />
 											</q-control-wrapper>
 											<q-control-wrapper
@@ -587,8 +588,8 @@
 														:texts="controls.EQUIP___PSEUDROOMSMVE.texts"
 														:rows-selected="controls.EQUIP___PSEUDMOVIMEVV.rowsSelected"
 														:disabled="controls.EQUIP___PSEUDROOMSMVE.readonly"
-														@remove-label="onUnselectRow(controls.EQUIP___PSEUDMOVIMEVV, $event); model.List_Movimevv_SelectedIds.updateValue(rowKeyHashTableToArray(controls.EQUIP___PSEUDMOVIMEVV.rowsSelected))"
-														@on-enter="onSelectRow(controls.EQUIP___PSEUDMOVIMEVV, $event); model.List_Movimevv_SelectedIds.updateValue(rowKeyHashTableToArray(controls.EQUIP___PSEUDMOVIMEVV.rowsSelected))" />
+														@remove-label="controls.EQUIP___PSEUDMOVIMEVV.onUnselectRow($event); model.List_Movimevv_SelectedIds.updateValue(controls.EQUIP___PSEUDMOVIMEVV.rowsSelectedKeys)"
+														@on-enter="controls.EQUIP___PSEUDMOVIMEVV.onSelectRow($event); model.List_Movimevv_SelectedIds.updateValue(controls.EQUIP___PSEUDMOVIMEVV.rowsSelectedKeys)" />
 												</base-input-structure>
 											</q-control-wrapper>
 										</q-row-container>
@@ -602,6 +603,7 @@
 													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers" />
 												<q-table-extra-extension
 													:list-ctrl="controls.EQUIP___PSEUDMOVIMELS"
+													:filter-operators="controls.EQUIP___PSEUDMOVIMELS.filterOperators"
 													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers" />
 											</q-control-wrapper>
 										</q-row-container>
@@ -663,7 +665,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.EQUIP___PSEUDNOVOGR05.isVisible || controls.EQUIP___PSEUDNOVOGR08.isVisible"
+					v-show="controls.EQUIP___PSEUDNOVOGR05.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.EQUIP___PSEUDNOVOGR05.isVisible"
@@ -671,12 +673,13 @@
 						<q-accordion
 							v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible"
 							id="EQUIP___PSEUDNOVOGR05"
+							v-model="controls.EQUIP___PSEUDNOVOGR05.openChild"
 							v-bind="controls.EQUIP___PSEUDNOVOGR05">
 							<!-- Start EQUIP___PSEUDNOVOGR05 -->
-							<q-group-collapsible
-								id="EQUIP___PSEUDNOVOGR03"
-								v-bind="controls.EQUIP___PSEUDNOVOGR03"
-								v-on="controls.EQUIP___PSEUDNOVOGR03.handlers">
+							<q-accordion-item
+								id="EQUIP___PSEUDNOVOGR03-container"
+								value="EQUIP___PSEUDNOVOGR03"
+								:title="controls.EQUIP___PSEUDNOVOGR03.label">
 								<!-- Start EQUIP___PSEUDNOVOGR03 -->
 								<q-row-container v-show="controls.EQUIP___PSEUDINSTALAG.isVisible">
 									<q-control-wrapper
@@ -688,15 +691,16 @@
 											v-on="controls.EQUIP___PSEUDINSTALAG.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.EQUIP___PSEUDINSTALAG"
+											:filter-operators="controls.EQUIP___PSEUDINSTALAG.filterOperators"
 											v-on="controls.EQUIP___PSEUDINSTALAG.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End EQUIP___PSEUDNOVOGR03 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="EQUIP___PSEUDNOVOGR04"
-								v-bind="controls.EQUIP___PSEUDNOVOGR04"
-								v-on="controls.EQUIP___PSEUDNOVOGR04.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="EQUIP___PSEUDNOVOGR04-container"
+								value="EQUIP___PSEUDNOVOGR04"
+								:title="controls.EQUIP___PSEUDNOVOGR04.label">
 								<!-- Start EQUIP___PSEUDNOVOGR04 -->
 								<q-row-container v-show="controls.EQUIP___PSEUDINSTALAC.isVisible">
 									<q-control-wrapper
@@ -708,15 +712,16 @@
 											v-on="controls.EQUIP___PSEUDINSTALAC.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.EQUIP___PSEUDINSTALAC"
+											:filter-operators="controls.EQUIP___PSEUDINSTALAC.filterOperators"
 											v-on="controls.EQUIP___PSEUDINSTALAC.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End EQUIP___PSEUDNOVOGR04 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="EQUIP___PSEUDNOVOGR11"
-								v-bind="controls.EQUIP___PSEUDNOVOGR11"
-								v-on="controls.EQUIP___PSEUDNOVOGR11.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="EQUIP___PSEUDNOVOGR11-container"
+								value="EQUIP___PSEUDNOVOGR11"
+								:title="controls.EQUIP___PSEUDNOVOGR11.label">
 								<!-- Start EQUIP___PSEUDNOVOGR11 -->
 								<q-row-container v-show="controls.EQUIP___PSEUDREPARACO.isVisible || controls.EQUIP___DECOMDECOMNR_.isVisible || controls.EQUIP___EQUIPIFABATIF.isVisible">
 									<q-control-wrapper
@@ -728,6 +733,7 @@
 											v-on="controls.EQUIP___PSEUDREPARACO.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.EQUIP___PSEUDREPARACO"
+											:filter-operators="controls.EQUIP___PSEUDREPARACO.filterOperators"
 											v-on="controls.EQUIP___PSEUDREPARACO.handlers" />
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -770,10 +776,12 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End EQUIP___PSEUDNOVOGR11 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End EQUIP___PSEUDNOVOGR05 -->
 						</q-accordion>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.EQUIP___PSEUDNOVOGR08.isVisible">
 					<q-control-wrapper
 						v-show="controls.EQUIP___PSEUDNOVOGR08.isVisible"
 						class="control-join-group">
@@ -792,6 +800,7 @@
 										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.EQUIP___PSEUDFOTOEQUI"
+										:filter-operators="controls.EQUIP___PSEUDFOTOEQUI.filterOperators"
 										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers" />
 								</q-control-wrapper>
 							</q-row-container>
@@ -800,7 +809,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.EQUIP___PSEUDNOVOGR07.isVisible || controls.EQUIP___PSEUDNOVOGR12.isVisible"
+					v-show="controls.EQUIP___PSEUDNOVOGR07.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.EQUIP___PSEUDNOVOGR07.isVisible"
@@ -820,12 +829,15 @@
 										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.EQUIP___PSEUDVISEQUIP"
+										:filter-operators="controls.EQUIP___PSEUDVISEQUIP.filterOperators"
 										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers" />
 								</q-control-wrapper>
 							</q-row-container>
 							<!-- End EQUIP___PSEUDNOVOGR07 -->
 						</q-group-box-container>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.EQUIP___PSEUDNOVOGR12.isVisible">
 					<q-control-wrapper
 						v-show="controls.EQUIP___PSEUDNOVOGR12.isVisible"
 						class="control-join-group">
@@ -844,6 +856,7 @@
 										v-on="controls.EQUIP___PSEUDANEXOS__.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.EQUIP___PSEUDANEXOS__"
+										:filter-operators="controls.EQUIP___PSEUDANEXOS__.filterOperators"
 										v-on="controls.EQUIP___PSEUDANEXOS__.handlers" />
 								</q-control-wrapper>
 							</q-row-container>
@@ -1516,7 +1529,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1531,7 +1544,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1621,7 +1634,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR09',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -2100,6 +2113,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIP___PSEUDINSTALAG'],
@@ -2327,6 +2341,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIP___PSEUDINSTALAC'],
@@ -2476,6 +2491,10 @@
 									},
 								}),
 								styleVariables: {
+									allowLegend: {
+										rawValue: false,
+										isMapped: false
+									},
 									zoomLevel: {
 										rawValue: 6,
 										isMapped: false
@@ -2624,6 +2643,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIP___PSEUDREPARACO', 'EQUIP___DECOMDECOMNR_', 'EQUIP___EQUIPIFABATIF'],
@@ -2708,7 +2728,7 @@
 								label: computed(() => this.Resources.TECHNICAL_AREA50773),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAreatecn.type,
 								arrayDisplayMode: 'D',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -2880,7 +2900,7 @@
 								defaultValue: ''
 							},
 						],
-						globalEvents: ['changed-EQUIP', 'changed-REPAR', 'changed-PESSO', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
+						globalEvents: ['changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
 						uuid: 'Equip_ValReparaco',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -3804,6 +3824,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						controller: 'EQUIP',
 						action: 'Equip_ValTlequipa',
+						tipoTimeline: '',
 						controlLimits: [
 						],
 					}, this),
@@ -3991,6 +4012,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS EQUIP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT EQUIP]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
@@ -4280,7 +4309,7 @@
 			'controls.EQUIP___PSEUDMOVIMEVV.rowsSelected': {
 				handler()
 				{
-					const value = this.rowKeyHashTableToArray(this.controls.EQUIP___PSEUDMOVIMEVV.rowsSelected)
+					const value = this.controls.EQUIP___PSEUDMOVIMEVV.rowsSelectedKeys
 					this.model.List_Movimevv_SelectedIds.updateValue(value)
 				},
 				deep: true

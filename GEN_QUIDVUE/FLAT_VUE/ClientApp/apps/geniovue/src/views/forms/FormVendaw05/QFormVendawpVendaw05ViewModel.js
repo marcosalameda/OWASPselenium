@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'VENDAW05',
 			area: 'SALE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_VENDAW05',
-				updateFilesTickets: 'UpdateFilesTicketsVENDAW05'
+				recalculateFormulas: 'RecalculateFormulas_Vendaw05',
+				updateFilesTickets: 'UpdateFilesTicketsVendaw05',
+				setFile: 'SetFileVendaw05'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODVENDA',
 			description: '',
 		}).cloneFrom(values?.ValCodvenda))
-		watch(() => this.ValCodvenda.value, (newValue, oldValue) => this.onUpdate('sale.codvenda', this.ValCodvenda, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodvenda.value, (newValue, oldValue) => this.onUpdate('sale.codvenda', this.ValCodvenda, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodorgan = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodorgan))
-		watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('sale.codorgan', this.ValCodorgan, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('sale.codorgan', this.ValCodorgan, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValDtaprese = reactive(new modelFieldType.DateTime({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTAPRESE',
 			description: computed(() => this.Resources.PRESENTATION_MADE15117),
 		}).cloneFrom(values?.ValDtaprese))
-		watch(() => this.ValDtaprese.value, (newValue, oldValue) => this.onUpdate('sale.dtaprese', this.ValDtaprese, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtaprese.value, (newValue, oldValue) => this.onUpdate('sale.dtaprese', this.ValDtaprese, newValue, oldValue)))
 
 		this.ValApresent = reactive(new modelFieldType.Boolean({
 			id: 'ValApresent',
@@ -81,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'APRESENT',
 			description: computed(() => this.Resources.PRESENTATION64246),
 		}).cloneFrom(values?.ValApresent))
-		watch(() => this.ValApresent.value, (newValue, oldValue) => this.onUpdate('sale.apresent', this.ValApresent, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValApresent.value, (newValue, oldValue) => this.onUpdate('sale.apresent', this.ValApresent, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.ValIdentifi = reactive(new modelFieldType.String({
@@ -93,7 +94,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.IDENTIFICATION_OF_BU58085),
 		}).cloneFrom(values?.ValIdentifi))
-		watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('sale.identifi', this.ValIdentifi, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIdentifi.value, (newValue, oldValue) => this.onUpdate('sale.identifi', this.ValIdentifi, newValue, oldValue)))
 	}
 
 	/**

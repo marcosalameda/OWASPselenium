@@ -2,13 +2,24 @@
 	Resources: Record<string, object>
 }
 
-class UsersTexts
+class BaseResources
 {
 	private readonly resources: Record<string, object>
 
 	constructor(vueContext: VueContext)
 	{
 		this.resources = vueContext.Resources
+	}
+
+		get actions() {
+			return this.resources.ACOES22599
+		}
+}
+
+class UsersTexts extends BaseResources
+{
+	constructor(vueContext: VueContext) {
+		super(vueContext);
 	}
 		get assignRolesQuickly() {
 			return this.resources.ATRIBUIR_RAPIDAMENTE15967
@@ -45,13 +56,10 @@ class UsersTexts
 		}
 }
 
-class SystemConfigTexts
+class SystemConfigTexts extends BaseResources
 {
-	private readonly resources: Record<string, object>
-
-	constructor(vueContext: VueContext)
-	{
-		this.resources = vueContext.Resources
+	constructor(vueContext: VueContext) {
+		super(vueContext);
 	}
 		get assignRolesQuickly() {
 			return this.resources.ATRIBUIR_RAPIDAMENTE15967
@@ -367,13 +375,10 @@ class SystemConfigTexts
 		}
 }
 
-class AppConfigTexts
+class AppConfigTexts extends BaseResources
 {
-	private readonly resources: Record<string, object>
-
-	constructor(vueContext: VueContext)
-	{
-		this.resources = vueContext.Resources
+	constructor(vueContext: VueContext) {
+		super(vueContext);
 	}
 		get appConfigurationTitle() {
 			return this.resources.CONFIGURACAO_DA_APLI59110
@@ -458,9 +463,6 @@ class AppConfigTexts
 		}
 		get fixedUsersTitle() {
 			return this.resources.UTILIZADORES_FIXOS00716
-		}
-		get appConfigurationTitle() {
-			return this.resources.CONFIGURACAO_DA_APLI59110
 		}
 		get pathAppLabel() {
 			return this.resources.CAMINHO_PARA_A_APLIC44450

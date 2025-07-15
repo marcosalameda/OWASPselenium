@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -105,15 +105,14 @@
 							:suggestion-mode-on="suggestionModeOn">
 							<q-radio-group
 								v-if="controls.FLDSCONDFLDS_COND____.isVisible"
-								id="FLDSCONDFLDS_COND____"
-								:model-value="model.ValCond.value"
-								deselect-radio
-								:label-left-side="controls.FLDSCONDFLDS_COND____.labelPosition === labelAlignment.left"
-								:number-of-columns="controls.FLDSCONDFLDS_COND____.columnNumber"
-								:is-required="controls.FLDSCONDFLDS_COND____.isRequired"
-								:readonly="controls.FLDSCONDFLDS_COND____.readonly"
-								:options-list="controls.FLDSCONDFLDS_COND____.items"
-								@update:model-value="model.ValCond.fnUpdateValue" />
+								v-bind="controls.FLDSCONDFLDS_COND____.props"
+								v-on="controls.FLDSCONDFLDS_COND____.handlers">
+								<q-radio-button
+									v-for="radio in controls.FLDSCONDFLDS_COND____.items"
+									:key="radio.key"
+									:label="radio.value"
+									:value="radio.key" />
+							</q-radio-group>
 						</base-input-structure>
 						<q-group-box-container
 							id="FLDSCONDPSEUDGROUP4__"
@@ -384,6 +383,7 @@
 										v-on="controls.FLDSCONDPSEUDLISTTBL_.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.FLDSCONDPSEUDLISTTBL_"
+										:filter-operators="controls.FLDSCONDPSEUDLISTTBL_.filterOperators"
 										v-on="controls.FLDSCONDPSEUDLISTTBL_.handlers" />
 								</q-control-wrapper>
 							</q-row-container>
@@ -752,14 +752,13 @@
 						valueChangeEvent: 'fieldChange:flds.cond',
 						id: 'FLDSCONDFLDS_COND____',
 						name: 'COND',
-						size: 'medium',
 						label: computed(() => this.Resources.FIELD_STATE03599),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 8,
 						labelId: 'label_FLDSCONDFLDS_COND____',
 						arrayName: 'aCondTst',
-						columnNumber: 1,
+						columns: 1,
 						controlLimits: [
 						],
 					}, this),
@@ -867,7 +866,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSCONDPSEUDGROUP1__',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 						requiredConditions: {
@@ -1660,6 +1659,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS FLDSCOND]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FLDSCOND]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

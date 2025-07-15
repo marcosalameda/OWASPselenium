@@ -31,6 +31,11 @@ export class BaseProperty {
 
 		_merge(this, options)
 	}
+
+	destroy()
+	{
+		this.getResource = null
+	}
 }
 
 export class StringProperty extends BaseProperty {
@@ -153,6 +158,13 @@ export class ArrayProperty extends BaseProperty {
 				value: computed(() => this.getResource(element.resourceId))
 			}
 		})
+	}
+
+	destroy()
+	{
+		super.destroy()
+
+		this.array.length = 0
 	}
 }
 

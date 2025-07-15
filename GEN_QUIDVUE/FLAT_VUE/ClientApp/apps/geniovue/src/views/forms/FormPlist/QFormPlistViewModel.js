@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PLIST',
 			area: 'ITEM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PLIST',
-				updateFilesTickets: 'UpdateFilesTicketsPLIST'
+				recalculateFormulas: 'RecalculateFormulas_Plist',
+				updateFilesTickets: 'UpdateFilesTicketsPlist',
+				setFile: 'SetFilePlist'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODITEM',
 			description: '',
 		}).cloneFrom(values?.ValCoditem))
-		watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('item.coditem', this.ValCoditem, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('item.coditem', this.ValCoditem, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodgitem = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources._GLOBAL_ARTICLE51116),
 		}).cloneFrom(values?.ValCodgitem))
-		watch(() => this.ValCodgitem.value, (newValue, oldValue) => this.onUpdate('item.codgitem', this.ValCodgitem, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodgitem.value, (newValue, oldValue) => this.onUpdate('item.codgitem', this.ValCodgitem, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'WAREH',
 			description: computed(() => this.Resources._WAREHOUSE19861),
 		}).cloneFrom(values?.ValCodwareh))
-		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('item.codwareh', this.ValCodwareh, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('item.codwareh', this.ValCodwareh, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableWarehWarehdes = reactive(new modelFieldType.String({
@@ -85,7 +86,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
 		}).cloneFrom(values?.TableWarehWarehdes))
-		watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableWarehWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.TableWarehWarehdes, newValue, oldValue)))
 
 		this.ValItemdes = reactive(new modelFieldType.String({
 			id: 'ValItemdes',
@@ -107,7 +108,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.ARTICLE60065),
 		}).cloneFrom(values?.ValItemdes))
-		watch(() => this.ValItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.ValItemdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValItemdes.value, (newValue, oldValue) => this.onUpdate('item.itemdes', this.ValItemdes, newValue, oldValue)))
 		/** Property List Value. */
 		this.ValPlist = reactive(new modelFieldType.PropertyList({
 			id: 'ValPlist',
@@ -118,7 +119,7 @@ export default class ViewModel extends FormViewModelBase
 			valueCol: 'ValPropval',
 			typeCol: 'ValProptype',
 		}, this.vueContext).cloneFrom(values?.ValPlist))
-		watch(() => this.ValPlist.value, (newValue, oldValue) => this.onUpdate('pseud.plist', this.ValPlist, newValue, oldValue), { deep: true })
+		this.stopWatchers.push(watch(() => this.ValPlist.value, (newValue, oldValue) => this.onUpdate('pseud.plist', this.ValPlist, newValue, oldValue), { deep: true }))
 
 		/** The form fields used only in formulas. */
 		this.GitemValItemdes = reactive(new modelFieldType.String({
@@ -130,7 +131,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.GLOBAL_ARTICLE63861),
 		}).cloneFrom(values?.GitemValItemdes))
-		watch(() => this.GitemValItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.GitemValItemdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.GitemValItemdes.value, (newValue, oldValue) => this.onUpdate('gitem.itemdes', this.GitemValItemdes, newValue, oldValue)))
 	}
 
 	/**

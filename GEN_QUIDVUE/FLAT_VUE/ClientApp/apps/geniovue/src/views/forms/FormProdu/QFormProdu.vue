@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -336,15 +336,16 @@
 						<q-accordion
 							v-if="controls.PRODU___PSEUDNOVOGR06.isVisible"
 							id="PRODU___PSEUDNOVOGR06"
+							v-model="controls.PRODU___PSEUDNOVOGR06.openChild"
 							v-bind="controls.PRODU___PSEUDNOVOGR06">
 							<!-- Start PRODU___PSEUDNOVOGR06 -->
-							<q-group-collapsible
-								id="PRODU___PSEUDNOVOGR04"
-								v-bind="controls.PRODU___PSEUDNOVOGR04"
-								v-on="controls.PRODU___PSEUDNOVOGR04.handlers">
+							<q-accordion-item
+								id="PRODU___PSEUDNOVOGR04-container"
+								value="PRODU___PSEUDNOVOGR04"
+								:title="controls.PRODU___PSEUDNOVOGR04.label">
 								<!-- Start PRODU___PSEUDNOVOGR04 -->
 								<q-row-container
-									v-show="controls.PRODU___PSEUDNOVOGR03.isVisible || controls.PRODU___PSEUDSTOCKEVO.isVisible"
+									v-show="controls.PRODU___PSEUDNOVOGR03.isVisible"
 									is-large>
 									<q-control-wrapper
 										v-show="controls.PRODU___PSEUDNOVOGR03.isVisible"
@@ -401,6 +402,8 @@
 											<!-- End PRODU___PSEUDNOVOGR03 -->
 										</q-group-box-container>
 									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.PRODU___PSEUDSTOCKEVO.isVisible">
 									<q-control-wrapper
 										v-show="controls.PRODU___PSEUDSTOCKEVO.isVisible"
 										class="control-join-group">
@@ -410,15 +413,16 @@
 											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.PRODU___PSEUDSTOCKEVO"
+											:filter-operators="controls.PRODU___PSEUDSTOCKEVO.filterOperators"
 											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PRODU___PSEUDNOVOGR04 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PRODU___PSEUDNOVOGR05"
-								v-bind="controls.PRODU___PSEUDNOVOGR05"
-								v-on="controls.PRODU___PSEUDNOVOGR05.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PRODU___PSEUDNOVOGR05-container"
+								value="PRODU___PSEUDNOVOGR05"
+								:title="controls.PRODU___PSEUDNOVOGR05.label">
 								<!-- Start PRODU___PSEUDNOVOGR05 -->
 								<q-row-container v-show="controls.PRODU___PSEUDINPUTSRE.isVisible || controls.PRODU___PSEUDOUTPUTSD.isVisible">
 									<q-control-wrapper
@@ -430,6 +434,7 @@
 											v-on="controls.PRODU___PSEUDINPUTSRE.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.PRODU___PSEUDINPUTSRE"
+											:filter-operators="controls.PRODU___PSEUDINPUTSRE.filterOperators"
 											v-on="controls.PRODU___PSEUDINPUTSRE.handlers" />
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -441,11 +446,12 @@
 											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.PRODU___PSEUDOUTPUTSD"
+											:filter-operators="controls.PRODU___PSEUDOUTPUTSD.filterOperators"
 											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PRODU___PSEUDNOVOGR05 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End PRODU___PSEUDNOVOGR06 -->
 						</q-accordion>
 					</q-control-wrapper>
@@ -1028,6 +1034,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PRODU___PSEUDNOVOGR03', 'PRODU___PSEUDSTOCKEVO'],
@@ -1221,7 +1228,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-STOCK', 'changed-DISPA', 'changed-PRODU', 'changed-RECEI'],
+						globalEvents: ['changed-RECEI', 'changed-STOCK', 'changed-DISPA', 'changed-PRODU'],
 						uuid: 'Produ_ValStockevo',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1241,6 +1248,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PRODU___PSEUDINPUTSRE', 'PRODU___PSEUDOUTPUTSD'],
@@ -1833,6 +1841,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PRODU]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PRODU]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

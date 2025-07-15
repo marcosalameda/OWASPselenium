@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'AUTHENT',
 			area: 'WAREH',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_AUTHENT',
-				updateFilesTickets: 'UpdateFilesTicketsAUTHENT'
+				recalculateFormulas: 'RecalculateFormulas_Authent',
+				updateFilesTickets: 'UpdateFilesTicketsAuthent',
+				setFile: 'SetFileAuthent'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODWAREH',
 			description: '',
 		}).cloneFrom(values?.ValCodwareh))
-		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.ValWarehdes = reactive(new modelFieldType.String({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.WAREHOUSE51864),
 		}).cloneFrom(values?.ValWarehdes))
-		watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue)))
 	}
 
 	/**

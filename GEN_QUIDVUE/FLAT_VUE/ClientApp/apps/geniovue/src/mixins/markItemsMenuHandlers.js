@@ -25,8 +25,8 @@ export default {
 		// before running init on controls. This is because certain operations like
 		// crudConditions evaluation might depend on the data fetched from these calls.
 		Promise.all([
-			this.fetchListData(this.controls.firstTable, {}),
-			this.fetchListData(this.controls.secondTable, {})
+			this.controls.firstTable.fetchListData({}),
+			this.controls.secondTable.fetchListData({})
 		]).then(async () => {
 			for (let i in this.controls)
 			{
@@ -86,7 +86,7 @@ export default {
 		clearSelectedRows()
 		{
 			// Unselect all rows.
-			this.onUnselectAllRows(this.mainTable)
+			this.mainTable.onUnselectAllRows()
 
 			// Clears the selected rows hash table.
 			this.unselectAllRowsData()
@@ -99,7 +99,7 @@ export default {
 		 */
 		handleSelectedRow(tableConf, rowKey)
 		{
-			this.onSelectRow(tableConf, { rowKeyPath: rowKey, multipleSelection: true })
+			tableConf.onSelectRow({ rowKeyPath: rowKey, multipleSelection: true })
 			if (rowKey?.multipleSelection)
 				rowKey = rowKey.rowKeyPath
 			this.selectRowData(rowKey)
@@ -112,7 +112,7 @@ export default {
 		 */
 		handleUnSelectedRow(tableConf, rowKey)
 		{
-			this.onUnselectRow(tableConf, rowKey)
+			tableConf.onUnselectRow(rowKey)
 			if (rowKey?.multipleSelection)
 				rowKey = rowKey.rowKeyPath
 			this.unselectRowData(rowKey)
@@ -125,7 +125,7 @@ export default {
 		 */
 		handleSelectedRows(tableConf, rowKeys)
 		{
-			this.onSelectRows(tableConf, rowKeys)
+			tableConf.onSelectRows(rowKeys)
 			this.selectRowsData(rowKeys)
 		},
 
@@ -135,7 +135,7 @@ export default {
 		 */
 		handleUnselectAllRows(tableConf)
 		{
-			this.onUnselectAllRows(tableConf)
+			tableConf.onUnselectAllRows()
 			this.unselectAllRowsData()
 		},
 
@@ -156,7 +156,7 @@ export default {
 			{
 				const queryParams = {}
 				queryParams[baseArea] = this.selectedItemKey
-				this.fetchListData(this.controls.secondTable, { queryParams })
+				this.controls.secondTable.fetchListData({ queryParams })
 			}
 		},
 
@@ -188,14 +188,14 @@ export default {
 				action,
 				params,
 				(data) => {
-					this.fetchListData(this.controls.firstTable, {})
+					this.controls.firstTable.fetchListData({})
 
 					// Reload table with related records.
 					if (reloadTable && !_isEmpty(baseArea))
 					{
 						const queryParams = {}
 						queryParams[baseArea] = this.selectedItemKey
-						this.fetchListData(this.controls.secondTable, { queryParams })
+						this.controls.secondTable.fetchListData({ queryParams })
 					}
 
 					let msgType = 'error'

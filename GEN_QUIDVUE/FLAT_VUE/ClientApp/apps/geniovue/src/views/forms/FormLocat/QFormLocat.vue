@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -174,6 +174,7 @@
 										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers" />
 									<q-table-extra-extension
 										:list-ctrl="controls.LOCAT___PSEUDLOCALEXT"
+										:filter-operators="controls.LOCAT___PSEUDLOCALEXT.filterOperators"
 										v-on="controls.LOCAT___PSEUDLOCALEXT.handlers" />
 								</q-control-wrapper>
 							</q-row-container>
@@ -645,7 +646,7 @@
 								label: computed(() => this.Resources.SPACE_TYPE42493),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArraySpacetyp.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArraySpacetyp(vm.$getResource).elements),
 								arrayType: qProjArrays.QArraySpacetyp.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -896,6 +897,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS LOCAT]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT LOCAT]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

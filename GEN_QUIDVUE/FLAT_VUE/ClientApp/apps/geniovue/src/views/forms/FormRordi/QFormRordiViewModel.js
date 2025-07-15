@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'RORDI',
 			area: 'RORDI',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_RORDI',
-				updateFilesTickets: 'UpdateFilesTicketsRORDI'
+				recalculateFormulas: 'RecalculateFormulas_Rordi',
+				updateFilesTickets: 'UpdateFilesTicketsRordi',
+				setFile: 'SetFileRordi'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODRORDI',
 			description: '',
 		}).cloneFrom(values?.ValCodrordi))
-		watch(() => this.ValCodrordi.value, (newValue, oldValue) => this.onUpdate('rordi.codrordi', this.ValCodrordi, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodrordi.value, (newValue, oldValue) => this.onUpdate('rordi.codrordi', this.ValCodrordi, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValOrder = reactive(new modelFieldType.Number({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ORDER39632),
 		}).cloneFrom(values?.ValOrder))
-		watch(() => this.ValOrder.value, (newValue, oldValue) => this.onUpdate('rordi.order', this.ValOrder, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValOrder.value, (newValue, oldValue) => this.onUpdate('rordi.order', this.ValOrder, newValue, oldValue)))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('rordi.title', this.ValTitle, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('rordi.title', this.ValTitle, newValue, oldValue)))
 	}
 
 	/**

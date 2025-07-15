@@ -18,8 +18,13 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\apps/geniovue\dist</BuildOutputFolder>
   </PropertyGroup>
 
+  <ItemGroup>
+    <AllPackageJsons Include="$(PackageJsonDirectory)**\package.json" />
+    <LockFiles Include="$(PackageJsonDirectory)pnpm-lock.yaml" />
+  </ItemGroup>
+
   <!-- This target has been copied from the SDK targets and modified to use pnpm instead -->
-  <Target Name="RunPnpmInstall" DependsOnTargets="PreNpmInstallCheck" Inputs="$(PackageJsonDirectory)package.json" Outputs="$(NpmInstallCheck)" BeforeTargets="RunNpmInstall">
+  <Target Name="RunPnpmInstall" DependsOnTargets="PreNpmInstallCheck" Inputs="@(AllPackageJsons);@(LockFiles)" Outputs="$(NpmInstallCheck)" BeforeTargets="RunNpmInstall">
     <!-- Ensure Node.js is installed -->
     <Exec Command="node --version" ContinueOnError="true">
       <Output TaskParameter="ExitCode" PropertyName="ErrorCodeNpmVersion" />

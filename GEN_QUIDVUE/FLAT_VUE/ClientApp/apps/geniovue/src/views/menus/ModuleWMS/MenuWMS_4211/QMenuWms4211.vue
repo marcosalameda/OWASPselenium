@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -181,7 +182,7 @@
 								dataLength: 1,
 								scrollData: 1,
 								isVisible: false,
-								array: computed(() => qProjArrays.QArrayFaciltyp.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayFaciltyp(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayFaciltyp.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -222,7 +223,7 @@
 								dataLength: 1,
 								scrollData: 1,
 								isVisible: false,
-								array: computed(() => qProjArrays.QArrayGpsinput.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayGpsinput(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGpsinput.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -411,7 +412,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-ENTIT', 'changed-FACIL'],
+						globalEvents: ['changed-FACTY', 'changed-CNTRY', 'changed-FACIL', 'changed-ENTIT'],
 						uuid: '24c039d6-a804-4041-8cef-ca842275cf78',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -438,6 +439,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_4211]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_4211]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

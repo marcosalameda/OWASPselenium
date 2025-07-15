@@ -4,6 +4,7 @@
 		return {
 			yearlyTimeline: {
 				// Timeline Item-1 (Row-1)
+				tipoTimeline: 'S',
 				timeLineData: {
 					rows: [
 						{
@@ -211,6 +212,7 @@
 			// Timeline-2 (Monthly)
 			monthlyTimeline: {
 				// Timeline Item-1 (Row-1)
+				tipoTimeline: 'S',
 				timeLineData: {
 					rows: [
 						{
@@ -431,6 +433,7 @@
 			//  Timeline-3 (Daily)
 			dailyTimeline: {
 				// Timeline Item-1 (Row-1)
+				tipoTimeline: 'S',
 				timeLineData: {
 					rows: [
 						{
@@ -658,6 +661,7 @@
 			//  Timeline-4 (Weekly)
 			weeklyTimeline: {
 				// Timeline Item-1 (Row-1)
+				tipoTimeline: 'S',
 				timeLineData: {
 					rows: [
 						{

@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -157,6 +157,7 @@
 							v-on="controls.RECEI___PSEUDRECEIPTL.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.RECEI___PSEUDRECEIPTL"
+							:filter-operators="controls.RECEI___PSEUDRECEIPTL.filterOperators"
 							v-on="controls.RECEI___PSEUDRECEIPTL.handlers" />
 					</q-control-wrapper>
 					<q-control-wrapper
@@ -606,7 +607,7 @@
 						label: computed(() => this.Resources.RECEIPT_DATE00996),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -898,7 +899,7 @@
 						label: computed(() => this.Resources.RECEIPT_VERIFICATION62328),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -949,7 +950,7 @@
 						label: computed(() => this.Resources.STORAGE_DATE59954),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 						showWhen: {
@@ -1053,6 +1054,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS RECEI]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT RECEI]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

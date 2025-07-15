@@ -64,6 +64,7 @@
 							v-on="controls.WID_PESSPSEUDPESSLIST.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.WID_PESSPSEUDPESSLIST"
+							:filter-operators="controls.WID_PESSPSEUDPESSLIST.filterOperators"
 							v-on="controls.WID_PESSPSEUDPESSLIST.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -432,7 +433,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1', 'changed-REGI1'],
+						globalEvents: ['changed-PESSO', 'changed-CATEG', 'changed-REGI1', 'changed-CNTRY', 'changed-CMPNY', 'changed-PAIS1'],
 						uuid: 'Wid_pess_ValPesslist',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -610,6 +611,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WID_PESS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WID_PESS]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

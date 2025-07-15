@@ -44,7 +44,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			field: 'CODDISPA',
 			description: '',
 		}).cloneFrom(values?.DispaValCoddispa))
-		watch(() => this.DispaValCoddispa.value, (newValue, oldValue) => this.onUpdate('dispa.coddispa', this.DispaValCoddispa, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DispaValCoddispa.value, (newValue, oldValue) => this.onUpdate('dispa.coddispa', this.DispaValCoddispa, newValue, oldValue)))
 
 		this.DispaValCoddisst = reactive(new modelFieldType.ForeignKey({
 			id: 'DispaValCoddisst',
@@ -54,7 +54,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			relatedArea: 'DISST',
 			description: computed(() => this.Resources.___STATUS46938),
 		}).cloneFrom(values?.DispaValCoddisst))
-		watch(() => this.DispaValCoddisst.value, (newValue, oldValue) => this.onUpdate('dispa.coddisst', this.DispaValCoddisst, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DispaValCoddisst.value, (newValue, oldValue) => this.onUpdate('dispa.coddisst', this.DispaValCoddisst, newValue, oldValue)))
 
 		this.DisstValCoddisst = reactive(new modelFieldType.PrimaryKey({
 			id: 'DisstValCoddisst',
@@ -63,7 +63,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			field: 'CODDISST',
 			description: '',
 		}).cloneFrom(values?.DisstValCoddisst))
-		watch(() => this.DisstValCoddisst.value, (newValue, oldValue) => this.onUpdate('disst.coddisst', this.DisstValCoddisst, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DisstValCoddisst.value, (newValue, oldValue) => this.onUpdate('disst.coddisst', this.DisstValCoddisst, newValue, oldValue)))
 
 		this.DispaValDispanr = reactive(new modelFieldType.Number({
 			id: 'DispaValDispanr',
@@ -74,7 +74,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.DISPATCH_NUMBER23616),
 		}).cloneFrom(values?.DispaValDispanr))
-		watch(() => this.DispaValDispanr.value, (newValue, oldValue) => this.onUpdate('dispa.dispanr', this.DispaValDispanr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DispaValDispanr.value, (newValue, oldValue) => this.onUpdate('dispa.dispanr', this.DispaValDispanr, newValue, oldValue)))
 
 		this.DispaValDispadt = reactive(new modelFieldType.DateTime({
 			id: 'DispaValDispadt',
@@ -83,7 +83,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			field: 'DISPADT',
 			description: computed(() => this.Resources.DISPATCH_DATE54413),
 		}).cloneFrom(values?.DispaValDispadt))
-		watch(() => this.DispaValDispadt.value, (newValue, oldValue) => this.onUpdate('dispa.dispadt', this.DispaValDispadt, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DispaValDispadt.value, (newValue, oldValue) => this.onUpdate('dispa.dispadt', this.DispaValDispadt, newValue, oldValue)))
 
 		this.PersoValName = reactive(new modelFieldType.String({
 			id: 'PersoValName',
@@ -93,7 +93,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.PERSON_NAME40980),
 		}).cloneFrom(values?.PersoValName))
-		watch(() => this.PersoValName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.PersoValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.PersoValName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.PersoValName, newValue, oldValue)))
 
 		this.DispaValCodperso = reactive(new modelFieldType.ForeignKey({
 			id: 'DispaValCodperso',
@@ -103,7 +103,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			relatedArea: 'PERSO',
 			description: computed(() => this.Resources.__PERSON_RESPONSIBLE00553),
 		}).cloneFrom(values?.DispaValCodperso))
-		watch(() => this.DispaValCodperso.value, (newValue, oldValue) => this.onUpdate('dispa.codperso', this.DispaValCodperso, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DispaValCodperso.value, (newValue, oldValue) => this.onUpdate('dispa.codperso', this.DispaValCodperso, newValue, oldValue)))
 
 		this.PersoValCodperso = reactive(new modelFieldType.PrimaryKey({
 			id: 'PersoValCodperso',
@@ -112,7 +112,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			field: 'CODPERSO',
 			description: '',
 		}).cloneFrom(values?.PersoValCodperso))
-		watch(() => this.PersoValCodperso.value, (newValue, oldValue) => this.onUpdate('perso.codperso', this.PersoValCodperso, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.PersoValCodperso.value, (newValue, oldValue) => this.onUpdate('perso.codperso', this.PersoValCodperso, newValue, oldValue)))
 
 		this.DisstValStatus = reactive(new modelFieldType.String({
 			id: 'DisstValStatus',
@@ -122,7 +122,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.STATUS62033),
 		}).cloneFrom(values?.DisstValStatus))
-		watch(() => this.DisstValStatus.value, (newValue, oldValue) => this.onUpdate('disst.status', this.DisstValStatus, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DisstValStatus.value, (newValue, oldValue) => this.onUpdate('disst.status', this.DisstValStatus, newValue, oldValue)))
 
 		this.EntitValName = reactive(new modelFieldType.String({
 			id: 'EntitValName',
@@ -132,7 +132,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.LEGAL_NAME42902),
 		}).cloneFrom(values?.EntitValName))
-		watch(() => this.EntitValName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.EntitValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.EntitValName.value, (newValue, oldValue) => this.onUpdate('entit.name', this.EntitValName, newValue, oldValue)))
 
 		this.DispaValCodentit = reactive(new modelFieldType.ForeignKey({
 			id: 'DispaValCodentit',
@@ -142,7 +142,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			relatedArea: 'ENTIT',
 			description: computed(() => this.Resources.__CUSTOMER57515),
 		}).cloneFrom(values?.DispaValCodentit))
-		watch(() => this.DispaValCodentit.value, (newValue, oldValue) => this.onUpdate('dispa.codentit', this.DispaValCodentit, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DispaValCodentit.value, (newValue, oldValue) => this.onUpdate('dispa.codentit', this.DispaValCodentit, newValue, oldValue)))
 
 		this.EntitValCodentit = reactive(new modelFieldType.PrimaryKey({
 			id: 'EntitValCodentit',
@@ -151,7 +151,7 @@ export class KanbanCardViewModel extends MenuViewModelBase
 			field: 'CODENTIT',
 			description: '',
 		}).cloneFrom(values?.EntitValCodentit))
-		watch(() => this.EntitValCodentit.value, (newValue, oldValue) => this.onUpdate('entit.codentit', this.EntitValCodentit, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.EntitValCodentit.value, (newValue, oldValue) => this.onUpdate('entit.codentit', this.EntitValCodentit, newValue, oldValue)))
 
 		const _tempid = computed(() => this.DispaValCoddispa.displayValue)
 		Object.defineProperty(this, 'id', {
@@ -233,7 +233,7 @@ export class KanbanColumnViewModel extends MenuViewModelBase
 			field: 'CODDISST',
 			description: '',
 		}).cloneFrom(values?.DisstValCoddisst))
-		watch(() => this.DisstValCoddisst.value, (newValue, oldValue) => this.onUpdate('disst.coddisst', this.DisstValCoddisst, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DisstValCoddisst.value, (newValue, oldValue) => this.onUpdate('disst.coddisst', this.DisstValCoddisst, newValue, oldValue)))
 
 		this.DisstValOrder = reactive(new modelFieldType.Number({
 			id: 'DisstValOrder',
@@ -244,7 +244,7 @@ export class KanbanColumnViewModel extends MenuViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ORDER39632),
 		}).cloneFrom(values?.DisstValOrder))
-		watch(() => this.DisstValOrder.value, (newValue, oldValue) => this.onUpdate('disst.order', this.DisstValOrder, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DisstValOrder.value, (newValue, oldValue) => this.onUpdate('disst.order', this.DisstValOrder, newValue, oldValue)))
 
 		this.DisstValStatus = reactive(new modelFieldType.String({
 			id: 'DisstValStatus',
@@ -254,7 +254,7 @@ export class KanbanColumnViewModel extends MenuViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.STATUS62033),
 		}).cloneFrom(values?.DisstValStatus))
-		watch(() => this.DisstValStatus.value, (newValue, oldValue) => this.onUpdate('disst.status', this.DisstValStatus, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DisstValStatus.value, (newValue, oldValue) => this.onUpdate('disst.status', this.DisstValStatus, newValue, oldValue)))
 
 		this.DisstValDescript = reactive(new modelFieldType.String({
 			id: 'DisstValDescript',
@@ -264,7 +264,7 @@ export class KanbanColumnViewModel extends MenuViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.DisstValDescript))
-		watch(() => this.DisstValDescript.value, (newValue, oldValue) => this.onUpdate('disst.descript', this.DisstValDescript, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.DisstValDescript.value, (newValue, oldValue) => this.onUpdate('disst.descript', this.DisstValDescript, newValue, oldValue)))
 
 		const _tempid = computed(() => this.DisstValCoddisst.displayValue)
 		Object.defineProperty(this, 'id', {

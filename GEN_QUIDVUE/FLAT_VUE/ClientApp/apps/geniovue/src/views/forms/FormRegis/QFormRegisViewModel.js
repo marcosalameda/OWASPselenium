@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'REGIS',
 			area: 'REGIS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_REGIS',
-				updateFilesTickets: 'UpdateFilesTicketsREGIS'
+				recalculateFormulas: 'RecalculateFormulas_Regis',
+				updateFilesTickets: 'UpdateFilesTicketsRegis',
+				setFile: 'SetFileRegis'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODREGIS',
 			description: '',
 		}).cloneFrom(values?.ValCodregis))
-		watch(() => this.ValCodregis.value, (newValue, oldValue) => this.onUpdate('regis.codregis', this.ValCodregis, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodregis.value, (newValue, oldValue) => this.onUpdate('regis.codregis', this.ValCodregis, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('regis.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('regis.name', this.ValName, newValue, oldValue)))
 
 		this.ValNif = reactive(new modelFieldType.String({
 			id: 'ValNif',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.TAX_IDENTIFICATION_N63094),
 		}).cloneFrom(values?.ValNif))
-		watch(() => this.ValNif.value, (newValue, oldValue) => this.onUpdate('regis.nif', this.ValNif, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNif.value, (newValue, oldValue) => this.onUpdate('regis.nif', this.ValNif, newValue, oldValue)))
 
 		this.ValTelephon = reactive(new modelFieldType.String({
 			id: 'ValTelephon',
@@ -81,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 15,
 			description: computed(() => this.Resources.PHONE56703),
 		}).cloneFrom(values?.ValTelephon))
-		watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('regis.telephon', this.ValTelephon, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('regis.telephon', this.ValTelephon, newValue, oldValue)))
 
 		this.ValEmail1 = reactive(new modelFieldType.String({
 			id: 'ValEmail1',
@@ -91,7 +92,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 254,
 			description: computed(() => this.Resources.EMAIL25170),
 		}).cloneFrom(values?.ValEmail1))
-		watch(() => this.ValEmail1.value, (newValue, oldValue) => this.onUpdate('regis.email1', this.ValEmail1, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValEmail1.value, (newValue, oldValue) => this.onUpdate('regis.email1', this.ValEmail1, newValue, oldValue)))
 
 		this.ValEmail2 = reactive(new modelFieldType.String({
 			id: 'ValEmail2',
@@ -101,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 254,
 			description: computed(() => this.Resources.EMAIL25170),
 		}).cloneFrom(values?.ValEmail2))
-		watch(() => this.ValEmail2.value, (newValue, oldValue) => this.onUpdate('regis.email2', this.ValEmail2, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValEmail2.value, (newValue, oldValue) => this.onUpdate('regis.email2', this.ValEmail2, newValue, oldValue)))
 	}
 
 	/**

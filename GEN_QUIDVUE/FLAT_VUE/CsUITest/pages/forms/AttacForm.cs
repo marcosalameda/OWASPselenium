@@ -26,7 +26,7 @@ public class AttacForm : Form
 	/// <summary>
 	/// Document
 	/// </summary>
-	public DocumentControl AttacDocument => new DocumentControl(driver, ContainerLocator, "ATTAC___ATTACDOCUMENT");
+	public DocumentControl AttacDocument => new DocumentControl(driver, ContainerLocator, "ATTAC___ATTACDOCUMENT-container");
 
 	public AttacForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ATTAC", containerLocator: containerLocator) { }

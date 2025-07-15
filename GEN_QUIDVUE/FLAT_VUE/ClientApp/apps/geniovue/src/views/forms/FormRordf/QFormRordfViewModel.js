@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'RORDF',
 			area: 'RORDF',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_RORDF',
-				updateFilesTickets: 'UpdateFilesTicketsRORDF'
+				recalculateFormulas: 'RecalculateFormulas_Rordf',
+				updateFilesTickets: 'UpdateFilesTicketsRordf',
+				setFile: 'SetFileRordf'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODRORDF',
 			description: '',
 		}).cloneFrom(values?.ValCodrordf))
-		watch(() => this.ValCodrordf.value, (newValue, oldValue) => this.onUpdate('rordf.codrordf', this.ValCodrordf, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodrordf.value, (newValue, oldValue) => this.onUpdate('rordf.codrordf', this.ValCodrordf, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValOrder = reactive(new modelFieldType.Number({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 1,
 			description: computed(() => this.Resources.ORDER39632),
 		}).cloneFrom(values?.ValOrder))
-		watch(() => this.ValOrder.value, (newValue, oldValue) => this.onUpdate('rordf.order', this.ValOrder, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValOrder.value, (newValue, oldValue) => this.onUpdate('rordf.order', this.ValOrder, newValue, oldValue)))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('rordf.title', this.ValTitle, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('rordf.title', this.ValTitle, newValue, oldValue)))
 	}
 
 	/**

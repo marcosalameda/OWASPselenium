@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -555,7 +555,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.INFIELDSPSEUDNOVOGR06.isVisible || controls.INFIELDSFLDS_CREATUSE.isVisible || controls.INFIELDSFLDS_CREATDAT.isVisible || controls.INFIELDSFLDS_CREATINS.isVisible || controls.INFIELDSFLDS_CREATHOU.isVisible"
+					v-show="controls.INFIELDSPSEUDNOVOGR06.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.INFIELDSPSEUDNOVOGR06.isVisible"
@@ -615,21 +615,22 @@
 										:suggestion-mode-on="suggestionModeOn">
 										<q-radio-group
 											v-if="controls.INFIELDSFLDS_RADIOB__.isVisible"
-											id="INFIELDSFLDS_RADIOB__"
-											:model-value="model.ValRadiob.value"
-											deselect-radio
-											:label-left-side="controls.INFIELDSFLDS_RADIOB__.labelPosition === labelAlignment.left"
-											:number-of-columns="controls.INFIELDSFLDS_RADIOB__.columnNumber"
-											:is-required="controls.INFIELDSFLDS_RADIOB__.isRequired"
-											:readonly="controls.INFIELDSFLDS_RADIOB__.readonly"
-											:options-list="controls.INFIELDSFLDS_RADIOB__.items"
-											@update:model-value="model.ValRadiob.fnUpdateValue" />
+											v-bind="controls.INFIELDSFLDS_RADIOB__.props"
+											v-on="controls.INFIELDSFLDS_RADIOB__.handlers">
+											<q-radio-button
+												v-for="radio in controls.INFIELDSFLDS_RADIOB__.items"
+												:key="radio.key"
+												:label="radio.value"
+												:value="radio.key" />
+										</q-radio-group>
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
 							<!-- End INFIELDSPSEUDNOVOGR06 -->
 						</q-group-box-container>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.INFIELDSFLDS_CREATUSE.isVisible || controls.INFIELDSFLDS_CREATDAT.isVisible || controls.INFIELDSFLDS_CREATINS.isVisible || controls.INFIELDSFLDS_CREATHOU.isVisible">
 					<q-control-wrapper
 						v-show="controls.INFIELDSFLDS_CREATUSE.isVisible"
 						class="control-join-group">
@@ -1122,7 +1123,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR01',
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1136,7 +1137,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR01',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1150,7 +1151,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR01',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1164,7 +1165,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR01',
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -1492,7 +1493,7 @@
 						label: computed(() => this.Resources.DAY27593),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1505,7 +1506,7 @@
 						label: computed(() => this.Resources.COMPLETE_DATE53774),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -1518,7 +1519,7 @@
 						label: computed(() => this.Resources.HOUR15646),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1527,7 +1528,6 @@
 						valueChangeEvent: 'fieldChange:flds.radiob',
 						id: 'INFIELDSFLDS_RADIOB__',
 						name: 'RADIOB',
-						size: 'mini',
 						label: computed(() => this.Resources.RADIO_BTN20980),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
@@ -1535,7 +1535,7 @@
 						maxLength: 5,
 						labelId: 'label_INFIELDSFLDS_RADIOB__',
 						arrayName: 'RADIOBTN',
-						columnNumber: 2,
+						columns: 2,
 						controlLimits: [
 						],
 					}, this),
@@ -1680,6 +1680,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS INFIELDS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT INFIELDS]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

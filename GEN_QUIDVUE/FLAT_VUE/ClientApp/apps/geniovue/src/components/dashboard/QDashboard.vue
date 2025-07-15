@@ -215,6 +215,9 @@
 		beforeUnmount()
 		{
 			window.removeEventListener('resize', this.resizeGrid)
+			if(this.grid && typeof this.grid.destroy === 'function')
+				this.grid.destroy()
+			this.grid = null
 		},
 
 		computed: {

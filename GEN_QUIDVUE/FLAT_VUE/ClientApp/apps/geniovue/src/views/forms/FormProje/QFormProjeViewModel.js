@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PROJE',
 			area: 'PROJE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PROJE',
-				updateFilesTickets: 'UpdateFilesTicketsPROJE'
+				recalculateFormulas: 'RecalculateFormulas_Proje',
+				updateFilesTickets: 'UpdateFilesTicketsProje',
+				setFile: 'SetFileProje'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPROJE',
 			description: '',
 		}).cloneFrom(values?.ValCodproje))
-		watch(() => this.ValCodproje.value, (newValue, oldValue) => this.onUpdate('proje.codproje', this.ValCodproje, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodproje.value, (newValue, oldValue) => this.onUpdate('proje.codproje', this.ValCodproje, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodyear = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'YEAR1',
 			description: computed(() => this.Resources._REFERENCE_YEAR44132),
 		}).cloneFrom(values?.ValCodyear))
-		watch(() => this.ValCodyear.value, (newValue, oldValue) => this.onUpdate('proje.codyear', this.ValCodyear, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodyear.value, (newValue, oldValue) => this.onUpdate('proje.codyear', this.ValCodyear, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValProjecto = reactive(new modelFieldType.String({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.PROJECT37121),
 		}).cloneFrom(values?.ValProjecto))
-		watch(() => this.ValProjecto.value, (newValue, oldValue) => this.onUpdate('proje.projecto', this.ValProjecto, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValProjecto.value, (newValue, oldValue) => this.onUpdate('proje.projecto', this.ValProjecto, newValue, oldValue)))
 
 		this.TableYear1Year = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 4,
 			description: computed(() => this.Resources.YEAR61794),
 		}).cloneFrom(values?.TableYear1Year))
-		watch(() => this.TableYear1Year.value, (newValue, oldValue) => this.onUpdate('year1.year', this.TableYear1Year, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableYear1Year.value, (newValue, oldValue) => this.onUpdate('year1.year', this.TableYear1Year, newValue, oldValue)))
 
 		this.ValPrimeiro = reactive(new modelFieldType.Number({
 			id: 'ValPrimeiro',
@@ -108,7 +109,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.FIRST42972),
 		}).cloneFrom(values?.ValPrimeiro))
-		watch(() => this.ValPrimeiro.value, (newValue, oldValue) => this.onUpdate('proje.primeiro', this.ValPrimeiro, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPrimeiro.value, (newValue, oldValue) => this.onUpdate('proje.primeiro', this.ValPrimeiro, newValue, oldValue)))
 
 		this.ValBefore = reactive(new modelFieldType.Number({
 			id: 'ValBefore',
@@ -133,7 +134,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.BEFORE60156),
 		}).cloneFrom(values?.ValBefore))
-		watch(() => this.ValBefore.value, (newValue, oldValue) => this.onUpdate('proje.before', this.ValBefore, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValBefore.value, (newValue, oldValue) => this.onUpdate('proje.before', this.ValBefore, newValue, oldValue)))
 
 		this.ValFollowin = reactive(new modelFieldType.Number({
 			id: 'ValFollowin',
@@ -158,7 +159,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.FOLLOWING22170),
 		}).cloneFrom(values?.ValFollowin))
-		watch(() => this.ValFollowin.value, (newValue, oldValue) => this.onUpdate('proje.followin', this.ValFollowin, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFollowin.value, (newValue, oldValue) => this.onUpdate('proje.followin', this.ValFollowin, newValue, oldValue)))
 
 		this.ValUltimo = reactive(new modelFieldType.Number({
 			id: 'ValUltimo',
@@ -183,7 +184,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.LAST49207),
 		}).cloneFrom(values?.ValUltimo))
-		watch(() => this.ValUltimo.value, (newValue, oldValue) => this.onUpdate('proje.ultimo', this.ValUltimo, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValUltimo.value, (newValue, oldValue) => this.onUpdate('proje.ultimo', this.ValUltimo, newValue, oldValue)))
 
 		this.ValSaldo1 = reactive(new modelFieldType.Number({
 			id: 'ValSaldo1',
@@ -207,7 +208,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.NEXT___PREVIOUS__58212),
 		}).cloneFrom(values?.ValSaldo1))
-		watch(() => this.ValSaldo1.value, (newValue, oldValue) => this.onUpdate('proje.saldo1', this.ValSaldo1, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSaldo1.value, (newValue, oldValue) => this.onUpdate('proje.saldo1', this.ValSaldo1, newValue, oldValue)))
 
 		this.ValSaldo2 = reactive(new modelFieldType.Number({
 			id: 'ValSaldo2',
@@ -231,7 +232,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.LAST___FIRST__42481),
 		}).cloneFrom(values?.ValSaldo2))
-		watch(() => this.ValSaldo2.value, (newValue, oldValue) => this.onUpdate('proje.saldo2', this.ValSaldo2, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSaldo2.value, (newValue, oldValue) => this.onUpdate('proje.saldo2', this.ValSaldo2, newValue, oldValue)))
 	}
 
 	/**

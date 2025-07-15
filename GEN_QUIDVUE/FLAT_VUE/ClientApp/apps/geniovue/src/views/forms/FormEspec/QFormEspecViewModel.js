@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ESPEC',
 			area: 'SPECI',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ESPEC',
-				updateFilesTickets: 'UpdateFilesTicketsESPEC'
+				recalculateFormulas: 'RecalculateFormulas_Espec',
+				updateFilesTickets: 'UpdateFilesTicketsEspec',
+				setFile: 'SetFileEspec'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODESPEC',
 			description: '',
 		}).cloneFrom(values?.ValCodespec))
-		watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('speci.codespec', this.ValCodespec, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodespec.value, (newValue, oldValue) => this.onUpdate('speci.codespec', this.ValCodespec, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValEspecial = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.SPECIALTY09304),
 		}).cloneFrom(values?.ValEspecial))
-		watch(() => this.ValEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.ValEspecial, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValEspecial.value, (newValue, oldValue) => this.onUpdate('speci.especial', this.ValEspecial, newValue, oldValue)))
 
 		this.ValAreatecn = reactive(new modelFieldType.String({
 			id: 'ValAreatecn',
@@ -69,10 +70,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'SPECI',
 			field: 'AREATECN',
 			maxLength: 1,
-			arrayOptions: computed(() => qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
 			description: computed(() => this.Resources.TECHNICAL_AREA50773),
 		}).cloneFrom(values?.ValAreatecn))
-		watch(() => this.ValAreatecn.value, (newValue, oldValue) => this.onUpdate('speci.areatecn', this.ValAreatecn, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAreatecn.value, (newValue, oldValue) => this.onUpdate('speci.areatecn', this.ValAreatecn, newValue, oldValue)))
 	}
 
 	/**

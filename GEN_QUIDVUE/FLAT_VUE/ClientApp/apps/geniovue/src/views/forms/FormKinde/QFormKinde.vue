@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -119,6 +119,7 @@
 							v-on="controls.KINDE___PSEUDPARAMETE.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.KINDE___PSEUDPARAMETE"
+							:filter-operators="controls.KINDE___PSEUDPARAMETE.filterOperators"
 							v-on="controls.KINDE___PSEUDPARAMETE.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -132,6 +133,7 @@
 							v-on="controls.KINDE___PSEUDMANUALS_.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.KINDE___PSEUDMANUALS_"
+							:filter-operators="controls.KINDE___PSEUDMANUALS_.filterOperators"
 							v-on="controls.KINDE___PSEUDMANUALS_.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -518,7 +520,7 @@
 								label: computed(() => this.Resources.DATA_TYPE47159),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayDatatype.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayDatatype(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayDatatype.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -530,7 +532,7 @@
 								scrollData: 2,
 								maxDigits: 1,
 								decimalPlaces: 0,
-								array: computed(() => qProjArrays.QArrayDecplace.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayDecplace(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayDecplace.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -948,6 +950,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS KINDE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT KINDE]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

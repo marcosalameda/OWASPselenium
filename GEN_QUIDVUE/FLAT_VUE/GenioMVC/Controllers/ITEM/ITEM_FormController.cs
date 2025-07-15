@@ -570,5 +570,16 @@ namespace GenioMVC.Controllers
 			requestModel.Model.Init(UserContext.Current);
 			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
+
+		/// <summary>
+		/// Stores a new document, in the Docums table, associated to field TECHSPEC
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFileItemTechspec([FromForm] RequestDocumsCreateModel requestModel)
+		{
+			List<string> extensions = [];
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version, extensions);
+		}
 	}
 }

@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'GENCO',
 			area: 'GENRE',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_GENCO',
-				updateFilesTickets: 'UpdateFilesTicketsGENCO'
+				recalculateFormulas: 'RecalculateFormulas_Genco',
+				updateFilesTickets: 'UpdateFilesTicketsGenco',
+				setFile: 'SetFileGenco'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODGENRE',
 			description: '',
 		}).cloneFrom(values?.ValCodgenre))
-		watch(() => this.ValCodgenre.value, (newValue, oldValue) => this.onUpdate('genre.codgenre', this.ValCodgenre, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodgenre.value, (newValue, oldValue) => this.onUpdate('genre.codgenre', this.ValCodgenre, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValAgencont = reactive(new modelFieldType.String({
@@ -59,10 +60,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'GENRE',
 			field: 'AGENCONT',
 			maxLength: 1,
-			arrayOptions: computed(() => qProjArrays.QArrayGenconta.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayGenconta(vm.$getResource).elements),
 			description: computed(() => this.Resources.GENDER_CONTACT17830),
 		}).cloneFrom(values?.ValAgencont))
-		watch(() => this.ValAgencont.value, (newValue, oldValue) => this.onUpdate('genre.agencont', this.ValAgencont, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAgencont.value, (newValue, oldValue) => this.onUpdate('genre.agencont', this.ValAgencont, newValue, oldValue)))
 
 		this.ValGender = reactive(new modelFieldType.String({
 			id: 'ValGender',
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.GENRE63303),
 		}).cloneFrom(values?.ValGender))
-		watch(() => this.ValGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.ValGender, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValGender.value, (newValue, oldValue) => this.onUpdate('genre.gender', this.ValGender, newValue, oldValue)))
 
 		this.ValBackcolo = reactive(new modelFieldType.String({
 			id: 'ValBackcolo',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.BACKGROUND_COLOR47883),
 		}).cloneFrom(values?.ValBackcolo))
-		watch(() => this.ValBackcolo.value, (newValue, oldValue) => this.onUpdate('genre.backcolo', this.ValBackcolo, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValBackcolo.value, (newValue, oldValue) => this.onUpdate('genre.backcolo', this.ValBackcolo, newValue, oldValue)))
 
 		this.ValTextcolo = reactive(new modelFieldType.String({
 			id: 'ValTextcolo',
@@ -92,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TEXT_COLOR24820),
 		}).cloneFrom(values?.ValTextcolo))
-		watch(() => this.ValTextcolo.value, (newValue, oldValue) => this.onUpdate('genre.textcolo', this.ValTextcolo, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTextcolo.value, (newValue, oldValue) => this.onUpdate('genre.textcolo', this.ValTextcolo, newValue, oldValue)))
 	}
 
 	/**

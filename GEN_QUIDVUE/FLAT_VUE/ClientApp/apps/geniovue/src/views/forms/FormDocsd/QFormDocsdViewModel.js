@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'DOCSD',
 			area: 'OUDOC',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_DOCSD',
-				updateFilesTickets: 'UpdateFilesTicketsDOCSD'
+				recalculateFormulas: 'RecalculateFormulas_Docsd',
+				updateFilesTickets: 'UpdateFilesTicketsDocsd',
+				setFile: 'SetFileDocsd'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODDOCSD',
 			description: '',
 		}).cloneFrom(values?.ValCoddocsd))
-		watch(() => this.ValCoddocsd.value, (newValue, oldValue) => this.onUpdate('oudoc.coddocsd', this.ValCoddocsd, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCoddocsd.value, (newValue, oldValue) => this.onUpdate('oudoc.coddocsd', this.ValCoddocsd, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValNrdocsda = reactive(new modelFieldType.Number({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_14817),
 		}).cloneFrom(values?.ValNrdocsda))
-		watch(() => this.ValNrdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.nrdocsda', this.ValNrdocsda, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNrdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.nrdocsda', this.ValNrdocsda, newValue, oldValue)))
 
 		this.ValDtdocsda = reactive(new modelFieldType.DateTime({
 			id: 'ValDtdocsda',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTDOCSDA',
 			description: computed(() => this.Resources.DATE18475),
 		}).cloneFrom(values?.ValDtdocsda))
-		watch(() => this.ValDtdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.dtdocsda', this.ValDtdocsda, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtdocsda.value, (newValue, oldValue) => this.onUpdate('oudoc.dtdocsda', this.ValDtdocsda, newValue, oldValue)))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -81,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('oudoc.title', this.ValTitle, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('oudoc.title', this.ValTitle, newValue, oldValue)))
 	}
 
 	/**

@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'MANUA',
 			area: 'MANUA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_MANUA',
-				updateFilesTickets: 'UpdateFilesTicketsMANUA'
+				recalculateFormulas: 'RecalculateFormulas_Manua',
+				updateFilesTickets: 'UpdateFilesTicketsManua',
+				setFile: 'SetFileManua'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODMANUA',
 			description: '',
 		}).cloneFrom(values?.ValCodmanua))
-		watch(() => this.ValCodmanua.value, (newValue, oldValue) => this.onUpdate('manua.codmanua', this.ValCodmanua, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodmanua.value, (newValue, oldValue) => this.onUpdate('manua.codmanua', this.ValCodmanua, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodkinde = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'KINDE',
 			description: '',
 		}).cloneFrom(values?.ValCodkinde))
-		watch(() => this.ValCodkinde.value, (newValue, oldValue) => this.onUpdate('manua.codkinde', this.ValCodkinde, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodkinde.value, (newValue, oldValue) => this.onUpdate('manua.codkinde', this.ValCodkinde, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableKindeDesignat = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
 		}).cloneFrom(values?.TableKindeDesignat))
-		watch(() => this.TableKindeDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.TableKindeDesignat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableKindeDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.TableKindeDesignat, newValue, oldValue)))
 
 		this.ValName = reactive(new modelFieldType.String({
 			id: 'ValName',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.MANUAL_NAME60077),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('manua.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('manua.name', this.ValName, newValue, oldValue)))
 
 		this.ValDigdocum = reactive(new modelFieldType.Document({
 			id: 'ValDigdocum',
@@ -95,7 +96,7 @@ export default class ViewModel extends FormViewModelBase
 			currentDocument: computed(() => this.ValDigdocumData),
 			description: computed(() => this.Resources.DIGITAL_DOCUMENT59580),
 		}).cloneFrom(values?.ValDigdocum))
-		watch(() => this.ValDigdocum.value, (newValue, oldValue) => this.onUpdate('manua.digdocum', this.ValDigdocum, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDigdocum.value, (newValue, oldValue) => this.onUpdate('manua.digdocum', this.ValDigdocum, newValue, oldValue)))
 
 		this.ValDigdocumPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDigdocumPropertiesVM',
@@ -108,14 +109,14 @@ export default class ViewModel extends FormViewModelBase
 			area: 'MANUA',
 			field: 'DIGDOCUMFK'
 		}).cloneFrom(values?.ValDigdocumfk))
-		watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('manua.digdocumfk', this.ValDigdocumfk, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('manua.digdocumfk', this.ValDigdocumfk, newValue, oldValue)))
 		this.ValDigdocumData = reactive(new modelFieldType.DocumentData({
 			id: 'ValDigdocumData',
 			area: 'MANUA',
 			field: 'DIGDOCUMDATA',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.ValDigdocumData))
-		watch(() => this.ValDigdocumData.value, (newValue, oldValue) => this.onUpdate('manua.digdocumdata', this.ValDigdocumData, newValue, oldValue), { deep: true })
+		this.stopWatchers.push(watch(() => this.ValDigdocumData.value, (newValue, oldValue) => this.onUpdate('manua.digdocumdata', this.ValDigdocumData, newValue, oldValue), { deep: true }))
 
 		this.ValNotes = reactive(new modelFieldType.MultiLineString({
 			id: 'ValNotes',
@@ -124,7 +125,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NOTES',
 			description: computed(() => this.Resources.NOTES05274),
 		}).cloneFrom(values?.ValNotes))
-		watch(() => this.ValNotes.value, (newValue, oldValue) => this.onUpdate('manua.notes', this.ValNotes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNotes.value, (newValue, oldValue) => this.onUpdate('manua.notes', this.ValNotes, newValue, oldValue)))
 	}
 
 	/**

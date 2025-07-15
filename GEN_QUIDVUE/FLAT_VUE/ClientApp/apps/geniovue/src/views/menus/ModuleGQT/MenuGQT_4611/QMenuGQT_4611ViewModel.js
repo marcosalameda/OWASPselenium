@@ -40,7 +40,7 @@ export default class ViewModel extends MenuViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.WAREHOUSE51864),
 		}).cloneFrom(values?.WarehValWarehdes))
-		watch(() => this.WarehValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.WarehValWarehdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.WarehValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.WarehValWarehdes, newValue, oldValue)))
 	}
 
 	/**

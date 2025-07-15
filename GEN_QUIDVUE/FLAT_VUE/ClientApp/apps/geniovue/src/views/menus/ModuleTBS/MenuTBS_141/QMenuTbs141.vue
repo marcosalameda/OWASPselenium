@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -314,7 +315,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-GENRE', 'changed-CONTA', 'changed-TPCON', 'changed-PESSO'],
+						globalEvents: ['changed-GENRE', 'changed-TPCON', 'changed-CONTA', 'changed-PESSO'],
 						uuid: 'c97df91f-65ee-4b77-9b9a-cec4db5ebdb9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -341,6 +342,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS TBS_MENU_141]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT TBS_MENU_141]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

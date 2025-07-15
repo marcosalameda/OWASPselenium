@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PWORG',
 			area: 'PWORG',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PWORG',
-				updateFilesTickets: 'UpdateFilesTicketsPWORG'
+				recalculateFormulas: 'RecalculateFormulas_Pworg',
+				updateFilesTickets: 'UpdateFilesTicketsPworg',
+				setFile: 'SetFilePworg'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPWORG',
 			description: '',
 		}).cloneFrom(values?.ValCodpworg))
-		watch(() => this.ValCodpworg.value, (newValue, oldValue) => this.onUpdate('pworg.codpworg', this.ValCodpworg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpworg.value, (newValue, oldValue) => this.onUpdate('pworg.codpworg', this.ValCodpworg, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodpsw = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PSW',
 			description: '',
 		}).cloneFrom(values?.ValCodpsw))
-		watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pworg.codpsw', this.ValCodpsw, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pworg.codpsw', this.ValCodpsw, newValue, oldValue)))
 
 		this.ValCodorgan = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodorgan',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ORGAN',
 			description: '',
 		}).cloneFrom(values?.ValCodorgan))
-		watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('pworg.codorgan', this.ValCodorgan, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodorgan.value, (newValue, oldValue) => this.onUpdate('pworg.codorgan', this.ValCodorgan, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TablePswNome = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 100,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TablePswNome))
-		watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue)))
 
 		this.TableOrganOrganiza = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.ORGANIZATION64123),
 		}).cloneFrom(values?.TableOrganOrganiza))
-		watch(() => this.TableOrganOrganiza.value, (newValue, oldValue) => this.onUpdate('organ.organiza', this.TableOrganOrganiza, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableOrganOrganiza.value, (newValue, oldValue) => this.onUpdate('organ.organiza', this.TableOrganOrganiza, newValue, oldValue)))
 	}
 
 	/**

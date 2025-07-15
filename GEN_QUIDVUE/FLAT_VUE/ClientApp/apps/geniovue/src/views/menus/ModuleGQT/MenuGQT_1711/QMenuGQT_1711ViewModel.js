@@ -40,7 +40,7 @@ export default class ViewModel extends MenuViewModelBase
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
 		}).cloneFrom(values?.EquipValRegistnr))
-		watch(() => this.EquipValRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.EquipValRegistnr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.EquipValRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.EquipValRegistnr, newValue, oldValue)))
 
 		this.EquipTpequValTipoequi = reactive(new modelFieldType.String({
 			id: 'EquipTpequValTipoequi',
@@ -50,7 +50,7 @@ export default class ViewModel extends MenuViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 		}).cloneFrom(values?.EquipTpequValTipoequi))
-		watch(() => this.EquipTpequValTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.EquipTpequValTipoequi, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.EquipTpequValTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.EquipTpequValTipoequi, newValue, oldValue)))
 	}
 
 	/**

@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PARAM',
 			area: 'PARAM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PARAM',
-				updateFilesTickets: 'UpdateFilesTicketsPARAM'
+				recalculateFormulas: 'RecalculateFormulas_Param',
+				updateFilesTickets: 'UpdateFilesTicketsParam',
+				setFile: 'SetFileParam'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPARAM',
 			description: '',
 		}).cloneFrom(values?.ValCodparam))
-		watch(() => this.ValCodparam.value, (newValue, oldValue) => this.onUpdate('param.codparam', this.ValCodparam, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodparam.value, (newValue, oldValue) => this.onUpdate('param.codparam', this.ValCodparam, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodkinde = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'KINDE',
 			description: '',
 		}).cloneFrom(values?.ValCodkinde))
-		watch(() => this.ValCodkinde.value, (newValue, oldValue) => this.onUpdate('param.codkinde', this.ValCodkinde, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodkinde.value, (newValue, oldValue) => this.onUpdate('param.codkinde', this.ValCodkinde, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableKindeDesignat = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
 		}).cloneFrom(values?.TableKindeDesignat))
-		watch(() => this.TableKindeDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.TableKindeDesignat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableKindeDesignat.value, (newValue, oldValue) => this.onUpdate('kinde.designat', this.TableKindeDesignat, newValue, oldValue)))
 
 		this.ValParameter = reactive(new modelFieldType.String({
 			id: 'ValParameter',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.PARAMETER41976),
 		}).cloneFrom(values?.ValParameter))
-		watch(() => this.ValParameter.value, (newValue, oldValue) => this.onUpdate('param.parameter', this.ValParameter, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValParameter.value, (newValue, oldValue) => this.onUpdate('param.parameter', this.ValParameter, newValue, oldValue)))
 
 		this.ValDatatype = reactive(new modelFieldType.String({
 			id: 'ValDatatype',
@@ -91,10 +92,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'PARAM',
 			field: 'DATATYPE',
 			maxLength: 1,
-			arrayOptions: computed(() => qProjArrays.QArrayDatatype.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayDatatype(vm.$getResource).elements),
 			description: computed(() => this.Resources.DATA_TYPE47159),
 		}).cloneFrom(values?.ValDatatype))
-		watch(() => this.ValDatatype.value, (newValue, oldValue) => this.onUpdate('param.datatype', this.ValDatatype, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDatatype.value, (newValue, oldValue) => this.onUpdate('param.datatype', this.ValDatatype, newValue, oldValue)))
 
 		this.ValDecimalplaces = reactive(new modelFieldType.Number({
 			id: 'ValDecimalplaces',
@@ -103,10 +104,10 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DECPLACE',
 			maxDigits: 1,
 			decimalDigits: 0,
-			arrayOptions: computed(() => qProjArrays.QArrayDecplace.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayDecplace(vm.$getResource).elements),
 			description: computed(() => this.Resources.DECIMAL_PLACES62575),
 		}).cloneFrom(values?.ValDecimalplaces))
-		watch(() => this.ValDecimalplaces.value, (newValue, oldValue) => this.onUpdate('param.decimalplaces', this.ValDecimalplaces, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDecimalplaces.value, (newValue, oldValue) => this.onUpdate('param.decimalplaces', this.ValDecimalplaces, newValue, oldValue)))
 	}
 
 	/**

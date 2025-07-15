@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -183,12 +183,13 @@
 						<q-accordion
 							v-if="controls.PROPE11_PSEUDACC01___.isVisible"
 							id="PROPE11_PSEUDACC01___"
+							v-model="controls.PROPE11_PSEUDACC01___.openChild"
 							v-bind="controls.PROPE11_PSEUDACC01___">
 							<!-- Start PROPE11_PSEUDACC01___ -->
-							<q-group-collapsible
-								id="PROPE11_PSEUDLOCALIZA"
-								v-bind="controls.PROPE11_PSEUDLOCALIZA"
-								v-on="controls.PROPE11_PSEUDLOCALIZA.handlers">
+							<q-accordion-item
+								id="PROPE11_PSEUDLOCALIZA-container"
+								value="PROPE11_PSEUDLOCALIZA"
+								:title="controls.PROPE11_PSEUDLOCALIZA.label">
 								<!-- Start PROPE11_PSEUDLOCALIZA -->
 								<q-row-container v-show="controls.PROPE11_CITY_CITY____.isVisible">
 									<q-control-wrapper
@@ -231,11 +232,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE11_PSEUDLOCALIZA -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE11_PSEUDDETAILS_"
-								v-bind="controls.PROPE11_PSEUDDETAILS_"
-								v-on="controls.PROPE11_PSEUDDETAILS_.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE11_PSEUDDETAILS_-container"
+								value="PROPE11_PSEUDDETAILS_"
+								:title="controls.PROPE11_PSEUDDETAILS_.label">
 								<!-- Start PROPE11_PSEUDDETAILS_ -->
 								<q-row-container v-show="controls.PROPE11_PROPEBUILDTYP.isVisible || controls.PROPE11_PROPETYPOLOGY.isVisible">
 									<q-control-wrapper
@@ -263,15 +264,14 @@
 											:suggestion-mode-on="suggestionModeOn">
 											<q-radio-group
 												v-if="controls.PROPE11_PROPETYPOLOGY.isVisible"
-												id="PROPE11_PROPETYPOLOGY"
-												:model-value="model.ValTypology.value"
-												deselect-radio
-												:label-left-side="controls.PROPE11_PROPETYPOLOGY.labelPosition === labelAlignment.left"
-												:number-of-columns="controls.PROPE11_PROPETYPOLOGY.columnNumber"
-												:is-required="controls.PROPE11_PROPETYPOLOGY.isRequired"
-												:readonly="controls.PROPE11_PROPETYPOLOGY.readonly"
-												:options-list="controls.PROPE11_PROPETYPOLOGY.items"
-												@update:model-value="model.ValTypology.fnUpdateValue" />
+												v-bind="controls.PROPE11_PROPETYPOLOGY.props"
+												v-on="controls.PROPE11_PROPETYPOLOGY.handlers">
+												<q-radio-button
+													v-for="radio in controls.PROPE11_PROPETYPOLOGY.items"
+													:key="radio.key"
+													:label="radio.value"
+													:value="radio.key" />
+											</q-radio-group>
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -330,11 +330,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE11_PSEUDDETAILS_ -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE11_PSEUDAGENTINF"
-								v-bind="controls.PROPE11_PSEUDAGENTINF"
-								v-on="controls.PROPE11_PSEUDAGENTINF.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE11_PSEUDAGENTINF-container"
+								value="PROPE11_PSEUDAGENTINF"
+								:title="controls.PROPE11_PSEUDAGENTINF.label">
 								<!-- Start PROPE11_PSEUDAGENTINF -->
 								<q-row-container v-show="controls.PROPE11_AGENTNAME____.isVisible">
 									<q-control-wrapper
@@ -396,7 +396,7 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE11_PSEUDAGENTINF -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End PROPE11_PSEUDACC01___ -->
 						</q-accordion>
 					</q-control-wrapper>
@@ -409,6 +409,7 @@
 							v-on="controls.PROPE11_PSEUDPROPHOTO.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROPE11_PSEUDPROPHOTO"
+							:filter-operators="controls.PROPE11_PSEUDPROPHOTO.filterOperators"
 							v-on="controls.PROPE11_PSEUDPROPHOTO.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -422,6 +423,7 @@
 							v-on="controls.PROPE11_PSEUDPROPCONT.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROPE11_PSEUDPROPCONT"
+							:filter-operators="controls.PROPE11_PSEUDPROPCONT.filterOperators"
 							v-on="controls.PROPE11_PSEUDPROPCONT.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -862,6 +864,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE11_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE11_CITY_CITY____', 'PROPE11_CTRY_COUNTRY_'],
@@ -923,6 +926,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE11_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE11_PROPEBUILDTYP', 'PROPE11_PROPETYPOLOGY', 'PROPE11_PROPESIZE____', 'PROPE11_PROPEBATHRMS_', 'PROPE11_PROPEYEAR____'],
@@ -952,7 +956,6 @@
 						valueChangeEvent: 'fieldChange:prope.typology',
 						id: 'PROPE11_PROPETYPOLOGY',
 						name: 'TYPOLOGY',
-						size: 'small',
 						label: computed(() => this.Resources.TYPOLOGY11991),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
@@ -960,7 +963,7 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'aparttyp',
-						columnNumber: 4,
+						columns: 4,
 						controlLimits: [
 						],
 					}, this),
@@ -1017,6 +1020,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE11_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE11_AGENTNAME____', 'PROPE11_AGENTEMAIL___', 'PROPE11_AGENTPHOTO___'],
@@ -1593,6 +1597,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PROPE11]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PROPE11]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

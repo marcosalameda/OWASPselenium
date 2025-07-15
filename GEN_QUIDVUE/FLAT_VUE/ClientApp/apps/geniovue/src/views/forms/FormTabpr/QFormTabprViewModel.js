@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TABPR',
 			area: 'TABPR',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_TABPR',
-				updateFilesTickets: 'UpdateFilesTicketsTABPR'
+				recalculateFormulas: 'RecalculateFormulas_Tabpr',
+				updateFilesTickets: 'UpdateFilesTicketsTabpr',
+				setFile: 'SetFileTabpr'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTABPR',
 			description: '',
 		}).cloneFrom(values?.ValCodtabpr))
-		watch(() => this.ValCodtabpr.value, (newValue, oldValue) => this.onUpdate('tabpr.codtabpr', this.ValCodtabpr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtabpr.value, (newValue, oldValue) => this.onUpdate('tabpr.codtabpr', this.ValCodtabpr, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodtpeq1 = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'TPEQU',
 			description: computed(() => this.Resources._TYPE_OF_EQUIPMENT35057),
 		}).cloneFrom(values?.ValCodtpeq1))
-		watch(() => this.ValCodtpeq1.value, (newValue, oldValue) => this.onUpdate('tabpr.codtpeq1', this.ValCodtpeq1, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtpeq1.value, (newValue, oldValue) => this.onUpdate('tabpr.codtpeq1', this.ValCodtpeq1, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableTpequTipoequi = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 		}).cloneFrom(values?.TableTpequTipoequi))
-		watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue)))
 
 		this.ValSince = reactive(new modelFieldType.DateTime({
 			id: 'ValSince',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'SINCE',
 			description: computed(() => this.Resources.SINCE47259),
 		}).cloneFrom(values?.ValSince))
-		watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('tabpr.since', this.ValSince, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('tabpr.since', this.ValSince, newValue, oldValue)))
 
 		this.ValPrecohor = reactive(new modelFieldType.Number({
 			id: 'ValPrecohor',
@@ -93,7 +94,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.PRICE_BY_HOUR01060),
 		}).cloneFrom(values?.ValPrecohor))
-		watch(() => this.ValPrecohor.value, (newValue, oldValue) => this.onUpdate('tabpr.precohor', this.ValPrecohor, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPrecohor.value, (newValue, oldValue) => this.onUpdate('tabpr.precohor', this.ValPrecohor, newValue, oldValue)))
 	}
 
 	/**

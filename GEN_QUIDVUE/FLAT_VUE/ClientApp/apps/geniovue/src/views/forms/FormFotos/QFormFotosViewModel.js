@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FOTOS',
 			area: 'PHOTO',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_FOTOS',
-				updateFilesTickets: 'UpdateFilesTicketsFOTOS'
+				recalculateFormulas: 'RecalculateFormulas_Fotos',
+				updateFilesTickets: 'UpdateFilesTicketsFotos',
+				setFile: 'SetFileFotos'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPHOTO',
 			description: '',
 		}).cloneFrom(values?.ValCodphoto))
-		watch(() => this.ValCodphoto.value, (newValue, oldValue) => this.onUpdate('photo.codphoto', this.ValCodphoto, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodphoto.value, (newValue, oldValue) => this.onUpdate('photo.codphoto', this.ValCodphoto, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'EQUIP',
 			description: '',
 		}).cloneFrom(values?.ValCodequip))
-		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('photo.codequip', this.ValCodequip, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('photo.codequip', this.ValCodequip, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableEquipRegistnr = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
 		}).cloneFrom(values?.TableEquipRegistnr))
-		watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
 
 		this.ValPhotogra = reactive(new modelFieldType.Image({
 			id: 'ValPhotogra',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PHOTOGRA',
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.ValPhotogra))
-		watch(() => this.ValPhotogra.value, (newValue, oldValue) => this.onUpdate('photo.photogra', this.ValPhotogra, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPhotogra.value, (newValue, oldValue) => this.onUpdate('photo.photogra', this.ValPhotogra, newValue, oldValue)))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -92,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('photo.title', this.ValTitle, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('photo.title', this.ValTitle, newValue, oldValue)))
 
 		this.ValAnexed = reactive(new modelFieldType.DateTime({
 			id: 'ValAnexed',
@@ -101,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ANEXED',
 			description: computed(() => this.Resources.ATTACHED26247),
 		}).cloneFrom(values?.ValAnexed))
-		watch(() => this.ValAnexed.value, (newValue, oldValue) => this.onUpdate('photo.anexed', this.ValAnexed, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAnexed.value, (newValue, oldValue) => this.onUpdate('photo.anexed', this.ValAnexed, newValue, oldValue)))
 	}
 
 	/**

@@ -141,21 +141,17 @@ namespace GenioMVC.ViewModels.Grpb
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAgrpb.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAgrpb> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -307,12 +303,6 @@ namespace GenioMVC.ViewModels.Grpb
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAgrpb> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "3M1"),
-				new("Module", "PTN")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<PTN_Menu_3M1_RowViewModel>();
 
@@ -460,7 +450,6 @@ namespace GenioMVC.ViewModels.Grpb
 
 				if (nDistinctSearchTables > 1)
 					throw new BusinessException(Resources.Resources.NAO_E_POSSIVEL_EFETU17380, "PTN_Menu_3M1_ViewModel.Load", "Error: MultipleFiltersTablesBelow", null);
-			}
 		}
 
 		private List<PTN_Menu_3M1_RowViewModel> MapPTN_Menu_3M1(ListingMVC<CSGenioAgrpb> Qlisting, System.Collections.Hashtable tableBelowRows = null)

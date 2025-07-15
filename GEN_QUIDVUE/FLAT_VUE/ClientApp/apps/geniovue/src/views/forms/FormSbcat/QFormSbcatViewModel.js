@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'SBCAT',
 			area: 'SBCAT',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_SBCAT',
-				updateFilesTickets: 'UpdateFilesTicketsSBCAT'
+				recalculateFormulas: 'RecalculateFormulas_Sbcat',
+				updateFilesTickets: 'UpdateFilesTicketsSbcat',
+				setFile: 'SetFileSbcat'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODSBCAT',
 			description: '',
 		}).cloneFrom(values?.ValCodsbcat))
-		watch(() => this.ValCodsbcat.value, (newValue, oldValue) => this.onUpdate('sbcat.codsbcat', this.ValCodsbcat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodsbcat.value, (newValue, oldValue) => this.onUpdate('sbcat.codsbcat', this.ValCodsbcat, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValSubcateg = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.SUB_CATEGORIA15612),
 		}).cloneFrom(values?.ValSubcateg))
-		watch(() => this.ValSubcateg.value, (newValue, oldValue) => this.onUpdate('sbcat.subcateg', this.ValSubcateg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSubcateg.value, (newValue, oldValue) => this.onUpdate('sbcat.subcateg', this.ValSubcateg, newValue, oldValue)))
 	}
 
 	/**

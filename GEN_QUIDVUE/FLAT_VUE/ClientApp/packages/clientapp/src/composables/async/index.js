@@ -1,7 +1,7 @@
 ﻿import _forEach from 'lodash-es/forEach'
 import _remove from 'lodash-es/remove'
 import { v4 as uuidv4 } from 'uuid'
-import { computed, reactive, ref, watch } from 'vue'
+import { reactive, ref, computed, watch } from 'vue'
 
 import { useGenericDataStore } from '../../stores/genericData'
 
@@ -58,7 +58,7 @@ export class QAsyncProcess
 		this._dispatchChange = ref(0)
 		if (this.loadingEffectDelay > 0)
 		{
-			setTimeout((() => {
+			this._timerId = setTimeout((() => {
 				if (this.busyState === true && this.concluded.value === false)
 					genericDataStore.addProcessToBusyPageStack({ id: this.id, message: this.busyStateMessage })
 				this._dispatchChange.value++
@@ -86,6 +86,11 @@ export class QAsyncProcess
 	 */
 	destroy()
 	{
+		if (this._timerId) {
+			clearTimeout(this._timerId)
+			this._timerId = null
+		}
+
 		const genericDataStore = useGenericDataStore()
 
 		genericDataStore.removeProcessFromBusyPageStack(this.id)
@@ -219,7 +224,7 @@ class QAsyncProcessMonitor
 		// Tracks changes in the list of processes and re-evaluates whether there are any pending processes
 		this.loaded = computed(() => !this.processList.hasAny ? this._defaultValueLoaded : this.processList.allLoaded)
 
-		watch(
+		this._stopWatcher = watch(
 			this.processList,
 			() => {
 				if (this.processList.allConcluded)
@@ -300,7 +305,12 @@ class QAsyncProcessMonitor
 	 */
 	destroy()
 	{
+		if (this._stopWatcher)
+			this._stopWatcher()
+		this._stopWatcher = null
+
 		this.processList.destroy()
+		this.callbacksOnce.splice?.(0, this.callbacksOnce.length)
 	}
 }
 

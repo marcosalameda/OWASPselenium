@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -239,6 +239,7 @@
 							v-on="controls.PROJE___PSEUDDESPESAS.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROJE___PSEUDDESPESAS"
+							:filter-operators="controls.PROJE___PSEUDDESPESAS.filterOperators"
 							v-on="controls.PROJE___PSEUDDESPESAS.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -252,6 +253,7 @@
 							v-on="controls.PROJE___PSEUDAGREGADO.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROJE___PSEUDAGREGADO"
+							:filter-operators="controls.PROJE___PSEUDAGREGADO.filterOperators"
 							v-on="controls.PROJE___PSEUDAGREGADO.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -909,7 +911,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-YEAR', 'changed-AGREG', 'changed-EXPEN', 'changed-PROJE'],
+						globalEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: 'Proje_ValDespesas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1093,7 +1095,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-AGREG', 'changed-PROJE', 'changed-YEAR'],
+						globalEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG'],
 						uuid: 'Proje_ValAgregado',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1196,6 +1198,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PROJE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PROJE]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ARMAZ03',
 			area: 'WAREH',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ARMAZ03',
-				updateFilesTickets: 'UpdateFilesTicketsARMAZ03'
+				recalculateFormulas: 'RecalculateFormulas_Armaz03',
+				updateFilesTickets: 'UpdateFilesTicketsArmaz03',
+				setFile: 'SetFileArmaz03'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODWAREH',
 			description: '',
 		}).cloneFrom(values?.ValCodwareh))
-		watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('wareh.codwareh', this.ValCodwareh, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.ValWarehdes = reactive(new modelFieldType.String({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.WAREHOUSE51864),
 		}).cloneFrom(values?.ValWarehdes))
-		watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValWarehdes.value, (newValue, oldValue) => this.onUpdate('wareh.warehdes', this.ValWarehdes, newValue, oldValue)))
 	}
 
 	/**

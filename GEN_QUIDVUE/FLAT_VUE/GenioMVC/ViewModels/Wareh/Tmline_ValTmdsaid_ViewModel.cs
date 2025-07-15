@@ -136,6 +136,7 @@ namespace GenioMVC.ViewModels.Wareh
 
 			model.Icon = "";
 			model.Escala = "un";
+			model.TipoTimeLine = "";
 
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{

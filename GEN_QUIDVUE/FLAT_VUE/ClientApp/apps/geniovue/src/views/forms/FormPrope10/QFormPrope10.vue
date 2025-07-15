@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -183,12 +183,13 @@
 						<q-accordion
 							v-if="controls.PROPE10_PSEUDACC01___.isVisible"
 							id="PROPE10_PSEUDACC01___"
+							v-model="controls.PROPE10_PSEUDACC01___.openChild"
 							v-bind="controls.PROPE10_PSEUDACC01___">
 							<!-- Start PROPE10_PSEUDACC01___ -->
-							<q-group-collapsible
-								id="PROPE10_PSEUDLOCALIZA"
-								v-bind="controls.PROPE10_PSEUDLOCALIZA"
-								v-on="controls.PROPE10_PSEUDLOCALIZA.handlers">
+							<q-accordion-item
+								id="PROPE10_PSEUDLOCALIZA-container"
+								value="PROPE10_PSEUDLOCALIZA"
+								:title="controls.PROPE10_PSEUDLOCALIZA.label">
 								<!-- Start PROPE10_PSEUDLOCALIZA -->
 								<q-row-container v-show="controls.PROPE10_CITY_CITY____.isVisible">
 									<q-control-wrapper
@@ -231,11 +232,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE10_PSEUDLOCALIZA -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE10_PSEUDDETAILS_"
-								v-bind="controls.PROPE10_PSEUDDETAILS_"
-								v-on="controls.PROPE10_PSEUDDETAILS_.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE10_PSEUDDETAILS_-container"
+								value="PROPE10_PSEUDDETAILS_"
+								:title="controls.PROPE10_PSEUDDETAILS_.label">
 								<!-- Start PROPE10_PSEUDDETAILS_ -->
 								<q-row-container v-show="controls.PROPE10_PROPEBUILDTYP.isVisible || controls.PROPE10_PROPETYPOLOGY.isVisible">
 									<q-control-wrapper
@@ -263,15 +264,14 @@
 											:suggestion-mode-on="suggestionModeOn">
 											<q-radio-group
 												v-if="controls.PROPE10_PROPETYPOLOGY.isVisible"
-												id="PROPE10_PROPETYPOLOGY"
-												:model-value="model.ValTypology.value"
-												deselect-radio
-												:label-left-side="controls.PROPE10_PROPETYPOLOGY.labelPosition === labelAlignment.left"
-												:number-of-columns="controls.PROPE10_PROPETYPOLOGY.columnNumber"
-												:is-required="controls.PROPE10_PROPETYPOLOGY.isRequired"
-												:readonly="controls.PROPE10_PROPETYPOLOGY.readonly"
-												:options-list="controls.PROPE10_PROPETYPOLOGY.items"
-												@update:model-value="model.ValTypology.fnUpdateValue" />
+												v-bind="controls.PROPE10_PROPETYPOLOGY.props"
+												v-on="controls.PROPE10_PROPETYPOLOGY.handlers">
+												<q-radio-button
+													v-for="radio in controls.PROPE10_PROPETYPOLOGY.items"
+													:key="radio.key"
+													:label="radio.value"
+													:value="radio.key" />
+											</q-radio-group>
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -330,11 +330,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE10_PSEUDDETAILS_ -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE10_PSEUDAGENTINF"
-								v-bind="controls.PROPE10_PSEUDAGENTINF"
-								v-on="controls.PROPE10_PSEUDAGENTINF.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE10_PSEUDAGENTINF-container"
+								value="PROPE10_PSEUDAGENTINF"
+								:title="controls.PROPE10_PSEUDAGENTINF.label">
 								<!-- Start PROPE10_PSEUDAGENTINF -->
 								<q-row-container v-show="controls.PROPE10_AGENTNAME____.isVisible">
 									<q-control-wrapper
@@ -396,7 +396,7 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE10_PSEUDAGENTINF -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End PROPE10_PSEUDACC01___ -->
 						</q-accordion>
 					</q-control-wrapper>
@@ -409,6 +409,7 @@
 							v-on="controls.PROPE10_PSEUDPROPCONT.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROPE10_PSEUDPROPCONT"
+							:filter-operators="controls.PROPE10_PSEUDPROPCONT.filterOperators"
 							v-on="controls.PROPE10_PSEUDPROPCONT.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -849,6 +850,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE10_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE10_CITY_CITY____', 'PROPE10_CTRY_COUNTRY_'],
@@ -910,6 +912,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE10_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE10_PROPEBUILDTYP', 'PROPE10_PROPETYPOLOGY', 'PROPE10_PROPESIZE____', 'PROPE10_PROPEBATHRMS_', 'PROPE10_PROPEYEAR____'],
@@ -939,7 +942,6 @@
 						valueChangeEvent: 'fieldChange:prope.typology',
 						id: 'PROPE10_PROPETYPOLOGY',
 						name: 'TYPOLOGY',
-						size: 'small',
 						label: computed(() => this.Resources.TYPOLOGY11991),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
@@ -947,7 +949,7 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'aparttyp',
-						columnNumber: 4,
+						columns: 4,
 						controlLimits: [
 						],
 					}, this),
@@ -1004,6 +1006,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE10_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE10_AGENTNAME____', 'PROPE10_AGENTEMAIL___', 'PROPE10_AGENTPHOTO___'],
@@ -1407,6 +1410,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PROPE10]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PROPE10]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

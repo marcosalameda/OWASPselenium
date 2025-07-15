@@ -80,7 +80,7 @@
 				},
 
 				model: {
-					listArray: QArrayGender.setResources(this.$getResource).elements
+					listArray: new QArrayGender(this.$getResource).elements
 				}
 			}
 		},

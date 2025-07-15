@@ -437,8 +437,7 @@ namespace GenioMVC.ViewModels
 		/// <summary>
 		/// Gets the list of columns to export.
 		/// </summary>
-		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
-		public abstract List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false);
+		public abstract List<Exports.QColumn> GetColumnsToExport();
 
 		/// <summary>
 		/// Builds the list CriteriaSet with all the limits, filters and conditions
@@ -466,8 +465,8 @@ namespace GenioMVC.ViewModels
 		/// <param name="ColumnConfiguration">Column order and visibility</param>
 		public List<Exports.QColumn> GetExportColumns(List<CSGenio.framework.TableConfiguration.ColumnConfiguration> ColumnConfiguration)
 		{
-			List<Exports.QColumn> defaultColumns = this.GetColumnsToExport(false);
-			List<Exports.QColumn> configuredColumns = new List<Exports.QColumn>();
+			List<Exports.QColumn> defaultColumns = GetColumnsToExport();
+			List<Exports.QColumn> configuredColumns = [];
 
 			// If configuration is defined, get visible columns from the default configuration
 			if (ColumnConfiguration == null)

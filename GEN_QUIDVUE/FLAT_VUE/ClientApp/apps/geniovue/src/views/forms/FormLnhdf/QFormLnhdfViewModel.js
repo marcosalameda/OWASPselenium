@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'LNHDF',
 			area: 'LNHDF',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_LNHDF',
-				updateFilesTickets: 'UpdateFilesTicketsLNHDF'
+				recalculateFormulas: 'RecalculateFormulas_Lnhdf',
+				updateFilesTickets: 'UpdateFilesTicketsLnhdf',
+				setFile: 'SetFileLnhdf'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODLNHDF',
 			description: '',
 		}).cloneFrom(values?.ValCodlnhdf))
-		watch(() => this.ValCodlnhdf.value, (newValue, oldValue) => this.onUpdate('lnhdf.codlnhdf', this.ValCodlnhdf, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlnhdf.value, (newValue, oldValue) => this.onUpdate('lnhdf.codlnhdf', this.ValCodlnhdf, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodlnhde = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodlnhde))
-		watch(() => this.ValCodlnhde.value, (newValue, oldValue) => this.onUpdate('lnhdf.codlnhde', this.ValCodlnhde, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlnhde.value, (newValue, oldValue) => this.onUpdate('lnhdf.codlnhde', this.ValCodlnhde, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('lnhdf.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('lnhdf.name', this.ValName, newValue, oldValue)))
 	}
 
 	/**

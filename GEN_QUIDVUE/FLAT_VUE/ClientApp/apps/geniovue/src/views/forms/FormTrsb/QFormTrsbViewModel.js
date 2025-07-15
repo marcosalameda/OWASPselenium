@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TRSB',
 			area: 'TRSB',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_TRSB',
-				updateFilesTickets: 'UpdateFilesTicketsTRSB'
+				recalculateFormulas: 'RecalculateFormulas_Trsb',
+				updateFilesTickets: 'UpdateFilesTicketsTrsb',
+				setFile: 'SetFileTrsb'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTRSB',
 			description: '',
 		}).cloneFrom(values?.ValCodtrsb))
-		watch(() => this.ValCodtrsb.value, (newValue, oldValue) => this.onUpdate('trsb.codtrsb', this.ValCodtrsb, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtrsb.value, (newValue, oldValue) => this.onUpdate('trsb.codtrsb', this.ValCodtrsb, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('trsb.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('trsb.name', this.ValName, newValue, oldValue)))
 	}
 
 	/**

@@ -23,6 +23,8 @@
   },
   "include": [
     ".storybook/*",
+    "build",
+    "plugins",
     "src/**/*",
     "src/**/*.vue",
     "src/assets/config/Layoutconfig.json",

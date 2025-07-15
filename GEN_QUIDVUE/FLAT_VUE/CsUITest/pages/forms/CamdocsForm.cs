@@ -15,7 +15,7 @@ public class CamdocsForm : Subform
 	/// <summary>
 	/// Attachments
 	/// </summary>
-	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "CAMDOCS_FLDS_ATTACH__");
+	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "CAMDOCS_FLDS_ATTACH__-container");
 
 	public CamdocsForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "CAMDOCS", "LISTACAM", containerLocator: containerLocator) { }

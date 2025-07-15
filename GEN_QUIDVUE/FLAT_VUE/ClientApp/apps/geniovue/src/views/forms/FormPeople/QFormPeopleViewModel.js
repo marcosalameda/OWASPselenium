@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PEOPLE',
 			area: 'Home',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PEOPLE',
-				updateFilesTickets: 'UpdateFilesTicketsPEOPLE'
+				recalculateFormulas: 'RecalculateFormulas_People',
+				updateFilesTickets: 'UpdateFilesTicketsPeople',
+				setFile: 'SetFilePeople'
 			}
 		})
 

@@ -1637,18 +1637,18 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="feature">The feature name</param>
         /// <returns>True if the feature is active</returns>
-        public static bool IsFeatureActive(string feature)
+        public static int IsFeatureActive(string feature)
         {
             switch (feature)
             {
-                case "NOMVC" :
-                    return true;
-                case "MAL" :
-                    return true;
-                case "NOGER" :
-                    return true;
+                case "NOMVC":
+                    return 1;
+                case "MAL":
+                    return 1;
+                case "NOGER":
+                    return 1;
                 default :
-                    return false;
+                    return 0;
             }
         }
 

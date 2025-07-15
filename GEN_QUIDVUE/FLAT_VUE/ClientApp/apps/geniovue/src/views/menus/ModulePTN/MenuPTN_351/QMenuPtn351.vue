@@ -237,15 +237,15 @@
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
-								this.onSelectRow(this.controls.firstTable, eventData)
+								this.controls.firstTable.onSelectRow(eventData)
 								this.updateListData('rooms')
 							},
 							unselectRow: (eventData) => {
-								this.onUnselectRow(this.controls.firstTable, eventData)
+								this.controls.firstTable.onUnselectRow(eventData)
 								this.updateListData('rooms')
 							},
 							unselectAllRows: () => {
-								this.onUnselectAllRows(this.controls.firstTable)
+								this.controls.firstTable.onUnselectAllRows()
 							}
 						}
 					}, this),
@@ -315,11 +315,11 @@
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
-								this.onSelectRow(this.controls.secondTable, eventData)
+								this.controls.secondTable.onSelectRow(eventData)
 								this.selectRowData(eventData)
 							},
 							unselectRow: (eventData) => {
-								this.onUnselectRow(this.controls.secondTable, eventData)
+								this.controls.secondTable.onUnselectRow(eventData)
 								this.unselectRowData(eventData)
 							},
 							// Handles the checkbox click.
@@ -370,11 +370,11 @@
 						headerLevel: 1,
 						handlers: {
 							removeRow: (eventData) => {
-								this.onUnselectRow(this.mainTable, eventData)
+								this.mainTable.onUnselectRow(eventData)
 								this.unselectRowData(eventData)
 							},
-							unselectAllRows: (eventData) => {
-								this.onUnselectAllRows(this.mainTable, eventData)
+							unselectAllRows: () => {
+								this.mainTable.onUnselectAllRows()
 								this.unselectAllRowsData()
 							}
 						}

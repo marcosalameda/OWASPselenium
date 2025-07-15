@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -213,15 +213,14 @@
 										:suggestion-mode-on="suggestionModeOn">
 										<q-radio-group
 											v-if="controls.FIELDHLPFLDS_RADIOB__.isVisible"
-											id="FIELDHLPFLDS_RADIOB__"
-											:model-value="model.ValRadiob.value"
-											deselect-radio
-											:label-left-side="controls.FIELDHLPFLDS_RADIOB__.labelPosition === labelAlignment.left"
-											:number-of-columns="controls.FIELDHLPFLDS_RADIOB__.columnNumber"
-											:is-required="controls.FIELDHLPFLDS_RADIOB__.isRequired"
-											:readonly="controls.FIELDHLPFLDS_RADIOB__.readonly"
-											:options-list="controls.FIELDHLPFLDS_RADIOB__.items"
-											@update:model-value="model.ValRadiob.fnUpdateValue" />
+											v-bind="controls.FIELDHLPFLDS_RADIOB__.props"
+											v-on="controls.FIELDHLPFLDS_RADIOB__.handlers">
+											<q-radio-button
+												v-for="radio in controls.FIELDHLPFLDS_RADIOB__.items"
+												:key="radio.key"
+												:label="radio.value"
+												:value="radio.key" />
+										</q-radio-group>
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -1331,7 +1330,6 @@
 						valueChangeEvent: 'fieldChange:flds.radiob',
 						id: 'FIELDHLPFLDS_RADIOB__',
 						name: 'RADIOB',
-						size: 'small',
 						label: computed(() => this.Resources.RADIO_BTN20980),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1339,7 +1337,7 @@
 						maxLength: 5,
 						labelId: 'label_FIELDHLPFLDS_RADIOB__',
 						arrayName: 'RADIOBTN',
-						columnNumber: 0,
+						columns: 0,
 						controlLimits: [
 						],
 					}, this),
@@ -1466,7 +1464,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR01',
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1490,7 +1488,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR01',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1514,7 +1512,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR01',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1538,7 +1536,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FIELDHLPPSEUDNOVOGR01',
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -2027,7 +2025,7 @@
 						label: computed(() => this.Resources.DAY27593),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -2074,7 +2072,7 @@
 						label: computed(() => this.Resources.COMPLETE_DATE53774),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -2097,7 +2095,7 @@
 						label: computed(() => this.Resources.HOUR15646),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -2265,6 +2263,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS FIELDHLP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FIELDHLP]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

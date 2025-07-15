@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -245,6 +245,7 @@
 							v-on="controls.PROPE03_PSEUDPROPCONT.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROPE03_PSEUDPROPCONT"
+							:filter-operators="controls.PROPE03_PSEUDPROPCONT.filterOperators"
 							v-on="controls.PROPE03_PSEUDPROPCONT.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -1057,6 +1058,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PROPE03]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PROPE03]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

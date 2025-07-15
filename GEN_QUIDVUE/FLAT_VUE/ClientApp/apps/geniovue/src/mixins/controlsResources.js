@@ -12,6 +12,11 @@ class BaseResources
 			enumerable: true
 		})
 	}
+
+	destroy()
+	{
+		this._fnGetResource = null
+	}
 }
 
 class TableListMainResources extends BaseResources

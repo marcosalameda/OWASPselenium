@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PWREG',
 			area: 'PWREG',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PWREG',
-				updateFilesTickets: 'UpdateFilesTicketsPWREG'
+				recalculateFormulas: 'RecalculateFormulas_Pwreg',
+				updateFilesTickets: 'UpdateFilesTicketsPwreg',
+				setFile: 'SetFilePwreg'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPWREG',
 			description: '',
 		}).cloneFrom(values?.ValCodpwreg))
-		watch(() => this.ValCodpwreg.value, (newValue, oldValue) => this.onUpdate('pwreg.codpwreg', this.ValCodpwreg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpwreg.value, (newValue, oldValue) => this.onUpdate('pwreg.codpwreg', this.ValCodpwreg, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodpsw = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PSW',
 			description: '',
 		}).cloneFrom(values?.ValCodpsw))
-		watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pwreg.codpsw', this.ValCodpsw, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('pwreg.codpsw', this.ValCodpsw, newValue, oldValue)))
 
 		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodregia',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'REGIO',
 			description: '',
 		}).cloneFrom(values?.ValCodregia))
-		watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pwreg.codregia', this.ValCodregia, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pwreg.codregia', this.ValCodregia, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TablePswNome = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 100,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TablePswNome))
-		watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue)))
 
 		this.TableRegioRegiao = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.REGION12723),
 		}).cloneFrom(values?.TableRegioRegiao))
-		watch(() => this.TableRegioRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.TableRegioRegiao, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableRegioRegiao.value, (newValue, oldValue) => this.onUpdate('regio.regiao', this.TableRegioRegiao, newValue, oldValue)))
 	}
 
 	/**

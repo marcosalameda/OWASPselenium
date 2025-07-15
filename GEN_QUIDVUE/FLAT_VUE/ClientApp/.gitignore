@@ -29,3 +29,6 @@ storybook-static/
 *.sw?
 
 *storybook.log
+
+# VS generates an empty package-lock.json
+package-lock.json

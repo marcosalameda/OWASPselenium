@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'C_BRN',
 			area: 'C_BRN',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_C_BRN',
-				updateFilesTickets: 'UpdateFilesTicketsC_BRN'
+				recalculateFormulas: 'RecalculateFormulas_C_brn',
+				updateFilesTickets: 'UpdateFilesTicketsC_brn',
+				setFile: 'SetFileC_brn'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCTRY',
 			description: '',
 		}).cloneFrom(values?.ValCodctry))
-		watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('c_brn.codctry', this.ValCodctry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('c_brn.codctry', this.ValCodctry, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValCountry = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.ValCountry))
-		watch(() => this.ValCountry.value, (newValue, oldValue) => this.onUpdate('c_brn.country', this.ValCountry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCountry.value, (newValue, oldValue) => this.onUpdate('c_brn.country', this.ValCountry, newValue, oldValue)))
 	}
 
 	/**

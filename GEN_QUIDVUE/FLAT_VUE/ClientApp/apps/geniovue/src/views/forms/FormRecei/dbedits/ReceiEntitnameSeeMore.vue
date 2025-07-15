@@ -172,7 +172,7 @@
 					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -302,7 +302,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACI1', 'changed-FACI2', 'changed-ENTIT'],
+						globalEvents: ['changed-FACI1', 'changed-ENTIT', 'changed-FACI2'],
 						uuid: 'Recei_Recei_EntitValName',
 						allSelectedRows: 'false',
 						handlers: {

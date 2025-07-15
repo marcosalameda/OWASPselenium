@@ -148,29 +148,24 @@ namespace GenioMVC.ViewModels.Perso
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAperso.FldName, FieldType.TEXT, Resources.Resources.PERSON_NAME40980, 30, 0, true),
 				new Exports.QColumn(CSGenioAperso.FldGender, FieldType.ARRAY_TEXT, Resources.Resources.GENDER44172, 1, 0, true, "Gender"),
 				new Exports.QColumn(CSGenioAperso.FldIdentifi, FieldType.TEXT, Resources.Resources.IDENTIFICATION_NUMBE11999, 10, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAperso.FldPhoto, FieldType.IMAGE, Resources.Resources.PHOTO51874, 3, 1, true):null,
 				new Exports.QColumn(CSGenioAperso.FldDob, FieldType.DATE, Resources.Resources.DATE_OF_BIRTH63058, 8, 0, true),
 				new Exports.QColumn(CSGenioAperso.FldEmail, FieldType.TEXT, Resources.Resources.E_MAIL42251, 30, 0, true),
 				new Exports.QColumn(CSGenioAperso.FldYear, FieldType.NUMERIC, Resources.Resources.YEAR61794, 4, 0, false),
 				new Exports.QColumn(CSGenioAperso.FldMonth, FieldType.ARRAY_NUMERIC, Resources.Resources.MONTH46035, 2, 0, false, "Months"),
 				new Exports.QColumn(CSGenioAperso.FldTob, FieldType.TIME_HOURS, Resources.Resources.TIME_OF_BIRTH04797, 5, 0, false),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAperso> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -326,12 +321,6 @@ namespace GenioMVC.ViewModels.Perso
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAperso> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "43211"),
-				new("Module", "WMS")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<WMS_Menu_43211_RowViewModel>();
 
@@ -487,7 +476,6 @@ namespace GenioMVC.ViewModels.Perso
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<WMS_Menu_43211_RowViewModel> MapWMS_Menu_43211(ListingMVC<CSGenioAperso> Qlisting)

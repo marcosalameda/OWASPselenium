@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -209,15 +209,14 @@
 										:suggestion-mode-on="suggestionModeOn">
 										<q-radio-group
 											v-if="controls.FLDSTBL_FLDS_RADIOB__.isVisible"
-											id="FLDSTBL_FLDS_RADIOB__"
-											:model-value="model.ValRadiob.value"
-											deselect-radio
-											:label-left-side="controls.FLDSTBL_FLDS_RADIOB__.labelPosition === labelAlignment.left"
-											:number-of-columns="controls.FLDSTBL_FLDS_RADIOB__.columnNumber"
-											:is-required="controls.FLDSTBL_FLDS_RADIOB__.isRequired"
-											:readonly="controls.FLDSTBL_FLDS_RADIOB__.readonly"
-											:options-list="controls.FLDSTBL_FLDS_RADIOB__.items"
-											@update:model-value="model.ValRadiob.fnUpdateValue" />
+											v-bind="controls.FLDSTBL_FLDS_RADIOB__.props"
+											v-on="controls.FLDSTBL_FLDS_RADIOB__.handlers">
+											<q-radio-button
+												v-for="radio in controls.FLDSTBL_FLDS_RADIOB__.items"
+												:key="radio.key"
+												:label="radio.value"
+												:value="radio.key" />
+										</q-radio-group>
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -801,6 +800,7 @@
 							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.FLDSTBL_PSEUDFEECA___"
+							:filter-operators="controls.FLDSTBL_PSEUDFEECA___.filterOperators"
 							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -1340,7 +1340,6 @@
 						valueChangeEvent: 'fieldChange:flds.radiob',
 						id: 'FLDSTBL_FLDS_RADIOB__',
 						name: 'RADIOB',
-						size: 'small',
 						label: computed(() => this.Resources.RADIO_BTN20980),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
@@ -1348,7 +1347,7 @@
 						maxLength: 5,
 						labelId: 'label_FLDSTBL_FLDS_RADIOB__',
 						arrayName: 'RADIOBTN',
-						columnNumber: 2,
+						columns: 2,
 						controlLimits: [
 						],
 					}, this),
@@ -1475,7 +1474,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1499,7 +1498,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1523,7 +1522,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1547,7 +1546,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -2061,7 +2060,7 @@
 						label: computed(() => this.Resources.DAY27593),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -2108,7 +2107,7 @@
 						label: computed(() => this.Resources.COMPLETE_DATE53774),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -2131,7 +2130,7 @@
 						label: computed(() => this.Resources.HOUR15646),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -2484,6 +2483,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS FLDSTBL]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FLDSTBL]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

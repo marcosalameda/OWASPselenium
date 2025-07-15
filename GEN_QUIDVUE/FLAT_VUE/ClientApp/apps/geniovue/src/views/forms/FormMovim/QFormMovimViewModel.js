@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'MOVIM',
 			area: 'MOVIM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_MOVIM',
-				updateFilesTickets: 'UpdateFilesTicketsMOVIM'
+				recalculateFormulas: 'RecalculateFormulas_Movim',
+				updateFilesTickets: 'UpdateFilesTicketsMovim',
+				setFile: 'SetFileMovim'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODMOVIM',
 			description: '',
 		}).cloneFrom(values?.ValCodmovim))
-		watch(() => this.ValCodmovim.value, (newValue, oldValue) => this.onUpdate('movim.codmovim', this.ValCodmovim, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodmovim.value, (newValue, oldValue) => this.onUpdate('movim.codmovim', this.ValCodmovim, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'EQUIP',
 			description: computed(() => this.Resources._EQUIPMENT12605),
 		}).cloneFrom(values?.ValCodequip))
-		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('movim.codequip', this.ValCodequip, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('movim.codequip', this.ValCodequip, newValue, oldValue)))
 
 		this.ValCodrooms = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodrooms',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ROOMS',
 			description: computed(() => this.Resources._ROOM54790),
 		}).cloneFrom(values?.ValCodrooms))
-		watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('movim.codrooms', this.ValCodrooms, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('movim.codrooms', this.ValCodrooms, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValDhmudanc = reactive(new modelFieldType.DateTime({
@@ -81,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DHMUDANC',
 			description: computed(() => this.Resources.CHANGE36355),
 		}).cloneFrom(values?.ValDhmudanc))
-		watch(() => this.ValDhmudanc.value, (newValue, oldValue) => this.onUpdate('movim.dhmudanc', this.ValDhmudanc, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDhmudanc.value, (newValue, oldValue) => this.onUpdate('movim.dhmudanc', this.ValDhmudanc, newValue, oldValue)))
 
 		this.TableEquipRegistnr = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -92,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
 		}).cloneFrom(values?.TableEquipRegistnr))
-		watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
 
 		this.TableRoomsRoomnr = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -103,7 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 10,
 			description: computed(() => this.Resources.N_R__ROOM43805),
 		}).cloneFrom(values?.TableRoomsRoomnr))
-		watch(() => this.TableRoomsRoomnr.value, (newValue, oldValue) => this.onUpdate('rooms.roomnr', this.TableRoomsRoomnr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableRoomsRoomnr.value, (newValue, oldValue) => this.onUpdate('rooms.roomnr', this.TableRoomsRoomnr, newValue, oldValue)))
 
 		this.ValObservat = reactive(new modelFieldType.MultiLineString({
 			id: 'ValObservat',
@@ -112,7 +113,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'OBSERVAT',
 			description: computed(() => this.Resources.OBSERVATION37880),
 		}).cloneFrom(values?.ValObservat))
-		watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('movim.observat', this.ValObservat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('movim.observat', this.ValObservat, newValue, oldValue)))
 	}
 
 	/**

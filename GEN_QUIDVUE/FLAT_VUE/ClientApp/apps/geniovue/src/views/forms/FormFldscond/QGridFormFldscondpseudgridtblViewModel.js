@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'FLDSCONDPSEUDGRIDTBL_',
 			area: 'FEECA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_FLDSCONDPSEUDGRIDTBL_',
-				updateFilesTickets: 'UpdateFilesTicketsFLDSCONDPSEUDGRIDTBL_'
+				recalculateFormulas: 'RecalculateFormulas_Fldscondpseudgridtbl_',
+				updateFilesTickets: 'UpdateFilesTicketsFldscondpseudgridtbl_',
+				setFile: 'SetFileFldscondpseudgridtbl_'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODFEECA',
 			description: '',
 		}).cloneFrom(values?.ValCodfeeca))
-		watch(() => this.ValCodfeeca.value, (newValue, oldValue) => this.onUpdate('feeca.codfeeca', this.ValCodfeeca, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodfeeca.value, (newValue, oldValue) => this.onUpdate('feeca.codfeeca', this.ValCodfeeca, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodflds = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodflds))
-		watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('feeca.codflds', this.ValCodflds, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('feeca.codflds', this.ValCodflds, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValFeedback = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.FEEDBACK52855),
 		}).cloneFrom(values?.ValFeedback))
-		watch(() => this.ValFeedback.value, (newValue, oldValue) => this.onUpdate('feeca.feedback', this.ValFeedback, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFeedback.value, (newValue, oldValue) => this.onUpdate('feeca.feedback', this.ValFeedback, newValue, oldValue)))
 	}
 
 	/**

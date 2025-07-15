@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'WID_EQUI',
 			area: 'Home',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_WID_EQUI',
-				updateFilesTickets: 'UpdateFilesTicketsWID_EQUI'
+				recalculateFormulas: 'RecalculateFormulas_Wid_equi',
+				updateFilesTickets: 'UpdateFilesTicketsWid_equi',
+				setFile: 'SetFileWid_equi'
 			}
 		})
 

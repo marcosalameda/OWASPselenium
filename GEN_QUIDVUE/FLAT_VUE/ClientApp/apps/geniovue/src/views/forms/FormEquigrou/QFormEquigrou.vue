@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -226,12 +226,13 @@
 												<q-accordion
 													v-if="controls.EQUIGROUPSEUDNEWGRP17.isVisible"
 													id="EQUIGROUPSEUDNEWGRP17"
+													v-model="controls.EQUIGROUPSEUDNEWGRP17.openChild"
 													v-bind="controls.EQUIGROUPSEUDNEWGRP17">
 													<!-- Start EQUIGROUPSEUDNEWGRP17 -->
-													<q-group-collapsible
-														id="EQUIGROUPSEUDNEWGRP15"
-														v-bind="controls.EQUIGROUPSEUDNEWGRP15"
-														v-on="controls.EQUIGROUPSEUDNEWGRP15.handlers">
+													<q-accordion-item
+														id="EQUIGROUPSEUDNEWGRP15-container"
+														value="EQUIGROUPSEUDNEWGRP15"
+														:title="controls.EQUIGROUPSEUDNEWGRP15.label">
 														<!-- Start EQUIGROUPSEUDNEWGRP15 -->
 														<q-row-container v-show="controls.EQUIGROUPESS1IDFUNCIO.isVisible || controls.EQUIGROUPESS1TELEPHON.isVisible">
 															<q-control-wrapper
@@ -268,11 +269,11 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End EQUIGROUPSEUDNEWGRP15 -->
-													</q-group-collapsible>
-													<q-group-collapsible
-														id="EQUIGROUPSEUDNEWGRP16"
-														v-bind="controls.EQUIGROUPSEUDNEWGRP16"
-														v-on="controls.EQUIGROUPSEUDNEWGRP16.handlers">
+													</q-accordion-item>
+													<q-accordion-item
+														id="EQUIGROUPSEUDNEWGRP16-container"
+														value="EQUIGROUPSEUDNEWGRP16"
+														:title="controls.EQUIGROUPSEUDNEWGRP16.label">
 														<!-- Start EQUIGROUPSEUDNEWGRP16 -->
 														<q-row-container v-show="controls.EQUIGROUPESS1EMAIL___.isVisible || controls.EQUIGROUPESS1EMAIL2__.isVisible">
 															<q-control-wrapper
@@ -309,7 +310,7 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End EQUIGROUPSEUDNEWGRP16 -->
-													</q-group-collapsible>
+													</q-accordion-item>
 													<!-- End EQUIGROUPSEUDNEWGRP17 -->
 												</q-accordion>
 											</q-control-wrapper>
@@ -1481,7 +1482,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP14',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1524,6 +1525,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP17',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIGROUPESS1IDFUNCIO', 'EQUIGROUPESS1TELEPHON'],
@@ -1573,6 +1575,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP17',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIGROUPESS1EMAIL___', 'EQUIGROUPESS1EMAIL2__'],
@@ -1839,7 +1842,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'EQUIGROUPSEUDNEWGRP08',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -2173,7 +2176,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP05',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -2446,6 +2449,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS EQUIGROU]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT EQUIGROU]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

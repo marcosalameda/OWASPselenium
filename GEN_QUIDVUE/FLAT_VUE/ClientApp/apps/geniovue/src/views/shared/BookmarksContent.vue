@@ -3,6 +3,7 @@
 		<li
 			v-for="bmark in model.Bookmarks"
 			:key="bmark.MenuID"
+			:data-key="`bookmark_${bmark.Module}_${bmark.MenuID}`"
 			class="nav-item n-sidebar__nav-item bookmarks__item">
 			<menu-action
 				v-if="bmark.MenuEntryObj"

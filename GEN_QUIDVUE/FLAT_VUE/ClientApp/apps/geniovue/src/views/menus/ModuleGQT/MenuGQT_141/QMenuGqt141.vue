@@ -11,7 +11,8 @@
 						:label-attrs="{ class: 'i-text__label' }">
 						<q-date-time-picker
 							id="start-limit-field"
-							format="dateTime"
+							:date-time-type="dateTimeType"
+							:format="dateTimeFormat"
 							:locale="locale"
 							:model-value="model.ValMinvalue.value"
 							@reset-icon-click="model.ValMinvalue.fnUpdateValue(model.ValMinvalue.originalValue ?? new Date())"
@@ -27,7 +28,8 @@
 						:label-attrs="{ class: 'i-text__label' }">
 						<q-date-time-picker
 							id="end-limit-field"
-							format="dateTime"
+							:date-time-type="dateTimeType"
+							:format="dateTimeFormat"
 							:locale="locale"
 							:model-value="model.ValMaxvalue.value"
 							@reset-icon-click="model.ValMaxvalue.fnUpdateValue(model.ValMaxvalue.originalValue ?? new Date())"
@@ -75,7 +77,7 @@
 	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
-	import { useSystemDataStore } from '@quidgest/clientapp/stores'
+	import { useSystemDataStore, useGenericDataStore } from '@quidgest/clientapp/stores'
 
 	import netAPI from '@quidgest/clientapp/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
@@ -132,7 +134,8 @@
 
 				model: null,
 
-				locale: useSystemDataStore().system.currentLang
+				locale: useSystemDataStore().system.currentLang,
+				dateTimeType: 'dateTime'
 			}
 		},
 
@@ -193,9 +196,15 @@
 		beforeUnmount()
 		{
 			// Removes the listener
-			this.internalEvents.removeAllListeners()
+			this.internalEvents?.removeAllListeners()
 		},
 
+		computed: {
+			dateTimeFormat()
+			{
+				return useGenericDataStore().dateFormat[this.dateTimeType]
+			}
+		},
 		methods: {
 			followUp()
 			{

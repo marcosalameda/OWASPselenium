@@ -4111,6 +4111,12 @@ function saveWizardState(wizard, stepId, callback, isGoingBack, clearData)
  */
  function ToggleStickyHeader(header, threshold_el, breadcrumbs)
  {
+	 // `header` is a jQuery $() result, so it's never undefined
+	 // it either has length 0 or 1
+	 if (header?.length === 0) {
+		 return;
+	 }
+
 	 var topSide = $('nav').first().outerHeight();
 	 var threshold = threshold_el.outerHeight();
 	 //The layout variable containerWidth changes the formContainer class to "container"

@@ -86,11 +86,12 @@
 /* Set the click event of each card */
 function onCardClick(card) {
     let followup = card.children()[0];
-    let isPopup = followup.getAttribute("data-modal-form") == "true";
-    let href = followup.getAttribute("href");
 
-    if (isPopup) OpenModalForm(href, {});
-    else QUtils.NavigateTo = href;
+        if (followup.attributes['elem-identifier']?.value == "RowData") {
+            // Skip page change confirmation on follow-up row click
+            window.qVar_isControlledRedirect = true;
+        }
+        followup.click();
 }
 
 $(document).ready(function () {

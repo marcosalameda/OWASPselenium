@@ -179,8 +179,8 @@ namespace CSGenio.business
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");
-			info.Pathways.Add("facty","produ");
 			info.Pathways.Add("cntry","produ");
+			info.Pathways.Add("facty","produ");
 		}
 
 		/// <summary>

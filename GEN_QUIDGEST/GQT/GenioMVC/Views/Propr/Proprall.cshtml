@@ -333,6 +333,10 @@ else {
 
 
 			@Html.HiddenFor(model => model.ValCodpais1, new { @pers_cs_field="ValCodpais1", @pers_cs_area="Propr", @data_value = Model.ValCodpais1, @db_field="ValCodpais1", @trelate="Pais1", @tfrelate="Codcntry", @data_identifier="LED_PROPRALLPAIS1CODCNTRY" })
+			@Html.HiddenFor(model => model.ValCodtppro, new { @pers_cs_field="ValCodtppro", @pers_cs_area="Propr", @data_value = Model.ValCodtppro, @db_field="ValCodtppro", @trelate="Tppro", @tfrelate="Codtppro", @data_identifier="LED_PROPRALLTPPROCODTPPRO" })
+			@Html.HiddenFor(model => model.ValCodcntry, new { @pers_cs_field="ValCodcntry", @pers_cs_area="Propr", @data_value = Model.ValCodcntry, @db_field="ValCodcntry", @trelate="Cntry", @tfrelate="Codcntry", @data_identifier="LED_PROPRALLCNTRYCODCNTRY" })
+			@Html.HiddenFor(model => model.ValCodregia, new { @pers_cs_field="ValCodregia", @pers_cs_area="Propr", @data_value = Model.ValCodregia, @db_field="ValCodregia", @trelate="Regio", @tfrelate="Codregia", @data_identifier="LED_PROPRALLREGIOCODREGIA" })
+			@Html.HiddenFor(model => model.ValCodpesso, new { @pers_cs_field="ValCodpesso", @pers_cs_area="Propr", @data_value = Model.ValCodpesso, @db_field="ValCodpesso", @trelate="Pesso", @tfrelate="Codpesso", @data_identifier="LED_PROPRALLPESSOCODPESSO" })
 
 			@Html.HiddenFor(model => model.ValCodpropr, new { @pers_cs_field="ValCodpropr", @pers_cs_area="Propr", data_refresh = "true", @form_area="true", @data_value = Model.ValCodpropr, @data_identifier = "LED_PROPRALLPROPRCODPROPR" })
 

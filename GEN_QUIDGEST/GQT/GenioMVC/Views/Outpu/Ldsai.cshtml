@@ -143,6 +143,10 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodoutpt, new { @pers_cs_field="ValCodoutpt", @pers_cs_area="Outpu", @data_value = Model.ValCodoutpt, @db_field="ValCodoutpt", @trelate="Outpt", @tfrelate="Codoutpt", @data_identifier="LED_LDSAI___OUTPTCODOUTPT" })
+			@Html.HiddenFor(model => model.ValCodwareh, new { @pers_cs_field="ValCodwareh", @pers_cs_area="Outpu", @data_value = Model.ValCodwareh, @db_field="ValCodwareh", @trelate="Wareh", @tfrelate="Codwareh", @data_identifier="LED_LDSAI___WAREHCODWAREH" })
+			@Html.HiddenFor(model => model.ValCoditem, new { @pers_cs_field="ValCoditem", @pers_cs_area="Outpu", @data_value = Model.ValCoditem, @db_field="ValCoditem", @trelate="Item", @tfrelate="Coditem", @data_identifier="LED_LDSAI___ITEM_CODITEM_" })
+			@Html.HiddenFor(model => model.ValCoddocsd, new { @pers_cs_field="ValCoddocsd", @pers_cs_area="Outpu", @data_value = Model.ValCoddocsd, @db_field="ValCoddocsd", @trelate="Oudoc", @tfrelate="Coddocsd", @data_identifier="LED_LDSAI___OUDOCCODDOCSD" })
 
 			@Html.HiddenFor(model => model.ValCodoutpu, new { @pers_cs_field="ValCodoutpu", @pers_cs_area="Outpu", data_refresh = "true", @form_area="true", @data_value = Model.ValCodoutpu, @data_identifier = "LED_LDSAI___OUTPUCODOUTPU" })
 

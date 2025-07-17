@@ -71,6 +71,8 @@ else {
 
 		@Html.HiddenFor(model=> model.ValTpcateg, new { @pers_cs_area = "Itemc", @pers_cs_field = "ValTpcateg", @data_identifier = "LED_CATAR___ITEMCTPCATEG_" })
 
+			@Html.HiddenFor(model => model.ValCoditem, new { @pers_cs_field="ValCoditem", @pers_cs_area="Itemc", @data_value = Model.ValCoditem, @db_field="ValCoditem", @trelate="Item", @tfrelate="Coditem", @data_identifier="LED_CATAR___ITEM_CODITEM_" })
+			@Html.HiddenFor(model => model.ValCodtpcat, new { @pers_cs_field="ValCodtpcat", @pers_cs_area="Itemc", @data_value = Model.ValCodtpcat, @db_field="ValCodtpcat", @trelate="Cattp", @tfrelate="Codtpcat", @data_identifier="LED_CATAR___CATTPCODTPCAT" })
 
 			@Html.HiddenFor(model => model.ValCodcatar, new { @pers_cs_field="ValCodcatar", @pers_cs_area="Itemc", data_refresh = "true", @form_area="true", @data_value = Model.ValCodcatar, @data_identifier = "LED_CATAR___ITEMCCODCATAR" })
 

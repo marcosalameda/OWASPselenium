@@ -136,6 +136,8 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodtpequ, new { @pers_cs_field="ValCodtpequ", @pers_cs_area="Cmpki", @data_value = Model.ValCodtpequ, @db_field="ValCodtpequ", @trelate="Tpequ", @tfrelate="Codtpequ", @data_identifier="LED_CMPKI___TPEQUCODTPEQU" })
+			@Html.HiddenFor(model => model.ValCodtpeq1, new { @pers_cs_field="ValCodtpeq1", @pers_cs_area="Cmpki", @data_value = Model.ValCodtpeq1, @db_field="ValCodtpeq1", @trelate="Tpeq1", @tfrelate="Codtpequ", @data_identifier="LED_CMPKI___TPEQ1CODTPEQU" })
 
 			@Html.HiddenFor(model => model.ValCodcmpki, new { @pers_cs_field="ValCodcmpki", @pers_cs_area="Cmpki", data_refresh = "true", @form_area="true", @data_value = Model.ValCodcmpki, @data_identifier = "LED_CMPKI___CMPKICODCMPKI" })
 

@@ -70,6 +70,7 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodsbcat, new { @pers_cs_field="ValCodsbcat", @pers_cs_area="Cattp", @data_value = Model.ValCodsbcat, @db_field="ValCodsbcat", @trelate="Sbcat", @tfrelate="Codsbcat", @data_identifier="LED_TPCAT___SBCATCODSBCAT" })
 
 			@Html.HiddenFor(model => model.ValCodtpcat, new { @pers_cs_field="ValCodtpcat", @pers_cs_area="Cattp", data_refresh = "true", @form_area="true", @data_value = Model.ValCodtpcat, @data_identifier = "LED_TPCAT___CATTPCODTPCAT" })
 

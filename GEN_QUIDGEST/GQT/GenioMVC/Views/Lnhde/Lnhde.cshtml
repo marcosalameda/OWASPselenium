@@ -157,6 +157,9 @@ else {
 		@Html.HiddenFor(model=> model.LnhpdValQuantdec, new { @pers_cs_area = "Lnhpd", @pers_cs_field = "ValQuantdec", @data_identifier = "LED_LNHDE___LNHPDQUANTDEC" })
 
 			@Html.HiddenFor(model => model.ValCodlnhag, new { @pers_cs_field="ValCodlnhag", @pers_cs_area="Lnhde", @data_value = Model.ValCodlnhag, @db_field="ValCodlnhag", @trelate="Lnhag", @tfrelate="Codlnhag", @data_identifier="LED_LNHDE___LNHAGCODLNHAG" })
+			@Html.HiddenFor(model => model.ValCodpedid, new { @pers_cs_field="ValCodpedid", @pers_cs_area="Lnhde", @data_value = Model.ValCodpedid, @db_field="ValCodpedid", @trelate="Pedid", @tfrelate="Codpedid", @data_identifier="LED_LNHDE___PEDIDCODPEDID" })
+			@Html.HiddenFor(model => model.ValCodlnhpd, new { @pers_cs_field="ValCodlnhpd", @pers_cs_area="Lnhde", @data_value = Model.ValCodlnhpd, @db_field="ValCodlnhpd", @trelate="Lnhpd", @tfrelate="Codlnhpd", @data_identifier="LED_LNHDE___LNHPDCODLNHPD" })
+			@Html.HiddenFor(model => model.ValCodtpequ, new { @pers_cs_field="ValCodtpequ", @pers_cs_area="Lnhde", @data_value = Model.ValCodtpequ, @db_field="ValCodtpequ", @trelate="Tpeq1", @tfrelate="Codtpequ", @data_identifier="LED_LNHDE___TPEQ1CODTPEQU" })
 
 			@Html.HiddenFor(model => model.ValCodlnhde, new { @pers_cs_field="ValCodlnhde", @pers_cs_area="Lnhde", data_refresh = "true", @form_area="true", @data_value = Model.ValCodlnhde, @data_identifier = "LED_LNHDE___LNHDECODLNHDE" })
 

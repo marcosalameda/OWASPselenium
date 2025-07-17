@@ -64,6 +64,8 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodpesso, new { @pers_cs_field="ValCodpesso", @pers_cs_area="Esppe", @data_value = Model.ValCodpesso, @db_field="ValCodpesso", @trelate="Pesso", @tfrelate="Codpesso", @data_identifier="LED_ESPPE___PESSOCODPESSO" })
+			@Html.HiddenFor(model => model.ValCodespec, new { @pers_cs_field="ValCodespec", @pers_cs_area="Esppe", @data_value = Model.ValCodespec, @db_field="ValCodespec", @trelate="Speci", @tfrelate="Codespec", @data_identifier="LED_ESPPE___SPECICODESPEC" })
 
 			@Html.HiddenFor(model => model.ValCodesppe, new { @pers_cs_field="ValCodesppe", @pers_cs_area="Esppe", data_refresh = "true", @form_area="true", @data_value = Model.ValCodesppe, @data_identifier = "LED_ESPPE___ESPPECODESPPE" })
 

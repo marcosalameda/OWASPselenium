@@ -205,6 +205,8 @@
 
 
 			@Html.HiddenFor(model => model.ValCodcateg, new { @pers_cs_field="ValCodcateg", @pers_cs_area="Pess1", @data_value = Model.ValCodcateg, @db_field="ValCodcateg", @trelate="Cate2", @tfrelate="Codcateg", @data_identifier="LED_PESS1___CATE2CODCATEG" })
+			@Html.HiddenFor(model => model.ValCodempre, new { @pers_cs_field="ValCodempre", @pers_cs_area="Pess1", @data_value = Model.ValCodempre, @db_field="ValCodempre", @trelate="Cmpny", @tfrelate="Codempre", @data_identifier="LED_PESS1___CMPNYCODEMPRE" })
+			@Html.HiddenFor(model => model.ValCodparte, new { @pers_cs_field="ValCodparte", @pers_cs_area="Pess1", @data_value = Model.ValCodparte, @db_field="ValCodparte", @trelate="Stake", @tfrelate="Codparte", @data_identifier="LED_PESS1___STAKECODPARTE" })
 
 			@Html.HiddenFor(model => model.ValCodpesso, new { @pers_cs_field="ValCodpesso", @pers_cs_area="Pess1", data_refresh = "true", @form_area="true", @data_value = Model.ValCodpesso, @data_identifier = "LED_PESS1___PESS1CODPESSO" })
 			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Pess1" })

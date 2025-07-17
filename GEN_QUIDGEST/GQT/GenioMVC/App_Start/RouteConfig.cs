@@ -44,6 +44,13 @@ namespace GenioMVC
 			//Used for user authentication with CAS. This method require one url for callback after login are made. This will permit to use schema + domain + "/CASLogin" to be use on Call back.
             routes.MapRoute("CASAuth", "CASLogin", new { culture = "en-US", system = Configuration.DefaultYear, controller = "Account", action = "CASLogin", module = "Public" });
 
+            // Health check route
+            routes.MapRoute(
+                "HealthCheck",
+                "health",
+                new { controller = "HealthCheck", action = "Index" }
+            );
+
             #endregion
 
             #region Generic routing

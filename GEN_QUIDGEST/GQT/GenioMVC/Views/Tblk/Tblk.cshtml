@@ -86,6 +86,8 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValFkey1, new { @pers_cs_field="ValFkey1", @pers_cs_area="Tblk", @data_value = Model.ValFkey1, @db_field="ValFkey1", @trelate="Grpb", @tfrelate="Codgrpb", @data_identifier="LED_TBLK____GRPB_CODGRPB_" })
+			@Html.HiddenFor(model => model.ValFkey2, new { @pers_cs_field="ValFkey2", @pers_cs_area="Tblk", @data_value = Model.ValFkey2, @db_field="ValFkey2", @trelate="Trsb", @tfrelate="Codtrsb", @data_identifier="LED_TBLK____TRSB_CODTRSB_" })
 
 			@Html.HiddenFor(model => model.ValCodtblk, new { @pers_cs_field="ValCodtblk", @pers_cs_area="Tblk", data_refresh = "true", @form_area="true", @data_value = Model.ValCodtblk, @data_identifier = "LED_TBLK____TBLK_CODTBLK_" })
 

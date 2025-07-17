@@ -469,6 +469,8 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodwareh, new { @pers_cs_field="ValCodwareh", @pers_cs_area="Item", @data_value = Model.ValCodwareh, @db_field="ValCodwareh", @trelate="Wareh", @tfrelate="Codwareh", @data_identifier="LED_ARTIG___WAREHCODWAREH" })
+			@Html.HiddenFor(model => model.ValCodgitem, new { @pers_cs_field="ValCodgitem", @pers_cs_area="Item", @data_value = Model.ValCodgitem, @db_field="ValCodgitem", @trelate="Gitem", @tfrelate="Codgitem", @data_identifier="LED_ARTIG___GITEMCODGITEM" })
 
 			@Html.HiddenFor(model => model.ValCoditem, new { @pers_cs_field="ValCoditem", @pers_cs_area="Item", data_refresh = "true", @form_area="true", @data_value = Model.ValCoditem, @data_identifier = "LED_ARTIG___ITEM_CODITEM_" })
 

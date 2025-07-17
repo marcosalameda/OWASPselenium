@@ -66,6 +66,8 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodproje, new { @pers_cs_field="ValCodproje", @pers_cs_area="Agreg", @data_value = Model.ValCodproje, @db_field="ValCodproje", @trelate="Proje", @tfrelate="Codproje", @data_identifier="LED_AGREG___PROJECODPROJE" })
+			@Html.HiddenFor(model => model.ValCodyear, new { @pers_cs_field="ValCodyear", @pers_cs_area="Agreg", @data_value = Model.ValCodyear, @db_field="ValCodyear", @trelate="Year", @tfrelate="Codyear", @data_identifier="LED_AGREG___YEAR_CODYEAR_" })
 
 			@Html.HiddenFor(model => model.ValCodaggre, new { @pers_cs_field="ValCodaggre", @pers_cs_area="Agreg", data_refresh = "true", @form_area="true", @data_value = Model.ValCodaggre, @data_identifier = "LED_AGREG___AGREGCODAGGRE" })
 

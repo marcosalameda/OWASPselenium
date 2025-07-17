@@ -161,6 +161,10 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodcntry, new { @pers_cs_field="ValCodcntry", @pers_cs_area="Indoc", @data_value = Model.ValCodcntry, @db_field="ValCodcntry", @trelate="Cntry", @tfrelate="Codcntry", @data_identifier="LED_DENTR___CNTRYCODCNTRY" })
+			@Html.HiddenFor(model => model.ValCodempre, new { @pers_cs_field="ValCodempre", @pers_cs_area="Indoc", @data_value = Model.ValCodempre, @db_field="ValCodempre", @trelate="Cmpny", @tfrelate="Codempre", @data_identifier="LED_DENTR___CMPNYCODEMPRE" })
+			@Html.HiddenFor(model => model.ValCodpesso, new { @pers_cs_field="ValCodpesso", @pers_cs_area="Indoc", @data_value = Model.ValCodpesso, @db_field="ValCodpesso", @trelate="Pesso", @tfrelate="Codpesso", @data_identifier="LED_DENTR___PESSOCODPESSO" })
+			@Html.HiddenFor(model => model.ValCodwareh, new { @pers_cs_field="ValCodwareh", @pers_cs_area="Indoc", @data_value = Model.ValCodwareh, @db_field="ValCodwareh", @trelate="Ware1", @tfrelate="Codwareh", @data_identifier="LED_DENTR___WARE1CODWAREH" })
 
 			@Html.HiddenFor(model => model.ValCoddentr, new { @pers_cs_field="ValCoddentr", @pers_cs_area="Indoc", data_refresh = "true", @form_area="true", @data_value = Model.ValCoddentr, @data_identifier = "LED_DENTR___INDOCCODDENTR" })
 

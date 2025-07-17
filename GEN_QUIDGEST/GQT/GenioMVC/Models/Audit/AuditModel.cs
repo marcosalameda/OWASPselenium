@@ -361,7 +361,7 @@ namespace GenioMVC.Models
 		/// <returns>Human value</returns>
 		public static string GetHumanValue(PersistentSupport sp, AreaInfo area, CSGenio.framework.Field field, string text)
 		{
-			if (field.isKey() && GenFunctions.emptyG(text) == 0)
+			if (field.isKey() && field.Alias != area.Alias && GenFunctions.emptyG(text) == 0)
 			{
 				// Foreign keys are replaced by referenced tables' human key
 				Relation relation = area.ParentTables.Values.First(x => x.SourceRelField == field.Name);

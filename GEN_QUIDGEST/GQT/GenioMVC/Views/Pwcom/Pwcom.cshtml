@@ -93,6 +93,8 @@ else {
 
 		@Html.HiddenFor(model=> model.ValName, new { @pers_cs_area = "Pwcom", @pers_cs_field = "ValName", @data_identifier = "LED_PWCOM___PWCOMNAME____" })
 
+			@Html.HiddenFor(model => model.ValCodpsw, new { @pers_cs_field="ValCodpsw", @pers_cs_area="Pwcom", @data_value = Model.ValCodpsw, @db_field="ValCodpsw", @trelate="Psw", @tfrelate="Codpsw", @data_identifier="LED_PWCOM___PSW__CODPSW__" })
+			@Html.HiddenFor(model => model.ValCodpess1, new { @pers_cs_field="ValCodpess1", @pers_cs_area="Pwcom", @data_value = Model.ValCodpess1, @db_field="ValCodpess1", @trelate="Pess1", @tfrelate="Codpesso", @data_identifier="LED_PWCOM___PESS1CODPESSO" })
 
 			@Html.HiddenFor(model => model.ValCodpwcom, new { @pers_cs_field="ValCodpwcom", @pers_cs_area="Pwcom", data_refresh = "true", @form_area="true", @data_value = Model.ValCodpwcom, @data_identifier = "LED_PWCOM___PWCOMCODPWCOM" })
 

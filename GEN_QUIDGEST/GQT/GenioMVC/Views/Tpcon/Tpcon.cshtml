@@ -88,6 +88,7 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodgenre, new { @pers_cs_field="ValCodgenre", @pers_cs_area="Tpcon", @data_value = Model.ValCodgenre, @db_field="ValCodgenre", @trelate="Genre", @tfrelate="Codgenre", @data_identifier="LED_TPCON___GENRECODGENRE" })
 
 			@Html.HiddenFor(model => model.ValCodtpcon, new { @pers_cs_field="ValCodtpcon", @pers_cs_area="Tpcon", data_refresh = "true", @form_area="true", @data_value = Model.ValCodtpcon, @data_identifier = "LED_TPCON___TPCONCODTPCON" })
 

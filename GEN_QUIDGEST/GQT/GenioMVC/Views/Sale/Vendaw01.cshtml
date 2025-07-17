@@ -87,6 +87,7 @@
 
 
 
+			@Html.HiddenFor(model => model.ValCodorgan, new { @pers_cs_field="ValCodorgan", @pers_cs_area="Sale", @data_value = Model.ValCodorgan, @db_field="ValCodorgan", @trelate="Organ", @tfrelate="Codorgan", @data_identifier="LED_VENDAW01ORGANCODORGAN" })
 
 			@Html.HiddenFor(model => model.ValCodvenda, new { @pers_cs_field="ValCodvenda", @pers_cs_area="Sale", data_refresh = "true", @form_area="true", @data_value = Model.ValCodvenda, @data_identifier = "LED_VENDAW01SALE_CODVENDA" })
 	</fieldset>

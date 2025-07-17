@@ -103,6 +103,9 @@
 
 
 
+			@Html.HiddenFor(model => model.ValCodpesso, new { @pers_cs_field="ValCodpesso", @pers_cs_area="Conta", @data_value = Model.ValCodpesso, @db_field="ValCodpesso", @trelate="Pesso", @tfrelate="Codpesso", @data_identifier="LED_CONTA___PESSOCODPESSO" })
+			@Html.HiddenFor(model => model.ValCodgenre, new { @pers_cs_field="ValCodgenre", @pers_cs_area="Conta", @data_value = Model.ValCodgenre, @db_field="ValCodgenre", @trelate="Genre", @tfrelate="Codgenre", @data_identifier="LED_CONTA___GENRECODGENRE" })
+			@Html.HiddenFor(model => model.ValCodtpcon, new { @pers_cs_field="ValCodtpcon", @pers_cs_area="Conta", @data_value = Model.ValCodtpcon, @db_field="ValCodtpcon", @trelate="Tpcon", @tfrelate="Codtpcon", @data_identifier="LED_CONTA___TPCONCODTPCON" })
 
 			@Html.HiddenFor(model => model.ValCodconta, new { @pers_cs_field="ValCodconta", @pers_cs_area="Conta", @form_area="true", @data_value = Model.ValCodconta, @data_identifier = "LED_CONTA___CONTACODCONTA" })
 

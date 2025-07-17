@@ -218,6 +218,7 @@
 
 
 
+			@Html.HiddenFor(model => model.ValCodwareh, new { @pers_cs_field="ValCodwareh", @pers_cs_area="Wpess", @data_value = Model.ValCodwareh, @db_field="ValCodwareh", @trelate="Wareh", @tfrelate="Codwareh", @data_identifier="LED_ARMAPESSWAREHCODWAREH" })
 
 			@Html.HiddenFor(model => model.ValCodpess, new { @pers_cs_field="ValCodpess", @pers_cs_area="Wareh", @form_area="true", @data_value = Model.ValCodpess, @data_identifier = "LED_ARMAPESSWPESSCODPESS_" })
 			@Html.Hidden("CurrentHistoryLevel", Model.Navigation.CurrentLevel.Level, new { data_interface_id = "Armapess_" + @multiformfId })
@@ -371,6 +372,8 @@
 
 
 
+	@*Hidden Required Foreign Keys for Formulas*@
+			this.Controls.LED_ARMAPESSWAREHCODWAREH = new QHiddenControl($('[data-identifier="LED_ARMAPESSWAREHCODWAREH"]', this.element), window.Form_Armapess_@{@multiformfId});
 			this.Controls.LED_ARMAPESSWPESSCODPESS_ = new QHiddenControl($('[data-identifier="LED_ARMAPESSWPESSCODPESS_"]', this.element), window.Form_Armapess_@{@multiformfId});
 
 	@* Hidden Required Form Fields Controls for Formulas *@

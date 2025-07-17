@@ -118,6 +118,8 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodidio1, new { @pers_cs_field="ValCodidio1", @pers_cs_area="Tradu", @data_value = Model.ValCodidio1, @db_field="ValCodidio1", @trelate="Lang1", @tfrelate="Codlang", @data_identifier="LED_TRADU___LANG1CODLANG_" })
+			@Html.HiddenFor(model => model.ValCodidio2, new { @pers_cs_field="ValCodidio2", @pers_cs_area="Tradu", @data_value = Model.ValCodidio2, @db_field="ValCodidio2", @trelate="Lang2", @tfrelate="Codlang", @data_identifier="LED_TRADU___LANG2CODLANG_" })
 
 			@Html.HiddenFor(model => model.ValCodtradu, new { @pers_cs_field="ValCodtradu", @pers_cs_area="Tradu", data_refresh = "true", @form_area="true", @data_value = Model.ValCodtradu, @data_identifier = "LED_TRADU___TRADUCODTRADU" })
 

@@ -3,7 +3,7 @@
 	<Definicoes>
 		<Sistema>GQT</Sistema>
 		<Cliente>QUIDGEST</Cliente>
-		<Versao>4116</Versao>
+		<Versao>4109</Versao>
 	</Definicoes>
 	<Modulos>
 		<Modulo ID="REG">

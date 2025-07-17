@@ -85,6 +85,8 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCodcntry, new { @pers_cs_field="ValCodcntry", @pers_cs_area="Regio", @data_value = Model.ValCodcntry, @db_field="ValCodcntry", @trelate="Cntry", @tfrelate="Codcntry", @data_identifier="LED_REGIA_MLCNTRYCODCNTRY" })
+			@Html.HiddenFor(model => model.ValCodpais1, new { @pers_cs_field="ValCodpais1", @pers_cs_area="Regio", @data_value = Model.ValCodpais1, @db_field="ValCodpais1", @trelate="Pais1", @tfrelate="Codcntry", @data_identifier="LED_REGIA_MLPAIS1CODCNTRY" })
 
 			@Html.HiddenFor(model => model.ValCodregia, new { @pers_cs_field="ValCodregia", @pers_cs_area="Regio", data_refresh = "true", @form_area="true", @data_value = Model.ValCodregia, @data_identifier = "LED_REGIA_MLREGIOCODREGIA" })
 

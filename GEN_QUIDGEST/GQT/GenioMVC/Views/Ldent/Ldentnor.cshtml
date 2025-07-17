@@ -96,6 +96,9 @@ else {
 
 
 
+			@Html.HiddenFor(model => model.ValCoddentr, new { @pers_cs_field="ValCoddentr", @pers_cs_area="Ldent", @data_value = Model.ValCoddentr, @db_field="ValCoddentr", @trelate="Indoc", @tfrelate="Coddentr", @data_identifier="LED_LDENTNORINDOCCODDENTR" })
+			@Html.HiddenFor(model => model.ValCodwareh, new { @pers_cs_field="ValCodwareh", @pers_cs_area="Ldent", @data_value = Model.ValCodwareh, @db_field="ValCodwareh", @trelate="Wareh", @tfrelate="Codwareh", @data_identifier="LED_LDENTNORWAREHCODWAREH" })
+			@Html.HiddenFor(model => model.ValCoditem, new { @pers_cs_field="ValCoditem", @pers_cs_area="Ldent", @data_value = Model.ValCoditem, @db_field="ValCoditem", @trelate="Item", @tfrelate="Coditem", @data_identifier="LED_LDENTNORITEM_CODITEM_" })
 
 			@Html.HiddenFor(model => model.ValCodldent, new { @pers_cs_field="ValCodldent", @pers_cs_area="Ldent", data_refresh = "true", @form_area="true", @data_value = Model.ValCodldent, @data_identifier = "LED_LDENTNORLDENTCODLDENT" })
 

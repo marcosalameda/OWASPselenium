@@ -127,8 +127,8 @@ namespace CSGenio.business
 			//Actualiza as seguintes rotinas de ultimo Qvalue:
 			info.LastValueArgs = new List<LastValueArgument>();
 			info.LastValueArgs.Add( new LastValueArgument("tpequ",
-				new string [] {"since","precoult"},
-				new string [] {"since","precohor"},
+				new string [] {"precoult","since"},
+				new string [] {"precohor","since"},
 				"since",
 				null,
 

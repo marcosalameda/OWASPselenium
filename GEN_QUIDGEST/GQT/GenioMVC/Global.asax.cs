@@ -32,6 +32,8 @@ namespace GenioMVC
 
         protected void Application_Start()
         {
+            if (Configuration.ConfigVersion == null)
+                return;
 
             // this line is to hide mvc header
             MvcHandler.DisableMvcResponseHeader = true;
@@ -108,7 +110,7 @@ namespace GenioMVC
 
         protected void Application_PostAcquireRequestState(object sender, EventArgs e)
         {
-            if (Context.Session != null)
+            if (Configuration.ConfigVersion != null && Context.Session != null)
             {
                 // set the user interaction flow for this request
                 // TODO: set it according to the key specified in the request
@@ -139,7 +141,7 @@ namespace GenioMVC
 
         protected void Application_AcquireRequestState(object sender, EventArgs e)
         {
-            if (Context.Session != null)
+            if (Configuration.ConfigVersion != null && Context.Session != null)
             {
                 //Limpar a cache do current navigation
                 CurrentNavigation.Destroy();
@@ -237,6 +239,9 @@ namespace GenioMVC
         {
             public override void OnActionExecuting(ActionExecutingContext filterContext)
             {
+                if (Configuration.ConfigVersion == null)
+                    return;
+
                 var u = UserContext.Current.User;
                 string value = filterContext.RouteData.Values["module"] as string;
 
@@ -299,6 +304,9 @@ namespace GenioMVC
 
             public override void OnResultExecuted(ResultExecutedContext filterContext)
             {
+                if (Configuration.ConfigVersion == null)
+                    return;
+
                 //end the metrics timer
                 (filterContext.HttpContext.Items["page_load_metric"] as IDisposable)?.Dispose();
                 //remove the log scope

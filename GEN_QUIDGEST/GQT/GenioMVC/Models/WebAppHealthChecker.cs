@@ -33,8 +33,11 @@ public class WebAppHealthChecker : HealthChecker
 	{
 		IDictionary<string, HealthStatus> details = new Dictionary<string, HealthStatus>();
 
-		ValidateDBConnection(details);
-		ValidateReportServer(details);
+		if (ValidateConfiguration(details))
+		{
+			ValidateDBConnection(details);
+			ValidateReportServer(details);
+		}
 
 		return details;
 	}

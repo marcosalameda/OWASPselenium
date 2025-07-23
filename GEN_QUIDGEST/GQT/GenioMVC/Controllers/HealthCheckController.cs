@@ -27,6 +27,9 @@ public class HealthCheckController : Controller
 			return Json(healthChecker.LastResult.ToJson(), JsonRequestBehavior.AllowGet);
 
 		Response.StatusCode = 503;
+		// Prevent IIS from overriding our JSON response with a generic error page.
+		// Without this, clients would only see "Service Unavailable" instead of our detailed JSON.
+		Response.TrySkipIisCustomErrors = true;
 		return Json(healthChecker.LastResult.ToJson(), JsonRequestBehavior.AllowGet);
 	}
 }

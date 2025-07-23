@@ -65,8 +65,8 @@ public class HealthCheckResult
 	public HealthCheckResult(IDictionary<string, HealthStatus> details = null, string environment = null)
 	{
 		Timestamp = DateTime.UtcNow;
-		Service = Configuration.Application.Name;
-		Environment = environment;
+		Service = Configuration.Application?.Name ?? "";
+		Environment = environment ?? "";
 		Details = details ?? new Dictionary<string, HealthStatus>();
 
 		// Overall status is Error if any resource has an error, otherwise Ok
@@ -116,7 +116,7 @@ public class HealthCheckResult
 			status = Status.GetDescription(),
 			timestamp = Timestamp.ToString("yyyy-MM-dd HH:mm:ss.fff UTC", CultureInfo.InvariantCulture),
 			service = Service,
-			environment = Environment?.ToLower() ?? "",
+			environment = Environment.ToLower(),
 			details = Details.ToDictionary(d => d.Key, d => d.Value.GetDescription())
 		};
 	}
@@ -189,14 +189,15 @@ public abstract class HealthChecker
 	protected bool ValidateReportServer(IDictionary<string, HealthStatus> details)
 	{
 		bool reportServerOk = true;
+		string reportServerUrl = Configuration.SSRSServer?.url;
 
-		if (!string.IsNullOrWhiteSpace(Configuration.SSRSServer.url))
+		if (!string.IsNullOrWhiteSpace(reportServerUrl))
 		{
-			reportServerOk = TestHttpEndpoint(Configuration.SSRSServer.url);
+			reportServerOk = TestHttpEndpoint(reportServerUrl);
 			details["report_server"] = reportServerOk ? HealthStatus.Ok : HealthStatus.Error;
 
 			if (!reportServerOk)
-				GenioDI.Log.Error($"Health Check (Report Server) - Couldn't connect to {Configuration.SSRSServer.url}");
+				GenioDI.Log.Error($"Health Check (Report Server) - Couldn't connect to {reportServerUrl}");
 		}
 
 		return reportServerOk;
@@ -211,16 +212,21 @@ public abstract class HealthChecker
 	protected bool ValidateChatbotAPI(IDictionary<string, HealthStatus> details)
 	{
 		bool chatbotApiOk = true;
+		string chatbotUrl = Configuration.APIEndpoint;
 
-		if (!string.IsNullOrWhiteSpace(Configuration.APIEndpoint))
+		if (!string.IsNullOrWhiteSpace(chatbotUrl))
 		{
-			Uri baseUri = new(Configuration.APIEndpoint);
+			// Ensure the base URL has a trailing slash, otherwise, the Uri class won't be able to correctly build the final URL
+			if (!chatbotUrl.EndsWith("/"))
+				chatbotUrl += "/";
+
+			Uri baseUri = new(chatbotUrl);
 			// Access the health check endpoint of the chatbot service
 			chatbotApiOk = TestHttpEndpoint(new Uri(baseUri, "health").AbsoluteUri);
 			details["chatbot_api"] = chatbotApiOk ? HealthStatus.Ok : HealthStatus.Error;
 
 			if (!chatbotApiOk)
-				GenioDI.Log.Error($"Health Check (Chatbot) - Couldn't connect to {Configuration.APIEndpoint}");
+				GenioDI.Log.Error($"Health Check (Chatbot) - Couldn't connect to {chatbotUrl}");
 		}
 
 		return chatbotApiOk;
@@ -313,16 +319,16 @@ public abstract class HealthChecker
 	{
 		IDictionary<string, HealthStatus> details = new Dictionary<string, HealthStatus>();
 
+		// Check if we have a cached result
+		string cacheKey = "SystemHealthCheck";
+		if (QCache.Instance.User.Get(cacheKey) is HealthCheckResult lastResult)
+		{
+			LastResult = lastResult;
+			return lastResult.Details;
+		}
+
 		try
 		{
-			// Check if we have a cached result
-			string cacheKey = "SystemHealthCheck";
-			if (QCache.Instance.User.Get(cacheKey) is HealthCheckResult lastResult)
-			{
-				LastResult = lastResult;
-				return lastResult.Details;
-			}
-
 			// Add core resource validations
 			details = ValidateCoreResources();
 
@@ -330,17 +336,20 @@ public abstract class HealthChecker
 			details = details
 				.Union(ValidateCustomResources())
 				.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
-
-			// Create and cache the combined result
-			LastResult = new(details, environment);
-			// Cache results for the specified interval to avoid abuse
-			if (ValidationIntervalMillis > 0)
-				QCache.Instance.User.Put(cacheKey, LastResult, TimeSpan.FromMilliseconds(ValidationIntervalMillis));
 		}
 		catch (Exception e)
 		{
+			// Ensure the final status is error, in case there's a low-level exception in one of the
+			// validations and nothing is put in the details (should never happen, it's a last case scenario).
+			details["unknown_resource"] = HealthStatus.Error;
 			GenioDI.Log.Error($"Health Check - {e.Message}");
 		}
+
+		// Create and cache the combined result
+		LastResult = new(details, environment);
+		// Cache results for the specified interval to avoid abuse
+		if (ValidationIntervalMillis > 0)
+			QCache.Instance.User.Put(cacheKey, LastResult, TimeSpan.FromMilliseconds(ValidationIntervalMillis));
 
 		return details;
 	}

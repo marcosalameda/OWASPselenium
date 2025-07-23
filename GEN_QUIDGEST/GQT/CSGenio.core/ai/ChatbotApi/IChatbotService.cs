@@ -39,5 +39,10 @@ namespace CSGenio.core.ai
         /// TODO
         /// </summary>
         Task<HttpRequestMessage> BuildRequest(string path, HttpMethod method, Stream content);
+
+        /// <summary>
+        /// Makes a function call to the chatbot service and returns the result of type T
+        /// </summary>
+        Task<T> CallChabotAgentPromptAsync<T>(object requestData);
     }
 }

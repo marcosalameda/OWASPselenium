@@ -49,6 +49,14 @@ public abstract class AiAgent
 
     public abstract string AGENT_ID { get; }
 
+    public class AgentRequestData
+    {
+        public object jsonSchema { get; set; }
+        public string prompt { get; set; }
+        public string systemPrompt { get; set; }
+        public string project { get; set; }
+    }
+
     /// <summary>
     /// Sends a prompt to the chatbot and retrieves a response asynchronously.
     /// </summary>
@@ -68,13 +76,7 @@ public abstract class AiAgent
             {
 
                 // Construct the request payload with necessary parameters
-                var requestData = new
-                {
-                    jsonSchema = JsonSchema,
-                    prompt = BuildUserPrompt(),
-                    systemPrompt = BuildSystemPrompt(),
-                    project = Configuration.Program // Static app identifier
-                };
+                var requestData = BuildRequestData();
                 Log.Info($"User ${user.Name} called {AGENT_ID}"); 
                 // Call the chatbot service asynchronously and return the result
                 return await _service.CallChatbotFunctionAsync<OutData>(requestData)
@@ -86,6 +88,44 @@ public abstract class AiAgent
             Log.Error($"Error in agent {AGENT_ID}: {ex.Message}");
             throw;
         }
+    }
+
+    public AgentRequestData BuildRequestData()
+    {
+        return new AgentRequestData
+        {
+            jsonSchema = JsonSchema,
+            prompt = BuildUserPrompt(),
+            systemPrompt = BuildSystemPrompt(),
+            project = Configuration.Application.Name // Static app identifier
+        };
+    }
+
+    /// <summary>
+    /// Sends a structutred prompt to the chatbot and returns the jobId of that request
+    /// </summary>
+    /// <param name="requestData"> The request data </param>
+    /// <returns></returns>
+    public object GetAgentPromptJobId(User user, string formKey)
+    {
+        var agentData = BuildRequestData();
+        var requestData = new 
+        {
+            agentData.jsonSchema,
+            agentData.prompt,
+            agentData.systemPrompt,
+            agentData.project,
+
+            username = user.Name,
+            agentId = AGENT_ID,
+            formId = formKey,
+        };
+
+        var jobId = _service.CallChabotAgentPromptAsync<object>(requestData)
+                        .GetAwaiter()
+                        .GetResult();
+
+        return jobId;
     }
 
     /// <summary>

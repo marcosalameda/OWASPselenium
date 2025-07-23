@@ -14,7 +14,6 @@
 
 
 //*************** User functions ***************
-// eslint-disable-next-line no-unused-vars
 function Idade(dDtNasc, dData)
 {
 	/// <summary>
@@ -24,7 +23,6 @@ function Idade(dDtNasc, dData)
 	/// <param name="dData">Data a calcular a idade</param>
 return ExecuteServerFunction('Idade', [dDtNasc, dData]);
 }
-// eslint-disable-next-line no-unused-vars
 function DayOfWeek(dt)
 {
 	/// <summary>
@@ -48,7 +46,6 @@ function DayOfWeek(dt)
 // eslint-disable-next-line
 /* eslint-enable indent */
 }
-// eslint-disable-next-line no-unused-vars
 function TimeNow()
 {
 	/// <summary>
@@ -62,7 +59,6 @@ function TimeNow()
 // eslint-disable-next-line
 /* eslint-enable indent */
 }
-// eslint-disable-next-line no-unused-vars
 function GetGeoFromLatLng(lat, lng)
 {
 	/// <summary>

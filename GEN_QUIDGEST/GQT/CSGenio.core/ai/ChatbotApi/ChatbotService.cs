@@ -73,7 +73,7 @@ namespace CSGenio.core.ai
             return await response.Content.ReadAsStringAsync();
         }
 
-        public async Task<HttpRequestMessage> BuildRequest(string path, HttpMethod method, Stream content){
+        public async Task<HttpRequestMessage> BuildRequest(string path, HttpMethod method, Stream content) {
             var request = new HttpRequestMessage
             {
                 Method = method,
@@ -91,7 +91,7 @@ namespace CSGenio.core.ai
 
         }
 
-        public async Task<string> SendChatbotRequestAsync(HttpRequestMessage request){
+        public async Task<string> SendChatbotRequestAsync(HttpRequestMessage request) {
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
@@ -109,7 +109,7 @@ namespace CSGenio.core.ai
                 jsonContent = await reader.ReadToEndAsync();
 
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
-            var request = new HttpRequestMessage(HttpMethod.Post, BuildEndpoint("prompt/submit"))
+            var request = new HttpRequestMessage(HttpMethod.Post, BuildEndpoint("get-job-result"))
             {
                 Content = content
             };
@@ -160,12 +160,13 @@ namespace CSGenio.core.ai
         }
 
         /// <summary>
-        /// Calls a specific function on the Chatbot API and deserializes the response.
+        /// Calls a specific API endpoint on the Chatbot service and deserializes the response.
         /// </summary>
-        /// <typeparam name="T">The type to deserialize the response into</typeparam>
-        /// <param name="requestData">The request data to send</param>
-        /// <returns>The deserialized response data</returns>
-        public async Task<T> CallChatbotFunctionAsync<T>(object requestData)
+        /// <typeparam name="T">The type to deserialize the response into.</typeparam>
+        /// <param name="requestData">The request data to send.</param>
+        /// <param name="endpointPath">The specific API path to call (e.g., "/function/json").</param>
+        /// <returns>The deserialized response data.</returns>
+        private async Task<T> CallChatbotApiAsync<T>(object requestData, string endpointPath)
         {
             if (string.IsNullOrWhiteSpace(_chatbotEndpointUrl))
             {
@@ -177,7 +178,7 @@ namespace CSGenio.core.ai
                 Encoding.UTF8,
                 "application/json");
 
-            var response = await _httpClient.PostAsync($"{_chatbotEndpointUrl}/function/json", content);
+            var response = await _httpClient.PostAsync($"{_chatbotEndpointUrl}/{endpointPath}", content);
             response.EnsureSuccessStatusCode();
 
             string responseContent = await response.Content.ReadAsStringAsync();
@@ -195,6 +196,26 @@ namespace CSGenio.core.ai
             {
                 throw new InvalidOperationException("An unexpected error occurred while calling the chatbot function.", ex);
             }
+        }
+
+        /// <summary>
+        /// Calls a specific function on the Chatbot API and deserializes the response.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize the response into</typeparam>
+        /// <param name="requestData">The request data to send</param>
+        /// <returns>The deserialized response data</returns>
+        public Task<T> CallChatbotFunctionAsync<T>(object requestData)
+        {
+            return CallChatbotApiAsync<T>(requestData, "function/json");
+        }
+
+
+        /// <summary>
+        /// Calls a structured prompt on the chatbot API.
+        /// </summary>
+        public Task<T> CallChabotAgentPromptAsync<T>(object requestData)
+        {
+            return CallChatbotApiAsync<T>(requestData, "prompt/structured");
         }
 
         /// <summary>

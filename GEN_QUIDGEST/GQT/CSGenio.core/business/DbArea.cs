@@ -2343,7 +2343,10 @@ namespace CSGenio.business
                 createEmptyFields();
 
                 Zzstate = 1;
-                if(!sp.DatabaseSidePk)
+                //We only calculate a new primary key if are in application side pk's mode, and the pk has not been set yet.
+                //In some cases, batch algorithms need to preallocate pk's so they can pre-fill fk's to the correct values
+                // so, we need to support reaching this point with a Pk already set in the Area record.
+                if(!sp.DatabaseSidePk && string.IsNullOrEmpty(QPrimaryKey))
                     QPrimaryKey = sp.codIntInsertion(this, false);
 
                 if (UserRecord)
@@ -2589,7 +2592,7 @@ namespace CSGenio.business
             }
         }
 
-        private List<FieldRef> loadFieldsToUpdate(DbArea area)
+        private List<FieldRef> loadFieldsToUpdate(AreaInfo area)
         {
             /*
             * In this method we only need to reload the values of the Formula
@@ -2664,26 +2667,57 @@ namespace CSGenio.business
                     string condArea = relacao.AliasTargetTab.ToUpper();
                     foreach (var filha in filhasParaDuplicar)
                     {                        
-                        DbArea areaChild = (DbArea)Area.createArea(relacao.AliasSourceTab, User, User.CurrentModule);
+                        AreaInfo childInfo = Area.GetInfoArea(relacao.AliasSourceTab);
 
                         // Load fields to update on the parent table
-                        modelFieldsToUpdate.AddRange(loadFieldsToUpdate(areaChild));
+                        modelFieldsToUpdate.AddRange(loadFieldsToUpdate(childInfo));
 
                         //RMR(2022-11-11) - If it has more child record to duplicate after, it cannot enforce conditions
                         bool needsValidation = cascata.Any(x => x.TargetTable == relacao.SourceTable);
-                        var sourceRecords = LoadAndSortRecords(sp, areaChild, relacao, filha.Key);
-                        if (!sourceRecords.Any())
-                            continue;
+                        var sourceRecords = LoadAndSortRecords(sp, childInfo, relacao, filha.Key);
 
-                        foreach (var dup in sourceRecords)
+                        //filter all the records that actually can be duplicated
+                        var dbRecords = sourceRecords.Where(r =>
+                            !fichasDuplicadas.ContainsKey(r.QPrimaryKey)
+                            && r.ValidateDupConditions(sp, condArea))
+                            .ToList();
+
+                        foreach (var dup in dbRecords)
                         {
-                            if (!fichasDuplicadas.ContainsKey(dup.QPrimaryKey))
+                            dup.NeedsValidation = needsValidation;
+                            dup.UserRecord = this.UserRecord;
+                        }
+
+                        //self referencing tables need to know all the pks before processing each duplication.
+                        //this allows for the self references of early records to be mapped to later records.
+                        bool hasSelfRelations = childInfo.ParentTables.Values.Any(parent => parent.TargetTable == childInfo.TableName);
+                        if (hasSelfRelations)
+                        {
+                            var prealloc_pks = sp.generatePrimaryKey(
+                                childInfo.TableName,
+                                childInfo.PrimaryKeyName,
+                                childInfo.DBFields[childInfo.PrimaryKeyName].FieldSize,
+                                childInfo.KeyType,
+                                dbRecords.Count());
+
+                            for (var i = 0; i < prealloc_pks.Count; i++)
                             {
-                                areaChild = (DbArea) dup;
-                                areaChild.NeedsValidation = needsValidation;
-                                if (areaChild.ValidateDupConditions(sp, condArea)) //Validate Duplicate Conditions
-                                    if (areaChild.duplicarFilha(sp, dup.QPrimaryKey, areasDuplicadas)) //Duplicate Record
-                                        fichasDuplicadas.Add(dup.QPrimaryKey, areaChild.QPrimaryKey);
+                                fichasDuplicadas.Add(dbRecords[i].QPrimaryKey, prealloc_pks[i]);
+                                dbRecords[i].QPrimaryKey = prealloc_pks[i];
+                            }
+
+                            foreach (var dup in dbRecords)
+                                dup.duplicarFilha(sp, areasDuplicadas);
+                        }
+                        //other tables can follow a normal sequence and allocate pk's on demand
+                        else
+                        {
+                            foreach (var dup in dbRecords)
+                            {
+                                var src_pk = dup.QPrimaryKey;
+                                dup.QPrimaryKey = "";
+                                dup.duplicarFilha(sp, areasDuplicadas);
+                                fichasDuplicadas.Add(src_pk, dup.QPrimaryKey);
                             }
                         }
                     }
@@ -2698,11 +2732,11 @@ namespace CSGenio.business
         /// If the table references itself, applies special ordering to handle dependency correctly.
         /// </summary>
         /// <param name="sp">Persistent support</param>
-        /// <param name="area">The child DbArea instance (representing the table to query).</param>
+        /// <param name="area">The child DbArea schema</param>
         /// <param name="relation">Relation metadata between parent and child tables.</param>
         /// <param name="parentKeyValue">The parent key to search</param>
         /// <returns>List of DbArea instances ready for duplication.</returns>
-        private List<Area> LoadAndSortRecords(PersistentSupport sp, DbArea area, Relation relation, string parentKeyValue)
+        private List<DbArea> LoadAndSortRecords(PersistentSupport sp, AreaInfo area, Relation relation, string parentKeyValue)
         {
             Log.Debug($"Loading children {relation.AliasSourceTab} of table {relation.AliasTargetTab}");
 
@@ -2710,16 +2744,22 @@ namespace CSGenio.business
                     Equal(relation.AliasSourceTab, relation.SourceRelField, parentKeyValue);
             var records = searchList(area.Alias, sp, user, criteria);
 
-            // If the table references itself, ensure that the referenced records come before the others
-            foreach (var selfRelation in area.ParentTables.Values.Where(parent => parent.TargetTable == area.TableName))
-            {                   
-                //Fields with no foreign key to self come first
-                records = records
-                    .OrderByDescending(r => string.IsNullOrEmpty(r.returnValueField(selfRelation.SourceRelField).ToString()))
-                    .ToList();
+            var res = records
+                .Select(r => r as DbArea)
+                .Where(r => r is not null && r.Zzstate == 0);
+
+            if (!string.IsNullOrEmpty(area.MainOrderField))
+            {
+                var otype = area.DBFields[area.MainOrderField].FieldType.GetFormatting();
+                if (otype == FieldFormatting.FLOAT || otype == FieldFormatting.INTEIRO)
+                    res = res.OrderBy(x => Convert.ToDecimal(x.returnValueField(area.MainOrderField)));
+                else if (otype == FieldFormatting.DATA || otype == FieldFormatting.DATAHORA || otype == FieldFormatting.DATASEGUNDO)
+                    res = res.OrderBy(x => Convert.ToDateTime(x.returnValueField(area.MainOrderField)));
+                else
+                    res = res.OrderBy(x => x.returnValueField(area.MainOrderField).ToString());
             }
-            
-            return records;
+
+            return res.ToList();
         }
 
 		private List<Relation> CalcularCascataDuplicacao()
@@ -2749,67 +2789,39 @@ namespace CSGenio.business
 		}
 
         /// <summary>
-        /// Função que permite duplicate uma table filha
+        /// Field calculations specific to duplicating a child record
         /// </summary>
-        /// <param name="area">Name da área filha a ser duplicada</param>
-        /// <param name="valorCodInt">Qvalue do código interno da área filha a ser duplicada</param>
-        /// <param name="campoMae">Name da key primária da table mãe</param>
-        /// <param name="valorCampoMae">Qvalue da key primária da table mãe</param>
-        /// <returns>true se a filha foi duplicada, false caso contrário</returns>
-        private bool duplicarFilha(PersistentSupport sp, string codIntValue, Dictionary<string, Dictionary<string, string>> areasDuplicadas)
+        /// <param name="sp">Persistent support</param>
+        /// <param name="areasMapping">Mappings of previously duplicated pks and their new corresponding pk</param>
+        private void duplicarFilha(PersistentSupport sp, Dictionary<string, Dictionary<string, string>> areasMapping)
         {
-            //TODO: falta o suporte to a duplicação em cascata
-            sp.getRecord(this, codIntValue);
-
-            // Last updated by [CJP] at [2016.06.01]
-            // Não deve duplicate os registos filhos com ZZSTATE != 0
-            if (Zzstate != 0)
-                return false;
-
-            //Como é uma duplicação em cascata temos de considerar que é como se fosse o proprio user a introduce as fichas abaixo.
-            //RMR(2022-11-11) - Removed force to true because this is decided in the "tambemDuplica" function, in case it has child to duplicate with conditions
-            //UserRecord = true;
-
-            //actualizar chaves estrangeiras dos Qvalues antigos to os novos
+            //update the foreign keys to the new pk's they should point to
             foreach (var r in this.ParentTables)
             {
                 var acima = r.Value.TargetTable;
-                if (areasDuplicadas.ContainsKey(acima))
+                if (areasMapping.ContainsKey(acima))
                 {
                     string nomeCe = Alias + "." + r.Value.SourceRelField;
                     string valorCeAntigo = this.returnValueField(nomeCe).ToString();
 
-                    areasDuplicadas[acima].TryGetValue(valorCeAntigo, out string valorCeNovo);
-                    if (valorCeNovo != null)
+                    if(areasMapping[acima].TryGetValue(valorCeAntigo, out string valorCeNovo))
                         this.insertNameValueField(nomeCe, valorCeNovo);
                 }
             }
 
-            //zerar os fields declarados com zeroAduplicar
+            //empty the fields declared in the model with zeroDup
             zeroDuplicar();
-            if(!sp.DatabaseSidePk)
-                QPrimaryKey = sp.codIntInsertion(this, false);
 
-            //1 - preencher carimbo
-            fillStampInsert();
+            //insert operation already tries to create the pk. There is no point in doing it here.
 
             //No need to fill the sequencial fields with negative values
             //Since we always want to keep the value when duplicating,
             //Even if the value is empty or invalid, it will be handled next
 
-            //4 - fill defaults on empty fields
-            fillValuesDefault(sp, FunctionType.DUP);
-
-            //5 - operações internas que dependem de números sequenciais
-            fillInternalOperations(sp, null);
-
             //Duplicate docums
             sp.duplicateFilesDB(this);
-
-            // Executes the encryption formulas associated with the fields before saving the value to the database
-            ExecuteFieldValueEncryption(sp);
             
-            //RS 24.04.2017 Passa a efectuar todas as regras de business durante a duplicação.
+            //process all the business rules of an insertion
             insert(sp);
 
             //with database side pk's the docums Chave field will not have been filled so we need to do it after the insert
@@ -2818,8 +2830,6 @@ namespace CSGenio.business
             //There is one place where the field "chave" is used, but it could be unused if we refactory the content of document ticket. 
             if (sp.DatabaseSidePk)
                 sp.AfterDuplicateFilesDB(this);
-
-            return true;
         }
 
         public virtual bool checkoutDocums(PersistentSupport sp, string docField, out string newcodDocums)

@@ -302,7 +302,13 @@ namespace CSGenio.business
             get { return m_nomeChaveHumana; }
             set { m_nomeChaveHumana = value; }
         }
-		
+
+        /// <summary>
+        /// Natural ordering field for this table.
+        /// This can influence sorting defaults and order of processing during batches.
+        /// </summary>
+        public string MainOrderField { get; set; } = "";
+
         private string m_nomeChaveTabSombra;
         /// <summary>
         /// Name do Qfield key primária da table shadow

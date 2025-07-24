@@ -410,7 +410,7 @@ namespace CSGenio.business
                 {
                     foreach (CSGenioAnotificationmessage.FinalMsg finalmsg in msg.FinalMsgs)
                     {
-                        EmailServer emailProperties = Configuration.EmailProperties.Find(x=>x.Codpmail== msg.ValCodpmail);
+                        EmailServer emailProperties = Configuration.EmailProperties.Find(x=>x.Codpmail.ToUpper() == msg.ValCodpmail.ToUpper());
                         CSGenioAnotificationemailsignature emailSignature = CSGenioAnotificationemailsignature.search(sp, msg.ValCodsigna, user);
 
                         byte[] data = Convert.FromBase64String(emailProperties.Password);

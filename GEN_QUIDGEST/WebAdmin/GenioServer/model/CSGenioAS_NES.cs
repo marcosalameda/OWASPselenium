@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -496,7 +496,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX S_NES]/

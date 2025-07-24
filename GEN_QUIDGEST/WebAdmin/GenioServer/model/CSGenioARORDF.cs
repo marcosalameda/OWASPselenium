@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -147,6 +147,7 @@ namespace CSGenio.business
 
 			info.PrimaryKeyName="codrordf";
 			info.HumanKeyName="order,".TrimEnd(',');
+			info.MainOrderField="order";
 			info.Alias="rordf";
 			info.IsDomain = true;
 			info.PersistenceType = PersistenceType.Database;
@@ -349,7 +350,8 @@ namespace CSGenio.business
 
 
 
- 		//To usar routine manual no pedido eliminate
+
+		//To usar routine manual no pedido eliminate
 		public override StatusMessage eliminate(PersistentSupport sp)
 		{
 			StatusMessage msg = base.eliminate(sp);

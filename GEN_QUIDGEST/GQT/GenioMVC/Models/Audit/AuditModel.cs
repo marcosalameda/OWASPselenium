@@ -364,7 +364,9 @@ namespace GenioMVC.Models
 			if (field.isKey() && field.Alias != area.Alias && GenFunctions.emptyG(text) == 0)
 			{
 				// Foreign keys are replaced by referenced tables' human key
-				Relation relation = area.ParentTables.Values.First(x => x.SourceRelField == field.Name);
+				Relation relation = area.ParentTables.Values.FirstOrDefault(x => x.SourceRelField == field.Name);
+				if (relation is null)
+					return text;
 				AreaInfo table = CSGenio.business.Area.GetInfoArea(relation.AliasTargetTab);
 
 				// There can be multiple fields marked as human key

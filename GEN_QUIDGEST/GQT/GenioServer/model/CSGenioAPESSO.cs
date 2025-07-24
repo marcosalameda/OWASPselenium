@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1185,7 +1185,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 		/// <summary>
         /// To use routine manual validations and extra calculations
 		/// after the update of the record.

@@ -4444,71 +4444,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Entity" code="ENTITY62049">
     <ENUS>Entity</ENUS>
   </msg>
-  <msg id="Bank Data" code="BANK_DATA61943">
-    <ENUS>Bank Data</ENUS>
-  </msg>
-  <msg id="Real %" code="REAL__37390">
-    <ENUS>Real %</ENUS>
-  </msg>
-  <msg id="Seller" code="SELLER36870">
-    <ENUS>Seller</ENUS>
-  </msg>
-  <msg id="Individual notifications" code="INDIVIDUAL_NOTIFICAT21987">
-    <ENUS>Individual notifications</ENUS>
-  </msg>
-  <msg id=" 1090" code="_109034838">
-    <ENUS>This address is no longer in use (or was never correct but retained for records).</ENUS>
-  </msg>
-  <msg id="Phone number" code="PHONE_NUMBER20774">
-    <ENUS>Phone number</ENUS>
-  </msg>
-  <msg id="Class (Enumeração de Texto)" code="CLASS__ENUMERACAO_DE17340">
-    <ENUS>Class (Enumeração de Texto)</ENUS>
-  </msg>
-  <msg id="  203" code="__20337157">
-    <ENUS>Colocação do número de fax.</ENUS>
-  </msg>
-  <msg id="  303" code="__30344822">
-    <ENUS>Ordem pai</ENUS>
-  </msg>
-  <msg id="Wizard with Progress" code="WIZARD_WITH_PROGRESS41811">
-    <ENUS>Wizard with Progress</ENUS>
-  </msg>
-  <msg id="House" code="HOUSE01993">
-    <ENUS>House</ENUS>
-  </msg>
-  <msg id="Numeric enumeration" code="NUMERIC_ENUMERATION46756">
-    <ENUS>Numeric enumeration</ENUS>
-  </msg>
-  <msg id="Item" code="ITEM40802">
-    <ENUS>Item</ENUS>
-  </msg>
-  <msg id=" 1063" code="_106356362">
-    <ENUS>Documento a importar</ENUS>
-  </msg>
-  <msg id="Teste" code="TESTE23551">
-  </msg>
-  <msg id="   24" code="___2412795">
-    <ENUS>This help is for a field of type Currency decimal</ENUS>
-  </msg>
-  <msg id="Árvore" code="ARVORE44219">
-    <ENUS>Árvore</ENUS>
-  </msg>
-  <msg id="Alert sup." code="ALERT_SUP_52757">
-    <ENUS>Alert sup.</ENUS>
-  </msg>
-  <msg id="Zoom level" code="ZOOM_LEVEL17268">
-    <ENUS>Zoom level</ENUS>
-  </msg>
-  <msg id="Valor (Ano N-2)" code="VALOR__ANO_N_2_48120">
-    <ENUS>Valor (Ano N-2)</ENUS>
-  </msg>
-  <msg id="Group 2" code="GROUP_205486">
-    <ENUS>Group 2</ENUS>
-  </msg>
-  <msg id="Crescimento" code="CRESCIMENTO17722">
-    <ENUS>Crescimento</ENUS>
-  </msg>
   <msg id="Meta Real" code="META_REAL47614">
     <ENUS>Meta Real</ENUS>
   </msg>
@@ -4905,6 +4840,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Designation:" code="DESIGNATION_35800">
     <ENUS>Designation:</ENUS>
   </msg>
+  <msg id="  303" code="__30344822">
+    <ENUS>Ordem pai</ENUS>
+  </msg>
   <msg id="Perpspective" code="PERPSPECTIVE16685">
     <ENUS>Perpspective</ENUS>
   </msg>
@@ -4949,6 +4887,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="Curriculum" code="CURRICULUM51182">
     <ENUS>Resume</ENUS>
+  </msg>
+  <msg id="Class (Enumeração de Texto)" code="CLASS__ENUMERACAO_DE17340">
+    <ENUS>Class (Enumeração de Texto)</ENUS>
   </msg>
   <msg id="Somatório Pts Activ" code="SOMATORIO_PTS_ACTIV53475">
     <ENUS>Somatório Pts Activ</ENUS>
@@ -5028,6 +4969,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="  456" code="__45646557">
     <ENUS>Número de horas semanais de trabalho na EG</ENUS>
+  </msg>
+  <msg id=" 1090" code="_109034838">
+    <ENUS>This address is no longer in use (or was never correct but retained for records).</ENUS>
   </msg>
   <msg id="Date second" code="DATE_SECOND44057">
     <ENUS>Date second</ENUS>
@@ -5341,6 +5285,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="All employees" code="ALL_EMPLOYEES64244">
     <ENUS>All employees</ENUS>
+  </msg>
+  <msg id="Árvore" code="ARVORE44219">
+    <ENUS>Árvore</ENUS>
   </msg>
   <msg id="Groups with style classes" code="GROUPS_WITH_STYLE_CL04007">
   </msg>
@@ -5839,6 +5786,9 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
   <msg id="Sim / Não" code="SIM___NAO31594">
     <ENUS>Sim / Não</ENUS>
   </msg>
+  <msg id="Numeric enumeration" code="NUMERIC_ENUMERATION46756">
+    <ENUS>Numeric enumeration</ENUS>
+  </msg>
   <msg id="Room Designation:" code="ROOM_DESIGNATION_33759">
     <ENUS>Room Designation:</ENUS>
   </msg>
@@ -6306,6 +6256,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   </msg>
   <msg id="Start time" code="START_TIME30037">
     <ENUS>Start time</ENUS>
+  </msg>
+  <msg id="Individual notifications" code="INDIVIDUAL_NOTIFICAT21987">
+    <ENUS>Individual notifications</ENUS>
   </msg>
   <msg id="State/Province" code="STATE_PROVINCE28516">
     <ENUS>State/Province</ENUS>
@@ -7313,6 +7266,9 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</ENUS>
   <msg id="Good limit 2" code="GOOD_LIMIT_258360">
     <ENUS>Good limit 2</ENUS>
   </msg>
+  <msg id="Group 2" code="GROUP_205486">
+    <ENUS>Group 2</ENUS>
+  </msg>
   <msg id="Lending" code="LENDING18782">
     <ENUS>Lending</ENUS>
   </msg>
@@ -7351,6 +7307,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
   </msg>
   <msg id="Lista de campos" code="LISTA_DE_CAMPOS37609">
     <ENUS>Lista de campos</ENUS>
+  </msg>
+  <msg id="Seller" code="SELLER36870">
+    <ENUS>Seller</ENUS>
   </msg>
   <msg id="Dispatch status" code="DISPATCH_STATUS62739">
     <ENUS>Dispatch status</ENUS>
@@ -7678,6 +7637,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Show and Block conditions" code="SHOW_AND_BLOCK_CONDI30657">
     <ENUS>Show and Block conditions</ENUS>
   </msg>
+  <msg id="   24" code="___2412795">
+    <ENUS>This help is for a field of type Currency decimal</ENUS>
+  </msg>
   <msg id="  122" code="__12258586">
     <ENUS>Changed by</ENUS>
   </msg>
@@ -7818,6 +7780,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="  180" code="__18064021">
     <ENUS>Dia de referência dos dados. Insira o dia a que os dados devem respeitar, conforme a periocidade de recolha definida. Exemplo: para uma periodicidade mensal, o dia 31 significa que os dados vão ser referentes ao último dia de cada mês.</ENUS>
+  </msg>
+  <msg id=" 1063" code="_106356362">
+    <ENUS>Documento a importar</ENUS>
   </msg>
   <msg id=" 1146_VERBOSE" code="_1146_VERBOSE39468">
     <ENUS>Verbose help in the second enumeration item</ENUS>
@@ -7973,6 +7938,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="  226" code="__22650687">
     <ENUS>Utilizador responsável pela iniciativa.</ENUS>
   </msg>
+  <msg id="Alert sup." code="ALERT_SUP_52757">
+    <ENUS>Alert sup.</ENUS>
+  </msg>
   <msg id=" 1123_VERBOSE" code="_1123_VERBOSE50467">
   </msg>
   <msg id="Descrição da Missão" code="DESCRICAO_DA_MISSAO02902">
@@ -8023,6 +7991,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Perspectiva (extenso)" code="PERSPECTIVA__EXTENSO62001">
     <ENUS>Perspectiva (extenso)</ENUS>
+  </msg>
+  <msg id="Real %" code="REAL__37390">
+    <ENUS>Real %</ENUS>
   </msg>
   <msg id="Login Name" code="LOGIN_NAME03494">
     <ENUS>Login Name</ENUS>
@@ -8234,6 +8205,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Approach" code="APPROACH06577">
     <ENUS>Approach</ENUS>
   </msg>
+  <msg id="Zoom level" code="ZOOM_LEVEL17268">
+    <ENUS>Zoom level</ENUS>
+  </msg>
   <msg id="Path" code="PATH03888">
     <ENUS>Path</ENUS>
   </msg>
@@ -8273,6 +8247,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Non qualified" code="NON_QUALIFIED19103">
     <ENUS>Non qualified</ENUS>
+  </msg>
+  <msg id="Phone number" code="PHONE_NUMBER20774">
+    <ENUS>Phone number</ENUS>
   </msg>
   <msg id="Local" code="LOCAL02842">
     <ENUS>Local</ENUS>
@@ -8321,6 +8298,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Single Inputs" code="SINGLE_INPUTS14159">
     <ENUS>Single Inputs</ENUS>
+  </msg>
+  <msg id="Item" code="ITEM40802">
+    <ENUS>Item</ENUS>
   </msg>
   <msg id="Graphix XML" code="GRAPHIX_XML41240">
     <ENUS>Graphix XML</ENUS>
@@ -8378,6 +8358,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Moving access" code="MOVING_ACCESS62712">
     <ENUS>Moving access</ENUS>
   </msg>
+  <msg id="Bank Data" code="BANK_DATA61943">
+    <ENUS>Bank Data</ENUS>
+  </msg>
   <msg id="  177" code="__17758137">
     <ENUS>De onde vêm os dados que vão ser introduzidos neste indicador.</ENUS>
   </msg>
@@ -8403,6 +8386,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Button to trigger" code="BUTTON_TO_TRIGGER30903">
     <ENUS>Button to trigger</ENUS>
+  </msg>
+  <msg id="Crescimento" code="CRESCIMENTO17722">
+    <ENUS>Crescimento</ENUS>
   </msg>
   <msg id="Manufacturer" code="MANUFACTURER50759">
     <ENUS>Manufacturer</ENUS>
@@ -8589,6 +8575,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Output No" code="OUTPUT_NO41865">
     <ENUS>Output No</ENUS>
   </msg>
+  <msg id="Wizard with Progress" code="WIZARD_WITH_PROGRESS41811">
+    <ENUS>Wizard with Progress</ENUS>
+  </msg>
   <msg id="leader no." code="LEADER_NO_11905">
     <ENUS>leader no.</ENUS>
   </msg>
@@ -8674,8 +8663,14 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Main table" code="MAIN_TABLE05017">
   </msg>
+  <msg id="Valor (Ano N-2)" code="VALOR__ANO_N_2_48120">
+    <ENUS>Valor (Ano N-2)</ENUS>
+  </msg>
   <msg id="  196" code="__19647992">
     <ENUS>Escolher o mês em que se inicia o ano.</ENUS>
+  </msg>
+  <msg id="House" code="HOUSE01993">
+    <ENUS>House</ENUS>
   </msg>
   <msg id="Perspectives (Model)" code="PERSPECTIVES__MODEL_33875">
     <ENUS>Perspectives (Model)</ENUS>
@@ -8737,6 +8732,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="MAIN CONTACT" code="MAIN_CONTACT60524">
     <ENUS>MAIN CONTACT</ENUS>
   </msg>
+  <msg id="  203" code="__20337157">
+    <ENUS>Colocação do número de fax.</ENUS>
+  </msg>
   <msg id="Technical" code="TECHNICAL18245">
     <ENUS>Technical</ENUS>
   </msg>
@@ -8773,6 +8771,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Help in the date field" code="HELP_IN_THE_DATE_FIE36724">
     <ENUS>Help in the date field</ENUS>
+  </msg>
+  <msg id="Teste" code="TESTE23551">
   </msg>
   <msg id="WCF" code="WCF53361">
   </msg>

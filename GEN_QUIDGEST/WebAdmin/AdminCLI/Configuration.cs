@@ -332,6 +332,17 @@ namespace AdminCLI
                     }
                 }
             }
+
+            Console.WriteLine();
+            Console.WriteLine("Available project specific properties:");
+            Console.WriteLine("=================================");
+            var properties = ExtraProperties.GetAdvancedProperties().ToList();
+            int maxIdLength = properties.Any() ? properties.Max(p => p.Id.Length) + 3 : 0;
+
+            foreach (var property in properties)
+            {
+                Console.WriteLine($"{property.Id.PadRight(maxIdLength)}{property.Label}");
+            }
         }
 
         /// <summary>
@@ -339,17 +350,50 @@ namespace AdminCLI
         /// </summary>
         private static int GetConfigProperty(string propertyName)
         {
+            var config = _configManager.GetExistingConfig();
             var property = FindPropertyByCommandName(propertyName);
-            
-            if (property == null)
+
+            if (property != null)
+                return PrintStandardProperty(property, propertyName, config);
+
+            if (ExtraProperties.GetAdvancedProperties().Any(p => p.Id == propertyName))
             {
-                Console.WriteLine($"Error: Property '{propertyName}' not found");
-                return 1;
+                var value = config.maisPropriedades[propertyName];
+                Console.WriteLine($"{propertyName}: {value}");
+                return 0;
             }
 
+            Console.WriteLine($"Error: Property '{propertyName}' not found");
+            return 1;
+        }
+
+        /// <summary>
+        /// Sets the value of a configuration property
+        /// </summary>
+        private static int SetConfigProperty(string propertyName, string value)
+        {
+            var config = _configManager.GetExistingConfig();
+            var property = FindPropertyByCommandName(propertyName);
+
+            if (property != null)
+                return SetStandardProperty(property, propertyName, value, config);
+
+            if (ExtraProperties.GetAdvancedProperties().Any(p => p.Id == propertyName))
+            {
+                config.maisPropriedades[propertyName] = value;
+                _configManager.StoreConfig(config);
+                Console.WriteLine($"Successfully set {propertyName} to {value}");
+                return 0;
+            }
+
+            Console.WriteLine($"Error: Property '{propertyName}' not found");
+            return 1;
+        }
+
+        private static int PrintStandardProperty(PropertyInfo property, string propertyName, ConfigurationXML config)
+        {
             try
             {
-                var config = _configManager.GetExistingConfig();
                 var instance = GetInstanceForProperty(property, config);
                 if (instance == null)
                 {
@@ -363,27 +407,15 @@ namespace AdminCLI
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error reading property: {ex.Message}");
+                Console.WriteLine($"Error reading property '{propertyName}': {ex.Message}");
                 return 1;
             }
         }
 
-        /// <summary>
-        /// Sets the value of a configuration property
-        /// </summary>
-        private static int SetConfigProperty(string propertyName, string value)
+        private static int SetStandardProperty(PropertyInfo property, string propertyName, string value, ConfigurationXML config)
         {
-            var property = FindPropertyByCommandName(propertyName);
-            
-            if (property == null)
-            {
-                Console.WriteLine($"Error: Property '{propertyName}' not found");
-                return 1;
-            }
-
             try
             {
-                var config = _configManager.GetExistingConfig();
                 var instance = GetInstanceForProperty(property, config);
                 if (instance == null)
                 {
@@ -399,10 +431,11 @@ namespace AdminCLI
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error setting property: {ex.Message}");
+                Console.WriteLine($"Error setting property '{propertyName}': {ex.Message}");
                 return 1;
             }
         }
+
 
         /// <summary>
         /// Gets the appropriate configuration instance for a property

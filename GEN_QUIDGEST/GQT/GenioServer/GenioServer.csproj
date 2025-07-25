@@ -301,8 +301,6 @@
     <Compile Include="business\RequestFlashWFRela.cs" />
     <Compile Include="persistence\PersistentSupportExtra.cs" />
     <Compile Include="security\UserBusinessService.cs" />
-    <Compile Include="ai\AdressAgent2Agent.cs" />
-    <Compile Include="ai\AdressAgentAgent.cs" />
     <Compile Include="ai\RepairsCategorizerAgent.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

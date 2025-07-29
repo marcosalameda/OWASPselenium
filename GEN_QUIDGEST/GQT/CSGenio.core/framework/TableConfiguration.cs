@@ -254,6 +254,10 @@ namespace CSGenio.framework.TableConfiguration
         [JsonPropertyName("selectedRows")]
         public List<string> SelectedRows { get; set; }
 
+        // Form field filters - should be ignored in the saved Json, as they're external to the table.
+        [JsonIgnore]
+        public Dictionary<string, object> FieldFilters { get; set; } = [];
+
         // Advanced filters, column filters, and searchbar filters merged
         [JsonIgnore]
         public List<SearchFilter> SearchFilters

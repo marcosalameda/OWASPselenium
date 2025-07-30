@@ -17,7 +17,7 @@
 			:disabled="disabled"
 			:readonly="readonly"
 			:time-picker="isTimePicker"
-			:format="dateTimeFormat"
+			:format="format"
 			:placeholder="placeholder"
 			:text-input="textInputOptions"
 			:is24="!time12h"
@@ -29,7 +29,8 @@
 			:aria-labels="{ input: $attrs?.ariaLabel }"
 			hide-input-icon
 			clearable
-			auto-apply>
+			auto-apply
+			ref="datePickerPluginEl">
 			<template #clear-icon="{ clear }">
 				<q-button
 					class="q-date-time-picker__clear"
@@ -98,11 +99,18 @@
 			},
 
 			/**
-			 * format of the control, {D : date}, {T : time}, {DT : dateTime}, {DS : dateTimeSeconds}
+			 * Format
 			 */
 			format: {
+				type: String
+			},
+
+			/**
+			 * DateTime type (date, dateTime, dateTimeSeconds, time)
+			 */
+			dateTimeType: {
 				type: String,
-				default: 'date' // Default format
+				default: 'date'
 			},
 
 			/**
@@ -173,11 +181,22 @@
 
 		expose: [],
 
+		beforeUnmount() {
+			// bugfix - memory leak!
+			const el = this.$refs.datePickerPluginEl
+			const onScrollFn = el?.onScroll
+			if (typeof onScrollFn === 'function') {
+				const target = document.getElementById('app')
+				target?.removeEventListener('scroll', onScrollFn)
+			}
+
+		},
+
 		computed: {
 			model: {
 				get()
 				{
-					if (typeof this.modelValue === 'string' && this.format === 'time')
+					if (typeof this.modelValue === 'string' && this.dateTimeType === 'time')
 					{
 						if (this.modelValue === '')
 							return null
@@ -197,33 +216,18 @@
 			},
 
 			enableSeconds() {
-				return this.format === 'dateTimeSeconds'
+				return this.dateTimeType === 'dateTimeSeconds'
 			},
 
 			hasTimePicker() {
-				return this.format !== 'date'
+				return this.dateTimeType !== 'date'
 			},
 			isTimePicker() {
-				return this.format === 'time'
-			},
-
-			dateTimeFormat() {
-				switch (this.format) {
-					case 'date':
-						return 'dd/MM/yyyy'
-					case 'dateTime':
-						return 'dd/MM/yyyy HH:mm'
-					case 'dateTimeSeconds':
-						return 'dd/MM/yyyy HH:mm:ss'
-					case 'time':
-						return 'HH:mm'
-					default:
-						return ''
-				}
+				return this.dateTimeType === 'time'
 			},
 
 			textFormat() {
-				switch (this.format) {
+				switch (this.dateTimeType) {
 					case 'date':
 						return ['dd/MM/yyyy', 'dd-MM-yyyy', 'ddMMyyyy', 'dd.MM.yyyy']
 					case 'dateTime':
@@ -250,7 +254,7 @@
 			},
 
 			inputIcon() {
-				return this.format === 'time' ? 'time' : 'date'
+				return this.dateTimeType === 'time' ? 'time' : 'date'
 			}
 		}
 	}

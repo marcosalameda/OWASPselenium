@@ -11,7 +11,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed } from 'vue'
 	import { mapActions } from 'pinia'
 	import _merge from 'lodash-es/merge'
@@ -35,7 +35,7 @@
 	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import { removeModal } from '@/utils/layout'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import ViewModelBase from '@/mixins/viewModelBase.js'
 
@@ -172,7 +172,7 @@
 					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
 				}
 
-				this.listCtrl.componentOnLoadProc.addWL(this.fetchListData(this.listCtrl, params))
+				this.listCtrl.fetchListData(params)
 			},
 
 			handleRowAction(eventData)
@@ -249,7 +249,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROJE', 'changed-YEAR', 'changed-AGREG'],
+						globalEvents: ['changed-PROJE', 'changed-AGREG', 'changed-YEAR'],
 						uuid: 'Despe_Despe_AgregValValue',
 						allSelectedRows: 'false',
 						handlers: {

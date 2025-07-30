@@ -142,10 +142,10 @@ namespace GenioMVC.ViewModels.Notif
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAnotif.FldNrcomoda, FieldType.NUMERIC, Resources.Resources.NO__OF_THE_DADATO35934, 6, 0, true),
 				new Exports.QColumn(CSGenioAnotif.FldBegin, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
 				new Exports.QColumn(CSGenioAnotif.FldEnd, FieldType.DATETIME, Resources.Resources.END47577, 16, 0, true),
@@ -160,16 +160,12 @@ namespace GenioMVC.ViewModels.Notif
 				new Exports.QColumn(CSGenioAnotif.FldReturned, FieldType.LOGIC, Resources.Resources.RETURNED01606, 1, 0, true),
 				new Exports.QColumn(CSGenioAnotif.FldDtdevolu, FieldType.DATE, Resources.Resources.RETURN32222, 8, 0, true),
 				new Exports.QColumn(CSGenioApess2.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAnotif> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -321,12 +317,6 @@ namespace GenioMVC.ViewModels.Notif
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAnotif> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "81"),
-				new("Module", "GQT")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<GQT_Menu_81_RowViewModel>();
 
@@ -487,7 +477,6 @@ namespace GenioMVC.ViewModels.Notif
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<GQT_Menu_81_RowViewModel> MapGQT_Menu_81(ListingMVC<CSGenioAnotif> Qlisting)

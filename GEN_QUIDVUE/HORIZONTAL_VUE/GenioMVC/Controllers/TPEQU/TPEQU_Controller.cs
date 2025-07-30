@@ -222,6 +222,30 @@ namespace GenioMVC.Controllers
 
 
 
+		// POST: /Tpequ/TPEQU_UPDATE_FORMULAS_TriggerCondition
+		[HttpPost]
+		public JsonResult TPEQU_UPDATE_FORMULAS_TriggerCondition([FromBody] ViewModels.Tpequ.Tpequ_ViewModel formData)
+		{
+			try
+			{
+				// Create a model from form data to avoid extra database queries.
+				var p = new Models.Tpequ(UserContext.Current);
+
+				// At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+				// the values coming from the client-side will be accepted as valid, since they won't be saved and are only being used for calculation.
+				formData.DisableUserValuesSecurity();
+				// Map client-side form data into the model
+				formData.MapToModel(p);
+
+				// Formula: isEmptyC([TPEQU->TIPOEQUI]) && HasRole("A")
+				var result = (((string)p.ValTipoequi) == "")&&CSGenio.business.GlobalFunctions.HasRole(m_userContext.User,"A");
+				return JsonOK(result);
+			}
+			catch (Exception ex)
+			{
+				return JsonERROR(ex.Message);
+			}
+		}
 
 
 		/// <summary>
@@ -307,16 +331,6 @@ namespace GenioMVC.Controllers
 		public ActionResult GetFile([FromBody] RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
-		}
-
-		/// <summary>
-		/// Stores a new document in the Docums table
-		/// </summary>
-		/// <param name="requestModel">The request model with the document and ticket</param>
-		/// <returns>A JSON response with the result of the operation</returns>
-		public ActionResult SetFile([FromForm] RequestDocumsCreateModel requestModel)
-		{
-			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version);
 		}
 
 		/// <summary>

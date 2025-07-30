@@ -11,7 +11,8 @@
 						:label-attrs="{ class: 'i-text__label' }">
 						<q-date-time-picker
 							id="start-limit-field"
-							format="dateTime"
+							:date-time-type="dateTimeType"
+							:format="dateTimeFormat"
 							:locale="locale"
 							:model-value="model.ValMinvalue.value"
 							@reset-icon-click="model.ValMinvalue.fnUpdateValue(model.ValMinvalue.originalValue ?? new Date())"
@@ -27,7 +28,8 @@
 						:label-attrs="{ class: 'i-text__label' }">
 						<q-date-time-picker
 							id="end-limit-field"
-							format="dateTime"
+							:date-time-type="dateTimeType"
+							:format="dateTimeFormat"
 							:locale="locale"
 							:model-value="model.ValMaxvalue.value"
 							@reset-icon-click="model.ValMaxvalue.fnUpdateValue(model.ValMaxvalue.originalValue ?? new Date())"
@@ -61,7 +63,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import _foreach from 'lodash-es/forEach'
 	import { computed } from 'vue'
 
@@ -75,14 +77,14 @@
 	import modelFieldType from '@quidgest/clientapp/models/fields'
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
-	import { useSystemDataStore } from '@quidgest/clientapp/stores'
+	import { useSystemDataStore, useGenericDataStore } from '@quidgest/clientapp/stores'
 
 	import netAPI from '@quidgest/clientapp/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import qEnums from '@quidgest/clientapp/constants/enums'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	const requiredTextResources = ['QMenuGQT_141', 'hardcoded', 'messages']
 
@@ -132,7 +134,8 @@
 
 				model: null,
 
-				locale: useSystemDataStore().system.currentLang
+				locale: useSystemDataStore().system.currentLang,
+				dateTimeType: 'dateTime'
 			}
 		},
 
@@ -152,7 +155,7 @@
 			// Load resources (translations)
 			this.componentOnLoadProc.addBusy(loadResources(this, requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
 			// Load default limit values
-			let vm = this;
+			const vm = this
 			this.componentOnLoadProc.addBusy(netAPI.postData("LENDI", 'GQT_MenuSE_141', null, (data) => {
 				vm.model = {
 					ValMinvalue: new modelFieldType.DateTime({
@@ -193,9 +196,15 @@
 		beforeUnmount()
 		{
 			// Removes the listener
-			this.internalEvents.removeAllListeners()
+			this.internalEvents?.removeAllListeners()
 		},
 
+		computed: {
+			dateTimeFormat()
+			{
+				return useGenericDataStore().dateFormat[this.dateTimeType]
+			}
+		},
 		methods: {
 			followUp()
 			{

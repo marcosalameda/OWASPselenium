@@ -123,23 +123,19 @@ namespace GenioMVC.ViewModels.Locat
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAlcext.FldGlnext, FieldType.TEXT, Resources.Resources.GLN_EXTENSION_COMPON55869, 30, 0, true),
 				new Exports.QColumn(CSGenioAlcext.FldSpacetyp, FieldType.ARRAY_TEXT, Resources.Resources.SPACE_TYPE42493, 1, 0, true, "SpaceTyp"),
 				new Exports.QColumn(CSGenioAlcext.FldSpaceobs, FieldType.TEXT, Resources.Resources.SPACE62433, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAlcext> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -295,11 +291,6 @@ namespace GenioMVC.ViewModels.Locat
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAlcext> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Form", "LOCAT")
-			}, "ms", "Time to load the form."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Locat_ValLocalext_RowViewModel>();
 
@@ -435,7 +426,6 @@ namespace GenioMVC.ViewModels.Locat
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<Locat_ValLocalext_RowViewModel> MapLocat_ValLocalext(ListingMVC<CSGenioAlcext> Qlisting)

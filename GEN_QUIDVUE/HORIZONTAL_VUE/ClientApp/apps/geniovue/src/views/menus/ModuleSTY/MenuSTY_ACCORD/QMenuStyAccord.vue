@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuSTY_ACCORDViewModel.js'
 
@@ -284,7 +285,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ACCORDI',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ACCORDI'
 								}
 							},
 							formsDefinition: {
@@ -301,7 +302,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY', 'changed-PESS1', 'changed-DECOM'],
+						globalEvents: ['changed-ITEM', 'changed-WAREH', 'changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-DECOM', 'changed-PESS1'],
 						uuid: '63f47415-010f-4c3a-890d-4d78a7386e11',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -332,6 +333,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS STY_MENU_ACCORD]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT STY_MENU_ACCORD]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

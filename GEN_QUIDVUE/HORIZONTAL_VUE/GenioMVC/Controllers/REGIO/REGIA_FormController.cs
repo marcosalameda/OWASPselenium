@@ -462,12 +462,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Regio/Regia_SaveEdit
 		[HttpPost]
 		public ActionResult Regia_SaveEdit([FromBody] Regia_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regia_SaveEdit",
 				ViewName = "Regia",
@@ -498,7 +497,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsRegia([FromBody] RegiaDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

@@ -87,10 +87,10 @@
 
 					if (target)
 					{
-						let anchoredChildren = anchor.anchoredChildren
+						const anchoredChildren = anchor.anchoredChildren
 						let hasAnActiveChild = false
 
-						for (let anchoredChild of anchoredChildren)
+						for (const anchoredChild of anchoredChildren)
 						{
 							if (findActiveAnchor(anchoredChild))
 							{
@@ -103,7 +103,7 @@
 						if (hasAnActiveChild)
 							return true
 
-						let pos = target.getBoundingClientRect()
+						const pos = target.getBoundingClientRect()
 
 						if (!isThereAnActiveSession && (pos.top < scrollYStart + 5 && pos.bottom > scrollYStart))
 						{
@@ -118,7 +118,7 @@
 				}
 
 				// Looking for the first section whose the top is in the viewport.
-				for (let ctrl of this.anchors)
+				for (const ctrl of this.anchors)
 					findActiveAnchor(ctrl)
 			},
 

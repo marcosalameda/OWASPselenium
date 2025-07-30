@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PHOTO03',
 			area: 'PROPH',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PHOTO03',
-				updateFilesTickets: 'UpdateFilesTicketsPHOTO03'
+				recalculateFormulas: 'RecalculateFormulas_Photo03',
+				updateFilesTickets: 'UpdateFilesTicketsPhoto03',
+				setFile: 'SetFilePhoto03'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPROPH',
 			description: '',
 		}).cloneFrom(values?.ValCodproph))
-		watch(() => this.ValCodproph.value, (newValue, oldValue) => this.onUpdate('proph.codproph', this.ValCodproph, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodproph.value, (newValue, oldValue) => this.onUpdate('proph.codproph', this.ValCodproph, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodprope = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PROPE',
 			description: computed(() => this.Resources.PROPERTY43977),
 		}).cloneFrom(values?.ValCodprope))
-		watch(() => this.ValCodprope.value, (newValue, oldValue) => this.onUpdate('proph.codprope', this.ValCodprope, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodprope.value, (newValue, oldValue) => this.onUpdate('proph.codprope', this.ValCodprope, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValPhoto = reactive(new modelFieldType.Image({
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'PHOTO',
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.ValPhoto))
-		watch(() => this.ValPhoto.value, (newValue, oldValue) => this.onUpdate('proph.photo', this.ValPhoto, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPhoto.value, (newValue, oldValue) => this.onUpdate('proph.photo', this.ValPhoto, newValue, oldValue)))
 
 		this.ValTitle = reactive(new modelFieldType.String({
 			id: 'ValTitle',
@@ -81,7 +82,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.ValTitle))
-		watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('proph.title', this.ValTitle, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTitle.value, (newValue, oldValue) => this.onUpdate('proph.title', this.ValTitle, newValue, oldValue)))
 
 		this.TablePropeTitle = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -92,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.TablePropeTitle))
-		watch(() => this.TablePropeTitle.value, (newValue, oldValue) => this.onUpdate('prope.title', this.TablePropeTitle, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePropeTitle.value, (newValue, oldValue) => this.onUpdate('prope.title', this.TablePropeTitle, newValue, oldValue)))
 	}
 
 	/**

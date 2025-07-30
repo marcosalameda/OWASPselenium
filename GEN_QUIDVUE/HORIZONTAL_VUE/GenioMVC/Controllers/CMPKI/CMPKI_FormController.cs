@@ -533,12 +533,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Cmpki/Cmpki_SaveEdit
 		[HttpPost]
 		public ActionResult Cmpki_SaveEdit([FromBody] Cmpki_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_SaveEdit",
 				ViewName = "Cmpki",
@@ -569,7 +568,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsCmpki([FromBody] CmpkiDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

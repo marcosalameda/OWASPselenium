@@ -533,12 +533,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Messa/Messa_SaveEdit
 		[HttpPost]
 		public ActionResult Messa_SaveEdit([FromBody] Messa_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_SaveEdit",
 				ViewName = "Messa",
@@ -569,7 +568,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsMessa([FromBody] MessaDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

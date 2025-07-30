@@ -462,12 +462,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Procn/Contac19_SaveEdit
 		[HttpPost]
 		public ActionResult Contac19_SaveEdit([FromBody] Contac19_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Contac19_SaveEdit",
 				ViewName = "Contac19",
@@ -498,7 +497,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsContac19([FromBody] Contac19DocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

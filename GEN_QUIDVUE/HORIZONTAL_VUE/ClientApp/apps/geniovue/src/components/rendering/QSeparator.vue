@@ -85,7 +85,7 @@
 					classes.push(`${sepPrefix}--space-${this.space}`)
 
 				// Adds any provided custom classes to the default ones.
-				for (let customClass of this.customClasses)
+				for (const customClass of this.customClasses)
 					classes.push(customClass)
 
 				return classes

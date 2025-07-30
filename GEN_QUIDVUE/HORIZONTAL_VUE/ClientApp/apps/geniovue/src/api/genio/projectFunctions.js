@@ -1,11 +1,10 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useTracingDataStore } from '@quidgest/clientapp/stores'
 
 import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
 import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
-/* eslint-enable no-unused-vars */
 
 /*
  * ====================================================
@@ -19,7 +18,6 @@ import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
  */
 
 //*************** User functions ***************
-// eslint-disable-next-line no-unused-vars
 function Idade(dDtNasc, dData)
 {
 	/// <summary>
@@ -29,7 +27,6 @@ function Idade(dDtNasc, dData)
 	/// <param name="dData">Data a calcular a idade</param>
 	return netAPI.executeServerFunction('Idade', [dDtNasc, dData]);
 }
-// eslint-disable-next-line no-unused-vars
 function DayOfWeek(dt)
 {
 	/// <summary>
@@ -53,7 +50,6 @@ function DayOfWeek(dt)
 // eslint-disable-next-line
 /* eslint-enable indent */
 }
-// eslint-disable-next-line no-unused-vars
 function TimeNow()
 {
 	/// <summary>
@@ -67,7 +63,6 @@ function TimeNow()
 // eslint-disable-next-line
 /* eslint-enable indent */
 }
-// eslint-disable-next-line no-unused-vars
 function GetGeoFromLatLng(lat, lng)
 {
 	/// <summary>

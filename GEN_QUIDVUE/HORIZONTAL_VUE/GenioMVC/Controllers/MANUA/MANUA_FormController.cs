@@ -462,12 +462,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Manua/Manua_SaveEdit
 		[HttpPost]
 		public ActionResult Manua_SaveEdit([FromBody] Manua_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Manua_SaveEdit",
 				ViewName = "Manua",
@@ -498,7 +497,18 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsManua([FromBody] ManuaDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+		}
+
+		/// <summary>
+		/// Stores a new document, in the Docums table, associated to field DIGDOCUM
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFileManuaDigdocum([FromForm] RequestDocumsCreateModel requestModel)
+		{
+			List<string> extensions = [];
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version, extensions);
 		}
 	}
 }

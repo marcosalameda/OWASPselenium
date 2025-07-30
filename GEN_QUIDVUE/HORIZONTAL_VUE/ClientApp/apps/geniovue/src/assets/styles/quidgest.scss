@@ -64,7 +64,6 @@
 @import "controls/q-password-meter.scss";
 @import "controls/q-popover.scss";
 @import "controls/q-progress.scss";
-@import "controls/q-radio.scss";
 @import "controls/q-rating.scss";
 @import "controls/q-tab.scss";
 @import "controls/q-table.scss";
@@ -195,13 +194,11 @@ label {
 }
 
 .i-checkbox__field,
-.i-textarea__field,
-.i-radio__field {
+.i-textarea__field {
 	background-color: $input-bg;
 }
 
 .i-checkbox__field[readonly],
-.i-textarea__field[readonly],
-.i-radio__field[readonly] {
+.i-textarea__field[readonly] {
 	background-color: $input-bg-readonly;
 }

@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /C_brn/C_brn_SaveEdit
 		[HttpPost]
 		public ActionResult C_brn_SaveEdit([FromBody] C_brn_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_SaveEdit",
 				ViewName = "C_brn",
@@ -427,7 +426,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsC_brn([FromBody] C_brnDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

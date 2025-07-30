@@ -120,9 +120,9 @@
 					rowsSelected: {},
 					rowsChecked: {},
 					handlers: {
-						selectRow: eventData => this.onSelectRow(this.tableManu, eventData),
-						unselectRow: eventData => this.onUnselectRow(this.tableManu, eventData),
-						unselectAllRows: () => this.onUnselectAllRows(this.tableManu)
+						selectRow: eventData => this.tableManu.onSelectRow(eventData),
+						unselectRow: eventData => this.tableManu.onUnselectRow(eventData),
+						unselectAllRows: () => this.tableManu.onUnselectAllRows()
 					}
 				}, this),
 

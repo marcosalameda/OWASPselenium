@@ -231,7 +231,7 @@
 			 */
 			hydrate(rawData)
 			{
-				for (let fld in this.model)
+				for (const fld in this.model)
 					this.model[fld].updateValue(rawData[fld])
 			},
 

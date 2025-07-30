@@ -21,7 +21,7 @@ namespace GenioMVC.ViewModels.Flds
 	public class Fldstbl_ViewModel : FormViewModel<Models.Flds>, IPreparableForSerialization
 	{
 		[JsonIgnore]
-		public override bool HasWriteConditions { get => false; }
+		public override bool HasWriteConditions { get => true; }
 
 		/// <summary>
 		/// Reference for the Models MsqActive property
@@ -344,6 +344,30 @@ namespace GenioMVC.ViewModels.Flds
 		public override StatusMessage EvaluateWriteConditions(bool isApply)
 		{
 			StatusMessage result = new StatusMessage(Status.OK, "");
+			Models.Flds model = Model;
+			Models.Flds areaFlds = model;
+			try
+			{
+				// (FLDSTBL form condition) NumericToString([FLDS->DURATION], [FLDS->YEAR]) == "" || LEFT([FLDS->TXTFIELD], [FLDS->YEAR]) == "" || RIGHT([FLDS->TXTFIELD], [FLDS->YEAR]) == "" || SubString([FLDS->TXTFIELD], [FLDS->YEAR], [FLDS->YEAR]) == ""
+				if (!isApply && !(CSGenio.framework.GenFunctions.NumericToString(areaFlds.klass.ValDuration,areaFlds.klass.ValYear)==""||CSGenio.framework.GenFunctions.LEFT(areaFlds.klass.ValTxtfield,areaFlds.klass.ValYear)==""||CSGenio.framework.GenFunctions.RIGHT(areaFlds.klass.ValTxtfield,areaFlds.klass.ValYear)==""||CSGenio.framework.GenFunctions.SubString(areaFlds.klass.ValTxtfield,areaFlds.klass.ValYear,areaFlds.klass.ValYear)==""))
+				{
+					var status = Status.W;
+					StatusMessage message = new(status, ""); // Message: ""
+					result.MergeStatusMessage(message);
+				}
+				// (FLDSTBL form condition) Round([FLDS->YEAR], [FLDS->YEAR]) == 0 || RoundQG([FLDS->YEAR], [FLDS->YEAR]) == 0 || Incidenc([FLDS->YEAR], [FLDS->YEAR], [FLDS->YEAR], [FLDS->YEAR]) == 0 || ValorIVA([FLDS->YEAR], [FLDS->YEAR], [FLDS->YEAR], [FLDS->YEAR]) == 0
+				if (!isApply && !(CSGenio.framework.GenFunctions.Round(areaFlds.klass.ValYear,areaFlds.klass.ValYear)==0||CSGenio.framework.GenFunctions.RoundQG(areaFlds.klass.ValYear,areaFlds.klass.ValYear)==0||CSGenio.framework.GenFunctions.Incidenc(areaFlds.klass.ValYear,areaFlds.klass.ValYear,areaFlds.klass.ValYear,areaFlds.klass.ValYear)==0||CSGenio.framework.GenFunctions.VATValue(areaFlds.klass.ValYear,areaFlds.klass.ValYear,areaFlds.klass.ValYear,areaFlds.klass.ValYear)==0))
+				{
+					var status = Status.W;
+					StatusMessage message = new(status, ""); // Message: ""
+					result.MergeStatusMessage(message);
+				}
+			}
+			catch (Exception exc)
+			{
+				Log.Error($"Error executing form FFLDSTBL access condition: {exc.Message}");
+				throw;
+			}
 			return result;
 		}
 

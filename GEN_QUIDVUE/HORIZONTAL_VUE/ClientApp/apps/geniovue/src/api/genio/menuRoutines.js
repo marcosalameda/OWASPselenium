@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed } from 'vue'
 
 import netAPI from '@quidgest/clientapp/network'
@@ -8,7 +8,7 @@ import asyncProcM from '@quidgest/clientapp/composables/async'
 import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 import qEnums from '@quidgest/clientapp/constants/enums'
 import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 export default {
 }

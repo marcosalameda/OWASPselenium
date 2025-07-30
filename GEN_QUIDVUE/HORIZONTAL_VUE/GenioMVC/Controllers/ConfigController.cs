@@ -12,9 +12,8 @@ namespace GenioMVC.Controllers
 		private readonly bool enableOtlpTracing;
 		public ConfigController(UserContextService userContextService, IConfiguration config) : base(userContextService)
 		{
-			IConfigurationSection telemetryConfig = config.GetSection("TelemetryConfig");
-			if (telemetryConfig?.Exists() ?? false)
-				enableOtlpTracing = telemetryConfig.Get<TelemetryConfiguration>().EnableTracing;
+			var telemetryConfig = config.GetSection("TelemetryConfig").Get<TelemetryConfiguration>();
+			enableOtlpTracing = telemetryConfig?.EnableTracing ?? false;
 		}
 
 		private object getConfig()

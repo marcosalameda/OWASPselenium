@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'EVCAT',
 			area: 'EVCAT',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_EVCAT',
-				updateFilesTickets: 'UpdateFilesTicketsEVCAT'
+				recalculateFormulas: 'RecalculateFormulas_Evcat',
+				updateFilesTickets: 'UpdateFilesTicketsEvcat',
+				setFile: 'SetFileEvcat'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPROGR',
 			description: '',
 		}).cloneFrom(values?.ValCodprogr))
-		watch(() => this.ValCodprogr.value, (newValue, oldValue) => this.onUpdate('evcat.codprogr', this.ValCodprogr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodprogr.value, (newValue, oldValue) => this.onUpdate('evcat.codprogr', this.ValCodprogr, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodpesso = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PESSO',
 			description: computed(() => this.Resources._PERSON28337),
 		}).cloneFrom(values?.ValCodpesso))
-		watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('evcat.codpesso', this.ValCodpesso, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('evcat.codpesso', this.ValCodpesso, newValue, oldValue)))
 
 		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodcateg',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'CATE1',
 			description: computed(() => this.Resources._CATEGORY37591),
 		}).cloneFrom(values?.ValCodcateg))
-		watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('evcat.codcateg', this.ValCodcateg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('evcat.codcateg', this.ValCodcateg, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TablePessoName = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TablePessoName))
-		watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePessoName.value, (newValue, oldValue) => this.onUpdate('pesso.name', this.TablePessoName, newValue, oldValue)))
 
 		this.TableCate1Category = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.CATEGORY18978),
 		}).cloneFrom(values?.TableCate1Category))
-		watch(() => this.TableCate1Category.value, (newValue, oldValue) => this.onUpdate('cate1.categoria', this.TableCate1Category, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableCate1Category.value, (newValue, oldValue) => this.onUpdate('cate1.categoria', this.TableCate1Category, newValue, oldValue)))
 
 		this.ValSince = reactive(new modelFieldType.Date({
 			id: 'ValSince',
@@ -103,7 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'SINCE',
 			description: computed(() => this.Resources.SINCE47259),
 		}).cloneFrom(values?.ValSince))
-		watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('evcat.since', this.ValSince, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('evcat.since', this.ValSince, newValue, oldValue)))
 
 		this.ValUntil = reactive(new modelFieldType.Date({
 			id: 'ValUntil',
@@ -112,7 +113,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'UNTIL',
 			isFixed: true,
 			showWhen: {
-				// eslint-disable-next-line no-unused-vars
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: emptyD([EVCAT->UNTILMAN])==1 && emptyD([EVCAT->UNTIL])==0
@@ -124,7 +125,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.UNTIL39173),
 		}).cloneFrom(values?.ValUntil))
-		watch(() => this.ValUntil.value, (newValue, oldValue) => this.onUpdate('evcat.until', this.ValUntil, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValUntil.value, (newValue, oldValue) => this.onUpdate('evcat.until', this.ValUntil, newValue, oldValue)))
 
 		this.ValUntilman = reactive(new modelFieldType.Date({
 			id: 'ValUntilman',
@@ -132,7 +133,7 @@ export default class ViewModel extends FormViewModelBase
 			area: 'EVCAT',
 			field: 'UNTILMAN',
 			showWhen: {
-				// eslint-disable-next-line no-unused-vars
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: emptyD([EVCAT->UNTIL])==1
@@ -144,7 +145,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.UP_MANUAL46500),
 		}).cloneFrom(values?.ValUntilman))
-		watch(() => this.ValUntilman.value, (newValue, oldValue) => this.onUpdate('evcat.untilman', this.ValUntilman, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValUntilman.value, (newValue, oldValue) => this.onUpdate('evcat.untilman', this.ValUntilman, newValue, oldValue)))
 
 		this.ValFimperio = reactive(new modelFieldType.Date({
 			id: 'ValFimperio',
@@ -154,7 +155,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line no-unused-vars
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([EVCAT->UNTILMAN])==0,[EVCAT->UNTILMAN],[EVCAT->UNTIL])
@@ -166,7 +167,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.END_OF_PERIOD44616),
 		}).cloneFrom(values?.ValFimperio))
-		watch(() => this.ValFimperio.value, (newValue, oldValue) => this.onUpdate('evcat.fimperio', this.ValFimperio, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValFimperio.value, (newValue, oldValue) => this.onUpdate('evcat.fimperio', this.ValFimperio, newValue, oldValue)))
 
 		this.ValObservat = reactive(new modelFieldType.MultiLineString({
 			id: 'ValObservat',
@@ -175,7 +176,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'OBSERVAT',
 			description: computed(() => this.Resources.OBSERVATION37880),
 		}).cloneFrom(values?.ValObservat))
-		watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('evcat.observat', this.ValObservat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValObservat.value, (newValue, oldValue) => this.onUpdate('evcat.observat', this.ValObservat, newValue, oldValue)))
 	}
 
 	/**

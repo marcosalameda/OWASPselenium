@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -237,11 +237,11 @@ namespace CSGenio.business
 			info.Pathways.Add("cntry","pess1");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
-			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 		}
 
 		/// <summary>
@@ -620,7 +620,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX LENDI]/

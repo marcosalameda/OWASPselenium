@@ -87,12 +87,12 @@ export function fetchData(
 
 	_merge(axiosOptions, options, { params: { ...params, nav: navigationId } })
 
-	const promise = new Promise((fnResolve) => {
+	const promise = new Promise((fnResolve, fnReject) => {
 		axiosInstance
 			.get(url, axiosOptions)
 			.then((response) => processRequest(response, _fnCallback, fnResolve))
 			.catch((error) =>
-				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback)
+				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, fnReject, error)
 			)
 	})
 
@@ -156,12 +156,12 @@ export function postData(
 
 	_merge(axiosOptions, options, { params: { nav: navigationId } })
 
-	const promise = new Promise((fnResolve) => {
+	const promise = new Promise((fnResolve, fnReject) => {
 		axiosInstance
 			.post(url, requestData, axiosOptions)
 			.then((response) => processRequest(response, _fnCallback, fnResolve))
 			.catch((error) =>
-				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback)
+				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, fnReject, error)
 			)
 	})
 
@@ -250,12 +250,12 @@ async function uploadChunk({
 		}
 	}
 
-	return new Promise((fnResolve) => {
+	return new Promise((fnResolve, fnReject) => {
 		axiosInstance
 			.post(url, formData, axiosOptions)
 			.then((response) => processRequest(response, _fnCallback, fnResolve))
 			.catch((error) =>
-				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback)
+				handleNonOkResponse(error.response, fnResolve, _fnErrorCallback, fnReject, error)
 			)
 	})
 }
@@ -387,8 +387,10 @@ export function getFile(baseArea, ticket, viewType, navigationId = MAIN_HISTORY_
  * @param {AxiosResponse} response Axios response object (data, status, statusText, headers, config, request?)
  * @param {Function} fnResolve The «promise resolve» function
  * @param {Callback} _fnCallback The request callback
+ * @param {Function} fnReject The «promise reject» function
+ * @param {Error} error The request error object
  */
-async function handleNonOkResponse(response, fnResolve, _fnCallback) {
+async function handleNonOkResponse(response, fnResolve, _fnCallback, fnReject, error) {
 	if (response) {
 		let responseData = response.data ?? {},
 			data = responseData.Data ?? null,
@@ -426,7 +428,14 @@ async function handleNonOkResponse(response, fnResolve, _fnCallback) {
 
 		fnResolve?.(data)
 	} else {
-		fnResolve?.(null)
+		if (error?.name === 'CanceledError') {
+			// Request was aborted; silently ignore.
+			// A practical case: exiting the form before the table lists have finished loading.
+			// To prevent callback from being processed after exiting, the request will be canceled and ignored.
+			fnReject?.(error)
+		} else {
+			fnResolve?.(null)
+		}
 	}
 
 	// FIXME: Temporary workaround just to avoid infinitely calling "GetIfUserLogged" when itself fails.

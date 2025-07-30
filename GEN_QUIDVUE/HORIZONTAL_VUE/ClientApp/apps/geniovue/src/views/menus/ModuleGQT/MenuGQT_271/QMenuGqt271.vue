@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_271ViewModel.js'
 
@@ -161,7 +162,7 @@
 								label: computed(() => this.Resources.GENUS37471),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayGenero.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGenero.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -374,7 +375,7 @@
 										],
 										isControlled: true,
 										isRoute: true,
-										action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'PESSOSEP',
+										action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'PESSOSEP'
 									}
 								},
 								{
@@ -389,7 +390,7 @@
 										],
 										isControlled: true,
 										isRoute: true,
-										action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'EXTERNO',
+										action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'EXTERNO'
 									}
 								},
 							],
@@ -403,7 +404,7 @@
 											fnValueSelector: (row) => row.ValCodpesso
 										},
 									],
-									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.GQT_MenuMC_271,
+									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.GQT_MenuMC_271
 								}
 							},
 							formsDefinition: {
@@ -431,7 +432,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGI1', 'changed-PESSO', 'changed-CNTRY', 'changed-PAIS1', 'changed-CMPNY', 'changed-CATEG'],
+						globalEvents: ['changed-REGI1', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-CMPNY', 'changed-CATEG'],
 						uuid: 'e6dc0e9f-d5c7-4b9c-87f7-f7ac16dffec8',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -542,6 +543,10 @@
 		{
 			// Listener for MC action in case of redirect by Jump if just one.
 			this.$eventHub.off('EXEC-GQT_MenuMC_271', this.GQT_MenuMC_271)
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_271]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		methods: {

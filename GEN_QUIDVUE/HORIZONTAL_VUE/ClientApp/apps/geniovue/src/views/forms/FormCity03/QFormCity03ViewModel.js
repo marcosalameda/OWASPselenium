@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CITY03',
 			area: 'CITY',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_CITY03',
-				updateFilesTickets: 'UpdateFilesTicketsCITY03'
+				recalculateFormulas: 'RecalculateFormulas_City03',
+				updateFilesTickets: 'UpdateFilesTicketsCity03',
+				setFile: 'SetFileCity03'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCITY',
 			description: '',
 		}).cloneFrom(values?.ValCodcity))
-		watch(() => this.ValCodcity.value, (newValue, oldValue) => this.onUpdate('city.codcity', this.ValCodcity, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcity.value, (newValue, oldValue) => this.onUpdate('city.codcity', this.ValCodcity, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodctry = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'CTRY',
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.ValCodctry))
-		watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('city.codctry', this.ValCodctry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodctry.value, (newValue, oldValue) => this.onUpdate('city.codctry', this.ValCodctry, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValCity = reactive(new modelFieldType.String({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.CITY42505),
 		}).cloneFrom(values?.ValCity))
-		watch(() => this.ValCity.value, (newValue, oldValue) => this.onUpdate('city.city', this.ValCity, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCity.value, (newValue, oldValue) => this.onUpdate('city.city', this.ValCity, newValue, oldValue)))
 
 		this.TableCtryCountry = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.TableCtryCountry))
-		watch(() => this.TableCtryCountry.value, (newValue, oldValue) => this.onUpdate('ctry.country', this.TableCtryCountry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableCtryCountry.value, (newValue, oldValue) => this.onUpdate('ctry.country', this.TableCtryCountry, newValue, oldValue)))
 	}
 
 	/**

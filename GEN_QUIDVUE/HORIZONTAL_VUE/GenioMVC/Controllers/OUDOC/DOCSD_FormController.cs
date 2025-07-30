@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Oudoc/Docsd_SaveEdit
 		[HttpPost]
 		public ActionResult Docsd_SaveEdit([FromBody] Docsd_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Docsd_SaveEdit",
 				ViewName = "Docsd",
@@ -427,7 +426,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsDocsd([FromBody] DocsdDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

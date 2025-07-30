@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -104,10 +104,10 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("ftgri","ftgri");
 			info.Pathways.Add("pesso","pesso");
-			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
-			info.Pathways.Add("cmpny","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("pais1","pesso");
+			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
 
@@ -350,7 +350,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX GRID]/

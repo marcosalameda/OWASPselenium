@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ATTAC',
 			area: 'ATTAC',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ATTAC',
-				updateFilesTickets: 'UpdateFilesTicketsATTAC'
+				recalculateFormulas: 'RecalculateFormulas_Attac',
+				updateFilesTickets: 'UpdateFilesTicketsAttac',
+				setFile: 'SetFileAttac'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODATTAC',
 			description: '',
 		}).cloneFrom(values?.ValCodattac))
-		watch(() => this.ValCodattac.value, (newValue, oldValue) => this.onUpdate('attac.codattac', this.ValCodattac, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodattac.value, (newValue, oldValue) => this.onUpdate('attac.codattac', this.ValCodattac, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodasset = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ASSET',
 			description: computed(() => this.Resources.__ASSET57857),
 		}).cloneFrom(values?.ValCodasset))
-		watch(() => this.ValCodasset.value, (newValue, oldValue) => this.onUpdate('attac.codasset', this.ValCodasset, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodasset.value, (newValue, oldValue) => this.onUpdate('attac.codasset', this.ValCodasset, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableAssetName = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_NAME16317),
 		}).cloneFrom(values?.TableAssetName))
-		watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue)))
 
 		this.ValAttached = reactive(new modelFieldType.DateTime({
 			id: 'ValAttached',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ATTACHED',
 			description: computed(() => this.Resources.ATTACHED26247),
 		}).cloneFrom(values?.ValAttached))
-		watch(() => this.ValAttached.value, (newValue, oldValue) => this.onUpdate('attac.attached', this.ValAttached, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAttached.value, (newValue, oldValue) => this.onUpdate('attac.attached', this.ValAttached, newValue, oldValue)))
 
 		this.ValNote = reactive(new modelFieldType.MultiLineString({
 			id: 'ValNote',
@@ -91,7 +92,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NOTE',
 			description: computed(() => this.Resources.NOTE54557),
 		}).cloneFrom(values?.ValNote))
-		watch(() => this.ValNote.value, (newValue, oldValue) => this.onUpdate('attac.note', this.ValNote, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNote.value, (newValue, oldValue) => this.onUpdate('attac.note', this.ValNote, newValue, oldValue)))
 
 		this.ValDocument = reactive(new modelFieldType.Document({
 			id: 'ValDocument',
@@ -103,7 +104,7 @@ export default class ViewModel extends FormViewModelBase
 			currentDocument: computed(() => this.ValDocumentData),
 			description: computed(() => this.Resources.DOCUMENT00695),
 		}).cloneFrom(values?.ValDocument))
-		watch(() => this.ValDocument.value, (newValue, oldValue) => this.onUpdate('attac.document', this.ValDocument, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDocument.value, (newValue, oldValue) => this.onUpdate('attac.document', this.ValDocument, newValue, oldValue)))
 
 		this.ValDocumentPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDocumentPropertiesVM',
@@ -116,14 +117,14 @@ export default class ViewModel extends FormViewModelBase
 			area: 'ATTAC',
 			field: 'DOCUMENTFK'
 		}).cloneFrom(values?.ValDocumentfk))
-		watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('attac.documentfk', this.ValDocumentfk, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDocumentfk.value, (newValue, oldValue) => this.onUpdate('attac.documentfk', this.ValDocumentfk, newValue, oldValue)))
 		this.ValDocumentData = reactive(new modelFieldType.DocumentData({
 			id: 'ValDocumentData',
 			area: 'ATTAC',
 			field: 'DOCUMENTDATA',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.ValDocumentData))
-		watch(() => this.ValDocumentData.value, (newValue, oldValue) => this.onUpdate('attac.documentdata', this.ValDocumentData, newValue, oldValue), { deep: true })
+		this.stopWatchers.push(watch(() => this.ValDocumentData.value, (newValue, oldValue) => this.onUpdate('attac.documentdata', this.ValDocumentData, newValue, oldValue), { deep: true }))
 	}
 
 	/**

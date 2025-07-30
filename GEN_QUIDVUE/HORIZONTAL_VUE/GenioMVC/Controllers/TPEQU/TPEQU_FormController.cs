@@ -134,11 +134,11 @@ namespace GenioMVC.Controllers
 				AfterOp = (sink, sp) =>
 				{
 					model.MapFromModel();
-					using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new List<KeyValuePair<string, object>>() {
+					using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new System.Diagnostics.TagList([
 						new("Name", "AFTER_SAVE_NEW"),
 						new("Parameter", "TPEQU"),
 						new("ModuleOrSystem", "GQT")
-					}, "ms", "Time to execute the manual code.")) {
+					]), "ms", "Time to execute the manual code.")) {
 //Platform: MVC | Type: AFTER_SAVE_NEW | Module: GQT | Parameter: TPEQU | File:  | Order: 0
 //BEGIN_MANUALCODE_CODMANUA:57efd9ed-6ccb-482f-961e-bf3a993ced4a
 					var requestModel = new RequestCargaModel()
@@ -853,12 +853,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Tpequ/Tpequ_SaveEdit
 		[HttpPost]
 		public ActionResult Tpequ_SaveEdit([FromBody] Tpequ_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Tpequ_SaveEdit",
 				ViewName = "Tpequ",
@@ -876,6 +875,77 @@ namespace GenioMVC.Controllers
 			return GenericHandlePostFormApply(eventSink, model);
 		}
 
+		/// <summary>
+		/// Server-side component of action #1 (RECALC) of trigger UPDATE_FORMULAS
+		/// </summary>
+		/// <param name="data">The client-side context of the trigger.</param>
+		/// <returns>
+		/// Success message
+		/// </returns>
+		public ActionResult Tpequ_FormTriggers_UPDATE_FORMULAS_1([FromBody] Tpequ_ViewModel vm)
+		{
+			var key = vm.ValCodtpequ;
+
+			User user = UserContext.Current.User;
+			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+
+			try
+			{
+				var model = Models.Tpequ.Find(key, UserContext.Current, "FTPEQU");
+				vm.MapToModel(model);
+				// Context
+				var context = new CSGenio.business.Triggers.TriggerContext()
+				{
+					Area = model.klass,
+					PersistentSupport = sp,
+					User = user,
+				};
+
+				// Should open a local transaction
+				// if the context did not provide an open transaction.
+				bool openLocalTransaction = sp.TransactionIsClosed;
+
+				// Should keep the connection alive
+				// if the context provided an open connection but not an open transaction.
+				bool keepConnectionAlive = !sp.ConnectionIsClosed && sp.TransactionIsClosed;
+
+				if (openLocalTransaction)
+					sp.openTransaction();
+
+				// Trigger UPDATE_FORMULAS
+				CSGenio.business.Triggers.ITrigger trigger_UPDATE_FORMULAS = new CSGenio.business.Triggers.TriggerUpdateFormulas(context);
+				CSGenio.business.Triggers.IAction action = trigger_UPDATE_FORMULAS.GetAction(1);
+				trigger_UPDATE_FORMULAS.ExecuteAction(action);
+
+				// If a local transaction was opened, it should also be closed.
+				if (openLocalTransaction)
+				{
+					sp.closeTransaction();
+
+					// Reopen the connection if it needs to be kept alive.
+					if (keepConnectionAlive)
+						sp.openConnection();
+				}
+			}
+			catch (Exception)
+			{
+				sp.rollbackTransaction();
+				return Json(
+					new {
+						success = "E",
+						message = Resources.Resources.PEDIMOS_DESCULPA__OC63848
+					}
+				);
+			}
+
+			return Json(
+				new {
+					success = "OK",
+					message = Resources.Resources.A_OPERACAO_FOI_CONCL36721
+				}
+			);
+		}
+
 		public class TpequDocumValidateTickets : RequestDocumValidateTickets
 		{
 			public Tpequ_ViewModel Model { get; set; }
@@ -889,7 +959,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsTpequ([FromBody] TpequDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

@@ -533,12 +533,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Insta/Insta_SaveEdit
 		[HttpPost]
 		public ActionResult Insta_SaveEdit([FromBody] Insta_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Insta_SaveEdit",
 				ViewName = "Insta",
@@ -569,7 +568,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsInsta([FromBody] InstaDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

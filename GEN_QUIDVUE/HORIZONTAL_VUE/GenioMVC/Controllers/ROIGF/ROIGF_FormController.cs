@@ -462,12 +462,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Roigf/Roigf_SaveEdit
 		[HttpPost]
 		public ActionResult Roigf_SaveEdit([FromBody] Roigf_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Roigf_SaveEdit",
 				ViewName = "Roigf",
@@ -498,7 +497,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsRoigf([FromBody] RoigfDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

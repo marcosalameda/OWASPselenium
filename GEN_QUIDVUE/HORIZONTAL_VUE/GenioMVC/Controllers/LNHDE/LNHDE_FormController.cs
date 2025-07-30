@@ -673,12 +673,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Lnhde/Lnhde_SaveEdit
 		[HttpPost]
 		public ActionResult Lnhde_SaveEdit([FromBody] Lnhde_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhde_SaveEdit",
 				ViewName = "Lnhde",
@@ -709,7 +708,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsLnhde([FromBody] LnhdeDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

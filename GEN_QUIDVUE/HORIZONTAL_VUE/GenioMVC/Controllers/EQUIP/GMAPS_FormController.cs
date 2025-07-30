@@ -460,12 +460,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Equip/Gmaps_SaveEdit
 		[HttpPost]
 		public ActionResult Gmaps_SaveEdit([FromBody] Gmaps_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Gmaps_SaveEdit",
 				ViewName = "Gmaps",
@@ -496,7 +495,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsGmaps([FromBody] GmapsDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

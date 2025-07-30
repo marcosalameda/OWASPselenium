@@ -27,7 +27,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, readonly } from 'vue'
 	import MenuHandlers from '@/mixins/menuHandlers.js'
 	import controlClass from '@/mixins/fieldControl.js'
@@ -44,7 +44,7 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import qEnums from '@quidgest/clientapp/constants/enums'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_211ViewModel.js'
 

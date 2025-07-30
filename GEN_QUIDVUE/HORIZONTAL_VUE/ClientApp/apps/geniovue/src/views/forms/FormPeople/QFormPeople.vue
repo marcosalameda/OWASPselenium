@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -103,6 +103,7 @@
 							v-on="controls.PEOPLE__PSEUDPEOPLELS.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PEOPLE__PSEUDPEOPLELS"
+							:filter-operators="controls.PEOPLE__PSEUDPEOPLELS.filterOperators"
 							v-on="controls.PEOPLE__PSEUDPEOPLELS.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -141,7 +142,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -161,7 +162,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormPeopleViewModel.js'
 
@@ -237,7 +238,8 @@
 					area: 'Home',
 					designation: '',
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -440,7 +442,7 @@
 								label: computed(() => this.Resources.GENUS37471),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayGenero.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGenero.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -491,7 +493,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGI1', 'changed-PESSO', 'changed-CNTRY', 'changed-PAIS1', 'changed-CMPNY', 'changed-CATEG'],
+						globalEvents: ['changed-REGI1', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-CMPNY', 'changed-CATEG'],
 						uuid: 'People_ValPeoplels',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -565,17 +567,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PEOPLE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -585,7 +593,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -595,7 +603,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -615,7 +623,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -648,7 +656,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -668,7 +676,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -699,11 +707,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -713,7 +719,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -721,8 +727,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -730,7 +734,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -738,8 +742,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -747,7 +749,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -755,11 +757,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -769,7 +769,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -779,7 +779,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

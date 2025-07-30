@@ -491,7 +491,7 @@
 			isDisabled(action) {
 				if (action.disabled) return true
 
-				let permissions = {
+				const permissions = {
 					editBtnDisabled: false,
 					viewBtnDisabled: false,
 					deleteBtnDisabled: false,

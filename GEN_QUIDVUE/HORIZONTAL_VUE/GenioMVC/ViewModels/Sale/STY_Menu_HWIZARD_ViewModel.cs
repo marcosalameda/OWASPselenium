@@ -150,10 +150,10 @@ namespace GenioMVC.ViewModels.Sale
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAsale.FldNrlide, FieldType.NUMERIC, Resources.Resources.N_O_DA_LIDE50722, 10, 0, true),
 				new Exports.QColumn(CSGenioAsale.FldStartdt, FieldType.DATETIME, Resources.Resources.BEGINNING18124, 16, 0, true),
 				new Exports.QColumn(CSGenioAsale.FldIdentifi, FieldType.TEXT, Resources.Resources.IDENTIFICACAO_DA_OPO05341, 30, 0, true),
@@ -174,16 +174,12 @@ namespace GenioMVC.ViewModels.Sale
 				new Exports.QColumn(CSGenioAsale.FldTentfech, FieldType.DATETIME, Resources.Resources.TENTATIVAS_DE_FECHO20342, 16, 0, true),
 				new Exports.QColumn(CSGenioAsale.FldDtvenda, FieldType.DATETIME, Resources.Resources.FECHO_DA_VENDA48081, 16, 0, true),
 				new Exports.QColumn(CSGenioAsale.FldDtacompa, FieldType.DATETIME, Resources.Resources.ACOMPANHAMENTO53507, 16, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAsale> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -336,12 +332,6 @@ namespace GenioMVC.ViewModels.Sale
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAsale> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "HWIZARD"),
-				new("Module", "STY")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<STY_Menu_HWIZARD_RowViewModel>();
 
@@ -497,7 +487,6 @@ namespace GenioMVC.ViewModels.Sale
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<STY_Menu_HWIZARD_RowViewModel> MapSTY_Menu_HWIZARD(ListingMVC<CSGenioAsale> Qlisting)

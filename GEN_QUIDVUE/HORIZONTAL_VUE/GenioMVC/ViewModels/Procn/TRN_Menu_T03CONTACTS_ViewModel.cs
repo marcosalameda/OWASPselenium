@@ -142,26 +142,22 @@ namespace GenioMVC.ViewModels.Procn
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAprocn.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 				new Exports.QColumn(CSGenioAprocn.FldEmail, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
 				new Exports.QColumn(CSGenioAprocn.FldTelephon, FieldType.TEXT, Resources.Resources.TELEPHONE28697, 30, 0, true),
 				new Exports.QColumn(CSGenioAprocn.FldDescript, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
 				new Exports.QColumn(CSGenioAprocn.FldDate, FieldType.DATE, Resources.Resources.DATE18475, 8, 0, true),
 				new Exports.QColumn(CSGenioAprope.FldTitle, FieldType.TEXT, Resources.Resources.TITLE21885, 30, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAprocn> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -313,12 +309,6 @@ namespace GenioMVC.ViewModels.Procn
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAprocn> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "T03CONTACTS"),
-				new("Module", "TRN")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<TRN_Menu_T03CONTACTS_RowViewModel>();
 
@@ -455,7 +445,6 @@ namespace GenioMVC.ViewModels.Procn
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<TRN_Menu_T03CONTACTS_RowViewModel> MapTRN_Menu_T03CONTACTS(ListingMVC<CSGenioAprocn> Qlisting)

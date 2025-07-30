@@ -270,7 +270,7 @@
 			 */
 			getExcelFile()
 			{
-				let url = netAPI.apiActionURL('Cav', 'GenerateExcel')
+				const url = netAPI.apiActionURL('Cav', 'GenerateExcel')
 				window.location.assign(url)
 			}
 		}

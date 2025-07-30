@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ABATEREQ',
 			area: 'DECOM',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ABATEREQ',
-				updateFilesTickets: 'UpdateFilesTicketsABATEREQ'
+				recalculateFormulas: 'RecalculateFormulas_Abatereq',
+				updateFilesTickets: 'UpdateFilesTicketsAbatereq',
+				setFile: 'SetFileAbatereq'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODDECO',
 			description: '',
 		}).cloneFrom(values?.ValCoddeco))
-		watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('decom.coddeco', this.ValCoddeco, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('decom.coddeco', this.ValCoddeco, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValDecomnr = reactive(new modelFieldType.Number({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.NO_BATE21045),
 		}).cloneFrom(values?.ValDecomnr))
-		watch(() => this.ValDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.ValDecomnr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.ValDecomnr, newValue, oldValue)))
 
 		this.ValNote = reactive(new modelFieldType.MultiLineString({
 			id: 'ValNote',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NOTE',
 			description: computed(() => this.Resources.NOTES05274),
 		}).cloneFrom(values?.ValNote))
-		watch(() => this.ValNote.value, (newValue, oldValue) => this.onUpdate('decom.note', this.ValNote, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNote.value, (newValue, oldValue) => this.onUpdate('decom.note', this.ValNote, newValue, oldValue)))
 
 		this.ValDtdeco = reactive(new modelFieldType.DateTime({
 			id: 'ValDtdeco',
@@ -80,11 +81,11 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DTDECO',
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line no-unused-vars
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [Now]
-					return qApi.Agora()
+					return qApi.Now()
 				},
 				dependencyEvents: [],
 				isServerRecalc: false,
@@ -92,49 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.DECOMISSION14486),
 		}).cloneFrom(values?.ValDtdeco))
-		watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue))
-
-		this.ValCreatdat = reactive(new modelFieldType.Date({
-			id: 'ValCreatdat',
-			originId: 'ValCreatdat',
-			area: 'DECOM',
-			field: 'CREATDAT',
-			isFixed: true,
-			description: computed(() => this.Resources.CREATION_DATE51875),
-		}).cloneFrom(values?.ValCreatdat))
-		watch(() => this.ValCreatdat.value, (newValue, oldValue) => this.onUpdate('decom.creatdat', this.ValCreatdat, newValue, oldValue))
-
-		this.ValCreatope = reactive(new modelFieldType.String({
-			id: 'ValCreatope',
-			originId: 'ValCreatope',
-			area: 'DECOM',
-			field: 'CREATOPE',
-			maxLength: 20,
-			isFixed: true,
-			description: computed(() => this.Resources.CREATED_BY12292),
-		}).cloneFrom(values?.ValCreatope))
-		watch(() => this.ValCreatope.value, (newValue, oldValue) => this.onUpdate('decom.creatope', this.ValCreatope, newValue, oldValue))
-
-		this.ValChngdate = reactive(new modelFieldType.Date({
-			id: 'ValChngdate',
-			originId: 'ValChngdate',
-			area: 'DECOM',
-			field: 'CHNGDATE',
-			isFixed: true,
-			description: computed(() => this.Resources.CHANGED_ON19727),
-		}).cloneFrom(values?.ValChngdate))
-		watch(() => this.ValChngdate.value, (newValue, oldValue) => this.onUpdate('decom.chngdate', this.ValChngdate, newValue, oldValue))
-
-		this.ValOperchng = reactive(new modelFieldType.String({
-			id: 'ValOperchng',
-			originId: 'ValOperchng',
-			area: 'DECOM',
-			field: 'OPERCHNG',
-			maxLength: 20,
-			isFixed: true,
-			description: computed(() => this.Resources.CHANGED_BY08967),
-		}).cloneFrom(values?.ValOperchng))
-		watch(() => this.ValOperchng.value, (newValue, oldValue) => this.onUpdate('decom.operchng', this.ValOperchng, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue)))
 	}
 
 	/**

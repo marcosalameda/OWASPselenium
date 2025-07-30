@@ -7,21 +7,21 @@
 		is-nested />
 	<div v-else-if="userIsLoggedIn">
 <!-- eslint-disable indent, vue/html-indent, vue/script-indent -->
-<!-- USE /[MANUAL GQT INDEX_AUTHENTICATED]/ -->
+<!--Platform: VUE | Type: INDEX_AUTHENTICATED | Module: GQT | Parameter:  | File:  | Order: 0-->
+<!--BEGIN_MANUALCODE_CODMANUA:193f80d9-d308-4b2f-af22-3650bbd986d5-->
+<h2>Welcome teste</h2>
+<!--END_MANUALCODE-->
 <!-- eslint-disable-next-line -->
 <!-- eslint-enable indent, vue/html-indent, vue/script-indent -->
 <!-- eslint-disable indent, vue/html-indent, vue/script-indent -->
 <!-- USE /[MANUAL GQT INDEX_AUTHENTICATED HORIZONTAL_VUE]/ -->
 <!-- eslint-disable-next-line -->
 <!-- eslint-enable indent, vue/html-indent, vue/script-indent -->
-		<div class="welcome-authenticated">
-			<span>{{ Resources.BEM_VINDO38622 }} {{ userData.name }}</span>
-		</div>
 	</div>
 </template>
 
 <script>
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	import { shallowRef, defineAsyncComponent } from 'vue'
 	import { mapState } from 'pinia'
 	import _assignIn from 'lodash-es/assignIn'

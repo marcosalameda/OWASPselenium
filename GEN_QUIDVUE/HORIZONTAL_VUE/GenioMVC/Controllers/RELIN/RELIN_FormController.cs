@@ -533,12 +533,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Relin/Relin_SaveEdit
 		[HttpPost]
 		public ActionResult Relin_SaveEdit([FromBody] Relin_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Relin_SaveEdit",
 				ViewName = "Relin",
@@ -569,7 +568,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsRelin([FromBody] RelinDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

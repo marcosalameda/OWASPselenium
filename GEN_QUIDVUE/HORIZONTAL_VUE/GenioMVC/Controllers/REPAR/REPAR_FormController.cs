@@ -614,7 +614,7 @@ namespace GenioMVC.Controllers
 		/// <returns>
 		/// Success message
 		/// </returns>
-		public ActionResult Repar_BT_CATEG_AI_REPAIR_AGENT_1([FromBody]Repar_ViewModel vm)
+		public ActionResult Repar_BT_CATEG_AI_REPAIR_AGENT_1([FromBody] Repar_ViewModel vm)
 		{
 			var key = vm.ValCodrepar;
 
@@ -658,9 +658,8 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
-			catch(Exception)
+			catch (Exception)
 			{
 				sp.rollbackTransaction();
 				return Json(
@@ -685,20 +684,19 @@ namespace GenioMVC.Controllers
 		/// </summary>
 		/// <param name="id">The identifier.</param>
 		[ActionName("Repar_ValTipoarea")]
-		public ActionResult Repar_ValTipoarea([FromBody]RequestIdModel requestModel)
+		public ActionResult Repar_ValTipoarea([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Repar_ViewModel(m_userContext, id, false, [CSGenioArepar.FldTipoarea.Field]);
+			string id = requestModel.Id;
+			Repar_ViewModel model = new(m_userContext, id, false, [CSGenioArepar.FldTipoarea.Field]);
 
 			return JsonOK(new { model.ValTipoarea });
 		}
-
 
 		// POST: /Repar/Repar_SaveEdit
 		[HttpPost]
 		public ActionResult Repar_SaveEdit([FromBody] Repar_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_SaveEdit",
 				ViewName = "Repar",
@@ -729,7 +727,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsRepar([FromBody] ReparDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

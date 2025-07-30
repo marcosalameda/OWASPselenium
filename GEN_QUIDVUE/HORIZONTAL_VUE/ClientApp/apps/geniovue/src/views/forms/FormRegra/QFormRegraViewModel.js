@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'REGRA',
 			area: 'RULES',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_REGRA',
-				updateFilesTickets: 'UpdateFilesTicketsREGRA'
+				recalculateFormulas: 'RecalculateFormulas_Regra',
+				updateFilesTickets: 'UpdateFilesTicketsRegra',
+				setFile: 'SetFileRegra'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODREGRA',
 			description: '',
 		}).cloneFrom(values?.ValCodregra))
-		watch(() => this.ValCodregra.value, (newValue, oldValue) => this.onUpdate('rules.codregra', this.ValCodregra, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodregra.value, (newValue, oldValue) => this.onUpdate('rules.codregra', this.ValCodregra, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValTipocond = reactive(new modelFieldType.String({
@@ -59,10 +60,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'RULES',
 			field: 'TIPOCOND',
 			maxLength: 1,
-			arrayOptions: computed(() => qProjArrays.QArrayTipocond.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayTipocond(vm.$getResource).elements),
 			description: computed(() => this.Resources.CONDITION_TYPE57524),
 		}).cloneFrom(values?.ValTipocond))
-		watch(() => this.ValTipocond.value, (newValue, oldValue) => this.onUpdate('rules.tipocond', this.ValTipocond, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTipocond.value, (newValue, oldValue) => this.onUpdate('rules.tipocond', this.ValTipocond, newValue, oldValue)))
 
 		this.ValDescript = reactive(new modelFieldType.String({
 			id: 'ValDescript',
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 100,
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescript))
-		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('rules.descript', this.ValDescript, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('rules.descript', this.ValDescript, newValue, oldValue)))
 
 		this.ValLocal = reactive(new modelFieldType.String({
 			id: 'ValLocal',
@@ -80,10 +81,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'RULES',
 			field: 'LOCAL',
 			maxLength: 1,
-			arrayOptions: computed(() => qProjArrays.QArrayAlocregr.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayAlocregr(vm.$getResource).elements),
 			description: computed(() => this.Resources.PLACE_WHERE_YOU_RUN27490),
 		}).cloneFrom(values?.ValLocal))
-		watch(() => this.ValLocal.value, (newValue, oldValue) => this.onUpdate('rules.local', this.ValLocal, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValLocal.value, (newValue, oldValue) => this.onUpdate('rules.local', this.ValLocal, newValue, oldValue)))
 	}
 
 	/**

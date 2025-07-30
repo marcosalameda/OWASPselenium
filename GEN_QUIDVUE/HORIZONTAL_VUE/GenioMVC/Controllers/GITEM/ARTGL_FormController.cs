@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Gitem/Artgl_SaveEdit
 		[HttpPost]
 		public ActionResult Artgl_SaveEdit([FromBody] Artgl_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Artgl_SaveEdit",
 				ViewName = "Artgl",
@@ -427,7 +426,18 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsArtgl([FromBody] ArtglDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+		}
+
+		/// <summary>
+		/// Stores a new document, in the Docums table, associated to field DOCUMENT
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFileArtglDocument([FromForm] RequestDocumsCreateModel requestModel)
+		{
+			List<string> extensions = [];
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version, extensions);
 		}
 	}
 }

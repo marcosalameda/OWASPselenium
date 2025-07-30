@@ -365,6 +365,9 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	async saveDocuments()
 	{
+		if (_isEmpty(this.modelInfo.actions.setFile))
+			return []
+
 		const promises = [],
 			documentFields = Object.values(this).filter((e) => e instanceof Document && e.isDirty && e.type !== 'Lookup')
 
@@ -380,7 +383,7 @@ export default class FormViewModelBase extends ViewModelBase
 			const promise = new Promise((resolve) => {
 				uploadFile(
 					field.area,
-					'SetFile',
+					`${this.modelInfo.actions.setFile}${field.field}`,
 					currentDocument.value.fileData,
 					currentDocument.dataToSubmit,
 					(data) => {

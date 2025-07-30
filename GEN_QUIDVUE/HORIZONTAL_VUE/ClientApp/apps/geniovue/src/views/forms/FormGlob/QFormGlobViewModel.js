@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'GLOB',
 			area: 'GLOB',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_GLOB',
-				updateFilesTickets: 'UpdateFilesTicketsGLOB'
+				recalculateFormulas: 'RecalculateFormulas_Glob',
+				updateFilesTickets: 'UpdateFilesTicketsGlob',
+				setFile: 'SetFileGlob'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODGLOB',
 			description: '',
 		}).cloneFrom(values?.ValCodglob))
-		watch(() => this.ValCodglob.value, (newValue, oldValue) => this.onUpdate('glob.codglob', this.ValCodglob, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodglob.value, (newValue, oldValue) => this.onUpdate('glob.codglob', this.ValCodglob, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
 		this.ValCodfacty = reactive(new modelFieldType.ForeignKey({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: '',
 		}).cloneFrom(values?.ValCodfacty))
-		watch(() => this.ValCodfacty.value, (newValue, oldValue) => this.onUpdate('glob.codfacty', this.ValCodfacty, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodfacty.value, (newValue, oldValue) => this.onUpdate('glob.codfacty', this.ValCodfacty, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValHome = reactive(new modelFieldType.MultiLineString({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'HOME',
 			description: computed(() => this.Resources.HOME_TEXT11153),
 		}).cloneFrom(values?.ValHome))
-		watch(() => this.ValHome.value, (newValue, oldValue) => this.onUpdate('glob.home', this.ValHome, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValHome.value, (newValue, oldValue) => this.onUpdate('glob.home', this.ValHome, newValue, oldValue)))
 
 		this.ValApiurl = reactive(new modelFieldType.String({
 			id: 'ValApiurl',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 350,
 			description: computed(() => this.Resources.EXTERNAL_API_ADDRESS59205),
 		}).cloneFrom(values?.ValApiurl))
-		watch(() => this.ValApiurl.value, (newValue, oldValue) => this.onUpdate('glob.apiurl', this.ValApiurl, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValApiurl.value, (newValue, oldValue) => this.onUpdate('glob.apiurl', this.ValApiurl, newValue, oldValue)))
 
 		this.ValLegend = reactive(new modelFieldType.Image({
 			id: 'ValLegend',
@@ -92,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'LEGEND',
 			description: computed(() => this.Resources.LEGEND16814),
 		}).cloneFrom(values?.ValLegend))
-		watch(() => this.ValLegend.value, (newValue, oldValue) => this.onUpdate('glob.legend', this.ValLegend, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValLegend.value, (newValue, oldValue) => this.onUpdate('glob.legend', this.ValLegend, newValue, oldValue)))
 	}
 
 	/**

@@ -96,6 +96,19 @@ namespace GenioMVC.ViewModels.Pesso
 		[ValidateSetAccess]
 		public DateTime? ValDtultcat { get; set; }
 		/// <summary>
+		/// Title: "Curriculum" | Type: "IB"
+		/// </summary>
+		[Document("ValCurricul", false, false, false, DocumentViewTypeMode.Preview)]
+		public string ValCurricul { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "PSEUD"
+		/// </summary>
+		public string ValCurriculfk { get; set; }
+		/// <summary>
+		/// Title: "" | Type: "PSEUD"
+		/// </summary>
+		public DocumsProperties_ViewModel ValCurriculPropertiesVM { get; set; }
+		/// <summary>
 		/// Title: "Designation" | Type: "C"
 		/// </summary>
 		[ValidateSetAccess]
@@ -260,6 +273,8 @@ namespace GenioMVC.ViewModels.Pesso
 				ValInterna = ViewModelConversion.ToLogic(m.ValInterna);
 				ValExterna = ViewModelConversion.ToLogic(m.ValExterna);
 				ValDtultcat = ViewModelConversion.ToDateTime(m.ValDtultcat);
+				ValCurricul = ViewModelConversion.ToString(m.ValCurricul);
+				ValCurriculfk = ViewModelConversion.ToString(m.ValCurriculfk);
 				ValTelephon = ViewModelConversion.ToString(m.ValTelephon);
 				ValEmail = ViewModelConversion.ToString(m.ValEmail);
 				ValPhotogra = ViewModelConversion.ToImage(m.ValPhotogra);
@@ -297,6 +312,8 @@ namespace GenioMVC.ViewModels.Pesso
 				m.ValGender = ViewModelConversion.ToString(ValGender);
 				m.ValInterna = ViewModelConversion.ToLogic(ValInterna);
 				m.ValExterna = ViewModelConversion.ToLogic(ValExterna);
+				m.ValCurricul = ViewModelConversion.ToString(ValCurricul);
+				m.ValCurriculfk = ViewModelConversion.ToString(ValCurriculfk);
 				m.ValTelephon = ViewModelConversion.ToString(ValTelephon);
 				m.ValEmail = ViewModelConversion.ToString(ValEmail);
 				if (ValPhotogra == null || !ValPhotogra.IsThumbnail)
@@ -360,6 +377,9 @@ namespace GenioMVC.ViewModels.Pesso
 						break;
 					case "pesso.externa":
 						this.ValExterna = ViewModelConversion.ToLogic(_value);
+						break;
+					case "pesso.curricul":
+						this.ValCurricul = ViewModelConversion.ToString(_value);
 						break;
 					case "pesso.telephon":
 						this.ValTelephon = ViewModelConversion.ToString(_value);
@@ -444,6 +464,14 @@ namespace GenioMVC.ViewModels.Pesso
 
 		protected override void LoadDocumentsProperties(Models.Pesso row)
 		{
+			try
+			{
+				ValCurriculPropertiesVM = row.GetInfoDoc("ValCurricul");
+			}
+			catch (Exception)
+			{
+				ValCurriculPropertiesVM = new DocumsProperties_ViewModel(m_userContext);
+			}
 		}
 
 		/// <summary>
@@ -927,6 +955,7 @@ namespace GenioMVC.ViewModels.Pesso
 				"pesso.interna" => ViewModelConversion.ToLogic(modelValue),
 				"pesso.externa" => ViewModelConversion.ToLogic(modelValue),
 				"pesso.dtultcat" => ViewModelConversion.ToDateTime(modelValue),
+				"pesso.curricul" => ViewModelConversion.ToString(modelValue),
 				"pesso.telephon" => ViewModelConversion.ToString(modelValue),
 				"pesso.email" => ViewModelConversion.ToString(modelValue),
 				"pesso.photogra" => ViewModelConversion.ToImage(modelValue),

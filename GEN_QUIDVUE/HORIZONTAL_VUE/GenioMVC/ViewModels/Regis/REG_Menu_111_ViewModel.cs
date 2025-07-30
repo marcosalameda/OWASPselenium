@@ -143,25 +143,21 @@ namespace GenioMVC.ViewModels.Regis
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAregis.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 50, 0, true),
 				new Exports.QColumn(CSGenioAregis.FldNif, FieldType.TEXT, Resources.Resources.NIF55908, 20, 0, true),
 				new Exports.QColumn(CSGenioAregis.FldEmail1, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
 				new Exports.QColumn(CSGenioAregis.FldEmail2, FieldType.TEXT, Resources.Resources.EMAIL25170, 30, 0, true),
 				new Exports.QColumn(CSGenioAregis.FldTelephon, FieldType.TEXT, Resources.Resources.PHONE56703, 15, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAregis> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -313,12 +309,6 @@ namespace GenioMVC.ViewModels.Regis
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAregis> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "111"),
-				new("Module", "REG")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<REG_Menu_111_RowViewModel>();
 
@@ -455,7 +445,6 @@ namespace GenioMVC.ViewModels.Regis
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<REG_Menu_111_RowViewModel> MapREG_Menu_111(ListingMVC<CSGenioAregis> Qlisting)

@@ -602,12 +602,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Prope/Prope10_SaveEdit
 		[HttpPost]
 		public ActionResult Prope10_SaveEdit([FromBody] Prope10_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Prope10_SaveEdit",
 				ViewName = "Prope10",
@@ -638,7 +637,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsPrope10([FromBody] Prope10DocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

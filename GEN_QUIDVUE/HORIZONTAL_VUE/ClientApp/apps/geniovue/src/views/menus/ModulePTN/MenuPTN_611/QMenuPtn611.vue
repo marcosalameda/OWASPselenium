@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_611ViewModel.js'
 
@@ -275,7 +276,7 @@
 								label: computed(() => this.Resources.TEXT_ENUMERATION45668),
 								dataLength: 2,
 								scrollData: 2,
-								array: computed(() => qProjArrays.QArrayClass.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayClass(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayClass.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -287,7 +288,7 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
-								array: computed(() => qProjArrays.QArrayClassnum.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayClassnum(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayClassnum.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -297,7 +298,7 @@
 								field: 'LOGICENU',
 								label: computed(() => this.Resources.LOGICAL_ENUMERATION30276),
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayPrimviag.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayPrimviag(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayPrimviag.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
@@ -496,7 +497,7 @@
 								label: computed(() => this.Resources.RADIO_BTN20980),
 								dataLength: 5,
 								scrollData: 5,
-								array: computed(() => qProjArrays.QArrayRadiobtn.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayRadiobtn(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayRadiobtn.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -624,7 +625,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'FIELDHLP',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'FIELDHLP'
 								}
 							},
 							formsDefinition: {
@@ -640,7 +641,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
+						globalEvents: ['changed-AERO', 'changed-FLDS', 'changed-EQUIP'],
 						uuid: '8c79866f-7459-4fd0-8b1b-b5434e42c174',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -667,6 +668,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_611]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_611]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

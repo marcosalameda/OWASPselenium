@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_43211ViewModel.js'
 
@@ -161,7 +162,7 @@
 								label: computed(() => this.Resources.GENDER44172),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayGender.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayGender(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGender.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -223,7 +224,7 @@
 								maxDigits: 2,
 								decimalPlaces: 0,
 								isVisible: false,
-								array: computed(() => qProjArrays.QArrayMonths.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayMonths(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayMonths.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -362,7 +363,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'PERSO',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'PERSO'
 								}
 							},
 							formsDefinition: {
@@ -415,6 +416,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_43211]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_43211]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

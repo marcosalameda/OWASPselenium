@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_4211ViewModel.js'
 
@@ -181,7 +182,7 @@
 								dataLength: 1,
 								scrollData: 1,
 								isVisible: false,
-								array: computed(() => qProjArrays.QArrayFaciltyp.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayFaciltyp(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayFaciltyp.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -222,7 +223,7 @@
 								dataLength: 1,
 								scrollData: 1,
 								isVisible: false,
-								array: computed(() => qProjArrays.QArrayGpsinput.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayGpsinput(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGpsinput.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -395,7 +396,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'FACIL',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'FACIL'
 								}
 							},
 							formsDefinition: {
@@ -438,6 +439,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_4211]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_4211]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

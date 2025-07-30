@@ -531,12 +531,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Flds/Fldstbl_SaveEdit
 		[HttpPost]
 		public ActionResult Fldstbl_SaveEdit([FromBody] Fldstbl_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldstbl_SaveEdit",
 				ViewName = "Fldstbl",
@@ -567,7 +566,18 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsFldstbl([FromBody] FldstblDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+		}
+
+		/// <summary>
+		/// Stores a new document, in the Docums table, associated to field ATTACH
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFileFldstblAttach([FromForm] RequestDocumsCreateModel requestModel)
+		{
+			List<string> extensions = [];
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version, extensions);
 		}
 	}
 }

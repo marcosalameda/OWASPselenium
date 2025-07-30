@@ -11,7 +11,7 @@ export class BaseProperty {
 	 */
 	constructor(options, vueContext)
 	{
-		this.getResource = vueContext.$getResource,
+		this.getResource = vueContext.$getResource
 
 		this.rowId = ''
 		this.id = ''
@@ -27,9 +27,14 @@ export class BaseProperty {
 			disabled: false,
 			readonly: false,
 			required: false
-		},
+		}
 
 		_merge(this, options)
+	}
+
+	destroy()
+	{
+		this.getResource = null
 	}
 }
 
@@ -153,6 +158,13 @@ export class ArrayProperty extends BaseProperty {
 				value: computed(() => this.getResource(element.resourceId))
 			}
 		})
+	}
+
+	destroy()
+	{
+		super.destroy()
+
+		this.array.length = 0
 	}
 }
 

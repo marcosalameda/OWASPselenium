@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'ASSMA',
 			area: 'ASSMA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_ASSMA',
-				updateFilesTickets: 'UpdateFilesTicketsASSMA'
+				recalculateFormulas: 'RecalculateFormulas_Assma',
+				updateFilesTickets: 'UpdateFilesTicketsAssma',
+				setFile: 'SetFileAssma'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODASSMA',
 			description: '',
 		}).cloneFrom(values?.ValCodassma))
-		watch(() => this.ValCodassma.value, (newValue, oldValue) => this.onUpdate('assma.codassma', this.ValCodassma, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodassma.value, (newValue, oldValue) => this.onUpdate('assma.codassma', this.ValCodassma, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodasset = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'ASSET',
 			description: computed(() => this.Resources.__ASSET23159),
 		}).cloneFrom(values?.ValCodasset))
-		watch(() => this.ValCodasset.value, (newValue, oldValue) => this.onUpdate('assma.codasset', this.ValCodasset, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodasset.value, (newValue, oldValue) => this.onUpdate('assma.codasset', this.ValCodasset, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableAssetName = reactive(new modelFieldType.String({
@@ -73,7 +74,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.IDENTIFICATION_NAME16317),
 		}).cloneFrom(values?.TableAssetName))
-		watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableAssetName.value, (newValue, oldValue) => this.onUpdate('asset.name', this.TableAssetName, newValue, oldValue)))
 
 		this.ValName = reactive(new modelFieldType.String({
 			id: 'ValName',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.MANUAL_NAME60077),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('assma.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('assma.name', this.ValName, newValue, oldValue)))
 
 		this.ValDigdocum = reactive(new modelFieldType.Document({
 			id: 'ValDigdocum',
@@ -95,7 +96,7 @@ export default class ViewModel extends FormViewModelBase
 			currentDocument: computed(() => this.ValDigdocumData),
 			description: computed(() => this.Resources.DIGITAL_DOCUMENT59580),
 		}).cloneFrom(values?.ValDigdocum))
-		watch(() => this.ValDigdocum.value, (newValue, oldValue) => this.onUpdate('assma.digdocum', this.ValDigdocum, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDigdocum.value, (newValue, oldValue) => this.onUpdate('assma.digdocum', this.ValDigdocum, newValue, oldValue)))
 
 		this.ValDigdocumPropertiesVM = reactive(new modelFieldType.Base({
 			id: 'ValDigdocumPropertiesVM',
@@ -108,14 +109,14 @@ export default class ViewModel extends FormViewModelBase
 			area: 'ASSMA',
 			field: 'DIGDOCUMFK'
 		}).cloneFrom(values?.ValDigdocumfk))
-		watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('assma.digdocumfk', this.ValDigdocumfk, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('assma.digdocumfk', this.ValDigdocumfk, newValue, oldValue)))
 		this.ValDigdocumData = reactive(new modelFieldType.DocumentData({
 			id: 'ValDigdocumData',
 			area: 'ASSMA',
 			field: 'DIGDOCUMDATA',
 			ignoreFldSubmit: true
 		}).cloneFrom(values?.ValDigdocumData))
-		watch(() => this.ValDigdocumData.value, (newValue, oldValue) => this.onUpdate('assma.digdocumdata', this.ValDigdocumData, newValue, oldValue), { deep: true })
+		this.stopWatchers.push(watch(() => this.ValDigdocumData.value, (newValue, oldValue) => this.onUpdate('assma.digdocumdata', this.ValDigdocumData, newValue, oldValue), { deep: true }))
 
 		this.ValNotes = reactive(new modelFieldType.MultiLineString({
 			id: 'ValNotes',
@@ -124,7 +125,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'NOTES',
 			description: computed(() => this.Resources.NOTES05274),
 		}).cloneFrom(values?.ValNotes))
-		watch(() => this.ValNotes.value, (newValue, oldValue) => this.onUpdate('assma.notes', this.ValNotes, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNotes.value, (newValue, oldValue) => this.onUpdate('assma.notes', this.ValNotes, newValue, oldValue)))
 	}
 
 	/**

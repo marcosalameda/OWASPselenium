@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_REPAIR_LISTViewModel.js'
 
@@ -201,7 +202,7 @@
 								label: computed(() => this.Resources.TECHNICAL_AREA50773),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayAreatecn.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayAreatecn(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAreatecn.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -368,7 +369,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'REPAR',
+									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'REPAR'
 								}
 							},
 							formsDefinition: {
@@ -384,7 +385,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CATE1', 'changed-SPECI', 'changed-CMPNY', 'changed-PESSO', 'changed-REPAR', 'changed-EQUIP'],
+						globalEvents: ['changed-SPECI', 'changed-CMPNY', 'changed-CATE1', 'changed-EQUIP', 'changed-PESSO', 'changed-REPAR'],
 						uuid: 'eb5c42d7-9401-4743-a232-b08f9c554f17',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -411,6 +412,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GQT_MENU_REPAIR_LIST]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_REPAIR_LIST]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

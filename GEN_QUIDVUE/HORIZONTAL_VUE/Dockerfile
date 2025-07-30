@@ -6,17 +6,18 @@ WORKDIR /app
 RUN npm install -g pnpm
 
 # Copy only package files first to leverage caching
-COPY ClientApp/package.json ClientApp/pnpm-lock.yaml ClientApp/pnpm-workspace.yaml ./
+COPY ClientApp/package.json ClientApp/pnpm-workspace.yaml ./
 COPY ClientApp/apps/geniovue/package.json ./apps/geniovue/
+COPY ClientApp/packages/clientapp/package.json ./packages/clientapp/
 
 # Install dependencies (this layer will be cached unless package files change)
 RUN pnpm install
 
 # Copy the rest of the frontend files
 COPY ClientApp/apps/geniovue ./apps/geniovue
+COPY ClientApp/packages/clientapp/ ./packages/clientapp
 COPY ClientApp/tsconfig.json ./
 COPY ClientApp/vitest.config.ts ./
-COPY ClientApp/vitest.workspace.ts ./
 
 # Build the frontend
 ENV NODE_OPTIONS=--max_old_space_size=10240

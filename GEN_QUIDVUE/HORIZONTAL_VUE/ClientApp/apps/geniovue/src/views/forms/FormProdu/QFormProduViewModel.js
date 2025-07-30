@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PRODU',
 			area: 'PRODU',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PRODU',
-				updateFilesTickets: 'UpdateFilesTicketsPRODU'
+				recalculateFormulas: 'RecalculateFormulas_Produ',
+				updateFilesTickets: 'UpdateFilesTicketsProdu',
+				setFile: 'SetFileProdu'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPRODU',
 			description: '',
 		}).cloneFrom(values?.ValCodprodu))
-		watch(() => this.ValCodprodu.value, (newValue, oldValue) => this.onUpdate('produ.codprodu', this.ValCodprodu, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodprodu.value, (newValue, oldValue) => this.onUpdate('produ.codprodu', this.ValCodprodu, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodlocat = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'LOCAT',
 			description: computed(() => this.Resources.__LOCATION45198),
 		}).cloneFrom(values?.ValCodlocat))
-		watch(() => this.ValCodlocat.value, (newValue, oldValue) => this.onUpdate('produ.codlocat', this.ValCodlocat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlocat.value, (newValue, oldValue) => this.onUpdate('produ.codlocat', this.ValCodlocat, newValue, oldValue)))
 
 		this.ValCodlcext = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodlcext',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'LCEXT',
 			description: computed(() => this.Resources.__LOCATION_EXTENSION43450),
 		}).cloneFrom(values?.ValCodlcext))
-		watch(() => this.ValCodlcext.value, (newValue, oldValue) => this.onUpdate('produ.codlcext', this.ValCodlcext, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodlcext.value, (newValue, oldValue) => this.onUpdate('produ.codlcext', this.ValCodlcext, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValProduct = reactive(new modelFieldType.String({
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.PRODUCT12880),
 		}).cloneFrom(values?.ValProduct))
-		watch(() => this.ValProduct.value, (newValue, oldValue) => this.onUpdate('produ.product', this.ValProduct, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValProduct.value, (newValue, oldValue) => this.onUpdate('produ.product', this.ValProduct, newValue, oldValue)))
 
 		this.ValIn_use = reactive(new modelFieldType.Number({
 			id: 'ValIn_use',
@@ -93,7 +94,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.IN_USE42606),
 		}).cloneFrom(values?.ValIn_use))
-		watch(() => this.ValIn_use.value, (newValue, oldValue) => this.onUpdate('produ.in_use', this.ValIn_use, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIn_use.value, (newValue, oldValue) => this.onUpdate('produ.in_use', this.ValIn_use, newValue, oldValue)))
 
 		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
@@ -102,7 +103,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESCRIPT',
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescript))
-		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('produ.descript', this.ValDescript, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('produ.descript', this.ValDescript, newValue, oldValue)))
 
 		this.ValSku = reactive(new modelFieldType.String({
 			id: 'ValSku',
@@ -112,7 +113,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 20,
 			description: computed(() => this.Resources.SKU42303),
 		}).cloneFrom(values?.ValSku))
-		watch(() => this.ValSku.value, (newValue, oldValue) => this.onUpdate('produ.sku', this.ValSku, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSku.value, (newValue, oldValue) => this.onUpdate('produ.sku', this.ValSku, newValue, oldValue)))
 
 		this.ValGtin = reactive(new modelFieldType.String({
 			id: 'ValGtin',
@@ -122,7 +123,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 14,
 			description: computed(() => this.Resources.GTIN45487),
 		}).cloneFrom(values?.ValGtin))
-		watch(() => this.ValGtin.value, (newValue, oldValue) => this.onUpdate('produ.gtin', this.ValGtin, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValGtin.value, (newValue, oldValue) => this.onUpdate('produ.gtin', this.ValGtin, newValue, oldValue)))
 
 		this.ValSize = reactive(new modelFieldType.String({
 			id: 'ValSize',
@@ -132,7 +133,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.SIZE10299),
 		}).cloneFrom(values?.ValSize))
-		watch(() => this.ValSize.value, (newValue, oldValue) => this.onUpdate('produ.size', this.ValSize, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSize.value, (newValue, oldValue) => this.onUpdate('produ.size', this.ValSize, newValue, oldValue)))
 
 		this.ValWeight = reactive(new modelFieldType.Number({
 			id: 'ValWeight',
@@ -143,7 +144,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 2,
 			description: computed(() => this.Resources.WEIGHT36329),
 		}).cloneFrom(values?.ValWeight))
-		watch(() => this.ValWeight.value, (newValue, oldValue) => this.onUpdate('produ.weight', this.ValWeight, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValWeight.value, (newValue, oldValue) => this.onUpdate('produ.weight', this.ValWeight, newValue, oldValue)))
 
 		this.ValPrice = reactive(new modelFieldType.Number({
 			id: 'ValPrice',
@@ -154,7 +155,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 4,
 			description: computed(() => this.Resources.PRICE06900),
 		}).cloneFrom(values?.ValPrice))
-		watch(() => this.ValPrice.value, (newValue, oldValue) => this.onUpdate('produ.price', this.ValPrice, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPrice.value, (newValue, oldValue) => this.onUpdate('produ.price', this.ValPrice, newValue, oldValue)))
 
 		this.ValInputs = reactive(new modelFieldType.Number({
 			id: 'ValInputs',
@@ -166,7 +167,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.INPUTS19315),
 		}).cloneFrom(values?.ValInputs))
-		watch(() => this.ValInputs.value, (newValue, oldValue) => this.onUpdate('produ.inputs', this.ValInputs, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValInputs.value, (newValue, oldValue) => this.onUpdate('produ.inputs', this.ValInputs, newValue, oldValue)))
 
 		this.ValOutputs = reactive(new modelFieldType.Number({
 			id: 'ValOutputs',
@@ -178,7 +179,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.OUTPUTS47833),
 		}).cloneFrom(values?.ValOutputs))
-		watch(() => this.ValOutputs.value, (newValue, oldValue) => this.onUpdate('produ.outputs', this.ValOutputs, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValOutputs.value, (newValue, oldValue) => this.onUpdate('produ.outputs', this.ValOutputs, newValue, oldValue)))
 
 		this.ValStock = reactive(new modelFieldType.Number({
 			id: 'ValStock',
@@ -190,7 +191,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.STOCK37618),
 		}).cloneFrom(values?.ValStock))
-		watch(() => this.ValStock.value, (newValue, oldValue) => this.onUpdate('produ.stock', this.ValStock, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValStock.value, (newValue, oldValue) => this.onUpdate('produ.stock', this.ValStock, newValue, oldValue)))
 
 		this.ValImage = reactive(new modelFieldType.Image({
 			id: 'ValImage',
@@ -199,7 +200,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'IMAGE',
 			description: computed(() => this.Resources.IMAGE65174),
 		}).cloneFrom(values?.ValImage))
-		watch(() => this.ValImage.value, (newValue, oldValue) => this.onUpdate('produ.image', this.ValImage, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValImage.value, (newValue, oldValue) => this.onUpdate('produ.image', this.ValImage, newValue, oldValue)))
 
 		this.TableLocatGln = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -210,7 +211,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
 		}).cloneFrom(values?.TableLocatGln))
-		watch(() => this.TableLocatGln.value, (newValue, oldValue) => this.onUpdate('locat.gln', this.TableLocatGln, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableLocatGln.value, (newValue, oldValue) => this.onUpdate('locat.gln', this.TableLocatGln, newValue, oldValue)))
 
 		this.TableLcextGlnext = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -221,7 +222,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
 		}).cloneFrom(values?.TableLcextGlnext))
-		watch(() => this.TableLcextGlnext.value, (newValue, oldValue) => this.onUpdate('lcext.glnext', this.TableLcextGlnext, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableLcextGlnext.value, (newValue, oldValue) => this.onUpdate('lcext.glnext', this.TableLcextGlnext, newValue, oldValue)))
 	}
 
 	/**

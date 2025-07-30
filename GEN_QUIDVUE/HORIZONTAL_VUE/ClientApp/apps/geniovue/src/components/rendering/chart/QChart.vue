@@ -20,7 +20,6 @@
 </template>
 
 <script>
-	import cloneDeep from 'lodash-es/cloneDeep'
 	import isEmpty from 'lodash-es/isEmpty'
 	import has from 'lodash-es/has'
 
@@ -33,6 +32,8 @@
 	import heatmap from 'highcharts/modules/heatmap'
 	import offlineExporting from 'highcharts/modules/offline-exporting'
 	import variablePie from 'highcharts/modules/variable-pie'
+
+	import { unref } from 'vue'
 
 	exportingInit(Highcharts)
 	offlineExporting(Highcharts)
@@ -220,7 +221,7 @@
 					const xaxisSample = this.mappedValues[0].xaxis
 					const yaxisSample = this.mappedValues[0].yaxis
 
-					var seriesSelector = this.mappedValues.filter((row) => 'serieSelector' in row)
+					const seriesSelector = this.mappedValues.filter((row) => 'serieSelector' in row)
 
 					if (seriesSelector.length)
 					{
@@ -292,13 +293,13 @@
 				if (this.chartOptions.chart.type === 'heatmap')
 					return `<b>${context.point.series.name}:</b> ${context.point.value}`
 
-				var xValue = ''
-				var yValue = ''
-				var zValue = ''
-				var keyValue = ''
-				var result = ''
-				var defaultFormat = true
-				var groupValue = 0
+				let xValue = ''
+				let yValue = ''
+				let zValue = ''
+				let keyValue = ''
+				let result = ''
+				let defaultFormat = true
+				let groupValue = 0
 
 				if (!this.isEmpty(context.key))
 				{
@@ -401,12 +402,12 @@
 			getPieFormatter(context)
 			{
 				let name = context.point.name
-				let percentage = context.point.percentage.toFixed(1)
+				const percentage = context.point.percentage.toFixed(1)
 
 				if (this.hasDateX())
 					name = this.getDateAsString(name)
 
-				var result = ''
+				let result = ''
 
 				if (has(this.config, 'labels.data.format'))
 				{
@@ -424,8 +425,8 @@
 			 */
 			addGenericOptions()
 			{
-				let vm = this,
-					type = has(this.styleVariables, 'chartType') ? this.styleVariables.chartType.value : 'line'
+				const vm = this
+				let type = has(this.styleVariables, 'chartType') ? this.styleVariables.chartType.value : 'line'
 
 				if (type === 'semi-pie')
 					type = 'pie'
@@ -442,7 +443,7 @@
 						events: {
 							load: function()
 							{
-								var toShow = this.series.length
+								let toShow = this.series.length
 								const showLastN = has(vm.styleVariables, 'showLastN')
 									? parseInt(vm.styleVariables.showLastN.value)
 									: -1
@@ -523,7 +524,7 @@
 						labels: {
 							formatter: function()
 							{
-								var value = this.value
+								let value = this.value
 
 								if (value && vm.hasDateX())
 									value = vm.getDateAsString(value)
@@ -545,7 +546,7 @@
 								: 0,
 							formatter: function()
 							{
-								var value = this.value
+								let value = this.value
 
 								if (vm.hasDateY())
 									value = vm.getDateAsString(value)
@@ -988,11 +989,11 @@
 
 			buildDefaultData()
 			{
-				let categories = []
+				const categories = []
 				this.chartOptions.series = []
-				let filteredRows = this.getFilteredRows()
+				const filteredRows = this.getFilteredRows()
 
-				this.labelRow = cloneDeep(filteredRows[0])
+				this.labelRow = filteredRows[0]
 				// use style/config
 
 				this.labelColumn.x = has(this.styleVariables, 'xaxisName')
@@ -1006,7 +1007,7 @@
 					return
 
 				this.series.forEach((series) => {
-					let data = []
+					const data = []
 
 					filteredRows.forEach((row) => {
 						let x = row.xaxis?.rawData
@@ -1018,7 +1019,7 @@
 						{
 							const foundElement = row.xaxis.source.array.find(element => element.key === x)
 							if (foundElement)
-								x = foundElement.value
+								x = unref(foundElement.value)
 						}
 
 						if ('serieSelector' in row)
@@ -1027,7 +1028,7 @@
 							// add only if serieSelector matches current serie
 							if (row.serieSelector.rawData === series.id)
 							{
-								let y = row.yaxis[0]
+								const y = row.yaxis[0]
 
 								data.push({
 									y: y.rawData,
@@ -1041,7 +1042,7 @@
 						}
 						else
 						{
-							let y = row.yaxis.filter(
+							const y = row.yaxis.filter(
 								(y) => y.source.field === series.id
 							)[0]
 
@@ -1077,13 +1078,13 @@
 				}
 				this.chartOptions.series = []
 
-				var data = []
+				const data = []
 
-				var filteredRows = this.getFilteredRows()
+				const filteredRows = this.getFilteredRows()
 				if (filteredRows.length === 0)
 					return
 
-				this.labelRow = cloneDeep(filteredRows[0])
+				this.labelRow = filteredRows[0]
 				this.labelColumn.x = has(this.styleVariables, 'xaxisName')
 					? this.styleVariables.xaxisName.value
 					: ''
@@ -1120,7 +1121,7 @@
 
 					if (this.hasDateX(0))
 					{
-						var date = row.xaxis.value.match(
+						const date = row.xaxis.value.match(
 							/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2}):(\d{2})/
 						)
 
@@ -1196,14 +1197,14 @@
 				}
 
 				this.chartOptions.series = []
-				var data = []
-				var series = this.series[0]
-				var filteredRows = this.getFilteredRows()
+				const data = []
+				const series = this.series[0]
+				const filteredRows = this.getFilteredRows()
 
 				if (filteredRows.length === 0)
 					return
 
-				this.labelRow = cloneDeep(filteredRows[0])
+				this.labelRow = filteredRows[0]
 				this.labelColumn.x = has(this.styleVariables, 'xaxisName')
 					? this.styleVariables.xaxisName.value
 					: ''
@@ -1215,15 +1216,15 @@
 					: ''
 
 				filteredRows.forEach((row) => {
-					let x = row.xaxis?.rawData
-					let y = row.yaxis[0]?.rawData
-					let z = row.zaxis?.rawData
-					let name = row.pointName?.value
+					const x = row.xaxis?.rawData
+					const y = row.yaxis[0]?.rawData
+					const z = row.zaxis?.rawData
+					const name = row.pointName?.value
 
 					//in case we have point specific colors
 					if (has(series, 'dataset.color'))
 					{
-						let color = row.Fields[series.dataset.color]
+						const color = row.Fields[series.dataset.color]
 
 						data.push({
 							x: x,
@@ -1259,11 +1260,11 @@
 				}
 
 				this.chartOptions.series = []
-				var series = this.series[0]
-				var filteredRows = this.getFilteredRows()
-				var finalSeries = []
+				const series = this.series[0]
+				const filteredRows = this.getFilteredRows()
+				const finalSeries = []
 
-				this.labelRow = cloneDeep(filteredRows[0])
+				this.labelRow = filteredRows[0]
 
 				if (filteredRows.length === 0)
 					return
@@ -1275,15 +1276,15 @@
 					? this.styleVariables.yaxisName.value
 					: ''
 
-				var groupBySet = new Set()
+				const groupBySet = new Set()
 
 				filteredRows.forEach((row) => {
 					groupBySet.add(row.Fields[series.groupBy])
 				})
 
-				var groupBy = Array.from(groupBySet)
+				const groupBy = Array.from(groupBySet)
 
-				for (let i in groupBy)
+				for (const i in groupBy)
 				{
 					finalSeries[i] = {
 						name: groupBy[i],
@@ -1292,10 +1293,10 @@
 				}
 
 				filteredRows.forEach((row) => {
-					let gby = row.Fields[series.groupBy]
-					let name = row.Fields[series.dataset.x]
-					let value = row.Fields[series.dataset.y]
-					let index = groupBy.findIndex((el) => el === gby)
+					const gby = row.Fields[series.groupBy]
+					const name = row.Fields[series.dataset.x]
+					const value = row.Fields[series.dataset.y]
+					const index = groupBy.findIndex((el) => el === gby)
 
 					finalSeries[index].data.push({
 						name: name,
@@ -1308,11 +1309,11 @@
 
 			buildHeatmapData()
 			{
-				let categories = []
+				const categories = []
 				this.chartOptions.series = []
-				let filteredRows = this.getFilteredRows()
+				const filteredRows = this.getFilteredRows()
 
-				this.labelRow = cloneDeep(filteredRows[0])
+				this.labelRow = filteredRows[0]
 
 				this.labelColumn.x = has(this.styleVariables, 'xaxisName')
 					? this.styleVariables.xaxisName.value
@@ -1323,9 +1324,9 @@
 
 				if (filteredRows.length === 0) return
 
-				let yCategories = []
+				const yCategories = []
 				this.series.forEach((series) => {
-					let data = []
+					const data = []
 
 					filteredRows.forEach((row) => {
 						const x = row.xaxis?.rawData
@@ -1348,7 +1349,7 @@
 						])
 					})
 
-					let name = this.labelRow.zaxis?.source.label
+					const name = this.labelRow.zaxis?.source.label
 
 					this.chartOptions.series.push({
 						name: name,
@@ -1367,13 +1368,13 @@
 			 */
 			getFilteredRows()
 			{
-				let yDatasets = []
+				const yDatasets = []
 
 				this.series.forEach((series) => {
 					yDatasets.push(series.dataset.y)
 				})
 
-				let filteredRows = []
+				const filteredRows = []
 
 				if (this.hasMappedValues)
 				{
@@ -1458,10 +1459,10 @@
 			getKeyByProperty(xValue)
 			{
 				// We assume the xAxis only has unique values
-				var row = this.mappedValues.filter((row) => {
+				const row = this.mappedValues.filter((row) => {
 					if (this.vDataType[0].xType.includes('Date'))
 					{
-						let dateStr = this.getDateAsString(xValue)
+						const dateStr = this.getDateAsString(xValue)
 						return row.xaxis.value === dateStr
 					}
 
@@ -1475,7 +1476,7 @@
 
 			getPointCategoryName(point, dimension)
 			{
-				var series = point.series,
+				const series = point.series,
 					isY = dimension === 'y',
 					axis = series[isY ? 'yAxis' : 'xAxis']
 				return axis.categories[point[isY ? 'y' : 'x']]

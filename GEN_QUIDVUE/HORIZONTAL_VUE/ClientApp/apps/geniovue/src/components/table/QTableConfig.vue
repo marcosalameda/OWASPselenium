@@ -5,7 +5,7 @@
 		:to="`#q-modal-${modalId}-header`"
 		:key="domKey">
 		<div>
-			<h4 
+			<h4
 				class="c-modal__header-title"
 				:id="`q-modal-${modalId}_title`">
 				{{ texts.tableConfig }}
@@ -127,7 +127,7 @@
 							id: 'column-config',
 							componentId: 'columnConfig',
 							name: 'columns',
-							label: this.texts.configureColumns,
+							label: computed(() => this.texts.configureColumns),
 							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'columnConfig'])?.active === false),
 							isVisible: computed(() => {
 								return (
@@ -140,7 +140,7 @@
 							id: 'advanced-filters',
 							componentId: 'advancedFilters',
 							name: 'filters',
-							label: this.texts.advancedFiltersText,
+							label: computed(() => this.texts.advancedFiltersText),
 							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'advancedFilters'])?.active === false),
 							isVisible: computed(() => {
 								return (
@@ -153,7 +153,7 @@
 							id: 'view-save',
 							componentId: 'viewSave',
 							name: 'newView',
-							label: this.texts.saveViewText,
+							label: computed(() => this.texts.saveViewText),
 							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'viewSave'])?.active === false),
 							isVisible: computed(() => {
 								return (
@@ -165,7 +165,7 @@
 							id: 'views',
 							componentId: 'views',
 							name: 'views',
-							label: this.texts.viewManagerText,
+							label: computed(() => this.texts.viewManagerText),
 							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'views'])?.active === false),
 							isVisible: computed(() => {
 								return this.tableCtrl.config.allowManageViews && _find(this.tableCtrl.config.configOptionsUse, ['id', 'views'])?.visible
@@ -199,8 +199,8 @@
 			},
 
 			setAllTabsShowContent(tabGroupId, show, mergeProps) {
-				for (let tabId in this[tabGroupId]['tabsList']) {
-					let tabObj = this[tabGroupId]['tabsList'][tabId]
+				for (const tabId in this[tabGroupId]['tabsList']) {
+					const tabObj = this[tabGroupId]['tabsList'][tabId]
 					this.$emit('signal-component', tabObj.componentId, { showInline: show, showHeader: false }, mergeProps)
 				}
 			},

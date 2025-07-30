@@ -533,12 +533,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Item/Artigval_SaveEdit
 		[HttpPost]
 		public ActionResult Artigval_SaveEdit([FromBody] Artigval_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Artigval_SaveEdit",
 				ViewName = "Artigval",
@@ -569,7 +568,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsArtigval([FromBody] ArtigvalDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

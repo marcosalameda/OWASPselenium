@@ -144,10 +144,10 @@ namespace GenioMVC.ViewModels.Tpequ
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAfamil.FldFamily, FieldType.TEXT, Resources.Resources.FAMILIA_DE_EQUIPAMEN12158, 30, 0, true),
 				new Exports.QColumn(CSGenioAtpequ.FldTipoequi, FieldType.TEXT, Resources.Resources.TYPE_OF_EQUIPMENT18080, 30, 0, true),
 				new Exports.QColumn(CSGenioAtpequ.FldTpequcod, FieldType.TEXT, Resources.Resources.CODE49225, 20, 0, true),
@@ -160,16 +160,12 @@ namespace GenioMVC.ViewModels.Tpequ
 				new Exports.QColumn(CSGenioAtpequ.FldSince, FieldType.DATETIME, Resources.Resources.SINCE47259, 16, 0, true),
 				new Exports.QColumn(CSGenioAtpequ.FldQtdequip, FieldType.NUMERIC, Resources.Resources.AMOUNT46885, 6, 0, true),
 				new Exports.QColumn(CSGenioAtpequ.FldKit, FieldType.LOGIC, Resources.Resources.KIT27179, 1, 0, true),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAtpequ> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -321,12 +317,6 @@ namespace GenioMVC.ViewModels.Tpequ
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAtpequ> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "2D11"),
-				new("Module", "GQT")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<GQT_Menu_2D11_RowViewModel>();
 
@@ -463,7 +453,6 @@ namespace GenioMVC.ViewModels.Tpequ
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<GQT_Menu_2D11_RowViewModel> MapGQT_Menu_2D11(ListingMVC<CSGenioAtpequ> Qlisting)

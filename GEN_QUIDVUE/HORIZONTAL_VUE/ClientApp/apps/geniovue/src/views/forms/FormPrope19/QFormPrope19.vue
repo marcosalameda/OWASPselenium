@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -201,12 +201,13 @@
 						<q-accordion
 							v-if="controls.PROPE19_PSEUDACC01___.isVisible"
 							id="PROPE19_PSEUDACC01___"
+							v-model="controls.PROPE19_PSEUDACC01___.openChild"
 							v-bind="controls.PROPE19_PSEUDACC01___">
 							<!-- Start PROPE19_PSEUDACC01___ -->
-							<q-group-collapsible
-								id="PROPE19_PSEUDLOCALIZA"
-								v-bind="controls.PROPE19_PSEUDLOCALIZA"
-								v-on="controls.PROPE19_PSEUDLOCALIZA.handlers">
+							<q-accordion-item
+								id="PROPE19_PSEUDLOCALIZA-container"
+								value="PROPE19_PSEUDLOCALIZA"
+								:title="controls.PROPE19_PSEUDLOCALIZA.label">
 								<!-- Start PROPE19_PSEUDLOCALIZA -->
 								<q-row-container v-show="controls.PROPE19_CITY_CITY____.isVisible">
 									<q-control-wrapper
@@ -249,11 +250,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE19_PSEUDLOCALIZA -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE19_PSEUDDETAILS_"
-								v-bind="controls.PROPE19_PSEUDDETAILS_"
-								v-on="controls.PROPE19_PSEUDDETAILS_.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE19_PSEUDDETAILS_-container"
+								value="PROPE19_PSEUDDETAILS_"
+								:title="controls.PROPE19_PSEUDDETAILS_.label">
 								<!-- Start PROPE19_PSEUDDETAILS_ -->
 								<q-row-container v-show="controls.PROPE19_PROPEBUILDTYP.isVisible || controls.PROPE19_PROPEGRNDSIZE.isVisible">
 									<q-control-wrapper
@@ -317,15 +318,14 @@
 											:suggestion-mode-on="suggestionModeOn">
 											<q-radio-group
 												v-if="controls.PROPE19_PROPETYPOLOGY.isVisible"
-												id="PROPE19_PROPETYPOLOGY"
-												:model-value="model.ValTypology.value"
-												deselect-radio
-												:label-left-side="controls.PROPE19_PROPETYPOLOGY.labelPosition === labelAlignment.left"
-												:number-of-columns="controls.PROPE19_PROPETYPOLOGY.columnNumber"
-												:is-required="controls.PROPE19_PROPETYPOLOGY.isRequired"
-												:readonly="controls.PROPE19_PROPETYPOLOGY.readonly"
-												:options-list="controls.PROPE19_PROPETYPOLOGY.items"
-												@update:model-value="model.ValTypology.fnUpdateValue" />
+												v-bind="controls.PROPE19_PROPETYPOLOGY.props"
+												v-on="controls.PROPE19_PROPETYPOLOGY.handlers">
+												<q-radio-button
+													v-for="radio in controls.PROPE19_PROPETYPOLOGY.items"
+													:key="radio.key"
+													:label="radio.value"
+													:value="radio.key" />
+											</q-radio-group>
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -396,11 +396,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE19_PSEUDDETAILS_ -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE19_PSEUDAGENTINF"
-								v-bind="controls.PROPE19_PSEUDAGENTINF"
-								v-on="controls.PROPE19_PSEUDAGENTINF.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE19_PSEUDAGENTINF-container"
+								value="PROPE19_PSEUDAGENTINF"
+								:title="controls.PROPE19_PSEUDAGENTINF.label">
 								<!-- Start PROPE19_PSEUDAGENTINF -->
 								<q-row-container v-show="controls.PROPE19_AGENTNAME____.isVisible">
 									<q-control-wrapper
@@ -439,7 +439,7 @@
 												v-if="controls.PROPE19_AGENTEMAIL___.isVisible"
 												v-bind="controls.PROPE19_AGENTEMAIL___"
 												:model-value="model.AgentValEmail.value"
-												@update:model-value="model.AgentValEmail.fnUpdateValue" />
+												@change="model.AgentValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -462,7 +462,7 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE19_PSEUDAGENTINF -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End PROPE19_PSEUDACC01___ -->
 						</q-accordion>
 					</q-control-wrapper>
@@ -475,6 +475,7 @@
 							v-on="controls.PROPE19_PSEUDPROPHOTO.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROPE19_PSEUDPROPHOTO"
+							:filter-operators="controls.PROPE19_PSEUDPROPHOTO.filterOperators"
 							v-on="controls.PROPE19_PSEUDPROPHOTO.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -488,6 +489,7 @@
 							v-on="controls.PROPE19_PSEUDPROPCONT.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROPE19_PSEUDPROPCONT"
+							:filter-operators="controls.PROPE19_PSEUDPROPCONT.filterOperators"
 							v-on="controls.PROPE19_PSEUDPROPCONT.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -526,7 +528,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -546,7 +548,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormPrope19ViewModel.js'
 
@@ -625,7 +627,8 @@
 					primaryKey: 'ValCodprope',
 					designation: computed(() => this.Resources.PROPERTY43977),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -848,7 +851,7 @@
 						controlLimits: [
 						],
 						blockWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: true
@@ -953,6 +956,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE19_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE19_CITY_CITY____', 'PROPE19_CTRY_COUNTRY_'],
@@ -1014,6 +1018,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE19_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE19_PROPEBUILDTYP', 'PROPE19_PROPEGRNDSIZE', 'PROPE19_PROPEFLOORNUM', 'PROPE19_PROPETYPOLOGY', 'PROPE19_PROPESIZE____', 'PROPE19_PROPEBATHRMS_', 'PROPE19_PROPEYEAR____', 'PROPE19_PROPEBUILDAGE'],
@@ -1053,7 +1058,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [PROPE->BUILDTYP]=="H"
@@ -1078,7 +1083,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [PROPE->BUILDTYP]=="A"
@@ -1093,7 +1098,6 @@
 						valueChangeEvent: 'fieldChange:prope.typology',
 						id: 'PROPE19_PROPETYPOLOGY',
 						name: 'TYPOLOGY',
-						size: 'small',
 						label: computed(() => this.Resources.TYPOLOGY11991),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
@@ -1101,7 +1105,7 @@
 						maxIntegers: 1,
 						maxDecimals: 0,
 						arrayName: 'aparttyp',
-						columnNumber: 4,
+						columns: 4,
 						controlLimits: [
 						],
 					}, this),
@@ -1166,7 +1170,7 @@
 						controlLimits: [
 						],
 						blockWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: true
@@ -1184,6 +1188,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE19_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE19_AGENTNAME____', 'PROPE19_AGENTEMAIL___', 'PROPE19_AGENTPHOTO___'],
@@ -1436,7 +1441,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROPE', 'changed-PROPH'],
+						globalEvents: ['changed-PROPH', 'changed-PROPE'],
 						uuid: 'Prope19_ValProphoto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1632,7 +1637,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROCN', 'changed-PROPE'],
+						globalEvents: ['changed-PROPE', 'changed-PROCN'],
 						uuid: 'Prope19_ValPropcont',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1772,17 +1777,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PROPE19]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1792,7 +1803,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1802,7 +1813,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1822,7 +1833,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -1855,7 +1866,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1875,7 +1886,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -1906,11 +1917,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1920,7 +1929,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1928,8 +1937,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1937,7 +1944,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1945,8 +1952,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1954,7 +1959,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1962,11 +1967,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1976,7 +1979,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1986,7 +1989,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

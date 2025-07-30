@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_311ViewModel.js'
 
@@ -269,7 +270,7 @@
 								field: 'IN_USE',
 								label: computed(() => this.Resources.IN_USE42606),
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayYesno.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayYesno(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayYesno.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
@@ -408,7 +409,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'PRODU',
+									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'PRODU'
 								}
 							},
 							formsDefinition: {
@@ -425,7 +426,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PRODU', 'changed-LOCAT', 'changed-LCEXT'],
+						globalEvents: ['changed-LOCAT', 'changed-PRODU', 'changed-LCEXT'],
 						uuid: '92697297-35db-4e66-a7dc-b3b9b29febb5',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -452,6 +453,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS WMS_MENU_311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT WMS_MENU_311]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

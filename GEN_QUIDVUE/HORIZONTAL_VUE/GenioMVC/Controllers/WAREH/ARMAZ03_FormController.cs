@@ -460,12 +460,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Wareh/Armaz03_SaveEdit
 		[HttpPost]
 		public ActionResult Armaz03_SaveEdit([FromBody] Armaz03_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Armaz03_SaveEdit",
 				ViewName = "Armaz03",
@@ -496,7 +495,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsArmaz03([FromBody] Armaz03DocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

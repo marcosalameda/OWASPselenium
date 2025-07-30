@@ -227,7 +227,7 @@
 			{
 				if (window.tinymce)
 				{
-					let editorCtrl = window.tinymce.get(this.id)
+					const editorCtrl = window.tinymce.get(this.id)
 					if (editorCtrl)
 					{
 						editorCtrl.remove()

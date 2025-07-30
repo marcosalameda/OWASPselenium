@@ -460,12 +460,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model.Menu);
 		}
 
-
 		// POST: /Grpb/Grpb_SaveEdit
 		[HttpPost]
 		public ActionResult Grpb_SaveEdit([FromBody] Grpb_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb_SaveEdit",
 				ViewName = "Grpb",
@@ -496,7 +495,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsGrpb([FromBody] GrpbDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

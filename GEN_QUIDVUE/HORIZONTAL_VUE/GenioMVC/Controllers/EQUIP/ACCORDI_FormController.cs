@@ -747,12 +747,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Equip/Accordi_SaveEdit
 		[HttpPost]
 		public ActionResult Accordi_SaveEdit([FromBody] Accordi_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Accordi_SaveEdit",
 				ViewName = "Accordi",
@@ -783,7 +782,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsAccordi([FromBody] AccordiDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

@@ -58,30 +58,6 @@ namespace GenioMVC.ViewModels.Addre
 		/// Title: "Address City" | Type: "C"
 		/// </summary>
 		public string ValAddresscity { get; set; }
-		/// <summary>
-		/// Title: "Address District" | Type: "C"
-		/// </summary>
-		public string ValAddressdistrict { get; set; }
-		/// <summary>
-		/// Title: "Address State" | Type: "C"
-		/// </summary>
-		public string ValAddressstate { get; set; }
-		/// <summary>
-		/// Title: "Address Postal Code" | Type: "C"
-		/// </summary>
-		public string ValAddresspostalcode { get; set; }
-		/// <summary>
-		/// Title: "Address Country" | Type: "C"
-		/// </summary>
-		public string ValAddresscountry { get; set; }
-		/// <summary>
-		/// Title: "Period Start" | Type: "DT"
-		/// </summary>
-		public DateTime? ValPeriodstart { get; set; }
-		/// <summary>
-		/// Title: "Period End" | Type: "DT"
-		/// </summary>
-		public DateTime? ValPeriodend { get; set; }
 
 		#region Navigations
 		#endregion
@@ -100,6 +76,14 @@ namespace GenioMVC.ViewModels.Addre
 
 		#region Fields for formulas
 
+		// Field for formula
+		/// <summary>Field: "Period Start" Tipo: "DT"</summary>
+		[ValidateSetAccess]
+		public DateTime? ValPeriodstart { get; set; }
+		// Field for formula
+		/// <summary>Field: "Period End" Tipo: "DT"</summary>
+		[ValidateSetAccess]
+		public DateTime? ValPeriodend { get; set; }
 
 		#endregion
 
@@ -217,10 +201,6 @@ namespace GenioMVC.ViewModels.Addre
 				ValAddresstype = ViewModelConversion.ToString(m.ValAddresstype);
 				ValAddresstext = ViewModelConversion.ToString(m.ValAddresstext);
 				ValAddresscity = ViewModelConversion.ToString(m.ValAddresscity);
-				ValAddressdistrict = ViewModelConversion.ToString(m.ValAddressdistrict);
-				ValAddressstate = ViewModelConversion.ToString(m.ValAddressstate);
-				ValAddresspostalcode = ViewModelConversion.ToString(m.ValAddresspostalcode);
-				ValAddresscountry = ViewModelConversion.ToString(m.ValAddresscountry);
 				ValPeriodstart = ViewModelConversion.ToDateTime(m.ValPeriodstart);
 				ValPeriodend = ViewModelConversion.ToDateTime(m.ValPeriodend);
 				ValCodaddre = ViewModelConversion.ToString(m.ValCodaddre);
@@ -253,13 +233,17 @@ namespace GenioMVC.ViewModels.Addre
 				m.ValAddresstype = ViewModelConversion.ToString(ValAddresstype);
 				m.ValAddresstext = ViewModelConversion.ToString(ValAddresstext);
 				m.ValAddresscity = ViewModelConversion.ToString(ValAddresscity);
-				m.ValAddressdistrict = ViewModelConversion.ToString(ValAddressdistrict);
-				m.ValAddressstate = ViewModelConversion.ToString(ValAddressstate);
-				m.ValAddresspostalcode = ViewModelConversion.ToString(ValAddresspostalcode);
-				m.ValAddresscountry = ViewModelConversion.ToString(ValAddresscountry);
+				m.ValCodaddre = ViewModelConversion.ToString(ValCodaddre);
+
+				/*
+					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
+						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
+				*/
+				if (!HasDisabledUserValuesSecurity)
+					return;
+
 				m.ValPeriodstart = ViewModelConversion.ToDateTime(ValPeriodstart);
 				m.ValPeriodend = ViewModelConversion.ToDateTime(ValPeriodend);
-				m.ValCodaddre = ViewModelConversion.ToString(ValCodaddre);
 			}
 			catch (Exception)
 			{
@@ -295,24 +279,6 @@ namespace GenioMVC.ViewModels.Addre
 						break;
 					case "addre.addresscity":
 						this.ValAddresscity = ViewModelConversion.ToString(_value);
-						break;
-					case "addre.addressdistrict":
-						this.ValAddressdistrict = ViewModelConversion.ToString(_value);
-						break;
-					case "addre.addressstate":
-						this.ValAddressstate = ViewModelConversion.ToString(_value);
-						break;
-					case "addre.addresspostalcode":
-						this.ValAddresspostalcode = ViewModelConversion.ToString(_value);
-						break;
-					case "addre.addresscountry":
-						this.ValAddresscountry = ViewModelConversion.ToString(_value);
-						break;
-					case "addre.periodstart":
-						this.ValPeriodstart = ViewModelConversion.ToDateTime(_value);
-						break;
-					case "addre.periodend":
-						this.ValPeriodend = ViewModelConversion.ToDateTime(_value);
 						break;
 					case "addre.codaddre":
 						this.ValCodaddre = ViewModelConversion.ToString(_value);
@@ -428,10 +394,6 @@ namespace GenioMVC.ViewModels.Addre
 			CrudViewModelFieldValidator validator = new(m_userContext.User.Language);
 
 			validator.StringLength("ValAddresscity", Resources.Resources.ADDRESS_CITY41109, ValAddresscity, 50);
-			validator.StringLength("ValAddressdistrict", Resources.Resources.ADDRESS_DISTRICT48524, ValAddressdistrict, 50);
-			validator.StringLength("ValAddressstate", Resources.Resources.ADDRESS_STATE16863, ValAddressstate, 50);
-			validator.StringLength("ValAddresspostalcode", Resources.Resources.ADDRESS_POSTAL_CODE41631, ValAddresspostalcode, 50);
-			validator.StringLength("ValAddresscountry", Resources.Resources.ADDRESS_COUNTRY56159, ValAddresscountry, 50);
 
 
 			return validator.GetResult();
@@ -477,10 +439,6 @@ namespace GenioMVC.ViewModels.Addre
 				"addre.addresstype" => ViewModelConversion.ToString(modelValue),
 				"addre.addresstext" => ViewModelConversion.ToString(modelValue),
 				"addre.addresscity" => ViewModelConversion.ToString(modelValue),
-				"addre.addressdistrict" => ViewModelConversion.ToString(modelValue),
-				"addre.addressstate" => ViewModelConversion.ToString(modelValue),
-				"addre.addresspostalcode" => ViewModelConversion.ToString(modelValue),
-				"addre.addresscountry" => ViewModelConversion.ToString(modelValue),
 				"addre.periodstart" => ViewModelConversion.ToDateTime(modelValue),
 				"addre.periodend" => ViewModelConversion.ToDateTime(modelValue),
 				"addre.codaddre" => ViewModelConversion.ToString(modelValue),

@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -102,8 +102,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("psw","psw");
 			info.Pathways.Add("perso","perso");
+			info.Pathways.Add("psw","psw");
 		}
 
 		/// <summary>
@@ -345,7 +345,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX USERS]/

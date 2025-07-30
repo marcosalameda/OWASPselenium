@@ -1,5 +1,4 @@
-﻿import { readonly } from 'vue'
-import { isNavigationFailure } from 'vue-router'
+import { readonly } from 'vue'
 import { mapActions, mapState } from 'pinia'
 import _forEach from 'lodash-es/forEach'
 import _isEmpty from 'lodash-es/isEmpty'
@@ -8,6 +7,7 @@ import _some from 'lodash-es/some'
 import { useGenericDataStore } from '@quidgest/clientapp/stores'
 import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
 import { useNavDataStore } from '@quidgest/clientapp/stores'
+import { useAiDataStore } from '@quidgest/clientapp/stores'
 
 import netAPI from '@quidgest/clientapp/network'
 import { QEventEmitter } from '@quidgest/clientapp/plugins/eventBus'
@@ -231,7 +231,13 @@ export default {
 		const canLoad = await this.beforeLoad()
 		// Load form data.
 		if (canLoad)
-			this.loadFormData(true)
+			this.loadFormData(true).catch((err) => {
+				this.$eventTracker.addError({
+					origin: 'created (formHandler)',
+					message: `Error loading form data: ${err?.message}`,
+					contextData: { error: err, formInfo: this.formInfo }
+				})
+			})
 	},
 
 	mounted()
@@ -265,6 +271,12 @@ export default {
 		const modalEl = document.getElementById(this.uiContainersId.main)
 		if (modalEl !== null || this.isNested || this.formInfo.route !== this.$route.name)
 			this.formModalIsReady = true
+
+		if (systemInfo.isChatBotAvailable && this.formInfo.availableAgents.length > 0)
+		{
+			this.$eventHub.on('apply-agent-fields', this.applyAgentFields)
+			this.setFormAgents(this.formInfo.availableAgents)
+		}
 	},
 
 	beforeUnmount()
@@ -276,14 +288,24 @@ export default {
 		})
 
 		this.showExternalApp = false
-		this.internalEvents.removeAllListeners()
-		this.formControl.destroy()
+		this.internalEvents?.removeAllListeners()
+		this.internalEvents = null
+		this.formControl?.destroy()
+		this.formControl = null
 
 		this.$eventHub.off('modal-is-ready', this.setFormModalReady)
 		this.$eventHub.off('form-apply', this.formApplyCallback)
 		this.$eventHub.off('focus-control', this.focusControl)
 
 		this.componentOnLoadProc?.destroy()
+		this.componentOnLoadProc = null
+
+		if (systemInfo.isChatBotAvailable && this.formInfo.availableAgents.length > 0)
+		{
+			this.$eventHub.off('apply-agent-fields', this.applyAgentFields)
+			this.setAvailableAgents([])
+			this.setCurrentAgent({ id: '' })
+		}
 	},
 
 	computed: {
@@ -519,7 +541,35 @@ export default {
 		 */
 		humanKey()
 		{
-			return this.isNested ? '' : this.buildHumanKey()
+			// Being a different route from the current one means the human key is probably already calculated, if not, it's because we have no way of calculating it.
+			if (this.formInfo.route !== this.$route.name || this.isNested || this.isHomePage)
+				return ''
+
+			const humanKeyFields = this.$route.meta.humanKeyFields
+
+			if (!Array.isArray(humanKeyFields) || _isEmpty(humanKeyFields) || typeof this.model !== 'object')
+				return ''
+
+			var humanKey = ''
+
+			for (let fieldId of humanKeyFields)
+			{
+				let field = this.model[fieldId]
+				if (_isEmpty(field))
+					break
+
+				let value = field.displayValue
+
+				if (_isEmpty(value))
+					continue
+
+				if (humanKey.length > 0)
+					humanKey += '; '
+
+				humanKey += `${field.description}: ${value}`
+			}
+
+			return humanKey
 		},
 
 		/**
@@ -586,6 +636,12 @@ export default {
 			'getFormValues',
 			'storeValue',
 			'storeValues'
+		]),
+
+		...mapActions(useAiDataStore, [
+			'setAvailableAgents',
+			'setCurrentAgent',
+			'applyAgentFields'
 		]),
 
 		removeModal,
@@ -729,7 +785,13 @@ export default {
 				if (typeof containerState === 'undefined')
 					containerState = false
 
-				container.setState(containerState)
+				if (!container.isInAccordion)
+					container.setState(containerState)
+				else if (containerState)
+				{
+					const accordion = this.controls[container.container]
+					accordion.openChild = container.id
+				}
 			}
 
 			// In case the form has tabs, selects the right one.
@@ -1069,6 +1131,19 @@ export default {
 			}
 			else
 			{
+				// If there's already a request pending, cancel it.
+				this.formControl?.currentController?.abort()
+
+				let axiosOptions = undefined
+				// Create a new controller for the new request.
+				if (this.formControl)
+				{
+					this.formControl.currentController = new AbortController()
+					axiosOptions = {
+						signal: this.formControl.currentController.signal
+					}
+				}
+
 				await netAPI.fetchFormData(
 					this.formArea,
 					this.formInfo.name,
@@ -1125,7 +1200,13 @@ export default {
 
 						opResult = true
 					},
-					this.navigationId)
+					this.navigationId,
+					axiosOptions)
+					.finally(() => {
+						// Always clear the controller reference so GC can reclaim it
+						if (this.formControl)
+							this.formControl.currentController = null
+					})
 			}
 
 			return opResult
@@ -1408,11 +1489,8 @@ export default {
 			const buttons = {
 				confirm: {
 					action: () => this.continueSaveForm(false, data),
-					label: this.formButtons.saveBtn.text
+					label: this.Resources[hardcodedTexts.ok]
 				},
-				cancel: {
-					label: this.formButtons.cancelBtn.text
-				}
 			}
 
 			const warnings = data.Warnings.map((warning) => `<div>${warning}</div>`).join('')
@@ -1652,12 +1730,7 @@ export default {
 
 			try
 			{
-				const result = await this.navigateTo(this.navigation.currentLevel, params)
-
-				if (!isNavigationFailure(result))
-					this.model.resetValues()
-
-				return result
+				return await this.navigateTo(this.navigation.currentLevel, params)
 			}
 			catch (error)
 			{
@@ -1777,6 +1850,7 @@ export default {
 				// Local function to execute common form exit logic.
 				const executeNextAndExit = async () => {
 					this.clearInfoMessages()
+					this.model.resetValues()
 
 					if (typeof next === 'function')
 					{
@@ -2106,20 +2180,6 @@ export default {
 		},
 
 		/**
-		 * Builds the human key of the current record.
-		 * @returns A string with the human key.
-		 */
-		buildHumanKey()
-		{
-			// Being a different route from the current one means the human key is probably already calculated, if not, it's because we have no way of calculating it.
-			if (this.formInfo.route !== this.$route.name || this.isNested || this.isHomePage)
-				return this.humanKey ?? ''
-
-			const humanKeyFields = this.$route.meta.humanKeyFields
-			return genericFunctions.buildHumanKey(humanKeyFields, this.model)
-		},
-
-		/**
 		 * Sets the breadcrumbs properties in the global store.
 		 */
 		setBreadcrumbProperties()
@@ -2194,7 +2254,9 @@ export default {
 			}
 
 			// Load form data.
-			await this.addBusy(this.fetchFormFields(!isFirstLoad), this.Resources[hardcodedTexts.formLoad])
+			const successFormLoad = await this.addBusy(this.fetchFormFields(!isFirstLoad), this.Resources[hardcodedTexts.formLoad])
+			if (!successFormLoad)
+				return 'Form data load failed or canceled.'
 
 			const route = this.isNested ? this.getNestedRouteData() : this.$route
 			const formInited = isFirstLoad ? this.initFormProperties(route) : true
@@ -2353,6 +2415,25 @@ export default {
 			return this.isWidget
 				? this.componentOnLoadProc.addWL(cbPromise)
 				: this.componentOnLoadProc.addBusy(cbPromise, busyStateMessage, 300)
+		},
+
+		/**
+		 * Sets the available agents for the form.
+		 * @param {Array} agents The list of agents to set
+		 */
+		setFormAgents(agents)
+		{
+			const availableAgents = agents.map((agent) => {
+				// For now key and value are the same.
+				// Later a "Display Text" will be added to the agent object.
+				return {
+					value: agent,
+					key: agent,
+					formId: this.$route.params.id
+				}
+			})
+
+			this.setAvailableAgents(availableAgents)
 		}
 	},
 

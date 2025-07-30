@@ -421,8 +421,8 @@ namespace CSGenio.business
                         if(Fields.TryGetValue(Qfield.FullName, out RequestedField reqField))
                             hasEmptyValue = Qfield.isEmptyValue(reqField.Value);
 
-                        // Ignore fields with default of the type "FIXO" when this field is already filled.
-                        if (Qfield.DefaultValue.tpDefault == DefaultValue.DefaultType.FIXO && !hasEmptyValue)
+                        // Ignore fields with default of the type "FIXO" and "OP_INT" when this field is already filled.
+                        if ((Qfield.DefaultValue.tpDefault == DefaultValue.DefaultType.FIXO || Qfield.DefaultValue.tpDefault == DefaultValue.DefaultType.OP_INT) && !hasEmptyValue)
                             continue;
 
                         // Skip fields that are not empty when duplicating records
@@ -1506,77 +1506,98 @@ namespace CSGenio.business
         /// <param name="oldvalues">Old record values</param>
         private void DeleteDependencies(PersistentSupport sp, Area rootRecord, Area oldvalues)
         {
+            if (ChildTable is null)
+                return;
+
+            //only do the full check once at the root
             if (rootRecord == this)
-            {
-                //Check if it can be deleted
                 CheckDependencies(sp);
-            }
 
-            ChildRelation[] tabsFilha = ChildTable;
-            if (tabsFilha != null)
+            var requireUpdateValues = false;
+            var pkParam = new SqlValue(QueryUtils.ToValidDbValue(QPrimaryKey, DBFields[PrimaryKeyName]), "ppk");
+
+            foreach (var child in ChildTable)
             {
-                // MH (27/01/2020) - Indicates whether we will need to update the fields values after deleting the records from the child table.
-                // Because of the propagation of formulas, such as SR.
-                var requireUpdateValues = false;
-                int nrFilhos = tabsFilha.Length;
-                for (int i = 0; i < nrFilhos; i++)
+                string deleteProc = child.ProcWhenDelete.toString();
+                //delete if new relations are equivalent to delete when the record is new, and not delete otherwise
+                if (deleteProc == DeleteProc.DELETE_IF_NEW)
+                    deleteProc = rootRecord.Zzstate != 0 ? DeleteProc.DELETE_RECORD : DeleteProc.DONT_DELETE;
+
+                AreaInfo childInfo = Area.GetInfoArea(child.ChildArea);
+
+                //ignore custom tables
+                if (childInfo.PersistenceType == PersistenceType.Codebase || childInfo.PersistenceType == PersistenceType.View)
+                    continue;
+
+                //self relations will be treated as CLEAR
+                if(child.ChildArea == this.Alias)
+                    deleteProc = DeleteProc.CLEAR;
+
+                if (deleteProc == DeleteProc.DELETE_RECORD || deleteProc == DeleteProc.CLEAR)
                 {
-                    //SO 2007.05.29
-                    Area childTable = Area.createArea(tabsFilha[i].ChildArea, User, User.CurrentModule);
-
-                    //2014.03.19 AP - Ignora tables Personalizadas
-                    //TODO: Criar Um método onde possa ser avaliada a validação da table personalizada
-                    if (childTable.Information.PersistenceType.Equals(CSGenio.business.PersistenceType.Codebase) || childTable.Information.PersistenceType.Equals(CSGenio.business.PersistenceType.View))
-                        continue;
-
-                    childTable.UserRecord = false;
-                    ArrayList filhos = sp.existsChild(tabsFilha[i].RelatedFields, childTable, QPrimaryKey);
-                    if (filhos.Count != 0)
+                    //get all the row that need deleting/clearing
+                    HashSet<string> pks = new HashSet<string>();
+                    SelectQuery query = null;
+                    
+                    foreach (var field in child.RelatedFields)
                     {
-                        if (tabsFilha[i].ProcWhenDelete.Equals(DeleteProc.AP) || (tabsFilha[i].ProcWhenDelete.Equals(DeleteProc.AN) && rootRecord.Zzstate == 1))
-                        {
-                            for (int j = 0; j < filhos.Count; j++)
-                            {
-                                childTable.insertNameValueField(childTable.Alias + "." + childTable.PrimaryKeyName, filhos[j].ToString());
-                                //vai recursivamente apagar as fichas filhas
-                                childTable.eliminateDependent(sp, rootRecord);
-                                requireUpdateValues = true;
-                            }
-                        }
+                        SelectQuery subquery = new SelectQuery()
+                            .Select(childInfo.Alias, childInfo.PrimaryKeyName)
+                            .From(childInfo.QSystem, childInfo.TableName, childInfo.Alias)
+                            .Where(CriteriaSet.And().Equal(childInfo.Alias, field, pkParam));
+
+                        if(query is null)
+                            query = subquery;
                         else
+                            query.Union(subquery, true);
+                    }
+
+                    ArrayList res = sp.executeReaderOneColumn(query);
+                    foreach (var pkobj in res)
+                        pks.Add(DBConversion.ToKey(pkobj));
+
+                    //if there are any possible propagations to this record then mark it as needing refresh
+                    if (!requireUpdateValues && pks.Count > 0)
+                    {
+                        requireUpdateValues |= childInfo.RelatedSumArgs?.Exists(s => s.AliasSR == this.Alias) ?? false;
+                        requireUpdateValues |= childInfo.LastValueArgs?.Exists(s => s.AliasRUV == this.Alias) ?? false;
+                        requireUpdateValues |= childInfo.ArgsListAggregate?.Exists(s => s.AliasLG == this.Alias) ?? false;
+                    }
+
+                    //delete each one
+                    foreach (var pk in pks)
+                    {
+                        DbArea childArea = Area.createArea(child.ChildArea, rootRecord.User, rootRecord.Module) as DbArea;
+                        if (childArea is null)
+                            break;
+
+                        childArea.QPrimaryKey = pk;
+
+                        if (deleteProc == DeleteProc.DELETE_RECORD)
                         {
-                            if (tabsFilha[i].ProcWhenDelete.Equals(DeleteProc.DM) ||
-                            tabsFilha[i].ProcWhenDelete.Equals(DeleteProc.NA) && tabsFilha[i].ChildArea.Equals(this.Alias)) // Use case: Domain A, Area B of Domain A. Table A refer B. In cases of deletion A records, delete all references to A in other records as well.
-                            {
-                                for (int j = 0; j < tabsFilha[i].RelatedFields.Length; j++)//20061122
-                                {
-                                    //TODO: isto não está a respeitar as regras de business das formulas internas das tables actualizadas
-                                    sp.deleteRelationship(childTable, tabsFilha[i].RelatedFields[j].ToString(), QPrimaryKey);
-                                }
-                            }
-                            else
-                            {
-                                string strMsg = Translations.Get("O registo não pode ser eliminado porque existem registos relacionados.", user.Language);
-                                string strTable = Translations.Get("Tabela", user.Language);
-                                string srtDesig = Translations.Get(childTable.AreaDesignation, user.Language);
-                                string strMsgUser = strMsg + " (" + strTable + ": " + srtDesig + ")";
-                                throw new BusinessException(strMsgUser, "DbArea.apagar", "The record with code " + QPrimaryKey + " of the table " + this.Alias.ToUpper() + " has related records and can't be deleted. The related table: " + childTable.Alias.ToUpper());
-                            }
+                            childArea.delete(sp, rootRecord);
+                        }
+                        else if (deleteProc == DeleteProc.CLEAR)
+                        {
+                            foreach (var field in child.RelatedFields)
+                                childArea.insertNameValueField(field, null);
+                            childArea.change(sp, null);
                         }
                     }
                 }
-
-                if (requireUpdateValues)
-                {
-                    // MH (27/01/2020) - Read the old values from the database, which may be updated by propagation of the formulas.
-                    // For example: C-> B-> A, where A has the SR of B and B has the SR of C.
-                    // If B also has On delete rule of the C, the value of the SR in table A will be incorrect.
-                    oldvalues.removeCalculatedFields();
-                    sp.getRecord(oldvalues, QPrimaryKey);
-                    // During deletion, new values are always the same as in the database.
-                    CloneFrom(oldvalues);
-                }
             }
+
+            if (requireUpdateValues)
+            {
+                // MH (27/01/2020) - Read the old values from the database, which may be updated by propagation of the formulas.
+                // For example: C-> B-> A, where A has the SR of B and B has the SR of C.
+                // If B also has On delete rule of the C, the value of the SR in table A will be incorrect.
+                oldvalues.removeCalculatedFields();
+                sp.getRecord(oldvalues, QPrimaryKey);
+                // During deletion, new values are always the same as in the database.
+                CloneFrom(oldvalues);
+            }
+
         }
 
         /// <summary>
@@ -1750,12 +1771,12 @@ namespace CSGenio.business
         /// <exception>Throws a BusinessException if the record cannot be deleted</exception>
         private void CheckDependencies(PersistentSupport sp)
         {
-            var areas = FindDeleteDependencies(sp, new List<ChildRelation>(), this);
+            var areas = FindDeleteDependencies(sp, [], this);
             if (areas.Any())
             {
                 string strMsg = Translations.Get("O registo não pode ser eliminado porque existem registos relacionados.", user.Language);
                 string strTable = Translations.Get("Tabela", user.Language);
-                string srtDesig = String.Join(",", areas.Select(a => Translations.Get(a.AreaDesignation, user.Language)));
+                string srtDesig = String.Join(",", areas.Select(a => Translations.Get(a.AreaDesignation, user.Language)).Distinct());
 
                 string strMsgUser = strMsg + " (" + strTable + ": " + srtDesig + ")";
                 throw new BusinessException(strMsgUser, "DbArea.apagar", "The record with code " + QPrimaryKey + " of the table " + this.Alias.ToUpper() + " has related records and can't be deleted. The related tables: " + string.Join(",", areas.Select(a=>a.Alias)));
@@ -1763,88 +1784,157 @@ namespace CSGenio.business
         }
 
         /// <summary>
-        /// From a list of relations, check if there are any dependencies that stop the record deletion and return them
+        /// Auxiliary class for data associated with a child relation expansion
+        /// For internal use of FindDeleteDependencies only
         /// </summary>
-        /// <param name="sp"></param>
-        /// <param name="prevRelations">List of </param>
-        /// <param name="rootZzstate"></param>
-        /// <returns></returns>
-        private List<AreaInfo> FindDeleteDependencies(PersistentSupport sp,List<ChildRelation> prevRelations, DbArea rootRecord)
+        private struct ExpInfo
         {
-            List<AreaInfo> areas = new List<AreaInfo>();
+            public Relation rel;
+            public AreaInfo info;
+            public string proc;
+        }
+
+        /// <summary>
+        /// Checks for records that can't be deleted in the below tables
+        /// </summary>
+        /// <param name="sp">Persistent support</param>
+        /// <param name="prevRelations">A list of the relations to add as joins</param>
+        /// <param name="rootRecord">The root record that anchors all the joins</param>
+        /// <returns>A list of all the areas that have records that can't be deleted</returns>
+        private List<AreaInfo> FindDeleteDependencies(PersistentSupport sp, List<Relation> prevRelations, DbArea rootRecord)
+        {
+            List<AreaInfo> areas = [];
             if (ChildTable == null || ChildTable.Length == 0)
                 return areas;
+
+            SelectQuery union = new SelectQuery();
+
+            //collect all the path expansions
+            List<ExpInfo> expansions = [];
+            int ix = 0;
+
+            var pkParam = new SqlValue(QueryUtils.ToValidDbValue(rootRecord.QPrimaryKey, rootRecord.DBFields[rootRecord.PrimaryKeyName]), "ppk");
 
             foreach (ChildRelation relation in ChildTable)
             {
                 string deleteProc = relation.ProcWhenDelete.toString();
+                //delete if new relations are equivalent to delete when the record is new, and not delete otherwise
+                if (deleteProc == DeleteProc.DELETE_IF_NEW)
+                    deleteProc = rootRecord.Zzstate != 0 ? DeleteProc.DELETE_RECORD : DeleteProc.DONT_DELETE;
+
                 var childInfo = GetInfoArea(relation.ChildArea);
-                var isTreeRelation = childInfo.TableName == this.Information.TableName;
 
-                if (deleteProc == DeleteProc.CLEAR //Clear relations are always possible
-                    || childInfo.PersistenceType != PersistenceType.Database)  //Views and code tables should not be verified here
+                //Clear relations are always possible
+                if (deleteProc == DeleteProc.CLEAR)
                     continue;
 
-                //Clone the list of previous relations, add self and check for dependencies
-                var relations = new List<ChildRelation>(prevRelations);
-                relations.Add(relation);
-                /*
-                    Due to the low frequency of occurrence, we will not apply in-depth validation to tree structures.
-                    We let proceed with the removal and it's will throw an error if has a dependent record that can't be removed (as the old behavior).
-                 */
-                if (isTreeRelation || !rootRecord.HasDependencies(sp, relations))
+                //Views and code tables should not be verified here
+                if (childInfo.PersistenceType != PersistenceType.Database)
                     continue;
 
-                if (deleteProc == DeleteProc.DONT_DELETE ||
-                    (deleteProc == DeleteProc.DELETE_IF_NEW && rootRecord.Zzstate == 0))
+                //a delete_record with no dependencies can skip being checked
+                if (deleteProc == DeleteProc.DELETE_RECORD && (childInfo.ChildTable?.Length ?? 0) == 0)
+                    continue;
+
+                //self relations are not supported in this check (isTreeRelation)
+                if (childInfo.TableName == this.Information.TableName)
+                    continue;
+
+                foreach (var fork in relation.RelatedFields)
                 {
-                    //This dependencies will stop the deletion
-                    areas.Add(childInfo);
+                    var rel = new Relation(
+                        childInfo.QSystem,
+                        childInfo.TableName,
+                        childInfo.Alias,
+                        childInfo.PrimaryKeyName,
+                        fork,
+                        QSystem,
+                        TableName,
+                        Alias,
+                        PrimaryKeyName,
+                        PrimaryKeyName
+                        );
+
+                    //add the subquery to the union query
+                    SelectQuery subquery = new SelectQuery()
+                        .Select(new SqlLiteral(ix), "pos")
+                        .Select(SqlFunctions.Count(new SqlLiteral(1)), "c")
+                        .From(childInfo.TableName);
+
+                    //join all the previous path (we can avoid the join with the root, and condition the query directly)
+                    string skipJoinTable = null;
+                    string skipJoinField = null;
+                    foreach (var prev in prevRelations)
+                    {
+                        if (prev.TargetTable == rootRecord.TableName)
+                        {
+                            skipJoinTable = prev.SourceTable;
+                            skipJoinField = prev.SourceRelField;
+                        }
+                        else
+                            subquery.Join(prev.TargetTable).On(CriteriaSet.And().Equal(prev.TargetTable, prev.TargetRelField, prev.SourceTable, prev.SourceRelField));
+                    }
+
+                    //join this path
+                    if (rel.TargetTable == rootRecord.TableName)
+                    {
+                        skipJoinTable = rel.SourceTable;
+                        skipJoinField = rel.SourceRelField;
+                    }
+                    else
+                        subquery.Join(rel.TargetTable).On(CriteriaSet.And().Equal(rel.TargetTable, rel.TargetRelField, rel.SourceTable, rel.SourceRelField));
+
+                    //match the root record
+                    if (skipJoinTable != null)
+                        subquery.Where(CriteriaSet.And().Equal(skipJoinTable, skipJoinField, pkParam));
+                    else
+                        subquery.Where(CriteriaSet.And().Equal(rootRecord.TableName, rootRecord.PrimaryKeyName, pkParam));
+
+
+                    if (expansions.Count == 0)
+                        union = subquery; //the first query becomes the head of the union
+                    else
+                        union.Union(subquery, true); //otherwise just add them
+
+                    expansions.Add(new ExpInfo()
+                    {
+                        rel = rel,
+                        info = childInfo,
+                        proc = deleteProc
+                    });
+
+                    ix++;
                 }
-                else if (deleteProc == DeleteProc.DELETE_RECORD ||
-                    (deleteProc == DeleteProc.DELETE_IF_NEW && rootRecord.Zzstate != 0))
+            }
+
+            //nothing needs checking, so nothing stop the delete
+            if (expansions.Count == 0)
+                return areas;
+
+            //get all the data for the expansions that needs to check for records
+            //forcing an order allows us to match up to the request info linearly
+            union.OrderBy(null, "pos", SortOrder.Ascending);
+            var countResult = sp.Execute(union);
+
+            //recursively check expansions that can be deleted that still have records
+            ix = 0;
+            foreach (var rel in expansions)
+            {
+                if (countResult.GetInteger(ix, 1) > 0)
                 {
-                    //Recursively check if the child records can be deleted
-                    DbArea childArea = (DbArea)createArea(relation.ChildArea, user, module);
-                    var dependencies = childArea.FindDeleteDependencies(sp, relations, rootRecord);
-                    areas.AddRange(dependencies);
+                    if (rel.proc == DeleteProc.DELETE_RECORD)
+                    {
+                        var other = Area.createArea(rel.info.Alias, user, module) as DbArea;
+                        var deps = other.FindDeleteDependencies(sp, [.. prevRelations, rel.rel], rootRecord);
+                        areas.AddRange(deps);
+                    }
+                    else
+                        areas.Add(rel.info);
                 }
+                ix++;
             }
 
             return areas;
-        }
-
-        /// <summary>
-        /// Check if there is any records by following this relation path
-        /// </summary>
-        /// <param name="relations">A relation path from this record to the last leaf</param>
-        /// <returns>True if there are any records</returns>
-        private bool HasDependencies(PersistentSupport sp, List<ChildRelation> relations)
-        {
-            SelectQuery query = new SelectQuery();
-            query.Select(SqlFunctions.Count("1"), "numRecords");
-            query.From(this.TableName, this.Alias);
-            string parentAlias = this.Alias;
-            string parentKey = this.PrimaryKeyName;
-            foreach (var relation in relations)
-            {
-                var area = GetInfoArea(relation.ChildArea);
-                var criteriaSet = CriteriaSet.Or();
-                foreach (var foreignKey in relation.RelatedFields)
-                    criteriaSet.Equal(parentAlias, parentKey, area.Alias, foreignKey);
-
-                query.Join(area.TableName, area.Alias, TableJoinType.Inner).On(criteriaSet);
-            }
-            query.Where(CriteriaSet.And().Equal(parentAlias, parentKey, QPrimaryKey));
-
-            //JGF 2021.06.16 MySQL databases return bigint for counts so the return value may be either an int or a long.
-            // Due to C# boxing and unboxing we must do this ugly multiplexing
-            var valCount = sp.ExecuteScalar(query);
-            if (valCount is int)
-                return ((int) valCount) > 0;
-            else
-                return ((long) valCount) > 0;
-
         }
 
 
@@ -2253,7 +2343,10 @@ namespace CSGenio.business
                 createEmptyFields();
 
                 Zzstate = 1;
-                if(!sp.DatabaseSidePk)
+                //We only calculate a new primary key if are in application side pk's mode, and the pk has not been set yet.
+                //In some cases, batch algorithms need to preallocate pk's so they can pre-fill fk's to the correct values
+                // so, we need to support reaching this point with a Pk already set in the Area record.
+                if(!sp.DatabaseSidePk && string.IsNullOrEmpty(QPrimaryKey))
                     QPrimaryKey = sp.codIntInsertion(this, false);
 
                 if (UserRecord)
@@ -2499,7 +2592,7 @@ namespace CSGenio.business
             }
         }
 
-        private List<FieldRef> loadFieldsToUpdate(DbArea area)
+        private List<FieldRef> loadFieldsToUpdate(AreaInfo area)
         {
             /*
             * In this method we only need to reload the values of the Formula
@@ -2574,26 +2667,57 @@ namespace CSGenio.business
                     string condArea = relacao.AliasTargetTab.ToUpper();
                     foreach (var filha in filhasParaDuplicar)
                     {                        
-                        DbArea areaChild = (DbArea)Area.createArea(relacao.AliasSourceTab, User, User.CurrentModule);
+                        AreaInfo childInfo = Area.GetInfoArea(relacao.AliasSourceTab);
 
                         // Load fields to update on the parent table
-                        modelFieldsToUpdate.AddRange(loadFieldsToUpdate(areaChild));
+                        modelFieldsToUpdate.AddRange(loadFieldsToUpdate(childInfo));
 
                         //RMR(2022-11-11) - If it has more child record to duplicate after, it cannot enforce conditions
                         bool needsValidation = cascata.Any(x => x.TargetTable == relacao.SourceTable);
-                        var sourceRecords = LoadAndSortRecords(sp, areaChild, relacao, filha.Key);
-                        if (!sourceRecords.Any())
-                            continue;
+                        var sourceRecords = LoadAndSortRecords(sp, childInfo, relacao, filha.Key);
 
-                        foreach (var dup in sourceRecords)
+                        //filter all the records that actually can be duplicated
+                        var dbRecords = sourceRecords.Where(r =>
+                            !fichasDuplicadas.ContainsKey(r.QPrimaryKey)
+                            && r.ValidateDupConditions(sp, condArea))
+                            .ToList();
+
+                        foreach (var dup in dbRecords)
                         {
-                            if (!fichasDuplicadas.ContainsKey(dup.QPrimaryKey))
+                            dup.NeedsValidation = needsValidation;
+                            dup.UserRecord = this.UserRecord;
+                        }
+
+                        //self referencing tables need to know all the pks before processing each duplication.
+                        //this allows for the self references of early records to be mapped to later records.
+                        bool hasSelfRelations = childInfo.ParentTables.Values.Any(parent => parent.TargetTable == childInfo.TableName);
+                        if (hasSelfRelations)
+                        {
+                            var prealloc_pks = sp.generatePrimaryKey(
+                                childInfo.TableName,
+                                childInfo.PrimaryKeyName,
+                                childInfo.DBFields[childInfo.PrimaryKeyName].FieldSize,
+                                childInfo.KeyType,
+                                dbRecords.Count());
+
+                            for (var i = 0; i < prealloc_pks.Count; i++)
                             {
-                                areaChild = (DbArea) dup;
-                                areaChild.NeedsValidation = needsValidation;
-                                if (areaChild.ValidateDupConditions(sp, condArea)) //Validate Duplicate Conditions
-                                    if (areaChild.duplicarFilha(sp, dup.QPrimaryKey, areasDuplicadas)) //Duplicate Record
-                                        fichasDuplicadas.Add(dup.QPrimaryKey, areaChild.QPrimaryKey);
+                                fichasDuplicadas.Add(dbRecords[i].QPrimaryKey, prealloc_pks[i]);
+                                dbRecords[i].QPrimaryKey = prealloc_pks[i];
+                            }
+
+                            foreach (var dup in dbRecords)
+                                dup.duplicarFilha(sp, areasDuplicadas);
+                        }
+                        //other tables can follow a normal sequence and allocate pk's on demand
+                        else
+                        {
+                            foreach (var dup in dbRecords)
+                            {
+                                var src_pk = dup.QPrimaryKey;
+                                dup.QPrimaryKey = "";
+                                dup.duplicarFilha(sp, areasDuplicadas);
+                                fichasDuplicadas.Add(src_pk, dup.QPrimaryKey);
                             }
                         }
                     }
@@ -2608,11 +2732,11 @@ namespace CSGenio.business
         /// If the table references itself, applies special ordering to handle dependency correctly.
         /// </summary>
         /// <param name="sp">Persistent support</param>
-        /// <param name="area">The child DbArea instance (representing the table to query).</param>
+        /// <param name="area">The child DbArea schema</param>
         /// <param name="relation">Relation metadata between parent and child tables.</param>
         /// <param name="parentKeyValue">The parent key to search</param>
         /// <returns>List of DbArea instances ready for duplication.</returns>
-        private List<Area> LoadAndSortRecords(PersistentSupport sp, DbArea area, Relation relation, string parentKeyValue)
+        private List<DbArea> LoadAndSortRecords(PersistentSupport sp, AreaInfo area, Relation relation, string parentKeyValue)
         {
             Log.Debug($"Loading children {relation.AliasSourceTab} of table {relation.AliasTargetTab}");
 
@@ -2620,16 +2744,22 @@ namespace CSGenio.business
                     Equal(relation.AliasSourceTab, relation.SourceRelField, parentKeyValue);
             var records = searchList(area.Alias, sp, user, criteria);
 
-            // If the table references itself, ensure that the referenced records come before the others
-            foreach (var selfRelation in area.ParentTables.Values.Where(parent => parent.TargetTable == area.TableName))
-            {                   
-                //Fields with no foreign key to self come first
-                records = records
-                    .OrderByDescending(r => string.IsNullOrEmpty(r.returnValueField(selfRelation.SourceRelField).ToString()))
-                    .ToList();
+            var res = records
+                .Select(r => r as DbArea)
+                .Where(r => r is not null && r.Zzstate == 0);
+
+            if (!string.IsNullOrEmpty(area.MainOrderField))
+            {
+                var otype = area.DBFields[area.MainOrderField].FieldType.GetFormatting();
+                if (otype == FieldFormatting.FLOAT || otype == FieldFormatting.INTEIRO)
+                    res = res.OrderBy(x => Convert.ToDecimal(x.returnValueField(area.MainOrderField)));
+                else if (otype == FieldFormatting.DATA || otype == FieldFormatting.DATAHORA || otype == FieldFormatting.DATASEGUNDO)
+                    res = res.OrderBy(x => Convert.ToDateTime(x.returnValueField(area.MainOrderField)));
+                else
+                    res = res.OrderBy(x => x.returnValueField(area.MainOrderField).ToString());
             }
-            
-            return records;
+
+            return res.ToList();
         }
 
 		private List<Relation> CalcularCascataDuplicacao()
@@ -2659,67 +2789,39 @@ namespace CSGenio.business
 		}
 
         /// <summary>
-        /// Função que permite duplicate uma table filha
+        /// Field calculations specific to duplicating a child record
         /// </summary>
-        /// <param name="area">Name da área filha a ser duplicada</param>
-        /// <param name="valorCodInt">Qvalue do código interno da área filha a ser duplicada</param>
-        /// <param name="campoMae">Name da key primária da table mãe</param>
-        /// <param name="valorCampoMae">Qvalue da key primária da table mãe</param>
-        /// <returns>true se a filha foi duplicada, false caso contrário</returns>
-        private bool duplicarFilha(PersistentSupport sp, string codIntValue, Dictionary<string, Dictionary<string, string>> areasDuplicadas)
+        /// <param name="sp">Persistent support</param>
+        /// <param name="areasMapping">Mappings of previously duplicated pks and their new corresponding pk</param>
+        private void duplicarFilha(PersistentSupport sp, Dictionary<string, Dictionary<string, string>> areasMapping)
         {
-            //TODO: falta o suporte to a duplicação em cascata
-            sp.getRecord(this, codIntValue);
-
-            // Last updated by [CJP] at [2016.06.01]
-            // Não deve duplicate os registos filhos com ZZSTATE != 0
-            if (Zzstate != 0)
-                return false;
-
-            //Como é uma duplicação em cascata temos de considerar que é como se fosse o proprio user a introduce as fichas abaixo.
-            //RMR(2022-11-11) - Removed force to true because this is decided in the "tambemDuplica" function, in case it has child to duplicate with conditions
-            //UserRecord = true;
-
-            //actualizar chaves estrangeiras dos Qvalues antigos to os novos
+            //update the foreign keys to the new pk's they should point to
             foreach (var r in this.ParentTables)
             {
                 var acima = r.Value.TargetTable;
-                if (areasDuplicadas.ContainsKey(acima))
+                if (areasMapping.ContainsKey(acima))
                 {
                     string nomeCe = Alias + "." + r.Value.SourceRelField;
                     string valorCeAntigo = this.returnValueField(nomeCe).ToString();
 
-                    areasDuplicadas[acima].TryGetValue(valorCeAntigo, out string valorCeNovo);
-                    if (valorCeNovo != null)
+                    if(areasMapping[acima].TryGetValue(valorCeAntigo, out string valorCeNovo))
                         this.insertNameValueField(nomeCe, valorCeNovo);
                 }
             }
 
-            //zerar os fields declarados com zeroAduplicar
+            //empty the fields declared in the model with zeroDup
             zeroDuplicar();
-            if(!sp.DatabaseSidePk)
-                QPrimaryKey = sp.codIntInsertion(this, false);
 
-            //1 - preencher carimbo
-            fillStampInsert();
+            //insert operation already tries to create the pk. There is no point in doing it here.
 
             //No need to fill the sequencial fields with negative values
             //Since we always want to keep the value when duplicating,
             //Even if the value is empty or invalid, it will be handled next
 
-            //4 - fill defaults on empty fields
-            fillValuesDefault(sp, FunctionType.DUP);
-
-            //5 - operações internas que dependem de números sequenciais
-            fillInternalOperations(sp, null);
-
             //Duplicate docums
             sp.duplicateFilesDB(this);
-
-            // Executes the encryption formulas associated with the fields before saving the value to the database
-            ExecuteFieldValueEncryption(sp);
             
-            //RS 24.04.2017 Passa a efectuar todas as regras de business durante a duplicação.
+            //process all the business rules of an insertion
             insert(sp);
 
             //with database side pk's the docums Chave field will not have been filled so we need to do it after the insert
@@ -2728,8 +2830,6 @@ namespace CSGenio.business
             //There is one place where the field "chave" is used, but it could be unused if we refactory the content of document ticket. 
             if (sp.DatabaseSidePk)
                 sp.AfterDuplicateFilesDB(this);
-
-            return true;
         }
 
         public virtual bool checkoutDocums(PersistentSupport sp, string docField, out string newcodDocums)

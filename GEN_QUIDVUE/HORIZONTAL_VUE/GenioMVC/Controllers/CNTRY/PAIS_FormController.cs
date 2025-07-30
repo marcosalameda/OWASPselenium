@@ -529,12 +529,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Cntry/Pais_SaveEdit
 		[HttpPost]
 		public ActionResult Pais_SaveEdit([FromBody] Pais_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pais_SaveEdit",
 				ViewName = "Pais",
@@ -565,7 +564,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsPais([FromBody] PaisDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

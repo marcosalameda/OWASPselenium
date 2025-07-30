@@ -257,6 +257,7 @@ public class AppPage: PageObject
 		res.AddMenu(module, "A3", "A");
 		res.AddMenu(module, "A4", "A");
 		res.AddMenu(module, "B", null);
+		res.AddMenu(module, "C", null);
 		module = "IMO";
 		res.AddModule(module);
 		res.AddMenu(module, "1", null);

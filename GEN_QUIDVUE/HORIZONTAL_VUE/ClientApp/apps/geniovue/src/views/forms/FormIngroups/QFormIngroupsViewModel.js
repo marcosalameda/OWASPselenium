@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'INGROUPS',
 			area: 'INPGR',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_INGROUPS',
-				updateFilesTickets: 'UpdateFilesTicketsINGROUPS'
+				recalculateFormulas: 'RecalculateFormulas_Ingroups',
+				updateFilesTickets: 'UpdateFilesTicketsIngroups',
+				setFile: 'SetFileIngroups'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODINPGR',
 			description: '',
 		}).cloneFrom(values?.ValCodinpgr))
-		watch(() => this.ValCodinpgr.value, (newValue, oldValue) => this.onUpdate('inpgr.codinpgr', this.ValCodinpgr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodinpgr.value, (newValue, oldValue) => this.onUpdate('inpgr.codinpgr', this.ValCodinpgr, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValNumbgro = reactive(new modelFieldType.Number({
@@ -62,7 +63,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.VAT_NUMBER24236),
 		}).cloneFrom(values?.ValNumbgro))
-		watch(() => this.ValNumbgro.value, (newValue, oldValue) => this.onUpdate('inpgr.numbgro', this.ValNumbgro, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValNumbgro.value, (newValue, oldValue) => this.onUpdate('inpgr.numbgro', this.ValNumbgro, newValue, oldValue)))
 
 		this.ValName = reactive(new modelFieldType.String({
 			id: 'ValName',
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('inpgr.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('inpgr.name', this.ValName, newValue, oldValue)))
 
 		this.ValLastname = reactive(new modelFieldType.String({
 			id: 'ValLastname',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.LAST_NAME63426),
 		}).cloneFrom(values?.ValLastname))
-		watch(() => this.ValLastname.value, (newValue, oldValue) => this.onUpdate('inpgr.lastname', this.ValLastname, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValLastname.value, (newValue, oldValue) => this.onUpdate('inpgr.lastname', this.ValLastname, newValue, oldValue)))
 
 		this.ValPrefix = reactive(new modelFieldType.String({
 			id: 'ValPrefix',
@@ -90,10 +91,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'INPGR',
 			field: 'PREFIX',
 			maxLength: 3,
-			arrayOptions: computed(() => qProjArrays.QArrayPhonepre.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayPhonepre(vm.$getResource).elements),
 			description: computed(() => this.Resources.PREFIX02493),
 		}).cloneFrom(values?.ValPrefix))
-		watch(() => this.ValPrefix.value, (newValue, oldValue) => this.onUpdate('inpgr.prefix', this.ValPrefix, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPrefix.value, (newValue, oldValue) => this.onUpdate('inpgr.prefix', this.ValPrefix, newValue, oldValue)))
 
 		this.ValPhone = reactive(new modelFieldType.Number({
 			id: 'ValPhone',
@@ -104,7 +105,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.PHONE_NUMBER20774),
 		}).cloneFrom(values?.ValPhone))
-		watch(() => this.ValPhone.value, (newValue, oldValue) => this.onUpdate('inpgr.phone', this.ValPhone, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPhone.value, (newValue, oldValue) => this.onUpdate('inpgr.phone', this.ValPhone, newValue, oldValue)))
 
 		this.ValAdress = reactive(new modelFieldType.String({
 			id: 'ValAdress',
@@ -112,10 +113,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'INPGR',
 			field: 'ADRESS',
 			maxLength: 8,
-			arrayOptions: computed(() => qProjArrays.QArrayAddresst.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayAddresst(vm.$getResource).elements),
 			description: computed(() => this.Resources.ADDRESS_TYPE64627),
 		}).cloneFrom(values?.ValAdress))
-		watch(() => this.ValAdress.value, (newValue, oldValue) => this.onUpdate('inpgr.adress', this.ValAdress, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAdress.value, (newValue, oldValue) => this.onUpdate('inpgr.adress', this.ValAdress, newValue, oldValue)))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -126,7 +127,7 @@ export default class ViewModel extends FormViewModelBase
 			maskType: 'EM',
 			description: computed(() => this.Resources.E_MAIL42251),
 		}).cloneFrom(values?.ValEmail))
-		watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('inpgr.email', this.ValEmail, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('inpgr.email', this.ValEmail, newValue, oldValue)))
 
 		this.ValWeb = reactive(new modelFieldType.String({
 			id: 'ValWeb',
@@ -136,7 +137,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.WEB09813),
 		}).cloneFrom(values?.ValWeb))
-		watch(() => this.ValWeb.value, (newValue, oldValue) => this.onUpdate('inpgr.web', this.ValWeb, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValWeb.value, (newValue, oldValue) => this.onUpdate('inpgr.web', this.ValWeb, newValue, oldValue)))
 
 		this.ValBankcomp = reactive(new modelFieldType.String({
 			id: 'ValBankcomp',
@@ -144,10 +145,10 @@ export default class ViewModel extends FormViewModelBase
 			area: 'INPGR',
 			field: 'BANKCOMP',
 			maxLength: 2,
-			arrayOptions: computed(() => qProjArrays.QArrayBankcomp.setResources(vm.$getResource).elements),
+			arrayOptions: computed(() => new qProjArrays.QArrayBankcomp(vm.$getResource).elements),
 			description: computed(() => this.Resources.ENTITY62049),
 		}).cloneFrom(values?.ValBankcomp))
-		watch(() => this.ValBankcomp.value, (newValue, oldValue) => this.onUpdate('inpgr.bankcomp', this.ValBankcomp, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValBankcomp.value, (newValue, oldValue) => this.onUpdate('inpgr.bankcomp', this.ValBankcomp, newValue, oldValue)))
 
 		this.ValIban = reactive(new modelFieldType.String({
 			id: 'ValIban',
@@ -158,7 +159,7 @@ export default class ViewModel extends FormViewModelBase
 			maskType: 'IN',
 			description: computed(() => this.Resources.IBAN28506),
 		}).cloneFrom(values?.ValIban))
-		watch(() => this.ValIban.value, (newValue, oldValue) => this.onUpdate('inpgr.iban', this.ValIban, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIban.value, (newValue, oldValue) => this.onUpdate('inpgr.iban', this.ValIban, newValue, oldValue)))
 
 		this.ValTextgro = reactive(new modelFieldType.String({
 			id: 'ValTextgro',
@@ -168,7 +169,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TEXT_FIELD41810),
 		}).cloneFrom(values?.ValTextgro))
-		watch(() => this.ValTextgro.value, (newValue, oldValue) => this.onUpdate('inpgr.textgro', this.ValTextgro, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTextgro.value, (newValue, oldValue) => this.onUpdate('inpgr.textgro', this.ValTextgro, newValue, oldValue)))
 
 		this.ValBankacco = reactive(new modelFieldType.String({
 			id: 'ValBankacco',
@@ -179,7 +180,7 @@ export default class ViewModel extends FormViewModelBase
 			maskType: 'IB',
 			description: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
 		}).cloneFrom(values?.ValBankacco))
-		watch(() => this.ValBankacco.value, (newValue, oldValue) => this.onUpdate('inpgr.bankacco', this.ValBankacco, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValBankacco.value, (newValue, oldValue) => this.onUpdate('inpgr.bankacco', this.ValBankacco, newValue, oldValue)))
 
 		this.ValDirectio = reactive(new modelFieldType.String({
 			id: 'ValDirectio',
@@ -189,7 +190,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.ADRESS39816),
 		}).cloneFrom(values?.ValDirectio))
-		watch(() => this.ValDirectio.value, (newValue, oldValue) => this.onUpdate('inpgr.directio', this.ValDirectio, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDirectio.value, (newValue, oldValue) => this.onUpdate('inpgr.directio', this.ValDirectio, newValue, oldValue)))
 
 		/** The form fields used only in formulas. */
 		this.ValIcongro = reactive(new modelFieldType.String({
@@ -201,7 +202,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.ICON41974),
 		}).cloneFrom(values?.ValIcongro))
-		watch(() => this.ValIcongro.value, (newValue, oldValue) => this.onUpdate('inpgr.icongro', this.ValIcongro, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIcongro.value, (newValue, oldValue) => this.onUpdate('inpgr.icongro', this.ValIcongro, newValue, oldValue)))
 	}
 
 	/**

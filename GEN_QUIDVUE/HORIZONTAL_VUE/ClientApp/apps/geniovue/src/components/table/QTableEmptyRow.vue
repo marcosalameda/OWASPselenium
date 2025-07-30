@@ -67,10 +67,10 @@
 			 */
 			cellClasses(column)
 			{
-				let classes = ['q-skeleton__cell']
+				const classes = ['q-skeleton__cell']
 
 				// BEGIN: Text alignment class
-				let alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
+				const alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
 
 				// Undefined data type, use rowTextAlignment
 				if (_has(column, 'rowTextAlignment') && _includes(alignments, column.rowTextAlignment))

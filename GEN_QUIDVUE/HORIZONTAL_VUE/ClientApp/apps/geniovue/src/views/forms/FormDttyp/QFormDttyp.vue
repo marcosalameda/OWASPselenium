@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -100,12 +100,13 @@
 						<q-accordion
 							v-if="controls.DTTYP___PSEUDNOVOGR06.isVisible"
 							id="DTTYP___PSEUDNOVOGR06"
+							v-model="controls.DTTYP___PSEUDNOVOGR06.openChild"
 							v-bind="controls.DTTYP___PSEUDNOVOGR06">
 							<!-- Start DTTYP___PSEUDNOVOGR06 -->
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR01"
-								v-bind="controls.DTTYP___PSEUDNOVOGR01"
-								v-on="controls.DTTYP___PSEUDNOVOGR01.handlers">
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR01-container"
+								value="DTTYP___PSEUDNOVOGR01"
+								:title="controls.DTTYP___PSEUDNOVOGR01.label">
 								<!-- Start DTTYP___PSEUDNOVOGR01 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPSTRING__.isVisible">
 									<q-control-wrapper
@@ -140,7 +141,7 @@
 												v-if="controls.DTTYP___DTTYPUPPERCAS.isVisible"
 												v-bind="controls.DTTYP___DTTYPUPPERCAS"
 												:model-value="model.ValUppercas.value"
-												@update:model-value="model.ValUppercas.fnUpdateValue" />
+												@change="model.ValUppercas.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -199,11 +200,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR01 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR02"
-								v-bind="controls.DTTYP___PSEUDNOVOGR02"
-								v-on="controls.DTTYP___PSEUDNOVOGR02.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR02-container"
+								value="DTTYP___PSEUDNOVOGR02"
+								:title="controls.DTTYP___PSEUDNOVOGR02.label">
 								<!-- Start DTTYP___PSEUDNOVOGR02 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPBOOLEAN_.isVisible">
 									<q-control-wrapper
@@ -246,11 +247,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR02 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR03"
-								v-bind="controls.DTTYP___PSEUDNOVOGR03"
-								v-on="controls.DTTYP___PSEUDNOVOGR03.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR03-container"
+								value="DTTYP___PSEUDNOVOGR03"
+								:title="controls.DTTYP___PSEUDNOVOGR03.label">
 								<!-- Start DTTYP___PSEUDNOVOGR03 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPSMALLINT.isVisible">
 									<q-control-wrapper
@@ -415,11 +416,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR03 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR04"
-								v-bind="controls.DTTYP___PSEUDNOVOGR04"
-								v-on="controls.DTTYP___PSEUDNOVOGR04.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR04-container"
+								value="DTTYP___PSEUDNOVOGR04"
+								:title="controls.DTTYP___PSEUDNOVOGR04.label">
 								<!-- Start DTTYP___PSEUDNOVOGR04 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPDATE____.isVisible">
 									<q-control-wrapper
@@ -502,11 +503,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR04 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="DTTYP___PSEUDNOVOGR05"
-								v-bind="controls.DTTYP___PSEUDNOVOGR05"
-								v-on="controls.DTTYP___PSEUDNOVOGR05.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="DTTYP___PSEUDNOVOGR05-container"
+								value="DTTYP___PSEUDNOVOGR05"
+								:title="controls.DTTYP___PSEUDNOVOGR05.label">
 								<!-- Start DTTYP___PSEUDNOVOGR05 -->
 								<q-row-container v-show="controls.DTTYP___DTTYPIMAGE___.isVisible">
 									<q-control-wrapper
@@ -527,7 +528,7 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End DTTYP___PSEUDNOVOGR05 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End DTTYP___PSEUDNOVOGR06 -->
 						</q-accordion>
 					</q-control-wrapper>
@@ -567,7 +568,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -587,7 +588,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormDttypViewModel.js'
 
@@ -664,7 +665,8 @@
 					primaryKey: 'ValCoddttyp',
 					designation: computed(() => this.Resources.DATA_TYPE47159),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -893,6 +895,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPSTRING__', 'DTTYP___DTTYPUPPERCAS', 'DTTYP___DTTYPUUID____', 'DTTYP___DTTYPMULTILIN', 'DTTYP___DTTYPMULTILI3'],
@@ -980,6 +983,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPBOOLEAN_', 'DTTYP___DTTYPBOOLEAN2'],
@@ -1022,6 +1026,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPSMALLINT', 'DTTYP___DTTYPINTEGER_', 'DTTYP___DTTYPBIGINT__', 'DTTYP___DTTYPREAL____', 'DTTYP___DTTYPFLOAT___', 'DTTYP___DTTYPDECIMAL_', 'DTTYP___DTTYPDECIMAL9', 'DTTYP___DTTYPMONEY___', 'DTTYP___DTTYPMONEY9__'],
@@ -1171,6 +1176,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPDATE____', 'DTTYP___DTTYPDATETIME', 'DTTYP___DTTYPDTSESOND', 'DTTYP___DTTYPTIME____'],
@@ -1187,7 +1193,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'DTTYP___PSEUDNOVOGR04',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1201,7 +1207,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'DTTYP___PSEUDNOVOGR04',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1215,7 +1221,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'DTTYP___PSEUDNOVOGR04',
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -1229,7 +1235,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'DTTYP___PSEUDNOVOGR04',
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1241,6 +1247,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['DTTYP___DTTYPIMAGE___'],
@@ -1382,17 +1389,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT DTTYP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1402,7 +1415,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1412,7 +1425,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1432,7 +1445,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -1465,7 +1478,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1485,7 +1498,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -1516,11 +1529,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1530,7 +1541,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1538,8 +1549,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1547,7 +1556,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1555,8 +1564,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1564,7 +1571,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1572,11 +1579,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1586,7 +1591,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1596,7 +1601,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

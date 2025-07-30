@@ -143,10 +143,10 @@ namespace GenioMVC.ViewModels.Flds
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAaero.FldName, FieldType.TEXT, Resources.Resources.AIRLINE_NAME55130, 30, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldDescrip, FieldType.MEMO, Resources.Resources.DESCRIPTION07383, 30, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldNpassage, FieldType.NUMERIC, Resources.Resources.NUMERIC19292, 3, 0, true),
@@ -163,7 +163,6 @@ namespace GenioMVC.ViewModels.Flds
 				new Exports.QColumn(CSGenioAflds.FldClass, FieldType.ARRAY_TEXT, Resources.Resources.TEXT_ENUMERATION45668, 2, 0, true, "CLASS"),
 				new Exports.QColumn(CSGenioAflds.FldClassnum, FieldType.ARRAY_NUMERIC, Resources.Resources.NUMERIC_ENUMERATION19068, 1, 0, true, "CLASSNUM"),
 				new Exports.QColumn(CSGenioAflds.FldLogicenu, FieldType.ARRAY_LOGIC, Resources.Resources.LOGICAL_ENUMERATION30276, 1, 0, true, "PRIMVIAG"),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAflds.FldLogo, FieldType.IMAGE, Resources.Resources.LOGO62483, 3, 1, true):null,
 				new Exports.QColumn(CSGenioAflds.FldAttach, FieldType.DOCUMENT, Resources.Resources.DOCUMENT00695, 30, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldLogoexte, FieldType.PATH, Resources.Resources.LOGO__EXTERNAL_FILE_58162, 3, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldCreatuse, FieldType.TEXT, Resources.Resources.CREATED_BY12292, 20, 0, true),
@@ -184,16 +183,12 @@ namespace GenioMVC.ViewModels.Flds
 				new Exports.QColumn(CSGenioAflds.FldClrpicke, FieldType.TEXT, Resources.Resources.COLORPICKER39653, 30, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldShwrc, FieldType.LOGIC, Resources.Resources.SHOW_RECORD53851, 1, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldRadiob, FieldType.ARRAY_TEXT, Resources.Resources.RADIO_BTN20980, 5, 0, true, "RADIOBTN"),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAflds> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -345,12 +340,6 @@ namespace GenioMVC.ViewModels.Flds
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAflds> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "611"),
-				new("Module", "PTN")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<PTN_Menu_611_RowViewModel>();
 
@@ -487,7 +476,6 @@ namespace GenioMVC.ViewModels.Flds
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<PTN_Menu_611_RowViewModel> MapPTN_Menu_611(ListingMVC<CSGenioAflds> Qlisting)

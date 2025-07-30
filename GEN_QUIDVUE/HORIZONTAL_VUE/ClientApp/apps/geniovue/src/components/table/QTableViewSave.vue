@@ -225,8 +225,8 @@
 
 				// Check if view with this name already exists.
 				let viewExists = false
-				for (let idx in this.configNames) {
-					let configName = this.configNames[idx]
+				for (const idx in this.configNames) {
+					const configName = this.configNames[idx]
 					if (this.saveViewName === configName) {
 						viewExists = true
 						break
@@ -247,7 +247,7 @@
 		watch: {
 			signal: {
 				handler(newValue) {
-					for (let key in newValue) {
+					for (const key in newValue) {
 						switch (key) {
 							case 'show':
 								if (newValue.show) {

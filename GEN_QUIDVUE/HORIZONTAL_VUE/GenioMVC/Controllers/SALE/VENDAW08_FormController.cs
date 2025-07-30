@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Sale/Vendaw08_SaveEdit
 		[HttpPost]
 		public ActionResult Vendaw08_SaveEdit([FromBody] Vendaw08_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_SaveEdit",
 				ViewName = "Vendaw08",
@@ -427,7 +426,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsVendaw08([FromBody] Vendaw08DocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

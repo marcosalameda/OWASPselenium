@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Rordi/Rordi_SaveEdit
 		[HttpPost]
 		public ActionResult Rordi_SaveEdit([FromBody] Rordi_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordi_SaveEdit",
 				ViewName = "Rordi",
@@ -427,7 +426,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsRordi([FromBody] RordiDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

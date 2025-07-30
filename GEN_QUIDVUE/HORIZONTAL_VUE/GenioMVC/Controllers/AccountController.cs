@@ -523,7 +523,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.User = user;
 
 				//UserContext.Current.SetFormsAuthenticationCookie();
-				var claimsIdentity = new ClaimsIdentity(new List<Claim>
+				var claimsIdentity = new ClaimsIdentity(new List<System.Security.Claims.Claim>
 				{
 					new(ClaimTypes.Name, user.Name)
 				}, LegacyFormsAuthenticationOptions.DefaultScheme);

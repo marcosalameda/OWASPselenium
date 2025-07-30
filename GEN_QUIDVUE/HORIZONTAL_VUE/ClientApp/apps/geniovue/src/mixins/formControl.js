@@ -50,6 +50,7 @@ export class FormControl
 		}
 		this.triggerIntervalIds = []
 		this.initialized = false
+		this.currentController = null
 	}
 
 	async init(initTabs, isEditable, initControls = true)
@@ -260,7 +261,7 @@ export class FormControl
 			const table = this.vueContext.controls[tableName]
 			if (!_isEmpty(table))
 			{
-				this.vueContext.internalEvents.offMany(table.internalEvents, table.reloadList)
+				this.vueContext.internalEvents?.offMany(table.internalEvents, table.reloadList)
 				eventBus.offMany(table.globalEvents, table.reloadList)
 			}
 		}
@@ -268,19 +269,34 @@ export class FormControl
 
 	destroy()
 	{
+		// If there's a request pending, cancel it
+		if (this.currentController) {
+			this.currentController.abort()
+		}
+		this.currentController = null
+
 		this.clearBtns()
 
 		this.removeListOnDBChangeEvent()
 
 		if (this.vueContext.model instanceof FormViewModelBase)
-			this.vueContext.model.unbindEvents()
+			this.vueContext.model.destroy()
 
-		_forEach(this.vueContext.controls, (ctrl) => {
-			if (ctrl.destroy)
-				ctrl.destroy()
+		const controlsIds = Object.keys(this.vueContext.controls ?? {})
+		controlsIds.forEach((controlId) => {
+			if (typeof this.vueContext.controls[controlId].destroy === 'function')
+				this.vueContext.controls[controlId].destroy()
+			this.vueContext.controls[controlId] = null
+			delete this.vueContext.controls[controlId]
 		})
 
 		this.destroyTriggers()
+
+		this.vueContext.internalEvents?.removeAllListeners()
+		this.vueContext.internalEvents = null
+		this.vueContext.model = null
+		this.vueContext.controls = null
+		this.vueContext = null
 	}
 
 	destroyTriggers()

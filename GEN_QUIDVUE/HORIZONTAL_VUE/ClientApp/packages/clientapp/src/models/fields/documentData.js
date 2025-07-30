@@ -132,6 +132,7 @@ export class DocumentData extends Base {
 	reset() {
 		this.value.fileData = null
 		this.value.deleteType = -1
+		this.value.submitMode = -1
 	}
 
 	/**

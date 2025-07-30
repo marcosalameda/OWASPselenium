@@ -21,7 +21,7 @@ public class AssmaForm : Form
 	/// <summary>
 	/// Digital document
 	/// </summary>
-	public DocumentControl AssmaDigdocum => new DocumentControl(driver, ContainerLocator, "ASSMA___ASSMADIGDOCUM");
+	public DocumentControl AssmaDigdocum => new DocumentControl(driver, ContainerLocator, "ASSMA___ASSMADIGDOCUM-container");
 
 	/// <summary>
 	/// Notes

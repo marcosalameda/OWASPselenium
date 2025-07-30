@@ -214,7 +214,7 @@
 
 		data()
 		{
-			let cavOperators = cavArrays.operators.setResources(this.$getResource)
+			const cavOperators = cavArrays.operators.setResources(this.$getResource)
 			return {
 				searchInput: '',
 
@@ -311,13 +311,13 @@
 			 */
 			hydrateCondition(condition)
 			{
-				let fieldId = condition.Operands[0].ValueReference,
+				const fieldId = condition.Operands[0].ValueReference,
 					splited = fieldId.split('.'),
 					table = _find(this.tables, (t) => t.Id === splited[0]),
 					field = _find(table.Fields, (f) => f.Id === fieldId),
 					fieldArray = !_isEmpty(field.ArrayElements) ? field.ArrayElements[0].ArrayId : null
 
-				let extendedCondition = _assignIn(condition, {
+				const extendedCondition = _assignIn(condition, {
 					internalKey: uuidv4(),
 					fieldType: field.Type,
 					typeOperand: _isEmpty(fieldArray) ? field.Type : 'ARRAY',
@@ -376,7 +376,7 @@
 			 */
 			removeCondition(internalKey)
 			{
-				let idxToRemove = _findIndex(this.conditions, (c) => c.internalKey === internalKey)
+				const idxToRemove = _findIndex(this.conditions, (c) => c.internalKey === internalKey)
 				if (idxToRemove !== -1)
 					this.conditions.splice(idxToRemove, 1)
 			},
@@ -392,7 +392,7 @@
 
 				if (condition.Operation === 'IN' || condition.Operation === 'BETWEEN')
 				{
-					let values = []
+					const values = []
 					for (let idx = 1; idx < condition.Operands.lenght; idx++)
 						value.push(condition.Operands[idx].ValueReference)
 					value = _join(values, ', ')

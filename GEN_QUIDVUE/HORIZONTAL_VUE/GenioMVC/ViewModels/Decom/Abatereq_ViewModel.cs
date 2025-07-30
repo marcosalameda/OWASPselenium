@@ -44,26 +44,6 @@ namespace GenioMVC.ViewModels.Decom
 		/// Title: "Decomission" | Type: "DT"
 		/// </summary>
 		public DateTime? ValDtdeco { get; set; }
-		/// <summary>
-		/// Title: "Creation date" | Type: "OD"
-		/// </summary>
-		[ValidateSetAccess]
-		public DateTime? ValCreatdat { get; set; }
-		/// <summary>
-		/// Title: "Created by" | Type: "ON"
-		/// </summary>
-		[ValidateSetAccess]
-		public string ValCreatope { get; set; }
-		/// <summary>
-		/// Title: "Changed on" | Type: "ED"
-		/// </summary>
-		[ValidateSetAccess]
-		public DateTime? ValChngdate { get; set; }
-		/// <summary>
-		/// Title: "Changed by" | Type: "EN"
-		/// </summary>
-		[ValidateSetAccess]
-		public string ValOperchng { get; set; }
 
 		#region Navigations
 		#endregion
@@ -198,10 +178,6 @@ namespace GenioMVC.ViewModels.Decom
 				ValDecomnr = ViewModelConversion.ToNumeric(m.ValDecomnr);
 				ValNote = ViewModelConversion.ToString(m.ValNote);
 				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
-				ValCreatdat = ViewModelConversion.ToDateTime(m.ValCreatdat);
-				ValCreatope = ViewModelConversion.ToString(m.ValCreatope);
-				ValChngdate = ViewModelConversion.ToDateTime(m.ValChngdate);
-				ValOperchng = ViewModelConversion.ToString(m.ValOperchng);
 				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
 			}
 			catch (Exception)
@@ -232,18 +208,6 @@ namespace GenioMVC.ViewModels.Decom
 				m.ValNote = ViewModelConversion.ToString(ValNote);
 				m.ValDtdeco = ViewModelConversion.ToDateTime(ValDtdeco);
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
-
-				/*
-					At this moment, in the case of runtime calculation of server-side formulas, to improve performance and reduce database load,
-						the values coming from the client-side will be accepted as valid, since they will not be saved and are only being used for calculation.
-				*/
-				if (!HasDisabledUserValuesSecurity)
-					return;
-
-				m.ValCreatdat = ViewModelConversion.ToDateTime(ValCreatdat);
-				m.ValCreatope = ViewModelConversion.ToString(ValCreatope);
-				m.ValChngdate = ViewModelConversion.ToDateTime(ValChngdate);
-				m.ValOperchng = ViewModelConversion.ToString(ValOperchng);
 			}
 			catch (Exception)
 			{
@@ -440,10 +404,6 @@ namespace GenioMVC.ViewModels.Decom
 				"decom.decomnr" => ViewModelConversion.ToNumeric(modelValue),
 				"decom.note" => ViewModelConversion.ToString(modelValue),
 				"decom.dtdeco" => ViewModelConversion.ToDateTime(modelValue),
-				"decom.creatdat" => ViewModelConversion.ToDateTime(modelValue),
-				"decom.creatope" => ViewModelConversion.ToString(modelValue),
-				"decom.chngdate" => ViewModelConversion.ToDateTime(modelValue),
-				"decom.operchng" => ViewModelConversion.ToString(modelValue),
 				"decom.coddeco" => ViewModelConversion.ToString(modelValue),
 				_ => modelValue
 			};

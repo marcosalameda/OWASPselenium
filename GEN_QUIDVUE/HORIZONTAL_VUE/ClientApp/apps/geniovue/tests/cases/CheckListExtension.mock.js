@@ -272,6 +272,7 @@ export default {
 					dataImportResponse: {},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestScroll: new controlClass.TableListControl(
@@ -711,6 +712,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestLimit_1: new controlClass.TableListControl(
@@ -1370,6 +1372,7 @@ export default {
 					],
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestEdit: new controlClass.TableListControl(
@@ -1881,6 +1884,7 @@ export default {
 					dataImportResponse: {},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestReorder: new controlClass.TableListControl(
@@ -2393,6 +2397,7 @@ export default {
 					dataImportResponse: {},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestDates: new controlClass.TableListControl(
@@ -2609,6 +2614,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestOther: new controlClass.TableListControl(
@@ -2937,6 +2943,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestOtherScroll: new controlClass.TableListControl(
@@ -3271,6 +3278,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestTotaler: new controlClass.TableListControl(
@@ -3600,6 +3608,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestTotalerSelected: new controlClass.TableListControl(
@@ -3932,6 +3941,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestSelectMultiple: new controlClass.TableListControl(
@@ -4268,6 +4278,7 @@ export default {
 					rowsChecked: {},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestSelectMultipleMultiAction: new controlClass.TableListControl(
@@ -4636,6 +4647,7 @@ export default {
 					rowsChecked: {},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestSelectSingle: new controlClass.TableListControl(
@@ -4968,6 +4980,7 @@ export default {
 					rowsChecked: {},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestRemoveRows: new controlClass.TableListControl(
@@ -5263,6 +5276,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestPaginationNormal: new controlClass.TableListControl(
@@ -5457,6 +5471,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestPaginationNormalServer: new controlClass.TableListControl(
@@ -5524,6 +5539,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 			tableTestPaginationAlt: new controlClass.TableListControl(
@@ -5717,6 +5733,7 @@ export default {
 					},
 				},
 				this,
+				{},
 				{}
 			),
 		};

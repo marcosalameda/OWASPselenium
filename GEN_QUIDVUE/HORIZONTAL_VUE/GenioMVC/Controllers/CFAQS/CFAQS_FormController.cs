@@ -460,12 +460,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Cfaqs/Cfaqs_SaveEdit
 		[HttpPost]
 		public ActionResult Cfaqs_SaveEdit([FromBody] Cfaqs_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cfaqs_SaveEdit",
 				ViewName = "Cfaqs",
@@ -496,7 +495,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsCfaqs([FromBody] CfaqsDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

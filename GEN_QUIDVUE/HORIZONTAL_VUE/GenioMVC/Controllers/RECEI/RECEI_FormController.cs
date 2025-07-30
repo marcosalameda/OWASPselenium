@@ -531,12 +531,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Recei/Recei_SaveEdit
 		[HttpPost]
 		public ActionResult Recei_SaveEdit([FromBody] Recei_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Recei_SaveEdit",
 				ViewName = "Recei",
@@ -567,7 +566,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsRecei([FromBody] ReceiDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

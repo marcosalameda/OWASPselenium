@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_MB_MC_TViewModel.js'
 
@@ -336,7 +337,7 @@
 												fnValueSelector: (row) => row.ValCoddespe
 											},
 										],
-										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_BUTTONTRIGGERTEST2,
+										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_BUTTONTRIGGERTEST2
 									}
 								},
 							],
@@ -351,7 +352,7 @@
 												fnValueSelector: (row) => row.ValCoddespe
 											},
 										],
-										action: vm.PTN_MenuTR_3C1111, type: 'trigger',
+										action: vm.PTN_MenuTR_3C1111, type: 'trigger'
 									}
 								},
 								{
@@ -364,7 +365,7 @@
 												fnValueSelector: (row) => row.ValCoddespe
 											},
 										],
-										action: vm.PTN_MenuTR_3C1121, type: 'trigger',
+										action: vm.PTN_MenuTR_3C1121, type: 'trigger'
 									}
 								},
 							],
@@ -394,7 +395,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROJE', 'changed-AGREG', 'changed-EXPEN', 'changed-YEAR'],
+						globalEvents: ['changed-AGREG', 'changed-EXPEN', 'changed-PROJE', 'changed-YEAR'],
 						uuid: 'eba2dc82-74d0-42e8-8065-49dba77ea064',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -431,6 +432,10 @@
 		{
 			// Listener for MC action in case of redirect by Jump if just one.
 			this.$eventHub.off('EXEC-PTN_MenuMC_BUTTONTRIGGERTEST2', this.PTN_MenuMC_BUTTONTRIGGERTEST2)
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_LIST_DB_MB_MC_T]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		methods: {

@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Aero/Aero_SaveEdit
 		[HttpPost]
 		public ActionResult Aero_SaveEdit([FromBody] Aero_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_SaveEdit",
 				ViewName = "Aero",
@@ -427,7 +426,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsAero([FromBody] AeroDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

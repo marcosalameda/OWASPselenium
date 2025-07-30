@@ -243,6 +243,7 @@ public class FormOperationsTest : BaseSeleniumTest
         fileName = form.AnexdDocument.GetFileName();
         Assert.That(fileName, Is.EqualTo(string.Empty));
     }
+    */
 
     [Test]
     public void ConditionsPerRow()
@@ -288,7 +289,6 @@ public class FormOperationsTest : BaseSeleniumTest
         Assert.That(!list.IsActionAvailable(list.RowCount - 1, actionId));
         Assert.That(list.IsActionAvailable(0, actionId));
     }
-    */
 
     [Test]
     public void BlockConditions()
@@ -911,5 +911,75 @@ public class FormOperationsTest : BaseSeleniumTest
         Assert.That(columnConfig.GetValue(0, "name").Equals("No. register"));
         // last column (3rd) has a false show-when condition, so it shouldn't appear in the config
         Assert.That(columnConfig.GetValue(2, "name"), Is.Null);
+    }
+
+    [Test]
+    public void DashboardMenuWidget()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("GQT");
+        app.Menu.ActivateMenu("GQT", "C");
+
+        var dashboard = new MenuDashboardPage<GQT_TESTDSDashboard>(Driver, "GQT", "TESTDS").Dashboard;
+
+        // Two shortcuts, one alert and all bookmarks
+        Assert.That(dashboard.VisibleWidgetCount, Is.EqualTo(3 + app.Menu.GetBookmarkCount()));
+
+        //LENDINGS widget
+        var lendingsWidget = dashboard.ALL_LENDINGS;
+        Assert.That(lendingsWidget.IsVisible, Is.True);
+        Assert.That(lendingsWidget.GetTitle(), Is.EqualTo("All Lendings"));
+        Assert.That(lendingsWidget.GetGroupTitle(), Is.EqualTo("Lendings".ToUpperInvariant()));
+
+        // Execute menu action (GQT-111)
+        lendingsWidget.ExecuteAction();
+        Assert.That(app.ValidateMenuNavigation("GQT", "111"), Is.True);
+    }
+
+    [Test]
+    public void DashboardAlertWidget()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("GQT");
+        app.Menu.ActivateMenu("GQT", "C");
+
+        var dashboard = new MenuDashboardPage<GQT_TESTDSDashboard>(Driver, "GQT", "TESTDS").Dashboard;
+
+        var alertWidget = dashboard.ALERT;
+        //ALERT widget
+        Assert.That(alertWidget.IsVisible, Is.True);
+        Assert.That(alertWidget.GetTitle(), Is.EqualTo("Unused items"));
+        Assert.That(alertWidget.GetGroupTitle(), Is.EqualTo("Items".ToUpperInvariant()));
+
+        int alertCount = alertWidget.GetCount();
+
+        // Execute alert action (GQT-4A1)
+        alertWidget.ExecuteAction();
+        Assert.That(app.ValidateMenuNavigation("GQT", "UNUSED_ITEMS"), Is.True);
+
+        // The count on the alert should be the number of valid records in GQT-4A1
+        var list = new MenuListPage(Driver, "GQT", "UNUSED_ITEMS").List;
+        Assert.That(list.TotalRecordCount, Is.EqualTo(alertCount));
+    }
+
+    [Test]
+    public void DashboardFavouritesWidget()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("GQT");
+        app.Menu.ActivateMenu("GQT", "C");
+
+        var dashboard = new MenuDashboardPage<GQT_TESTDSDashboard>(Driver, "GQT", "TESTDS").Dashboard;
+
+        var favorites = dashboard.FAVORITES;
+
+        // All bookmarks should be in the dashboard as widgets
+        Assert.That(favorites.Widgets.Count, Is.EqualTo(app.Menu.GetBookmarkCount()));
+
+        // Favorite widgets work as menu widgets - navigate to bookmarked menu or form (STY-Overview-Accordions) - Disabled until a function to add favorites is implemented
+        // var accordionsWidget = favorites.GetBookmarkWidget("Accordions");
+        // accordionsWidget.ExecuteAction();
+        // var accordionsForm = new AccordiForm(Driver, FORM_MODE.SHOW);
+        // Assert.That(accordionsForm.ValidateFormMode(), Is.True);
     }
 }

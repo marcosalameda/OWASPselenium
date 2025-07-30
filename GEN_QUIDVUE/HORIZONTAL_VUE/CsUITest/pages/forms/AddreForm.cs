@@ -27,36 +27,6 @@ public class AddreForm : Form
 	/// </summary>
 	public BaseInputControl AddreAddrcity => new BaseInputControl(driver, ContainerLocator, "container-ADDRE___ADDREADDRCITY", "#ADDRE___ADDREADDRCITY");
 
-	/// <summary>
-	/// Address District
-	/// </summary>
-	public BaseInputControl AddreAddrdist => new BaseInputControl(driver, ContainerLocator, "container-ADDRE___ADDREADDRDIST", "#ADDRE___ADDREADDRDIST");
-
-	/// <summary>
-	/// Address State
-	/// </summary>
-	public BaseInputControl AddreAddrstat => new BaseInputControl(driver, ContainerLocator, "container-ADDRE___ADDREADDRSTAT", "#ADDRE___ADDREADDRSTAT");
-
-	/// <summary>
-	/// Address Postal Code
-	/// </summary>
-	public BaseInputControl AddreAddrpcod => new BaseInputControl(driver, ContainerLocator, "container-ADDRE___ADDREADDRPCOD", "#ADDRE___ADDREADDRPCOD");
-
-	/// <summary>
-	/// Address Country
-	/// </summary>
-	public BaseInputControl AddreAddrcoun => new BaseInputControl(driver, ContainerLocator, "container-ADDRE___ADDREADDRCOUN", "#ADDRE___ADDREADDRCOUN");
-
-	/// <summary>
-	/// Period Start
-	/// </summary>
-	public DateInputControl AddrePeristar => new DateInputControl(driver, ContainerLocator, "#ADDRE___ADDREPERISTAR", "dd/MM/yyyy HH:mm");
-
-	/// <summary>
-	/// Period End
-	/// </summary>
-	public DateInputControl AddrePeriend => new DateInputControl(driver, ContainerLocator, "#ADDRE___ADDREPERIEND_", "dd/MM/yyyy HH:mm");
-
 	public AddreForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ADDRE", containerLocator: containerLocator) { }
 }

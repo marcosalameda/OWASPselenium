@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -200,12 +200,12 @@ namespace CSGenio.business
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("pedid","pedid");
-			info.Pathways.Add("tpeq1","tpeq1");
 			info.Pathways.Add("lnhpd","lnhpd");
+			info.Pathways.Add("tpeq1","tpeq1");
 			info.Pathways.Add("lnhag","lnhag");
-			info.Pathways.Add("fami1","tpeq1");
 			info.Pathways.Add("tpequ","lnhpd");
 			info.Pathways.Add("famil","lnhpd");
+			info.Pathways.Add("fami1","tpeq1");
 		}
 
 		/// <summary>
@@ -223,8 +223,8 @@ namespace CSGenio.business
 			//Actualiza as seguintes somas que criam registos:
 			info.SumCreateRecords = new SumsCreatesRecords[1];
 
-			info.SumCreateRecords[0] = new SumsCreatesRecords("gqtlnhag", "lnhag", "codlnhag", "codlnhag", new string[]{"codpedid","codtpequ"}, new string[]{"codpedid","codtpequ"});
-			info.ObtainAllFields = new string[] {"codpedid","codtpequ"};
+			info.SumCreateRecords[0] = new SumsCreatesRecords("gqtlnhag", "lnhag", "codlnhag", "codlnhag", new string[]{"codtpequ","codpedid"}, new string[]{"codtpequ","codpedid"});
+			info.ObtainAllFields = new string[] {"codtpequ","codpedid"};
 
 			info.ReplicaFields = new string[] {
 			 "codpedid"
@@ -554,7 +554,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX LNHDE]/

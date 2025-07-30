@@ -36,7 +36,7 @@ namespace GenioMVC.Controllers
 		private static readonly NavigationLocation ACTION_PTN_MENU_LIST_DB_MB_MC_R = new NavigationLocation("ARTICLES59822", "PTN_Menu_LIST_DB_MB_MC_R", "Item") { vueRouteName = "menu-PTN_LIST_DB_MB_MC_R" };
 		private static readonly NavigationLocation ACTION_GQT_MENU_451 = new NavigationLocation("ARTICLES59822", "GQT_Menu_451", "Item") { vueRouteName = "menu-GQT_451" };
 		private static readonly NavigationLocation ACTION_GQT_MENU_4611 = new NavigationLocation("ARTICLES__WAREH__WAR35760", "GQT_Menu_4611", "Item") { vueRouteName = "menu-GQT_4611" };
-		private static readonly NavigationLocation ACTION_GQT_MENU_4A1 = new NavigationLocation("ARTICLES59822", "GQT_Menu_4A1", "Item") { vueRouteName = "menu-GQT_4A1" };
+		private static readonly NavigationLocation ACTION_GQT_MENU_UNUSED_ITEMS = new NavigationLocation("ARTICLES59822", "GQT_Menu_UNUSED_ITEMS", "Item") { vueRouteName = "menu-GQT_UNUSED_ITEMS" };
 
 
 		//
@@ -923,17 +923,17 @@ namespace GenioMVC.Controllers
 		}
 
 		//
-		// GET: /Item/GQT_Menu_4A1
-		[ActionName("GQT_Menu_4A1")]
+		// GET: /Item/GQT_Menu_UNUSED_ITEMS
+		[ActionName("GQT_Menu_UNUSED_ITEMS")]
 		[HttpPost]
-		public ActionResult GQT_Menu_4A1([FromBody]RequestMenuModel requestModel)
+		public ActionResult GQT_Menu_UNUSED_ITEMS([FromBody]RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
 			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
 			string rowsPerPageOptionsString = "";
 
-			GQT_Menu_4A1_ViewModel model = new GQT_Menu_4A1_ViewModel(UserContext.Current);
+			GQT_Menu_UNUSED_ITEMS_ViewModel model = new GQT_Menu_UNUSED_ITEMS_ViewModel(UserContext.Current);
 
 			// Table configuration load options
 			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
@@ -963,7 +963,7 @@ namespace GenioMVC.Controllers
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
-				Navigation.SetValue("HomePage", "GQT_Menu_4A1");
+				Navigation.SetValue("HomePage", "GQT_Menu_UNUSED_ITEMS");
 
 			//If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_item")))
@@ -982,24 +982,25 @@ namespace GenioMVC.Controllers
 				querystring.AddRange(queryParams);
 
 			if (!isHomePage &&
-				(Navigation.CurrentLevel == null || !ACTION_GQT_MENU_4A1.IsSameAction(Navigation.CurrentLevel.Location)) &&
-				Navigation.CurrentLevel.Location.Action != ACTION_GQT_MENU_4A1.Action)
+				(Navigation.CurrentLevel == null || !ACTION_GQT_MENU_UNUSED_ITEMS.IsSameAction(Navigation.CurrentLevel.Location)) &&
+				Navigation.CurrentLevel.Location.Action != ACTION_GQT_MENU_UNUSED_ITEMS.Action)
 				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 			else if (isHomePage)
 			{
-				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_GQT_MENU_4A1.ShortDescription());
+				CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.MENU01948 + " " + ACTION_GQT_MENU_UNUSED_ITEMS.ShortDescription());
 				Navigation.SetValue("HomePageContainsList", true);
 			}
 
 
+			Navigation.SetValue("item.valid", "0");
 
-// USE /[MANUAL GQT MENU_GET 4A1]/
+// USE /[MANUAL GQT MENU_GET UNUSED_ITEMS]/
 
 			// Table List Export - check if user is exporting the Qlisting
 			if (querystring["ExportList"] != null && Convert.ToBoolean(querystring["ExportList"]) && querystring["ExportType"] != null)
 			{
 				string exportType = querystring["ExportType"];
-				string file = "GQT_Menu_4A1_" + DateTime.Now.ToString("ddMMyyyyhhmmss") + "." + exportType;
+				string file = "GQT_Menu_UNUSED_ITEMS_" + DateTime.Now.ToString("ddMMyyyyhhmmss") + "." + exportType;
 				ListingMVC<CSGenioAitem> listing = null;
 				CriteriaSet conditions = null;
 				List<CSGenio.framework.Exports.QColumn> columns = null;
@@ -1013,8 +1014,8 @@ namespace GenioMVC.Controllers
 				}
 
 				byte[] fileBytes = null;
-// USE /[MANUAL GQT OVERRQEXPORT 4A1]/
-				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, exportType, file,ACTION_GQT_MENU_4A1.Name);
+// USE /[MANUAL GQT OVERRQEXPORT UNUSED_ITEMS]/
+				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, exportType, file,ACTION_GQT_MENU_UNUSED_ITEMS.Name);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
 				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));

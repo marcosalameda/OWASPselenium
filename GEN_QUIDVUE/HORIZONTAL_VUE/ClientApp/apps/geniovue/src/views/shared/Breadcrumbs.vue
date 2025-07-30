@@ -213,7 +213,7 @@
 				if (typeof menuOrder !== 'string' || this.isEmpty(menuOrder) || !Array.isArray(menus) || menus.length === 0)
 					return ''
 
-				for (let m of menus)
+				for (const m of menus)
 				{
 					if (menuOrder.startsWith(m.Order))
 					{
@@ -317,7 +317,7 @@
 				const navHistory = navDataStore.navigation.getHistory(this.navigationId).convertToCollection()
 				const breadcrumbsData = []
 
-				for (let navEntry of navHistory)
+				for (const navEntry of navHistory)
 				{
 					if (navEntry.isNested)
 						continue

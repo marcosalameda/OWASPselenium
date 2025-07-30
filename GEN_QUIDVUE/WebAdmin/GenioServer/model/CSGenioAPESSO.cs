@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -493,10 +493,10 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(5);
-			info.Pathways.Add("categ","categ");
 			info.Pathways.Add("cntry","cntry");
-			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("categ","categ");
 			info.Pathways.Add("pais1","pais1");
+			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("regi1","regi1");
 		}
 
@@ -1185,7 +1185,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 		/// <summary>
         /// To use routine manual validations and extra calculations
 		/// after the update of the record.

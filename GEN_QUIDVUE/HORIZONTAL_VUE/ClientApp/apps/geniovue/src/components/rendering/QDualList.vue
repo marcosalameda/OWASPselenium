@@ -326,7 +326,7 @@
 
 				// Map over the selected items and return objects without the 'id' property
 				const selectedItemsWithoutIds = selectedItemsObjects.map((items) => {
-					let res = { ...items }
+					const res = { ...items }
 					delete res.id
 					return res
 				})

@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -168,8 +168,8 @@ namespace CSGenio.business
 			info.Pathways.Add("indoc","indoc");
 			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("cntry","indoc");
-			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("cmpny","indoc");
+			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("pesso","indoc");
 			info.Pathways.Add("categ","indoc");
 			info.Pathways.Add("pais1","indoc");
@@ -228,6 +228,7 @@ namespace CSGenio.business
 
 			info.PrimaryKeyName="codldent";
 			info.HumanKeyName="line,".TrimEnd(',');
+			info.MainOrderField="line";
 			info.Alias="ldent";
 			info.IsDomain = true;
 			info.PersistenceType = PersistenceType.Database;
@@ -485,7 +486,8 @@ namespace CSGenio.business
 
 
 
- 		//To usar routine manual no pedido eliminate
+
+		//To usar routine manual no pedido eliminate
 		public override StatusMessage eliminate(PersistentSupport sp)
 		{
 			StatusMessage msg = base.eliminate(sp);

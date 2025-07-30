@@ -6,8 +6,9 @@
   "scripts": {
     "clean": "rimraf dist storybook-static",
     "build": "set NODE_OPTIONS=--max_old_space_size=10240 && vite build --out-dir dist --mode production",
-    "build:dev": "set NODE_OPTIONS=--max_old_space_size=8192 && vite build --out-dir dist --mode development",
-    "dev": "set NODE_OPTIONS=--max_old_space_size=10240 && vite --mode development",
+    "build:dev": "pnpm run pre-dev && set NODE_OPTIONS=--max_old_space_size=8192 && vite build --out-dir dist --mode development",
+    "pre-dev": "node --import tsx build/pre-dev.ts",
+    "dev": "pnpm run pre-dev && set NODE_OPTIONS=--max_old_space_size=10240 && vite --mode development",
     "serve": "set NODE_OPTIONS=--max_old_space_size=10240 && vite serve --mode development",
     "storybook": "storybook dev -p 6006",
     "build:storybook": "storybook build"
@@ -37,7 +38,7 @@
     "proj4": "2.9.1",
     "screenfull": "6.0.2",
     "vue3-google-map": "0.18.0",
-    "@quidgest/chatbot": "0.4.0",
+    "@quidgest/chatbot": "0.5.1",
     "@quidgest/clientapp": "workspace:*",
     "@quidgest/ui": "catalog:",
     "@sweetalert2/theme-bootstrap-4": "5.0.7",
@@ -45,7 +46,7 @@
     "@vuepic/vue-datepicker": "8.8.0",
     "ace-builds": "1.37.5",
     "ace-diff": "3.0.3",
-	"axios": "catalog:",
+    "axios": "catalog:",
     "bootstrap": "4.6.2",
     "cropperjs": "1.6.2",
     "eventemitter3": "5.0.1",
@@ -89,10 +90,10 @@
     "jest-matcher-utils": "29.7.0",
     "rollup-plugin-visualizer": "5.9.0",
     "storybook": "^8.6.11",
+    "tsx": "^4.20.3",
     "svgstore": "3.0.1",
     "vite": "catalog:",
-    "vite-plugin-mkcert": "1.17.6",
-    "vue-eslint-parser": "9.4.3"
+    "vite-plugin-mkcert": "1.17.6"
   },
   "browserslist": [
     "> 1%",

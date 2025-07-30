@@ -69,7 +69,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed } from 'vue'
 
 	import { loadResources } from '@/plugins/i18n.js'
@@ -88,7 +88,7 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import qEnums from '@quidgest/clientapp/constants/enums'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_2C11ViewModel.js'
 
@@ -373,7 +373,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY', 'changed-PESS1', 'changed-DECOM'],
+						globalEvents: ['changed-ITEM', 'changed-WAREH', 'changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-DECOM', 'changed-PESS1'],
 						uuid: '1ac74500-24cd-4979-9f76-49d2b8b45ea2',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -562,13 +562,13 @@
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
-								this.onSelectRow(this.controls.secondTable, eventData)
+								this.controls.secondTable.onSelectRow(eventData)
 							},
 							unselectRow: (eventData) => {
-								this.onUnselectRow(this.controls.secondTable, eventData)
+								this.controls.secondTable.onUnselectRow(eventData)
 							},
 							unselectAllRows: () => {
-								this.onUnselectAllRows(this.controls.secondTable)
+								this.controls.secondTable.onUnselectAllRows()
 							}
 						}
 					}, this),
@@ -611,11 +611,11 @@
 						headerLevel: 1,
 						handlers: {
 							removeRow: (eventData) => {
-								this.onUnselectRow(this.mainTable, eventData)
+								this.mainTable.onUnselectRow(eventData)
 								this.unselectRowData(eventData)
 							},
-							unselectAllRows: (eventData) => {
-								this.onUnselectAllRows(this.mainTable, eventData)
+							unselectAllRows: () => {
+								this.mainTable.onUnselectAllRows()
 								this.unselectAllRowsData()
 							}
 						}

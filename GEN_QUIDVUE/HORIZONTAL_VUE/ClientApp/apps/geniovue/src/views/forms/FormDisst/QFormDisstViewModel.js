@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'DISST',
 			area: 'DISST',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_DISST',
-				updateFilesTickets: 'UpdateFilesTicketsDISST'
+				recalculateFormulas: 'RecalculateFormulas_Disst',
+				updateFilesTickets: 'UpdateFilesTicketsDisst',
+				setFile: 'SetFileDisst'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODDISST',
 			description: '',
 		}).cloneFrom(values?.ValCoddisst))
-		watch(() => this.ValCoddisst.value, (newValue, oldValue) => this.onUpdate('disst.coddisst', this.ValCoddisst, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCoddisst.value, (newValue, oldValue) => this.onUpdate('disst.coddisst', this.ValCoddisst, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValStatus = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.STATUS62033),
 		}).cloneFrom(values?.ValStatus))
-		watch(() => this.ValStatus.value, (newValue, oldValue) => this.onUpdate('disst.status', this.ValStatus, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValStatus.value, (newValue, oldValue) => this.onUpdate('disst.status', this.ValStatus, newValue, oldValue)))
 
 		this.ValOrder = reactive(new modelFieldType.Number({
 			id: 'ValOrder',
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			decimalDigits: 0,
 			description: computed(() => this.Resources.ORDER39632),
 		}).cloneFrom(values?.ValOrder))
-		watch(() => this.ValOrder.value, (newValue, oldValue) => this.onUpdate('disst.order', this.ValOrder, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValOrder.value, (newValue, oldValue) => this.onUpdate('disst.order', this.ValOrder, newValue, oldValue)))
 
 		this.ValDescript = reactive(new modelFieldType.String({
 			id: 'ValDescript',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescript))
-		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('disst.descript', this.ValDescript, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('disst.descript', this.ValDescript, newValue, oldValue)))
 	}
 
 	/**

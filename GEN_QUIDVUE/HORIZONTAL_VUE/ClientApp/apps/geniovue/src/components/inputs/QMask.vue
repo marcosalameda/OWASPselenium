@@ -13,7 +13,8 @@
 		:aria-label="label"
 		:aria-labelledby="labelId"
 		:placeholder="placeholder"
-		:data-testid="dataTestid" />
+		:data-testid="dataTestid"
+		@change="$emit('change', $event)" />
 </template>
 
 <script>
@@ -27,7 +28,10 @@
 	export default {
 		name: 'QMask',
 
-		emits: ['update:modelValue'],
+		emits: [
+			'change',
+			'update:modelValue'
+		],
 
 		inheritAttrs: false,
 
@@ -138,6 +142,13 @@
 
 		expose: [],
 
+		setup()
+		{
+			return {
+				maskaInstance: null
+			}
+		},
+
 		data()
 		{
 			return {
@@ -147,7 +158,14 @@
 
 		mounted()
 		{
-			create(this.$refs.field?.inputRef, this.getTokens())
+			this.maskaInstance = create(this.$refs.field?.inputRef, this.getTokens())
+		},
+
+		beforeUnmount()
+		{
+			if(typeof this.maskaInstance?.destroy === 'function')
+				this.maskaInstance.destroy()
+			this.maskaInstance = null
 		},
 
 		computed: {
@@ -173,19 +191,19 @@
 			 */
 			getTokens()
 			{
-				let defaultConfig = {
-						mask: '',
-						tokens: {
-							0: { pattern: /[0-9]/ },
-							X: { pattern: /[0-9a-zA-Z]/ },
-							S: { pattern: /[a-zA-Z]/ },
-							A: { pattern: /[a-zA-Z]/, uppercase: true },
-							a: { pattern: /[a-zA-Z]/, lowercase: true },
-							'!': { escape: true },
-							'*': { repeat: true }
-						}
-					},
-					customConfig = {}
+				const defaultConfig = {
+					mask: '',
+					tokens: {
+						0: { pattern: /[0-9]/ },
+						X: { pattern: /[0-9a-zA-Z]/ },
+						S: { pattern: /[a-zA-Z]/ },
+						A: { pattern: /[a-zA-Z]/, uppercase: true },
+						a: { pattern: /[a-zA-Z]/, lowercase: true },
+						'!': { escape: true },
+						'*': { repeat: true }
+					}
+				}
+				let customConfig = {}
 
 				switch (this.maskType)
 				{

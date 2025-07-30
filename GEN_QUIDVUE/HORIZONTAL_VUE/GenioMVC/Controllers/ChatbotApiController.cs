@@ -19,36 +19,46 @@ namespace GenioMVC.Controllers
 
         public async Task<string> ChatbotApiProxy()
         {
-            return await _chatbotService.SendChatbotRequestAsync(HttpContext.Request.RouteValues["values"]?.ToString(), new HttpMethod(HttpContext.Request.Method), HttpContext.Request.Body);
+            var path = HttpContext.Request.Path.Value!.Substring("/chatbotapi/".Length);
+
+            return await _chatbotService.SendChatbotRequestAsync(path, new HttpMethod(HttpContext.Request.Method), HttpContext.Request.Body);
         }
 
         public async Task ChatbotApiStreamProxy()
         {
-            var form = HttpContext.Request.Form;
+            Stream stream;
 
-            var formFields = form
-                .SelectMany(f => f.Value.Select(val => new KeyValuePair<string, string>(f.Key, val)))
-                .ToList();
+            // If it's a structured prompt, it likely comes as raw JSON body (not multipart/form)
+            var contentType = Request.ContentType ?? "";
 
-            var formFiles = form.Files
-                .Select(file => ( file.Name, file.ContentType, file.OpenReadStream()))
-                .ToList();
-
-            var stream = await _chatbotService.GetChatbotStreamAsync(formFields, formFiles);
+            if (contentType.Contains("application/json", StringComparison.OrdinalIgnoreCase))
+            {
+                stream = await _chatbotService.GetChatbotStreamAsync(Request.Body);
+            }
+            else if (contentType.Contains("multipart/form-data", StringComparison.OrdinalIgnoreCase))
+            {
+                stream = await GetFormDataStreamAsync();
+            }
+            else
+            {
+                Response.StatusCode = 400;
+                await Response.WriteAsync("Unsupported content type.");
+                return;
+            }
 
             Response.ContentType = "text/event-stream";
+            Response.Headers.Append("Cache-Control", "no-cache");
+            Response.Headers.Append("Connection", "keep-alive");
 
-            using (var reader = new StreamReader(stream))
+            using var reader = new StreamReader(stream);
+            char[] buffer = new char[1024];
+            int bytesRead;
+
+            while ((bytesRead = await reader.ReadAsync(buffer, 0, buffer.Length)) > 0)
             {
-                while (!reader.EndOfStream)
-                {
-                    var chunk = await reader.ReadLineAsync();
-                    if (!string.IsNullOrEmpty(chunk))
-                    {
-                        await Response.WriteAsync(chunk);
-                        await Response.Body.FlushAsync();
-                    }
-                }
+                string chunk = new string(buffer, 0, bytesRead);
+                await Response.WriteAsync(chunk);
+                await Response.Body.FlushAsync();
             }
         }
 
@@ -72,6 +82,21 @@ namespace GenioMVC.Controllers
             string jsonString = await content.ReadAsStringAsync();
             object requestData = JsonConvert.DeserializeObject(jsonString);
             return await _chatbotService.CallChatbotFunctionAsync<T>(requestData);
+        }
+
+        private async Task<Stream> GetFormDataStreamAsync()
+        {
+            var form = await Request.ReadFormAsync();
+
+            var formFields = form
+                .SelectMany(f => f.Value.Select(val => new KeyValuePair<string, string>(f.Key, val)))
+                .ToList();
+
+            var formFiles = form.Files
+                .Select(file => (file.Name, file.ContentType, file.OpenReadStream()))
+                .ToList();
+
+            return await _chatbotService.GetChatbotStreamAsync(formFields, formFiles);
         }
     }
 }

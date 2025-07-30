@@ -1,23 +1,15 @@
-﻿using CSGenio.framework;
+﻿using CSGenio.core.ai;
+using CSGenio.core.di;
+using CSGenio.core.logger;
+using CSGenio.framework;
 using CSGenio.persistence;
+using GenioMVC;
+using GenioMVC.Helpers;
 using GenioServer.security;
 using Microsoft.AspNetCore.Mvc;
-using GenioMVC;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Options;
-using log4net;
-using log4net.Config;
-using OpenTelemetry.Trace;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Resources;
-using System.Diagnostics.Metrics;
-using OpenTelemetry.Metrics;
-using CSGenio.core.logger;
-using CSGenio.core.di;
-using GenioMVC.Metrics;
-using CSGenio.core.ai;
-using GenioMVC.Helpers;
 
 //---------------------------------
 // Setup the GenioServer services
@@ -30,11 +22,11 @@ CSGenio.business.ElasticsearchQueriesExtra.Use();
 //---------------------------------
 var builder = WebApplication.CreateBuilder(args);
 
-//If it finds it, read the web.config as if it was a strongly typed Options provider
+// If it finds it, read the web.config as if it was a strongly typed Options provider
 ((IConfigurationBuilder)builder.Configuration).Add(new WebConfigConfigurationSource());
 
 // Customize the default automatic validation behaviour to our custom on demand validation
-builder.Services.AddSingleton<IObjectModelValidator>( s =>
+builder.Services.AddSingleton<IObjectModelValidator>(s =>
 {
     var options = s.GetRequiredService<IOptions<MvcOptions>>().Value;
     var metadataProvider = s.GetRequiredService<IModelMetadataProvider>();
@@ -47,9 +39,8 @@ builder.Services.AddSingleton<IObjectModelValidator>( s =>
 var telemetryConfig = builder.Configuration.GetSection("TelemetryConfig").Get<TelemetryConfiguration>();
 builder.Services.ConfigureTelemetry(telemetryConfig, builder.Logging);
 
-
 // Add services to the container.
-builder.Services.AddControllers(options => 
+builder.Services.AddControllers(options =>
     {
         options.Filters.Add<ModuleActionFilter>();
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
@@ -79,9 +70,8 @@ builder.Services.AddScoped<IChatbotService, ChatbotService>();
 // Any controller that needs User information it can add UserContextService to its constructor
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserContextService, UserContextService>();
-//TODO: Replace all controller constructors that use the concrete class and replace it with the interface
+// TODO: Replace all controller constructors that use the concrete class and replace it with the interface
 builder.Services.AddScoped<UserContextService>();
-
 
 // Add a shim authentication to provide compatibility with the old code
 // It would actually handle the authentication, UserContextService will deal with that
@@ -100,14 +90,14 @@ builder.Services.AddSession(options =>
     builder.Configuration.GetSection("SessionOptions").Bind(options);
 });
 
-//Authentication handlers
+// Authentication handlers
 var schemeName = LegacyFormsAuthenticationOptions.DefaultScheme;
 builder.Services.AddAuthentication(schemeName)
     .AddScheme<LegacyFormsAuthenticationOptions, LegacyFormsAuthentication>(schemeName, options => {
         builder.Configuration.GetSection("LegacyFormsAuthentication").Bind(options);
     });
 
-//gzip compression
+// gzip compression
 builder.Services.AddResponseCompression(options =>
 {
     options.EnableForHttps = true;
@@ -118,7 +108,7 @@ builder.WebHost.ConfigureKestrel(options =>
     options.AddServerHeader = false;
 });
 
-//Background services (messaging, scheduling, ...)
+// Background services (messaging, scheduling, ...)
 builder.WebHost.UseShutdownTimeout(TimeSpan.FromSeconds(60));
 builder.Services.AddHostedService<MessagingServiceHost>();
 
@@ -140,14 +130,14 @@ if (telemetryConfig != null && telemetryConfig.LoggerType == TelemetryConfigurat
 // Default will be redirecting to https.
 // Set https_redirect to 'none' when reverse proxy deals already deals with https redirection.
 // Set https_port when using a different https port than 443
-string? https_redirect = app.Configuration["https_redirect"];
-if (https_redirect == null || https_redirect == "redirect")
+string? httpsRedirect = app.Configuration["https_redirect"];
+if (httpsRedirect == null || httpsRedirect == "redirect")
     app.UseHttpsRedirection();
-if (https_redirect == "hsts")
+if (httpsRedirect == "hsts")
     app.UseHsts();
 
 // Callback paths calculations need to take into account reverse Proxys
-//TODO: Get a utility class or service
+// TODO: Get a utility class or service
 AbsoluteUrlUtils.ProxyUrl = app.Configuration["ProxyUrl"] ?? "";
 
 if (app.Environment.IsDevelopment())
@@ -172,17 +162,17 @@ else
     });
 }
 
-// AspCore wrapper already does this, so its not needed
+// AspCore wrapper already does this, so it's not needed
 //app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseSession();
 
-//This is only needed when using the [ApiController] attributes
+// This is only needed when using the [ApiController] attributes
 //app.MapControllers();
 
-//External authentication endpoints
+// External authentication endpoints
 app.MapControllerRoute(
     name: "authRedirectRoute",
     pattern: "auth/{action}/{providerId}",
@@ -193,48 +183,49 @@ app.MapControllerRoute(
         controller = "Account"
     });
 
-
-//Chatbot API proxy endpoints
+// Chatbot API proxy endpoints
 app.MapControllerRoute(
-    name: "chatbotapi",
+    name: "chatbotapi_submit",
     pattern: "chatbotapi/prompt/submit",
     defaults: new { controller = "ChatbotApi", action = "ChatbotApiStreamProxy" });
 
 app.MapControllerRoute(
-    name: "chatbotapi",
-    pattern: "chatbotapi/{**values}",
+    name: "chatbotapi_agent_response",
+    pattern: "chatbotapi/get-job-result",
+    defaults: new { controller = "ChatbotApi", action = "ChatbotApiStreamProxy" });
+
+app.MapControllerRoute(
+    name: "chatbotapi_clear",
+    pattern: "chatbotapi/prompt/clear",
     defaults: new { controller = "ChatbotApi", action = "ChatbotApiProxy" });
 
 app.MapControllerRoute(
-    name: "chatbotapi",
-    pattern: "chatbotapi/login",
-    defaults: new { controller = "ChatbotApi", action = "ChatbotApiAuth" });
+    name: "chatbotapi_load",
+    pattern: "chatbotapi/prompt/load",
+    defaults: new { controller = "ChatbotApi", action = "ChatbotApiProxy" });
     
 
-//Configuration and Antiforgery token
+// Configuration and Antiforgery token
 app.MapControllerRoute("config",
     "api/Config/{action}/{system}",
     new {
         controller = "Config",
         action = "GetConfig",
         system = Configuration.DefaultYear
-        }
-    );
+    });
 
-//User profile
+// User profile
 app.MapControllerRoute("RouteForUsersProfile",
     "{culture}/{system}/User{action}/{id}",
-    new
-    {
+    new {
         culture = "en-US",
         system = Configuration.DefaultYear,
         controller = "Home",
         action = "Profile",
         module = "Public"
-    }
-);
+    });
 
-//Default route
+// Default route
 app.MapControllerRoute("default",
     "api/{culture}/{system}/{module}/{controller}/{action}/{id?}",
     new {
@@ -243,7 +234,14 @@ app.MapControllerRoute("default",
         module = "Public",
         controller = "Home",
         action = "Index"
-        }
-    );
+    });
+
+// Health check endpoint
+app.MapControllerRoute("health",
+    "api/health",
+    new {
+        controller = "HealthCheck",
+        action = "Index"
+    });
 
 app.Run();

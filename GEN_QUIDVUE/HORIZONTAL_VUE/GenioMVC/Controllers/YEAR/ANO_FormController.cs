@@ -529,12 +529,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Year/Ano_SaveEdit
 		[HttpPost]
 		public ActionResult Ano_SaveEdit([FromBody] Ano_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ano_SaveEdit",
 				ViewName = "Ano",
@@ -565,7 +564,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsAno([FromBody] AnoDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

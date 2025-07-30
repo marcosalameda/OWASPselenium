@@ -462,12 +462,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Tpcon/Tpcon_SaveEdit
 		[HttpPost]
 		public ActionResult Tpcon_SaveEdit([FromBody] Tpcon_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Tpcon_SaveEdit",
 				ViewName = "Tpcon",
@@ -498,7 +497,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsTpcon([FromBody] TpconDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

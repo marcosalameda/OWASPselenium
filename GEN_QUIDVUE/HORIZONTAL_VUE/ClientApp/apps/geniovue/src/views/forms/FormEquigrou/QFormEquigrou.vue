@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -226,12 +226,13 @@
 												<q-accordion
 													v-if="controls.EQUIGROUPSEUDNEWGRP17.isVisible"
 													id="EQUIGROUPSEUDNEWGRP17"
+													v-model="controls.EQUIGROUPSEUDNEWGRP17.openChild"
 													v-bind="controls.EQUIGROUPSEUDNEWGRP17">
 													<!-- Start EQUIGROUPSEUDNEWGRP17 -->
-													<q-group-collapsible
-														id="EQUIGROUPSEUDNEWGRP15"
-														v-bind="controls.EQUIGROUPSEUDNEWGRP15"
-														v-on="controls.EQUIGROUPSEUDNEWGRP15.handlers">
+													<q-accordion-item
+														id="EQUIGROUPSEUDNEWGRP15-container"
+														value="EQUIGROUPSEUDNEWGRP15"
+														:title="controls.EQUIGROUPSEUDNEWGRP15.label">
 														<!-- Start EQUIGROUPSEUDNEWGRP15 -->
 														<q-row-container v-show="controls.EQUIGROUPESS1IDFUNCIO.isVisible || controls.EQUIGROUPESS1TELEPHON.isVisible">
 															<q-control-wrapper
@@ -268,11 +269,11 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End EQUIGROUPSEUDNEWGRP15 -->
-													</q-group-collapsible>
-													<q-group-collapsible
-														id="EQUIGROUPSEUDNEWGRP16"
-														v-bind="controls.EQUIGROUPSEUDNEWGRP16"
-														v-on="controls.EQUIGROUPSEUDNEWGRP16.handlers">
+													</q-accordion-item>
+													<q-accordion-item
+														id="EQUIGROUPSEUDNEWGRP16-container"
+														value="EQUIGROUPSEUDNEWGRP16"
+														:title="controls.EQUIGROUPSEUDNEWGRP16.label">
 														<!-- Start EQUIGROUPSEUDNEWGRP16 -->
 														<q-row-container v-show="controls.EQUIGROUPESS1EMAIL___.isVisible || controls.EQUIGROUPESS1EMAIL2__.isVisible">
 															<q-control-wrapper
@@ -309,7 +310,7 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End EQUIGROUPSEUDNEWGRP16 -->
-													</q-group-collapsible>
+													</q-accordion-item>
 													<!-- End EQUIGROUPSEUDNEWGRP17 -->
 												</q-accordion>
 											</q-control-wrapper>
@@ -1030,7 +1031,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -1050,7 +1051,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormEquigrouViewModel.js'
 
@@ -1129,7 +1130,8 @@
 					primaryKey: 'ValCodequip',
 					designation: computed(() => this.Resources.EQUIPMENT03632),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -1481,7 +1483,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP14',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1524,6 +1526,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP17',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIGROUPESS1IDFUNCIO', 'EQUIGROUPESS1TELEPHON'],
@@ -1573,6 +1576,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP17',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['EQUIGROUPESS1EMAIL___', 'EQUIGROUPESS1EMAIL2__'],
@@ -1839,7 +1843,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.left),
 						container: 'EQUIGROUPSEUDNEWGRP08',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -2173,7 +2177,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIGROUPSEUDNEWGRP05',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -2450,17 +2454,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT EQUIGROU]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -2470,7 +2480,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -2480,7 +2490,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -2500,7 +2510,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -2533,7 +2543,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -2553,7 +2563,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -2584,11 +2594,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -2598,7 +2606,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -2606,8 +2614,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2615,7 +2621,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -2623,8 +2629,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2632,7 +2636,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -2640,11 +2644,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -2654,7 +2656,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -2664,7 +2666,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

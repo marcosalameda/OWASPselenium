@@ -35,31 +35,6 @@ public class AbatereqForm : Form
 	/// <summary>
 	/// Decomission
 	/// </summary>
-	public DateInputControl DecomDtdeco => new DateInputControl(driver, ContainerLocator, "#ABATEREQDECOMDTDECO__", "dd/MM/yyyy HH:mm");
-
-	/// <summary>
-	/// Creation date
-	/// </summary>
-	public BaseInputControl DecomCreatdat => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMCREATDAT", "#ABATEREQDECOMCREATDAT");
-
-	/// <summary>
-	/// Created by
-	/// </summary>
-	public BaseInputControl DecomCreatope => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMCREATOPE", "#ABATEREQDECOMCREATOPE");
-
-	/// <summary>
-	/// Changed on
-	/// </summary>
-	public BaseInputControl DecomChngdate => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMCHNGDATE", "#ABATEREQDECOMCHNGDATE");
-
-	/// <summary>
-	/// Changed by
-	/// </summary>
-	public BaseInputControl DecomOperchng => new BaseInputControl(driver, ContainerLocator, "container-ABATEREQDECOMOPERCHNG", "#ABATEREQDECOMOPERCHNG");
-
-	/// <summary>
-	/// Decomission
-	/// </summary>
 	public DateInputControl AbatetabDecomDtdeco => new DateInputControl(driver, ContainerLocator, "#ABATETABDECOMDTDECO__", "dd/MM/yyyy HH:mm");
 
 	public AbatereqForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)

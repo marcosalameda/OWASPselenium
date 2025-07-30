@@ -264,6 +264,13 @@
 			this.setDefaultSearchColumnName()
 		},
 
+		beforeUnmount()
+		{
+			if(this.tableConf?.rows instanceof Array)
+				this.tableConf.rows.length = 0
+			this.tableConf = null
+		},
+
 		computed: {
 			visibleColumns() {
 				return this.tableConf.rows.filter((column) => {
@@ -294,19 +301,19 @@
 			 * @returns Array
 			 */
 			getColumnsCfgRows() {
-				var rows = []
+				const rows = []
 
 				//Iterate columns
-				var thisIdx = 1
-				var column = {}
-				var colOrder = 1
-				for (let idx in this.columns) {
+				let thisIdx = 1
+				let column = {}
+				let colOrder = 1
+				for (const idx in this.columns) {
 					column = this.columns[idx]
 
 					// Columns with a false show-when condition shouldn't be displayed here - visibility is determined by the condition, not the user
 					if (!column.visibilityEval) continue
 
-					let columnCfg = {
+					const columnCfg = {
 						Rownum: 0,
 						Fields: {}
 					}
@@ -407,7 +414,7 @@
 			 * Set the default search column
 			 */
 			setDefaultSearchColumnName() {
-				var defaultSearchColumn = this.tableConf.columnsCfgCols.find((x) => x.name === 'defaultSearch')
+				const defaultSearchColumn = this.tableConf.columnsCfgCols.find((x) => x.name === 'defaultSearch')
 				defaultSearchColumn.checkedValue = this.defaultSearchColumnName
 				this.defaultSearchColumnNameCfg = this.defaultSearchColumnName
 			},
@@ -434,7 +441,7 @@
 			},
 
 			onTableListRowReorder(eObj) {
-				var row = listFunctions.getRowByKeyPath(this.tableConf.rows, eObj?.rowKey),
+				const row = listFunctions.getRowByKeyPath(this.tableConf.rows, eObj?.rowKey),
 					orderingColumn = _find(this.tableConf.columnsCfgCols, (col) => col.isOrderingColumn === true)
 
 				listFunctions.setTableCellValue(this.tableConf, row, orderingColumn, eObj.index + 1)
@@ -445,7 +452,7 @@
 		watch: {
 			signal: {
 				handler(newValue) {
-					for (let key in newValue) {
+					for (const key in newValue) {
 						switch (key) {
 							case 'show':
 								if (newValue.show) {

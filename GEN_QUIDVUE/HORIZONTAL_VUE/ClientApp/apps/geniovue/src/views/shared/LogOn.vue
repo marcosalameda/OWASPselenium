@@ -313,11 +313,11 @@
 
 				if (responseData.Success)
 				{
-					if (responseData.Auth2FA && !responseData.Val2FA)
+					if (responseData.Data.Auth2FA && !responseData.Val2FA)
 					{
-						if (responseData.User.Auth2FATp === 'TOTP')
+						if (responseData.Data.User.Auth2FATp === 'TOTP')
 							this.confirmBox2FA()
-						else if (responseData.User.Auth2FATp === 'WebAuth')
+						else if (responseData.Data.User.Auth2FATp === 'WebAuth')
 							this.handleSignInWebAuth(responseData)
 					}
 					else
@@ -464,8 +464,8 @@
 				if (!this.isVisible)
 					return
 
-				let el = this.$refs.logonMenu
-				let target = event.target
+				const el = this.$refs.logonMenu
+				const target = event.target
 
 				if (el && el !== target && !el.contains(target))
 					this.setLogonVisibility(false)

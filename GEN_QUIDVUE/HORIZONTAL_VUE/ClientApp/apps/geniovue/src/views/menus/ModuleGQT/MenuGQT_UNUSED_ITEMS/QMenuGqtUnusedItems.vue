@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,25 +49,27 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import netAPI from '@quidgest/clientapp/network'
+	import openQSign from '@quidgest/clientapp/plugins/qSign'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import { computed, readonly } from 'vue'
 
 	import MenuHandlers from '@/mixins/menuHandlers.js'
 	import controlClass from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
-	import genericFunctions from '@/mixins/genericFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
-	import asyncProcM from '@/api/global/asyncProcMonitoring.js'
 
 	import hardcodedTexts from '@/hardcodedTexts'
-	import netAPI from '@/api/network'
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	import qEnums from '@/mixins/quidgest.mainEnums.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_UNUSED_ITEMSViewModel.js'
 
@@ -176,7 +179,7 @@
 								label: computed(() => this.Resources.TYPE00312),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayTipoarti.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayTipoarti(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTipoarti.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -304,7 +307,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIG',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIG'
 								}
 							},
 							formsDefinition: {
@@ -321,7 +324,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-GITEM', 'changed-ITEM'],
+						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
 						uuid: '026b4b45-a993-4305-9455-a3c221daa253',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -352,6 +355,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GQT_MENU_UNUSED_ITEMS]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_UNUSED_ITEMS]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

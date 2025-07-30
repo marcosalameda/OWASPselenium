@@ -1,4 +1,5 @@
-﻿import { QEventEmitter } from '../../plugins/eventBus'
+﻿import { markRaw } from 'vue'
+import { QEventEmitter } from '../../plugins/eventBus'
 
 /**
  * Class that represents a source in the stack.
@@ -81,6 +82,11 @@ class ConditionSource
 	{
 		this.#observers.forEach((fn) => fn())
 	}
+
+	destroy()
+	{
+		this.#observers.length = 0
+	}
 }
 
 /**
@@ -107,7 +113,7 @@ class ConditionStack
 				enumerable: false
 			},
 			sources: {
-				value: {},
+				value: markRaw({}),
 				configurable: true,
 				writable: false,
 				enumerable: false
@@ -119,7 +125,7 @@ class ConditionStack
 				enumerable: false
 			},
 			internalEvents: {
-				value: new QEventEmitter,
+				value: markRaw(new QEventEmitter),
 				configurable: true,
 				writable: false,
 				enumerable: false
@@ -320,6 +326,24 @@ class ConditionStack
 		if (typeof listener !== 'function')
 			throw new Error('The "listener" argument should be a function.')
 		this.internalEvents.off(this.constructor.UNMET_EVENT, listener)
+	}
+
+	destroy()
+	{
+		this.internalEvents?.removeAllListeners()
+		delete this.internalEvents
+
+		const sourcesKeys = Object.keys(this.sources ?? {})
+		sourcesKeys.forEach(sourceKey => {
+			if(typeof this.sources[sourceKey]?.destroy === 'function')
+				this.sources[sourceKey].destroy()
+			this.sources[sourceKey] = null
+			delete this.sources[sourceKey]
+		})
+
+		this.otherStacks.length = 0
+		this.metConditions.length = 0
+		delete this.globalEvents
 	}
 }
 

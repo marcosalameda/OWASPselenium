@@ -337,7 +337,7 @@
 			 */
 			getEventInfo(event)
 			{
-				var info = ''
+				let info = ''
 				if (event.type === TraceEventType.REQUEST || event.type === TraceEventType.RESPONSE)
 				{
 					info += _toString(event.requestUrl)

@@ -200,7 +200,7 @@ public class FieldhlpForm : Form
 	/// <summary>
 	/// Document
 	/// </summary>
-	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "FIELDHLPFLDS_ATTACH__");
+	public DocumentControl FldsAttach => new DocumentControl(driver, ContainerLocator, "FIELDHLPFLDS_ATTACH__-container");
 
 	/// <summary>
 	/// Day

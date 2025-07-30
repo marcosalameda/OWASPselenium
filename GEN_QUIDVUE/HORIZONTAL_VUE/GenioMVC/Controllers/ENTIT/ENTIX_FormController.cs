@@ -460,12 +460,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Entit/Entix_SaveEdit
 		[HttpPost]
 		public ActionResult Entix_SaveEdit([FromBody] Entix_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Entix_SaveEdit",
 				ViewName = "Entix",
@@ -496,7 +495,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsEntix([FromBody] EntixDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

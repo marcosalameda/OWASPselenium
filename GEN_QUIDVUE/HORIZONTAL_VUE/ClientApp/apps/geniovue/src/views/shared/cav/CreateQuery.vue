@@ -27,9 +27,13 @@
 						<q-radio-group
 							id="text-persistence-input"
 							v-model="radioOption"
-							:options-list="accessTypes"
-							:label-left-side="false"
-							:deselect-radio="false" />
+							:value="accessTypes">
+							<q-radio-button
+								v-for="radio in radioOption"
+								:key="radio.key"
+								:value="radio.key"
+								:label="radio.value" />
+						</q-radio-group>
 					</base-input-structure>
 				</q-control-wrapper>
 			</q-row-container>

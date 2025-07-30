@@ -267,7 +267,7 @@
 			 */
 			filterOperators: {
 				type: Object,
-				default: () => searchFilterDataModule.operators.elements
+				default: () => new searchFilterDataModule.SearchFilterConditionOperators()
 			},
 
 			/**
@@ -558,7 +558,7 @@
 			 * @returns String
 			 */
 			filterNameDisplayCell(table, row, column, options) {
-				var value = listFunctions.textDisplayCell(table, row, column, options)
+				const value = listFunctions.textDisplayCell(table, row, column, options)
 				if (value.length > 0) {
 					return value
 				}
@@ -576,7 +576,7 @@
 
 				this.$nextTick().then(() => {
 					//Scroll to filter controls
-					let filterForm = document.getElementById('filter_' + this.selectedFilterIdx)
+					const filterForm = document.getElementById('filter_' + this.selectedFilterIdx)
 					if (filterForm) {
 						filterForm.scrollIntoView({ block: 'end', inline: 'nearest' })
 					}
@@ -617,19 +617,19 @@
 			 * @returns {Array}
 			 */
 			getValidationErrorFieldIndex(filters, columns) {
-				let validationErrorFieldIndex = []
+				const validationErrorFieldIndex = []
 				let conditionStates = []
 				//Iterate filters
 				for (let filterIdx = 0; filterIdx < filters.length; filterIdx++) {
-					let filter = filters[filterIdx]
+					const filter = filters[filterIdx]
 					conditionStates = listFunctions.filterValidate(filter, columns)
 					//Iterate filter conditions
-					for (let conditionIdx in conditionStates) {
-						let conditionState = conditionStates[conditionIdx]
+					for (const conditionIdx in conditionStates) {
+						const conditionState = conditionStates[conditionIdx]
 						if (conditionState.State !== 'VALID') {
 							//Iterate values
-							for (let valueIdx in conditionState.ValueStates) {
-								let valueState = conditionState.ValueStates[valueIdx]
+							for (const valueIdx in conditionState.ValueStates) {
+								const valueState = conditionState.ValueStates[valueIdx]
 								if (valueState !== 'VALID') {
 									validationErrorFieldIndex.push({
 										elemId: this.tableName + '_filters_' + filterIdx + '_' + conditionIdx + '_' + valueIdx,
@@ -652,7 +652,7 @@
 			 * @returns {Array}
 			 */
 			getFilterValueErrorMessages(filterIdx, conditionIdx, valueIdx) {
-				let errors = this.validationErrorFieldIndex.filter(
+				const errors = this.validationErrorFieldIndex.filter(
 					(error) => error.elemId === this.tableName + '_filters_' + filterIdx + '_' + conditionIdx + '_' + valueIdx
 				)
 				return errors.map((error) => error.message)
@@ -663,14 +663,14 @@
 			 * @param {string} id
 			 */
 			focusErrorField(id) {
-				let fieldInfo = this.validationErrorFieldIndex[id]
+				const fieldInfo = this.validationErrorFieldIndex[id]
 				if (!fieldInfo) return
 
 				let elemId = fieldInfo.elemId
 				if (fieldInfo.fieldType === 'Date') {
 					elemId = 'dp-input-' + elemId
 				}
-				let elem = document.getElementById(elemId)
+				const elem = document.getElementById(elemId)
 				if (!elem) return
 
 				elem.focus()
@@ -690,7 +690,7 @@
 		watch: {
 			signal: {
 				handler(newValue) {
-					for (let key in newValue) {
+					for (const key in newValue) {
 						switch (key) {
 							case 'show':
 								if (newValue.show) {

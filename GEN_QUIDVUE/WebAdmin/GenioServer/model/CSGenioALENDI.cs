@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -228,20 +228,20 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(14);
-			info.Pathways.Add("pess2","pess2");
 			info.Pathways.Add("pess1","pess1");
+			info.Pathways.Add("pess2","pess2");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("stake","pess2");
-			info.Pathways.Add("cmpny","pess2");
-			info.Pathways.Add("cntry","pess2");
+			info.Pathways.Add("stake","pess1");
 			info.Pathways.Add("cate2","pess1");
-			info.Pathways.Add("decom","equip");
+			info.Pathways.Add("cmpny","pess1");
+			info.Pathways.Add("cntry","pess1");
 			info.Pathways.Add("wareh","equip");
+			info.Pathways.Add("decom","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
-			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 		}
 
 		/// <summary>
@@ -620,7 +620,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX LENDI]/

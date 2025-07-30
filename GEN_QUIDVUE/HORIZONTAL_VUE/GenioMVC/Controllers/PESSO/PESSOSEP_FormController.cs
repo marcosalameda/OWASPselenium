@@ -671,12 +671,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Pesso/Pessosep_SaveEdit
 		[HttpPost]
 		public ActionResult Pessosep_SaveEdit([FromBody] Pessosep_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pessosep_SaveEdit",
 				ViewName = "Pessosep",
@@ -707,7 +706,18 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsPessosep([FromBody] PessosepDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+		}
+
+		/// <summary>
+		/// Stores a new document, in the Docums table, associated to field CURRICUL
+		/// </summary>
+		/// <param name="requestModel">The request model with the document and ticket</param>
+		/// <returns>A JSON response with the result of the operation</returns>
+		public ActionResult SetFilePessosepCurricul([FromForm] RequestDocumsCreateModel requestModel)
+		{
+			List<string> extensions = [];
+			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version, extensions);
 		}
 	}
 }

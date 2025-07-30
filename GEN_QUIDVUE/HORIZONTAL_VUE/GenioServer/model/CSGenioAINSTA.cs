@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -222,8 +222,8 @@ namespace CSGenio.business
 			info.Pathways.Add("famil","tpequ");
 			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
-			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("item","equip");
+			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("pess1","equip");
 			info.Pathways.Add("gitem","equip");
@@ -603,7 +603,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX INSTA]/

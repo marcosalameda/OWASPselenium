@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -235,7 +235,7 @@ namespace CSGenio.business
 			info.ChildTable = new ChildRelation[6];
 			info.ChildTable[0]= new ChildRelation("ccorr", new String[] {"coditem"}, DeleteProc.NA);
 			info.ChildTable[1]= new ChildRelation("ldent", new String[] {"coditem"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("itemp", new String[] {"coditem"}, DeleteProc.AP);
+			info.ChildTable[2]= new ChildRelation("itemp", new String[] {"coditem"}, DeleteProc.NA);
 			info.ChildTable[3]= new ChildRelation("outpu", new String[] {"coditem"}, DeleteProc.NA);
 			info.ChildTable[4]= new ChildRelation("itemc", new String[] {"coditem"}, DeleteProc.NA);
 			info.ChildTable[5]= new ChildRelation("equip", new String[] {"coditem"}, DeleteProc.NA);
@@ -255,8 +255,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("wareh","wareh");
 			info.Pathways.Add("gitem","gitem");
+			info.Pathways.Add("wareh","wareh");
 		}
 
 		/// <summary>
@@ -660,7 +660,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX ITEM]/

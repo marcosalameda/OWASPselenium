@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -159,11 +159,11 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(11);
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("indoc","indoc");
-			info.Pathways.Add("wareh","item");
 			info.Pathways.Add("gitem","item");
+			info.Pathways.Add("wareh","item");
 			info.Pathways.Add("cntry","indoc");
-			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("cmpny","indoc");
+			info.Pathways.Add("ware1","indoc");
 			info.Pathways.Add("pesso","indoc");
 			info.Pathways.Add("categ","indoc");
 			info.Pathways.Add("pais1","indoc");
@@ -475,7 +475,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX CCORR]/

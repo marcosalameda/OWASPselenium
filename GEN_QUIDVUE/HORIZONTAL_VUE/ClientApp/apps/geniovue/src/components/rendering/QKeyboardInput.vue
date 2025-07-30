@@ -143,19 +143,13 @@
 
 		mounted()
 		{
-			document.addEventListener('mousedown', (event) => {
-				if (event.target && !this.$refs.keyboardContainer.contains(event.target))
-					this.togglePopupOff()
-			})
+			document.addEventListener('mousedown', this.onMousedown)
 		},
 
 		beforeUnmount()
 		{
 			// Hook to remove event listener when the component is destroyed, to avoid potential memory leaks.
-			document.removeEventListener('mousedown', (event) => {
-				if (event.target && !this.$refs.keyboardContainer.contains(event.target))
-					this.togglePopupOff()
-			})
+			document.removeEventListener('mousedown', this.onMousedown)
 		},
 
 		computed: {
@@ -174,8 +168,8 @@
 
 			keyboardRows()
 			{
-				let itemsPerRow = Math.ceil(this.options.length / this.rows) // Round a number up to the nearest integer, ex: 1 => 1 / 1.1 => 2
-				let result = []
+				const itemsPerRow = Math.ceil(this.options.length / this.rows) // Round a number up to the nearest integer, ex: 1 => 1 / 1.1 => 2
+				const result = []
 				for (let i = 0; i < this.rows; i++)
 					result.push(this.options.slice(i * itemsPerRow, (i + 1) * itemsPerRow)) // This slices a portion of options array to create a new inner array (or row).
 				return result
@@ -195,6 +189,12 @@
 		},
 
 		methods: {
+			onMousedown(event)
+			{
+				if (event.target && !this.$refs.keyboardContainer.contains(event.target))
+					this.togglePopupOff()
+			},
+
 			inputDigit(digit)
 			{
 				if (digit === 'q-keyboard--backspace')

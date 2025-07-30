@@ -122,7 +122,7 @@
 				const selectValues = []
 				let selectOption = {}
 
-				for (let idx in this.selectOptions)
+				for (const idx in this.selectOptions)
 				{
 					selectOption = this.selectOptions[idx]
 					if (selectOption.selected !== false)
@@ -144,7 +144,7 @@
 				const selectOptions = cloneDeep(this.options)
 
 				// Set property of each option to it's state, selected or not, based on whether it's value is in the modelValue array
-				for (let idx in selectOptions)
+				for (const idx in selectOptions)
 				{
 					const selectOption = selectOptions[idx]
 					// Option's value is in the modelValue array

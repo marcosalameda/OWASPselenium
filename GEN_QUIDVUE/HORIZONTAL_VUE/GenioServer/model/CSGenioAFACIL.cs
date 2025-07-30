@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -240,8 +240,8 @@ namespace CSGenio.business
 			info.Pathways.Add("cntry","cntry");
 			info.Pathways.Add("facty","facty");
 			info.Pathways.Add("entit","entit");
-			info.Pathways.Add("faci1","entit");
 			info.Pathways.Add("faci2","entit");
+			info.Pathways.Add("faci1","entit");
 		}
 
 		/// <summary>
@@ -642,7 +642,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX FACIL]/

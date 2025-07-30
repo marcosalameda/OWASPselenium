@@ -66,8 +66,8 @@
 			 */
 			onFocusoutMenu(event)
 			{
-				let menuContainer = this.$refs?.menuContainer
-				let focusedElem = event?.relatedTarget
+				const menuContainer = this.$refs?.menuContainer
+				const focusedElem = event?.relatedTarget
 				//If the focus went to an element within the menu button or dropdown,
 				//logically, the menu is still focused
 				if(menuContainer.contains(focusedElem))

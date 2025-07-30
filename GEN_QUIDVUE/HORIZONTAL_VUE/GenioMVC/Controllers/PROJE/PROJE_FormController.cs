@@ -600,12 +600,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Proje/Proje_SaveEdit
 		[HttpPost]
 		public ActionResult Proje_SaveEdit([FromBody] Proje_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Proje_SaveEdit",
 				ViewName = "Proje",
@@ -636,7 +635,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsProje([FromBody] ProjeDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

@@ -401,13 +401,12 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Regis/Regis_SaveEdit
 		[AllowAnonymous]
 		[HttpPost]
 		public ActionResult Regis_SaveEdit([FromBody] Regis_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_SaveEdit",
 				ViewName = "Regis",
@@ -438,7 +437,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsRegis([FromBody] RegisDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

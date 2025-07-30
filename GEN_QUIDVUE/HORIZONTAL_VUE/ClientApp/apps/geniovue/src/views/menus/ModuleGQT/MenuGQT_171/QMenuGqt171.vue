@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_171ViewModel.js'
 
@@ -245,7 +246,7 @@
 											fnValueSelector: (row) => row.ValCodequip
 										},
 									],
-									action: vm.openMenuAction, type: 'menu', menuName: 'GQT_1711',
+									action: vm.openMenuAction, type: 'menu', menuName: 'GQT_1711'
 								}
 							},
 							formsDefinition: {
@@ -258,7 +259,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY', 'changed-PESS1', 'changed-DECOM'],
+						globalEvents: ['changed-ITEM', 'changed-WAREH', 'changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-DECOM', 'changed-PESS1'],
 						uuid: '1090b7c9-cd38-40ef-a2d1-2d42d0f77d18',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -285,6 +286,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GQT_MENU_171]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_171]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

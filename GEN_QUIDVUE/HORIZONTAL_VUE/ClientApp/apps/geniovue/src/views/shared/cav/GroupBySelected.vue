@@ -238,10 +238,10 @@
 
 			hydrateGroupField(fld)
 			{
-				let table = _find(this.tables, (t) => t.Id === fld.TableId),
+				const table = _find(this.tables, (t) => t.Id === fld.TableId),
 					field = _find(table.Fields, (f) => f.Id === fld.FieldId)
 
-				let extendedField = _assignIn(fld, {
+				const extendedField = _assignIn(fld, {
 					tableTitle: table.Description,
 					Title: field.Description
 				})
@@ -251,7 +251,7 @@
 
 			hydrateGroup(group)
 			{
-				let extendedGroup = {
+				const extendedGroup = {
 					internalKey: uuidv4(),
 					PageBreak: group.PageBreak || false,
 					Fields: []
@@ -277,11 +277,11 @@
 			 */
 			removeField(groupInternalKey, fieldId)
 			{
-				let idxOfGroup = _findIndex(this.groupings, (g) => g.internalKey === groupInternalKey)
+				const idxOfGroup = _findIndex(this.groupings, (g) => g.internalKey === groupInternalKey)
 
 				if (idxOfGroup !== -1)
 				{
-					let idxToRemove = _findIndex(this.groupings[idxOfGroup].Fields, (f) => f.FieldId === fieldId)
+					const idxToRemove = _findIndex(this.groupings[idxOfGroup].Fields, (f) => f.FieldId === fieldId)
 					if (idxToRemove !== -1)
 						this.groupings[idxOfGroup].Fields.splice(idxToRemove, 1)
 				}

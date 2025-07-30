@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_MB_MC_RViewModel.js'
 
@@ -172,7 +173,7 @@
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayDsiponib.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayDsiponib(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayDsiponib.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
@@ -225,7 +226,7 @@
 												fnValueSelector: (row) => row.ValCoditem
 											},
 										],
-										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_3A11,
+										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_3A11
 									}
 								},
 							],
@@ -240,7 +241,7 @@
 												fnValueSelector: (row) => row.ValCoditem
 											},
 										],
-										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_Menu_LIST_DB_MB_MC_R_MenuR_OPENARTIGVAL,
+										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_Menu_LIST_DB_MB_MC_R_MenuR_OPENARTIGVAL
 									}
 								},
 								{
@@ -253,7 +254,7 @@
 												fnValueSelector: (row) => row.ValCoditem
 											},
 										],
-										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_Menu_LIST_DB_MB_MC_R_MenuR_OPENARTIGINV,
+										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_Menu_LIST_DB_MB_MC_R_MenuR_OPENARTIGINV
 									}
 								},
 							],
@@ -279,7 +280,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-GITEM', 'changed-ITEM'],
+						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
 						uuid: '6ef09042-07c7-4515-a46d-6e9b3833501c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -319,6 +320,10 @@
 			// Listener for MC action in case of redirect by Jump if just one.
 			this.$eventHub.off('EXEC-PTN_MenuMC_3A11', this.PTN_MenuMC_3A11)
 			this.$eventHub.off('EXEC-MENU-ROUTINE-PTN_LIST_DB_MB_MC_R', this.onExecRoutineEvent)
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_LIST_DB_MB_MC_R]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
 		methods: {

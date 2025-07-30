@@ -160,7 +160,7 @@ public class ListacamForm : Form
 	/// <summary>
 	/// Attachments
 	/// </summary>
-	public DocumentControl CamdocsFldsAttach => new DocumentControl(driver, ContainerLocator, "CAMDOCS_FLDS_ATTACH__");
+	public DocumentControl CamdocsFldsAttach => new DocumentControl(driver, ContainerLocator, "CAMDOCS_FLDS_ATTACH__-container");
 
 	/// <summary>
 	/// Created by

@@ -61,8 +61,7 @@
 						@selected="emitConfigAction">
 						<component
 							:is="confirmChanges ? 'q-badge-indicator' : 'v-fragment'"
-							color="highlight"
-							placement="top-right">
+							color="highlight">
 							<q-icon icon="table-configuration" />
 						</component>
 					</q-dropdown-menu>
@@ -93,7 +92,7 @@
 						:model-value="$props.activeViewModeId"
 						:view-modes="$props.viewModes"
 						:texts="$props.texts"
-						@update:model-value="(newVal) => $emit('update:active-view-mode', newVal)" />
+						@update:model-value="(newVal) => emitEvent('update:active-view-mode', newVal)" />
 					<!-- BEGIN: Row reorder toggle -->
 					<q-button
 						v-if="showRowDragAndDropOption && !readonly"
@@ -123,8 +122,8 @@
 							:server-mode="serverMode"
 							:texts="texts"
 							@import-data="importData"
-							@show-import-popup="$emit('show-popup', importModalProps)"
-							@hide-import-popup="$emit('hide-popup', 'data-import')"
+							@show-import-popup="emitEvent('show-popup', importModalProps)"
+							@hide-import-popup="emitEvent('hide-popup', 'data-import')"
 							@export-template="(format) => exportTemplate(format)">
 						</q-table-import>
 						<!-- END: Import menu -->
@@ -151,7 +150,7 @@
 					:disabled="!loaded"
 					:message="searchBarConfig.message"
 					:signal="signalSearch"
-					@set-message="(...args) => $emit('set-property', ['config', 'searchBarConfig', 'message'], ...args)"
+					@set-message="(...args) => emitEvent('set-property', ['config', 'searchBarConfig', 'message'], ...args)"
 					@clear-global-search="clearGlobalSearch"
 					@search-by-column="searchByColumn"
 					@search-by-all-columns="searchByAllColumns"
@@ -205,6 +204,7 @@
 					:menu-name="config.name"
 					:group-filters="groupFilters"
 					:active-filters="activeFilters"
+					:date-formats="dateFormats"
 					@update:active-filters="updateActiveFilters"
 					@update:group-filters="updateGroupFilters" />
 
@@ -218,8 +218,8 @@
 					:has-filters-active="hasCustomFilters"
 					:texts="texts"
 					:filter-operators="filterOperators"
-					@signal-component="(...args) => $emit('signal-component', ...args)"
-					@show-advanced-filters="(...args) => $emit('show-advanced-filters', ...args)"
+					@signal-component="(...args) => emitEvent('signal-component', ...args)"
+					@show-advanced-filters="(...args) => emitEvent('show-advanced-filters', ...args)"
 					@remove-column-filter="removeColumnFilter"
 					@remove-search-bar-filter="removeSearchBarFilter"
 					@remove-custom-filters="removeAllCustomFilters" />
@@ -250,7 +250,7 @@
 						:texts="texts"
 						@row-action="
 							(emitAction) =>
-								$emit('row-action', {
+								emitEvent('row-action', {
 									...emitAction,
 									row: rowSelected,
 									rowKeyPath: rowSelected?.rowKeyPath ?? '',
@@ -280,7 +280,7 @@
 										? onMultiformSelect(row)
 										: null
 								"
-								@deselect="$emit('set-array-sub-prop-where', 'rowFormProps', 'id', row.rowKey, 'mode', 'SHOW')">
+								@deselect="emitEvent('set-array-sub-prop-where', 'rowFormProps', 'id', row.rowKey, 'mode', 'SHOW')">
 							</component>
 						</div>
 						<div
@@ -292,8 +292,8 @@
 								:form-data="{ form: formName, id: newRowID, mode: 'NEW' }"
 								:row-component-props="rowComponentPropsInsert"
 								:resources-path="config.resourcesPath"
-								@insert-form="(...args) => $emit('insert-form', ...args)"
-								@cancel-insert="(...args) => $emit('cancel-insert', ...args)">
+								@insert-form="(...args) => emitEvent('insert-form', ...args)"
+								@cancel-insert="(...args) => emitEvent('cancel-insert', ...args)">
 							</component>
 						</div>
 					</template>
@@ -334,14 +334,14 @@
 							@check-all-rows="checkAllRows"
 							@check-current-page-rows="checkCurrentPageRows"
 							@check-none-rows="checkNoneRows"
-							@unselect-all-rows="$emit('unselect-all-rows')"
+							@unselect-all-rows="emitEvent('unselect-all-rows')"
 							@edit-column-filter="(...args) => editColumnFilter(...args)"
 							@remove-column-filter="(...args) => removeColumnFilter(...args)"
-							@add-advanced-filter="(...args) => $emit('add-advanced-filter', ...args)"
+							@add-advanced-filter="(...args) => emitEvent('add-advanced-filter', ...args)"
 							@show-advanced-filters="
 								(idx, columnFilter, columnName) => {
-									$emit('signal-component', 'config', { show: true, selectedTab: 'advanced-filters' }, true)
-									$emit('signal-component', 'advancedFilters', { columnFilter: columnFilter, columnName: columnName, selectedFilterIdx: idx }, true)
+									emitEvent('signal-component', 'config', { show: true, selectedTab: 'advanced-filters' }, true)
+									emitEvent('signal-component', 'advancedFilters', { columnFilter: columnFilter, columnName: columnName, selectedFilterIdx: idx }, true)
 								}
 							"
 							@column-resize="onColumnResize()"
@@ -396,14 +396,14 @@
 									:texts="texts"
 									:resources-path="config.resourcesPath"
 									@row-click="(...args) => executeRowClickAction(...args)"
-									@row-action="(emitAction) => $emit('row-action', emitAction)"
+									@row-action="(emitAction) => emitEvent('row-action', emitAction)"
 									@row-reorder="rowReorder"
-									@execute-action="(...args) => $emit('execute-action', ...args)"
+									@execute-action="(...args) => emitEvent('execute-action', ...args)"
 									@cell-action="(...args) => executeActionCell(...args)"
 									@remove-row="removeRow(row.rowKey)"
 									@toggle-row-selected="toggleRowSelectMultiple(row)"
 									@update="(...args) => updateCell(...args)"
-									@update-external="(...args) => $emit('update-external', ...args)"
+									@update-external="(...args) => emitEvent('update-external', ...args)"
 									@toggle-show-children="setChildRowsVisibility"
 									@go-to-row="(...args) => goToRow(...args)"
 									@navigate-row="(...args) => navigateToRowByMultiIndex(...args)"
@@ -534,7 +534,7 @@
 								:enable-general-actions="loaded"
 								display="inline"
 								:texts="texts"
-								@row-action="(emitAction) => $emit('row-action', emitAction)" />
+								@row-action="(emitAction) => emitEvent('row-action', emitAction)" />
 						</template>
 					</q-table-footer>
 				</div>
@@ -600,7 +600,7 @@
 								:enable-general-actions="loaded"
 								display="inline"
 								:texts="texts"
-								@row-action="$emit('row-action', $event)" />
+								@row-action="emitEvent('row-action', $event)" />
 						</template>
 					</q-table-footer>
 				</div>
@@ -1143,7 +1143,7 @@
 			 */
 			filterOperators: {
 				type: Object,
-				default: () => searchFilterData.operators.elements
+				default: () => new searchFilterData.SearchFilterConditionOperators()
 			},
 
 			/**
@@ -1186,6 +1186,8 @@
 		data()
 		{
 			return {
+				unmountedComponent: false,
+
 				controlId: this.id || this.config.name || `q-table-${this._.uid}`,
 				vbtRows: [],
 				vbtColumns: [],
@@ -1415,7 +1417,7 @@
 
 					if (this.changeQueryOnLoad !== false) this.changeQuery()
 
-					this.$emit('loaded')
+					this.emitEvent('loaded')
 				}
 			})
 
@@ -1451,7 +1453,7 @@
 			// Update table navigation properties
 			if (this.setNavOnUpdate)
 			{
-				this.$emit('set-property', ['config', 'setNavOnUpdate'], false)
+				this.emitEvent('set-property', ['config', 'setNavOnUpdate'], false)
 
 				this.$nextTick().then(() => {
 					this.navigateToTableRowAction('first')
@@ -1461,6 +1463,8 @@
 
 		beforeUnmount()
 		{
+			this.unmountedComponent = true
+
 			window.removeEventListener('keyup', this.handleShiftKeyOnSelectStart)
 			window.removeEventListener('keydown', this.handleShiftKeyOnSelectStart)
 			document.removeEventListener('selectstart', this.documentOnSelectStart)
@@ -1472,6 +1476,29 @@
 				this.resizableGrid.destroy()
 				this.resizableGrid = null
 			}
+
+
+			this.tableContainerElem = null
+
+			this.navRowElems.length = 0
+
+			if(this.vbtColumns?.length > 0) {
+				this.vbtColumns.forEach(column => {
+					if(typeof column.destroy === 'function')
+						column.destroy()
+				})
+			}
+			this.vbtColumns.splice(0)
+
+			this.columnHierarchy.length = 0
+
+			if(this.vbtRows?.length > 0) {
+				this.vbtRows.forEach((row) => {
+					if(typeof row?.destroy === 'function')
+						row.destroy()
+				})
+			}
+			this.vbtRows.length = 0
 		},
 
 		computed: {
@@ -1779,11 +1806,11 @@
 			hasStaticFiltersActive()
 			{
 				// Iterate group filters
-				for (let key in this.groupFilters)
+				for (const key in this.groupFilters)
 				{
 					const curFilter = this.groupFilters[key]
 
-					for (let idx in curFilter.filters)
+					for (const idx in curFilter.filters)
 					{
 						const curSubFilter = curFilter.filters[idx]
 
@@ -1792,7 +1819,7 @@
 				}
 
 				// Iterate active filters
-				for (let key in this.activeFilters.options)
+				for (const key in this.activeFilters.options)
 				{
 					const curFilter = this.activeFilters.options[key]
 
@@ -1833,7 +1860,7 @@
 			{
 				const advancedFiltersActive = []
 
-				for (let idx in this.advancedFilters)
+				for (const idx in this.advancedFilters)
 				{
 					const filter = this.advancedFilters[idx]
 
@@ -1957,7 +1984,7 @@
 			 */
 			sortOrderColumn()
 			{
-				for (let idx in this.columns)
+				for (const idx in this.columns)
 				{
 					const column = this.columns[idx]
 
@@ -2017,12 +2044,12 @@
 			 */
 			rowSelected()
 			{
-				let rowIdStr = Object.keys(this.rowsSelected)[0]
+				const rowIdStr = Object.keys(this.rowsSelected)[0]
 				if (rowIdStr === undefined || rowIdStr === null) return null
 
-				let rowId = rowIdStr.split(',')
+				const rowId = rowIdStr.split(',')
 
-				let rowSelected = listFunctions.getRowByKeyPath(this.rows, rowId)
+				const rowSelected = listFunctions.getRowByKeyPath(this.rows, rowId)
 
 				if (rowSelected !== undefined && rowSelected !== null) rowSelected.rowKeyPath = rowId
 
@@ -2167,6 +2194,16 @@
 			rowWithoutChildren: listFunctions.rowWithoutChildren,
 			isValidFilter: listFunctions.isValidFilter,
 
+			emitEvent(event, ...rawArgs)
+			{
+				if (!this.unmountedComponent)
+					this.$emit(event, ...rawArgs)
+				// To facilitate debugging during development
+				else if (import.meta.env.DEV)
+					// eslint-disable-next-line no-console
+					console.warn(`The QTable component is emitting the event already after unmount: ${event}`)
+			},
+
 			/**
 			 * Sets all data properties from props passed in
 			 */
@@ -2224,7 +2261,7 @@
 				if(rowElems.length > 0)
 				{
 					// Clear the state for all action elements in this row
-					let actionElements = this.getTableRowActionElements(rowElems[rowIndex])
+					const actionElements = this.getTableRowActionElements(rowElems[rowIndex])
 					actionElements.forEach((actionElement) => {
 						actionElement.setAttribute('data-table-action-selected', 'false')
 					})
@@ -2314,7 +2351,7 @@
 				const rowElems = this.navRowElems
 				if(rowElems.length === 0)
 					return
-				let actionElements = this.getTableRowActionElements(rowElems[this.navRowIndex])
+				const actionElements = this.getTableRowActionElements(rowElems[this.navRowIndex])
 				this.focusTableRowActionElement(actionElements, direction)
 			},
 
@@ -2441,7 +2478,7 @@
 						break
 					case "Insert":
 						// Insert new record
-						this.$emit('row-action', { id: 'insert' })
+						this.emitEvent('row-action', { id: 'insert' })
 						event.preventDefault()
 						break
 					case "PageUp":
@@ -2469,7 +2506,7 @@
 			rowOnFocusin(event)
 			{
 				// Actual element mousedown happens on
-				let element = event?.target
+				const element = event?.target
 
 				// Get action element that mousedown happened on or propagated to
 				// since mousedown can originate on sub-elements
@@ -2484,7 +2521,7 @@
 					rowElement = rowElement.parentElement
 
 				// Get multi-index of row
-				let multiIndex = rowElement.getAttribute('index')
+				const multiIndex = rowElement.getAttribute('index')
 
 				// Set row as the current navigated row
 				this.navRowIndex = this.getNavRowIndexFromMultiIndex(multiIndex)
@@ -2501,9 +2538,9 @@
 
 				// Set the row property that signals if the row is navigated
 				if(multiIndex === 'h')
-					this.$emit('set-property', ['headerRow', 'isNavigated'], true)
+					this.emitEvent('set-property', ['headerRow', 'isNavigated'], true)
 				else
-					this.$emit('set-row-index-property', multiIndex, 'isNavigated', true)
+					this.emitEvent('set-row-index-property', multiIndex, 'isNavigated', true)
 			},
 
 			/**
@@ -2516,7 +2553,7 @@
 			rowOnFocusout(event)
 			{
 				// Actual element focusout happens on
-				let element = event?.target
+				const element = event?.target
 
 				// Get row element
 				let rowElement = element
@@ -2524,7 +2561,7 @@
 					rowElement = rowElement.parentElement
 
 				// Element focus went to, if any
-				let elementFocused = event?.relatedTarget
+				const elementFocused = event?.relatedTarget
 
 				// If element focus went to is in the row, navigation stays on the row
 				if(rowElement.contains(elementFocused))
@@ -2534,16 +2571,16 @@
 				this.resetTableRowActionProperties(this.navRowIndex)
 
 				//Get multi-index of row
-				let multiIndex = rowElement.getAttribute('index')
+				const multiIndex = rowElement.getAttribute('index')
 
 				// Prevent re-rendering rows when changing the row navigated property
 				this.rerenderRowsOnNextChange = false
 
 				// Set the row property that signals if the row is navigated
 				if(multiIndex === 'h')
-					this.$emit('set-property', ['headerRow', 'isNavigated'], false)
+					this.emitEvent('set-property', ['headerRow', 'isNavigated'], false)
 				else
-					this.$emit('set-row-index-property', multiIndex, 'isNavigated', false)
+					this.emitEvent('set-row-index-property', multiIndex, 'isNavigated', false)
 			},
 
 			/**
@@ -2569,11 +2606,11 @@
 				this.perPage = perPage
 
 				// Update property in table model object
-				this.$emit('set-property', ['config', 'perPageSelected'], this.perPage)
+				this.emitEvent('set-property', ['config', 'perPageSelected'], this.perPage)
 
 				if (!this.serverMode)
 				{
-					let doPaginateFilter = this.page === 1
+					const doPaginateFilter = this.page === 1
 
 					if (!this.preservePageOnDataChange) this.page = 1
 
@@ -2581,7 +2618,7 @@
 				} else
 				{
 					this.changeQuery()
-					this.$emit('update-config')
+					this.emitEvent('update-config')
 				}
 			},
 
@@ -2592,7 +2629,7 @@
 			initGlobalSearch(emitSearch = false)
 			{
 				// Update property in table model object
-				this.$emit('set-property', ['searchValue'], this.searchBarConfig.init.value)
+				this.emitEvent('set-property', ['searchValue'], this.searchBarConfig.init.value)
 
 				if (emitSearch) this.updateSearch()
 			},
@@ -2602,7 +2639,7 @@
 			 */
 			initHeaderSelector()
 			{
-				this.$emit('fetch-qtable-all-selected', this.id)
+				this.emitEvent('fetch-qtable-all-selected', this.id)
 
 				//If less than three records, disable button
 				if (this.vbtAllSelected)
@@ -2619,7 +2656,7 @@
 			 */
 			updateSortQuery(columnName, sortOrder)
 			{
-				this.$emit('set-property', ['columnSorting'], { columnName, sortOrder })
+				this.emitEvent('set-property', ['columnSorting'], { columnName, sortOrder })
 			},
 
 			/**
@@ -2650,7 +2687,7 @@
 				this.changeSort(columnName, sortOrder)
 
 				// Signal that the configuration changed so it will be saved when in auto-save mode
-				this.$emit('update-config')
+				this.emitEvent('update-config')
 			},
 
 			/**
@@ -2674,9 +2711,13 @@
 			updateColumns()
 			{
 				//Put references to columns in vbtColumns
+				this.vbtColumns.forEach(column => {
+					if(typeof column.destroy === 'function')
+						column.destroy()
+				})
 				this.vbtColumns.splice(0)
 
-				for (let column of this.columns)
+				for (const column of this.columns)
 					this.vbtColumns.push(column.clone?.() ?? cloneDeep(column))
 
 				//FOR: TABLE LIST ROW ACTIONS
@@ -2834,7 +2875,7 @@
 					this.tempFilteredResults = orderBy(
 						this.tempFilteredResults,
 						(row) => {
-							let value = get(row.Fields, this.columnSorting.columnName)
+							const value = get(row.Fields, this.columnSorting.columnName)
 							return value?.toString().toLowerCase() ?? ''
 						},
 						[this.columnSorting.sortOrder]
@@ -2861,7 +2902,7 @@
 			 */
 			filter(resetPage = true, isInit = false)
 			{
-				let res = filter(this.rows, () => true)
+				const res = filter(this.rows, () => true)
 
 				this.tempFilteredResults = res
 
@@ -2878,7 +2919,7 @@
 					this.page = 1
 				} else if (!isInit)
 				{
-					let newTotalPage = Math.ceil(this.rowCount / this.perPage)
+					const newTotalPage = Math.ceil(this.rowCount / this.perPage)
 					this.page = this.page <= newTotalPage ? this.page : newTotalPage
 				}
 			},
@@ -2890,7 +2931,7 @@
 			 */
 			search(tempFilteredResults)
 			{
-				let globalSearchResults = filter(tempFilteredResults, (row) => {
+				const globalSearchResults = filter(tempFilteredResults, (row) => {
 					let flag = false
 
 					this.vbtColumns.some((vbt_column) =>
@@ -2952,8 +2993,8 @@
 			{
 				if (this.pagination)
 				{
-					let start = (this.page - 1) * this.perPage
-					let end = start + this.perPage
+					const start = (this.page - 1) * this.perPage
+					const end = start + this.perPage
 					this.vbtRows = this.tempFilteredResults.slice(start, end)
 				} else
 				{
@@ -2995,7 +3036,7 @@
 
 				if (column !== undefined) emitAction['column'] = column
 
-				this.$emit('cell-action', emitAction)
+				this.emitEvent('cell-action', emitAction)
 			},
 
 			//FOR: EXTENDED ROW ACTIONS
@@ -3019,7 +3060,7 @@
 				{
 					this.checkCurrentPageRows()
 
-					this.$emit('set-qtable-all-selected', { isSelected: true, id: this.id })
+					this.emitEvent('set-qtable-all-selected', { isSelected: true, id: this.id })
 					this.vbtAllSelected = true
 
 					//Make sure no one can uncheck rows
@@ -3035,16 +3076,17 @@
 			{
 				if (this.vbtAllSelected && !isInit)
 				{
-					this.$emit('set-qtable-all-selected', { isSelected: false, id: this.id })
+					this.emitEvent('set-qtable-all-selected', { isSelected: false, id: this.id })
 					this.vbtAllSelected = false
 
 					//Re-enable rows
 					this.enableAllChecks()
 				}
 
-				var key = '',
-					row = {},
-					rowKeysArray = {}
+				let key = '',
+					row = {}
+
+				const rowKeysArray = {}
 
 				//Check all visible rows if they aren't checked already
 				if (!this.isSelectedAllRows)
@@ -3060,7 +3102,7 @@
 							rowKeysArray[row.rowKey] = true
 						}
 					}
-					this.$emit('select-rows', rowKeysArray)
+					this.emitEvent('select-rows', rowKeysArray)
 				}
 			},
 
@@ -3072,14 +3114,14 @@
 			{
 				if (this.vbtAllSelected)
 				{
-					this.$emit('set-qtable-all-selected', { isSelected: false, id: this.id })
+					this.emitEvent('set-qtable-all-selected', { isSelected: false, id: this.id })
 					this.vbtAllSelected = false
 
 					//Re-enable rows
 					this.enableAllChecks()
 				}
 
-				this.$emit('unselect-all-rows')
+				this.emitEvent('unselect-all-rows')
 			},
 
 			//FOR: TABLE LIST COLUMN SUPPORT FORMS
@@ -3144,16 +3186,16 @@
 			 */
 			getRowCellDataTitles(row, columns, options)
 			{
-				var cellTitles = {}
+				const cellTitles = {}
 
 				if (options !== undefined)
 				{
 					options = {}
 				}
 
-				for (let col in columns)
+				for (const col in columns)
 				{
-					let column = columns[col]
+					const column = columns[col]
 
 					// Columns with multiple values will display a tooltip for each badge instead of a single tooltip for the entire cell.
 					if (column.isHtmlField || column.multipleValues) cellTitles[column.name] = ''
@@ -3206,7 +3248,7 @@
 			 */
 			getRowClasses(row, columnsLevel = 0)
 			{
-				let rowClasses = []
+				const rowClasses = []
 
 				if (this.hasRowClickAction) rowClasses.push('c-table__row--clickable')
 
@@ -3249,9 +3291,9 @@
 				if (!this.doClickAction(row)) return
 
 				//Execute default row action
-				let rowKeyPath = listFunctions.getRowKeyPath(this.rows, row)
-				if (Object.keys(this.rowClickAction).length > 0) this.$emit('row-action', { id: this.rowClickAction.id, rowKeyPath })
-				else this.$emit('row-action', { rowKeyPath })
+				const rowKeyPath = listFunctions.getRowKeyPath(this.rows, row)
+				if (Object.keys(this.rowClickAction).length > 0) this.emitEvent('row-action', { id: this.rowClickAction.id, rowKeyPath })
+				else this.emitEvent('row-action', { rowKeyPath })
 			},
 
 			/**
@@ -3260,16 +3302,16 @@
 			 */
 			toggleRowSelectSingle(row)
 			{
-				let rowKeyPath = listFunctions.getRowKeyPath(this.rows, row)
+				const rowKeyPath = listFunctions.getRowKeyPath(this.rows, row)
 
 				//If row is already selected, remove from selected rows
 				if (this.isRowSelected(row))
 				{
-					this.$emit('unselect-row', rowKeyPath)
+					this.emitEvent('unselect-row', rowKeyPath)
 				} else
 				{
 					//Add to selected rows
-					this.$emit('select-row', { rowKeyPath, multipleSelection: false })
+					this.emitEvent('select-row', { rowKeyPath, multipleSelection: false })
 				}
 			},
 
@@ -3279,16 +3321,16 @@
 			 */
 			toggleRowSelectMultiple(row)
 			{
-				let rowKeyPath = listFunctions.getRowKeyPath(this.rows, row)
+				const rowKeyPath = listFunctions.getRowKeyPath(this.rows, row)
 
 				//If row is already selected, remove from selected rows
 				if (this.isRowSelected(row))
 				{
-					this.$emit('unselect-row', rowKeyPath)
+					this.emitEvent('unselect-row', rowKeyPath)
 				} else
 				{
 					//If row is not already selected, add to selected rows
-					this.$emit('select-row', { rowKeyPath, multipleSelection: true })
+					this.emitEvent('select-row', { rowKeyPath, multipleSelection: true })
 				}
 			},
 
@@ -3299,9 +3341,9 @@
 			 */
 			isRowSelected(row)
 			{
-				let rowKeyPath = listFunctions.getRowKeyPath(this.rows, row)
+				const rowKeyPath = listFunctions.getRowKeyPath(this.rows, row)
 
-				for (let x in this.rowsSelected)
+				for (const x in this.rowsSelected)
 				{
 					if (x.toString() === rowKeyPath.toString())
 					{
@@ -3319,7 +3361,7 @@
 			 */
 			removeRow(rowKey)
 			{
-				this.$emit('remove-row', rowKey)
+				this.emitEvent('remove-row', rowKey)
 			},
 			//END: Row methods
 
@@ -3333,8 +3375,8 @@
 			{
 				if (column.showTotal)
 				{
-					var total = 0
-					var row = {}
+					let total = 0
+					let row = {}
 
 					if (selectedOnly === undefined)
 					{
@@ -3344,7 +3386,7 @@
 					//Sum column values of rows
 					if (column.showTotal !== false)
 					{
-						for (let idx in this.rows)
+						for (const idx in this.rows)
 						{
 							row = this.rows[idx]
 
@@ -3367,7 +3409,7 @@
 			 */
 			rowGroupAction(event)
 			{
-				this.$emit('row-group-action', {
+				this.emitEvent('row-group-action', {
 					rowsSelected: this.rowsSelected,
 					allSelected: this.vbtAllSelected,
 					action: event.action
@@ -3380,7 +3422,7 @@
 			clearGlobalSearch()
 			{
 				// Update property in table model object
-				this.$emit('set-property', ['searchValue'], '')
+				this.emitEvent('set-property', ['searchValue'], '')
 				this.updateSearch()
 			},
 
@@ -3394,9 +3436,9 @@
 				//Clear search bar
 				if (this.searchValue?.length > 0)
 					// Update property in table model object
-					this.$emit('set-property', ['searchValue'], '')
+					this.emitEvent('set-property', ['searchValue'], '')
 
-				this.$emit('reset-query')
+				this.emitEvent('reset-query')
 				this.updateSearch()
 			},
 
@@ -3407,7 +3449,7 @@
 			emitSearch(searchValue)
 			{
 				// Update property in table model object
-				this.$emit('set-property', ['searchValue'], searchValue)
+				this.emitEvent('set-property', ['searchValue'], searchValue)
 				this.updateSearch()
 			},
 
@@ -3427,11 +3469,11 @@
 				}
 
 				// Update page property in table model object
-				this.$emit('set-property', ['config', 'page'], page)
+				this.emitEvent('set-property', ['config', 'page'], page)
 
 				// Signal change in query
 				if (this.serverMode && this.canEmitQueries)
-					this.$emit('on-change-query')
+					this.emitEvent('on-change-query')
 			},
 
 			/**
@@ -3462,14 +3504,14 @@
 			editColumnFilter(fullColumnName, filter)
 			{
 				// Clone column filters and replace the one being edited
-				let columnFilters = cloneDeep(this.columnFilters)
+				const columnFilters = cloneDeep(this.columnFilters)
 				columnFilters[fullColumnName] = filter
 
 				// Set property in table model object
-				this.$emit('set-property', ['columnFilters'], columnFilters)
+				this.emitEvent('set-property', ['columnFilters'], columnFilters)
 
 				// Signal that there is an update to save the configuration when in auto-save mode
-				this.$emit('update-config')
+				this.emitEvent('update-config')
 
 				this.updateSearch()
 			},
@@ -3481,14 +3523,14 @@
 			removeColumnFilter(fullColumnName)
 			{
 				// Clone column filters and remove this
-				let columnFilters = cloneDeep(this.columnFilters)
+				const columnFilters = cloneDeep(this.columnFilters)
 				delete columnFilters[fullColumnName]
 
 				// Set property in table model object
-				this.$emit('set-property', ['columnFilters'], columnFilters)
+				this.emitEvent('set-property', ['columnFilters'], columnFilters)
 
 				// Signal that there is an update to save the configuration when in auto-save mode
-				this.$emit('update-config')
+				this.emitEvent('update-config')
 
 				this.updateSearch()
 			},
@@ -3500,7 +3542,7 @@
 			clearColumnFilters(emitSearch = false)
 			{
 				// Set property in table model object
-				this.$emit('set-property', ['columnFilters'], {})
+				this.emitEvent('set-property', ['columnFilters'], {})
 
 				if (emitSearch)
 				{
@@ -3515,11 +3557,11 @@
 			removeSearchBarFilter(fullColumnName)
 			{
 				// Clone search bar filters without this one and set as the new value
-				let searchBarFilters = cloneDeep(this.searchBarFilters)
+				const searchBarFilters = cloneDeep(this.searchBarFilters)
 				delete searchBarFilters[fullColumnName]
 
 				// Update property in table model object
-				this.$emit('set-property', ['searchBarFilters'], searchBarFilters)
+				this.emitEvent('set-property', ['searchBarFilters'], searchBarFilters)
 
 				this.updateSearch()
 				this.signalSearch = { resetQuery: true }
@@ -3532,7 +3574,7 @@
 			clearSearchBarFilters(emitSearch = false)
 			{
 				// Update property in table model object
-				this.$emit('set-property', ['searchBarFilters'], {})
+				this.emitEvent('set-property', ['searchBarFilters'], {})
 				if (emitSearch)
 				{
 					this.updateSearch()
@@ -3549,18 +3591,18 @@
 				// Normalize value
 				value = column.getNormalizedValue(value)
 
-				var columnName = listFunctions.columnFullName(column)
-				var operator = searchFilterData.searchBarOperator(column.searchFieldType, value)
+				const columnName = listFunctions.columnFullName(column)
+				const operator = searchFilterData.searchBarOperator(column.searchFieldType, value)
 
 				// Create hashtable with this column name as the key and the filter as the value
-				let searchBarFilters = {}
+				const searchBarFilters = {}
 				searchBarFilters[columnName] = listFunctions.searchFilter('', true, [
 					listFunctions.searchFilterCondition('', true, listFunctions.columnFullName(column), operator, [value])
 				])
 
 				// Update properties in table model object
-				this.$emit('set-property', ['searchBarFilters'], searchBarFilters)
-				this.$emit('set-property', ['searchValue'], '')
+				this.emitEvent('set-property', ['searchBarFilters'], searchBarFilters)
+				this.emitEvent('set-property', ['searchValue'], '')
 
 				this.updateSearch()
 			},
@@ -3588,9 +3630,9 @@
 				this.updateSortQuery(this.defaultColumnSorting.columnName, this.defaultColumnSorting.sortOrder)
 
 				//Also reloads table
-				this.$emit('remove-all-advanced-filters')
+				this.emitEvent('remove-all-advanced-filters')
 				// Signal that the configuration changed so it will be saved when in auto-save mode
-				this.$emit('update-config')
+				this.emitEvent('update-config')
 			},
 
 			/**
@@ -3598,7 +3640,7 @@
 			 */
 			showAdvancedFilters()
 			{
-				this.$emit(
+				this.emitEvent(
 					'signal-component',
 					'config',
 					{
@@ -3608,7 +3650,7 @@
 					},
 					true
 				)
-				this.$emit('signal-component', 'advancedFilters', { columnFilter: null, columnName: null, selectedFilterIdx: undefined }, true)
+				this.emitEvent('signal-component', 'advancedFilters', { columnFilter: null, columnName: null, selectedFilterIdx: undefined }, true)
 			},
 
 			/**
@@ -3616,7 +3658,7 @@
 			 */
 			showAdvancedFiltersNew()
 			{
-				this.$emit('signal-component', 'advancedFiltersNew', { show: true, selectedFilterIdx: undefined }, true)
+				this.emitEvent('signal-component', 'advancedFiltersNew', { show: true, selectedFilterIdx: undefined }, true)
 			},
 			//END: FOR: SEARCH FILTERS
 
@@ -3630,7 +3672,7 @@
 				const payload = {
 					format: format
 				}
-				this.$emit('on-export-data', payload)
+				this.emitEvent('on-export-data', payload)
 			},
 
 			/**
@@ -3640,7 +3682,7 @@
 			 */
 			importData(payload)
 			{
-				this.$emit('on-import-data', payload)
+				this.emitEvent('on-import-data', payload)
 			},
 
 			/**
@@ -3653,7 +3695,7 @@
 				const payload = {
 					format: format
 				}
-				this.$emit('on-export-template', payload)
+				this.emitEvent('on-export-template', payload)
 			},
 
 			/**
@@ -3662,7 +3704,7 @@
 			 */
 			updateActiveFilters(activeFilters)
 			{
-				this.$emit('update:activeFilters', activeFilters)
+				this.emitEvent('update:activeFilters', activeFilters)
 			},
 
 			/**
@@ -3671,7 +3713,7 @@
 			 */
 			updateGroupFilters(groupFilters)
 			{
-				this.$emit('update:groupFilters', groupFilters)
+				this.emitEvent('update:groupFilters', groupFilters)
 			},
 
 			/**
@@ -3729,7 +3771,7 @@
 			toggleShowFilters()
 			{
 				this.filtersVisible = !this.filtersVisible
-				this.$emit('set-property', ['config', 'filtersVisible'], this.filtersVisible)
+				this.emitEvent('set-property', ['config', 'filtersVisible'], this.filtersVisible)
 			},
 
 			/**
@@ -3747,7 +3789,7 @@
 			 */
 			emitRowAdd(row)
 			{
-				this.$emit('row-add', row)
+				this.emitEvent('row-add', row)
 
 				//Clear object for new row
 				this.initRow(this.newRow)
@@ -3760,7 +3802,7 @@
 			 */
 			emitRowEdit(row)
 			{
-				this.$emit('row-edit', row)
+				this.emitEvent('row-edit', row)
 			},
 
 			/**
@@ -3770,10 +3812,10 @@
 			 */
 			emitRowsDelete(rowKeys)
 			{
-				this.$emit('rows-delete', rowKeys)
+				this.emitEvent('rows-delete', rowKeys)
 
 				//Clear checked rows so it doesn't have keys of records that don't exist
-				this.$emit('unselect-all-rows')
+				this.emitEvent('unselect-all-rows')
 			},
 
 			/**
@@ -3821,7 +3863,7 @@
 			 */
 			updateCell(row, column, event)
 			{
-				this.$emit('update-cell', { row: row, column: column, value: event })
+				this.emitEvent('update-cell', { row: row, column: column, value: event })
 
 				// Optionally prevent rerendering rows when changing cell values
 				if(column.rerenderRowsOnNextChange === false)
@@ -3845,7 +3887,7 @@
 
 				if(this.hasRowDragAndDrop && column.isOrderingColumn)
 				{
-					let index = listFunctions.getCellValue(row, column)
+					const index = listFunctions.getCellValue(row, column)
 					this.navigateToRow(parseInt(index) - 1)
 				}
 			},
@@ -3873,7 +3915,7 @@
 					}
 				}
 
-				this.$emit('toggle-rows-drag-drop')
+				this.emitEvent('toggle-rows-drag-drop')
 
 				if (!this.hasRowDragAndDrop)
 				{
@@ -3910,21 +3952,21 @@
 			 */
 			getColumnHeaderElements()
 			{
-				var columnHeaderDOMElems = []
+				const columnHeaderDOMElems = []
 				//Get table element
-				var tableElem = this.getTableElement()
+				const tableElem = this.getTableElement()
 				if (tableElem === undefined || tableElem === null)
 				{
 					return columnHeaderDOMElems
 				}
 				//Get row elements
-				var rowElems = tableElem.getElementsByTagName('TR')
+				const rowElems = tableElem.getElementsByTagName('TR')
 				if (rowElems === undefined || rowElems === null || rowElems.length < 1)
 				{
 					return columnHeaderDOMElems
 				}
 				//Get column header elements
-				var columnHeaderElems = rowElems[0].getElementsByTagName('TH')
+				const columnHeaderElems = rowElems[0].getElementsByTagName('TH')
 				if (columnHeaderElems === undefined || columnHeaderElems === null || columnHeaderElems.length < 1)
 				{
 					return columnHeaderDOMElems
@@ -3944,12 +3986,12 @@
 			getColumnSizes()
 			{
 				//Get column header elements
-				var columnHeaderElems = this.getColumnHeaderElements()
+				const columnHeaderElems = this.getColumnHeaderElements()
 
 				//Get column sizes
-				var columnSizes = {}
-				var column = {}
-				for (let idx in columnHeaderElems)
+				const columnSizes = {}
+				let column = {}
+				for (const idx in columnHeaderElems)
 				{
 					column = columnHeaderElems[idx]
 					if (column.style.width.length > 0)
@@ -3959,8 +4001,8 @@
 				}
 
 				//Get table size
-				var tableSize = ''
-				var tableElem = this.getTableElement()
+				let tableSize = ''
+				const tableElem = this.getTableElement()
 
 				if (tableElem !== undefined && tableElem !== null)
 				{
@@ -3991,7 +4033,7 @@
 				}
 
 				//Get table element
-				var tableElem = this.getTableElement()
+				const tableElem = this.getTableElement()
 				if (tableElem === undefined || tableElem === null)
 				{
 					return
@@ -4001,12 +4043,12 @@
 				tableElem.style.width = columnSizes.tableSize
 
 				//Get column header elements
-				var columnHeaderElems = this.getColumnHeaderElements()
+				const columnHeaderElems = this.getColumnHeaderElements()
 
 				//Set column sizes
-				var column = {}
-				var columnSize = {}
-				for (let idx in columnHeaderElems)
+				let column = {}
+				let columnSize = {}
+				for (const idx in columnHeaderElems)
 				{
 					column = columnHeaderElems[idx]
 
@@ -4108,17 +4150,17 @@
 			 */
 			setTableFooterSize()
 			{
-				var tableElem = this.getTableElement()
+				const tableElem = this.getTableElement()
 				if (tableElem === undefined || tableElem === null)
 				{
 					return
 				}
-				var tableWrapperElem = this.getTableWrapperElement()
+				const tableWrapperElem = this.getTableWrapperElement()
 				if (tableWrapperElem === undefined || tableWrapperElem === null)
 				{
 					return
 				}
-				var tableFooterElem = this.getTableFooterElement()
+				const tableFooterElem = this.getTableFooterElement()
 				if (tableFooterElem === undefined || tableFooterElem === null)
 				{
 					return
@@ -4139,19 +4181,19 @@
 			 */
 			saveCurrentView()
 			{
-				this.$emit('save-view', {
+				this.emitEvent('save-view', {
 					name: this.config.userTableConfigName,
 					isSelected: false
 				})
 
-				let alertProps = {
+				const alertProps = {
 					type: 'success',
 					message: this.texts.tableViewSaveSuccess,
 					icon: 'ok'
 				}
-				this.$emit('set-info-message', alertProps)
-				this.$emit('set-property', ['confirmChanges'], false)
-				this.$emit('update-config')
+				this.emitEvent('set-info-message', alertProps)
+				this.emitEvent('set-property', ['confirmChanges'], false)
+				this.emitEvent('update-config')
 			},
 
 			/**
@@ -4160,7 +4202,7 @@
 			 */
 			closeCurrentView()
 			{
-				this.$emit('close-view', {})
+				this.emitEvent('close-view', {})
 			},
 
 			/**
@@ -4169,8 +4211,8 @@
 			 */
 			onColumnResize()
 			{
-				this.$emit('set-property', ['config', 'columnSizes'], this.getColumnSizes())
-				this.$emit('update-config')
+				this.emitEvent('set-property', ['config', 'columnSizes'], this.getColumnSizes())
+				this.emitEvent('update-config')
 			},
 
 			/**
@@ -4180,14 +4222,14 @@
 			 */
 			onMultiformSelect(row)
 			{
-				for (let idx in this.rowFormProps)
+				for (const idx in this.rowFormProps)
 				{
 					if (this.rowFormProps[idx].mode === 'EDIT')
 					{
 						return
 					}
 				}
-				this.$emit('set-array-sub-prop-where', 'rowFormProps', 'id', row.rowKey, 'mode', 'EDIT', 'SHOW')
+				this.emitEvent('set-array-sub-prop-where', 'rowFormProps', 'id', row.rowKey, 'mode', 'EDIT', 'SHOW')
 			},
 
 			/**
@@ -4198,13 +4240,13 @@
 			rowReorder(eventData)
 			{
 				// Emit for row reorder by the server
-				var rowKey = this.getRowKey(eventData.row),
+				const rowKey = this.getRowKey(eventData.row),
 					currentIndex = findIndex(this.vbtRows, (row) => this.getRowKey(row) === rowKey),
 					index = currentIndex + eventData.shiftValue
-				this.$emit('row-reorder', { rowKey, index })
+				this.emitEvent('row-reorder', { rowKey, index })
 				// Set table navigation to the row
 				this.navigateToRow(parseInt(index))
-				this.$emit('set-property', ['config', 'setNavOnUpdate'], true)
+				this.emitEvent('set-property', ['config', 'setNavOnUpdate'], true)
 				// FOR: GETTING NAVIGABLE ROW ELEMENTS
 				// Make rows re-mount
 				this.rerenderRows()
@@ -4220,7 +4262,7 @@
 				if (evt.newIndex !== evt.oldIndex)
 				{
 					// Emit for row reorder by the server
-					var rowIndex = parseInt(evt.item.getAttribute('index')),
+					const rowIndex = parseInt(evt.item.getAttribute('index')),
 						row = this.vbtRows[rowIndex],
 						rowKey = row ? row.rowKey : null,
 						index = evt.newIndex
@@ -4230,10 +4272,10 @@
 					// added when starting the drag
 					this.$refs.tableElem.style.userSelect = 'unset'
 
-					this.$emit('row-reorder', { rowKey, index })
+					this.emitEvent('row-reorder', { rowKey, index })
 					// Set table navigation to the row
 					this.navigateToRow(parseInt(index))
-					this.$emit('set-property', ['config', 'setNavOnUpdate'], true)
+					this.emitEvent('set-property', ['config', 'setNavOnUpdate'], true)
 					// FOR: GETTING NAVIGABLE ROW ELEMENTS
 					// Make rows re-mount
 					this.rerenderRows()
@@ -4285,10 +4327,10 @@
 			 */
 			scrollToRow(rowId, behavior = 'smooth')
 			{
-				var elem = document.getElementById(rowId)
+				const elem = document.getElementById(rowId)
 				if (!elem) return
-				var wrapper = this.tableContainerElem
-				var dist = elem.offsetTop - 160
+				const wrapper = this.tableContainerElem
+				const dist = elem.offsetTop - 160
 				wrapper?.scroll?.({ top: dist, left: 0, behavior })
 			},
 
@@ -4300,7 +4342,7 @@
 			 */
 			goToRow(rowKeyPath, rowId)
 			{
-				this.$emit('go-to-row', rowKeyPath)
+				this.emitEvent('go-to-row', rowKeyPath)
 
 				this.scrollToRow(rowId)
 			},
@@ -4311,7 +4353,7 @@
 			 */
 			emitConfigAction(id)
 			{
-				let eObj = find(this.configOptions, ['id', id])
+				const eObj = find(this.configOptions, ['id', id])
 				if (!eObj) return
 
 				// If saving changes to current table view
@@ -4327,14 +4369,14 @@
 						// since multiple actions used the same interface that will be opened
 						if (eObj.id === 'viewSave')
 						{
-							this.$emit(
+							this.emitEvent(
 								'signal-component',
 								'viewSave',
 								{ mode: 'SAVE' },
 								true
 							)
 						}
-						this.$emit('signal-component', 'config', {
+						this.emitEvent('signal-component', 'config', {
 							show: true,
 							selectedTab: eObj.elementId,
 							returnElement: this.configMenuId
@@ -4358,7 +4400,7 @@
 			 */
 			getViewIdByName(name)
 			{
-				let view = find(this.savedViewsOptions, ['value', name])
+				const view = find(this.savedViewsOptions, ['value', name])
 				if (!view) return 0
 				return view.id
 			},
@@ -4374,10 +4416,10 @@
 					this.closeCurrentView()
 				} else
 				{
-					let selectedViewInfo = find(this.savedViewsOptions, ['key', id])
+					const selectedViewInfo = find(this.savedViewsOptions, ['key', id])
 					if (!selectedViewInfo) return
 					//Emit data to script which calls apply function
-					this.$emit('view-action', { name: 'SHOW', rowValue: selectedViewInfo.value })
+					this.emitEvent('view-action', { name: 'SHOW', rowValue: selectedViewInfo.value })
 				}
 			},
 
@@ -4399,7 +4441,7 @@
 			{
 				if (this.confirmChanges && !this.readonly)
 				{
-					let buttons = {
+					const buttons = {
 						confirm: {
 							label: this.texts.saveText,
 							action: this.saveViewOpenView
@@ -4421,9 +4463,9 @@
 				if (eventData.show === true && eventData.row?.alreadyLoaded === false)
 				{
 					// Prevent rows from re-rendering when changing the property to show sub-rows
-					this.$emit('set-property', ['config', 'rerenderRowsOnNextChange'], false)
+					this.emitEvent('set-property', ['config', 'rerenderRowsOnNextChange'], false)
 
-					this.$emit('tree-load-branch-data', { row: eventData.row })
+					this.emitEvent('tree-load-branch-data', { row: eventData.row })
 				}
 			},
 
@@ -4514,7 +4556,7 @@
 			 */
 			onRowsLoaded()
 			{
-				this.$emit('rows-loaded')
+				this.emitEvent('rows-loaded')
 				this.setNavRowElements()
 			},
 
@@ -4524,7 +4566,7 @@
 			 */
 			onSubRowsLoaded()
 			{
-				this.$emit('rows-loaded')
+				this.emitEvent('rows-loaded')
 				this.setNavRowElements()
 			}
 		},
@@ -4543,7 +4585,7 @@
 					{
 						if (this.preservePageOnDataChange)
 						{
-							let predictedTotalPage = Math.ceil(this.rowCount / this.perPage)
+							const predictedTotalPage = Math.ceil(this.rowCount / this.perPage)
 							if (predictedTotalPage !== 0)
 							{
 								this.page = this.page <= predictedTotalPage ? this.page : predictedTotalPage
@@ -4569,7 +4611,7 @@
 					else
 					{
 						this.rerenderRowsOnNextChange = true
-						this.$emit('set-property', ['config', 'rerenderRowsOnNextChange'], true)
+						this.emitEvent('set-property', ['config', 'rerenderRowsOnNextChange'], true)
 					}
 				},
 				deep: true

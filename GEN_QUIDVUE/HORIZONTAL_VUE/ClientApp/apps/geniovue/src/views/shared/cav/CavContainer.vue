@@ -418,7 +418,7 @@
 
 		setup()
 		{
-			let route = useRoute()
+			const route = useRoute()
 			return {
 				routeMetadata: computed(() => route.meta || null)
 			}
@@ -618,7 +618,7 @@
 			 */
 			removeFieldQuery(fieldId)
 			{
-				let idxToRemove = _findIndex(this.model.FieldsSelectedList, (fld) => fld.FieldId === fieldId)
+				const idxToRemove = _findIndex(this.model.FieldsSelectedList, (fld) => fld.FieldId === fieldId)
 				if (idxToRemove !== -1)
 					this.model.FieldsSelectedList.splice(idxToRemove, 1)
 

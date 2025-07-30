@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -127,20 +127,20 @@ namespace CSGenio.business
 			//Actualiza as seguintes rotinas de ultimo Qvalue:
 			info.LastValueArgs = new List<LastValueArgument>();
 			info.LastValueArgs.Add( new LastValueArgument("tpequ",
-				new string [] {"since","precoult"},
-				new string [] {"since","precohor"},
-				"since",
-				null,
-
-	"today", true));
-
-			info.LastValueArgs.Add( new LastValueArgument("tpequ",
 				new string [] {"precomax"},
 				new string [] {"precohor"},
 				"precohor",
 				null,
 
 				null, false));
+
+			info.LastValueArgs.Add( new LastValueArgument("tpequ",
+				new string [] {"since","precoult"},
+				new string [] {"since","precohor"},
+				"since",
+				null,
+
+	"today", true));
 
 
 
@@ -383,7 +383,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX TABPR]/

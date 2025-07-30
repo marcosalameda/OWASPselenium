@@ -193,4 +193,5 @@
 	maintenanceActive: 'O_SISTEMA_ENCONTRA_S37912',
 	maintenanceScheduled: 'O_SISTEMA_IRA_ENTRAR46754',
 	enterCaptcha: 'ENTER_THE_TEXT_YOU_S10625',
+	ok: 'OK15819',
 }

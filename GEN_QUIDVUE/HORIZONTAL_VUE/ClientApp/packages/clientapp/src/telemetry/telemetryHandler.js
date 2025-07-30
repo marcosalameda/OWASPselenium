@@ -1,4 +1,4 @@
-import { postData } from '../network/core'
+import { apiActionURL } from '../network/utils'
 import { ErrorEvent, WarningEvent } from './tracingEvents'
 
 export class TelemetryHandler
@@ -16,14 +16,39 @@ export class TelemetryHandler
 		this._interval = null
 
 		this.startBatching()
+
+		// Capture global errors
+		this.error_globalhandler = (event) => {
+			this.registerLog(new ErrorEvent({
+				origin: event.filename,
+				message: event.message,
+				callStack: event.error?.stack || ""
+			}))
+		}
+		window.addEventListener("error", this.error_globalhandler)
+
+		// Capture unhandled promise rejections
+		this.unhandledrejection_globalhandler = (event) => {
+
+			this.registerLog(new ErrorEvent({
+				origin: window.location.href,
+				message: event.reason?.message || "Unhandled promise rejection",
+				callStack: event.reason?.stack || ""
+			}))
+		}
+		window.addEventListener("unhandledrejection", this.unhandledrejection_globalhandler)
 	}
 
 	/**
 	 * Register a trace
 	 * @param {object} event ResponseEvent or RequestEvent
 	 */
-	registerTrace(event)
+	registerTrace(/*event*/)
 	{
+		//For now, client side traces have been completely disabled until they are refactored
+		//we should not be tracing requests-responses, we should be tracing user interactions
+		//because request-response is already being traced server side.
+		/*
 		if (!this.enableTracing)
 			return
 
@@ -33,6 +58,7 @@ export class TelemetryHandler
 		}
 
 		this.addToQueue(params)
+		*/
 	}
 
 	/**
@@ -67,7 +93,7 @@ export class TelemetryHandler
 	/**
 	 * Send batched events to the backend
 	 */
-	async sendBatch()
+	sendBatch()
 	{
 		if (this.eventQueue.length === 0 || this.isSending)
 			return
@@ -78,20 +104,28 @@ export class TelemetryHandler
 
 		try
 		{
-			await postData(
-				'InternalProcess',
-				'RegisterTelemetry',
-				{ events: eventsToSend },
-				(data) => {
+			let url = apiActionURL('InternalProcess', 'RegisterTelemetry'),
+				tokenElements = document.getElementsByName('__RequestVerificationToken'),
+				antiForgeryToken = tokenElements.length > 0 ? tokenElements[0].value : null
+
+			fetch(url, {
+				method: "POST",
+				headers: {
+					__RequestVerificationToken: antiForgeryToken,
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ events: eventsToSend })
+			}).then((data) => {
+				if (import.meta.env.DEV)
 					// eslint-disable-next-line no-console
 					console.log('Batch sent successfully:', data)
-				},
-				undefined)
+			})
 		}
 		catch (error)
 		{
-			// eslint-disable-next-line no-console
-			console.error('Failed to send telemetry batch:', error)
+			if (import.meta.env.DEV)
+				// eslint-disable-next-line no-console
+				console.error('Failed to send telemetry batch:', error)
 
 			// Add events back into the queue if sending fails
 			this.eventQueue = [...eventsToSend, ...this.eventQueue]
@@ -109,7 +143,7 @@ export class TelemetryHandler
 	{
 		if(this._interval)
 			clearInterval(this._interval)
-		setInterval(() => this.sendBatch(), this.batchInterval)
+		this._interval = setInterval(this.sendBatch.bind(this), this.batchInterval)
 	}
 
 	dispose()
@@ -119,6 +153,11 @@ export class TelemetryHandler
 		this._interval = null
 		if(this.eventQueue?.length > 0)
 			this.eventQueue.length = 0
+
+		window.removeEventListener("error", this.error_globalhandler)
+		this.error_globalhandler = null
+		window.removeEventListener("unhandledrejection", this.unhandledrejection_globalhandler)
+		this.unhandledrejection_globalhandler = null
 	}
 }
 

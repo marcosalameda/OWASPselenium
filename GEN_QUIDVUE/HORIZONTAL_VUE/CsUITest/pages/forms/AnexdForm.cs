@@ -42,7 +42,7 @@ public class AnexdForm : Form
 	/// <summary>
 	/// Document
 	/// </summary>
-	public DocumentControl AnexdDocument => new DocumentControl(driver, ContainerLocator, "ANEXD___ANEXDDOCUMENT");
+	public DocumentControl AnexdDocument => new DocumentControl(driver, ContainerLocator, "ANEXD___ANEXDDOCUMENT-container");
 
 	public AnexdForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "ANEXD", containerLocator: containerLocator) { }

@@ -148,6 +148,14 @@
 			},
 
 			/**
+			 * A list with the legends of shapes/polygons already on the map.
+			 */
+			legends: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
 			 * The defined style variables.
 			 */
 			styleVariables: {
@@ -237,7 +245,8 @@
 				scaleControl: null,
 				zoomControl: null,
 				searchControl: null,
-				printControl: null
+				printControl: null,
+				legendControl: null
 			}
 		},
 
@@ -295,8 +304,9 @@
 			 */
 			mapMaxBounds()
 			{
-				let bounds = null,
-					southWest = this.styleVariables.boundSouthWest?.value,
+				let bounds = null
+
+				const southWest = this.styleVariables.boundSouthWest?.value,
 					northEast = this.styleVariables.boundNorthEast?.value
 
 				if (typeof southWest === 'object' && typeof northEast === 'object')
@@ -449,7 +459,7 @@
 				if (typeof converter !== 'function')
 					return coordinates
 
-				for (let coords of coordsList ?? [])
+				for (const coords of coordsList ?? [])
 				{
 					let convertedCoord
 					if (Array.isArray(coords) && typeof coords[0] !== 'number')
@@ -496,7 +506,7 @@
 
 					if (this.exclusiveLayers.find((l) => l === overlay.name))
 					{
-						for (let el of this.layersList)
+						for (const el of this.layersList)
 							if (el.name !== overlay.name && this.exclusiveLayers.find((l) => l === el.name))
 								nextTick().then(() => this.map.removeLayer(el.layer))
 					}
@@ -530,6 +540,9 @@
 					this.map.off('exitFullscreen').on('exitFullscreen', () => this.isFullscreen = false)
 				}
 
+				// Add legend
+				this.setLegend()
+
 				// Add the search bar.
 				this.setSearchBar()
 
@@ -545,7 +558,7 @@
 				this.addOverlays()
 				this.setDrawTexts()
 
-				for (let i in this.baseLayers)
+				for (const i in this.baseLayers)
 					this.baseLayers[i].addTo(this.map)
 
 				await this.resetMapProperties()
@@ -573,7 +586,7 @@
 					this.map.removeControl(this.controlLayer)
 
 				// Remove all the layers already on the map.
-				for (let el of this.layersList)
+				for (const el of this.layersList)
 					this.map.removeLayer(el.layer)
 
 				this.layersList = []
@@ -593,7 +606,7 @@
 				const layerCount = this.layersList.reduce((accum, curr) => curr.name ? accum + 1 : accum, 0) + Object.keys(this.baseLayers).length
 
 				// Set the layers visible on the map.
-				for (let el of this.layersList)
+				for (const el of this.layersList)
 				{
 					if (!el.name)
 						continue
@@ -873,7 +886,7 @@
 				if (typeof layer !== 'object' || typeof layer.getLayers !== 'function')
 					return subLayers
 
-				for (let subLayer of layer.getLayers())
+				for (const subLayer of layer.getLayers())
 				{
 					// Having layers inside means it's not a shape, but a group of shapes.
 					if (typeof subLayer._layers !== 'undefined')
@@ -898,7 +911,7 @@
 
 					layers = []
 
-					for (let layer of this.layersList)
+					for (const layer of this.layersList)
 						if (this.activeLayers.find((l) => l === layer.name))
 							layers.push(...this.getSubLayers(layer.layer))
 				}
@@ -922,7 +935,7 @@
 			 */
 			activateShapeLayers()
 			{
-				for (let layer of this.shapes)
+				for (const layer of this.shapes)
 					this.activateLayer(layer.layerName)
 			},
 
@@ -1200,7 +1213,7 @@
 			 */
 			hideControls(mainControls = [this.controlLayer, this.zoomControl, this.fullscreenControl, this.searchControl], hideEditControls = true)
 			{
-				for (let control of mainControls)
+				for (const control of mainControls)
 					if (control !== null)
 						this.map.removeControl(control)
 
@@ -1215,7 +1228,7 @@
 			 */
 			showControls(mainControls = [this.controlLayer, this.zoomControl, this.fullscreenControl, this.searchControl], showEditControls = true)
 			{
-				for (let control of mainControls)
+				for (const control of mainControls)
 					if (control !== null)
 						this.map.addControl(control)
 
@@ -1249,12 +1262,12 @@
 					layerObj = this.shapesLayer
 				else
 				{
-					for (let layer of this.layersList)
+					for (const layer of this.layersList)
 					{
 						// If there's already a layer with the same name, we add the shapes to that layer instead of creating a new one.
 						if (layer.name === layerData.layerName)
 						{
-							let layerGroup = L.layerGroup(layerData.shapes)
+							const layerGroup = L.layerGroup(layerData.shapes)
 							this.setLayerOptions(layerGroup, layerData)
 
 							layer.layer.addLayer(layerGroup)
@@ -1268,7 +1281,7 @@
 				{
 					if (typeof layerObj === 'undefined')
 					{
-						let layerGroup = L.layerGroup(layerData.shapes)
+						const layerGroup = L.layerGroup(layerData.shapes)
 						this.setLayerOptions(layerGroup, layerData)
 
 						layerObj = L.featureGroup()
@@ -1322,7 +1335,7 @@
 					this.setLayerOptions(this.shapesLayer, layerOptions)
 
 					// Add the shapes already on the map to the shapes layer.
-					for (let shape of shapesList)
+					for (const shape of shapesList)
 						this.shapesLayer.addLayer(shape)
 				}
 
@@ -1410,7 +1423,7 @@
 			 */
 			setShapeOptions(shape, options = {})
 			{
-				for (let i in options)
+				for (const i in options)
 					shape.options[i] = options[i]
 
 				if (!options.opacity && !(shape instanceof L.Marker))
@@ -1623,7 +1636,7 @@
 					})
 				}
 
-				for (let layer of this.layersList)
+				for (const layer of this.layersList)
 				{
 					if (typeof layer.name !== 'string' || typeof layer.layer !== 'object')
 						continue
@@ -1649,7 +1662,7 @@
 
 				const shapes = layer._layers
 
-				for (let i in shapes)
+				for (const i in shapes)
 				{
 					const shape = shapes[i]
 
@@ -1662,7 +1675,7 @@
 						if (shape instanceof L.MarkerClusterGroup)
 							layers = shape.getLayers()
 
-						for (let l of layers)
+						for (const l of layers)
 						{
 							const layerProps = {
 								...layer.options,
@@ -1750,7 +1763,7 @@
 							delete options.latlng
 							delete options.opacity
 							delete options.weight
-							let shapeCoord = this.projectFromCoords(shape.latlng, COORD_TYPES.array)
+							const shapeCoord = this.projectFromCoords(shape.latlng, COORD_TYPES.array)
 							shapeToDraw = shape.type === 'circlemarker' ? L.circleMarker(shapeCoord, options) : L.marker(shapeCoord, options)
 						}
 						break
@@ -1767,12 +1780,12 @@
 			{
 				const shapesLayers = []
 
-				for (let layer of this.shapes)
+				for (const layer of this.shapes)
 				{
 					if (!Array.isArray(layer.shapes))
 						break
 
-					let shapesList = [],
+					const shapesList = [],
 						markers = [],
 						colorOptions = {}
 
@@ -1783,7 +1796,7 @@
 					if (layer.circleColor)
 						colorOptions.circleColor = layer.circleColor
 
-					for (let shape of layer.shapes)
+					for (const shape of layer.shapes)
 					{
 						let options = Object.assign({}, shape)
 						delete options.type
@@ -1844,9 +1857,9 @@
 			 */
 			convertShapesToObjects()
 			{
-				let shapesList = []
+				const shapesList = []
 
-				for (let i in this.shapesLayer._layers)
+				for (const i in this.shapesLayer._layers)
 				{
 					const shapes = this.shapesLayer._layers[i]
 
@@ -1864,7 +1877,7 @@
 					else if (shapes instanceof L.MarkerClusterGroup)
 						parts = shapes.getLayers()
 
-					for (let j in parts)
+					for (const j in parts)
 					{
 						const shape = parts[j]
 
@@ -1949,6 +1962,36 @@
 					else
 						execFunction()
 				}, 100)
+			},
+			/**
+			 * Creates a list with the legend objects already on the map.
+			 */
+			setLegend() {
+				if (!this.styleVariables.allowLegend?.value || this.legends.length === 0 || this.map === null)
+					return
+
+				// Removes old subtitles if they already exist
+				if (this.legendControl) {
+					this.map.removeControl(this.legendControl)
+					this.legendControl = null
+				}
+
+				const items = this.legends
+
+				const legend = L.control({ position: 'bottomright' })
+
+				legend.onAdd = function () {
+					const div = L.DomUtil.create('div', 'leaflet-legend')
+					items.forEach(item => {
+						div.innerHTML += `
+				<i style="background: ${item.color};"></i> ${item.label}<br>
+			`
+					})
+					return div
+				}
+
+				legend.addTo(this.map)
+				this.legendControl = legend
 			}
 		},
 
@@ -1982,13 +2025,24 @@
 				{
 					this.activateShapeLayers()
 
-					for (let el of this.layersList)
+					for (const el of this.layersList)
 						if (this.activeLayers.find((l) => l === el.name))
 							el.layer.addTo(this.map)
 				}
 
 				if (newVal.length > 0 || oldVal.length > 0)
 					this.fitMapZoom()
+
+				// Add legend
+				this.setLegend()
+			},
+
+			legends: {
+				handler(newVal, oldVal) {
+					if (newVal.length > 0 || oldVal.length > 0)
+						this.setLegend()
+				},
+				deep: true
 			},
 
 			externalLayers(newVal, oldVal)
@@ -2113,7 +2167,7 @@
 							break
 						case 'GeographicShape':
 						case 'GeometricShape':
-							for (let shape of centerCoord.value?.shapes ?? [])
+							for (const shape of centerCoord.value?.shapes ?? [])
 								features.push(this.getLeafletShape(shape))
 							break
 					}

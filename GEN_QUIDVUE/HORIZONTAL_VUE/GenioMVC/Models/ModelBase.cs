@@ -14,6 +14,12 @@ namespace GenioMVC.Models
 	public class ModelBase(UserContext userContext) : IConditionalSerializer
 	{
 		protected UserContext m_userContext = userContext;
+
+		/// <summary>
+		/// The current user navigation
+		/// </summary>
+		protected NavigationContext Navigation => m_userContext?.CurrentNavigation;
+
 		/// <summary>
 		/// List of field values filled by history.
 		/// During the insertion of a new record, defaults or replicas may remove the value of keys filled by history.
@@ -21,6 +27,11 @@ namespace GenioMVC.Models
 		/// </summary>
 		protected Dictionary<string, string> m_filledByHistory = [];
 
+		/// <summary>
+		/// Whether to serialize the field
+		/// </summary>
+		/// <param name="tag">The field</param>
+		/// <returns>True if it should be serialized, false otherwise</returns>
 		public bool ShouldSerialize(string tag)
 		{
 			return SerializeAllFields || FieldsToSerialize.Contains(tag);
@@ -554,8 +565,7 @@ namespace GenioMVC.Models
 				{
 					if (String.IsNullOrEmpty(alternativeAlias))
 						return areaFK.GetType().GetProperty("Val" + CSGenio.framework.StringUtils.CapFirst(rel.TargetRelField)).GetValue(areaFK, null);
-					else
-						return areaFK.TryGetForeignKey(alias);
+					return areaFK.TryGetForeignKey(alias);
 				}
 			}
 

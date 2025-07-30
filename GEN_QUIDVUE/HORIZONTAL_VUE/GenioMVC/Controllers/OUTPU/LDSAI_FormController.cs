@@ -675,12 +675,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Outpu/Ldsai_SaveEdit
 		[HttpPost]
 		public ActionResult Ldsai_SaveEdit([FromBody] Ldsai_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ldsai_SaveEdit",
 				ViewName = "Ldsai",
@@ -711,7 +710,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsLdsai([FromBody] LdsaiDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

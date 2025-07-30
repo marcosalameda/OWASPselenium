@@ -109,7 +109,7 @@
 			 */
 			updateValue(event)
 			{
-				var value = 0
+				let value = 0
 
 				if (typeof event === 'number')
 					value = event === 0 ? 0 : 1

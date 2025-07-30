@@ -546,12 +546,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Outpt/Dsaid_SaveEdit
 		[HttpPost]
 		public ActionResult Dsaid_SaveEdit([FromBody] Dsaid_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Dsaid_SaveEdit",
 				ViewName = "Dsaid",
@@ -582,7 +581,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsDsaid([FromBody] DsaidDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

@@ -604,12 +604,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Ldent/Ldentnor_SaveEdit
 		[HttpPost]
 		public ActionResult Ldentnor_SaveEdit([FromBody] Ldentnor_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ldentnor_SaveEdit",
 				ViewName = "Ldentnor",
@@ -640,7 +639,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsLdentnor([FromBody] LdentnorDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

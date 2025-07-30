@@ -391,12 +391,11 @@ namespace GenioMVC.Controllers
 		#endregion
 
 
-
 		// POST: /Tblb/Grpb____pseudtblb_____SaveEdit
 		[HttpPost]
 		public ActionResult Grpb____pseudtblb_____SaveEdit([FromBody] Grpb____pseudtblb_____ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____SaveEdit",
 				ViewName = "Grpb____pseudtblb____",
@@ -427,7 +426,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsGrpb____pseudtblb____([FromBody] Grpb____pseudtblb____DocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

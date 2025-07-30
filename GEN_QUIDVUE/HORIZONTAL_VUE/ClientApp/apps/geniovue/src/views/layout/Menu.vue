@@ -104,9 +104,9 @@
 			 */
 			closeMenu(){
 				//Close all sub-menus
-				for(let key in this.$refs.menuSubItem)
+				for(const key in this.$refs.menuSubItem)
 				{
-					let curMenuComponent = this.$refs?.menuSubItem[key]
+					const curMenuComponent = this.$refs?.menuSubItem[key]
 					curMenuComponent.closeMenu()
 				}
 			}

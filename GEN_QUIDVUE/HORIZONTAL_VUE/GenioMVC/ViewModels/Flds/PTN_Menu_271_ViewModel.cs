@@ -143,27 +143,22 @@ namespace GenioMVC.ViewModels.Flds
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAflds.FldCond, FieldType.ARRAY_TEXT, Resources.Resources.FIELD_STATE03599, 8, 0, true, "aCondTst"),
 				new Exports.QColumn(CSGenioAflds.FldFclient1, FieldType.TEXT, Resources.Resources.FIELD_WITH_CLIENT_SI60452, 30, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldFserver1, FieldType.DATETIME, Resources.Resources.FIELD_WITH_SERVER_SI13554, 16, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldFclient2, FieldType.LOGIC, Resources.Resources.FIELD_WITH_CLIENT_SI60452, 1, 0, true),
 				new Exports.QColumn(CSGenioAflds.FldFserver2, FieldType.NUMERIC, Resources.Resources.FIELD_WITH_SERVER_SI13554, 8, 2, true),
 				new Exports.QColumn(CSGenioAflds.FldFclient3, FieldType.DOCUMENT, Resources.Resources.FIELD_WITH_CLIENT_SI60452, 30, 0, true),
-				!ajaxRequest ? new Exports.QColumn(CSGenioAflds.FldFserver3, FieldType.IMAGE, Resources.Resources.FIELD_WITH_SERVER_SI13554, 3, 1, true):null,
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAflds> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -315,12 +310,6 @@ namespace GenioMVC.ViewModels.Flds
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAflds> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("menu_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Menu", "271"),
-				new("Module", "PTN")
-			}, "ms", "Time to load the menu."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<PTN_Menu_271_RowViewModel>();
 
@@ -449,7 +438,6 @@ namespace GenioMVC.ViewModels.Flds
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<PTN_Menu_271_RowViewModel> MapPTN_Menu_271(ListingMVC<CSGenioAflds> Qlisting)

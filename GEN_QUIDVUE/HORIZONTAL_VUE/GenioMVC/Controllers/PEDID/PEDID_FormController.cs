@@ -598,12 +598,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Pedid/Pedid_SaveEdit
 		[HttpPost]
 		public ActionResult Pedid_SaveEdit([FromBody] Pedid_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_SaveEdit",
 				ViewName = "Pedid",
@@ -634,7 +633,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsPedid([FromBody] PedidDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

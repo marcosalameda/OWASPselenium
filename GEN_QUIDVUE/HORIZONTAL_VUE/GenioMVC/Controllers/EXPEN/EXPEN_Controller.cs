@@ -91,7 +91,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -161,7 +160,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -231,7 +229,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -301,7 +298,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -371,7 +367,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -441,7 +436,6 @@ namespace GenioMVC.Controllers
 					if (keepConnectionAlive)
 						sp.openConnection();
 				}
-
 			}
 			catch(Exception)
 			{
@@ -678,16 +672,6 @@ namespace GenioMVC.Controllers
 		public ActionResult GetFile([FromBody] RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
-		}
-
-		/// <summary>
-		/// Stores a new document in the Docums table
-		/// </summary>
-		/// <param name="requestModel">The request model with the document and ticket</param>
-		/// <returns>A JSON response with the result of the operation</returns>
-		public ActionResult SetFile([FromForm] RequestDocumsCreateModel requestModel)
-		{
-			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version);
 		}
 
 		/// <summary>

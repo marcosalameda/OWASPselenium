@@ -776,12 +776,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Indoc/Dentr_SaveEdit
 		[HttpPost]
 		public ActionResult Dentr_SaveEdit([FromBody] Dentr_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Dentr_SaveEdit",
 				ViewName = "Dentr",
@@ -812,7 +811,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsDentr([FromBody] DentrDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

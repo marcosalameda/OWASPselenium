@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CONTAC19',
 			area: 'PROCN',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_CONTAC19',
-				updateFilesTickets: 'UpdateFilesTicketsCONTAC19'
+				recalculateFormulas: 'RecalculateFormulas_Contac19',
+				updateFilesTickets: 'UpdateFilesTicketsContac19',
+				setFile: 'SetFileContac19'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODPROCN',
 			description: '',
 		}).cloneFrom(values?.ValCodprocn))
-		watch(() => this.ValCodprocn.value, (newValue, oldValue) => this.onUpdate('procn.codprocn', this.ValCodprocn, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodprocn.value, (newValue, oldValue) => this.onUpdate('procn.codprocn', this.ValCodprocn, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodprope = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PROPE',
 			description: computed(() => this.Resources.PROPERTY43977),
 		}).cloneFrom(values?.ValCodprope))
-		watch(() => this.ValCodprope.value, (newValue, oldValue) => this.onUpdate('procn.codprope', this.ValCodprope, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodprope.value, (newValue, oldValue) => this.onUpdate('procn.codprope', this.ValCodprope, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValName = reactive(new modelFieldType.String({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.ValName))
-		watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('procn.name', this.ValName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValName.value, (newValue, oldValue) => this.onUpdate('procn.name', this.ValName, newValue, oldValue)))
 
 		this.ValEmail = reactive(new modelFieldType.String({
 			id: 'ValEmail',
@@ -82,7 +83,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.EMAIL25170),
 		}).cloneFrom(values?.ValEmail))
-		watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('procn.email', this.ValEmail, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValEmail.value, (newValue, oldValue) => this.onUpdate('procn.email', this.ValEmail, newValue, oldValue)))
 
 		this.ValTelephon = reactive(new modelFieldType.String({
 			id: 'ValTelephon',
@@ -92,7 +93,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TELEPHONE28697),
 		}).cloneFrom(values?.ValTelephon))
-		watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('procn.telephon', this.ValTelephon, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTelephon.value, (newValue, oldValue) => this.onUpdate('procn.telephon', this.ValTelephon, newValue, oldValue)))
 
 		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
@@ -101,7 +102,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESCRIPT',
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescript))
-		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('procn.descript', this.ValDescript, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('procn.descript', this.ValDescript, newValue, oldValue)))
 
 		this.ValDate = reactive(new modelFieldType.Date({
 			id: 'ValDate',
@@ -111,11 +112,11 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line no-unused-vars
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [Today]
-					return qApi.Hoje()
+					return qApi.Today()
 				},
 				dependencyEvents: [],
 				isServerRecalc: false,
@@ -123,7 +124,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.DATE18475),
 		}).cloneFrom(values?.ValDate))
-		watch(() => this.ValDate.value, (newValue, oldValue) => this.onUpdate('procn.date', this.ValDate, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDate.value, (newValue, oldValue) => this.onUpdate('procn.date', this.ValDate, newValue, oldValue)))
 
 		this.TablePropeTitle = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -134,7 +135,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TITLE21885),
 		}).cloneFrom(values?.TablePropeTitle))
-		watch(() => this.TablePropeTitle.value, (newValue, oldValue) => this.onUpdate('prope.title', this.TablePropeTitle, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePropeTitle.value, (newValue, oldValue) => this.onUpdate('prope.title', this.TablePropeTitle, newValue, oldValue)))
 	}
 
 	/**

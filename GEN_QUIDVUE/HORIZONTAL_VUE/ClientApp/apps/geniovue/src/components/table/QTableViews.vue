@@ -307,12 +307,12 @@
 			 * @returns Array
 			 */
 			getRows() {
-				var rows = []
+				const rows = []
 
 				//Iterate configNames
-				var thisIdx = 1
-				var configName = {}
-				for (let idx in this.configNames) {
+				let thisIdx = 1
+				let configName = {}
+				for (const idx in this.configNames) {
 					configName = this.configNames[idx]
 					// Needs btnPermission to be defined to avoid having actions disabled
 					rows.push({ Rownum: thisIdx, rowKey: thisIdx, Value: configName, Fields: { name: configName, selectedView: true }, btnPermission: {} })
@@ -328,7 +328,7 @@
 			 * @returns Array
 			 */
 			selectView(value) {
-				var viewColumn = this.viewColumns.find((x) => x.name === 'selectedView')
+				const viewColumn = this.viewColumns.find((x) => x.name === 'selectedView')
 				viewColumn.checkedValue = value
 				this.selectedViewNameCfg = value
 
@@ -336,9 +336,9 @@
 				if (value === '') {
 					//Set all radio buttons to unchecked (needs to be done this way)
 					if (!this.$refs.viewsTableContainer) return
-					let selectedViewButtons = this.$refs.viewsTableContainer.querySelectorAll("[name='selectedView']")
-					for (let idx in selectedViewButtons) {
-						let selectedViewButton = selectedViewButtons[idx]
+					const selectedViewButtons = this.$refs.viewsTableContainer.querySelectorAll("[name='selectedView']")
+					for (const idx in selectedViewButtons) {
+						const selectedViewButton = selectedViewButtons[idx]
 						if (selectedViewButton.type && selectedViewButton.type === 'radio') {
 							selectedViewButton.checked = false
 						}
@@ -362,7 +362,7 @@
 		watch: {
 			signal: {
 				handler(newValue) {
-					for (let key in newValue) {
+					for (const key in newValue) {
 						switch (key) {
 							case 'show':
 								if (newValue.show) {

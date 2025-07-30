@@ -112,7 +112,7 @@ export default function getUserRoutes()
 			component: () => import('@/views/shared/RecoverPasswordChangeSuccess.vue')
 		},
 		{
-			path: '/:culture/Profile',
+			path: '/:culture/:system/Profile',
 			name: 'profile',
 			meta: {
 				hasInitialPHE: false

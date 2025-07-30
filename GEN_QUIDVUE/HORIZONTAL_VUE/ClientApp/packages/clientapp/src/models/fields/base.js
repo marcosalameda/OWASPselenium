@@ -4,7 +4,7 @@ import _has from 'lodash-es/has'
 import _isEmpty from 'lodash-es/isEmpty'
 import _isEqual from 'lodash-es/isEqual'
 import _some from 'lodash-es/some'
-import { computed, reactive, unref } from 'vue'
+import { computed, reactive, unref, isReadonly } from 'vue'
 
 import { useTracingDataStore } from '../../stores/tracingData'
 import {
@@ -354,5 +354,23 @@ export class Base {
 	 */
 	clearServerWarningMessages() {
 		this.serverWarningMessages.length = 0
+	}
+
+	destroy()
+	{
+		this.showWhenConditions?.destroy?.()
+		this.showWhenConditions = null
+
+		this.blockWhenConditions?.destroy?.()
+		this.blockWhenConditions = null
+
+		this.fillWhenConditions?.destroy?.()
+		this.fillWhenConditions = null
+
+		if(this.arrayOptions?.length > 0 && !isReadonly(this.arrayOptions))
+			this.arrayOptions.length = 0
+
+		delete this.arrayOptions
+		delete this.arrayGroups
 	}
 }

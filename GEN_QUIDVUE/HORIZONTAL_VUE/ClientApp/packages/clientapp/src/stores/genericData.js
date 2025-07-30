@@ -270,7 +270,7 @@ const actions = {
 
 		// If no return element is specified, use the element that opened the popup
 		if (props.returnElement === undefined || props.returnElement === null)
-			props.returnElement = document.activeElement
+			props.returnElement = document.activeElement?.id ?? ''  /* Why is the entire HTMLElement used (before) !? TODO: Improve this code */
 
 		let index = -1
 

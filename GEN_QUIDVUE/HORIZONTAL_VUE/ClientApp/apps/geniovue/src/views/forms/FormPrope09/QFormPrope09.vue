@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -183,12 +183,13 @@
 						<q-accordion
 							v-if="controls.PROPE09_PSEUDACC01___.isVisible"
 							id="PROPE09_PSEUDACC01___"
+							v-model="controls.PROPE09_PSEUDACC01___.openChild"
 							v-bind="controls.PROPE09_PSEUDACC01___">
 							<!-- Start PROPE09_PSEUDACC01___ -->
-							<q-group-collapsible
-								id="PROPE09_PSEUDLOCALIZA"
-								v-bind="controls.PROPE09_PSEUDLOCALIZA"
-								v-on="controls.PROPE09_PSEUDLOCALIZA.handlers">
+							<q-accordion-item
+								id="PROPE09_PSEUDLOCALIZA-container"
+								value="PROPE09_PSEUDLOCALIZA"
+								:title="controls.PROPE09_PSEUDLOCALIZA.label">
 								<!-- Start PROPE09_PSEUDLOCALIZA -->
 								<q-row-container v-show="controls.PROPE09_CITY_CITY____.isVisible">
 									<q-control-wrapper
@@ -231,11 +232,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE09_PSEUDLOCALIZA -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE09_PSEUDDETAILS_"
-								v-bind="controls.PROPE09_PSEUDDETAILS_"
-								v-on="controls.PROPE09_PSEUDDETAILS_.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE09_PSEUDDETAILS_-container"
+								value="PROPE09_PSEUDDETAILS_"
+								:title="controls.PROPE09_PSEUDDETAILS_.label">
 								<!-- Start PROPE09_PSEUDDETAILS_ -->
 								<q-row-container v-show="controls.PROPE09_PROPESIZE____.isVisible">
 									<q-control-wrapper
@@ -292,11 +293,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE09_PSEUDDETAILS_ -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PROPE09_PSEUDAGENTINF"
-								v-bind="controls.PROPE09_PSEUDAGENTINF"
-								v-on="controls.PROPE09_PSEUDAGENTINF.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PROPE09_PSEUDAGENTINF-container"
+								value="PROPE09_PSEUDAGENTINF"
+								:title="controls.PROPE09_PSEUDAGENTINF.label">
 								<!-- Start PROPE09_PSEUDAGENTINF -->
 								<q-row-container v-show="controls.PROPE09_AGENTNAME____.isVisible">
 									<q-control-wrapper
@@ -335,7 +336,7 @@
 												v-if="controls.PROPE09_AGENTEMAIL___.isVisible"
 												v-bind="controls.PROPE09_AGENTEMAIL___"
 												:model-value="model.AgentValEmail.value"
-												@update:model-value="model.AgentValEmail.fnUpdateValue" />
+												@change="model.AgentValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
 									</q-control-wrapper>
 								</q-row-container>
@@ -358,7 +359,7 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PROPE09_PSEUDAGENTINF -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End PROPE09_PSEUDACC01___ -->
 						</q-accordion>
 					</q-control-wrapper>
@@ -373,6 +374,7 @@
 							v-on="controls.PROPE09_PSEUDPROPCONT.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.PROPE09_PSEUDPROPCONT"
+							:filter-operators="controls.PROPE09_PSEUDPROPCONT.filterOperators"
 							v-on="controls.PROPE09_PSEUDPROPCONT.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -411,7 +413,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -431,7 +433,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormPrope09ViewModel.js'
 
@@ -510,7 +512,8 @@
 					primaryKey: 'ValCodprope',
 					designation: computed(() => this.Resources.PROPERTY43977),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -813,6 +816,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE09_CITY_CITY____', 'PROPE09_CTRY_COUNTRY_'],
@@ -874,6 +878,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE09_PROPESIZE____', 'PROPE09_PROPEBATHRMS_', 'PROPE09_PROPEYEAR____'],
@@ -933,6 +938,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDACC01___',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPE09_AGENTNAME____', 'PROPE09_AGENTEMAIL___', 'PROPE09_AGENTPHOTO___'],
@@ -1209,7 +1215,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROCN', 'changed-PROPE'],
+						globalEvents: ['changed-PROPE', 'changed-PROCN'],
 						uuid: 'Prope09_ValPropcont',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1336,17 +1342,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PROPE09]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1356,7 +1368,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1366,7 +1378,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1386,7 +1398,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -1419,7 +1431,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1439,7 +1451,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -1470,11 +1482,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1484,7 +1494,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1492,8 +1502,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1501,7 +1509,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1509,8 +1517,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1518,7 +1524,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1526,11 +1532,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1540,7 +1544,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1550,7 +1554,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

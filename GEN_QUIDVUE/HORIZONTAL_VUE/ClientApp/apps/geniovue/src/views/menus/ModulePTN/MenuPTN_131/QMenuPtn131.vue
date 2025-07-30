@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_131ViewModel.js'
 
@@ -152,7 +153,7 @@
 								label: computed(() => this.Resources.TIPO_DE_CONDICAO09986),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayTipocond.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayTipocond(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTipocond.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -172,7 +173,7 @@
 								label: computed(() => this.Resources.LOCAL_ONDE_EXECUTA12798),
 								dataLength: 1,
 								scrollData: 1,
-								array: computed(() => qProjArrays.QArrayAlocregr.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayAlocregr(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAlocregr.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -300,7 +301,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'REGRA',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'REGRA'
 								}
 							},
 							formsDefinition: {
@@ -310,7 +311,7 @@
 								},
 							},
 							insertCondition: {
-								// eslint-disable-next-line no-unused-vars
+								// eslint-disable-next-line @typescript-eslint/no-unused-vars
 								fnFormula(params)
 								{
 									// Formula: [RULES->TIPOCOND]!="I"  || [RULES->LOCAL]!="T"
@@ -355,6 +356,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_131]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_131]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

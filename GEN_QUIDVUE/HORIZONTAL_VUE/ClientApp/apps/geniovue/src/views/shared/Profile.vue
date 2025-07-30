@@ -458,7 +458,7 @@
 
 			setData(modelValue)
 			{
-				for (let fld in this.model)
+				for (const fld in this.model)
 				{
 					if (this.model[fld] instanceof modelFieldType.Base)
 						this.model[fld].updateValue(modelValue[fld])
@@ -513,11 +513,11 @@
 
 			changePassword()
 			{
-				let _model = {}
+				const _model = {}
 
 				this.showErrors = false
 
-				for (let fld in this.model)
+				for (const fld in this.model)
 				{
 					if (this.model[fld] instanceof modelFieldType.Base)
 						_model[fld] = this.model[fld].value

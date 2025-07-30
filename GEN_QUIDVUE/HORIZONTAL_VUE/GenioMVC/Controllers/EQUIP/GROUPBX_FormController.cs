@@ -604,12 +604,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Equip/Groupbx_SaveEdit
 		[HttpPost]
 		public ActionResult Groupbx_SaveEdit([FromBody] Groupbx_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Groupbx_SaveEdit",
 				ViewName = "Groupbx",
@@ -640,7 +639,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsGroupbx([FromBody] GroupbxDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

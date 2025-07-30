@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'CFAQS',
 			area: 'CFAQS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_CFAQS',
-				updateFilesTickets: 'UpdateFilesTicketsCFAQS'
+				recalculateFormulas: 'RecalculateFormulas_Cfaqs',
+				updateFilesTickets: 'UpdateFilesTicketsCfaqs',
+				setFile: 'SetFileCfaqs'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCFAQS',
 			description: '',
 		}).cloneFrom(values?.ValCodcfaqs))
-		watch(() => this.ValCodcfaqs.value, (newValue, oldValue) => this.onUpdate('cfaqs.codcfaqs', this.ValCodcfaqs, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcfaqs.value, (newValue, oldValue) => this.onUpdate('cfaqs.codcfaqs', this.ValCodcfaqs, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValIcon = reactive(new modelFieldType.Image({
@@ -60,7 +61,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ICON',
 			description: '',
 		}).cloneFrom(values?.ValIcon))
-		watch(() => this.ValIcon.value, (newValue, oldValue) => this.onUpdate('cfaqs.icon', this.ValIcon, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValIcon.value, (newValue, oldValue) => this.onUpdate('cfaqs.icon', this.ValIcon, newValue, oldValue)))
 
 		this.ValCategory = reactive(new modelFieldType.MultiLineString({
 			id: 'ValCategory',
@@ -69,7 +70,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CATEGORY',
 			description: computed(() => this.Resources.CATEGORY18978),
 		}).cloneFrom(values?.ValCategory))
-		watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('cfaqs.category', this.ValCategory, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCategory.value, (newValue, oldValue) => this.onUpdate('cfaqs.category', this.ValCategory, newValue, oldValue)))
 
 		this.ValDescript = reactive(new modelFieldType.MultiLineString({
 			id: 'ValDescript',
@@ -78,7 +79,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DESCRIPT',
 			description: computed(() => this.Resources.DESCRIPTION07383),
 		}).cloneFrom(values?.ValDescript))
-		watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('cfaqs.descript', this.ValDescript, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValDescript.value, (newValue, oldValue) => this.onUpdate('cfaqs.descript', this.ValDescript, newValue, oldValue)))
 	}
 
 	/**

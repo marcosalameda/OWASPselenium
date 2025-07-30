@@ -268,7 +268,7 @@
 						// If collapsed, focus on parent row
 						if(!this.showChildren)
 						{
-							let index = rowElem.getAttribute('index')
+							const index = rowElem.getAttribute('index')
 							this.$emit('navigate-row', this.getParentMultiIndex(index))
 						}
 					case "-":

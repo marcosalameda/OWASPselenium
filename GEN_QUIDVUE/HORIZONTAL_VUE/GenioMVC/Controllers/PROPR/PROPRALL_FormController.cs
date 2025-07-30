@@ -675,12 +675,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Propr/Proprall_SaveEdit
 		[HttpPost]
 		public ActionResult Proprall_SaveEdit([FromBody] Proprall_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Proprall_SaveEdit",
 				ViewName = "Proprall",
@@ -711,7 +710,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsProprall([FromBody] ProprallDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

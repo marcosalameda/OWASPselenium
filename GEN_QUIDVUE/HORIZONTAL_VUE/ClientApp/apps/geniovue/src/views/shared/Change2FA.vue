@@ -428,7 +428,7 @@
 
 			setData(modelValue)
 			{
-				for (let fld in this.model)
+				for (const fld in this.model)
 				{
 					if (this.model[fld] instanceof modelFieldType.Base)
 						this.model[fld].updateValue(modelValue[fld])

@@ -42,8 +42,25 @@ export default {
 	{
 		this.$eventTracker.addTrace({ origin: 'beforeUnmount (menuHandler)', message: 'Menu will be unmounted', contextData: { menuInfo: this.menuInfo } })
 		// Removes the listeners.
-		this.internalEvents.offMany(this.controls.menu.internalEvents, this.loadList)
+		this.internalEvents?.offMany(this.controls.menu.internalEvents, this.loadList) // The generic handler, in beforeUnmount, already removes all events.
 		this.$eventHub.offMany(this.controls.menu.globalEvents, this.loadList)
+
+		if(this.controls)
+		{
+			const controlsIds = Object.keys(this.controls)
+			controlsIds.forEach((controlId) => {
+				if (typeof this.controls[controlId].destroy === 'function')
+					this.controls[controlId].destroy()
+				this.controls[controlId] = null
+				delete this.controls[controlId]
+			})
+		}
+
+		if(typeof this.model?.destroy === 'function')
+		{
+			this.model.destroy()
+			this.model = null
+		}
 	},
 
 	computed: {

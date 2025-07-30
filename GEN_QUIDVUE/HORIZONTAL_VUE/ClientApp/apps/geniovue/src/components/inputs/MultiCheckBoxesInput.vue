@@ -148,9 +148,10 @@
 			{
 				if (!_isEmpty(this.options))
 				{
-					let vm = this,
-						numColumns = this.numberOfColumns === 0 ? this.options.length : this.numberOfColumns,
-						midCount = Math.ceil(this.options.length / numColumns)
+					const vm = this,
+						numColumns = this.numberOfColumns === 0 ? this.options.length : this.numberOfColumns
+
+					let midCount = Math.ceil(this.options.length / numColumns)
 
 					if (!Number.isSafeInteger(midCount))
 						midCount = 1

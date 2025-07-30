@@ -531,12 +531,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model.Menu);
 		}
 
-
 		// POST: /Item/Plist_SaveEdit
 		[HttpPost]
 		public ActionResult Plist_SaveEdit([FromBody] Plist_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Plist_SaveEdit",
 				ViewName = "Plist",
@@ -567,7 +566,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsPlist([FromBody] PlistDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

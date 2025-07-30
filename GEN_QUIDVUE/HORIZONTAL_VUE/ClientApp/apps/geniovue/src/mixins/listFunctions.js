@@ -15,6 +15,7 @@ import searchFilterData from '@/api/genio/searchFilterData.js'
 import { documentViewTypeMode, formModes, tableViewManagementModes } from '@quidgest/clientapp/constants/enums'
 import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 import { geographicDisplay, geographicShapeDisplay } from '@quidgest/clientapp/utils/geography'
+import { deepUnwrap } from '@quidgest/clientapp/utils/deepUnwrap'
 
 import { useGlobalTablesDataStore } from '@/stores/globalTablesData.js'
 import { useGenericDataStore } from '@quidgest/clientapp/stores'
@@ -196,7 +197,8 @@ export function getTableConfiguration(listConf)
 	// BEGIN: Advanced filters
 	if (!_isEmpty(listConf.advancedFilters))
 	{
-		const advancedFilters = cloneDeep(listConf.advancedFilters)
+		const advancedFiltersWithoutReactive = deepUnwrap(listConf.advancedFilters)
+		const advancedFilters = cloneDeep(advancedFiltersWithoutReactive)
 		filtersToServerFormat(advancedFilters, listConf.columns)
 		config.advancedFilters = advancedFilters
 	}
@@ -205,7 +207,8 @@ export function getTableConfiguration(listConf)
 	// BEGIN: Column filters
 	if (!_isEmpty(listConf.columnFilters))
 	{
-		const columnFilters = cloneDeep(listConf.columnFilters)
+		const columnFiltersWithoutReactive = deepUnwrap(listConf.columnFilters)
+		const columnFilters = cloneDeep(columnFiltersWithoutReactive)
 		filtersToServerFormat(columnFilters, listConf.columns)
 		config.columnFilters = columnFilters
 	}
@@ -214,7 +217,8 @@ export function getTableConfiguration(listConf)
 	// BEGIN: Search bar filters
 	if (!_isEmpty(listConf.searchBarFilters))
 	{
-		const searchBarFilters = cloneDeep(listConf.searchBarFilters)
+		const searchBarFiltersWithoutReactive = deepUnwrap(listConf.searchBarFilters)
+		const searchBarFilters = cloneDeep(searchBarFiltersWithoutReactive)
 		filtersToServerFormat(searchBarFilters, listConf.columns)
 		config.searchBarFilters = searchBarFilters
 	}
@@ -363,7 +367,8 @@ export function applyTableConfiguration(listControl, viewCfg)
 	// Advanced filters
 	if (!_isEmpty(viewCfg.advancedFilters))
 	{
-		const advancedFilters = cloneDeep(viewCfg.advancedFilters)
+		const advancedFiltersWithoutReactive = deepUnwrap(viewCfg.advancedFilters)
+		const advancedFilters = cloneDeep(advancedFiltersWithoutReactive)
 		filtersToClientFormat(advancedFilters, listControl.columns)
 		listControl.advancedFilters = advancedFilters
 	}
@@ -373,7 +378,8 @@ export function applyTableConfiguration(listControl, viewCfg)
 	// Column filters
 	if (!_isEmpty(viewCfg.columnFilters))
 	{
-		const columnFilters = cloneDeep(viewCfg.columnFilters)
+		const columnFiltersWithoutReactive = deepUnwrap(viewCfg.columnFilters)
+		const columnFilters = cloneDeep(columnFiltersWithoutReactive)
 		filtersToClientFormat(columnFilters, listControl.columns)
 		listControl.columnFilters = columnFilters
 	}
@@ -452,7 +458,8 @@ export function applyTableConfiguration(listControl, viewCfg)
  */
 export function convertTableConfigurationToDB(tableConfig)
 {
-	let tableConfigSave = cloneDeep(tableConfig)
+	const tableConfigWithoutReactive = deepUnwrap(tableConfig)
+	let tableConfigSave = cloneDeep(tableConfigWithoutReactive)
 
 	// BEGIN: Remove properties that don't get saved
 
@@ -515,6 +522,33 @@ export function updateConfigOptions(configOptions, viewManagement, confirmChange
 	}
 }
 
+class TableRow
+{
+	constructor(rownum, fields, pkField, btnPermission)
+	{
+		this.Rownum = rownum
+		this.Fields = fields
+		this.pkField = pkField
+		this.btnPermission = btnPermission
+
+		// reason for not being a normal getter, see in 'rowWithoutChildren'
+		Object.defineProperty(this, 'rowKey', {
+			get() { return !_isEmpty(this.pkField) ? this.Fields[this.pkField] : this.Rownum },
+			enumerable: true,
+			configurable: true
+		})
+
+		this.actionVisibility = {}
+	}
+
+	destroy()
+	{
+		this.btnPermission = null
+		this.actionVisibility = null
+		this.Fields = null
+	}
+}
+
 /**
  * Hydrates the table rows.
  * @param {object} listControl The list control object
@@ -547,14 +581,13 @@ export function hydrateTableRow(listControl, rowData, rowIndex)
 	// Delete this property, so it won't be duplicated in every row.
 	delete rowData?.btnPermission
 
-	const row = reactive({
-		Rownum: rowIndex,
-		Fields: rowData,
-		pkField: listControl.config.pkColumn,
-		actionVisibility: {},
-		get rowKey() { return !_isEmpty(listControl.config.pkColumn) ? this.Fields[this.pkField] : this.Rownum },
+	const pkColumn = toValue(listControl.config.pkColumn)
+	const row = reactive(new TableRow(
+		rowIndex,
+		rowData,
+		pkColumn,
 		btnPermission
-	})
+	))
 
 	// Custom actions visibility
 	_forEach(listControl.config.customActions, (action) => {
@@ -797,6 +830,25 @@ class TreeRow
 			return new TreeRow(row, this._fnRowModel, this, { rowKeyToScroll: rowKeyToScroll, rownum: rownum++ })
 		}))
 		this.hasChildren = !_isEmpty(this._originalChildren)
+	}
+
+	destroy()
+	{
+		for(let childRowIdx in this._parsedChildren) {
+			if(this._parsedChildren[childRowIdx] instanceof TreeRow) {
+				this._parsedChildren[childRowIdx].destroy()
+			}
+		}
+
+		this._fnRowModel = null
+		if(this._originalChildren instanceof Array)
+			this._originalChildren.length = 0
+		this._originalChildren = null
+		if(this._parsedChildren instanceof Array)
+			this._parsedChildren.length = 0
+		this._parsedChildren = null
+		this._fields = null
+		this.Fields = null
 	}
 }
 
@@ -2318,7 +2370,10 @@ export function setFilterDefaultValues(filterOperators, filter, conditionIdx, se
 	for (let valueIdx = 0; valueIdx < valueCount; valueIdx++)
 	{
 		if (operator.defaultValue !== undefined)
-			filter.conditions[conditionIdx].values[valueIdx] = cloneDeep(operator.defaultValue)
+		{
+			const operatorDefaultValue = deepUnwrap(operator.defaultValue)
+			filter.conditions[conditionIdx].values[valueIdx] = cloneDeep(operatorDefaultValue)
+		}
 		else
 		{
 			const column = getColumnFromTableColumnName(searchableColumns, filter.conditions[conditionIdx].field)
@@ -2651,7 +2706,7 @@ export function initTableEvents(listControl)
 
 		// Updates the array with dirty rows to validate before leaving the form.
 		listControl.vueContext.internalEvents.on('is-table-control-dirty', ({ id, isDirty }) => {
-			listControl.vueContext.onRowDirty(listControl, id, isDirty)
+			listControl.onRowDirty(id, isDirty)
 		})
 
 		// Deselects selected row(s) when closing and extended support form.

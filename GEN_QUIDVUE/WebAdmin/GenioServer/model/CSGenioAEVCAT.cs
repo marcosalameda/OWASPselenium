@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -164,10 +164,10 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(7);
 			info.Pathways.Add("cate1","cate1");
 			info.Pathways.Add("pesso","pesso");
-			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("cntry","pesso");
-			info.Pathways.Add("cmpny","pesso");
+			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("pais1","pesso");
+			info.Pathways.Add("cmpny","pesso");
 			info.Pathways.Add("regi1","pesso");
 		}
 
@@ -184,8 +184,8 @@ namespace CSGenio.business
 			//Actualiza as seguintes rotinas de ultimo Qvalue:
 			info.LastValueArgs = new List<LastValueArgument>();
 			info.LastValueArgs.Add( new LastValueArgument("pesso",
-				new string [] {"codcateg","dtultcat"},
-				new string [] {"codcateg","since"},
+				new string [] {"dtultcat","codcateg"},
+				new string [] {"since","codcateg"},
 				"since",
 				null,
 
@@ -484,7 +484,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX EVCAT]/

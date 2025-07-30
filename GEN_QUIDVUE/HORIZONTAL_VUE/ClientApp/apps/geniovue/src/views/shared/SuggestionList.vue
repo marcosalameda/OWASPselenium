@@ -84,7 +84,7 @@
 		computed: {
 			tableRows()
 			{
-				var rows = []
+				const rows = []
 
 				if (this.model.Suggestions && this.model.Suggestions.length > 0)
 				{

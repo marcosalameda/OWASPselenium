@@ -321,7 +321,7 @@
 				if (typeof isPHE !== 'boolean')
 					isPHE = false
 
-				var routeName = 'home'
+				let routeName = 'home'
 				if (!this.isEmpty(menu.Action))
 					routeName = menu.Action
 

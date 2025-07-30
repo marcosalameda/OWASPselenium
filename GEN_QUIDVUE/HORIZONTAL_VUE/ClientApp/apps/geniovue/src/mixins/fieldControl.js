@@ -3,6 +3,7 @@ import _assignInWith from 'lodash-es/assignInWith'
 import _capitalize from 'lodash-es/capitalize'
 import cloneDeep from 'lodash-es/cloneDeep'
 import _debounce from 'lodash-es/debounce'
+import _find from 'lodash-es/find'
 import _forEach from 'lodash-es/forEach'
 import _get from 'lodash-es/get'
 import _has from 'lodash-es/has'
@@ -15,7 +16,8 @@ import _some from 'lodash-es/some'
 import _toLower from 'lodash-es/toLower'
 import _unionWith from 'lodash-es/unionWith'
 import { v4 as uuidv4 } from 'uuid'
-import { computed, isRef, nextTick, ref, watch, watchEffect } from 'vue'
+import { computed, isRef, nextTick, ref, toValue, markRaw } from 'vue'
+import { ScopedWatch } from '@quidgest/clientapp/utils/scopedWatch'
 
 import searchFilterData from '@/api/genio/searchFilterData.js'
 import { validateFormula } from '@/utils/formula.js'
@@ -37,6 +39,7 @@ import getSpecialRenderingControls from './customControl.js'
 import formFunctions from './formFunctions.js'
 import listFunctions from './listFunctions.js'
 import { systemInfo } from '@/systemInfo'
+import { AbortControllerManager } from '@/utils/abortControllerManager.js'
 
 /**
  * Base form control
@@ -44,14 +47,39 @@ import { systemInfo } from '@/systemInfo'
 export class BaseControl
 {
 	/**
+	 * Dedicated watcher scope.
+	 * @protected
+	 * @type {ScopedWatch}
+	 */
+	_watchScope
+
+	/**
 	 * Base constructor
-	 * @param {object} options
-	 * @param {Proxy} vueContext
+	 * @param {object} options – configuration specific to the control
+	 * @param {Proxy} vueContext – reactive context supplied by the parent
 	 */
 	constructor(options, vueContext)
 	{
+		// All watchers created inside this scope are collected automatically
+		// https://vuejs.org/api/reactivity-advanced#effectscope
+		Object.defineProperty(this, '_watchScope', {
+			value: markRaw(new ScopedWatch(/* detached? */ false)),
+			enumerable: false,
+			writable: true,
+			configurable: true
+		})
+
+		// The Vue context properties.
 		this.vueContext = vueContext
 		Object.defineProperty(this, 'vueContext', { enumerable: false })
+
+		// Ideally, this property should have a static value, since the navigatino ID is created in the «created» hook.
+		// However, this change will be left for a future merge request to avoid mixing too many refactorings at once.
+		Object.defineProperty(this, 'currentNavigationId', {
+			get() { return this.vueContext.navigationId },
+			enumerable: false,
+			configurable: true
+		})
 
 		// Init default values of control properties
 		/** The id of the control */
@@ -78,8 +106,6 @@ export class BaseControl
 		this.tab = ''
 		/** Indicates the parent sub-form id */
 		this.subForm = ''
-		/** The id of the parent control */
-		this.parent = computed(() => this.container || this.tab || this.subForm || '')
 		/** List of sources that hide the control */
 		this.showWhenConditions = new HideConditionStack()
 		/** List of sources that block the control */
@@ -127,6 +153,13 @@ export class BaseControl
 		this.showAlternativeView = false
 
 		_merge(this, options || {})
+	}
+
+	/**
+	 * The id of the parent control
+	 */
+	get parent() {
+		return this.container || this.tab || this.subForm || ''
 	}
 
 	get props()
@@ -538,7 +571,44 @@ export class BaseControl
 	 */
 	destroy()
 	{
+		this._watchScope?.dispose()
+		this._watchScope = null
+
+		if(typeof this.showWhenConditions?.destroy === 'function')
+			this.showWhenConditions.destroy()
+		this.showWhenConditions = null
+		if(typeof this.blockWhenConditions?.destroy === 'function')
+			this.blockWhenConditions.destroy()
+		this.blockWhenConditions = null
+		if(typeof this.fieldRequiredConditions?.destroy === 'function')
+			this.fieldRequiredConditions.destroy()
+		this.fieldRequiredConditions = null
+
 		this.componentOnLoadProc.destroy()
+		this.componentOnLoadProc = null
+
+		if(this.texts instanceof controlsResources.BaseResources)
+			this.texts.destroy()
+		this.texts = null
+
+		// Disable the closure that held the component's this
+		if(typeof this.showWhen?.fnFormula === 'function')
+			this.showWhen.fnFormula = null
+		if(typeof this.blockWhen?.fnFormula === 'function')
+			this.blockWhen.fnFormula = null
+		if(typeof this.requiredConditions?.fnFormula === 'function')
+			this.requiredConditions.fnFormula = null
+
+		delete this.items
+		delete this.filterArray
+		delete this.groups
+		delete this.arrayOptions
+
+		this.handlers = null
+		this.modelFieldRef = null
+
+		delete this.currentNavigationId
+		delete this.vueContext
 	}
 }
 
@@ -708,7 +778,7 @@ export class TextEditorControl extends StringControl
 		 */
 		if (window.tinymce)
 		{
-			let editorCtrl = window.tinymce.get(this.id)
+			const editorCtrl = window.tinymce.get(this.id)
 			if (editorCtrl)
 			{
 				editorCtrl.remove()
@@ -858,8 +928,8 @@ export class NumberControl extends DatabaseControl
 
 		if (this.modelFieldRef)
 		{
-			this.maxDigits = computed(() => this.modelFieldRef.maxDigits)
-			this.decimalDigits = computed(() => this.modelFieldRef.decimalDigits)
+			this.maxDigits = this.modelFieldRef.maxDigits
+			this.decimalDigits = this.modelFieldRef.decimalDigits
 			this.showEmptyMessage = computed(() => this.isSequencial && (_isEmpty(this.modelFieldRef) || this.modelFieldRef.value < 0))
 		}
 	}
@@ -875,7 +945,7 @@ export class CurrencyControl extends NumberControl
 		super({
 			type: 'Number',
 			dFlexInline: true,
-			currencySymbol: computed(() => systemInfo.system.baseCurrency.symbol ?? '€')
+			currencySymbol: systemInfo.system.baseCurrency.symbol ?? '€'
 		}, _vueContext)
 
 		_merge(this, options || {})
@@ -905,10 +975,22 @@ export class DateControl extends DatabaseControl
 	{
 		return {
 			...super.props,
-			type: this.type,
+			dateTimeType: this.dateTimeType,
 			locale: this.locale,
 			format: this.format
 		}
+	}
+
+	/**
+	 * @override
+	 */
+	async init(isEditableForm)
+	{
+		await super.init(isEditableForm)
+
+		const genericDataStore = useGenericDataStore()
+
+		this.format = genericDataStore.dateFormat[this.dateTimeType]
 	}
 }
 
@@ -938,7 +1020,12 @@ class BaseArrayControl extends DatabaseControl
 			items: [],
 			groups: [],
 			arrayOptions: [],
-			arrayElShowWhen: null
+			arrayElShowWhen: null,
+			orientation: 'vertical',
+			columns: 1,
+			_stopWatcherItems: null,
+			_stopWatcherGroups: null,
+			_stopWatcherFilteredOptions: null
 		}, _vueContext)
 
 		_merge(this, options || {})
@@ -952,7 +1039,9 @@ class BaseArrayControl extends DatabaseControl
 			groups: this.groups,
 			clearable: this.clearable,
 			emptyValue: this.emptyValue,
-			ariaLabel: this.label
+			ariaLabel: this.label,
+			orientation: this.orientation,
+			columns: this.columns
 		}
 	}
 
@@ -967,7 +1056,9 @@ class BaseArrayControl extends DatabaseControl
 		// TODO: This is a workaround to hide groups without elements. This code is needed until the component has this part working for itself.
 		this.arrayGroups = this.modelFieldRef?.arrayGroups
 		this.groups = this.modelFieldRef?.arrayGroups
-		watchEffect(() => {
+		if(this._stopWatcherItems)
+			this._stopWatcherItems()
+		this._stopWatcherItems = this._watchScope.watchEffect(() => {
 			this.filterArray = this.filterArrayElements(this.arrayOptions, this.arrayGroups) || []
 			this.items = this.setShowDescription(this.filterArray)
 		})
@@ -1036,11 +1127,15 @@ class BaseArrayControl extends DatabaseControl
 				if (allGroups !== undefined)
 				{
 					// Update visible options for groups
-					watchEffect(() => {
+					if(this._stopWatcherGroups)
+						this._stopWatcherGroups()
+					this._stopWatcherGroups = this._watchScope.watchEffect(() => {
 						this.groups = allGroups.filter((item) => filteredOptions.some((option) => option.group === item.id))
 					})
 				}
-				watchEffect(() => (this.items = filteredOptions))
+				if(this._stopWatcherFilteredOptions)
+					this._stopWatcherFilteredOptions()
+				this._stopWatcherFilteredOptions = this._watchScope.watchEffect(() => (this.items = filteredOptions))
 
 				// Clean display value
 				if (filteredOptions.filter((o) => o.key === this.modelFieldRef.value).length === 0)
@@ -1077,6 +1172,20 @@ class BaseArrayControl extends DatabaseControl
 	unwrapArrayOptions(arrayOptions)
 	{
 		return (isRef(arrayOptions) ? arrayOptions.value : arrayOptions) || []
+	}
+
+	destroy()
+	{
+		super.destroy()
+		if(this._stopWatcherItems)
+			this._stopWatcherItems()
+		this._stopWatcherItems = null
+		if(this._stopWatcherGroups)
+			this._stopWatcherGroups()
+		this._stopWatcherGroups = null
+		if(this._stopWatcherFilteredOptions)
+			this._stopWatcherFilteredOptions()
+		this._stopWatcherFilteredOptions = null
 	}
 }
 
@@ -1434,7 +1543,7 @@ export class LookupControl extends BaseControl
 
 		_forEach(limitValues.limits, (value, key) => {
 			const entry = {
-				navigationId: this.vueContext.navigationId,
+				navigationId: this.currentNavigationId,
 				key,
 				value
 			}
@@ -1481,7 +1590,7 @@ export class LookupControl extends BaseControl
 						ReloadDBEditRequestNumber: this.requestNumberReload += 1
 					}
 				},
-				this.vueContext.navigationId))
+				this.currentNavigationId))
 	}
 
 	/**
@@ -1518,7 +1627,7 @@ export class LookupControl extends BaseControl
 
 		_forEach(values, (value, key) => {
 			const entry = {
-				navigationId: this.vueContext.navigationId,
+				navigationId: this.currentNavigationId,
 				key,
 				value
 			}
@@ -1573,7 +1682,7 @@ export class LookupControl extends BaseControl
 						GetDependantsRequestNumber: this.requestNumberGetDependants += 1
 					}
 				},
-				this.vueContext.navigationId),
+				this.currentNavigationId),
 			true)
 	}
 
@@ -1604,7 +1713,7 @@ export class LookupControl extends BaseControl
 		this.seeMoreParams = {
 			id: this.vueContext.primaryKeyValue,
 			limits: this.getLimitsValues(),
-			navigationId: this.vueContext.navigationId
+			navigationId: this.currentNavigationId
 		}
 		this.seeMoreIsVisible = true
 	}
@@ -1647,12 +1756,192 @@ export class LookupControl extends BaseControl
 		else
 			this.componentOnLoadProc.addWL(cbPromise)
 	}
+
+	destroy()
+	{
+		super.destroy()
+		if(typeof this.debouncedSearch?.cancel === 'function')
+			this.debouncedSearch.cancel()
+		this.debouncedSearch = null
+
+		this.lookupKeyModelFieldRef = null
+	}
+}
+
+class TableListBaseControl extends BaseControl
+{
+	/** @constructor */
+	constructor(options, _vueContext)
+	{
+		super(options, _vueContext)
+
+		/**
+		 * Manager for aborting HTTP requests by category.
+		 * @type {AbortControllerManager}
+		 * @protected
+		 */
+		Object.defineProperty(this, 'abortManager', {
+			value: markRaw(new AbortControllerManager()),
+			writable: true,
+			enumerable: false
+		})
+	}
+
+	/**
+	 * Fetches the data from the server and loads the list.
+	 * @param {object} params The necessary parameters
+	 * @param {Function} fnHydrateViewModel The custom callback method for hydrate the page view model data
+	 * @param {Function} fnUpdateData The custom callback method for update the data
+	 * @returns A promise with the response from the server.
+	 */
+	fetchListData(params, fnHydrateViewModel, fnUpdateData)
+	{
+		if(this.config.serverMode === false) return
+
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('fetchListData')
+
+		// Table list limits
+		const limits = this.getLimitsValues()
+
+		// Object with required parameters
+		let actionParams = {
+			id: limits.id ?? this.vueContext.$route.params.id,
+			/**
+			 * The limit values can come in the queryParams, but for now, we will opt to send them directly in the Navigation instead of through here,
+			 * to prevent potential issues with limit value formatting (especially with dates)
+			 * and eliminate the need for the server-side to insert the limits into the navigation itself.
+			 */
+			queryParams: {},
+			// Table configuration state
+			tableConfiguration: {},
+			// Whether this is the first time loading the table after navigating to it
+			isFirstLoad: false,
+			noRedirect: false,
+			// List of columns that have totalizers
+			totalizerColumns: listFunctions.getColumnTotalizers(this),
+			// List of ids that correspond to the selected rows.
+			selectedRows: listFunctions.getSelectedRows(this),
+			...params
+		}
+
+		// Use current control if the ID matches this table ID
+		const currentControl = this.vueContext.currentControl.id === this.id
+			? this.vueContext.currentControl
+			: null
+
+		if (!_isEmpty(currentControl))
+		{
+			this.vueContext.removeCurrentControl({
+				navigationId: this.currentNavigationId,
+				controlId: this.id
+			})
+		}
+
+		// Put the limit values in Navigation (history) before making the request to the server.
+		// TODO: Change for Event (internal event)
+		_forEach(limits, (value, key) => {
+			this.vueContext.setEntryValue({
+				navigationId: this.currentNavigationId,
+				key,
+				value
+			})
+		})
+
+		// If it's the first load
+		if (!this.dataAlreadyRequested)
+		{
+			// Used for «Jump if just one»
+			Reflect.set(actionParams, 'isFirstLoad', true)
+			Reflect.set(actionParams, 'noRedirect', true)
+
+			// BEGIN: If returning from a form
+			// Get current unsaved configuration data so it can be loaded in the hydrate function
+			const currentTableConfig = currentControl?.data?.tableConfig
+			// If current unsaved configuration exists
+			if (currentTableConfig !== undefined && currentTableConfig !== null)
+			{
+				Reflect.set(actionParams, 'tableConfiguration', currentTableConfig)
+				this.confirmChanges = currentControl.data.confirmChanges
+			}
+			// END: If returning from a form
+			else if (actionParams.tableConfiguration === undefined ||
+				actionParams.tableConfiguration === null ||
+				Object.keys(actionParams.tableConfiguration).length === 0)
+			{
+				// If no current unsaved configuration exists and it's the first load
+				Reflect.set(actionParams, 'loadDefaultView', true)
+			}
+		}
+		this.dataAlreadyRequested = true
+
+		// Reset search bar message
+		if (this?.config?.searchBarConfig?.message)
+			this.config.searchBarConfig.message = null
+
+		return this.componentOnLoadProc.addWL(netAPI.postData(
+			this.controller,
+			this.action,
+			actionParams,
+			(data, response) => {
+				// When loading additional data for the page ViewModel
+				if (typeof fnHydrateViewModel === 'function')
+					fnHydrateViewModel(data, this)
+
+				// When loading additional data for the branch of the tree,
+				// we use a customized callback to assign data to the branch's children.
+				if (typeof fnUpdateData === 'function')
+					fnUpdateData(data, this)
+				else
+				{
+					let rowKeyToScroll = ''
+
+					// FOR: table go to row on return
+					// If returning to the table from a form, set key of row to go to
+					if (!_isEmpty(currentControl) && currentControl.id === this.id)
+					{
+						rowKeyToScroll = currentControl?.data?.rowKey
+						this.config.rowKeyToScroll = rowKeyToScroll
+					}
+
+					if (this.type === 'TreeList')
+						this.hydrate(this, data, rowKeyToScroll)
+					else
+						this.hydrate(this, data)
+
+					this.isLoaded = true
+					this.afterLoaded()
+				}
+
+				if (response.data && response.data.Success === false && response.data.Message) {
+					genericFunctions.displayMessage(response.data.Message, 'warning')
+				}
+			},
+			undefined,
+			{
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('fetchListData')
+			}))
+	}
+
+	destroy()
+	{
+		super.destroy()
+		// If there's a request pending, cancel it
+		if(typeof this.abortManager?.dispose === 'function')
+			this.abortManager.dispose()
+		this.abortManager = null
+	}
 }
 
 /**
  * Form Table list control
  */
-export class TableListControl extends BaseControl
+export class TableListControl extends TableListBaseControl
 {
 	constructor(options, _vueContext, store)
 	{
@@ -1660,8 +1949,9 @@ export class TableListControl extends BaseControl
 		if (typeof store === 'undefined')
 			systemDataStore = useSystemDataStore()
 
-		const importExportResources = new controlsResources.ImportExportResources(_vueContext.$getResource)
-		const tableTexts = new controlsResources.TableListMainResources(_vueContext.$getResource)
+		const _getResources = _vueContext.$getResource
+		const importExportResources = new controlsResources.ImportExportResources(_getResources)
+		const tableTexts = new controlsResources.TableListMainResources(_getResources)
 
 		// Init default values of control properties
 		super({
@@ -1714,8 +2004,8 @@ export class TableListControl extends BaseControl
 			},
 			confirmChanges: false,
 			config: {
-				serverMode: computed(() => !!options?.config?.serverMode),
-				perPageDefault: computed(() => systemDataStore.system ? systemDataStore.system.defaultListRows : options.config !== undefined ? options.config.perPage !== undefined ? options.config.perPage : 10 : 10),
+				serverMode: !!options?.config?.serverMode,
+				perPageDefault: systemDataStore.system ? systemDataStore.system.defaultListRows : options.config !== undefined ? options.config.perPage !== undefined ? options.config.perPage : 10 : 10,
 				perPageSelected: null,
 				page: 1,
 				perPage: 10,
@@ -1786,7 +2076,7 @@ export class TableListControl extends BaseControl
 			},
 			texts: tableTexts,
 			// The translation mechanism for the filter operators arrays
-			filterOperators: searchFilterData.getWithTranslation(_vueContext.$getResource).operators.elements,
+			filterOperators: searchFilterData.getWithTranslation(_getResources),
 			allSelectedRows: 'false',
 			headerRow: {
 				isNavigated: false
@@ -1817,6 +2107,14 @@ export class TableListControl extends BaseControl
 			listFunctions.updateConfigOptions(configOptions, this.config.viewManagement, this.confirmChanges, this.readonly)
 			return configOptions
 		})
+	}
+
+	/**
+	 *  Convert hashtable of row IDs to array of row IDs
+	 */
+	get rowsSelectedKeys()
+	{
+		return Object.keys(this.rowsSelected)
 	}
 
 	/**
@@ -1871,7 +2169,7 @@ export class TableListControl extends BaseControl
 		super.initHandlers()
 
 		const handlers = {
-			onChangeQuery: (eventData) => this.onTableListChangeQuery(eventData),
+			onChangeQuery: () => this.onTableListChangeQuery(),
 			saveView: (eventData) => this.onTableListSaveView(eventData),
 			renameView: (eventData) => this.onTableListRenameView(eventData),
 			copyView: (eventData) => this.onTableListCopyView(eventData),
@@ -1893,7 +2191,7 @@ export class TableListControl extends BaseControl
 			selectRow: (eventData) => this.onSelectRow(eventData),
 			unselectRow: (eventData) => this.onUnselectRow(eventData),
 			selectRows: (eventData) => this.onSelectRows(eventData),
-			unselectAllRows: (eventData) => this.onUnselectAllRows(eventData),
+			unselectAllRows: () => this.onUnselectAllRows(),
 			executeAction: (eventData) => this.onTableListExecuteAction(eventData),
 			rowAction: (eventData) => this.onTableListExecuteAction(eventData),
 			cellAction: (eventData) => this.onTableListCellAction(eventData),
@@ -1918,7 +2216,7 @@ export class TableListControl extends BaseControl
 			setProperty: (...args) => this.setProperty(...args),
 			setRowIndexProperty: (...args) => this.setRowIndexProperty(...args),
 			setArraySubPropWhere: (...args) => this.setArraySubPropWhere(...args),
-			insertForm: (...args) => this.onTableListInsertForm(...args),
+			insertForm: () => this.onTableListInsertForm(),
 			cancelInsert: (...args) => this.onTableListCancelInsertRow(...args),
 			signalComponent: (...args) => this.signalComponent(...args),
 			toggleTextWrap: () => { this.config.hasTextWrap = !this.config.hasTextWrap },
@@ -2034,52 +2332,1088 @@ export class TableListControl extends BaseControl
 		this.config.configOptions = configOptions
 	}
 
-	onTableListChangeQuery(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListChangeQuery(this, eventData)) }
-	onTableListSaveView(eventData) { this.vueContext.onTableListSaveView(this, eventData) }
-	onTableListRenameView(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListRenameView(this, eventData)) }
-	onTableListCopyView(eventData) { this.vueContext.onTableListCopyView(this, eventData) }
-	onTableListCloseView(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListCloseView(this, eventData)) }
-	onTableListSelectView(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListSelectView(this, eventData)) }
-	onTableListViewAction(eventData) { this.componentOnLoadProc.addWL(this.vueContext.onTableListViewAction(this, eventData)) }
-	onTableListExportData(eventData, template) { asyncProcM.addBusy(this.vueContext.onTableListExportData(this, eventData, template), 'Export...') }
-	onTableListImportData(eventData) { asyncProcM.addBusy(this.vueContext.onTableListImportData(this, eventData), 'Import...') }
-	updateActiveViewMode(eventData) { this.vueContext.updateActiveViewMode(this, eventData) }
-	onRemoveRow(eventData) { this.vueContext.onRemoveRow(this, eventData) }
-	onTableListRowAdd(eventData) { this.vueContext.onTableListRowAdd(this, eventData) }
-	onTableListRowEdit(eventData) { this.vueContext.onTableListRowEdit(this, eventData) }
-	onTableListRowsDelete(eventData) { this.vueContext.onTableListRowsDelete(this, eventData) }
-	onTableListRowReorder(eventData) { this.vueContext.onTableListRowReorder(this, eventData) }
-	onToggleRowsDragDrop() { this.vueContext.onToggleRowsDragDrop(this) }
-	onTableListRowGroupAction(eventData) { this.vueContext.onTableListRowGroupAction(this, eventData) }
-	onGoToRow(eventData) { this.vueContext.onGoToRow(this, eventData) }
-	onSelectRow(eventData) { this.vueContext.onSelectRow(this, eventData) }
-	onUnselectRow(eventData) { this.vueContext.onUnselectRow(this, eventData) }
-	onSelectRows(eventData) { this.vueContext.onSelectRows(this, eventData) }
-	onUnselectAllRows(eventData) { this.vueContext.onUnselectAllRows(this, eventData) }
+	/**
+	 * @returns A promise with the response from the server.
+	 */
+	onTableListChangeQuery() {
+		this.fetchListData({ tableConfiguration: listFunctions.getTableConfiguration(this) })
+	}
+
+	/**
+	 * Save view (user table configuration)
+	 * @param {object} eObj
+	 */
+	onTableListSaveView(eObj) {
+		if (_isEmpty(eObj.name) || this.readonly)
+			return Promise.resolve()
+
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListSaveView')
+
+		if (typeof eObj.isSelected !== 'boolean')
+			eObj.isSelected = false
+
+		// Get table configuration
+		const config = listFunctions.getTableConfiguration(this)
+		// Convert to format used in database
+		const configEncoded = listFunctions.convertTableConfigurationToDB(config)
+
+		const params = {
+			uuid: this.uuid,
+			configName: eObj.name,
+			isSelected: eObj.isSelected,
+			data: configEncoded
+		}
+
+		// Send request to save configuration
+		return netAPI.postData(
+			'Tblcfg',
+			'SaveConfig',
+			params,
+			() => {
+				// Clear view name array if there are no views
+				if (_isEmpty(this.config.userTableConfigNames))
+					this.config.userTableConfigNames = []
+
+				// Add view name to list of available views
+				if (!this.config.userTableConfigNames.includes(eObj.name))
+					this.config.userTableConfigNames.push(eObj.name)
+
+				// Set default view
+				if (eObj.isSelected)
+					this.config.userTableConfigNameDefault = eObj.name
+
+				// Set opened view name to this view
+				this.config.userTableConfigName = eObj.name
+
+				// Reset property for whether there are changes
+				this.confirmChanges = false
+			},
+			undefined,
+			{
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListSaveView')
+			})
+	}
+
+	/**
+	 * Rename a table view (user table configuration)
+	 * @param {object} eObj
+	 */
+	onTableListRenameView(eObj) {
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListRenameView')
+
+		const params = {
+			uuid: this.uuid,
+			configName: eObj.name,
+			isSelected: eObj.isSelected,
+			renameFromName: eObj.renameFromName
+		}
+
+		// Send request to save configuration
+		return new Promise((resolve) => {
+			netAPI.postData(
+				'Tblcfg',
+				'RenameConfig',
+				params,
+				async (data) => {
+					if (data.Success)
+					{
+						// Set table configuration to use when reloading
+						const userTableConfigName = this.config.userTableConfigName === eObj.renameFromName ? eObj.name : this.config.userTableConfigName
+
+						// Set whether to load the default view
+						const LoadDefaultView = data.LoadDefaultView
+
+						// Reload table
+						await this.fetchListData({ userTableConfigName, LoadDefaultView })
+						resolve(true)
+					}
+					else
+					{
+						genericFunctions.displayMessage(data.ErrorMsg, 'error')
+						resolve(false)
+					}
+				},
+				undefined,
+				{
+					signal
+				},
+				this.currentNavigationId)
+				.finally(() => {
+					// clear this key so the controller can be GC’d
+					this.abortManager?.clear('onTableListRenameView')
+				})
+		})
+	}
+
+	/**
+	 * Close a table view (user table configuration)
+	 */
+	onTableListCloseView() {
+		// Clear view configuration
+		listFunctions.applyTableConfiguration(this, {})
+		this.config.userTableConfigName = null
+
+		// Reset property for whether there are changes
+		this.confirmChanges = false
+
+		// Reload table
+		return this.fetchListData()
+	}
+
+	/**
+	 * Select view (user table configuration)
+	 * @param {object} eObj
+	 */
+	onTableListSelectView(eObj) {
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListSelectView')
+
+		const params = {
+			uuid: this.uuid,
+			configName: eObj.name
+		}
+
+		// BEGIN: Send request to save configuration
+		return this.componentOnLoadProc.addWL(netAPI.postData(
+			'Tblcfg',
+			'SelectConfig',
+			params,
+			() => {
+				// Reload table
+				if (eObj.name && eObj.name !== '')
+					this.fetchListData({ queryParams: { uuid: this.uuid }, userTableConfigName: eObj.name })
+				else
+					this.onTableListCloseView(eObj)
+			},
+			undefined,
+			{
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListSelectView')
+			}))
+	}
+
+	/**
+	 * Table view action (user table configuration)
+	 * @param {object} eObj
+	 */
+	onTableListViewAction(eObj) {
+		switch(eObj.name)
+		{
+			case 'SHOW':
+				return this.onTableListOpenView(eObj)
+			case 'DUPLICATE':
+				return this.onTableListCopyView(eObj)
+			case 'DELETE':
+				return this.onTableListDeleteView(eObj)
+			default:
+				return
+		}
+	}
+
+	/**
+	 * Export table data to file
+	 * @param {object} eObj
+	 * @param {boolean} template (false: download data file, true: download template file)
+	 * @returns A promise with the response from the server.
+	 */
+	onTableListExportData(eObj, template) {
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListExportData')
+
+		let params = {},
+			paramNameList = 'ExportList',
+			paramNameType = 'ExportType'
+
+		// Change parameter names when downloading template file
+		if (template !== false)
+		{
+			paramNameList = 'ImportList'
+			paramNameType = 'ImportType'
+		}
+
+		Reflect.set(params, paramNameList, 'true')
+		Reflect.set(params, paramNameType, eObj.format)
+
+		// Table list limits
+		const limits = this.getLimitsValues()
+		// ID that records are limited by
+		const id = limits.id ?? this.vueContext.$route.params.id
+
+		// Put the limit values in Navigation (history) before making the request to the server.
+		_forEach(limits, (value, key) => {
+			const entry = {
+				navigationId: this.currentNavigationId,
+				key,
+				value
+			}
+			this.vueContext.setEntryValue(entry)
+		})
+
+		const tableConfiguration = listFunctions.getTableConfiguration(this)
+
+		return this.componentOnLoadProc.addBusy(netAPI.postData(
+			this.controller,
+			this.action,
+			{ queryParams: params, id, tableConfiguration },
+			(data) => {
+				// Make call to download file using the response URL
+				netAPI.postData(
+					data.controller,
+					data.action,
+					{
+						id: data.id,
+						type: eObj.format
+					},
+					(_, request) => netAPI.forceDownload(request.data, data.id),
+					undefined,
+					{ responseType: 'arraybuffer' },
+					this.currentNavigationId)
+			},
+			undefined,
+			{
+				params,
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListExportData')
+			}), 'Export...')
+	}
+
+	/**
+	 * Import table data from file
+	 * @param {object} eObj
+	 * @returns A promise with the response from the server.
+	 */
+	onTableListImportData(eObj) {
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListImportData')
+
+		const params = {
+			importType: eObj.format,
+			qqfile: eObj.fileName
+		}
+
+		let formData = new FormData()
+		formData.append('file', eObj.file)
+
+		return this.componentOnLoadProc.addBusy(netAPI.postData(
+			this.controller,
+			`${this.action}_UploadFile`,
+			formData,
+			(data) => this.dataImportResponse = data,
+			undefined,
+			{
+				params,
+				headers: { 'Content-Type': 'multipart/form-data' },
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListImportData')
+			}), 'Import...')
+	}
+
+	/**
+	 * Update the value of the id of the active view mode.
+	 * @param {object} id The id of the active view mode
+	 */
+	updateActiveViewMode(id) {
+		this.activeViewModeId = id
+
+		// Re-initialize the table configuration options
+		this.initUserConfig()
+
+		//Save config
+		this.updateConfig()
+	}
+
+	/**
+	 * Remove row from array of rows
+	 * @param rowKey {Object}
+	 */
+	onRemoveRow(rowKey) {
+		const rowIdx = this.rows.findIndex((elem) => elem.rowKey === rowKey)
+		if(rowIdx !== -1)
+			this.rows.splice(rowIdx, 1)
+	}
+
+	/**
+	 * Row add
+	 * @param {object} eObj Row object
+	 */
+	onTableListRowAdd(eObj) {
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListRowAdd')
+
+		let params = {
+			partialView: '',
+			InsertMode: 'true',
+			Expose: this.config.name
+		}
+
+		for (let key in eObj.Fields)
+			Reflect.set(params, key, eObj.Fields[key])
+
+		return netAPI.postData(
+			this.config.tableAlias,
+			`${this.action}Form_New`,
+			params,
+			() => this.fetchListData(),
+			undefined,
+			{
+				params,
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListRowAdd')
+			})
+	}
+
+	/**
+	 * Row edit
+	 * @param {object} eObj Row object
+	 */
+	onTableListRowEdit(eObj) {
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListRowEdit')
+
+		let params = {
+			partialView: '',
+			InsertMode: 'false',
+			Expose: this.config.name
+		}
+
+		for (let key in eObj.Fields)
+			Reflect.set(params, key, eObj.Fields[key])
+
+		return netAPI.postData(
+			this.config.tableAlias,
+			`${this.action}Form_Edit`,
+			params,
+			undefined,
+			undefined,
+			{
+				params,
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListRowEdit')
+			})
+	}
+
+	/**
+	 * Rows delete
+	 * @param {object} eObj Hashtable of row primary keys
+	 */
+	onTableListRowsDelete(eObj) {
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListRowsDelete')
+
+		const params = {
+			partialView: '',
+			InsertMode: 'false',
+			Expose: this.config.name,
+			rowKeys: Object.keys(eObj)
+		}
+
+		return netAPI.postData(
+			this.config.tableAlias,
+			`${this.action}Form_Delete_Rows`,
+			params,
+			() => this.fetchListData(),
+			undefined,
+			{
+				params,
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListRowsDelete')
+			})
+	}
+
+	/**
+	 * Row reorder
+	 * @param {object} eObj
+	 */
+	onTableListRowReorder(eObj) {
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListRowReorder')
+
+		const params = {
+			id: eObj.rowKey,
+			position: eObj.index
+		}
+
+		return netAPI.postData(
+			this.controller,
+			`Reorder${this.action}`,
+			params,
+			(data) => {
+				this.hydrate(this, data)
+				this.isLoaded = true
+				// Set row key path to navigate to after reloading
+				this.config.navigatedRowKeyPath = [eObj.rowKey]
+				// Set property to trigger focusing on the right element after reloading
+				this.config.setNavOnUpdate = true
+			},
+			undefined,
+			{
+				params,
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListRowReorder')
+			})
+	}
+
+	/**
+	 * Get ordering column of table
+	 */
+	getOrderingColumn()
+	{
+		for (let idx in this.columns)
+		{
+			let column = this.columns[idx]
+			if (column.isOrderingColumn !== undefined && column.isOrderingColumn !== false)
+				return column
+		}
+
+		return null
+	}
+
+	/**
+	 * Toggle drag and drop mode
+	 */
+	onToggleRowsDragDrop() {
+		this.config.hasRowDragAndDrop = !this.config.hasRowDragAndDrop
+
+		var sortOrderColumn = this.getOrderingColumn()
+		if (this.config.hasRowDragAndDrop && sortOrderColumn)
+		{
+			sortOrderColumn.component = 'q-edit-numeric'
+			sortOrderColumn.componentOptions = { size: 'mini' }
+		}
+		else
+			sortOrderColumn.component = undefined
+	}
+
+	/**
+	 * Run group action on selected rows
+	 * @param {object} eObj
+	 */
+	onTableListRowGroupAction(eObj) { this.vueContext.onTableListRowGroupAction(this, eObj) }
+
+	/**
+	 * Signal that something just happened to a row.
+	 * Depends on table configuration.
+	 * @param {object} eObj
+	 * @returns Boolean
+	 */
+	onGoToRow(eObj) {
+		// If single row selection is enabled, select the row
+		if (this.config.rowClickActionInternal === 'selectSingle')
+			this.onSelectRow({ rowKeyPath: eObj })
+		else
+		{
+			let row = listFunctions.getRowByKeyPath(this.rows, eObj)
+
+			if (row)
+			{
+				row.isHighlighted = true
+				setTimeout(() => {
+					// Prevent re-rendering again and causing an infinite loop
+					this.config.rerenderRowsOnNextChange = false
+					delete row.isHighlighted
+				}, 1500)
+			}
+		}
+	}
+
+	/**
+	 * Sets the row to highlight when the user returns to the list
+	 * @param {object} row The row
+	 * @param {boolean} storeTableConfig Whether to store the table configuration to use when returning
+	 */
+	setListReturnControl(row, storeTableConfig = false)
+	{
+		// Get table configuration to use when returning
+		const tableConfig = storeTableConfig ? listFunctions.getTableConfiguration(this) : undefined
+
+		if (this.type === 'TreeList')
+		{
+			this.vueContext.setCurrentControl({
+				navigationId: this.currentNavigationId,
+				controlData: {
+					id: this.id,
+					data: {
+						rowKey: this.config.rowKeyToScroll
+					}
+				}
+			})// TODO: Change to event (internal events)
+		}
+		else
+		{
+			this.vueContext.setCurrentControl({
+				navigationId: this.currentNavigationId,
+				controlData: {
+					id: this.id,
+					data: {
+						rowKey: row?.rowKey,
+						tableConfig: tableConfig,
+						confirmChanges: this.confirmChanges
+					}
+				}
+			})// TODO: Change to event (internal events)
+		}
+	}
+
+	/**
+	 * Performs the row selection (auxiliar function to onSelectRow handler)
+	 * @param {object} rowID The ID of the row to select
+	 */
+	executeRowSelection(rowID)
+	{
+		// Set row ID in hashtable of selected rows
+		this.rowsSelected[rowID] = true
+
+		this.vueContext.setEntryValue({
+			navigationId: this.currentNavigationId,
+			key: `TableListControl_${this.id}`,
+			value: rowID
+		}) // TODO: Change to event (internal events)
+
+		// Remove properties for selecting the row that was previously selected because of doing an action on it
+		this.config.rowKeyToScroll = ''
+	}
+
+	/**
+	 * Function that runs after the confirmation to change/select a row
+	 * @param {object} row The item to select
+	 * @param {object} rowIdStr The row id
+	 * @param {object} eventData The eventDataused in the selection of the row
+	 */
+	afterRowSelectConfirmation(row, rowIdStr, eventData)
+	{
+		// If we select a different record, the changes made to the previous will be lost - clean dirty rows array
+		Object.keys(this.rowsDirty).forEach((key) => { delete this.rowsDirty[key] })
+
+		if (!eventData.multipleSelection && !_isEmpty(this.rowsSelected))
+			this.onUnselectAllRows()
+
+		// Perform row selection
+		this.setListReturnControl(row, true)
+		this.executeRowSelection(rowIdStr)
+
+		// Update form
+		this.vueContext.internalEvents?.emit('on-table-row-selected', { tableId: this.id, row })
+	}
+
+	/**
+	 * Selects a row in a list - including a confirmation check for dirty extended support forms.
+	 * @param {object} eventData - Information for the selection - the row ID (rowKeyPath) and the selection type (single or multiple)
+	 */
+	onSelectRow(eventData) {
+		let row = listFunctions.getRowByKeyPath(this.rows, eventData.rowKeyPath)
+
+		if (!row)
+			return
+
+		let rowIdStr = row.rowKey
+
+		const rowsSelected = Object.keys(this.rowsSelected)
+
+		if (this.newRowID)
+			rowsSelected.push(this.newRowID)
+
+		if (this.linkedForm && rowsSelected.length !== 0 && !_isEmpty(this.rowsDirty))
+			this.linkedForm.handleLeaveForm(() => this.afterRowSelectConfirmation(row, rowIdStr, eventData))
+		else
+			this.afterRowSelectConfirmation(row, rowIdStr, eventData)
+	}
+
+	/**
+	 * Remove row from array of selected rows
+	 * @param {object} eObj
+	 * @returns Boolean
+	 */
+	onUnselectRow(eObj) {
+		delete this.rowsSelected[eObj]
+	}
+
+	/**
+	 * Add row to array of selected rows
+	 * @param {object} eObj
+	 * @returns Boolean
+	 */
+	onSelectRows(eObj) {
+		for (let rowKey in eObj)
+			this.rowsSelected[rowKey] = true
+	}
+
+	/**
+	 * Remove all rows from array of selected rows
+	 * @returns Boolean
+	 */
+	onUnselectAllRows() {
+		for (let rowKey in this.rowsSelected)
+			delete this.rowsSelected[rowKey]
+	}
+
+	/**
+	 * Get new record data
+	 * @param {object} eObj Row object
+	 */
+	onTableListInsertRow(eObj)
+	{
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListInsertRow')
+
+		var controller = this.config.tableAlias
+		var action = this.action + '_New'
+
+		if (eObj.controller)
+			controller = eObj.controller
+		if (eObj.action)
+			action = eObj.action
+
+		return netAPI.postData(
+			controller,
+			action,
+			null,
+			(data) => {
+				if (data.QPrimaryKey !== undefined && data.QPrimaryKey !== null)
+					this.newRowID = data.QPrimaryKey
+			},
+			undefined,
+			{
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListInsertRow')
+			})
+	}
+
 	onTableListExecuteAction(eventData) { this.vueContext.onTableListExecuteAction(this, eventData) }
-	onTableListCellAction(eventData) { this.vueContext.onTableListCellAction(this, eventData) }
-	onTableListUpdateCell(eventData) { this.vueContext.onTableListUpdateCell(this, eventData) }
-	onTableListApplyColumnConfig(eventData) { this.vueContext.onTableListApplyColumnConfig(this, eventData) }
-	onTableListResetColumnConfig(eventData) { this.vueContext.onTableListResetColumnConfig(this, eventData) }
-	onTableListResetColumnSizes(eventData) { this.vueContext.onTableListResetColumnSizes(this, eventData) }
+
+	/**
+	 *
+	 * @param {object} eObj
+	 */
+	onTableListCellAction(eObj) {
+		if (!_isEmpty(eObj) && !_isEmpty(eObj.column) && !_isEmpty(eObj.column.params) && eObj.column.params.type === 'form')
+			this.vueContext.openFormAction(this, eObj.column, eObj.row) // TODO: Change to event (internal events)
+	}
+
+	/**
+	 *
+	 * @param {object} eObj
+	 */
+	onTableListUpdateCell(eObj) {
+		if (this.config.hasRowDragAndDrop)
+		{
+			const pObj = {
+				rowKey: eObj.row.rowKey,
+				index: parseInt(eObj.value || 0) - 1
+			}
+			this.onTableListRowReorder(pObj)
+		}
+	}
+
+	/**
+	 *
+	 * @param {object} eObj
+	 */
+	onTableListApplyColumnConfig(eObj) {
+		var tableConfiguration = listFunctions.getTableConfiguration(this)
+		var columnCfgsOrdered = []
+		var columnCfg = {}
+
+		// Column order and visibility
+		if (eObj.columnOrder !== undefined && eObj.columnOrder !== null)
+		{
+			// Iterate column configuration data
+			for (let idxCfg in eObj.columnOrder)
+			{
+				columnCfg = eObj.columnOrder[idxCfg]
+
+				// Find column configuration data, set properties and add to ordered column configuration data array
+				let currentColumn = this.columns.find((x) => x.name === columnCfg.Fields.formField)
+				if (currentColumn)
+				{
+					columnCfgsOrdered.push({
+						name: currentColumn.name,
+						order: columnCfg.Fields.order,
+						visibility: columnCfg.Fields.visibility
+					})
+				}
+			}
+
+			// Set column configuration data to new data configured by user
+			tableConfiguration.columnConfiguration = columnCfgsOrdered
+			this.config.hasCustomColumns = true
+		}
+
+		// Default search column
+		if (eObj.defaultSearchColumn !== undefined && eObj.defaultSearchColumn !== null)
+			tableConfiguration.defaultSearchColumn = eObj.defaultSearchColumn
+
+		// Reload table using new configuration
+		return this.fetchListData({ tableConfiguration })
+	}
+
+	/**
+	 * Reset column configuration
+	 */
+	onTableListResetColumnConfig() {
+		this.columnsCustom = []
+		this.config.defaultSearchColumnName = this.config.defaultSearchColumnNameOriginal
+	}
+
+	/**
+	 * Reset column sizes
+	 */
+	onTableListResetColumnSizes() {
+		this.signal = { resetColumnSizes: true }
+	}
+
 	onTableListResetColumnOrdering() { this.reload() }
 	setInfoMessage(eventData) { this.vueContext.setInfoMessage(eventData) }
-	setAdvancedFiltersPopup(eventData) { this.vueContext.setAdvancedFiltersPopup(this, eventData[0], eventData[1]) }
-	addAdvancedFilter(eventData) { this.componentOnLoadProc.addWL(this.vueContext.addAdvancedFilter(this, eventData)) }
-	editAdvancedFilters(eventData) { this.componentOnLoadProc.addWL(this.vueContext.editAdvancedFilters(this, eventData)) }
-	removeAdvancedFilter(eventData) { this.componentOnLoadProc.addWL(this.vueContext.removeAdvancedFilter(this, eventData)) }
-	setAdvancedFilterState(eventData) { this.componentOnLoadProc.addWL(this.vueContext.setAdvancedFilterState(this, eventData[0], eventData[1])) }
-	removeAllAdvancedFilters() { this.componentOnLoadProc.addWL(this.vueContext.removeAllAdvancedFilters(this)) }
-	removeColumnFilter(eventData) { this.vueContext.removeColumnFilter(this, eventData) }
-	updateConfig(...args) { this.vueContext.updateConfig(this, ...args) }
+
+	/**
+	 * Open advanced filters
+	 * @param {[boolean, number]} eventData visible and selectedFilterIdx
+	 */
+	setAdvancedFiltersPopup(eventData) {
+		const visible = eventData[0]
+		const selectedFilterIdx = eventData[1]
+
+		var useVisible = false
+		if (visible !== undefined)
+			useVisible = !!visible
+
+		var useSelectedFilterIdx = null
+		if (selectedFilterIdx !== undefined)
+			useSelectedFilterIdx = selectedFilterIdx
+
+		// Set advanced filters open config to show and select corresponding filter by index
+		this.subSignals.advancedFilters = { 'show': useVisible, 'columnFilter': null, 'columnName': null, 'selectedFilterIdx': useSelectedFilterIdx }
+	}
+
+	/**
+	 * Add advanced filter
+	 * @param filter {Object}
+	 * @returns A promise with the response from the server.
+	 */
+	addAdvancedFilter(filter) {
+		this.advancedFilters.push(filter)
+
+		// Reload table
+		return this.onTableListChangeQuery()
+	}
+
+	/**
+	 * Edit advanced filter
+	 * @param filters {Object}
+	 * @returns A promise with the response from the server.
+	 */
+	editAdvancedFilters(filters) {
+		this.advancedFilters = filters
+
+		// Reload table
+		return this.onTableListChangeQuery()
+	}
+
+	/**
+	 * Set advanced filter state
+	 * @param {number} index : index
+	 */
+	removeAdvancedFilter(index) {
+		this.advancedFilters.splice(index, 1)
+
+		// Reload table
+		return this.onTableListChangeQuery()
+	}
+
+	/**
+	 * Set advanced filter state
+	 * @param {number} eventData[0] : index
+	 * @param {boolean} eventData[1] : active state
+	 * @returns A promise with the response from the server.
+	 */
+	setAdvancedFilterState(eventData) {
+		const index = eventData[0]
+		const active = eventData[1]
+		this.advancedFilters[index].active = active
+
+		// Reload table
+		return this.onTableListChangeQuery()
+	}
+
+
+	/**
+	 * Remove all advanced filters
+	 * @returns A promise with the response from the server.
+	 */
+	removeAllAdvancedFilters() {
+		this.advancedFilters.splice(0)
+
+		// Reload table
+		return this.onTableListChangeQuery()
+	}
+
+	/**
+	 * Remove column filter.
+	 * This has to be here to be able to remove column filters when saving the advanced filters after moving a column filter to advanced filters.
+	 * @param {string} fullColumnName
+	 */
+	removeColumnFilter(fullColumnName) {
+		delete this.columnFilters[fullColumnName]
+	}
+
+	/**
+	 * Update table configuration object (based on changes it's properties)
+	 */
+	async updateConfig() {
+		if (this.config.viewManagement === qEnums.tableViewManagementModes.persistOne)
+			await this.onTableListSaveView({ name: '_', isSelected: true })
+		else if (this.config.viewManagement === qEnums.tableViewManagementModes.persistMany
+			|| this.config.viewManagement === qEnums.tableViewManagementModes.nonPersistent)
+			this.confirmChanges = true
+
+		listFunctions.updateConfigOptions(this.config.configOptions, this.config.viewManagement, this.confirmChanges, this.readonly)
+	}
+
 	setProperty(...args) { this.vueContext.setProperty(this, ...args) }
 	setRowIndexProperty(...args) { listFunctions.setRowIndexProperty(this, ...args) }
 	setArraySubPropWhere(...args) { this.vueContext.setArraySubPropWhere(this, ...args) }
-	onTableListInsertForm(...args) { this.vueContext.onTableListInsertForm(this, ...args) }
-	onTableListCancelInsertRow(...args) { this.vueContext.onTableListCancelInsertRow(this, ...args) }
-	signalComponent(...args) { this.vueContext.signalComponent(this, ...args) }
-	onSetQtableAllSelected(eventData) { this.vueContext.onSetQtableAllSelected(this, eventData) }
-	onFetchQtableAllSelected(eventData) { this.vueContext.onFetchQtableAllSelected(this, eventData) }
+
+	/**
+	 * Called when saving a new record
+	 */
+	onTableListInsertForm() {
+		this.newRowID = ''
+	}
+
+	/**
+	 * Get new record data
+	 * @param {object} eObj Row object
+	 */
+	onTableListCancelInsertRow(eObj) {
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListCancelInsertRow')
+
+		var controller = this.config.tableAlias
+		var action = null
+		var addAction = _find(this.config.generalActions, (act) => act.id === 'insert')
+		action = `MF${addAction.params.formName}_Cancel`
+
+		if (eObj.controller)
+			controller = eObj.controller
+		if (eObj.action)
+			action = eObj.action
+
+		return netAPI.postData(
+			controller,
+			action,
+			{ id: this.newRowID },
+			(data) => {
+				if (data.Success)
+					this.newRowID = ''
+			},
+			undefined,
+			{
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListCancelInsertRow')
+			})
+	}
+
+	/**
+	 * Set property in table object that is used to send a signal to a component
+	 * @param {string} id
+	 * @param {object} signal
+	 * @param {boolean} mergeProps
+	 */
+	signalComponent(id, signal, mergeProps) {
+		if (mergeProps)
+		{
+			this.subSignals[id] = {
+				...this.subSignals[id],
+				...signal
+			}
+		}
+		else
+			this.subSignals[id] = signal
+	}
+
+	/**
+	 * Adds a route that indicates if all table rows are selected or not
+	 * @param {*} value The value to put in the parameter value
+	 */
+	onSetQtableAllSelected(value) {
+		let allSelected = this.vueContext.navigation.currentLevel.params.allSelected || []
+		// "allSelectedRows" is a string due to an issue where Vue won't recognize changes to boolean props
+		this.allSelectedRows = value.isSelected.toString().toLowerCase()
+
+		if (value.isSelected)
+		{
+			if (!allSelected.includes(value.id))
+				allSelected.push(value.id)
+		}
+		else
+		{
+			// Remove all selected
+			const idx = allSelected.findIndex((e) => e === value.id)
+			if (idx === -1)
+				return // No need to continue!
+
+			allSelected.splice(idx, 1)
+		}
+
+		this.vueContext.navigation.currentLevel.params.allSelected = allSelected // TODO: Change to event (internal events)
+	}
+
+	/**
+	 * Adds a route that indicates if all table rows are selected or not
+	 * @param {*} tableId
+	 */
+	onFetchQtableAllSelected(tableId) {
+		let allSelected = this.vueContext.navigation.currentLevel.params.allSelected || []
+
+		if (allSelected.findIndex((e) => e === tableId) !== -1)
+			this.allSelectedRows = 'true'
+	}
+
+	/**
+	 * Open a table view (user table configuration)
+	 * @param {object} eObj
+	 */
+	onTableListOpenView(eObj)
+	{
+		// Reset property for whether there are changes
+		this.confirmChanges = false
+
+		// Reload table
+		return this.fetchListData({ userTableConfigName: eObj.rowValue })
+	}
+
+	/**
+	 * Copy a table view (user table configuration)
+	 * @param {object} eObj
+	 */
+	onTableListCopyView(eObj)
+	{
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListCopyView')
+
+		const params = {
+			uuid: this.uuid,
+			configName: eObj.name,
+			isSelected: eObj.isSelected,
+			copyFromName: eObj.copyFromName
+		}
+
+		// Send request to save configuration
+		netAPI.postData(
+			'Tblcfg',
+			'CopyConfig',
+			params,
+			(data) => {
+				// If user chose to set the copied view as the default
+				const loadDefaultView = Boolean(data?.LoadDefaultView)
+				// Reload table
+				this.fetchListData({ queryParams: { uuid: this.uuid, loadDefaultView } })
+			},
+			undefined,
+			{
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListCopyView')
+			})
+	}
+
+	/**
+	 * Open a table view (user table configuration)
+	 * @param {object} eObj
+	 */
+	onTableListDeleteView(eObj)
+	{
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('onTableListDeleteView')
+
+		const params = {
+			uuid: this.uuid,
+			configName: eObj.rowValue
+		}
+
+		// Send request to save configuration
+		netAPI.postData(
+			'Tblcfg',
+			'DeleteConfig',
+			params,
+			(data) => {
+				// If view was default view
+				if (data.DeletedDefaultView)
+				{
+					// Clear view configuration
+					listFunctions.applyTableConfiguration(this, {})
+					this.config.userTableConfigName = null
+					// Reload table
+					this.fetchListData()
+				}
+				// If view was opened but not the default view
+				else if (eObj.rowValue === this.config.userTableConfigName)
+				{
+					// Reload table
+					this.fetchListData({ queryParams: { uuid: this.uuid, loadDefaultView: true } })
+				}
+				// If view was not opened
+				else
+				{
+					const idx = this.config.userTableConfigNames.findIndex((x) => x === eObj.rowValue)
+					this.config.userTableConfigNames.splice(idx, 1)
+				}
+			},
+			undefined,
+			{
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('onTableListDeleteView')
+			})
+	}
 
 	/**
 	 * Sets the value of the active filters
@@ -2092,7 +3426,7 @@ export class TableListControl extends BaseControl
 			tableConfiguration: listFunctions.getTableConfiguration(this)
 		}
 
-		this.vueContext.updateConfig(this)
+		this.updateConfig()
 		this.reload(params)
 	}
 
@@ -2107,7 +3441,7 @@ export class TableListControl extends BaseControl
 			tableConfiguration: listFunctions.getTableConfiguration(this)
 		}
 
-		this.vueContext.updateConfig(this)
+		this.updateConfig()
 		this.reload(params)
 	}
 
@@ -2136,6 +3470,19 @@ export class TableListControl extends BaseControl
 		// If row with this ID exists or first row exists
 		if (row !== null)
 			this.onSelectRow({ rowKeyPath: listFunctions.getRowKeyPath(this.rows, row) })
+	}
+
+	/**
+	 * Add row to array of dirty rows
+	 * @param {object} eObj
+	 * @param {boolean} isDirty
+	 */
+	onRowDirty(eObj, isDirty)
+	{
+		if (isDirty)
+			this.rowsDirty[eObj] = true
+		else
+			delete this.rowsDirty[eObj]
 	}
 
 	/**
@@ -2185,7 +3532,45 @@ export class TableListControl extends BaseControl
 			}
 		}
 
-		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this, params, this.fnHydrateViewModel))
+		return this.fetchListData(params, this.fnHydrateViewModel)
+	}
+
+	destroy()
+	{
+		super.destroy()
+
+		toValue(this.columnsCustom).forEach(column => {
+			if(typeof column.destroy === 'function')
+				column.destroy()
+		})
+		toValue(this.columnsOriginal).forEach(column => {
+			if(typeof column.destroy === 'function')
+				column.destroy()
+		})
+
+		this.columnsCustom.length = 0
+		this.columnsCustom = null
+		this.columnsOriginal.length = 0
+		this.columnsOriginal = null
+
+		if(this.rows?.length > 0) {
+			this.rows.forEach((row) => {
+				if(typeof row?.destroy === 'function')
+					row.destroy()
+			})
+			this.rows.length = 0
+		}
+
+
+		if(this.filterOperators instanceof searchFilterData.SearchFilterConditionOperators)
+			this.filterOperators.destroy()
+		this.filterOperators = null
+
+		// Disable the closure that held the component's this
+		if(typeof this.config?.insertCondition?.fnFormula === 'function')
+			this.config.insertCondition.fnFormula = null
+		if(typeof this.config?.rowValidation?.fnValidate === 'function')
+			this.config.rowValidation.fnValidate = null
 	}
 }
 
@@ -2242,7 +3627,7 @@ export class TreeTableListControl extends TableListControl
 
 		const handlers = {
 			getInsertFormName: (eventData) => this.getInsertFormName(eventData),
-			treeLoadBranchData: (eventData) => this.treeLoadBranchData(this, eventData)
+			treeLoadBranchData: (eventData) => this.treeLoadBranchData(eventData)
 		}
 
 		// Apply handlers without overriding. The handler can come from outside at initialization.
@@ -2285,17 +3670,16 @@ export class TreeTableListControl extends TableListControl
 
 	/**
 	 * The method responsible for making the server request and loading the children of the branch (if any)
-	 * @param {object} listConf The list configuration
 	 * @param {object} eventData Event object that contains the current parent row
 	 */
-	treeLoadBranchData(listConf, eventData)
+	treeLoadBranchData(eventData)
 	{
 		if (eventData.row?.alreadyLoaded === false)
 		{
 			// Set current row as row to navigate to after reloading
-			listConf.config.navigatedRowKeyPath = listFunctions.getRowKeyPath(listConf.rows, eventData.row)
+			this.config.navigatedRowKeyPath = listFunctions.getRowKeyPath(this.rows, eventData.row)
 
-			this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this, {
+			this.componentOnLoadProc.addWL(this.fetchListData({
 				queryParams: {
 					currentBranch: eventData.row?.BranchId + 1,
 					currentSelectedKey: eventData.row?.rowKey
@@ -2303,7 +3687,7 @@ export class TreeTableListControl extends TableListControl
 			},
 			this.fnHydrateViewModel,
 			(data) => {
-				const rowKeyToScroll = this.vueContext.currentControl?.data?.rowKey ?? null
+				const rowKeyToScroll = this.vueContext.currentControl?.data?.rowKey ?? null // TODO: Change!
 				eventData.row?.hydrateChildrenData(data.Tree, rowKeyToScroll)
 				// Prevent double request
 				eventData.row.alreadyLoaded = true
@@ -2350,31 +3734,6 @@ export class MultipleValuesControl extends TableListControl
 		if (!_isEmpty(this.modelFieldOptions) && this.vueContext.model)
 			if (_has(this.vueContext.model, this.modelFieldOptions))
 				this.modelFieldOptionsRef = _get(this.vueContext.model, this.modelFieldOptions)
-	}
-
-	/**
-	 * @override
-	 */
-	initHandlers()
-	{
-		super.initHandlers()
-
-		const handlers = {
-			setQtableAllSelected: (eventData) => this.onSetQtableAllSelected(eventData),
-			fetchQtableAllSelected: (eventData) => this.onFetchQtableAllSelected(eventData)
-		}
-
-		_assignInWith(this.handlers, handlers, (objValue, srcValue) => _isUndefined(objValue) ? srcValue : objValue)
-	}
-
-	onSetQtableAllSelected(eventData)
-	{
-		super.onSetQtableAllSelected(eventData)
-	}
-
-	onFetchQtableAllSelected(eventData)
-	{
-		super.onFetchQtableAllSelected(eventData)
 	}
 }
 
@@ -2506,7 +3865,7 @@ export class DocumentControl extends DatabaseControl
 	{
 		const baseArea = this.modelFieldRef.area
 		const areaKeyField = this.vueContext.dataApi.keys[baseArea.toLowerCase()]
-		const navigationId = this.vueContext.navigationId
+		const navigationId = this.currentNavigationId
 
 		this.modelFieldRef.setTickets(areaKeyField.value, navigationId)
 	}
@@ -2687,7 +4046,7 @@ export class DocumentControl extends DatabaseControl
 			},
 			undefined,
 			undefined,
-			this.vueContext.navigationId)
+			this.currentNavigationId)
 	}
 
 	/**
@@ -2757,7 +4116,7 @@ export class DocumentControl extends DatabaseControl
 				this.modelFieldRef.area,
 				versionTicket,
 				viewType,
-				this.vueContext.navigationId)
+				this.currentNavigationId)
 		}
 	}
 
@@ -2824,7 +4183,7 @@ export class DocumentControl extends DatabaseControl
 			},
 			undefined,
 			undefined,
-			this.vueContext.navigationId)
+			this.currentNavigationId)
 	}
 
 	/**
@@ -2897,7 +4256,7 @@ export class DocumentControl extends DatabaseControl
 				},
 				undefined,
 				{ responseType: 'arraybuffer' },
-				this.vueContext.navigationId))
+				this.currentNavigationId))
 	}
 
 	/**
@@ -2908,7 +4267,7 @@ export class DocumentControl extends DatabaseControl
 		this.documentTemplatesParams = {
 			id: this.vueContext.primaryKeyValue,
 			limits: this.getLimitsValues(),
-			navigationId: this.vueContext.navigationId
+			navigationId: this.currentNavigationId
 		}
 		this.documentTemplatesIsVisible = true
 	}
@@ -2926,7 +4285,7 @@ export class ImageControl extends DatabaseControl
 			type: 'Image',
 			image: null,
 			fullSizeImage: null,
-			defaultImage: computed(() => `${systemInfo.resourcesPath}no_img.png?v=${systemInfo.genio.buildVersion}`),
+			defaultImage: `${systemInfo.resourcesPath}no_img.png?v=${systemInfo.genio.buildVersion}`,
 			extensions: ['.jpg', '.jpeg', '.png', '.gif', '.svg', '.webp', '.bmp'],
 			isStatic: false,
 			texts: new controlsResources.ImageResources(_vueContext.$getResource),
@@ -2980,7 +4339,10 @@ export class ImageControl extends DatabaseControl
 		{
 			// Remove the previous watcher
 			this.imageWatcher()
-			this.imageWatcher = watch(() => this.modelFieldRef.value, (value) => (this.image = value || this.defaultImage), { immediate: true })
+			this.imageWatcher = this._watchScope.watch(
+				() => this.modelFieldRef.value,
+				(value) => (this.image = value || this.defaultImage),
+				{ immediate: true })
 		}
 
 		this.isEmptyImage = computed(() => {
@@ -3115,6 +4477,18 @@ export class ImageControl extends DatabaseControl
 		}
 		genericFunctions.handleFileError(errorCode, this.texts, extraInfo)
 	}
+
+	/**
+	 * @override
+	 */
+	destroy()
+	{
+		super.destroy()
+		// Stop watcher
+		if(this.imageWatcher)
+			this.imageWatcher()
+		this.imageWatcher = null
+	}
 }
 
 /**
@@ -3129,7 +4503,7 @@ export class ManualFillingImageControl extends ImageControl
 			type: 'ManualFillingImage',
 			image: null,
 			fullSizeImage: null,
-			defaultImage: computed(() => `${systemInfo.resourcesPath}no_img.png?v=${systemInfo.genio.buildVersion}`),
+			defaultImage: `${systemInfo.resourcesPath}no_img.png?v=${systemInfo.genio.buildVersion}`,
 			isStatic: true,
 			texts: new controlsResources.ImageResources(_vueContext.$getResource)
 		}, _vueContext)
@@ -3150,6 +4524,7 @@ export class GroupControl extends NonBlockableControl
 			type: 'Group',
 			directChildren: [],
 			anchoredChildren: [],
+			isInAccordion: false,
 			isCollapsible: false,
 			anchored: false,
 			modelValue: false
@@ -3171,10 +4546,10 @@ export class GroupControl extends NonBlockableControl
 			if (this.mustBeFilled)
 				return true
 
-			for (let i in this.vueContext.controls)
+			for (let controlId of this.directChildren)
 			{
-				const control = Reflect.get(this.vueContext.controls, i)
-				if (this.id === control.container && control.isRequired)
+				const control = Reflect.get(this.vueContext.controls, controlId)
+				if (control.isRequired)
 					return true
 			}
 
@@ -3214,7 +4589,7 @@ export class GroupControl extends NonBlockableControl
 	 */
 	setState(state)
 	{
-		if (!this.isCollapsible || typeof state !== 'boolean')
+		if (!this.isCollapsible || typeof state !== 'boolean' || this.modelValue === state)
 			return
 
 		this.modelValue = state
@@ -3222,7 +4597,7 @@ export class GroupControl extends NonBlockableControl
 		if (this.vueContext)
 		{
 			this.vueContext.storeContainerState({
-				navigationId: this.vueContext.navigationId,
+				navigationId: this.currentNavigationId,
 				key: this.vueContext.storeKey,
 				formInfo: this.vueContext.formInfo,
 				fieldId: this.id,
@@ -3232,6 +4607,12 @@ export class GroupControl extends NonBlockableControl
 
 		if (state)
 			this.showWhenConditions.emitShowEvent()
+	}
+
+	destroy()
+	{
+		super.destroy()
+		this.anchoredChildren.length = 0
 	}
 }
 
@@ -3244,10 +4625,48 @@ export class AccordionControl extends NonBlockableControl
 	{
 		// Init default values of control properties
 		super({
-			type: 'Accordion'
+			type: 'Accordion',
+			openChild: '',
+			groupWatcher: () => {}
 		}, _vueContext)
 
 		_merge(this, options || {})
+	}
+
+	/**
+	 * @override
+	 */
+	async init(isEditableForm)
+	{
+		await super.init(isEditableForm)
+
+		// Remove the previous watcher
+		this.groupWatcher()
+		this.groupWatcher = this._watchScope.watch(
+			() => this.openChild,
+			(value) => {
+				// When an accordion item is selected, the corresponding group is set as open
+				if (this.directChildren.includes(value))
+				{
+					const item = this.vueContext.controls[value]
+					item.setState(true)
+				}
+				// If the value isn't empty and not in the direct children's list, then it's invalid
+				else if (!_isEmpty(value))
+					this.openChild = ''
+			},
+			{ immediate: true })
+	}
+
+	/**
+	 * @override
+	 */
+	destroy()
+	{
+		super.destroy()
+		if(this.groupWatcher)
+			this.groupWatcher()
+		this.groupWatcher = null
 	}
 }
 
@@ -3258,7 +4677,7 @@ export class TimelineControl extends TableListControl
 {
 	constructor(options, _vueContext)
 	{
-		const systemDataStore = useSystemDataStore()
+		const genericDataStore = useGenericDataStore()
 
 		// Init default values of control properties
 		super({
@@ -3269,7 +4688,7 @@ export class TimelineControl extends TableListControl
 			},
 			config: {
 				scale: '',
-				dateTimeFormat: computed(() => systemDataStore.system?.dateFormat?.dateTime)
+				dateTimeFormat: genericDataStore.dateFormat?.dateTime
 			},
 			texts: new controlsResources.TimelineResources(_vueContext.$getResource)
 		}, _vueContext)
@@ -3278,11 +4697,45 @@ export class TimelineControl extends TableListControl
 	}
 
 	/**
+	 * Fetches the data from the server and loads the list.
+	 * @param {object} params The necessary parameters
+	 * @returns A promise with the response from the server.
+	 */
+	fetchTimelineData(params)
+	{
+		// get a fresh signal (aborts any prior for the same category)
+		const signal = this.abortManager.getSignal('fetchTimelineData')
+
+		if (_isEmpty(params))
+			params = {}
+
+		_assignIn(params, this.vueContext.$route.params)
+
+		return this.componentOnLoadProc.addWL(netAPI.postData(
+			this.controller,
+			this.action,
+			params,
+			(data) => {
+				this.hydrate(this, data)
+				this.isLoaded = true
+			},
+			undefined,
+			{
+				signal
+			},
+			this.currentNavigationId)
+			.finally(() => {
+				// clear this key so the controller can be GC’d
+				this.abortManager?.clear('fetchTimelineData')
+			}))
+	}
+
+	/**
 	 * Reloads the data of the timeline
 	 */
 	reload()
 	{
-		return this.componentOnLoadProc.addWL(this.vueContext.fetchTimelineData(this))
+		return this.fetchTimelineData()
 	}
 }
 
@@ -3298,6 +4751,15 @@ export class ButtonControl extends NonBlockableControl
 		}, _vueContext)
 
 		_merge(this, options || {})
+	}
+
+	destroy()
+	{
+		super.destroy()
+
+		// Disable the closure that held the component's this
+		if (typeof this.action === 'function')
+			this.action = null
 	}
 }
 
@@ -3329,10 +4791,10 @@ export class TabControl extends NonBlockableControl
 			if (this.mustBeFilled)
 				return true
 
-			for (let i in this.vueContext.controls)
+			for (let controlId of this.directChildren)
 			{
-				const control = Reflect.get(this.vueContext.controls, i)
-				if (this.id === control.tab && control.isRequired)
+				const control = Reflect.get(this.vueContext.controls, controlId)
+				if (control.isRequired)
 					return true
 			}
 
@@ -3355,13 +4817,29 @@ export class TabControl extends NonBlockableControl
  */
 export class TabsControl
 {
+	/**
+	 * Dedicated watcher scope.
+	 * @protected
+	 * @type {ScopedWatch}
+	 */
+	_watchScope
+
 	constructor(options, _vueContext)
 	{
+		// All watchers created inside this scope are collected automatically.
+		// https://vuejs.org/api/reactivity-advanced#effectscope
+		Object.defineProperty(this, '_watchScope', {
+			value: markRaw(new ScopedWatch(/* detached? */ false)),
+			enumerable: false,
+			writable: true,
+			configurable: true
+		})
+
 		this.vueContext = _vueContext
 
 		// Init default values of control properties
 		this.type = 'Tabs'
-		this.alignTabs = 'left',
+		this.alignTabs = 'left'
 		this.tabControlsIds = []
 		this.tabsList = []
 		this.selectedTab = ''
@@ -3403,15 +4881,17 @@ export class TabsControl
 		// Remove the previous watcher
 		this.tabWatcher()
 		// If the current tab becomes hidden, selects the first visible tab, if any.
-		this.tabWatcher = watch(() => this.tabsList, () => {
-			const currentTab = this.vueContext.controls[this.selectedTab]
+		this.tabWatcher = this._watchScope.watch(
+			() => this.tabsList,
+			() => {
+				const currentTab = this.vueContext.controls[this.selectedTab]
 
-			if (!_isEmpty(currentTab) && currentTab.isVisible && !currentTab.isBlocked)
-				return
+				if (!_isEmpty(currentTab) && currentTab.isVisible && !currentTab.isBlocked)
+					return
 
-			this.selectFirstTab()
-		},
-		{ deep: true, immediate: true })
+				this.selectFirstTab()
+			},
+			{ deep: true, immediate: true })
 	}
 
 	/**
@@ -3444,6 +4924,20 @@ export class TabsControl
 		}
 		else
 			this.selectFirstTab()
+	}
+
+	/**
+	 * The control destroy to be invoked on the unmount.
+	 */
+	destroy()
+	{
+		this._watchScope?.dispose()
+		this._watchScope = null
+
+		// Stop watcher
+		if(this.tabWatcher)
+			this.tabWatcher()
+		this.tabWatcher = null
 	}
 }
 
@@ -3670,7 +5164,11 @@ export class FormContainerControl extends BaseControl
 		if (id || formMode === 'NEW') this.firstLoad = true
 
 		if (_isEmpty(id) && formMode !== 'NEW')
-			this.destroy()
+		{
+			// Just to be the same as the previous version. TODO: Review the create/destroy implementation of this control.
+			this.componentOnLoadProc.destroy()
+			//this.destroy()
+		}
 		else
 			this.updateFormData({ mode: formMode, id, prefillValues })
 	}
@@ -3678,7 +5176,7 @@ export class FormContainerControl extends BaseControl
 	updateFormData({ mode, id, prefillValues })
 	{
 		this.setFormData({
-			historyBranchId: this.vueContext.navigationId,
+			historyBranchId: this.currentNavigationId,
 			isNested: true,
 			form: this.supportForm.name,
 			mode: mode,
@@ -3712,6 +5210,9 @@ export class FormContainerControl extends BaseControl
 		this.formData = formData
 	}
 
+	/**
+	 * @override
+	 */
 	destroy()
 	{
 		super.destroy()
@@ -3739,7 +5240,7 @@ export class NestedFormConfig
 /**
  * The Grid Table List control
  */
-export class GridTableListControl extends BaseControl
+export class GridTableListControl extends TableListBaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -3794,16 +5295,18 @@ export class GridTableListControl extends BaseControl
 
 		// Remove the previous watcher
 		this.gridWatcher()
-		this.gridWatcher = watch([() => this.loaded, () => this.emptyRows, () => this.readonly], () => {
-			// Create an empty row if there is none,
-			// the grid is editable and inserting rows is allowed
-			if (canInsert && !this.emptyRows.length && !this.readonly)
-				this.addNewModel()
-			// Ensure editable grids only have one empty row,
-			// and readonly grids display no empty rows
-			else if (this.emptyRows.length > 0)
-				this.trimEmptyRows()
-		})
+		this.gridWatcher = this._watchScope.watch(
+			[() => this.loaded, () => this.emptyRows, () => this.readonly],
+			() => {
+				// Create an empty row if there is none,
+				// the grid is editable and inserting rows is allowed
+				if (canInsert && !this.emptyRows.length && !this.readonly)
+					this.addNewModel()
+				// Ensure editable grids only have one empty row,
+				// and readonly grids display no empty rows
+				else if (this.emptyRows.length > 0)
+					this.trimEmptyRows()
+			})
 
 		this.initEvents()
 	}
@@ -3876,7 +5379,19 @@ export class GridTableListControl extends BaseControl
 
 	reload()
 	{
-		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this))
+		return this.fetchListData()
+	}
+
+	/**
+	 * @override
+	 */
+	destroy()
+	{
+		super.destroy()
+		// Stop watcher
+		if(this.gridWatcher)
+			this.gridWatcher()
+		this.gridWatcher = null
 	}
 }
 
@@ -3944,11 +5459,26 @@ export class WizardControl extends BaseControl
 
 		// Remove the previous watcher
 		this.dataWatcher()
-		this.dataWatcher = watch(() => this.vueContext.wizardData, () => _merge(this.wizardData, this.vueContext.wizardData || {}), { deep: true, immediate: true })
+		this.dataWatcher = this._watchScope.watch(
+			() => this.vueContext.wizardData,
+			() => _merge(this.wizardData, this.vueContext.wizardData || {}),
+			{ deep: true, immediate: true })
+	}
+
+	/**
+	 * @override
+	 */
+	destroy()
+	{
+		super.destroy()
+		// Stop watcher
+		if(this.dataWatcher)
+			this.dataWatcher()
+		this.dataWatcher = null
 	}
 }
 
-export class PropertyListControl extends BaseControl
+export class PropertyListControl extends TableListBaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -4050,11 +5580,24 @@ export class PropertyListControl extends BaseControl
 
 	reload()
 	{
-		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this))
+		return this.fetchListData()
+	}
+
+	destroy()
+	{
+		super.destroy()
+
+		if(this.fields instanceof Array) {
+			for(let fieldIdx in this.fields) {
+				if(typeof this.fields[fieldIdx].destroy === 'function')
+					this.fields[fieldIdx].destroy()
+			}
+			this.fields.length = 0
+		}
 	}
 }
 
-export class KanbanControl extends BaseControl
+export class KanbanControl extends TableListBaseControl
 {
 	constructor(options, _vueContext)
 	{
@@ -4080,14 +5623,17 @@ export class KanbanControl extends BaseControl
 		_merge(this, options || {})
 	}
 
+	get hasClickAction()
+	{
+		return Object.keys(this.config.rowClickAction).length !== 0
+	}
+
 	/**
 	 * @override
 	 */
 	async init(isEditableForm)
 	{
 		await super.init(isEditableForm)
-
-		this.hasClickAction = computed(() => Object.keys(this.config.rowClickAction).length !== 0)
 	}
 
 	/**
@@ -4134,7 +5680,7 @@ export class KanbanControl extends BaseControl
 	 */
 	async reload()
 	{
-		return this.componentOnLoadProc.addWL(this.vueContext.fetchListData(this, undefined, this.fnHydrateViewModel))
+		return this.fetchListData(undefined, this.fnHydrateViewModel)
 	}
 
 	onCardDrag(eventData)
@@ -4160,14 +5706,13 @@ export class KanbanControl extends BaseControl
 	{
 		const { action, card, column } = eventData
 
-		const listConf = this
-		const allActions = [ ...listConf.config.crudActions, ...listConf.config.generalActions, listConf.config.rowClickAction ]
+		const allActions = [ ...this.config.crudActions, ...this.config.generalActions, this.config.rowClickAction ]
 		const actionCfg = allActions.find(a => a.id === action)
 
 		let formName = actionCfg.params.formName,
 			mode = actionCfg.params.mode,
 			id = null,
-			formDef = listConf.config.formsDefinition[formName],
+			formDef = this.config.formsDefinition[formName],
 			options = {
 				isPopup: formDef.isPopup,
 				repeatInsert: actionCfg.params.repeatInsertion,
@@ -4177,10 +5722,10 @@ export class KanbanControl extends BaseControl
 			query = {},
 			prefillValues = actionCfg.params.prefillValues || {}
 
-		let tableName = listConf.controller[0] + listConf.controller.substring(1).toLowerCase()
-		let tableViewModelName = listConf.action + '_ViewModel'
-		this.vueContext.setEntryValue({ navigationId: this.navigationId, key: 'TableName', value: tableName })
-		this.vueContext.setEntryValue({ navigationId: this.navigationId, key: 'TableViewModelName', value: tableViewModelName })
+		let tableName = this.controller[0] + this.controller.substring(1).toLowerCase()
+		let tableViewModelName = this.action + '_ViewModel'
+		this.vueContext.setEntryValue({ navigationId: this.currentNavigationId, key: 'TableName', value: tableName })
+		this.vueContext.setEntryValue({ navigationId: this.currentNavigationId, key: 'TableViewModelName', value: tableViewModelName })
 
 		if (mode === 'DUPLICATE')
 			options.isDuplicate = true
@@ -4191,8 +5736,8 @@ export class KanbanControl extends BaseControl
 		{
 			// The the column in each the record is being inserted
 			const entry = {
-				navigationId: this.navigationId,
-				key: listConf.columnsTable,
+				navigationId: this.currentNavigationId,
+				key: this.columnsTable,
 				value: column
 			}
 			this.vueContext.setEntryValue(entry)

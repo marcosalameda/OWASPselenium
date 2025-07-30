@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -196,7 +196,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -216,7 +216,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormAddreViewModel.js'
 
@@ -293,7 +293,8 @@
 					primaryKey: 'ValCodaddre',
 					designation: computed(() => this.Resources.ADDRESS04342),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -587,140 +588,6 @@
 						controlLimits: [
 						],
 					}, this),
-					ADDRE___ADDREADDRDIST: new fieldControlClass.StringControl({
-						modelField: 'ValAddressdistrict',
-						valueChangeEvent: 'fieldChange:addre.addressdistrict',
-						id: 'ADDRE___ADDREADDRDIST',
-						name: 'ADDRDIST',
-						size: 'xxlarge',
-						helpControl: {
-							shortHelp: {
-								type: 'Tooltip',
-								text: computed(() => this.Resources._110050187),
-							},
-							detailedHelp: {
-								type: 'Popover',
-								text: computed(() => this.Resources._1100_VERBOSE38633),
-							}
-						},
-						label: computed(() => this.Resources.ADDRESS_DISTRICT48524),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
-						labelId: 'label_ADDRE___ADDREADDRDIST',
-						controlLimits: [
-						],
-					}, this),
-					ADDRE___ADDREADDRSTAT: new fieldControlClass.StringControl({
-						modelField: 'ValAddressstate',
-						valueChangeEvent: 'fieldChange:addre.addressstate',
-						id: 'ADDRE___ADDREADDRSTAT',
-						name: 'ADDRSTAT',
-						size: 'xxlarge',
-						helpControl: {
-							shortHelp: {
-								type: 'Tooltip',
-								text: computed(() => this.Resources._110152596),
-							},
-						},
-						label: computed(() => this.Resources.ADDRESS_STATE16863),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
-						labelId: 'label_ADDRE___ADDREADDRSTAT',
-						controlLimits: [
-						],
-					}, this),
-					ADDRE___ADDREADDRPCOD: new fieldControlClass.StringControl({
-						modelField: 'ValAddresspostalcode',
-						valueChangeEvent: 'fieldChange:addre.addresspostalcode',
-						id: 'ADDRE___ADDREADDRPCOD',
-						name: 'ADDRPCOD',
-						size: 'xxlarge',
-						helpControl: {
-							shortHelp: {
-								type: 'Tooltip',
-								text: computed(() => this.Resources._110253217),
-							},
-						},
-						label: computed(() => this.Resources.ADDRESS_POSTAL_CODE41631),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
-						labelId: 'label_ADDRE___ADDREADDRPCOD',
-						controlLimits: [
-						],
-					}, this),
-					ADDRE___ADDREADDRCOUN: new fieldControlClass.StringControl({
-						modelField: 'ValAddresscountry',
-						valueChangeEvent: 'fieldChange:addre.addresscountry',
-						id: 'ADDRE___ADDREADDRCOUN',
-						name: 'ADDRCOUN',
-						size: 'xxlarge',
-						helpControl: {
-							shortHelp: {
-								type: 'Tooltip',
-								text: computed(() => this.Resources._110349746),
-							},
-							detailedHelp: {
-								type: 'Popover',
-								text: computed(() => this.Resources._1103_VERBOSE48229),
-							}
-						},
-						label: computed(() => this.Resources.ADDRESS_COUNTRY56159),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 50,
-						labelId: 'label_ADDRE___ADDREADDRCOUN',
-						controlLimits: [
-						],
-					}, this),
-					ADDRE___ADDREPERISTAR: new fieldControlClass.DateControl({
-						modelField: 'ValPeriodstart',
-						valueChangeEvent: 'fieldChange:addre.periodstart',
-						id: 'ADDRE___ADDREPERISTAR',
-						name: 'PERISTAR',
-						size: 'medium',
-						helpControl: {
-							shortHelp: {
-								type: 'Tooltip',
-								text: computed(() => this.Resources._110650477),
-							},
-							detailedHelp: {
-								type: 'Popover',
-								text: computed(() => this.Resources._1106_VERBOSE30137),
-							}
-						},
-						label: computed(() => this.Resources.PERIOD_START07901),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
-						controlLimits: [
-						],
-					}, this),
-					ADDRE___ADDREPERIEND_: new fieldControlClass.DateControl({
-						modelField: 'ValPeriodend',
-						valueChangeEvent: 'fieldChange:addre.periodend',
-						id: 'ADDRE___ADDREPERIEND_',
-						name: 'PERIEND',
-						size: 'medium',
-						helpControl: {
-							shortHelp: {
-								type: 'Tooltip',
-								text: computed(() => this.Resources._110751102),
-							},
-							detailedHelp: {
-								type: 'Popover',
-								text: computed(() => this.Resources._1107_VERBOSE24939),
-							}
-						},
-						label: computed(() => this.Resources.PERIOD_END31576),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
-						controlLimits: [
-						],
-					}, this),
 				},
 
 				model: new FormViewModel(this, {
@@ -746,14 +613,6 @@
 					Addre: {
 						get ValAddresscity() { return vm.model.ValAddresscity.value },
 						set ValAddresscity(value) { vm.model.ValAddresscity.updateValue(value) },
-						get ValAddresscountry() { return vm.model.ValAddresscountry.value },
-						set ValAddresscountry(value) { vm.model.ValAddresscountry.updateValue(value) },
-						get ValAddressdistrict() { return vm.model.ValAddressdistrict.value },
-						set ValAddressdistrict(value) { vm.model.ValAddressdistrict.updateValue(value) },
-						get ValAddresspostalcode() { return vm.model.ValAddresspostalcode.value },
-						set ValAddresspostalcode(value) { vm.model.ValAddresspostalcode.updateValue(value) },
-						get ValAddressstate() { return vm.model.ValAddressstate.value },
-						set ValAddressstate(value) { vm.model.ValAddressstate.updateValue(value) },
 						get ValAddresstext() { return vm.model.ValAddresstext.value },
 						set ValAddresstext(value) { vm.model.ValAddresstext.updateValue(value) },
 						get ValAddresstype() { return vm.model.ValAddresstype.value },
@@ -812,17 +671,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ADDRE]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -832,7 +697,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -842,7 +707,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -862,7 +727,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -895,7 +760,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -915,7 +780,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -946,11 +811,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -960,7 +823,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -968,8 +831,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -977,7 +838,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -985,8 +846,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -994,7 +853,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1002,11 +861,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1016,7 +873,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1026,7 +883,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

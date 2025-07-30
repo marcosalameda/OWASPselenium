@@ -782,8 +782,8 @@ namespace GenioMVC.Controllers
 
 
 			//History Limit
-			if ("4B5F4D2D-36F8-4B8A-971E-0A27F1095009" != null)
-				Navigation.SetValue("pess1", "4B5F4D2D-36F8-4B8A-971E-0A27F1095009");
+			if ("" != null)
+				Navigation.SetValue("pess1", "");
 
 // USE /[MANUAL GQT MENU_GET 1311]/
 

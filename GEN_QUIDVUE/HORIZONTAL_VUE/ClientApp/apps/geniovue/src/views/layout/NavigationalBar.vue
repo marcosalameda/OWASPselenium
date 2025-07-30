@@ -336,9 +336,9 @@
 			onFocusOut(event)
 			{
 				// Main navbar element
-				let navbar = this.$refs?.navbar
+				const navbar = this.$refs?.navbar
 				// Element that gets focus
-				let focusedElem = event?.relatedTarget
+				const focusedElem = event?.relatedTarget
 				// If focus goes to an element within the navbar, logically the 'focus' is on the navbar
 				if (navbar.contains(focusedElem))
 					return
@@ -347,9 +347,9 @@
 				// If double nav bar, close sub menus
 				if (this.hasDoubleNavbar)
 				{
-					for (let key in this.$refs.menuSubItem)
+					for (const key in this.$refs.menuSubItem)
 					{
-						let curMenuComponent = this.$refs?.menuSubItem[key]
+						const curMenuComponent = this.$refs?.menuSubItem[key]
 						curMenuComponent.closeMenu()
 					}
 				}

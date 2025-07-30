@@ -456,7 +456,7 @@
 			 * Get focusable element in dropdown
 			 */
 			getFocusableDropdownElements() {
-				let focusableElements = []
+				const focusableElements = []
 
 				// Search bar
 				if (this.$refs.globalSearch) {
@@ -465,7 +465,7 @@
 
 				// Search by field buttons
 				if (this.$refs.searchField) {
-					for(let idx in this.$refs.searchField)
+					for(const idx in this.$refs.searchField)
 						focusableElements.push(this.$refs.searchField[idx]?.$el)
 				}
 
@@ -504,7 +504,7 @@
 			 * Key handler for search dropdown
 			 */
 			searchDropKeyPress(event) {
-				let key = event.key
+				const key = event.key
 				switch (key) {
 					case 'Tab':
 						this.hideDropdown()
@@ -541,7 +541,7 @@
 
 			signal: {
 				handler(newValue) {
-					for (let key in newValue) {
+					for (const key in newValue) {
 						switch (key) {
 							case 'resetQuery':
 								if (newValue.resetQuery) this.resetQuery()

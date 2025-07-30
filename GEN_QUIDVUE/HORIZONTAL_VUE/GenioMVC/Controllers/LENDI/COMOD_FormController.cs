@@ -604,12 +604,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Lendi/Comod_SaveEdit
 		[HttpPost]
 		public ActionResult Comod_SaveEdit([FromBody] Comod_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Comod_SaveEdit",
 				ViewName = "Comod",
@@ -640,7 +639,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsComod([FromBody] ComodDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

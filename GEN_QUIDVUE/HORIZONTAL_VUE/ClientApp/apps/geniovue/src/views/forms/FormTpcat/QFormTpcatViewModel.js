@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'TPCAT',
 			area: 'CATTP',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_TPCAT',
-				updateFilesTickets: 'UpdateFilesTicketsTPCAT'
+				recalculateFormulas: 'RecalculateFormulas_Tpcat',
+				updateFilesTickets: 'UpdateFilesTicketsTpcat',
+				setFile: 'SetFileTpcat'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODTPCAT',
 			description: '',
 		}).cloneFrom(values?.ValCodtpcat))
-		watch(() => this.ValCodtpcat.value, (newValue, oldValue) => this.onUpdate('cattp.codtpcat', this.ValCodtpcat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtpcat.value, (newValue, oldValue) => this.onUpdate('cattp.codtpcat', this.ValCodtpcat, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodsbcat = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'SBCAT',
 			description: '',
 		}).cloneFrom(values?.ValCodsbcat))
-		watch(() => this.ValCodsbcat.value, (newValue, oldValue) => this.onUpdate('cattp.codsbcat', this.ValCodsbcat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodsbcat.value, (newValue, oldValue) => this.onUpdate('cattp.codsbcat', this.ValCodsbcat, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValTpcatego = reactive(new modelFieldType.String({
@@ -72,7 +73,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.CATEGORY_TYPE23058),
 		}).cloneFrom(values?.ValTpcatego))
-		watch(() => this.ValTpcatego.value, (newValue, oldValue) => this.onUpdate('cattp.tpcatego', this.ValTpcatego, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValTpcatego.value, (newValue, oldValue) => this.onUpdate('cattp.tpcatego', this.ValTpcatego, newValue, oldValue)))
 
 		this.TableSbcatSubcateg = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.SUB_CATEGORIA15612),
 		}).cloneFrom(values?.TableSbcatSubcateg))
-		watch(() => this.TableSbcatSubcateg.value, (newValue, oldValue) => this.onUpdate('sbcat.subcateg', this.TableSbcatSubcateg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableSbcatSubcateg.value, (newValue, oldValue) => this.onUpdate('sbcat.subcateg', this.TableSbcatSubcateg, newValue, oldValue)))
 	}
 
 	/**

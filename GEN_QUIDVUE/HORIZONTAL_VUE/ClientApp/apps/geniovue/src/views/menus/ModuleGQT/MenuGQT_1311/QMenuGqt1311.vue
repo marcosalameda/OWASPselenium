@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_1311ViewModel.js'
 
@@ -202,7 +203,7 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
-								array: computed(() => qProjArrays.QArrayFreqempr.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayFreqempr.type,
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -385,7 +386,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'COMOD',
+									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'COMOD'
 								}
 							},
 							formsDefinition: {
@@ -430,7 +431,7 @@
 								defaultValue: '1'
 							},
 						],
-						globalEvents: ['changed-PESS1', 'changed-LENDI', 'changed-PESS2', 'changed-EQUIP'],
+						globalEvents: ['changed-PESS1', 'changed-LENDI', 'changed-EQUIP', 'changed-PESS2'],
 						uuid: '7c5b168c-36e1-428a-b409-4b372e706c23',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -461,6 +462,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS GQT_MENU_1311]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT GQT_MENU_1311]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

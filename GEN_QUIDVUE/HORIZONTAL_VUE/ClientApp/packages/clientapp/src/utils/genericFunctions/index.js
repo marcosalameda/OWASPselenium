@@ -104,39 +104,6 @@ export function saveNavigation(routeData, updateHistory)
 }
 
 /**
- * Builds the human key of the current record.
- * @param {object} humanKeyFields An array with the keys of the fields in the model needed for the human key
- * @param {object} model The form/menu model
- * @returns A string with the human key.
- */
-export function buildHumanKey(humanKeyFields, model)
-{
-	if (!Array.isArray(humanKeyFields) || _isEmpty(humanKeyFields) || typeof model !== 'object' || _isEmpty(model))
-		return ''
-
-	var humanKey = ''
-
-	for (let fieldId of humanKeyFields)
-	{
-		let field = model[fieldId]
-		if (_isEmpty(field))
-			break
-
-		let value = field.displayValue
-
-		if (_isEmpty(value))
-			continue
-
-		if (humanKey.length > 0)
-			humanKey += '; '
-
-		humanKey += `${field.description}: ${value}`
-	}
-
-	return humanKey
-}
-
-/**
  * Converts the specified raw layout variables data to the format expected by the application.
  * @param {object} layoutConfig The raw layout variables data
  * @returns An object with variables in the expected format.
@@ -409,19 +376,22 @@ export function scrollTo(id, position = 'center', behavior = 'smooth')
 
 /**
  * Focus on a DOM element.
- * @param {object || string} element A reference to the DOM element or ID of the DOM element
+ * @param {object || string} target A reference to the DOM element or ID of the DOM element
  */
-export function focusElement(element)
+export function focusElement(target)
 {
-	// If element is a string, get DOM element with that ID
-	if (typeof element === 'string' && element !== '')
-		element = document.getElementById(element)
+	let el = target
 
-	if (!element)
+	// If target is a string, get DOM element with that ID
+	if (typeof target === 'string' && target !== '')
+		el = document.getElementById(target)
+
+	if (!el)
 		return
 
 	// If the element can be focused, focus on it
-	element.focus?.()
+	if (el instanceof HTMLElement && typeof el.focus === 'function')
+		el.focus()
 }
 
 /**
@@ -951,8 +921,9 @@ export function mergeOptions(objValue, srcValue)
  */
 export function validateTexts(requiredTexts, texts)
 {
-	const textKeys = [...Object.keys(requiredTexts)]
-	return textKeys.every((element) => Object.keys(texts).includes(element))
+	const requiredKeys = Object.keys(requiredTexts)
+	const textsKeys = new Set(Object.keys(texts))
+	return requiredKeys.every((key) => textsKeys.has(key))
 }
 
 /**
@@ -1094,7 +1065,6 @@ export default {
 	normalizeDataInNavigationParams,
 	normalizeRouteForSaveNavigation,
 	saveNavigation,
-	buildHumanKey,
 	getLayoutVariables,
 	displayMessage,
 	scrollToTop,

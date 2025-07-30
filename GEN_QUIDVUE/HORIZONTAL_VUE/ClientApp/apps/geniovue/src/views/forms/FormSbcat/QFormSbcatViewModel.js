@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'SBCAT',
 			area: 'SBCAT',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_SBCAT',
-				updateFilesTickets: 'UpdateFilesTicketsSBCAT'
+				recalculateFormulas: 'RecalculateFormulas_Sbcat',
+				updateFilesTickets: 'UpdateFilesTicketsSbcat',
+				setFile: 'SetFileSbcat'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODSBCAT',
 			description: '',
 		}).cloneFrom(values?.ValCodsbcat))
-		watch(() => this.ValCodsbcat.value, (newValue, oldValue) => this.onUpdate('sbcat.codsbcat', this.ValCodsbcat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodsbcat.value, (newValue, oldValue) => this.onUpdate('sbcat.codsbcat', this.ValCodsbcat, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValSubcateg = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.SUB_CATEGORIA15612),
 		}).cloneFrom(values?.ValSubcateg))
-		watch(() => this.ValSubcateg.value, (newValue, oldValue) => this.onUpdate('sbcat.subcateg', this.ValSubcateg, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSubcateg.value, (newValue, oldValue) => this.onUpdate('sbcat.subcateg', this.ValSubcateg, newValue, oldValue)))
 	}
 
 	/**

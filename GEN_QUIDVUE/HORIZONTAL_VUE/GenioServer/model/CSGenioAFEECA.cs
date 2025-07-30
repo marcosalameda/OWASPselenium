@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -106,13 +106,13 @@ namespace CSGenio.business
 			info.Pathways.Add("equip","flds");
 			info.Pathways.Add("wareh","flds");
 			info.Pathways.Add("decom","flds");
+			info.Pathways.Add("item","flds");
 			info.Pathways.Add("tpequ","flds");
 			info.Pathways.Add("room1","flds");
-			info.Pathways.Add("item","flds");
 			info.Pathways.Add("cmpny","flds");
 			info.Pathways.Add("pess1","flds");
-			info.Pathways.Add("famil","flds");
 			info.Pathways.Add("gitem","flds");
+			info.Pathways.Add("famil","flds");
 			info.Pathways.Add("cntry","flds");
 			info.Pathways.Add("stake","flds");
 			info.Pathways.Add("cate2","flds");
@@ -357,7 +357,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX FEECA]/

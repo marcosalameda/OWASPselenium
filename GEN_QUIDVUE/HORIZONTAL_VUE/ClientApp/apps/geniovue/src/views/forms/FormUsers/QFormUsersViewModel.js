@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'USERS',
 			area: 'USERS',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_USERS',
-				updateFilesTickets: 'UpdateFilesTicketsUSERS'
+				recalculateFormulas: 'RecalculateFormulas_Users',
+				updateFilesTickets: 'UpdateFilesTicketsUsers',
+				setFile: 'SetFileUsers'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODUSERS',
 			description: '',
 		}).cloneFrom(values?.ValCodusers))
-		watch(() => this.ValCodusers.value, (newValue, oldValue) => this.onUpdate('users.codusers', this.ValCodusers, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodusers.value, (newValue, oldValue) => this.onUpdate('users.codusers', this.ValCodusers, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodpsw = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PSW',
 			description: computed(() => this.Resources.__LOGIN09030),
 		}).cloneFrom(values?.ValCodpsw))
-		watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('users.codpsw', this.ValCodpsw, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodpsw.value, (newValue, oldValue) => this.onUpdate('users.codpsw', this.ValCodpsw, newValue, oldValue)))
 
 		this.ValCodperso = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodperso',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'PERSO',
 			description: computed(() => this.Resources.__PERSON30342),
 		}).cloneFrom(values?.ValCodperso))
-		watch(() => this.ValCodperso.value, (newValue, oldValue) => this.onUpdate('users.codperso', this.ValCodperso, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodperso.value, (newValue, oldValue) => this.onUpdate('users.codperso', this.ValCodperso, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TablePswNome = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 100,
 			description: computed(() => this.Resources.NAME31974),
 		}).cloneFrom(values?.TablePswNome))
-		watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePswNome.value, (newValue, oldValue) => this.onUpdate('psw.nome', this.TablePswNome, newValue, oldValue)))
 
 		this.TablePersoName = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 85,
 			description: computed(() => this.Resources.PERSON_NAME40980),
 		}).cloneFrom(values?.TablePersoName))
-		watch(() => this.TablePersoName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.TablePersoName, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TablePersoName.value, (newValue, oldValue) => this.onUpdate('perso.name', this.TablePersoName, newValue, oldValue)))
 	}
 
 	/**

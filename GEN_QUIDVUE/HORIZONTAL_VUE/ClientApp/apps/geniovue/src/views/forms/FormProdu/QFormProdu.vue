@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -336,15 +336,16 @@
 						<q-accordion
 							v-if="controls.PRODU___PSEUDNOVOGR06.isVisible"
 							id="PRODU___PSEUDNOVOGR06"
+							v-model="controls.PRODU___PSEUDNOVOGR06.openChild"
 							v-bind="controls.PRODU___PSEUDNOVOGR06">
 							<!-- Start PRODU___PSEUDNOVOGR06 -->
-							<q-group-collapsible
-								id="PRODU___PSEUDNOVOGR04"
-								v-bind="controls.PRODU___PSEUDNOVOGR04"
-								v-on="controls.PRODU___PSEUDNOVOGR04.handlers">
+							<q-accordion-item
+								id="PRODU___PSEUDNOVOGR04-container"
+								value="PRODU___PSEUDNOVOGR04"
+								:title="controls.PRODU___PSEUDNOVOGR04.label">
 								<!-- Start PRODU___PSEUDNOVOGR04 -->
 								<q-row-container
-									v-show="controls.PRODU___PSEUDNOVOGR03.isVisible || controls.PRODU___PSEUDSTOCKEVO.isVisible"
+									v-show="controls.PRODU___PSEUDNOVOGR03.isVisible"
 									is-large>
 									<q-control-wrapper
 										v-show="controls.PRODU___PSEUDNOVOGR03.isVisible"
@@ -401,6 +402,8 @@
 											<!-- End PRODU___PSEUDNOVOGR03 -->
 										</q-group-box-container>
 									</q-control-wrapper>
+								</q-row-container>
+								<q-row-container v-show="controls.PRODU___PSEUDSTOCKEVO.isVisible">
 									<q-control-wrapper
 										v-show="controls.PRODU___PSEUDSTOCKEVO.isVisible"
 										class="control-join-group">
@@ -410,15 +413,16 @@
 											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.PRODU___PSEUDSTOCKEVO"
+											:filter-operators="controls.PRODU___PSEUDSTOCKEVO.filterOperators"
 											v-on="controls.PRODU___PSEUDSTOCKEVO.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PRODU___PSEUDNOVOGR04 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="PRODU___PSEUDNOVOGR05"
-								v-bind="controls.PRODU___PSEUDNOVOGR05"
-								v-on="controls.PRODU___PSEUDNOVOGR05.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="PRODU___PSEUDNOVOGR05-container"
+								value="PRODU___PSEUDNOVOGR05"
+								:title="controls.PRODU___PSEUDNOVOGR05.label">
 								<!-- Start PRODU___PSEUDNOVOGR05 -->
 								<q-row-container v-show="controls.PRODU___PSEUDINPUTSRE.isVisible || controls.PRODU___PSEUDOUTPUTSD.isVisible">
 									<q-control-wrapper
@@ -430,6 +434,7 @@
 											v-on="controls.PRODU___PSEUDINPUTSRE.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.PRODU___PSEUDINPUTSRE"
+											:filter-operators="controls.PRODU___PSEUDINPUTSRE.filterOperators"
 											v-on="controls.PRODU___PSEUDINPUTSRE.handlers" />
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -441,11 +446,12 @@
 											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.PRODU___PSEUDOUTPUTSD"
+											:filter-operators="controls.PRODU___PSEUDOUTPUTSD.filterOperators"
 											v-on="controls.PRODU___PSEUDOUTPUTSD.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End PRODU___PSEUDNOVOGR05 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End PRODU___PSEUDNOVOGR06 -->
 						</q-accordion>
 					</q-control-wrapper>
@@ -485,7 +491,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -505,7 +511,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormProduViewModel.js'
 
@@ -584,7 +590,8 @@
 					primaryKey: 'ValCodprodu',
 					designation: computed(() => this.Resources.PRODUCT12880),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -1028,6 +1035,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PRODU___PSEUDNOVOGR03', 'PRODU___PSEUDSTOCKEVO'],
@@ -1221,7 +1229,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-RECEI', 'changed-STOCK', 'changed-DISPA', 'changed-PRODU'],
+						globalEvents: ['changed-STOCK', 'changed-DISPA', 'changed-PRODU', 'changed-RECEI'],
 						uuid: 'Produ_ValStockevo',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1241,6 +1249,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODU___PSEUDNOVOGR06',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PRODU___PSEUDINPUTSRE', 'PRODU___PSEUDOUTPUTSD'],
@@ -1470,7 +1479,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PRODU', 'changed-RELIN', 'changed-ENTIT', 'changed-RECEI'],
+						globalEvents: ['changed-RECEI', 'changed-ENTIT', 'changed-PRODU', 'changed-RELIN'],
 						uuid: 'Produ_ValInputsre',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1837,17 +1846,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PRODU]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1857,7 +1872,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1867,7 +1882,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1887,7 +1902,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -1920,7 +1935,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1940,7 +1955,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -1971,11 +1986,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1985,7 +1998,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1993,8 +2006,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2002,7 +2013,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -2010,8 +2021,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2019,7 +2028,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -2027,11 +2036,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -2041,7 +2048,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -2051,7 +2058,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

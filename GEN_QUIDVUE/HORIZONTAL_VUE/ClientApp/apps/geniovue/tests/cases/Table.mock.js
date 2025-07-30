@@ -779,6 +779,7 @@ function getTableTest(context)
 		context || {
 			$getResource: (resId) => resId
 		},
+		{},
 		{}
 	)
 }
@@ -1381,6 +1382,7 @@ export default {
 			dataImportResponse: {}
 		},
 		{},
+		{},
 		{}
 	),
 	tableTestReorder: new controlClass.TableListControl(
@@ -1980,6 +1982,7 @@ export default {
 			dataImportResponse: {}
 		},
 		{},
+		{},
 		{}
 	),
 	tableTestDates: new controlClass.TableListControl(
@@ -2284,6 +2287,7 @@ export default {
 				]
 			}
 		},
+		{},
 		{},
 		{}
 	),
@@ -2698,6 +2702,7 @@ export default {
 				]
 			}
 		},
+		{},
 		{},
 		{}
 	),
@@ -3118,6 +3123,7 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
+		{},
 		{},
 		{}
 	),
@@ -3542,6 +3548,7 @@ export default {
 			rowsChecked: {}
 		},
 		{},
+		{},
 		{}
 	),
 	tableTestSelectMultiple: new controlClass.TableListControl(
@@ -3965,6 +3972,7 @@ export default {
 			rowsSelected: {},
 			rowsChecked: {}
 		},
+		{},
 		{},
 		{}
 	),
@@ -4428,6 +4436,7 @@ export default {
 			rowsChecked: {}
 		},
 		{},
+		{},
 		{}
 	),
 	tableTestSelectSingle: new controlClass.TableListControl(
@@ -4850,6 +4859,7 @@ export default {
 			rowsChecked: {}
 		},
 		{},
+		{},
 		{}
 	),
 	tableTestRemoveRows: new controlClass.TableListControl(
@@ -5217,6 +5227,7 @@ export default {
 			rowsChecked: {}
 		},
 		{},
+		{},
 		{}
 	),
 	tableTestPaginationNormal: new controlClass.TableListControl(
@@ -5501,6 +5512,7 @@ export default {
 			}
 		},
 		{},
+		{},
 		{}
 	),
 	tableTestPaginationNormalServer: new controlClass.TableListControl(
@@ -5586,6 +5598,7 @@ export default {
 				hydrate: listFunctions.hydrateTableData
 			}
 		},
+		{},
 		{},
 		{}
 	),
@@ -5869,6 +5882,7 @@ export default {
 				showAlternatePagination: true
 			}
 		},
+		{},
 		{},
 		{}
 	),
@@ -7280,14 +7294,6 @@ export default {
 		removeAdvancedFilter(listConf, index)
 		{
 			listConf.advancedFilters.splice(index, 1)
-		},
-		/**
-		 * Clear all advanced filters
-		 * @param {object} listConf The list configuration
-		 */
-		clearAdvancedFilters(listConf)
-		{
-			listConf.advancedFilters = []
 		},
 
 		/**

@@ -702,12 +702,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Lnhpd/Lnhpd_SaveEdit
 		[HttpPost]
 		public ActionResult Lnhpd_SaveEdit([FromBody] Lnhpd_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhpd_SaveEdit",
 				ViewName = "Lnhpd",
@@ -738,7 +737,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsLnhpd([FromBody] LnhpdDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

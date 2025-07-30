@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -209,15 +209,14 @@
 										:suggestion-mode-on="suggestionModeOn">
 										<q-radio-group
 											v-if="controls.FLDSTBL_FLDS_RADIOB__.isVisible"
-											id="FLDSTBL_FLDS_RADIOB__"
-											:model-value="model.ValRadiob.value"
-											deselect-radio
-											:label-left-side="controls.FLDSTBL_FLDS_RADIOB__.labelPosition === labelAlignment.left"
-											:number-of-columns="controls.FLDSTBL_FLDS_RADIOB__.columnNumber"
-											:is-required="controls.FLDSTBL_FLDS_RADIOB__.isRequired"
-											:readonly="controls.FLDSTBL_FLDS_RADIOB__.readonly"
-											:options-list="controls.FLDSTBL_FLDS_RADIOB__.items"
-											@update:model-value="model.ValRadiob.fnUpdateValue" />
+											v-bind="controls.FLDSTBL_FLDS_RADIOB__.props"
+											v-on="controls.FLDSTBL_FLDS_RADIOB__.handlers">
+											<q-radio-button
+												v-for="radio in controls.FLDSTBL_FLDS_RADIOB__.items"
+												:key="radio.key"
+												:label="radio.value"
+												:value="radio.key" />
+										</q-radio-group>
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -474,7 +473,7 @@
 											v-if="controls.FLDSTBL_FLDS_SSNUMBER.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_SSNUMBER"
 											:model-value="model.ValSsnumber.value"
-											@update:model-value="model.ValSsnumber.fnUpdateValue" />
+											@change="model.ValSsnumber.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -491,7 +490,7 @@
 											v-if="controls.FLDSTBL_FLDS_ZIPFIELD.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_ZIPFIELD"
 											:model-value="model.ValZipfield.value"
-											@update:model-value="model.ValZipfield.fnUpdateValue" />
+											@change="model.ValZipfield.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -508,7 +507,7 @@
 											v-if="controls.FLDSTBL_FLDS_VATNUMBR.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_VATNUMBR"
 											:model-value="model.ValVatnumbr.value"
-											@update:model-value="model.ValVatnumbr.fnUpdateValue" />
+											@change="model.ValVatnumbr.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -525,7 +524,7 @@
 											v-if="controls.FLDSTBL_FLDS_LICPLATE.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_LICPLATE"
 											:model-value="model.ValLicplate.value"
-											@update:model-value="model.ValLicplate.fnUpdateValue" />
+											@change="model.ValLicplate.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -542,7 +541,7 @@
 											v-if="controls.FLDSTBL_FLDS_BANKNMBR.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_BANKNMBR"
 											:model-value="model.ValBanknmbr.value"
-											@update:model-value="model.ValBanknmbr.fnUpdateValue" />
+											@change="model.ValBanknmbr.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -559,7 +558,7 @@
 											v-if="controls.FLDSTBL_FLDS_EMAILFLD.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_EMAILFLD"
 											:model-value="model.ValEmailfld.value"
-											@update:model-value="model.ValEmailfld.fnUpdateValue" />
+											@change="model.ValEmailfld.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -576,7 +575,7 @@
 											v-if="controls.FLDSTBL_FLDS_IBANFIEL.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_IBANFIEL"
 											:model-value="model.ValIbanfiel.value"
-											@update:model-value="model.ValIbanfiel.fnUpdateValue" />
+											@change="model.ValIbanfiel.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -593,7 +592,7 @@
 											v-if="controls.FLDSTBL_FLDS_UPPRTEXT.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_UPPRTEXT"
 											:model-value="model.ValUpprtext.value"
-											@update:model-value="model.ValUpprtext.fnUpdateValue" />
+											@change="model.ValUpprtext.fnUpdateValueOnChange" />
 									</base-input-structure>
 								</q-control-wrapper>
 								<q-control-wrapper
@@ -801,6 +800,7 @@
 							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers" />
 						<q-table-extra-extension
 							:list-ctrl="controls.FLDSTBL_PSEUDFEECA___"
+							:filter-operators="controls.FLDSTBL_PSEUDFEECA___.filterOperators"
 							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers" />
 					</q-control-wrapper>
 				</q-row-container>
@@ -839,7 +839,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -859,7 +859,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormFldstblViewModel.js'
 
@@ -936,7 +936,8 @@
 					primaryKey: 'ValCodflds',
 					designation: computed(() => this.Resources.FIELD_TYPE57098),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -1340,7 +1341,6 @@
 						valueChangeEvent: 'fieldChange:flds.radiob',
 						id: 'FLDSTBL_FLDS_RADIOB__',
 						name: 'RADIOB',
-						size: 'small',
 						label: computed(() => this.Resources.RADIO_BTN20980),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
@@ -1348,7 +1348,7 @@
 						maxLength: 5,
 						labelId: 'label_FLDSTBL_FLDS_RADIOB__',
 						arrayName: 'RADIOBTN',
-						columnNumber: 2,
+						columns: 2,
 						controlLimits: [
 						],
 					}, this),
@@ -1386,7 +1386,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR06',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=2935`),
+							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=2932`),
 							type: 'img',
 						},
 						height: 500,
@@ -1475,7 +1475,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -1499,7 +1499,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1523,7 +1523,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1547,7 +1547,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR01',
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -2061,7 +2061,7 @@
 						label: computed(() => this.Resources.DAY27593),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -2108,7 +2108,7 @@
 						label: computed(() => this.Resources.COMPLETE_DATE53774),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTimeSeconds',
+						dateTimeType: 'dateTimeSeconds',
 						controlLimits: [
 						],
 					}, this),
@@ -2131,7 +2131,7 @@
 						label: computed(() => this.Resources.HOUR15646),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'time',
+						dateTimeType: 'time',
 						controlLimits: [
 						],
 					}, this),
@@ -2488,17 +2488,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT FLDSTBL]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -2508,7 +2514,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -2518,7 +2524,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -2538,7 +2544,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -2571,7 +2577,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -2591,7 +2597,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -2622,11 +2628,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -2636,7 +2640,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -2644,8 +2648,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2653,7 +2655,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -2661,8 +2663,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2670,7 +2670,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -2678,11 +2678,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -2692,7 +2690,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -2702,7 +2700,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

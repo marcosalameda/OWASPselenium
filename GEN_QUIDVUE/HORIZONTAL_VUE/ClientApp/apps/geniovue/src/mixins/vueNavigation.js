@@ -137,6 +137,9 @@ export function processRedirect(vueInstance, data)
 		case 'route':
 			navigateToRouteName(vueInstance, data.routeName, data.routeValues)
 			break
+		case 'report':
+			navigateToReport(vueInstance, data.controller, data.reportAction, data.routeValues, data.preview)
+			break
 		default:
 			/* log error */
 			vueInstance.$eventTracker.addError({ origin: 'processRedirect', message: 'Error found while redirecting!', contextData: { type: data.type } })

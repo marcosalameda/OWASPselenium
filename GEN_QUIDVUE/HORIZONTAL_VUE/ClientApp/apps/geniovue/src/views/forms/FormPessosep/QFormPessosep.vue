@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -91,12 +91,10 @@
 			data-key="PESSOSEP"
 			:data-loading="!formInitialDataLoaded">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.PESSOSEPPSEUDNOVOGR02.isVisible || controls.PESSOSEPPSEUDOBRIGATO.isVisible"
-					is-large>
+				<q-row-container v-show="controls.PESSOSEPPSEUDNOVOGR02.isVisible || controls.PESSOSEPPSEUDOBRIGATO.isVisible">
 					<q-control-wrapper
 						v-show="controls.PESSOSEPPSEUDNOVOGR02.isVisible"
-						class="row-line-group">
+						class="control-join-group">
 						<q-group-box-container
 							id="PESSOSEPPSEUDNOVOGR02"
 							v-bind="controls.PESSOSEPPSEUDNOVOGR02"
@@ -158,15 +156,14 @@
 										:suggestion-mode-on="suggestionModeOn">
 										<q-radio-group
 											v-if="controls.PESSOSEPPESSOGENDER__.isVisible"
-											id="PESSOSEPPESSOGENDER__"
-											:model-value="model.ValGender.value"
-											deselect-radio
-											:label-left-side="controls.PESSOSEPPESSOGENDER__.labelPosition === labelAlignment.left"
-											:number-of-columns="controls.PESSOSEPPESSOGENDER__.columnNumber"
-											:is-required="controls.PESSOSEPPESSOGENDER__.isRequired"
-											:readonly="controls.PESSOSEPPESSOGENDER__.readonly"
-											:options-list="controls.PESSOSEPPESSOGENDER__.items"
-											@update:model-value="model.ValGender.fnUpdateValue" />
+											v-bind="controls.PESSOSEPPESSOGENDER__.props"
+											v-on="controls.PESSOSEPPESSOGENDER__.handlers">
+											<q-radio-button
+												v-for="radio in controls.PESSOSEPPESSOGENDER__.items"
+												:key="radio.key"
+												:label="radio.value"
+												:value="radio.key" />
+										</q-radio-group>
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -241,6 +238,24 @@
 											:model-value="model.ValDtultcat.value"
 											@reset-icon-click="model.ValDtultcat.fnUpdateValue(model.ValDtultcat.originalValue ?? new Date())"
 											@update:model-value="model.ValDtultcat.fnUpdateValue($event ?? '')" />
+									</base-input-structure>
+								</q-control-wrapper>
+							</q-row-container>
+							<q-row-container v-show="controls.PESSOSEPPESSOCURRICUL.isVisible">
+								<q-control-wrapper
+									v-show="controls.PESSOSEPPESSOCURRICUL.isVisible"
+									class="control-join-group">
+									<base-input-structure
+										class="i-text"
+										v-bind="controls.PESSOSEPPESSOCURRICUL"
+										v-on="controls.PESSOSEPPESSOCURRICUL.handlers"
+										:loading="controls.PESSOSEPPESSOCURRICUL.props.loading"
+										:reporting-mode-on="reportingModeCAV"
+										:suggestion-mode-on="suggestionModeOn">
+										<q-document
+											v-if="controls.PESSOSEPPESSOCURRICUL.isVisible"
+											v-bind="controls.PESSOSEPPESSOCURRICUL.props"
+											v-on="controls.PESSOSEPPESSOCURRICUL.handlers" />
 									</base-input-structure>
 								</q-control-wrapper>
 							</q-row-container>
@@ -322,12 +337,13 @@
 												<q-accordion
 													v-if="controls.PESSOS01PSEUDNOVOGR06.isVisible"
 													id="PESSOS01PSEUDNOVOGR06"
+													v-model="controls.PESSOS01PSEUDNOVOGR06.openChild"
 													v-bind="controls.PESSOS01PSEUDNOVOGR06">
 													<!-- Start PESSOS01PSEUDNOVOGR06 -->
-													<q-group-collapsible
-														id="PESSOS01PSEUDNOVOGR03"
-														v-bind="controls.PESSOS01PSEUDNOVOGR03"
-														v-on="controls.PESSOS01PSEUDNOVOGR03.handlers">
+													<q-accordion-item
+														id="PESSOS01PSEUDNOVOGR03-container"
+														value="PESSOS01PSEUDNOVOGR03"
+														:title="controls.PESSOS01PSEUDNOVOGR03.label">
 														<!-- Start PESSOS01PSEUDNOVOGR03 -->
 														<q-row-container v-show="controls.PESSOS01PESSOTELEPHON.isVisible || controls.PESSOS01PESSOEMAIL___.isVisible">
 															<q-control-wrapper
@@ -364,11 +380,11 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End PESSOS01PSEUDNOVOGR03 -->
-													</q-group-collapsible>
-													<q-group-collapsible
-														id="PESSOS01PSEUDNOVOGR04"
-														v-bind="controls.PESSOS01PSEUDNOVOGR04"
-														v-on="controls.PESSOS01PSEUDNOVOGR04.handlers">
+													</q-accordion-item>
+													<q-accordion-item
+														id="PESSOS01PSEUDNOVOGR04-container"
+														value="PESSOS01PSEUDNOVOGR04"
+														:title="controls.PESSOS01PSEUDNOVOGR04.label">
 														<!-- Start PESSOS01PSEUDNOVOGR04 -->
 														<q-row-container v-show="controls.PESSOS01PESSOPHOTOGRA.isVisible">
 															<q-control-wrapper
@@ -389,11 +405,11 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End PESSOS01PSEUDNOVOGR04 -->
-													</q-group-collapsible>
-													<q-group-collapsible
-														id="PESSOS01PSEUDNOVOGR05"
-														v-bind="controls.PESSOS01PSEUDNOVOGR05"
-														v-on="controls.PESSOS01PSEUDNOVOGR05.handlers">
+													</q-accordion-item>
+													<q-accordion-item
+														id="PESSOS01PSEUDNOVOGR05-container"
+														value="PESSOS01PSEUDNOVOGR05"
+														:title="controls.PESSOS01PSEUDNOVOGR05.label">
 														<!-- Start PESSOS01PSEUDNOVOGR05 -->
 														<q-row-container v-show="controls.PESSOS01PSEUDEVOLUCAO.isVisible">
 															<q-control-wrapper
@@ -405,6 +421,7 @@
 																	v-on="controls.PESSOS01PSEUDEVOLUCAO.handlers" />
 																<q-table-extra-extension
 																	:list-ctrl="controls.PESSOS01PSEUDEVOLUCAO"
+																	:filter-operators="controls.PESSOS01PSEUDEVOLUCAO.filterOperators"
 																	v-on="controls.PESSOS01PSEUDEVOLUCAO.handlers" />
 															</q-control-wrapper>
 														</q-row-container>
@@ -419,11 +436,11 @@
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End PESSOS01PSEUDNOVOGR05 -->
-													</q-group-collapsible>
-													<q-group-collapsible
-														id="PESSOS01PSEUDNOVOGR07"
-														v-bind="controls.PESSOS01PSEUDNOVOGR07"
-														v-on="controls.PESSOS01PSEUDNOVOGR07.handlers">
+													</q-accordion-item>
+													<q-accordion-item
+														id="PESSOS01PSEUDNOVOGR07-container"
+														value="PESSOS01PSEUDNOVOGR07"
+														:title="controls.PESSOS01PSEUDNOVOGR07.label">
 														<!-- Start PESSOS01PSEUDNOVOGR07 -->
 														<q-row-container v-show="controls.PESSOS01PSEUDCONTACTO.isVisible">
 															<q-control-wrapper
@@ -435,11 +452,12 @@
 																	v-on="controls.PESSOS01PSEUDCONTACTO.handlers" />
 																<q-table-extra-extension
 																	:list-ctrl="controls.PESSOS01PSEUDCONTACTO"
+																	:filter-operators="controls.PESSOS01PSEUDCONTACTO.filterOperators"
 																	v-on="controls.PESSOS01PSEUDCONTACTO.handlers" />
 															</q-control-wrapper>
 														</q-row-container>
 														<!-- End PESSOS01PSEUDNOVOGR07 -->
-													</q-group-collapsible>
+													</q-accordion-item>
 													<!-- End PESSOS01PSEUDNOVOGR06 -->
 												</q-accordion>
 											</q-control-wrapper>
@@ -485,7 +503,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -505,7 +523,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormPessosepViewModel.js'
 
@@ -584,7 +602,8 @@
 					primaryKey: 'ValCodpesso',
 					designation: computed(() => this.Resources.PERSON10446),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -795,13 +814,13 @@
 					PESSOSEPPSEUDNOVOGR02: new fieldControlClass.GroupControl({
 						id: 'PESSOSEPPSEUDNOVOGR02',
 						name: 'NOVOGR02',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.IDENTIFICATION40793),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isCollapsible: false,
 						anchored: false,
-						directChildren: ['PESSOSEPPESSOIDFUNCIO', 'PESSOSEPPESSONAME____', 'PESSOSEPPESSODTNASCIM', 'PESSOSEPPESSOGENDER__', 'PESSOSEPPESSOINTERNA_', 'PESSOSEPPESSOEXTERNA_', 'PESSOSEPCATEGCATEGORY', 'PESSOSEPPESSODTULTCAT'],
+						directChildren: ['PESSOSEPPESSOIDFUNCIO', 'PESSOSEPPESSONAME____', 'PESSOSEPPESSODTNASCIM', 'PESSOSEPPESSOGENDER__', 'PESSOSEPPESSOINTERNA_', 'PESSOSEPPESSOEXTERNA_', 'PESSOSEPCATEGCATEGORY', 'PESSOSEPPESSODTULTCAT', 'PESSOSEPPESSOCURRICUL'],
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -849,7 +868,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOSEPPSEUDNOVOGR02',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -858,15 +877,14 @@
 						valueChangeEvent: 'fieldChange:pesso.gender',
 						id: 'PESSOSEPPESSOGENDER__',
 						name: 'GENDER',
-						size: 'mini',
 						label: computed(() => this.Resources.GENDER44172),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.right),
+						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						maxLength: 1,
 						labelId: 'label_PESSOSEPPESSOGENDER__',
 						arrayName: 'Genero',
-						columnNumber: 3,
+						columns: 3,
 						controlLimits: [
 						],
 					}, this),
@@ -878,7 +896,7 @@
 						size: 'mini',
 						label: computed(() => this.Resources.INTERN65375),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.right),
+						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						controlLimits: [
 						],
@@ -891,7 +909,7 @@
 						size: 'small',
 						label: computed(() => this.Resources.EXTERNAL13375),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.right),
+						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						controlLimits: [
 						],
@@ -928,7 +946,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [PESSO->INTERNA]==1
@@ -949,11 +967,11 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOSEPPSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [PESSO->INTERNA]==1
@@ -962,6 +980,22 @@
 							dependencyEvents: ['fieldChange:pesso.interna'],
 							isServerRecalc: false,
 						},
+					}, this),
+					PESSOSEPPESSOCURRICUL: new fieldControlClass.MaskControl({
+						modelField: 'ValCurricul',
+						valueChangeEvent: 'fieldChange:pesso.curricul',
+						id: 'PESSOSEPPESSOCURRICUL',
+						name: 'CURRICUL',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.CURRICULUM51182),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						container: 'PESSOSEPPSEUDNOVOGR02',
+						extensions: [],
+						maxFileSize: 10485760, // In bytes.
+						maxFileSizeLabel: '10 MB',
+						controlLimits: [
+						],
 					}, this),
 					PESSOSEPPSEUDOBRIGATO: new fieldControlClass.BaseControl({
 						id: 'PESSOSEPPSEUDOBRIGATO',
@@ -1049,6 +1083,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PESSOS01PESSOTELEPHON', 'PESSOS01PESSOEMAIL___'],
@@ -1096,6 +1131,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PESSOS01PESSOPHOTOGRA'],
@@ -1128,13 +1164,14 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PESSOS01PSEUDEVOLUCAO', 'PESSOS01PSEUDFICHACAR'],
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [PESSO->INTERNA]==1
@@ -1335,7 +1372,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
+						globalEvents: ['changed-CATE1', 'changed-PESSO', 'changed-EVCAT'],
 						uuid: 'Pessos01_ValEvolucao',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1377,6 +1414,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSOS01PSEUDNOVOGR06',
 						tab: 'PESSOSEPPSEUDPESSOS01',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PESSOS01PSEUDCONTACTO'],
@@ -1529,7 +1567,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPCON', 'changed-CONTA', 'changed-PESSO', 'changed-GENRE'],
+						globalEvents: ['changed-CONTA', 'changed-PESSO', 'changed-TPCON', 'changed-GENRE'],
 						uuid: 'Pessos01_ValContacto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1598,6 +1636,8 @@
 						set ValCodpaise(value) { vm.model.ValCodpaise.updateValue(value) },
 						get ValCodregia() { return vm.model.ValCodregia.value },
 						set ValCodregia(value) { vm.model.ValCodregia.updateValue(value) },
+						get ValCurricul() { return vm.model.ValCurricul.value },
+						set ValCurricul(value) { vm.model.ValCurricul.updateValue(value) },
 						get ValDtnascim() { return vm.model.ValDtnascim.value },
 						set ValDtnascim(value) { vm.model.ValDtnascim.updateValue(value) },
 						get ValDtultcat() { return vm.model.ValDtultcat.value },
@@ -1678,17 +1718,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PESSOSEP]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1698,7 +1744,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1708,7 +1754,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1728,7 +1774,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -1761,7 +1807,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1781,7 +1827,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -1812,11 +1858,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1826,7 +1870,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1834,8 +1878,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1843,7 +1885,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1851,8 +1893,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1860,7 +1900,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1868,11 +1908,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1882,7 +1920,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1892,7 +1930,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

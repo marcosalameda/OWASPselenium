@@ -40,7 +40,7 @@ public class AccessibilityTest : BaseAccessibilityTest
         AccessibilityScanAndLog("APP__NAVIGATION_MENU", "#main-header-navbar");
 
         // Right sidebar
-        AccessibilityScanAndLog("APP__RIGHT_SIDEBAR", "#right-sidenav", false, 1);
+        AccessibilityScanAndLog("APP__RIGHT_SIDEBAR", "#right-sidenav");
     }
 
     [Test]
@@ -129,7 +129,7 @@ public class AccessibilityTest : BaseAccessibilityTest
         var ptn313List = new MenuListPage(Driver, "PTN", "3131").List;
 
         // Accessibility scan
-        AccessibilityScanAndLog("MENU_PTN_313__MENU_LIST", "#main", false, 1);
+        AccessibilityScanAndLog("MENU_PTN_313__MENU_LIST", "#main");
     }
 
     [Test]
@@ -165,7 +165,7 @@ public class AccessibilityTest : BaseAccessibilityTest
         var ptn313ListOccTableConfigPage = new TableConfigurationPage(Driver);
 
         // Accessibility scan
-        AccessibilityScanAndLog("MENU_PTN_313__COLUMN_CONFIG", "#main", false, 1);
+        AccessibilityScanAndLog("MENU_PTN_313__COLUMN_CONFIG", "#main");
 
         // Close column configuration popup
         ptn313ListOccTableConfigPage.CancelColumnConfig();
@@ -264,7 +264,7 @@ public class AccessibilityTest : BaseAccessibilityTest
         var styDashboard = new MenuListPage(Driver, "STY", "DASHBOARD");
 
         // Accessibility scan
-        AccessibilityScanAndLog("MENU_STY_43__DASHBOARD", "#main", true, 3);
+        AccessibilityScanAndLog("MENU_STY_43__DASHBOARD", "#main");
     }
 
     [Test]

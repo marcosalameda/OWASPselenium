@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -290,7 +290,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.PESSO1__PSEUDNOVOGR06.isVisible || controls.PESSO1__PSEUDOBRIGATO.isVisible"
+					v-show="controls.PESSO1__PSEUDNOVOGR06.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.PESSO1__PSEUDNOVOGR06.isVisible"
@@ -375,6 +375,7 @@
 																v-on="controls.PESSO1__PSEUDCONTACTO.handlers" />
 															<q-table-extra-extension
 																:list-ctrl="controls.PESSO1__PSEUDCONTACTO"
+																:filter-operators="controls.PESSO1__PSEUDCONTACTO.filterOperators"
 																v-on="controls.PESSO1__PSEUDCONTACTO.handlers" />
 														</q-control-wrapper>
 													</q-row-container>
@@ -471,6 +472,7 @@
 																v-on="controls.PESSO1__PSEUDEVOLUCAO.handlers" />
 															<q-table-extra-extension
 																:list-ctrl="controls.PESSO1__PSEUDEVOLUCAO"
+																:filter-operators="controls.PESSO1__PSEUDEVOLUCAO.filterOperators"
 																v-on="controls.PESSO1__PSEUDEVOLUCAO.handlers" />
 														</q-control-wrapper>
 													</q-row-container>
@@ -522,6 +524,8 @@
 							<!-- End PESSO1__PSEUDNOVOGR06 -->
 						</q-group-box-container>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.PESSO1__PSEUDOBRIGATO.isVisible">
 					<q-control-wrapper
 						v-show="controls.PESSO1__PSEUDOBRIGATO.isVisible"
 						class="control-join-group">
@@ -576,7 +580,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -596,7 +600,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormPesso1ViewModel.js'
 
@@ -676,7 +680,8 @@
 					primaryKey: 'ValCodpesso',
 					designation: computed(() => this.Resources.PERSON10446),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -986,7 +991,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR02',
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 					}, this),
@@ -1082,7 +1087,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [PESSO->INTERNA]==1
@@ -1103,11 +1108,11 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO1__PSEUDNOVOGR02',
 						isFormulaBlocked: true,
-						format: 'date',
+						dateTimeType: 'date',
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [PESSO->INTERNA]==1
@@ -1373,7 +1378,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPCON', 'changed-CONTA', 'changed-PESSO', 'changed-GENRE'],
+						globalEvents: ['changed-CONTA', 'changed-PESSO', 'changed-TPCON', 'changed-GENRE'],
 						uuid: 'Pesso1_ValContacto',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1666,7 +1671,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-PESSO', 'changed-EVCAT', 'changed-CATE1'],
+						globalEvents: ['changed-CATE1', 'changed-PESSO', 'changed-EVCAT'],
 						uuid: 'Pesso1_ValEvolucao',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1884,17 +1889,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PESSO1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1904,7 +1915,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1914,7 +1925,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1934,7 +1945,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -1967,7 +1978,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1987,7 +1998,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -2018,11 +2029,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -2032,7 +2041,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -2040,8 +2049,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2049,7 +2056,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -2057,8 +2064,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2066,7 +2071,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -2074,11 +2079,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -2088,7 +2091,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -2098,7 +2101,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

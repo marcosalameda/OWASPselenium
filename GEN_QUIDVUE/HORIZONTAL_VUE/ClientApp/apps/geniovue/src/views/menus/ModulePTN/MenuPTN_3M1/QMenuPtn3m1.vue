@@ -14,6 +14,7 @@
 
 				<q-table-extra-extension
 					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
 					v-on="controls.menu.handlers" />
 			</q-row-container>
 		</form>
@@ -48,7 +49,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -68,7 +69,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_3M1ViewModel.js'
 
@@ -237,7 +238,7 @@
 								maxDigits: 1,
 								decimalPlaces: 0,
 								sortable: false,
-								array: computed(() => qProjArrays.QArrayTypen.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayTypen(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTypen.type,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -251,7 +252,7 @@
 								dataLength: 1,
 								scrollData: 1,
 								sortable: false,
-								array: computed(() => qProjArrays.QArrayTypet.setResources(vm.$getResource).elements),
+								array: computed(() => new qProjArrays.QArrayTypet(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTypet.type,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -473,6 +474,14 @@
 		{
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FORM_CODEJS PTN_MENU_3M1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT PTN_MENU_3M1]/
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},

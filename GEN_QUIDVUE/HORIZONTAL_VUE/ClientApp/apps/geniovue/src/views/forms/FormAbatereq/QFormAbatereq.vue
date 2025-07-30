@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -236,7 +236,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -256,7 +256,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormAbatereqViewModel.js'
 
@@ -333,7 +333,8 @@
 					primaryKey: 'ValCoddeco',
 					designation: computed(() => this.Resources.OBRIGATORIO46267),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -609,74 +610,6 @@
 						controlLimits: [
 						],
 					}, this),
-					ABATEREQDECOMDTDECO__: new fieldControlClass.DateControl({
-						modelField: 'ValDtdeco',
-						valueChangeEvent: 'fieldChange:decom.dtdeco',
-						id: 'ABATEREQDECOMDTDECO__',
-						name: 'DTDECO',
-						size: 'medium',
-						label: computed(() => this.Resources.DECOMISSION14486),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'dateTime',
-						mustBeFilled: true,
-						controlLimits: [
-						],
-					}, this),
-					ABATEREQDECOMCREATDAT: new fieldControlClass.DateControl({
-						modelField: 'ValCreatdat',
-						valueChangeEvent: 'fieldChange:decom.creatdat',
-						id: 'ABATEREQDECOMCREATDAT',
-						name: 'CREATDAT',
-						size: 'medium',
-						label: computed(() => this.Resources.CREATION_DATE51875),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
-						controlLimits: [
-						],
-					}, this),
-					ABATEREQDECOMCREATOPE: new fieldControlClass.StringControl({
-						modelField: 'ValCreatope',
-						valueChangeEvent: 'fieldChange:decom.creatope',
-						id: 'ABATEREQDECOMCREATOPE',
-						name: 'CREATOPE',
-						size: 'large',
-						label: computed(() => this.Resources.CREATED_BY12292),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 20,
-						labelId: 'label_ABATEREQDECOMCREATOPE',
-						controlLimits: [
-						],
-					}, this),
-					ABATEREQDECOMCHNGDATE: new fieldControlClass.DateControl({
-						modelField: 'ValChngdate',
-						valueChangeEvent: 'fieldChange:decom.chngdate',
-						id: 'ABATEREQDECOMCHNGDATE',
-						name: 'CHNGDATE',
-						size: 'small',
-						label: computed(() => this.Resources.CHANGED_ON19727),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						format: 'date',
-						controlLimits: [
-						],
-					}, this),
-					ABATEREQDECOMOPERCHNG: new fieldControlClass.StringControl({
-						modelField: 'ValOperchng',
-						valueChangeEvent: 'fieldChange:decom.operchng',
-						id: 'ABATEREQDECOMOPERCHNG',
-						name: 'OPERCHNG',
-						size: 'large',
-						label: computed(() => this.Resources.CHANGED_BY08967),
-						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.topleft),
-						maxLength: 20,
-						labelId: 'label_ABATEREQDECOMOPERCHNG',
-						controlLimits: [
-						],
-					}, this),
 					ABATETABDECOMDTDECO__: new fieldControlClass.DateControl({
 						modelField: 'ValDtdeco',
 						valueChangeEvent: 'fieldChange:decom.dtdeco',
@@ -687,7 +620,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'ABATEREQPSEUDABATETAB',
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -722,20 +655,12 @@
 				 */
 				dataApi: {
 					Decom: {
-						get ValChngdate() { return vm.model.ValChngdate.value },
-						set ValChngdate(value) { vm.model.ValChngdate.updateValue(value) },
-						get ValCreatdat() { return vm.model.ValCreatdat.value },
-						set ValCreatdat(value) { vm.model.ValCreatdat.updateValue(value) },
-						get ValCreatope() { return vm.model.ValCreatope.value },
-						set ValCreatope(value) { vm.model.ValCreatope.updateValue(value) },
 						get ValDecomnr() { return vm.model.ValDecomnr.value },
 						set ValDecomnr(value) { vm.model.ValDecomnr.updateValue(value) },
 						get ValDtdeco() { return vm.model.ValDtdeco.value },
 						set ValDtdeco(value) { vm.model.ValDtdeco.updateValue(value) },
 						get ValNote() { return vm.model.ValNote.value },
 						set ValNote(value) { vm.model.ValNote.updateValue(value) },
-						get ValOperchng() { return vm.model.ValOperchng.value },
-						set ValOperchng(value) { vm.model.ValOperchng.updateValue(value) },
 					},
 					keys: {
 						/** The primary key of the DECOM table */
@@ -784,17 +709,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT ABATEREQ]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -804,7 +735,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -814,7 +745,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -834,7 +765,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -867,7 +798,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -887,7 +818,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -918,11 +849,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -932,7 +861,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -940,8 +869,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -949,7 +876,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -957,8 +884,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -966,7 +891,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -974,11 +899,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -988,7 +911,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -998,7 +921,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')

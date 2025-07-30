@@ -119,11 +119,11 @@ namespace GenioMVC.Controllers
 		{
 			try
 			{
-				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new List<KeyValuePair<string, object>>() {
+				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new System.Diagnostics.TagList([
 					new("Name", "CONTROLLER_ROUTINE_BODY"),
 					new("Parameter", "DELETEONEROW"),
 					new("ModuleOrSystem", "GQT")
-				}, "ms", "Time to execute the manual code.")) {
+				]), "ms", "Time to execute the manual code.")) {
 //Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DELETEONEROW | File:  | Order: 0
 //BEGIN_MANUALCODE_CODMANUA:d31ac115-e389-497a-814c-ae4776fc238a
 			
@@ -161,11 +161,11 @@ namespace GenioMVC.Controllers
 		{
 			try
 			{
-				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new List<KeyValuePair<string, object>>() {
+				using (CSGenio.core.di.GenioDI.MetricsOtlp.RecordTime("manua_exec_time", new System.Diagnostics.TagList([
 					new("Name", "CONTROLLER_ROUTINE_BODY"),
 					new("Parameter", "DELETEROWS"),
 					new("ModuleOrSystem", "GQT")
-				}, "ms", "Time to execute the manual code.")) {
+				]), "ms", "Time to execute the manual code.")) {
 //Platform: MVC | Type: CONTROLLER_ROUTINE_BODY | Module: GQT | Parameter: DELETEROWS | File:  | Order: 0
 //BEGIN_MANUALCODE_CODMANUA:db1bb593-c309-49f0-9eee-3ee35c5c4383
 			
@@ -496,16 +496,6 @@ namespace GenioMVC.Controllers
 		public ActionResult GetFile([FromBody] RequestDocumGetModel requestModel)
 		{
 			return base.GetFile(requestModel.Ticket, requestModel.ViewType);
-		}
-
-		/// <summary>
-		/// Stores a new document in the Docums table
-		/// </summary>
-		/// <param name="requestModel">The request model with the document and ticket</param>
-		/// <returns>A JSON response with the result of the operation</returns>
-		public ActionResult SetFile([FromForm] RequestDocumsCreateModel requestModel)
-		{
-			return base.SetFile(requestModel.Ticket, requestModel.Mode, requestModel.Version);
 		}
 
 		/// <summary>

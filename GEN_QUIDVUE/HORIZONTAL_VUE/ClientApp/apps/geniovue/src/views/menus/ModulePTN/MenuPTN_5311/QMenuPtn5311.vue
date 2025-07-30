@@ -32,7 +32,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import _foreach from 'lodash-es/forEach'
 	import { computed } from 'vue'
 
@@ -51,7 +51,7 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import qEnums from '@quidgest/clientapp/constants/enums'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	const requiredTextResources = ['QMenuPTN_5311', 'hardcoded', 'messages']
 

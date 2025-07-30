@@ -478,12 +478,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Fami1/Fami1_SaveEdit
 		[HttpPost]
 		public ActionResult Fami1_SaveEdit([FromBody] Fami1_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_SaveEdit",
 				ViewName = "Fami1",
@@ -514,7 +513,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsFami1([FromBody] Fami1DocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

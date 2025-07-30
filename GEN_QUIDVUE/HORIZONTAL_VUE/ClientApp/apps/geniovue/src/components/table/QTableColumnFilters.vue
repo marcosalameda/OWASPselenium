@@ -236,7 +236,7 @@
 			 */
 			filterOperators: {
 				type: Object,
-				default: () => searchFilterDataModule.operators.elements
+				default: () => new searchFilterDataModule.SearchFilterConditionOperators()
 			},
 
 			/**
@@ -629,20 +629,20 @@
 			 */
 			validateFilter(filter, column)
 			{
-				let validationErrors = []
-				let conditionStates = listFunctions.filterValidate(filter, [column])
+				const validationErrors = []
+				const conditionStates = listFunctions.filterValidate(filter, [column])
 				let isValid = true
 
 				if (conditionStates.length > 0)
 				{
-					let conditionState = conditionStates[0]
+					const conditionState = conditionStates[0]
 					if (conditionState.State === 'INVALID')
 						isValid = false
 
 					// Iterate values
-					for (let valueIdx in conditionState.ValueStates)
+					for (const valueIdx in conditionState.ValueStates)
 					{
-						let valueState = conditionState.ValueStates[valueIdx]
+						const valueState = conditionState.ValueStates[valueIdx]
 						let message = ''
 
 						if (valueState === 'EMPTY')

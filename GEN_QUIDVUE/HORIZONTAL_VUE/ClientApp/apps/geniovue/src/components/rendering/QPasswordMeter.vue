@@ -67,7 +67,7 @@
 					return score
 
 				// Award every unique letter until 5 repetitions.
-				let letters = new Object()
+				const letters = new Object()
 				for (let i = 0; i < pass.length; i++)
 				{
 					letters[pass[i]] = (letters[pass[i]] || 0) + 1
@@ -83,7 +83,7 @@
 				}
 				let variationCount = 0
 
-				for (let check in variations)
+				for (const check in variations)
 					variationCount += (variations[check] === true) ? 1 : 0
 				score += (variationCount - 1) * 10
 
@@ -96,7 +96,7 @@
 			 */
 			updateStrengthText(textValue)
 			{
-				let score = _isEmpty(textValue) ? 0 : this.scorePassword(textValue)
+				const score = _isEmpty(textValue) ? 0 : this.scorePassword(textValue)
 
 				if (_isEmpty(textValue))
 				{

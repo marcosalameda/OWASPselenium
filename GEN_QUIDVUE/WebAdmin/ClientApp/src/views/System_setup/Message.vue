@@ -94,7 +94,7 @@
 
 		computed: {
 			EnabledPublications() {
-				let vm = this;
+				const vm = this
 				return this.Metadata.Publishers.map(p => {
 					return {
 						id: p.Id,
@@ -104,7 +104,7 @@
 				});
 			},
 			EnabledSubscriptions() {
-				let vm = this;
+				const vm = this
 				return this.Metadata.Subscribers.map(p => {
 					return {
 						id: p.Id,

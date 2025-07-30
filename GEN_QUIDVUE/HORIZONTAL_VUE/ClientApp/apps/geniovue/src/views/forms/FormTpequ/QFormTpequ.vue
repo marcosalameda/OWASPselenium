@@ -52,7 +52,7 @@
 				v-if="$app.layout.FormAnchorsPosition === 'form-header' && visibleGroups.length > 0"
 				:anchors="anchorGroups"
 				:controls="visibleControls"
-				@focus-control="(...args) => focusControl(...args)" />
+				@focus-control="focusControl" />
 		</div>
 	</teleport>
 
@@ -211,7 +211,7 @@
 					</q-control-wrapper>
 				</q-row-container>
 				<q-row-container
-					v-show="controls.TPEQU___PSEUDNOVOGR05.isVisible || controls.TPEQU___PSEUDUNICO___.isVisible"
+					v-show="controls.TPEQU___PSEUDNOVOGR05.isVisible"
 					is-large>
 					<q-control-wrapper
 						v-show="controls.TPEQU___PSEUDNOVOGR05.isVisible"
@@ -219,12 +219,13 @@
 						<q-accordion
 							v-if="controls.TPEQU___PSEUDNOVOGR05.isVisible"
 							id="TPEQU___PSEUDNOVOGR05"
+							v-model="controls.TPEQU___PSEUDNOVOGR05.openChild"
 							v-bind="controls.TPEQU___PSEUDNOVOGR05">
 							<!-- Start TPEQU___PSEUDNOVOGR05 -->
-							<q-group-collapsible
-								id="TPEQU___PSEUDNOVOGR04"
-								v-bind="controls.TPEQU___PSEUDNOVOGR04"
-								v-on="controls.TPEQU___PSEUDNOVOGR04.handlers">
+							<q-accordion-item
+								id="TPEQU___PSEUDNOVOGR04-container"
+								value="TPEQU___PSEUDNOVOGR04"
+								:title="controls.TPEQU___PSEUDNOVOGR04.label">
 								<!-- Start TPEQU___PSEUDNOVOGR04 -->
 								<q-row-container v-show="controls.TPEQU___TPEQUKIT_____.isVisible">
 									<q-control-wrapper
@@ -256,15 +257,16 @@
 											v-on="controls.TPEQU___PSEUDCOMPONEN.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.TPEQU___PSEUDCOMPONEN"
+											:filter-operators="controls.TPEQU___PSEUDCOMPONEN.filterOperators"
 											v-on="controls.TPEQU___PSEUDCOMPONEN.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR04 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="TPEQU___PSEUDNOVOGR03"
-								v-bind="controls.TPEQU___PSEUDNOVOGR03"
-								v-on="controls.TPEQU___PSEUDNOVOGR03.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="TPEQU___PSEUDNOVOGR03-container"
+								value="TPEQU___PSEUDNOVOGR03"
+								:title="controls.TPEQU___PSEUDNOVOGR03.label">
 								<!-- Start TPEQU___PSEUDNOVOGR03 -->
 								<q-row-container v-show="controls.TPEQU___TPEQUPRECOMAX.isVisible || controls.TPEQU___TPEQUPRECOULT.isVisible || controls.TPEQU___TPEQUSINCE___.isVisible || controls.TPEQU___PSEUDEVOLUCAO.isVisible">
 									<q-control-wrapper
@@ -326,15 +328,16 @@
 											v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.TPEQU___PSEUDEVOLUCAO"
+											:filter-operators="controls.TPEQU___PSEUDEVOLUCAO.filterOperators"
 											v-on="controls.TPEQU___PSEUDEVOLUCAO.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR03 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="TPEQU___PSEUDNOVOGR02"
-								v-bind="controls.TPEQU___PSEUDNOVOGR02"
-								v-on="controls.TPEQU___PSEUDNOVOGR02.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="TPEQU___PSEUDNOVOGR02-container"
+								value="TPEQU___PSEUDNOVOGR02"
+								:title="controls.TPEQU___PSEUDNOVOGR02.label">
 								<!-- Start TPEQU___PSEUDNOVOGR02 -->
 								<q-row-container v-show="controls.TPEQU___TPEQUBACKCOLO.isVisible || controls.TPEQU___TPEQUCORLETRA.isVisible">
 									<q-control-wrapper
@@ -371,11 +374,11 @@
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR02 -->
-							</q-group-collapsible>
-							<q-group-collapsible
-								id="TPEQU___PSEUDNOVOGR06"
-								v-bind="controls.TPEQU___PSEUDNOVOGR06"
-								v-on="controls.TPEQU___PSEUDNOVOGR06.handlers">
+							</q-accordion-item>
+							<q-accordion-item
+								id="TPEQU___PSEUDNOVOGR06-container"
+								value="TPEQU___PSEUDNOVOGR06"
+								:title="controls.TPEQU___PSEUDNOVOGR06.label">
 								<!-- Start TPEQU___PSEUDNOVOGR06 -->
 								<q-row-container v-show="controls.TPEQU___PSEUDINSTALAC.isVisible || controls.TPEQU___PSEUDINSTALA1.isVisible">
 									<q-control-wrapper
@@ -387,6 +390,7 @@
 											v-on="controls.TPEQU___PSEUDINSTALAC.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.TPEQU___PSEUDINSTALAC"
+											:filter-operators="controls.TPEQU___PSEUDINSTALAC.filterOperators"
 											v-on="controls.TPEQU___PSEUDINSTALAC.handlers" />
 									</q-control-wrapper>
 									<q-control-wrapper
@@ -398,14 +402,17 @@
 											v-on="controls.TPEQU___PSEUDINSTALA1.handlers" />
 										<q-table-extra-extension
 											:list-ctrl="controls.TPEQU___PSEUDINSTALA1"
+											:filter-operators="controls.TPEQU___PSEUDINSTALA1.filterOperators"
 											v-on="controls.TPEQU___PSEUDINSTALA1.handlers" />
 									</q-control-wrapper>
 								</q-row-container>
 								<!-- End TPEQU___PSEUDNOVOGR06 -->
-							</q-group-collapsible>
+							</q-accordion-item>
 							<!-- End TPEQU___PSEUDNOVOGR05 -->
 						</q-accordion>
 					</q-control-wrapper>
+				</q-row-container>
+				<q-row-container v-show="controls.TPEQU___PSEUDUNICO___.isVisible">
 					<q-control-wrapper
 						v-show="controls.TPEQU___PSEUDUNICO___.isVisible"
 						class="control-join-group">
@@ -462,7 +469,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -482,7 +489,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormTpequViewModel.js'
 
@@ -560,7 +567,8 @@
 					primaryKey: 'ValCodtpequ',
 					designation: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -894,6 +902,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUKIT_____', 'TPEQU___PSEUDCOMPONEN'],
@@ -1001,7 +1010,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR03',
 						isFormulaBlocked: true,
-						format: 'dateTime',
+						dateTimeType: 'dateTime',
 						controlLimits: [
 						],
 					}, this),
@@ -1220,7 +1229,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPEQ1', 'changed-CMPKI', 'changed-TPEQU'],
+						globalEvents: ['changed-TPEQ1', 'changed-TPEQU', 'changed-CMPKI'],
 						uuid: 'Tpequ_ValComponen',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1240,6 +1249,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUPRECOMAX', 'TPEQU___TPEQUPRECOULT', 'TPEQU___TPEQUSINCE___', 'TPEQU___PSEUDEVOLUCAO'],
@@ -1444,6 +1454,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___TPEQUBACKCOLO', 'TPEQU___TPEQUCORLETRA'],
@@ -1459,13 +1470,13 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2935`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2932`),
 							type: 'img',
 							role: 'presentation',
 						},
 						// eslint-disable-next-line
 						action: (event) => {
-							let btnAction = () => {
+							const btnAction = () => {
 								if (!vm.isEditable)
 									return Promise.resolve(true)
 
@@ -1489,7 +1500,7 @@
 									undefined,
 									vm.navigationId)
 							}
-							let options = {
+							const options = {
 								form: 'TPEQU',
 								callback: btnAction
 							}
@@ -1506,6 +1517,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'TPEQU___PSEUDNOVOGR05',
+						isInAccordion: true,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['TPEQU___PSEUDINSTALAC', 'TPEQU___PSEUDINSTALA1'],
@@ -1773,7 +1785,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPEQU', 'changed-EQUIP', 'changed-INSTA'],
+						globalEvents: ['changed-TPEQU', 'changed-INSTA', 'changed-EQUIP'],
 						uuid: 'Tpequ_ValInstalac',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1939,7 +1951,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPEQU', 'changed-EQUIP', 'changed-INSTA'],
+						globalEvents: ['changed-TPEQU', 'changed-INSTA', 'changed-EQUIP'],
 						uuid: 'Tpequ_ValInstala1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -2002,6 +2014,24 @@
 				]),
 
 				triggers: readonly([
+					{
+						id: 'UPDATE_FORMULAS',
+						event: 'P',
+						periodicity: 50,
+						condition: () => {
+							return netAPI.postData(
+								'Tpequ',
+								'TPEQU_UPDATE_FORMULAS_TriggerCondition',
+								this.model.serverObjModel,
+								undefined,
+								undefined,
+								undefined,
+								this.model.navigationId)
+						},
+						execute: () => {
+							vm.TPEQU_FormTriggers_UPDATE_FORMULAS_1(vm.primaryKeyValue)
+						}
+					},
 					{
 						id: 'FILLTYPEEQUIP',
 						event: 'PG',
@@ -2098,17 +2128,23 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 		},
 
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT TPEQU]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
 		methods: {
 			/**
 			 * Called before form init.
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -2118,7 +2154,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -2128,7 +2164,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -2148,7 +2184,7 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets(true)
@@ -2181,7 +2217,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -2201,7 +2237,7 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				const canSetDocums = await this.model.updateFilesTickets()
@@ -2232,11 +2268,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -2246,7 +2280,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -2254,8 +2288,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2263,7 +2295,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -2271,8 +2303,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -2280,7 +2310,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -2288,11 +2318,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -2302,7 +2330,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -2312,7 +2340,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -2372,6 +2400,62 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
 				this.afterControlUpdate(controlField, fieldValue)
+			},
+
+			/**
+			 * Client-side component of action #1 (RECALC) of trigger UPDATE_FORMULAS.
+			 * @param {string} id The primary key of the record
+			 */
+			// eslint-disable-next-line
+			async TPEQU_FormTriggers_UPDATE_FORMULAS_1(id)
+			{
+				try
+				{
+					const data = await netAPI.postData(
+						'TPEQU',
+						'TPEQU_FormTriggers_UPDATE_FORMULAS_1',
+						this.model.serverObjModel,
+						undefined,
+						undefined,
+						undefined,
+						this.navigationId)
+
+					if (typeof data.success !== 'string' || typeof data.message !== 'string')
+						throw new Error('Invalid data structure.')
+
+					const result = qEnums.messageTypes[data.success]
+
+					if (!this.isEmpty(result))
+					{
+						if (result !== 'error')
+						{
+							const buttons = {
+								confirm: {
+									label: this.Resources.OK15819
+								}
+							}
+
+							genericFunctions.displayMessage(data.message, result, null, buttons)
+						}
+						else
+							genericFunctions.displayMessage(data.message, 'error')
+					}
+					else
+					{
+						this.$eventTracker.addError({
+							origin: 'Trigger UPDATE_FORMULAS',
+							message: 'Routine "TPEQU_FormTriggers" finished execution with an unknown result type: ' + data.success
+						})
+					}
+				}
+				catch (e)
+				{
+					genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON65121, 'error')
+					this.$eventTracker.addError({
+						origin: 'Trigger UPDATE_FORMULAS (catch)',
+						message: e.toString()
+					})
+				}
 			},
 
 			/**

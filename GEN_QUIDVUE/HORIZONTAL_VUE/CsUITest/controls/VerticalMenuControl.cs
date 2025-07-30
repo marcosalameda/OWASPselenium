@@ -72,12 +72,47 @@ public class VerticalMenuControl : PageObject, IMenuControl
         item.Click();
     }
 
-    public void ActivateFavorite(string itemId)
+    public void ActivateBookmark(string moduleId, string itemId)
+    {
+        if (!HasBookmark(moduleId, itemId))
+            throw new InvalidOperationException($"Menu {moduleId}_{itemId} is not bookmarked.");
+
+        bookmarks.Click();
+        var bookmark = bookmarks.FindElement(ByData.Key($"bookmark_{moduleId}_{itemId}"));
+        wait.Until(c => bookmark.Displayed);
+        bookmark.FindElement(By.TagName("a")).Click();
+    }
+
+    public void AddBookmark(string moduleId, string itemId)
     {
         bookmarks.Click();
-        var item = bookmarks.FindElement(ByData.Key(itemId));
-        wait.Until(c => item.Displayed);
-        item.Click();
+        var addButton = bookmarks.FindElement(By.CssSelector(".bookmarks__btn--add"));
+        wait.Until(c => addButton.Displayed);
+        addButton.Click();
+
+        // The current implementation of favorites requires navigation to the chosen menu to create the bookmark.
+        ActivateModule(moduleId);
+        ActivateMenu(moduleId, itemId);
+
+        wait.Until(c => HasBookmark(moduleId, itemId));
+    }
+
+    public void RemoveBookmark(string moduleId, string itemId)
+    {
+        bookmarks.Click();
+        var bookmark = bookmarks.FindElement(ByData.Key($"bookmark_{moduleId}_{itemId}"));
+        wait.Until(c => bookmark.Displayed);
+
+        var removeButton = bookmark.FindElement(By.CssSelector(".bookmarks__btn--remove"));
+        removeButton.Click();
+        wait.Until(c => !HasBookmark(moduleId, itemId));
+
+        bookmarks.Click();
+    }
+
+    public bool HasBookmark(string moduleId, string itemId)
+    {
+        return bookmarks.FindElements(ByData.Key($"bookmark_{moduleId}_{itemId}")).Count > 0;
     }
 
     public int GetMenuCount(string moduleId, string itemId)

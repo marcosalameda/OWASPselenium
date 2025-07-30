@@ -229,7 +229,7 @@
 				if (_isEmpty(modelValue))
 					return
 
-				for (let fld in this.model)
+				for (const fld in this.model)
 					this.model[fld].updateValue(modelValue[fld])
 			},
 

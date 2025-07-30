@@ -193,9 +193,9 @@
 		{
 			this.updateFormData(this.formData)
 
-			this.$eventHub.on('new-extended-record', (val) => this.$emit('update:model-value', val))
+			this.$eventHub.on('new-extended-record', this.emitModelUpdate)
 
-			let eventData = {
+			const eventData = {
 				supportFormId: this.id,
 				rowKey: this.modelValue ?? undefined,
 				formMode: this.formProps.mode
@@ -203,7 +203,17 @@
 			this.handleModelUpdateEvent(eventData)
 		},
 
+		beforeUnmount()
+		{
+			this.$eventHub.off('new-extended-record', this.emitModelUpdate)
+		},
+
 		methods: {
+			emitModelUpdate(val)
+			{
+				this.$emit('update:model-value', val)
+			},
+
 			/**
 			 * Used to updated the form props each time the form data is updated.
 			 * @param {object} newFormData The new data of the form

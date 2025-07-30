@@ -617,7 +617,7 @@
 			},
 
 			rowClasses() {
-				let classes = ['c-table__row']
+				const classes = ['c-table__row']
 
 				//Row selected
 				if (this.rowSelected) classes.push('vbt-row-selected')
@@ -642,7 +642,7 @@
 						if (typeof value === 'boolean' && value) {
 							classes += key
 						} else if (typeof value === 'function') {
-							let truth = value(this.row)
+							const truth = value(this.row)
 							if (typeof truth === 'boolean' && truth) {
 								classes += ' '
 								classes += key
@@ -753,10 +753,10 @@
 			 * @returns String
 			 */
 			cellClasses(column) {
-				let classes = []
+				const classes = []
 
 				//BEGIN: Text alignment class
-				let alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
+				const alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
 
 				//Undefined data type, use rowTextAlignment
 				if (has(column, 'rowTextAlignment') && includes(alignments, column.rowTextAlignment)) {
@@ -777,7 +777,7 @@
 						if (typeof value === 'boolean' && value) {
 							classes.push(key)
 						} else if (typeof value === 'function') {
-							let truth = value(this.row, column, this.getValueFromRow(this.row, column.name))
+							const truth = value(this.row, column, this.getValueFromRow(this.row, column.name))
 							if (typeof truth === 'boolean' && truth) {
 								classes.push(key)
 							}
@@ -988,7 +988,7 @@
 			 * @returns
 			 */
 			reorderRow(shift) {
-				var shiftValue = parseInt(shift)
+				const shiftValue = parseInt(shift)
 				//Update column value
 				this.$emit('row-reorder', { row: this.row, sortOrderColumn: this.sortOrderColumn, shiftValue })
 			},
@@ -999,7 +999,7 @@
 			 * @returns
 			 */
 			reorderRowUpDown(e) {
-				var shiftValue = 0
+				let shiftValue = 0
 				//Key pressed: tab
 				//Must disable ordering keys right after keyup if it's the tab key
 				//in order to avoid reordering rows when using shift+tab to tab backwards through elements
@@ -1025,7 +1025,7 @@
 			 * @returns
 			 */
 			addRowAfter() {
-				var addNewAction = cloneDeep(this.addAction)
+				const addNewAction = cloneDeep(this.addAction)
 				if (!addNewAction) return
 
 				const sortColumnName = `${this.sortOrderColumn.area.toLowerCase()}.${this.sortOrderColumn.field.toLowerCase()}`

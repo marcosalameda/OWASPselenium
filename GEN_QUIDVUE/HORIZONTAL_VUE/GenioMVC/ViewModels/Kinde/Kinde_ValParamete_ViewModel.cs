@@ -123,23 +123,19 @@ namespace GenioMVC.ViewModels.Kinde
 		}
 
 		/// <inheritdoc/>
-		public override List<Exports.QColumn> GetColumnsToExport(bool ajaxRequest = false)
+		public override List<Exports.QColumn> GetColumnsToExport()
 		{
-			var columns = new List<Exports.QColumn>()
-			{
+			return
+			[
 				new Exports.QColumn(CSGenioAparam.FldParameter, FieldType.TEXT, Resources.Resources.PARAMETER41976, 30, 0, true),
 				new Exports.QColumn(CSGenioAparam.FldDatatype, FieldType.ARRAY_TEXT, Resources.Resources.DATA_TYPE47159, 1, 0, true, "DataType"),
 				new Exports.QColumn(CSGenioAparam.FldDecimalplaces, FieldType.ARRAY_NUMERIC, Resources.Resources.DECIMAL_PLACES62575, 2, 0, true, "DecPlace"),
-			};
-
-			columns.RemoveAll(item => item == null);
-			return columns;
+			];
 		}
 
 		public void LoadToExport(out ListingMVC<CSGenioAparam> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
-
+			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
@@ -295,11 +291,6 @@ namespace GenioMVC.ViewModels.Kinde
 		/// <param name="conditions">The conditions.</param>
 		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAparam> Qlisting, ref CriteriaSet conditions)
 		{
-			using (GenioDI.MetricsOtlp.RecordTime("form_load_time", new List<KeyValuePair<string, object>>()
-			{
-				new("Form", "KINDE")
-			}, "ms", "Time to load the form."))
-			{
 				User u = m_userContext.User;
 				Menu = new TablePartial<Kinde_ValParamete_RowViewModel>();
 
@@ -435,7 +426,6 @@ namespace GenioMVC.ViewModels.Kinde
 
 				// Load the user table configuration names and default name
 				LoadUserTableConfigNameProperties();
-			}
 		}
 
 		private List<Kinde_ValParamete_RowViewModel> MapKinde_ValParamete(ListingMVC<CSGenioAparam> Qlisting)

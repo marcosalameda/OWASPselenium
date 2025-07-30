@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -174,13 +174,13 @@ namespace CSGenio.business
 			info.Pathways.Add("perso","dispa");
 			info.Pathways.Add("disst","dispa");
 			info.Pathways.Add("entit","dispa");
-			info.Pathways.Add("faci1","dispa");
 			info.Pathways.Add("faci2","dispa");
+			info.Pathways.Add("faci1","dispa");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");
-			info.Pathways.Add("facty","produ");
 			info.Pathways.Add("cntry","produ");
+			info.Pathways.Add("facty","produ");
 		}
 
 		/// <summary>
@@ -192,8 +192,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("dilin", "produ", "outputs", "delivere", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("dilin", "produ", "stock", "delivere", '-', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("dilin", "produ", "outputs", "delivere", '+', true));
 
 
 
@@ -492,7 +492,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX DILIN]/

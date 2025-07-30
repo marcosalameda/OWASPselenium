@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'PROPPAIS',
 			area: 'CNTRY',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_PROPPAIS',
-				updateFilesTickets: 'UpdateFilesTicketsPROPPAIS'
+				recalculateFormulas: 'RecalculateFormulas_Proppais',
+				updateFilesTickets: 'UpdateFilesTicketsProppais',
+				setFile: 'SetFileProppais'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODCNTRY',
 			description: '',
 		}).cloneFrom(values?.ValCodcntry))
-		watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('cntry.codcntry', this.ValCodcntry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodcntry.value, (newValue, oldValue) => this.onUpdate('cntry.codcntry', this.ValCodcntry, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValCountry = reactive(new modelFieldType.String({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 90,
 			description: computed(() => this.Resources.COUNTRY64133),
 		}).cloneFrom(values?.ValCountry))
-		watch(() => this.ValCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.ValCountry, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCountry.value, (newValue, oldValue) => this.onUpdate('cntry.country', this.ValCountry, newValue, oldValue)))
 
 		this.ValActive = reactive(new modelFieldType.Boolean({
 			id: 'ValActive',
@@ -70,7 +71,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ACTIVE',
 			description: computed(() => this.Resources.ACTIVE03270),
 		}).cloneFrom(values?.ValActive))
-		watch(() => this.ValActive.value, (newValue, oldValue) => this.onUpdate('cntry.active', this.ValActive, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValActive.value, (newValue, oldValue) => this.onUpdate('cntry.active', this.ValActive, newValue, oldValue)))
 
 		this.ValCodigonr = reactive(new modelFieldType.String({
 			id: 'ValCodigonr',
@@ -80,7 +81,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 3,
 			description: computed(() => this.Resources.NUMERIC_ISO_316620341),
 		}).cloneFrom(values?.ValCodigonr))
-		watch(() => this.ValCodigonr.value, (newValue, oldValue) => this.onUpdate('cntry.codigonr', this.ValCodigonr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodigonr.value, (newValue, oldValue) => this.onUpdate('cntry.codigonr', this.ValCodigonr, newValue, oldValue)))
 
 		this.ValAlfa2 = reactive(new modelFieldType.String({
 			id: 'ValAlfa2',
@@ -90,7 +91,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 2,
 			description: computed(() => this.Resources.ALPHABETIC_232435),
 		}).cloneFrom(values?.ValAlfa2))
-		watch(() => this.ValAlfa2.value, (newValue, oldValue) => this.onUpdate('cntry.alfa2', this.ValAlfa2, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAlfa2.value, (newValue, oldValue) => this.onUpdate('cntry.alfa2', this.ValAlfa2, newValue, oldValue)))
 
 		this.ValAlfa3 = reactive(new modelFieldType.String({
 			id: 'ValAlfa3',
@@ -100,7 +101,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 3,
 			description: computed(() => this.Resources.ALPHABETIC_316640),
 		}).cloneFrom(values?.ValAlfa3))
-		watch(() => this.ValAlfa3.value, (newValue, oldValue) => this.onUpdate('cntry.alfa3', this.ValAlfa3, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValAlfa3.value, (newValue, oldValue) => this.onUpdate('cntry.alfa3', this.ValAlfa3, newValue, oldValue)))
 	}
 
 	/**

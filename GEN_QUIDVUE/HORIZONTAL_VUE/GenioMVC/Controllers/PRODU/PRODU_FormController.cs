@@ -740,12 +740,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Produ/Produ_SaveEdit
 		[HttpPost]
 		public ActionResult Produ_SaveEdit([FromBody] Produ_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Produ_SaveEdit",
 				ViewName = "Produ",
@@ -776,7 +775,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsProdu([FromBody] ProduDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

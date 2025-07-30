@@ -8,9 +8,9 @@ import _merge from 'lodash-es/merge'
 import _mergeWith from 'lodash-es/mergeWith'
 import { computed, reactive, watch } from 'vue'
 
-import { useSystemDataStore } from '@quidgest/clientapp/stores'
 import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
+import { systemInfo } from '@/systemInfo'
 import getCustomControl from './custom-controls/customControlImport.js'
 import listFunctions from './listFunctions.js'
 
@@ -332,12 +332,10 @@ const customControlMixin = {
 	 */
 	async setMappedImage(mappedVal, image, usesFullSizeImg = false)
 	{
-		const systemDataStore = useSystemDataStore()
-
 		if (image === null)
 		{
-			mappedVal.value = `${systemDataStore.system.resourcesPath}no_img.png`
-			mappedVal.previewData = `${systemDataStore.system.resourcesPath}unknown.png`
+			mappedVal.value = `${systemInfo.resourcesPath}no_img.png`
+			mappedVal.previewData = `${systemInfo.resourcesPath}unknown.png`
 		}
 		else
 		{
@@ -378,6 +376,8 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 
 			this.setCustomControls()
 			this.addCustomTexts()
+
+			this.stopWatcher = null
 		}
 
 		/**
@@ -401,7 +401,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 				this.onStyleDependencyChange = (dependency) => this.styleDependencyChanged(dependency)
 
 				// Watches for changes in the value of the implicitly mapped field
-				watch(() => this.modelFieldRef.value, this.onDependencyChange, { deep: true })
+				this.stopWatcher = watch(() => this.modelFieldRef.value, this.onDependencyChange, { deep: true })
 
 				const dependencyEvents = this.getDependencyEvents()
 				const styleDependencyEvents = this.getStyleVariableDependencyEvents()
@@ -512,6 +512,16 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 
 			return dependencyEvents
 		}
+
+		destroy()
+		{
+			if(typeof super.destroy === 'function')
+				super.destroy()
+
+			if(this.stopWatcher)
+				this.stopWatcher()
+			this.stopWatcher = null
+		}
 	}
 
 	/**
@@ -532,6 +542,8 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 
 			this.setCustomControls()
 			this.addCustomTexts()
+
+			this.stopWatcher = null
 		}
 
 		/**
@@ -567,7 +579,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 				}
 
 				// Watches for changes in the view mode (ex: changing from list view to alternative view)
-				watch(() => this.viewModes, (viewModes) => this.onViewModeChange(viewModes), { deep: true })
+				this.stopWatcher = watch(() => this.viewModes, (viewModes) => this.onViewModeChange(viewModes), { deep: true })
 
 				if (!_isEmpty(this.vueContext.internalEvents))
 				{
@@ -619,6 +631,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 
 				viewMode.mappedValues.length = 0
 
+				// TODO: when rows are null
 				this.rows.forEach((row) => {
 					const mappedValues = reactive({
 						rowKey: row.rowKey,
@@ -672,6 +685,20 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 
 				this.setExtraProperties(viewMode)
 			}
+		}
+
+		destroy()
+		{
+			if(typeof super.destroy === 'function')
+				super.destroy()
+
+			if(this.unwatchData)
+				this.unwatchData()
+			this.unwatchData = null
+
+			if(this.stopWatcher)
+				this.stopWatcher()
+			this.stopWatcher = null
 		}
 	}
 

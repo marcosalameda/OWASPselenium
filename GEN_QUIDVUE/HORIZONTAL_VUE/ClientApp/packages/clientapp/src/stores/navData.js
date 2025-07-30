@@ -31,7 +31,7 @@ class NavigationState
 		if (!this.history.has(historyBranchId))
 		{
 			// eslint-disable-next-line no-console
-			console.warn('Requested navigation context that does not exist.', historyBranchId)
+			console.warn(`Requested navigation context that does not exist. ID: ${historyBranchId}`)
 			return new NavigationContext(historyBranchId)
 		}
 
@@ -265,7 +265,7 @@ const actions = {
 	 */
 	getContainersState(navigationId)
 	{
-		return this.navigation.getHistory(navigationId).currentLevel.containersState
+		return this.navigation.getHistory(navigationId)?.currentLevel?.containersState
 	},
 
 	/**

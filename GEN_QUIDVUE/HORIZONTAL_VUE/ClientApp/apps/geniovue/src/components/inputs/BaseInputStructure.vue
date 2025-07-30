@@ -19,6 +19,7 @@
 				v-if="displayLabel"
 				:id="labelId"
 				v-bind="labelAttrs"
+				:for="id"
 				:data-val-required="isRequired && !(readonly || disabled)"
 				:class="[{ disabled: disabled }, ...(classObject.labelClass || [])]">
 				{{ label }}
@@ -258,27 +259,27 @@
 
 		expose: [],
 
-		data()
+		setup(props, ctx)
 		{
 			return {
 				labelAlignment,
 
-				controlId: `container-${this.id || this._.uid}`,
+				controlId: `container-${props.id ?? 'undefined'}`,
 
 				classObject: {
 					labelPosition:
-						_isEmpty(this.label) || _isEmpty(this.labelPosition)
+						_isEmpty(props.label) || _isEmpty(props.labelPosition)
 							? ''
-							: `label${this.labelPosition}`,
-					labelContainerFlex: this.dFlexInline ? 'label-container--inline' : 'label-container'
+							: `label${props.labelPosition}`,
+					labelContainerFlex: props.dFlexInline ? 'label-container--inline' : 'label-container'
 				},
 
 				wrapperAttrs: {
-					class: this.$attrs.class ?? '',
-					'data-control-type': this.$attrs['data-control-type']
+					class: ctx.attrs.class ?? '',
+					'data-control-type': ctx.attrs['data-control-type']
 				},
 
-				labelAttrs: this.$attrs.labelAttrs ?? this.$attrs['label-attrs'] ?? {},
+				labelAttrs: ctx.attrs.labelAttrs ?? ctx.attrs['label-attrs'] ?? {},
 
 				sortablePlugin: null
 			}

@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -37,8 +37,9 @@ export default class ViewModel extends FormViewModelBase
 			name: 'INSTA',
 			area: 'INSTA',
 			actions: {
-				recalculateFormulas: 'RecalculateFormulas_INSTA',
-				updateFilesTickets: 'UpdateFilesTicketsINSTA'
+				recalculateFormulas: 'RecalculateFormulas_Insta',
+				updateFilesTickets: 'UpdateFilesTicketsInsta',
+				setFile: 'SetFileInsta'
 			}
 		})
 
@@ -50,7 +51,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CODINSTA',
 			description: '',
 		}).cloneFrom(values?.ValCodinsta))
-		watch(() => this.ValCodinsta.value, (newValue, oldValue) => this.onUpdate('insta.codinsta', this.ValCodinsta, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodinsta.value, (newValue, oldValue) => this.onUpdate('insta.codinsta', this.ValCodinsta, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodtpequ = reactive(new modelFieldType.ForeignKey({
@@ -61,7 +62,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'TPEQU',
 			description: computed(() => this.Resources._TYPE_OF_EQUIPMENT35057),
 		}).cloneFrom(values?.ValCodtpequ))
-		watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('insta.codtpequ', this.ValCodtpequ, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodtpequ.value, (newValue, oldValue) => this.onUpdate('insta.codtpequ', this.ValCodtpequ, newValue, oldValue)))
 
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodequip',
@@ -71,7 +72,7 @@ export default class ViewModel extends FormViewModelBase
 			relatedArea: 'EQUIP',
 			description: computed(() => this.Resources._EQUIPMENT12605),
 		}).cloneFrom(values?.ValCodequip))
-		watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('insta.codequip', this.ValCodequip, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('insta.codequip', this.ValCodequip, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.TableTpequTipoequi = reactive(new modelFieldType.String({
@@ -83,7 +84,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 50,
 			description: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 		}).cloneFrom(values?.TableTpequTipoequi))
-		watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableTpequTipoequi.value, (newValue, oldValue) => this.onUpdate('tpequ.tipoequi', this.TableTpequTipoequi, newValue, oldValue)))
 
 		this.TableEquipRegistnr = reactive(new modelFieldType.String({
 			type: 'Lookup',
@@ -94,7 +95,7 @@ export default class ViewModel extends FormViewModelBase
 			maxLength: 6,
 			description: computed(() => this.Resources.NO__REGISTER04207),
 		}).cloneFrom(values?.TableEquipRegistnr))
-		watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.TableEquipRegistnr.value, (newValue, oldValue) => this.onUpdate('equip.registnr', this.TableEquipRegistnr, newValue, oldValue)))
 
 		this.EquipValDesignat = reactive(new modelFieldType.String({
 			id: 'EquipValDesignat',
@@ -105,7 +106,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.DESIGNATION35876),
 		}).cloneFrom(values?.EquipValDesignat))
-		watch(() => this.EquipValDesignat.value, (newValue, oldValue) => this.onUpdate('equip.designat', this.EquipValDesignat, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.EquipValDesignat.value, (newValue, oldValue) => this.onUpdate('equip.designat', this.EquipValDesignat, newValue, oldValue)))
 
 		this.EquipValPhotogra = reactive(new modelFieldType.Image({
 			id: 'EquipValPhotogra',
@@ -115,7 +116,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			description: computed(() => this.Resources.PHOTO51874),
 		}).cloneFrom(values?.EquipValPhotogra))
-		watch(() => this.EquipValPhotogra.value, (newValue, oldValue) => this.onUpdate('equip.photogra', this.EquipValPhotogra, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.EquipValPhotogra.value, (newValue, oldValue) => this.onUpdate('equip.photogra', this.EquipValPhotogra, newValue, oldValue)))
 
 		this.ValSince = reactive(new modelFieldType.DateTime({
 			id: 'ValSince',
@@ -124,7 +125,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'SINCE',
 			description: computed(() => this.Resources.SINCE47259),
 		}).cloneFrom(values?.ValSince))
-		watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('insta.since', this.ValSince, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValSince.value, (newValue, oldValue) => this.onUpdate('insta.since', this.ValSince, newValue, oldValue)))
 
 		this.ValUntil = reactive(new modelFieldType.DateTime({
 			id: 'ValUntil',
@@ -133,7 +134,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'UNTIL',
 			description: computed(() => this.Resources.UNTIL39173),
 		}).cloneFrom(values?.ValUntil))
-		watch(() => this.ValUntil.value, (newValue, oldValue) => this.onUpdate('insta.until', this.ValUntil, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValUntil.value, (newValue, oldValue) => this.onUpdate('insta.until', this.ValUntil, newValue, oldValue)))
 
 		this.ValHours = reactive(new modelFieldType.Number({
 			id: 'ValHours',
@@ -145,7 +146,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line no-unused-vars
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: iif(emptyD([INSTA->SINCE])==1 || emptyD([INSTA->UNTIL])==1,0,Diferenca_entre_Datas([INSTA->SINCE],[INSTA->UNTIL],"H"))
@@ -157,7 +158,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.QTD_HOURS28684),
 		}).cloneFrom(values?.ValHours))
-		watch(() => this.ValHours.value, (newValue, oldValue) => this.onUpdate('insta.hours', this.ValHours, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValHours.value, (newValue, oldValue) => this.onUpdate('insta.hours', this.ValHours, newValue, oldValue)))
 
 		this.ValPrecohor = reactive(new modelFieldType.Number({
 			id: 'ValPrecohor',
@@ -169,7 +170,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line no-unused-vars
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
 					const fieldId = params?.originField?.id
@@ -182,7 +183,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.HOURLY_PRICE48005),
 		}).cloneFrom(values?.ValPrecohor))
-		watch(() => this.ValPrecohor.value, (newValue, oldValue) => this.onUpdate('insta.precohor', this.ValPrecohor, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValPrecohor.value, (newValue, oldValue) => this.onUpdate('insta.precohor', this.ValPrecohor, newValue, oldValue)))
 
 		this.ValValue = reactive(new modelFieldType.Number({
 			id: 'ValValue',
@@ -194,7 +195,7 @@ export default class ViewModel extends FormViewModelBase
 			isFixed: true,
 			valueFormula: {
 				stopRecalcCondition() { return false },
-				// eslint-disable-next-line no-unused-vars
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
 				fnFormula(params)
 				{
 					// Formula: [INSTA->HOURS]*[INSTA->PRECOHOR]
@@ -206,7 +207,7 @@ export default class ViewModel extends FormViewModelBase
 			},
 			description: computed(() => this.Resources.VALUE10285),
 		}).cloneFrom(values?.ValValue))
-		watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('insta.value', this.ValValue, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValValue.value, (newValue, oldValue) => this.onUpdate('insta.value', this.ValValue, newValue, oldValue)))
 
 		this.ValCoordgeo = reactive(new modelFieldType.Coordinate({
 			id: 'ValCoordgeo',
@@ -215,7 +216,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'COORDGEO',
 			description: computed(() => this.Resources.GEOGRAPHIC_COORDINAT21394),
 		}).cloneFrom(values?.ValCoordgeo))
-		watch(() => this.ValCoordgeo.value, (newValue, oldValue) => this.onUpdate('insta.coordgeo', this.ValCoordgeo, newValue, oldValue))
+		this.stopWatchers.push(watch(() => this.ValCoordgeo.value, (newValue, oldValue) => this.onUpdate('insta.coordgeo', this.ValCoordgeo, newValue, oldValue)))
 	}
 
 	/**

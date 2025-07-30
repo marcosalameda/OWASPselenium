@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -242,10 +242,10 @@ namespace CSGenio.business
 			info.Pathways.Add("lcext","lcext");
 			info.Pathways.Add("facil","locat");
 			info.Pathways.Add("entit","locat");
-			info.Pathways.Add("facty","locat");
 			info.Pathways.Add("cntry","locat");
-			info.Pathways.Add("faci1","locat");
+			info.Pathways.Add("facty","locat");
 			info.Pathways.Add("faci2","locat");
+			info.Pathways.Add("faci1","locat");
 		}
 
 		/// <summary>
@@ -623,7 +623,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX PRODU]/

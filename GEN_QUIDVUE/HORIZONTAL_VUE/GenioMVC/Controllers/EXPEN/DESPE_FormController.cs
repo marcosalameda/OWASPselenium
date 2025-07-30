@@ -604,12 +604,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Expen/Despe_SaveEdit
 		[HttpPost]
 		public ActionResult Despe_SaveEdit([FromBody] Despe_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Despe_SaveEdit",
 				ViewName = "Despe",
@@ -640,7 +639,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsDespe([FromBody] DespeDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

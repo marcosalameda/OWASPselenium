@@ -242,7 +242,7 @@
 					this.$emit('tab-changed', tab.id)
 
 				// Get reference to the tab's button component and focus on it
-				let buttonRef = this.getTabComponentRef(tab)
+				const buttonRef = this.getTabComponentRef(tab)
 				if (typeof buttonRef?.$el.focus !== 'function')
 					return
 				buttonRef.$el.focus()
@@ -282,7 +282,7 @@
 			 */
 			selectTabIndex(idx)
 			{
-				let tab = this.selectableTabs[idx]
+				const tab = this.selectableTabs[idx]
 				this.changeActiveTab(tab)
 			}
 		}

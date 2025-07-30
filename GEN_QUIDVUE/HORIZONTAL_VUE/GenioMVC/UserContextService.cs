@@ -1,5 +1,4 @@
-﻿using CSGenio;
-using CSGenio.framework;
+﻿using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Helpers.Culture;
 using GenioMVC.Models.Navigation;
@@ -13,6 +12,10 @@ public class UserContextService : IUserContextService
 		var httpContext = context.HttpContext;
 		if (httpContext is null)
 			throw new ArgumentNullException(nameof(httpContext));
+
+		// Don't go any further unless the system has a configuration.
+		if (Configuration.ConfigVersion is null)
+			return;
 
 		Current = new UserContext(httpContext, configuration);
 

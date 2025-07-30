@@ -931,12 +931,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Pesso/Pesso_SaveEdit
 		[HttpPost]
 		public ActionResult Pesso_SaveEdit([FromBody] Pesso_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pesso_SaveEdit",
 				ViewName = "Pesso",
@@ -968,7 +967,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsPesso([FromBody] PessoDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

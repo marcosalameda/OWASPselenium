@@ -70,7 +70,7 @@ public class FldscondForm : Form
 	/// <summary>
 	/// Campo com condições client-side
 	/// </summary>
-	public DocumentControl FldsFclient3 => new DocumentControl(driver, ContainerLocator, "FLDSCONDFLDS_FCLIENT3");
+	public DocumentControl FldsFclient3 => new DocumentControl(driver, ContainerLocator, "FLDSCONDFLDS_FCLIENT3-container");
 
 	/// <summary>
 	/// Campo com condições server-side

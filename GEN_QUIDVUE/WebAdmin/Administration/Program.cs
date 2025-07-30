@@ -28,7 +28,7 @@ CSGenio.business.ElasticsearchQueriesExtra.Use();
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers(options => 
+builder.Services.AddControllers(options =>
     {
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
     })
@@ -88,9 +88,9 @@ builder.Services.AddHostedService<SchedulerServiceHost>(p => p.GetRequiredServic
 // Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
-{    
+{
     c.DocInclusionPredicate((_, apiDesc) =>
-    {        
+    {
         return apiDesc.ActionDescriptor.RouteValues["controller"] == "RestAdmin";
     });
 });
@@ -147,25 +147,30 @@ else
 //This is only needed when using the [ApiController] attributes
 app.MapControllers();
 
-//Get default system
+// Get default system
 string defaultSystem = "0";
 
-//Default route
+// Default route
 app.MapControllerRoute("default",
     "api/{culture}/{system}/{controller}/{action}/{id?}",
     new {
         culture = Administration.AuxClass.Culture.CultureManager.DefaultCulture.Name,
         system = defaultSystem
-        }
-    );
+    });
 
 app.MapControllerRoute("defaultWithoutSystem",
     "api/{controller}/{action}/{id?}",
-    new
-    {
+    new {
         culture = Administration.AuxClass.Culture.CultureManager.DefaultCulture.Name,
         system = defaultSystem
-    }
-    );
+    });
+
+// Health check endpoint
+app.MapControllerRoute("health",
+    "api/health",
+    new {
+        controller = "HealthCheck",
+        action = "Index"
+    });
 
 app.Run();

@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -360,8 +360,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("faci1","faci1");
 			info.Pathways.Add("faci2","faci2");
+			info.Pathways.Add("faci1","faci1");
 		}
 
 		/// <summary>
@@ -893,7 +893,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX ENTIT]/

@@ -223,10 +223,10 @@
 
 			hydrateOrderField(order)
 			{
-				let table = _find(this.tables, (t) => t.Id === order.Field.TableId),
+				const table = _find(this.tables, (t) => t.Id === order.Field.TableId),
 					field = _find(table.Fields, (f) => f.Id === order.Field.FieldId)
 
-				let extendedOrder = _merge({}, order, {
+				const extendedOrder = _merge({}, order, {
 					internalKey: uuidv4(),
 					Field: {
 						tableTitle: table.Description,
@@ -255,14 +255,14 @@
 			 */
 			removeOrder(internalKey)
 			{
-				let idxToRemove = _findIndex(this.orderings, (o) => o.internalKey === internalKey)
+				const idxToRemove = _findIndex(this.orderings, (o) => o.internalKey === internalKey)
 				if (idxToRemove !== -1)
 					this.orderings.splice(idxToRemove, 1)
 			},
 
 			toggleDirection(internalKey)
 			{
-				let idxToChange = _findIndex(this.orderings, (o) => o.internalKey === internalKey)
+				const idxToChange = _findIndex(this.orderings, (o) => o.internalKey === internalKey)
 
 				if (idxToChange !== -1)
 				{

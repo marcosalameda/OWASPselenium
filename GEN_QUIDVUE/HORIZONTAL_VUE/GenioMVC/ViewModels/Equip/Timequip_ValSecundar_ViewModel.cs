@@ -143,6 +143,7 @@ namespace GenioMVC.ViewModels.Equip
 
 			model.Icon = "";
 			model.Escala = "dd";
+			model.TipoTimeLine = "";
 
 			foreach (RequestedField Qfield in row.Fields.Values)
 			{

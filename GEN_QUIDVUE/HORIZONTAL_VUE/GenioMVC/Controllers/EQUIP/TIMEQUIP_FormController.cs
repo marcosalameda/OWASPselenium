@@ -598,12 +598,11 @@ namespace GenioMVC.Controllers
 			return JsonOK(model);
 		}
 
-
 		// POST: /Equip/Timequip_SaveEdit
 		[HttpPost]
 		public ActionResult Timequip_SaveEdit([FromBody] Timequip_ViewModel model)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Timequip_SaveEdit",
 				ViewName = "Timequip",
@@ -634,7 +633,7 @@ namespace GenioMVC.Controllers
 		public ActionResult UpdateFilesTicketsTimequip([FromBody] TimequipDocumValidateTickets requestModel)
 		{
 			requestModel.Model.Init(UserContext.Current);
-			return base.UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
 		}
 	}
 }

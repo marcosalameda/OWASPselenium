@@ -69,7 +69,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed } from 'vue'
 
 	import { loadResources } from '@/plugins/i18n.js'
@@ -88,7 +88,7 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import qEnums from '@quidgest/clientapp/constants/enums'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_3511ViewModel.js'
 
@@ -222,21 +222,21 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY', 'changed-PESS1', 'changed-DECOM'],
+						globalEvents: ['changed-ITEM', 'changed-WAREH', 'changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-DECOM', 'changed-PESS1'],
 						uuid: '4a5e2c5a-b9ce-47ad-88fe-7f1fc6e0cd0f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
-								this.onSelectRow(this.controls.firstTable, eventData)
+								this.controls.firstTable.onSelectRow(eventData)
 								this.updateListData('equip')
 							},
 							unselectRow: (eventData) => {
-								this.onUnselectRow(this.controls.firstTable, eventData)
+								this.controls.firstTable.onUnselectRow(eventData)
 								this.updateListData('equip')
 							},
 							unselectAllRows: () => {
-								this.onUnselectAllRows(this.controls.firstTable)
+								this.controls.firstTable.onUnselectAllRows()
 							}
 						}
 					}, this),
@@ -300,17 +300,17 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-ITEM', 'changed-CMPNY', 'changed-PESS1', 'changed-DECOM'],
+						globalEvents: ['changed-ITEM', 'changed-WAREH', 'changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-DECOM', 'changed-PESS1'],
 						uuid: '4a5e2c5a-b9ce-47ad-88fe-7f1fc6e0cd0f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						handlers: {
 							selectRow: (eventData) => {
-								this.onSelectRow(this.controls.secondTable, eventData)
+								this.controls.secondTable.onSelectRow(eventData)
 								this.selectRowData(eventData)
 							},
 							unselectRow: (eventData) => {
-								this.onUnselectRow(this.controls.secondTable, eventData)
+								this.controls.secondTable.onUnselectRow(eventData)
 								this.unselectRowData(eventData)
 							},
 							// Handles the checkbox click.
@@ -361,11 +361,11 @@
 						headerLevel: 1,
 						handlers: {
 							removeRow: (eventData) => {
-								this.onUnselectRow(this.mainTable, eventData)
+								this.mainTable.onUnselectRow(eventData)
 								this.unselectRowData(eventData)
 							},
-							unselectAllRows: (eventData) => {
-								this.onUnselectAllRows(this.mainTable, eventData)
+							unselectAllRows: () => {
+								this.mainTable.onUnselectAllRows()
 								this.unselectAllRowsData()
 							}
 						}

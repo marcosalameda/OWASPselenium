@@ -106,7 +106,7 @@
 				// Get the Y coordinate starting after the layout header and form header
 				const scrollYStart = genericFunctions.scrollYStart()
 
-				for (let ctrl of this.anchors)
+				for (const ctrl of this.anchors)
 				{
 					const target = document.getElementById(ctrl)
 

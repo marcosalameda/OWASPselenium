@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -191,22 +191,22 @@ namespace CSGenio.business
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(19);
 			info.Pathways.Add("speci","speci");
-			info.Pathways.Add("cate1","cate1");
 			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("cate1","cate1");
 			info.Pathways.Add("pesso","pesso");
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("cntry","cmpny");
 			info.Pathways.Add("categ","pesso");
 			info.Pathways.Add("pais1","pesso");
 			info.Pathways.Add("regi1","pesso");
-			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
+			info.Pathways.Add("decom","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
-			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("gitem","equip");
+			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -545,7 +545,8 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX REPAR]/

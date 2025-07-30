@@ -114,7 +114,7 @@
 			 */
 			containerClasses()
 			{
-				var classes = ['q-wizard__content-container']
+				const classes = ['q-wizard__content-container']
 
 				if (this.isVertical)
 				{

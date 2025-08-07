@@ -79,10 +79,8 @@
             var queryString = window.location.search;
             queryString = queryString.replace("newMenu=True&", "");
             queryString = queryString.replace("newMenu=True", "");
-            // The search property returns the querystring part of a URL, including the question mark (?)
-            if (settings.requestsUrl.indexOf("?") !== -1 && queryString.length > 1)
-                queryString = "&" + queryString.substring(1);
-            var url = settings.requestsUrl + queryString;
+
+            var url = QUtils.updateUrlQueryString(settings.requestsUrl, queryString, false);
 
             // Destroy all QForm object into table. (Multiforms)
             $.each($('#' + settings.container).find('[qform]'), function (i, qform) {
@@ -204,6 +202,8 @@
             // The search property returns the querystring part of a URL, including the question mark (?)
             if (settings.requestsUrl.indexOf("?") !== -1 && queryString.length > 1)
                 queryString = "&" + queryString.substring(1);
+
+            // TODO: Fix duplicated «nav» parameter
             var url = settings.requestsUrl + queryString;
             var targetDiv = $("#" + settings.container).parent();
             var inputs = $("input:not(:button), select", targetDiv);

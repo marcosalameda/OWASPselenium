@@ -1,3 +1,5 @@
+using CSGenio.business;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -33,7 +35,18 @@ namespace CSGenio.core.ai
         /// <summary>
         /// Makes a function call to the chatbot service and returns the result of type T
         /// </summary>
+        Task<T> CallChatbotFunctionAsync<T>(AgentRequestData requestData);
+
+        /// <summary>
+        /// Calls a specific function on the Chatbot API and deserializes the response.
+        /// </summary>
+        [Obsolete("Use CallChatbotFunctionAsync<T>(AgentRequestData requestData) instead.")]
         Task<T> CallChatbotFunctionAsync<T>(object requestData);
+
+        /// <summary>
+        /// Prepares a multipart HTTP request for an agent, including files if provided.
+        /// </summary>
+        MultipartFormDataContent BuildHttpRequestData(AgentRequestData requestData);
 
         /// <summary>
         /// TODO

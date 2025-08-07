@@ -506,6 +506,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAinsta.FldCodinsta, CSGenioAinsta.Fl
                         new SpecialRenderingVariable { Variable = "circle-color", Value = "#f53505" },
                         new SpecialRenderingVariable { Variable = "group-markers-in-cluster", Value = "true" },
                         new SpecialRenderingVariable { Variable = "allow-exporting", Value = "true" },
+                        new SpecialRenderingVariable { Variable = "allow-center-control", Value = "true" },
                         new SpecialRenderingVariable { Variable = "background-overlay", Value = "OpenStreetMap" },
                         new SpecialRenderingVariable { Variable = "open-popup-on-hover", Value = "false" },
                     },

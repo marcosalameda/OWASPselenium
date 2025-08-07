@@ -2662,8 +2662,8 @@ namespace GenioMVC.Controllers
 			public int Level { get; set; }
 			[Newtonsoft.Json.JsonProperty("navId"), System.Runtime.Serialization.DataMember(Name = "navId")]
 			public string NavId { get; set; }
-			[Newtonsoft.Json.JsonProperty("formAction"), System.Runtime.Serialization.DataMember(Name = "formAction")]
-			public string FormAction { get; set; }
+			[Newtonsoft.Json.JsonProperty("formName"), System.Runtime.Serialization.DataMember(Name = "formName")]
+			public string FormName { get; set; }
 			[Newtonsoft.Json.JsonProperty("values"), System.Runtime.Serialization.DataMember(Name = "values")]
 			public IDictionary<string, string> Values { get; set; }
 		}
@@ -2704,7 +2704,7 @@ namespace GenioMVC.Controllers
 							(form.Level <= Navigation.CurrentLevel.Level) &&
 							// Check if it's a some form. Prevent insertion from unexisted form. (empty is the undefined)
 							// For now, let's not even check if the form exists in the history. In the case of wizards, the action is from the wizard phase.
-							/*(string.IsNullOrEmpty(form.FormAction) || Navigation.CheckAction(form.FormAction, form.Level)) &&*/
+							/*(string.IsNullOrEmpty(form.FormName) || Navigation.CheckAction(form.FormName, form.Level)) &&*/
 							(form.Values?.Any()).Value)
 						{
 							foreach (var areaKey in form.Values)

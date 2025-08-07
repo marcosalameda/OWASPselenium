@@ -138,10 +138,10 @@ namespace CSGenio.business
 			info.Pathways.Add("locat","locat");
 			info.Pathways.Add("facil","locat");
 			info.Pathways.Add("entit","locat");
-			info.Pathways.Add("cntry","locat");
 			info.Pathways.Add("facty","locat");
-			info.Pathways.Add("faci2","locat");
+			info.Pathways.Add("cntry","locat");
 			info.Pathways.Add("faci1","locat");
+			info.Pathways.Add("faci2","locat");
 		}
 
 		/// <summary>

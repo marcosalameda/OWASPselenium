@@ -486,6 +486,32 @@ function SubmitMultipleFormsRegistration(url, mainForm, regForm, helpForm){
     });
 }
 
+
+QForm.prototype.onSubmitFormData = function (e) {
+    // Existence of multiple input with same name causes problems in the WAF rules because it has duplicate parameters, 
+    //  which is normal behavior in checkboxes (used in browser submit of form redirect and menus).
+    e.preventDefault();
+    const formElement = $(e.currentTarget);
+    if (formElement && typeof formElement.getQForm === 'function') {
+        const qForm = formElement.getQForm();
+        if (qForm instanceof QForm) {
+            const controlNames = Object.keys(qForm.Controls || {});
+            const checkLists = controlNames.filter(function (controlName) {
+                return qForm.Controls[controlName] instanceof QCheckListControl;
+            });
+            checkLists.forEach(function (controlName) {
+                const control = qForm.Controls[controlName];
+                const inputElements = $('input[data-checklist]', control.element).first();
+                if(inputElements) {
+                    const inputName = inputElements.attr('name') || control.controlId;
+                    // Input values ​​in Redirect are not used (at least they shouldn't be), so the value that can create problems in WAF, will be ignored.
+                    e.formData.set(inputName, /*control.Value || */[]);
+                }
+            });
+        }
+    }
+};
+
 QForm.prototype.Redirect = function (data, repeatInsertion) {
     var _thisForm = this;
     var url = _thisForm.formRedirectURL;
@@ -494,6 +520,7 @@ QForm.prototype.Redirect = function (data, repeatInsertion) {
     }
     $(_thisForm.element).prop('action', url);
     window.qVar_isControlledRedirect = true;// Required when the Redirect is invoked from manual code.
+    $(_thisForm.element)[0].onformdata = this.onSubmitFormData
     $(_thisForm.element)[0].submit();
 };
 
@@ -1925,7 +1952,13 @@ QDbeditControl.prototype._reloadDBEditContent = function (searchInput, searchRes
 
     //no caso das limitações indiretas era preciso ter todas chaves
     //TODO: Mudar para procurar dentro dos controlos ou deixar até que fica implementado o 'class' dos dados
-    $.each(dbeditControl.ParentForm.getAllForeignKeySelectors(), function (area, selector) { values[area.toLowerCase()] = getFieldValue(selector); });
+    const isMultiform = dbeditControl.ParentForm.Type === 'MF';
+	$.each(dbeditControl.ParentForm.getAllForeignKeySelectors(), function (area, selector) { 
+		// The «eTarget» is a special property of multiforms, which contains the selector of the form element and should not be sent in the request.
+		const ignoreKey = isMultiform && area === 'eTarget'
+		if(!ignoreKey)
+			values[area.toLowerCase()] = getFieldValue(selector); 
+	});
 
     var searchText = "";
     var isSearching = searchInput !== undefined;

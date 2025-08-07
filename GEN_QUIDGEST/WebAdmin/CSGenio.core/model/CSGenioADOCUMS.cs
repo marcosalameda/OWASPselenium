@@ -55,7 +55,7 @@ namespace CSGenio.business
 			info.SyncType = SyncType.Central;
 					
              info.RegisterFieldDB(new Field(info.Alias, "coddocums", FieldType.KEY_GUID));
-    		info.RegisterFieldDB(new Field(info.Alias, "documid", FieldType.TEXT));
+    		info.RegisterFieldDB(new Field(info.Alias, "documid", FieldType.KEY_GUID));
     		info.RegisterFieldDB(new Field(info.Alias, "document", FieldType.BINARY));
             info.RegisterFieldDB(new Field(info.Alias, "docpath", FieldType.TEXT));
     		info.RegisterFieldDB(new Field(info.Alias, "nome", FieldType.TEXT));

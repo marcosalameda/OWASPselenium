@@ -2666,23 +2666,21 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                         }
                     }
                 }
-                else if(area.TableName == "docums")
+                else if (area.TableName == "docums")
                 {
-					object primaryKeyValueAux = area.QPrimaryKey;
-					if (area.DBFields[area.PrimaryKeyName].FieldType == FieldType.KEY_GUID)
-						primaryKeyValueAux = primaryKeyValueAux.ToString().Replace("-", "");
-						
+                    object primaryKeyValueAux = area.QPrimaryKey;
                     var document = (string)area.returnValueField(CSGenioAdocums.FldDocpath);
                     var ext = (string)area.returnValueField(CSGenioAdocums.FldExtensao);
                     int version = 0; int.TryParse((string)area.returnValueField(CSGenioAdocums.FldVersao), out version);
                     string filepath = duplicateFileOnDisk(primaryKeyValueAux, document, area.TableName, ext);
-                    valorChavePrimariaDocums = primaryKeyValueAux.ToString();
 
                     var updateDocums = new UpdateQuery()
                         .Update("docums")
                         .Set(CSGenioAdocums.FldDocpath, filepath)
                         .Set(CSGenioAdocums.FldVersao, (version + 1).ToString())
-                        .Where(CriteriaSet.And().Equal(CSGenioAdocums.FldCoddocums, primaryKeyValueAux));
+                        .Where(CriteriaSet.And()
+                            .Equal(CSGenioAdocums.FldCoddocums, primaryKeyValueAux));
+
                     Execute(updateDocums);
                 }
             }

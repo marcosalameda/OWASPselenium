@@ -25,7 +25,6 @@ namespace GenioServer.ai
         private User user;
         private string module; 
 
-
         public void LoadRecords(string key, PersistentSupport sp, User user)
         {
             //Base area
@@ -42,9 +41,21 @@ namespace GenioServer.ai
             this.module = user.CurrentModule;
 
             repar = (CSGenioArepar) area;
+			Files = new List<DBFile>();
+
+			// Documents to load
 
             // Areas dependent on base table
 
+        }
+
+		public void LoadFile(PersistentSupport sp, string valDocFk)
+        {
+            DBFile file = DbArea.getFileDB(valDocFk, sp);
+            if (file != null && file.File != null)
+            {
+                Files.Add(file);
+            }
         }
 
         public override string BuildUserPrompt()

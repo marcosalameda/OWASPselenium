@@ -2,10 +2,12 @@
 
 using CSGenio.core.di;
 using CSGenio.framework;
+using CSGenio.business;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using System.IO;
+using System.Net.Http;
 namespace CSGenio.core.ai;
 
 /// <summary>
@@ -49,13 +51,7 @@ public abstract class AiAgent
 
     public abstract string AGENT_ID { get; }
 
-    public class AgentRequestData
-    {
-        public object jsonSchema { get; set; }
-        public string prompt { get; set; }
-        public string systemPrompt { get; set; }
-        public string project { get; set; }
-    }
+    public List<DBFile> Files { get; set; }
 
     /// <summary>
     /// Sends a prompt to the chatbot and retrieves a response asynchronously.
@@ -76,7 +72,7 @@ public abstract class AiAgent
             {
 
                 // Construct the request payload with necessary parameters
-                var requestData = BuildRequestData();
+                AgentRequestDataWithFiles requestData = BuildRequestData();
                 Log.Info($"User ${user.Name} called {AGENT_ID}"); 
                 // Call the chatbot service asynchronously and return the result
                 return await _service.CallChatbotFunctionAsync<OutData>(requestData)
@@ -90,15 +86,9 @@ public abstract class AiAgent
         }
     }
 
-    public AgentRequestData BuildRequestData()
+    public AgentRequestDataWithFiles BuildRequestData()
     {
-        return new AgentRequestData
-        {
-            jsonSchema = JsonSchema,
-            prompt = BuildUserPrompt(),
-            systemPrompt = BuildSystemPrompt(),
-            project = Configuration.Application.Name // Static app identifier
-        };
+        return new AgentRequestDataWithFiles(JsonSchema, BuildUserPrompt(), BuildSystemPrompt(), Configuration.Application.Name, Files);
     }
 
     /// <summary>
@@ -109,12 +99,12 @@ public abstract class AiAgent
     public object GetAgentPromptJobId(User user, string formKey)
     {
         var agentData = BuildRequestData();
-        var requestData = new 
+        var requestData = new
         {
-            agentData.jsonSchema,
-            agentData.prompt,
-            agentData.systemPrompt,
-            agentData.project,
+            agentData.JsonSchema,
+            agentData.Prompt,
+            agentData.SystemPrompt,
+            agentData.Project,
 
             username = user.Name,
             agentId = AGENT_ID,

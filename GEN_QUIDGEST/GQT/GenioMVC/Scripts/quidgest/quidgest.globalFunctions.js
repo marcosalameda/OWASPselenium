@@ -1260,8 +1260,15 @@ function RequestModalDBEdit(selectList) {
 			values[limitArea] = limit.field.Value;
 		}
 	});
+
+	const isMultiform = dbeditControl.ParentForm.Type === 'MF';
 	//no caso das limitações indiretas era preciso ter todas chaves
-	$.each(dbeditControl.ParentForm.getAllForeignKeySelectors(), function (area, selector) { values[area.toLowerCase()] = getFieldValue(selector); });
+	$.each(dbeditControl.ParentForm.getAllForeignKeySelectors(), function (area, selector) { 
+		// The «eTarget» is a special property of multiforms, which contains the selector of the form element and should not be sent in the request.
+		const ignoreKey = isMultiform && area === 'eTarget'
+		if(!ignoreKey)
+			values[area.toLowerCase()] = getFieldValue(selector); 
+	});
 	// Retirar a opção selecionada atualmente
 	values[dbeditControl.area] = null;
 
@@ -1538,14 +1545,21 @@ function getInputValues(inputs) {
 	var params = {};
 
 	$.each(inputs, function (index, input) {
-		var _auxValue = getFieldValue($(input));
+		// Skip inputs without an 'id', as they are irrelevant for form data submission.
+		// Typically, these include hidden fields like the AntiForgeryToken, which is often 
+		// the last input on the page and lacks an 'id'. 
+		// Additionally, submitting parameters with empty keys may trigger issues with some WAFs (Web Application Firewalls).
+		if(input.id)
+		{
+			let _auxValue = getFieldValue($(input));
 
-		// MH - para manter o FormCollection no POST por ajax, tive que usar $.param que não formata as datas coretamente
-		if ($.type(_auxValue) === 'date') {
-			_auxValue = _auxValue.toQString();
+			// MH - para manter o FormCollection no POST por ajax, tive que usar $.param que não formata as datas coretamente
+			if ($.type(_auxValue) === 'date') {
+				_auxValue = _auxValue.toQString();
+			}
+
+			params[input.id] = _auxValue;
 		}
-
-		params[input.id] = _auxValue;
 	});
 
 	// checkLists Values
@@ -1945,7 +1959,7 @@ function _getRecursiveFormsKeys(targetForm) {
 		var formKeys = {
 			level: qForm.NavigationLevel,
 			navId: qForm.NavigationId,
-			formAction: qForm.formAction,
+			formName: qForm.formAction,
 			values: []
 		};
 		$.each(qForm.Data.RelationKeys, function (area, keyValue) {
@@ -2240,6 +2254,50 @@ var QUtils = QUtils || (function () {
 			}
 
 			return result;
+		},
+		/**
+		 * Merge the query string of 'baseUrl' (relative or absolute) with an additional query string ('extraSearch').  
+		 * If 'baseUrl' is relative, the function returns a relative URL; if it is absolute, the absolute form is preserved.
+		 * If a key occurs in both places, the behaviour depends on 'overwrite':
+		 *   - overwrite === true  -> the value from 'extraSearch' wins
+		 *   - overwrite === false -> the original value in 'baseUrl' is kept
+		 *
+		* @param {string}  baseUrl      – absolute or relative URL
+		* @param {string}  extraSearch  – raw query string beginning with '?' (may be empty)
+		* @param {boolean} [overwrite]  – whether to overwrite duplicates (default: true)
+		* @returns {string}             – merged URL; relative if input was relative
+		*/
+		updateUrlQueryString: function(baseUrl, extraSearch = '', overwrite = true) {
+			// Detect absolute URLs (scheme present or protocol-relative //host)
+			const isAbsolute = /^[a-zA-Z][a-zA-Z\d+.-]*:/.test(baseUrl) || baseUrl.startsWith("//");
+
+			// Resolve against the current document so that purely relative paths
+			// (e.g. 'api/report') keep any sub-folder prefix such as '/MySite/'.
+			const url = new URL(baseUrl, window.location.href);
+
+			// Existing parameters from baseUrl
+			const params = new URLSearchParams(url.search);
+
+			// Extra parameters (may be empty, e.g. '' or '?')
+			const extras = new URLSearchParams(extraSearch);
+
+			for (const [key, value] of extras) {
+				// write only if allowed to overwrite or the key does not yet exist
+				if (overwrite || !params.has(key)) {
+					params.set(key, value);
+				}
+			}
+
+			// Serialise the merged map back into the URL object
+			url.search = params.toString();
+
+			// Return absolute or relative form according to the original input
+			if (isAbsolute) {
+				return url.toString(); // full scheme://host/path?query
+			}
+
+			// Relative form: keep path + query + hash, omitting origin
+			return url.pathname + url.search + url.hash;
 		}
 	};
 })();

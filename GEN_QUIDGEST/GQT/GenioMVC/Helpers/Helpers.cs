@@ -2039,12 +2039,15 @@ namespace GenioMVC.Helpers
                 input.Attributes.Add("checked", "checked");
             input.Attributes.Add("value", "true");
 
-            TagBuilder input2 = new TagBuilder("input");
+            // TODO: It is necessary to check if the second input is still necessary, since we no longer use the old logic of sending double values.
+            // But the existence of the second input causes problems in the WAF rules because it has duplicate parameters, 
+            //      which is normal behavior in checkboxes (used in browser submit of form redirect and menus).
+            /*TagBuilder input2 = new TagBuilder("input");
             input2.Attributes.Add("value", "false");
             input2.Attributes.Add("type", "hidden");
-            input2.Attributes.Add("name", "propertyName");
+            input2.Attributes.Add("name", propertyName);*/
 
-            return new MvcHtmlString(input.ToString() + input2.ToString());
+            return new MvcHtmlString(input.ToString()/* + input2.ToString()*/);
         }
 
         public static MvcHtmlString CheckBoxFor<TModel, TValue>(this HtmlHelper<TModel> html, Expression<Func<TModel, TValue>> expression, object htmlAttributes, bool editionMode, bool isRequired)
@@ -2113,11 +2116,14 @@ namespace GenioMVC.Helpers
             input.Attributes.Add("value", "true");
             label.InnerHtml += input;
 
-            TagBuilder input2 = new TagBuilder("input");
+            // TODO: It is necessary to check if the second input is still necessary, since we no longer use the old logic of sending double values.
+            // But the existence of the second input causes problems in the WAF rules because it has duplicate parameters, 
+            //      which is normal behavior in checkboxes (used in browser submit of form redirect and menus).
+            /*TagBuilder input2 = new TagBuilder("input");
             input2.Attributes.Add("value", "false");
             input2.Attributes.Add("type", "hidden");
-            input2.Attributes.Add("name", "propertyName");
-            label.InnerHtml += input2;
+            input2.Attributes.Add("name", propertyName);
+            label.InnerHtml += input2;*/
 
             TagBuilder span = new TagBuilder("span");
             span.AddCssClass("i-checkbox__field");

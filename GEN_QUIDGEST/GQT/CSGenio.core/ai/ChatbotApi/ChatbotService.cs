@@ -1,6 +1,6 @@
 using CSGenio.core.di;
 using CSGenio.framework;
-using Newtonsoft.Json;
+using CSGenio.business;
 using System;
 using System.IO;
 using System.Net.Http;
@@ -8,6 +8,10 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
+using MimeKit;
+using System.Text.Json;
+using Newtonsoft.Json;
+
 
 namespace CSGenio.core.ai
 {
@@ -91,7 +95,29 @@ namespace CSGenio.core.ai
 
         }
 
-        public async Task<string> SendChatbotRequestAsync(HttpRequestMessage request) {
+        public MultipartFormDataContent BuildHttpRequestData(AgentRequestData requestData)
+        {
+            var form = new MultipartFormDataContent();
+            form.Add(new StringContent(System.Text.Json.JsonSerializer.Serialize(requestData.JsonSchema)), "jsonSchema");
+            form.Add(new StringContent(requestData.Prompt), "prompt");
+            form.Add(new StringContent(requestData.SystemPrompt), "systemPrompt");
+            form.Add(new StringContent(requestData.Project), "project");
+
+            if (requestData is AgentRequestDataWithFiles requestDataWithFiles && requestDataWithFiles.Files != null)
+            {
+                foreach (DBFile file in requestDataWithFiles.Files)
+                {
+                    var fileContent = new ByteArrayContent(file.File);
+                    fileContent.Headers.ContentType = new MediaTypeHeaderValue(MimeTypes.GetMimeType(file.Name));
+                    form.Add(fileContent, "filesToProcess", file.Name);
+                }
+            }
+
+            return form;
+        }
+
+        public async Task<string> SendChatbotRequestAsync(HttpRequestMessage request)
+        {
             var response = await _httpClient.SendAsync(request);
             response.EnsureSuccessStatusCode();
             return await response.Content.ReadAsStringAsync();
@@ -173,10 +199,18 @@ namespace CSGenio.core.ai
                 throw new InvalidOperationException("Chatbot endpoint URL is not configured. Please check the client configuration.");
             }
 
-            var content = new StringContent(
-                JsonConvert.SerializeObject(requestData),
-                Encoding.UTF8,
-                "application/json");
+            HttpContent content;
+            if (requestData is HttpContent httpContent)
+            {
+                content = httpContent;
+            }
+            else
+            {
+                content = new StringContent(
+                    JsonConvert.SerializeObject(requestData),
+                    Encoding.UTF8,
+                    "application/json");
+            }
 
             var response = await _httpClient.PostAsync($"{_chatbotEndpointUrl}/{endpointPath}", content);
             response.EnsureSuccessStatusCode();
@@ -188,7 +222,7 @@ namespace CSGenio.core.ai
                 var apiResponse = JsonConvert.DeserializeObject<ApiResponse<T>>(responseContent);
                 return apiResponse.Data;
             }
-            catch (JsonException jsonEx)
+            catch (Newtonsoft.Json.JsonException jsonEx)
             {
                 throw new InvalidOperationException("Failed to deserialize the response from the chatbot.", jsonEx);
             }
@@ -200,10 +234,24 @@ namespace CSGenio.core.ai
 
         /// <summary>
         /// Calls a specific function on the Chatbot API and deserializes the response.
+        /// If files are provided, sends them as multipart/form-data; otherwise, sends JSON.
         /// </summary>
         /// <typeparam name="T">The type to deserialize the response into</typeparam>
         /// <param name="requestData">The request data to send</param>
         /// <returns>The deserialized response data</returns>
+        public Task<T> CallChatbotFunctionAsync<T>(AgentRequestData requestData)
+        {
+            HttpContent httpRequestData = BuildHttpRequestData(requestData);
+            return CallChatbotApiAsync<T>(httpRequestData, "function/json");
+        }
+
+        /// <summary>
+        /// Calls a specific function on the Chatbot API and deserializes the response.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize the response into</typeparam>
+        /// <param name="requestData">The request data to send</param>
+        /// <returns>The deserialized response data</returns>
+        [Obsolete("Use CallChatbotFunctionAsync<T>(AgentRequestData requestData) instead.")]
         public Task<T> CallChatbotFunctionAsync<T>(object requestData)
         {
             return CallChatbotApiAsync<T>(requestData, "function/json");

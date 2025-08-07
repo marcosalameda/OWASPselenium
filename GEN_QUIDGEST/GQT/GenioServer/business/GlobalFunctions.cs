@@ -1770,7 +1770,7 @@ namespace CSGenio.business
         /// </summary>
         /// <param name="feature">The feature name</param>
         /// <returns>True if the feature is active</returns>
-        public static int IsFeatureActive(string feature)
+        public static CSGenio.business.Logical IsFeatureActive(string feature)
         {
             switch (feature)
             {

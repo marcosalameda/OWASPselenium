@@ -159,6 +159,7 @@
     <Compile Include="model\CSGenioASBCAT.cs" />
     <Compile Include="model\CSGenioASHITY.cs" />
     <Compile Include="model\CSGenioACCORR.cs" />
+    <Compile Include="model\CSGenioAATAGS.cs" />
     <Compile Include="model\CSGenioAASSMA.cs" />
     <Compile Include="model\CSGenioAWPESS.cs" />
     <Compile Include="model\CSGenioACATTP.cs" />

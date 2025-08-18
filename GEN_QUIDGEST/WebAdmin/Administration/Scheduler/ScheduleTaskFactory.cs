@@ -1,4 +1,5 @@
-﻿using CSGenio.core.scheduler;
+﻿using CSGenio.core.business;
+using CSGenio.core.scheduler;
 
 namespace Administration;
 
@@ -7,19 +8,20 @@ namespace Administration;
 /// </summary>
 public static class ScheduleTaskFactory
 {
-    private static Dictionary<string, IScheduledTask> m_taskList = new Dictionary<string, IScheduledTask>{
-
-        {"Reindex", new ReindexScheduledTask()},
-        {"AsyncProcess", new AsyncProcessScheduledTask()},
-        {"TransferLogs", new TransferLogsScheduledTask()},
-        {"Notifications", new NotificationsScheduledTask()},
+    private static Dictionary<string, IScheduledTask> m_taskList = new()
+    {
+        { "FormulaGroup", new FormulaGroupScheduledTask() },
+        { "Reindex", new ReindexScheduledTask() },
+        { "AsyncProcess", new AsyncProcessScheduledTask() },
+        { "TransferLogs", new TransferLogsScheduledTask() },
+        { "Notifications", new NotificationsScheduledTask() }
     };
 
     public static IScheduledTask GetScheduleTask(string id)
     {
-        if(m_taskList.TryGetValue(id, out var res))
+        if (m_taskList.TryGetValue(id, out var res))
             return res;
-        else 
+        else
             throw new InvalidOperationException($"Uknown scheduled task id {id}");
     }
 

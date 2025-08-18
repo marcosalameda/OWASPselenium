@@ -491,6 +491,15 @@ namespace CSGenio.reporting
                             SetLimitValues(limit.FullFieldName, limit.FieldValue, paramReportNames, ref result);
                         }
                         break;
+                    case ReportLimitParameter.LimitSource.AC:
+                        {
+                            //AC - Array choice Conditions
+                            var limit = genLimit as ReportLimitParameter_AC;
+                            if (string.IsNullOrEmpty(limit.FieldValue))
+                                throw new BusinessException(null, "ReportSSRS.getFillLimits", "Null or Empty area condition limit value");
+                            SetLimitValue(limit.FullFieldName, Convert.ToString(limit.FieldValue), paramReportNames, ref result);
+                        }
+                        break;
                 }
             }
 

@@ -3175,6 +3175,32 @@ namespace CSGenio.business
             }
                 
 
+            /* --- GQTATAGS --- */
+            dm = sp.Execute(
+                new SelectQuery()
+                .Select(CSGenioAatags.FldCodtags)
+                .From(CSGenioAatags.AreaATAGS)
+                .Where(CriteriaSet.And().In(CSGenioAatags.FldZzstate, zzstateToRemove))
+                );
+
+            for (int i = 0; i < dm.NumRows; i++)
+            {
+                CSGenioAatags model = new CSGenioAatags(user);
+                model.ValCodtags = dm.GetKey(i, 0);
+
+                try
+                {
+                    model.delete(sp);
+                }
+                //Not every exception should be allowed to continue record deletion, only business exceptions need to be caught and allow to deletion continue.
+                //If there are other types of exceptions, such as database connection problems, for example, execution should be stopped immediately
+                catch(BusinessException ex)
+                {
+                    Log.Error((ex.UserMessage != null) ? ex.UserMessage : ex.Message);
+                }
+            }
+                
+
             /* --- GQTAttachment --- */
             dm = sp.Execute(
                 new SelectQuery()

@@ -98,6 +98,31 @@ namespace GenioMVC.Models
 		public virtual Manuf Manuf { get { if (!this.isEmptyModel && (_manuf == null || (!string.IsNullOrEmpty(ValCodmanuf) && (_manuf.isEmptyModel || _manuf.klass.QPrimaryKey != ValCodmanuf)))) _manuf = Models.Manuf.Find(ValCodmanuf, Identifier, _fieldsToSerialize); if (_manuf == null) _manuf = new Models.Manuf(true, _fieldsToSerialize); return _manuf; } set { _manuf = value; } }
 		public bool ShouldSerializeManuf () => this.SerializeAllFields || this.FieldsToSerialize.Contains("Manuf");
 
+		[DisplayName("Description")]
+		/// <summary>Field : "Description" Tipo: "MO" Formula:  ""</summary>
+		[DataType(DataType.MultilineText)]
+		public string ValDescription { get { return klass.ValDescription; } set { klass.ValDescription = value; } }
+		public bool ShouldSerializeValDescription() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Asset.ValDescription");
+
+		[DisplayName("Detailed description")]
+		/// <summary>Field : "Detailed description" Tipo: "MO" Formula:  ""</summary>
+		[DataType(DataType.MultilineText)]
+		public string ValLongdesc { get { return klass.ValLongdesc; } set { klass.ValLongdesc = value; } }
+		public bool ShouldSerializeValLongdesc() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Asset.ValLongdesc");
+
+		[DisplayName("Category")]
+		/// <summary>Field : "Category" Tipo: "AC" Formula:  ""</summary>
+		[DataArray("Assetcategory", GenioMVC.Helpers.ArrayType.Character)]
+		public string ValCategory { get { return klass.ValCategory; } set { klass.ValCategory = value; } }
+		[JsonIgnore]
+		public SelectList ArrayValcategory { get { return new SelectList(CSGenio.business.ArrayAssetcategory.GetDictionary(), "Key", "Value", ValCategory); } set { ValCategory = value.SelectedValue as string; } }
+		public bool ShouldSerializeValCategory() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Asset.ValCategory");
+
+		[DisplayName("Background color for category")]
+		/// <summary>Field : "Background color for category" Tipo: "C" Formula:  ""</summary>
+		public string ValBg_color { get { return klass.ValBg_color; } set { klass.ValBg_color = value; } }
+		public bool ShouldSerializeValBg_color() => this.SerializeAllFields || this.FieldsToSerialize.Contains("Asset.ValBg_color");
+
 		[DisplayName("ZZSTATE")]
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public int ValZzstate { get { return klass.ValZzstate; } set { klass.ValZzstate = value; } }

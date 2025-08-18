@@ -643,6 +643,40 @@ namespace CSGenio.business
         }
 
         /// <summary>
+        /// Fills the internal formulas of the specified field
+        /// </summary>
+        /// <param name="sp">A persistent support with an open connection</param>
+        /// <param name="field">The field</param>
+        /// <param name="fdc">The DB context</param>
+        /// <param name="oldvalues">The old values</param>
+        public void fillInternalOperations(PersistentSupport sp, Field field, FormulaDbContext fdc, Area oldvalues)
+        {
+            if (field.Formula == null)
+                return;
+
+            if (field.Formula is ReplicaFormula)
+            {
+                preencherReplica(sp, field, fdc);
+                return;
+            }
+            if (field.Formula is QueryTableFormula)
+            {
+                preencherConsultaTabela(sp, field);
+                return;
+            }
+            if (field.Formula is InternalOperationFormula)
+            {
+                preencherOperacaoInterna(sp, field, fdc, oldvalues);
+                return;
+            }
+            if (field.Formula is EndPeriodFormula)
+            {
+                preencherFimPeriodo(sp, field);
+                return;
+            }
+        }
+
+        /// <summary>
         /// Preenche todas as formulas internas, ou seja, formulas que só alteram a ficha que
         /// está a ser actualizada. O cálculo é feito pela sequencia em que os fields foram
         /// registados de forma a dar hipótese de respeitar dependencias entre eles.
@@ -652,7 +686,6 @@ namespace CSGenio.business
         /// <param name="fdc">O contexto de fichas posicionadas existente ou null para alocar um apenas localmente</param>
         public void fillInternalOperations(PersistentSupport sp, Area oldvalues, FormulaDbContext fdc = null)
         {
-            //FormulaDbContext fdc = new FormulaDbContext(this);
             if (fdc is null)
             {
                 fdc = new FormulaDbContext(this);
@@ -661,7 +694,6 @@ namespace CSGenio.business
 
             foreach (Field Qfield in Information.DBFieldsList)
             {
-
                 //RS 18.05.2017 updates onde a UserRecord está a false deitam fora todos os calculos de numeros sequenciais, to não estragar o calculo da ficha principal
                 // pela gravação das fichas abaixo que potencialmente podem ter SR ou outras formulas de propagação.
                 // Assim sendo, não vale a pena tentar calcular um number que vai ser deitado fora.
@@ -688,29 +720,7 @@ namespace CSGenio.business
                         insertNameValueField(Qfield.FullName, null);
                 }
 
-                if (Qfield.Formula == null)
-                    continue;
-
-                if (Qfield.Formula is ReplicaFormula)
-                {
-                    preencherReplica(sp, Qfield, fdc);
-                    continue;
-                }
-                if (Qfield.Formula is QueryTableFormula)
-                {
-                    preencherConsultaTabela(sp, Qfield);
-                    continue;
-                }
-                if (Qfield.Formula is InternalOperationFormula)
-                {
-                    preencherOperacaoInterna(sp, Qfield, fdc, oldvalues);
-                    continue;
-                }
-                if (Qfield.Formula is EndPeriodFormula)
-                {
-                    preencherFimPeriodo(sp, Qfield);
-                    continue;
-                }
+                fillInternalOperations(sp, Qfield, fdc, oldvalues);
             }
 		}
 
@@ -764,7 +774,7 @@ namespace CSGenio.business
 
             object ct = null; //result
             Field dateInfo = DBFields[formula.FilledDateFields];
-            object dateValue = returnValueField(dateInfo.FullName);            
+            object dateValue = returnValueField(dateInfo.FullName);
             //se o valor do campo e null
             if (!dateInfo.isEmptyValue(dateValue))
             {
@@ -783,8 +793,8 @@ namespace CSGenio.business
                             object group2Value = returnValueField(group2Info.FullName);
                             if (!group2Info.isEmptyValue(group2Value))//se não existe valor, nao ha nada para mudar
                             {
-                                ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat, 
-                                    group1Value, group1Info.FieldType.GetFormatting(), 
+                                ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat,
+                                    group1Value, group1Info.FieldType.GetFormatting(),
                                     group2Value, group2Info.FieldType.GetFormatting(),
                                     sp);
                             }
@@ -973,9 +983,9 @@ namespace CSGenio.business
                 foreach (string Qfield in arg.ConsultedFields)
                     valoresCalculados.Add(DBFields[Qfield].GetValorEmpty());
 
-            //nao actualizar se todos os valores de destino forem iguais aos valores calculados            
+            //nao actualizar se todos os valores de destino forem iguais aos valores calculados
             var readArea = context.ReadRecord(arg.AliasRUV, relationValue as string, sp);
-            bool needsUpdate = false;            
+            bool needsUpdate = false;
             for(int i = 0; i < arg.ConsultedFields.Length; i++)
                 if(!valoresCalculados[i].Equals(readArea.returnValueField(readArea.Alias + "." + arg.LVRFields[i])))
                 {
@@ -1007,7 +1017,7 @@ namespace CSGenio.business
                 Field Qfield = DBFields[campoFp];
                 EndPeriodFormula formula = (EndPeriodFormula)Qfield.Formula;
 
-                formula.DeterminePropagation(sp, deleted ? null : this, oldvalues, (string alias, string pk, Area newrow, Area oldrow) 
+                formula.DeterminePropagation(sp, deleted ? null : this, oldvalues, (string alias, string pk, Area newrow, Area oldrow)
                     => auxActualizaFimPeriodo(context, sp, Qfield, formula, pk));
             }
         }
@@ -1538,7 +1548,7 @@ namespace CSGenio.business
                     //get all the row that need deleting/clearing
                     HashSet<string> pks = new HashSet<string>();
                     SelectQuery query = null;
-                    
+
                     foreach (var field in child.RelatedFields)
                     {
                         SelectQuery subquery = new SelectQuery()
@@ -2319,7 +2329,7 @@ namespace CSGenio.business
 			{
 				throw new BusinessException(Translations.Get("O Sistema encontra-se em manutenção! Pedimos desculpa pelo incómodo.", user.Language), "DbArea.change", "In maintenance mode.");
 			}
-			
+
             StatusMessage Qresult = StatusMessage.GetAggregator();
 
             try
@@ -2666,7 +2676,7 @@ namespace CSGenio.business
                     var filhasParaDuplicar = areasDuplicadas[relacao.TargetTable];
                     string condArea = relacao.AliasTargetTab.ToUpper();
                     foreach (var filha in filhasParaDuplicar)
-                    {                        
+                    {
                         AreaInfo childInfo = Area.GetInfoArea(relacao.AliasSourceTab);
 
                         // Load fields to update on the parent table
@@ -2820,14 +2830,14 @@ namespace CSGenio.business
 
             //Duplicate docums
             sp.duplicateFilesDB(this);
-            
+
             //process all the business rules of an insertion
             insert(sp);
 
             //with database side pk's the docums Chave field will not have been filled so we need to do it after the insert
             //This is not the best way to update the field "chave" from Docums table.
             //May be, we should not use this field because it creates a bidirectionl relationship with other tables.
-            //There is one place where the field "chave" is used, but it could be unused if we refactory the content of document ticket. 
+            //There is one place where the field "chave" is used, but it could be unused if we refactory the content of document ticket.
             if (sp.DatabaseSidePk)
                 sp.AfterDuplicateFilesDB(this);
         }
@@ -3303,7 +3313,7 @@ namespace CSGenio.business
                     continue;
 
                 //if we are inside a queue processor don't resend publications that are involved in service loops
-                if (sp.QueueMode && pub.NoReexport) 
+                if (sp.QueueMode && pub.NoReexport)
                     continue;
 
                 //check if this table is part of this publication
@@ -3431,7 +3441,7 @@ namespace CSGenio.business
             {
                 formula = new InternalOperationFormula(
                     formula.ByAreaArguments.Select(a => new ByAreaArguments(
-                        a.FieldNames, 
+                        a.FieldNames,
                         a.FieldsPosition,
                         a.AliasName == mt.Table ? area.Alias : a.AliasName, //switch the base area
                         a.KeyName
@@ -3564,19 +3574,19 @@ namespace CSGenio.business
                         if (!string.IsNullOrEmpty(key))
                         {
                             List<string> cp_list = new List<string>();
-                    
+
                             SelectQuery sqTables1N = new SelectQuery()
                                 .From(mq_area_1N.TableName)
                                 .Where(CriteriaSet.And()
                                     .Equal(mq_area_1N.TableName, area_1N.Field, key)
                                     .Equal(mq_area_1N.TableName, "zzstate", 0));
-                    
+
                             foreach (Field Qfield in mq_area_1N.DBFields.Values.Where(x => x.MQueue)) // Create dinamicamente query com todos os fields necessarios
                             {
                                 cp_list.Add(Qfield.Name);
                                 sqTables1N.Select(mq_area_1N.TableName, Qfield.Name);
                             }
-                    
+
                             DataMatrix list_mq_area_1N = sp.Execute(sqTables1N);
                             for (int i = 0; i < list_mq_area_1N.NumRows; i++)
                             {

@@ -248,6 +248,22 @@ namespace CSGenio.business
 			            Qresult.AppendLine("if {{{0}}} = \"N\" then \"Não\" else");
             Qresult.Append("\"                                              \"");
             todasArrays.Add("asimnao", Qresult.ToString());
+			// assetcategory
+            Qresult = new StringBuilder();
+			            Qresult.AppendLine("if {{{0}}} = \"RE\" then \"Real Estate\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"VCL\" then \"Vehicle\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"EQUIP\" then \"Equipment\" else");
+			            Qresult.AppendLine("if {{{0}}} = \"FNTR\" then \"Furniture\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("assetcategory", Qresult.ToString());
+			// assettags
+            Qresult = new StringBuilder();
+			Qresult.AppendLine("if {{{0}}} = 1 then \"Urgent\" else");
+			Qresult.AppendLine("if {{{0}}} = 2 then \"Checked\" else");
+			Qresult.AppendLine("if {{{0}}} = 3 then \"In Repair\" else");
+			Qresult.AppendLine("if {{{0}}} = 4 then \"Important\" else");
+            Qresult.Append("\"                                              \"");
+            todasArrays.Add("assettags", Qresult.ToString());
 			// assettyp
             Qresult = new StringBuilder();
 			            Qresult.AppendLine("if {{{0}}} = \"E\" then \"Equipment\" else");

@@ -397,6 +397,8 @@
     <Compile Include="Controllers\Shity\*.cs" />
     <Compile Include="ViewModels\Ccorr\*_ViewModel.cs" />
     <Compile Include="Controllers\Ccorr\*.cs" />
+    <Compile Include="ViewModels\Atags\*_ViewModel.cs" />
+    <Compile Include="Controllers\Atags\*.cs" />
     <Compile Include="ViewModels\Assma\*_ViewModel.cs" />
     <Compile Include="Controllers\Assma\*.cs" />
     <Compile Include="ViewModels\Wpess\*_ViewModel.cs" />

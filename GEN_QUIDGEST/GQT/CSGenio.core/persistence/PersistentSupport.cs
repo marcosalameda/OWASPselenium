@@ -2418,7 +2418,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <summary>
         /// Bulk insert records into the database
         /// </summary>
-        /// <typeparam name="A">Specific Area class of the rows</typeparam>
         /// <param name="rows">The list of rows to insert</param>
         public virtual void bulkInsert(IEnumerable<IArea> rows)
         {
@@ -2469,7 +2468,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <summary>
         /// Bulk updates records in the database
         /// </summary>
-        /// <typeparam name="A">Specific Area class of the rows</typeparam>
         /// <param name="rows">The list of rows to update</param>
         public virtual void bulkUpdate(IEnumerable<IArea> rows)
         {
@@ -2481,7 +2479,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <summary>
         /// Bulk delete records in the database
         /// </summary>
-        /// <typeparam name="A">Specific Area class of the rows</typeparam>
         /// <param name="rows">The list of rows to delete</param>
         public virtual void bulkDelete(IEnumerable<IArea> rows)
         {
@@ -3759,7 +3756,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="relatedTables">List of other tables</param>
         /// <param name="area"></param>
         /// <returns>True or false</returns>
-        private bool checkPathToRelations<A>(List<string> relatedTables, A area)where A : IArea
+        private bool checkPathToRelations<A>(List<string> relatedTables, A area) where A : IArea
         {
             foreach (string otherTable in relatedTables)
             {

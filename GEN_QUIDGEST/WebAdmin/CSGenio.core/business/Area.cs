@@ -116,6 +116,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaSHITY = new AreaRef("GQT", "gqtshity", "shity");
         public static AreaRef AreaCCORR { get { return m_AreaCCORR; } }
         private static AreaRef m_AreaCCORR = new AreaRef("GQT", "ccorr", "ccorr");
+        public static AreaRef AreaATAGS { get { return m_AreaATAGS; } }
+        private static AreaRef m_AreaATAGS = new AreaRef("GQT", "gqtatags", "atags");
         public static AreaRef AreaASSMA { get { return m_AreaASSMA; } }
         private static AreaRef m_AreaASSMA = new AreaRef("GQT", "gqtassetmanual", "assma");
         public static AreaRef AreaWPESS { get { return m_AreaWPESS; } }
@@ -436,6 +438,7 @@ namespace CSGenio.business
             "sbcat",
             "shity",
             "ccorr",
+            "atags",
             "assma",
             "wpess",
             "cattp",

@@ -2554,7 +2554,12 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             if (area.DBFields[area.PrimaryKeyName].FieldType == FieldType.KEY_GUID)
                 primaryKeyValue = primaryKeyValue.ToString().Replace("-", "");
             Field chaveDocums = CSGenioAdocums.GetInformation().DBFields["coddocums"];
-            object valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, "coddocums", chaveDocums.FieldSize, CSGenioAdocums.GetInformation().KeyType);
+            var fieldType = CSGenioAdocums.GetInformation().KeyType;
+            string valorChavePrimariaDocumsStr = generatePrimaryKey(tabelaDocums, "coddocums", chaveDocums.FieldSize, fieldType);
+            object valorChavePrimariaDocums = fieldType == FieldType.KEY_INT
+	                ? DBConversion.ToInteger(valorChavePrimariaDocumsStr)
+                    : valorChavePrimariaDocumsStr;
+
             // MH [update] (15/03/2015) - Burning of files to disk
             string filepath = saveFileToDisk(Convert.ToString(valorChavePrimariaDocums), file, area.TableName, extension);
 

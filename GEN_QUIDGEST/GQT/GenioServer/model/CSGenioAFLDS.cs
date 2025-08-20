@@ -676,8 +676,8 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(14);
 			info.Pathways.Add("aero","aero");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
+			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");

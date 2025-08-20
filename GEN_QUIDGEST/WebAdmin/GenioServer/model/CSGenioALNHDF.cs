@@ -103,12 +103,12 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(8);
 			info.Pathways.Add("lnhde","lnhde");
 			info.Pathways.Add("pedid","lnhde");
-			info.Pathways.Add("lnhpd","lnhde");
 			info.Pathways.Add("tpeq1","lnhde");
+			info.Pathways.Add("lnhpd","lnhde");
 			info.Pathways.Add("lnhag","lnhde");
+			info.Pathways.Add("fami1","lnhde");
 			info.Pathways.Add("tpequ","lnhde");
 			info.Pathways.Add("famil","lnhde");
-			info.Pathways.Add("fami1","lnhde");
 		}
 
 		/// <summary>

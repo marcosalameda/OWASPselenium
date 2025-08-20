@@ -143,8 +143,8 @@
 {
 	<text>
 	@*Hidden Foreign Keys Controls*@
-			this.Controls.LED_GROUPBX_PESS1CODPESSO = new QHiddenControl($('[data-identifier="LED_GROUPBX_PESS1CODPESSO"]', this.element), window.Form_Groupbx);
 			this.Controls.LED_GROUPBX_DECOMCODDECO_ = new QHiddenControl($('[data-identifier="LED_GROUPBX_DECOMCODDECO_"]', this.element), window.Form_Groupbx);
+			this.Controls.LED_GROUPBX_PESS1CODPESSO = new QHiddenControl($('[data-identifier="LED_GROUPBX_PESS1CODPESSO"]', this.element), window.Form_Groupbx);
 			this.Controls.LED_GROUPBX_CMPNYCODEMPRE = new QHiddenControl($('[data-identifier="LED_GROUPBX_CMPNYCODEMPRE"]', this.element), window.Form_Groupbx);
 	</text>
 }
@@ -222,8 +222,8 @@
 @{
 	<text>
 		window.Form_Groupbx.Data.RelationKeysSelector = {
-				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1', $('[data-form="Groupbx"]')); /* Hidden */ },
 				get decom() { return $(':not([elem-identifier="Multiform"]) > #ValCoddeco', $('[data-form="Groupbx"]')); /* Hidden */ },
+				get pess1() { return $(':not([elem-identifier="Multiform"]) > #ValCodpess1', $('[data-form="Groupbx"]')); /* Hidden */ },
 				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre', $('[data-form="Groupbx"]')); /* Hidden */ },
 				get tpequ() { return $(':not([elem-identifier="Multiform"]) > #ValCodtpequ[pers-cs-area="Tpequ"]', $('[data-form="Groupbx"]')); /* DBEdit */ },
 				get wareh() { return $(':not([elem-identifier="Multiform"]) > #ValCodwareh[pers-cs-area="Wareh"]', $('[data-form="Groupbx"]')); /* DBEdit */ },
@@ -238,10 +238,10 @@
 
 		window.Form_Groupbx.Data.RelationKeys = {
 			get formContext() { return window.Form_Groupbx; },
-			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* Hidden FK */ },
-			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get decom() { return (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value; /* Hidden FK */ },
 			set decom(newValue) { (this.formContext.Data.RelationKeysSelector.decom.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get pess1() { return (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value; /* Hidden FK */ },
+			set pess1(newValue) { (this.formContext.Data.RelationKeysSelector.pess1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get cmpny() { return (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value; /* Hidden FK */ },
 			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get tpequ() { return (this.formContext.Data.RelationKeysSelector.tpequ.getQControl() || {}).Value; /* DBEdit */ },

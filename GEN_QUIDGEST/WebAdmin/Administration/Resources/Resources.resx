@@ -17985,4 +17985,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
   <data name="CENTRAR_NO_MAPA05060" xml:space="preserve">
     <value>Center on the map</value>
   </data>
+  <data name="VOLTAR_PARA50593" xml:space="preserve">
+    <value>Back to</value>
+  </data>
 </root>

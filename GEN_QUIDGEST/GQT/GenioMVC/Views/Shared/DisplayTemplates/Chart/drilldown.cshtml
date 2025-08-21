@@ -1,0 +1,337 @@
+@using System.Collections.Generic
+@using System.Linq
+@using System.Globalization
+@using System.Text
+
+@{
+    #region Properties
+
+    var containerId = (string)ViewData["container-id"];
+    var rows = (List<Dictionary<string, object>>)ViewData["rows"];
+    var style = (Dictionary<string, string>)ViewData["style-vars"];
+
+    // Default settings
+    var chartType = "line";
+    var firstColor = "undefined";
+    var xaxisType = "linear";
+    var secondxaxisType = "linear";
+    var yaxisType = "linear";
+    var secondyaxisType = "linear";
+    var graphTitle = "";
+    var description = "";
+    var alignDescription = "left";
+    var xaxisName = "XAxis";
+    var secondxaxisName = "XAxis";
+    var inverted = "false";
+    var showLabels = "true";
+    var showLegend = "true";
+    var showPieLabel = "outside";
+    var heightPx = "400";
+    var pieInnerSizePercentage = "0";
+    var enableHover = "true";
+    var zoomType = "x";
+    var legendLayout = "horizontal";
+    var legendXPosition = "0";
+    var showLastN = "-1";
+    var legendYPosition = "0";
+    var legendFloating = "false";
+    var legendAlign = "center";
+    var legendVerticalAlign = "bottom";
+    var stackingType = "undefined";
+    var valuesDecimals = "0";
+    var lineMarker = false;
+
+    // Apply overrides from style
+    if (style.ContainsKey("chart-type")) { chartType = style["chart-type"]; }
+        var supportedChartTypes = new[] { "line", "spline", "area", "areaspline", "column", "bar" };
+    if (!supportedChartTypes.Contains(chartType.ToLowerInvariant()))
+    {
+        chartType = "line";
+    }
+    if (style.ContainsKey("first-color")) {  firstColor = style["first-color"]; }
+    if (style.ContainsKey("xaxis-type")) {  xaxisType = style["xaxis-type"]; }
+    if (style.ContainsKey("second-xaxis-type")) { secondxaxisType = style["second-xaxis-type"]; }
+    if (style.ContainsKey("yaxis-type")) { yaxisType = style["yaxis-type"]; }
+    if (style.ContainsKey("second-yaxis-type")) {  secondyaxisType = style["second-yaxis-type"]; }
+    if (style.ContainsKey("graph-title")) { graphTitle = style["graph-title"]; }
+    if (style.ContainsKey("description")) { description = style["description"]; }
+    if (style.ContainsKey("align-description")) { alignDescription = style["align-description"]; }
+    if (style.ContainsKey("xaxis-name")) { xaxisName = style["xaxis-name"]; }
+    if (style.ContainsKey("second-xaxis-name")) { secondxaxisName = style["second-xaxis-name"]; }
+    if (style.ContainsKey("inverted")) { inverted = style["inverted"]; }
+    if (style.ContainsKey("show-labels")) { showLabels = style["show-labels"]; }
+    if (style.ContainsKey("show-legend")) { showLegend = style["show-legend"]; }
+    if (style.ContainsKey("show-pie-label")) { showPieLabel = style["show-pie-label"]; }
+    if (style.ContainsKey("height-px")) { heightPx = style["height-px"]; }
+    if (style.ContainsKey("pie-inner-size-percentage")) { pieInnerSizePercentage = style["pie-inner-size-percentage"]; }
+    if (style.ContainsKey("enable-hover")) { enableHover = style["enable-hover"]; }
+    if (style.ContainsKey("zoom-type")) { zoomType = style["zoom-type"]; }
+    if (style.ContainsKey("legend-layout")) { legendLayout = style["legend-layout"]; }
+    if (style.ContainsKey("legend-x-position")) { legendXPosition = style["legend-x-position"]; }
+    if (style.ContainsKey("show-last-n")) { showLastN = style["show-last-n"]; }
+    if (style.ContainsKey("legend-y-position")) { legendYPosition = style["legend-y-position"]; }
+    if (style.ContainsKey("legend-floating")) { legendFloating = style["legend-floating"]; }
+    if (style.ContainsKey("legend-align")) { legendAlign = style["legend-align"]; }
+    if (style.ContainsKey("legend-vertical-align")) { legendVerticalAlign = style["legend-vertical-align"]; }
+    if (style.ContainsKey("stacking-type")) { stackingType = style["stacking-type"]; }
+    if (style.ContainsKey("values-decimals")) { valuesDecimals = style["values-decimals"]; }
+    if (style.ContainsKey("line-marker")) { lineMarker = style["line-marker"] == "enabled"; }
+
+        // Drilldown subtitle to make sure even without text the button to go back to root isn't on the burguer button
+    string drilldownSubtitle = new string(' ', 50);
+    string ds;
+
+    if (style.TryGetValue("drilldown-subtitle", out ds) && !string.IsNullOrWhiteSpace(ds))
+    {
+        drilldownSubtitle = ds;
+    }
+    else
+    {
+        drilldownSubtitle = string.Concat(Enumerable.Repeat("&nbsp;", 50));
+    }
+
+
+    // Y axis name detection
+    string yaxisName;
+    string yn;
+    if (style.TryGetValue("yaxis-name", out yn) && !string.IsNullOrWhiteSpace(yn))
+    {
+        yaxisName = yn;
+    }
+    else
+    {
+        var sample = rows.FirstOrDefault(r => r.ContainsKey("yaxis"));
+
+        List<string[]> ylist = null;
+        if (sample != null && sample.ContainsKey("yaxis"))
+        {
+            ylist = sample["yaxis"] as List<string[]>;
+        }
+        if (ylist != null && ylist.Count > 0)
+        {
+
+            yaxisName = (ylist[0].Length > 1 && !string.IsNullOrWhiteSpace(ylist[0][1]))
+                ? ylist[0][1]
+                : "YAxis";
+        }
+        else
+        {
+            yaxisName = "YAxis";
+        }
+    }
+
+    string secondyaxisName;
+    string syn;
+    if (style.TryGetValue("second-yaxis-name", out syn) && !string.IsNullOrWhiteSpace(syn))
+    {
+        secondyaxisName = syn;
+    }
+    else
+    {
+        var sample2 = rows.FirstOrDefault(r => r.ContainsKey("second-yaxis"));
+
+        List<string[]> sylist = null;
+        if (sample2 != null && sample2.ContainsKey("second-yaxis"))
+        {
+            sylist = sample2["second-yaxis"] as List<string[]>;
+        }
+
+        if (sylist != null && sylist.Count > 0 && sylist[0] != null && sylist[0].Length > 1 && !string.IsNullOrWhiteSpace(sylist[0][1]))
+        {
+            secondyaxisName = sylist[0][1];
+        }
+        else
+        {
+            secondyaxisName = "YAxis";
+        }
+    }
+
+    var allSeriesJS = ViewData["allSeries"];
+    var distinctxaxisJS = ViewData["distinctxaxis"];
+    var distinctyaxisJS = ViewData["distinctyaxis"];
+    var colorArray = ViewData["colorArray"];
+
+    string stack = stackingType != "undefined" ? stackingType : "";
+    string color = "#058DC7";
+    if (!string.IsNullOrWhiteSpace(firstColor) && !firstColor.Equals("undefined"))
+    {
+        color = firstColor;
+    }
+    if (chartType.Equals("semi-pie")) { chartType = "pie"; }
+
+    #endregion
+}
+
+@{
+    Func<Dictionary<string, object>, double> extractYaxis = r =>
+    {
+        if (r == null) return 0d;
+
+        object yObj;
+        if (r.TryGetValue("yaxis", out yObj))
+        {
+            var yaxis = yObj as List<string[]>;
+            if (yaxis != null && yaxis.Count > 0 && yaxis[0] != null && yaxis[0].Length > 0)
+            {
+                var raw = yaxis[0][0];
+                if (!string.IsNullOrEmpty(raw))
+                {
+                    raw = raw.Replace(",", ".");
+                    double val;
+                    if (double.TryParse(raw, NumberStyles.Any, CultureInfo.InvariantCulture, out val))
+                        return val;
+                }
+            }
+        }
+        return 0d;
+    };
+
+    Func<Dictionary<string, object>, double> extractSecondYaxis = r =>
+    {
+        if (r == null) return 0d;
+
+        object yObj;
+        if (r.TryGetValue("second-yaxis", out yObj))
+        {
+            var yaxis = yObj as List<string[]>;
+            if (yaxis != null && yaxis.Count > 0 && yaxis[0] != null && yaxis[0].Length > 0)
+            {
+                var raw = yaxis[0][0];
+                if (!string.IsNullOrEmpty(raw))
+                {
+                    raw = raw.Replace(",", ".");
+                    double val;
+                    if (double.TryParse(raw, NumberStyles.Any, CultureInfo.InvariantCulture, out val))
+                        return val;
+                }
+            }
+        }
+        return 0d;
+    };
+    var drilldownRoot = rows
+        .Where(r => !r.ContainsKey("second-xaxis") || string.IsNullOrEmpty(Convert.ToString(r["second-xaxis"])))
+        .Select(r => new
+        {
+            X = r["xaxis"].ToString(),
+            Y = extractYaxis(r)
+        })
+        .ToList();
+
+    var drilldownDetails = rows
+        .Where(r => r.ContainsKey("second-xaxis") && !string.IsNullOrEmpty(Convert.ToString(r["second-xaxis"])))
+        .GroupBy(r => r["xaxis"].ToString())
+        .ToDictionary(
+            g => g.Key,
+            g => g.Select(r => new
+            {
+                SecondX = r["second-xaxis"].ToString(),
+                Y = extractSecondYaxis(r)
+            }).ToList()
+        );
+}
+
+<div class="q-graph g-graph">
+    <div class="g-graph__body">
+        <figure class="highcharts-figure">
+            <div id="@containerId" style="height:@heightPx">
+                <script>
+                    Highcharts.setOptions({
+                        plotOptions: {
+                            column: {
+                                stacking: '@stack',
+                                tooltip: {
+                                    pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b><br/>'
+                                }
+                            },
+                            series: {
+                                allowPointSelect: true,
+                                cursor: 'pointer',
+                                dataLabels: {
+                                    enabled: @showLabels.ToLower(),
+                                    crop: false,
+                                    overflow: 'none'
+                                },
+                                marker: {
+                                    enabled: @(lineMarker ? "true" : "false"),
+                                }
+                            },
+                            pie: {
+                                showInLegend: @showLegend.ToLower(),
+                                dataLabels: {
+                                    enabled: true,
+                                    format: '<span style="color:{point.color}"><b>{point.y}</b> ({point.percentage:.@valuesDecimals}%)</span>'
+                                }
+                            }
+                        },
+                        lang: {
+                            drillUpText: '@Resources.VOLTAR_PARA50593 @xaxisName'
+                        }
+                    });
+
+                    Highcharts.chart('@containerId', {
+                        chart: {
+                            type: '@chartType',
+                            zoomType: '@zoomType',
+                            inverted: @inverted.ToLower(),
+                        },
+                        title: { text: '@graphTitle' },
+                        subtitle: {
+                            useHTML: true,
+                            text: '@Html.Raw(drilldownSubtitle)'
+                        },
+                        xAxis: {
+                            type: '@xaxisType',
+                            title: { text: '@xaxisName' }
+                        },
+                        yAxis: {
+                            title: { text: '@yaxisName' }
+                        },
+                        legend: {
+                            enabled: @showLegend.ToLower(),
+                            layout: '@legendLayout',
+                            align: '@legendAlign',
+                            verticalAlign: '@legendVerticalAlign',
+                            floating: @legendFloating.ToLower() == "true",
+                            x: @legendXPosition,
+                            y: @legendYPosition,
+                        },
+                        series: [{
+                            name: '@yaxisName',
+                            colorByPoint: true,
+                            data: [
+                                @for (int i = 0; i < drilldownRoot.Count; i++) {
+                                    var item = drilldownRoot[i];
+                                    <text>{
+                                        name: @Html.Raw(Json.Encode(item.X)),
+                                        y: @Html.Raw(Json.Encode(item.Y)),
+                                        drilldown: @Html.Raw(Json.Encode(item.X))
+                                    }@(i < drilldownRoot.Count - 1 ? "," : "")</text>
+                                }
+                            ]
+                        }],
+                        drilldown: {
+                            series: [
+                                @foreach (var kv in drilldownDetails)
+                                {
+                                    <text>{
+                                        id: @Html.Raw(Json.Encode(kv.Key)),
+                                        name: '@secondyaxisName',
+                                        data: [
+                                            @for (int i = 0; i < kv.Value.Count; i++) {
+                                                var d = kv.Value[i];
+                                                <text>[
+                                                    @Html.Raw(Json.Encode(d.SecondX)),
+                                                    @Html.Raw(Json.Encode(d.Y))
+                                                ]@(i < kv.Value.Count - 1 ? "," : "")</text>
+                                            }
+                                        ]
+                                    }@(kv.Key != drilldownDetails.Keys.Last() ? "," : "")</text>
+                                }
+                            ]
+                        }
+                    });
+                </script>
+            </div>
+        </figure>
+    </div>
+</div>

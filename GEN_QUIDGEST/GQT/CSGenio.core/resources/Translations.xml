@@ -17626,4 +17626,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Centrar no mapa" code="CENTRAR_NO_MAPA05060">
     <ENUS>Center on the map</ENUS>
   </msg>
+  <msg id="Voltar para" code="VOLTAR_PARA50593">
+    <ENUS>Back to</ENUS>
+  </msg>
 </Messages>

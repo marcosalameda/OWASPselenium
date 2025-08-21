@@ -53432,5 +53432,14 @@ namespace GenioMVC.Resources
 			}
 		}
 
+		/// <summary>
+		///   Looks up a localized string similar to "Voltar para"
+		/// </summary>
+		public static string VOLTAR_PARA50593 {
+			get {
+				return ResourceManager.GetString("VOLTAR_PARA50593", resourceCulture);
+			}
+		}
+
 	}
 }

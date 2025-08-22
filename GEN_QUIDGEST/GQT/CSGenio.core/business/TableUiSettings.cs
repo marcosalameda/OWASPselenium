@@ -1,13 +1,13 @@
-﻿using CSGenio.core.persistence;
-using CSGenio.framework;
-using CSGenio.framework.TableConfiguration;
-using CSGenio.persistence;
-using Quidgest.Persistence.GenericQuery;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+
+using CSGenio.framework;
+using CSGenio.framework.TableConfiguration;
+using CSGenio.persistence;
+using Quidgest.Persistence.GenericQuery;
 
 namespace CSGenio.business
 {
@@ -89,7 +89,7 @@ namespace CSGenio.business
         {
             return UserUiSettings.GetFromCache(cacheKey) as TableUiSettings;
         }
-		
+
 		/// <summary>
         /// Parse string-encoded table configuration data to an object.
 		/// </summary>
@@ -164,20 +164,16 @@ namespace CSGenio.business
         public static TableConfiguration GetTableDefaultConfig(PersistentSupport sp, User user, string uuid, TableConfigurationLoadOptions options = null)
         {
             // Get table configuration and name fields from the default configuration record
-            // tblcfg has the table configurations
-            // tblcfgsel has the records that specify which record in tblcfg, if any, is the default
             SelectQuery query = new SelectQuery()
                 .Select(CSGenioAtblcfg.FldCodtblcfg)
                 .Select(CSGenioAtblcfg.FldName)
                 .Select(CSGenioAtblcfg.FldConfig)
                 .Select(CSGenioAtblcfg.FldUsrsetv)
                 .From(Area.AreaTBLCFG)
-                .Join(Area.AreaTBLCFGSEL)
-                    .On(CriteriaSet.And().Equal(CSGenioAtblcfg.FldCodtblcfg, CSGenioAtblcfgsel.FldCodtblcfg)
-                )
                 .Where(CriteriaSet.And()
                     .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
                     .Equal(CSGenioAtblcfg.FldUuid, uuid)
+                    .Equal(CSGenioAtblcfg.FldIsdefault, 1)
                 );
 
             var result = sp.Execute(query);
@@ -256,8 +252,7 @@ namespace CSGenio.business
             else if (!string.IsNullOrEmpty(uuid) && !string.IsNullOrEmpty(configName))
                 tableConfig = GetTableConfig(sp, user, uuid, configName, options);
 
-            if (tableConfig == null)
-                tableConfig = defaultTableConfig ?? new TableConfiguration();
+            tableConfig ??= defaultTableConfig ?? new TableConfiguration();
 
             return tableConfig;
         }

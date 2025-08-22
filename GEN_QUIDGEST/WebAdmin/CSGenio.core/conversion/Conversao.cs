@@ -75,7 +75,7 @@ namespace CSGenio.framework
                 if (fieldValue.Equals(""))
                     return 0;
                 decimal Qvalue = Convert.ToDecimal(fieldValue, provider);
-                
+
                 return Qvalue;
             }
             catch (Exception ex)
@@ -84,7 +84,7 @@ namespace CSGenio.framework
                 return 0;
             }
         }
-        
+
         /// <summary>
         /// Método que transforma o Qvalue do objecto em inteiro
         /// </summary>
@@ -110,7 +110,7 @@ namespace CSGenio.framework
         //é mais eficiente compilar as expressões regulares apenas uma vez e depois partilhar e reutilizar
         private static Regex Data4 = new Regex("((19|[2-9][0-9])[0-9][0-9])[-/.]([1-9]|0[1-9]|1[012])[-/.]([1-9]|0[1-9]|[12][0-9]|3[01])");
         private static Regex Data2 = new Regex("([1-9]|0[1-9]|[12][0-9]|3[01])[-/.]([1-9]|0[1-9]|1[012])[-/.]((19|[2-9][0-9])[0-9][0-9])");
-		
+
         /// <summary>
         /// Método que converte uma data no format string to format datetime
         /// Pressupoe que as datas estão na forma day/month/Qyear
@@ -561,6 +561,8 @@ namespace CSGenio.framework
                 return (int)fieldValue;
             else if (fieldValue is byte)
                 return (byte)fieldValue;
+            else if (fieldValue is bool)
+                return (bool)fieldValue ? 1 : 0;
             else if (fieldValue is short)
                 return (short)fieldValue;
             else if (fieldValue is long)

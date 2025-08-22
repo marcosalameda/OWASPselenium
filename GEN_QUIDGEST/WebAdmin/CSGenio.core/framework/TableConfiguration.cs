@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Linq;
-using Quidgest.Persistence;
+
 using CSGenio.business;
 using CSGenio.persistence;
+using Quidgest.Persistence;
 
 namespace CSGenio.framework.TableConfiguration
 {

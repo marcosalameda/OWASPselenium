@@ -367,13 +367,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaNOTIFICATIONEMAILSIGNATURE = new AreaRef("notificationemailsignature", "notificationemailsignature");
         public static AreaRef AreaNOTIFICATIONMESSAGE { get { return m_AreaNOTIFICATIONMESSAGE; } }
         private static AreaRef m_AreaNOTIFICATIONMESSAGE = new AreaRef("notificationmessage", "notificationmessage");
-		//FOR: USER_TABLE_CONFIG (VueJS)
-		//BEGIN: User table configuration
         public static AreaRef AreaTBLCFG { get { return m_AreaTBLCFG; } }
         private static AreaRef m_AreaTBLCFG = new AreaRef("GQT", "GQTtblcfg", "tblcfg");
-        public static AreaRef AreaTBLCFGSEL { get { return m_AreaTBLCFGSEL; } }
-        private static AreaRef m_AreaTBLCFGSEL = new AreaRef("GQT", "GQTtblcfgsel", "tblcfgsel");
-		//END: User table configuration
         public static AreaRef AreaLSTUSR { get { return m_AreaLSTUSR; } }
         private static AreaRef m_AreaLSTUSR = new AreaRef("GQTlstusr", "lstusr");
         public static AreaRef AreaLSTCOL { get { return m_AreaLSTCOL; } }
@@ -575,7 +570,7 @@ namespace CSGenio.business
 
         //Static class accessed a lot during startup, must have concurrency concerns
         private static ConcurrentDictionary<string, Type> m_areaRegistry = new ConcurrentDictionary<string, Type>();
-        
+
         /// <summary>
         /// Função que dado o identifier da area devolve um objecto da mesma
         /// </summary>
@@ -618,7 +613,7 @@ namespace CSGenio.business
             //We need to pass an hint for the assembly, or it will only search in CSGenio.core
             string areaName = classPrefix + name + ", GenioServer";
             var type = Type.GetType(areaName);
-            //Since there are much more assemblies in GenioServer, we search for CSGenio.core only after not finding in GenioServer. 
+            //Since there are much more assemblies in GenioServer, we search for CSGenio.core only after not finding in GenioServer.
             if(type == null)
             {
                 areaName = classPrefix + name + ", CSGenio.core";
@@ -679,10 +674,10 @@ namespace CSGenio.business
         /// True if the record is to be validated, false if not
         /// </summary>
         /// <remarks>
-        /// By default, this field will be set as true, to prevent the storage of invalid records. 
+        /// By default, this field will be set as true, to prevent the storage of invalid records.
         /// However, certain situations require the validations to be delayed or even not occur - in these cases,
         /// it is preferable to alter this property instead of the UserRecord flag, since that is used for several
-        /// other cases outside of the validation scope. 
+        /// other cases outside of the validation scope.
         /// </remarks>
         public bool NeedsValidation { get; set; } = true;
 
@@ -723,16 +718,16 @@ namespace CSGenio.business
 
             return GetInfoArea(areaType);
         }
-		
+
 		/// <summary>
         /// Obtem a informação sobre uma area dado o seu tipo
         /// </summary>
         /// <returns></returns>
-		public static AreaInfo GetInfoArea<A>() where A : Area 
+		public static AreaInfo GetInfoArea<A>() where A : Area
         {
             return GetInfoArea(typeof(A));
         }
-		
+
         private static AreaInfo GetInfoArea(Type t)
         {
             return t.InvokeMember("GetInformation"
@@ -1027,7 +1022,7 @@ namespace CSGenio.business
 
                     if (
                         fieldInfo.IsClientSide &&
-                        !primaryKeyField.isEmptyValue(this.QPrimaryKey)                       
+                        !primaryKeyField.isEmptyValue(this.QPrimaryKey)
                     )
                     {
                         //queries inside these calculations are not supported
@@ -1064,7 +1059,7 @@ namespace CSGenio.business
             {
                 //support for non-fully-qualified names
                 var ix = fieldName.IndexOf('.');
-                var dbField = ix == -1 
+                var dbField = ix == -1
                     ? DBFields[fieldName]
                     : DBFields[fieldName.Substring(ix+1)];
 
@@ -1079,7 +1074,7 @@ namespace CSGenio.business
                     // TODO: Decrypt the value if necessary.
 
                     return encData.DecryptedValue;
-                } 
+                }
 
             }
             catch (GenioException ex)
@@ -1218,7 +1213,7 @@ namespace CSGenio.business
                 }
             }
 
-            // Fields with Concatenate rows formulas should not be overwritten by external inputs. 
+            // Fields with Concatenate rows formulas should not be overwritten by external inputs.
             // This type of formula is propagated from bottom to top.
             if (AggregateListFields != null)
             {
@@ -1321,7 +1316,7 @@ namespace CSGenio.business
                     return;
 
                 DateTime now = DateTime.Now;
-                foreach(string stamp in StampFieldsIns) 
+                foreach(string stamp in StampFieldsIns)
                 {
                     Field info = DBFields[stamp];
                     if(info.FieldType == FieldType.DATETIMESECONDS)
@@ -1801,7 +1796,7 @@ namespace CSGenio.business
             // Apply concrete type to method type parameter (searchListWhere<CSGenioA_____>)
             Type type = GetTypeArea(area);
             MethodInfo generic = mInfo.MakeGenericMethod(type);
-            
+
             // Invoke
             object[] args = { where, user, fields, distinct, noLock };
             return ((List<Area>)generic.Invoke(sp, args));
@@ -2250,7 +2245,7 @@ namespace CSGenio.business
                     {
                         status = StatusMessage.Error(Translations.Get(condition.ErrorWarning, user.Language));
                     }
-                }  
+                }
 
                 if(status.Status != Status.OK)
                     result.MergeStatusMessage(status);

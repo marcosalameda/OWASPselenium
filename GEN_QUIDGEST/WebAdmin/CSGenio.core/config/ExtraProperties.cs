@@ -120,5 +120,13 @@ namespace CSGenio.config
                 return property != null && !string.IsNullOrEmpty(property?.DefaultValue);
             }
         }
+
+        public static bool IsPasswordType(string id)
+        {
+            return initialAdvancedProperties.Exists(p => 
+                p.Id.Equals(id) &&
+                p.Type.Equals("P")
+            );
+        }
     }
 }

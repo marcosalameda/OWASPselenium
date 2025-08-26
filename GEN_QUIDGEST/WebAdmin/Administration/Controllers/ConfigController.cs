@@ -1199,6 +1199,10 @@ namespace Administration.Controllers
 
             if (String.IsNullOrEmpty(model.Val)) { return Json(new { emptyVal = true }); }
 
+            var valueContent = model.Val;
+            if (ExtraProperties.IsPasswordType(model.Key))
+                valueContent = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.Val));
+
             if (model.FormMode == "delete")
             {
                 initProp = ExtraProperties.HasDefaultValue(model.Key);
@@ -1207,12 +1211,12 @@ namespace Administration.Controllers
             }
             if (model.FormMode == "edit")
             {
-                conf.maisPropriedades[model.Key] = model.Val;
+                conf.maisPropriedades[model.Key] = valueContent;
             }
             if (model.FormMode == "new")
             {
                 if (conf.maisPropriedades.ContainsKey(model.Key)) { return Json(new { success = false }); }
-                conf.maisPropriedades.Add(model.Key, model.Val);
+                conf.maisPropriedades.Add(model.Key, valueContent);
             }
 
             configManager.StoreConfig(conf);

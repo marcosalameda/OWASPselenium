@@ -67,7 +67,6 @@ namespace CSGenio.business
 			Qfield.FieldSize =  8;
 			Qfield.CavDesignation = "END47577";
 
-            Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 

@@ -83,22 +83,21 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 1511]/
-                ReportSSRS_Result result;
-                using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
-                {
-                    // MH (11/10/2017) - Report Server credentials
-                    if (Configuration.SSRSServer.ContainsCredentials())
-                    {
-                        renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
-                    }
-                    renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
+				ReportSSRS_Result result;
+				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
+				{
+					// MH (11/10/2017) - Report Server credentials
+					if (Configuration.SSRSServer.ContainsCredentials())
+					{
+						renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
+					}
+					renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
 					result = renderer.Render("PDF");
-	
-                }
+				}
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 1511]/
-
-                Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
+				
+				Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
                 if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
                     return File(result.File, result.MimeType);
                 else

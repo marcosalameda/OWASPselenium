@@ -19,7 +19,7 @@ namespace GenioServer.framework
     public class ConfigXMLMigration
     {
 
-        public static int CurConfigurationVerion = 11;
+        public static int CurConfigurationVerion = 12;
 
         public static void Migration(IConfigurationManager configManager, int fileConfigVersion)
         {            
@@ -47,6 +47,7 @@ namespace GenioServer.framework
                 configFileTxt = migrateConfigToVersion9(fileConfigVersion, configFileTxt);
                 configFileTxt = migrateConfigToVersion10(fileConfigVersion, configFileTxt);
                 configFileTxt = migrateConfigToVersion11(fileConfigVersion, configFileTxt);
+                configFileTxt = migrateConfigToVersion12(fileConfigVersion, configFileTxt);
             }
 
             //write the final file
@@ -801,5 +802,45 @@ namespace GenioServer.framework
                 return configFileTxt;
             }
         }
+
+        /// <summary>
+        /// Convert all password advanced properties value to Base64 format
+        /// </summary>
+        /// <param name="fileVersion"></param>
+        /// <param name="configFileTxt"></param>
+        /// <returns></returns>
+        private static string migrateConfigToVersion12(int fileVersion, string configFileTxt)
+        {
+            // if the file is already on the right version, doesn't migrate.
+            if (fileVersion >= 12)
+                return configFileTxt;
+
+            try
+            {
+                XDocument xdoc = XDocument.Parse(configFileTxt);
+                var moreProperties = xdoc.Root.Elements("maisPropriedades").Elements("item");
+                foreach (var element in moreProperties)
+                {                    
+                    var oldElement = element;
+                    var key = element.Attribute("key");
+                    var keyValue = element.Attribute("value");
+
+                    if (ExtraProperties.IsPasswordType(key.Value))
+                    {
+                        XElement newElement = new XElement("item");
+                        newElement.SetAttributeValue("key", key.Value);
+                        newElement.SetAttributeValue("value", Convert.ToBase64String(Encoding.Unicode.GetBytes(keyValue.Value)));
+                        oldElement.ReplaceWith(newElement);
+                    } 
+                }
+                string changedXml_Text = xdoc.Declaration.ToString() + Environment.NewLine + xdoc.ToString();
+                return changeVersion(changedXml_Text, "12");
+            }
+            catch (Exception)
+            {
+                return configFileTxt;
+            }
+        }
+
     }
 }

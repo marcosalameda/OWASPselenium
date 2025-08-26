@@ -59,16 +59,17 @@ namespace GenioMVC.Controllers
                 if(crs == null && allSelected)
                     throw new FrameworkException(Resources.Resources.NAO_FOI_POSSIVEL_OBT36525, "GQT_Report_2D2141", "Could not obtain the selected records list.");
 
-
-				ReportLimitParameter_DM dmLimitation0 = new ReportLimitParameter_DM();
-				dmLimitation0.FullFieldName = "tpequ.codtpequ";
-				dmLimitation0.FieldValue = allSelected
+				{
+					ReportLimitParameter_DM dmLimitation = new ReportLimitParameter_DM();
+					dmLimitation.FullFieldName = "tpequ.codtpequ";
+					dmLimitation.FieldValue = allSelected
                         ? GetActionIds(crs, null, CSGenio.business.Area.createArea("tpequ",
                             UserContext.Current.User, UserContext.Current.User.CurrentModule)).ToArray()
-                        : Navigation.GetValue<string[]>("tpequ_Selections");					
-						
+                        : Navigation.GetValue<string[]>("tpequ_Selections");
 
-				limitation.Add(dmLimitation0);
+
+					limitation.Add(dmLimitation);
+				}
 
 
 
@@ -83,22 +84,21 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 2D2141]/
-                ReportSSRS_Result result;
-                using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
-                {
-                    // MH (11/10/2017) - Report Server credentials
-                    if (Configuration.SSRSServer.ContainsCredentials())
-                    {
-                        renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
-                    }
-                    renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
+				ReportSSRS_Result result;
+				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
+				{
+					// MH (11/10/2017) - Report Server credentials
+					if (Configuration.SSRSServer.ContainsCredentials())
+					{
+						renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
+					}
+					renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
 					result = renderer.Render("PDF");
-	
-                }
+				}
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 2D2141]/
-
-                Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
+				
+				Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
                 if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
                     return File(result.File, result.MimeType);
                 else

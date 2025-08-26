@@ -247,22 +247,21 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 52211]/
-                ReportSSRS_Result result;
-                using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
-                {
-                    // MH (11/10/2017) - Report Server credentials
-                    if (Configuration.SSRSServer.ContainsCredentials())
-                    {
-                        renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
-                    }
-                    renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
+				ReportSSRS_Result result;
+				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
+				{
+					// MH (11/10/2017) - Report Server credentials
+					if (Configuration.SSRSServer.ContainsCredentials())
+					{
+						renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
+					}
+					renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
 					result = renderer.Render("PDF");
-	
-                }
+				}
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 52211]/
-
-                Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
+				
+				Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
                 if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
                     return File(result.File, result.MimeType);
                 else
@@ -310,22 +309,21 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 52311]/
-                ReportSSRS_Result result;
-                using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
-                {
-                    // MH (11/10/2017) - Report Server credentials
-                    if (Configuration.SSRSServer.ContainsCredentials())
-                    {
-                        renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
-                    }
-                    renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
+				ReportSSRS_Result result;
+				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
+				{
+					// MH (11/10/2017) - Report Server credentials
+					if (Configuration.SSRSServer.ContainsCredentials())
+					{
+						renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
+					}
+					renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
 					result = renderer.Render("WORDOPENXML");
-	
-                }
+				}
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 52311]/
-
-                Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
+				
+				Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
                 if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
                     return File(result.File, result.MimeType);
                 else
@@ -373,22 +371,21 @@ namespace GenioMVC.Controllers
 
 
 // USE /[MANUAL GQT BEFORE_EXECUTE_REPORT 5311]/
-                ReportSSRS_Result result;
-                using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
-                {
-                    // MH (11/10/2017) - Report Server credentials
-                    if (Configuration.SSRSServer.ContainsCredentials())
-                    {
-                        renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
-                    }
-                    renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
+				ReportSSRS_Result result;
+				using (var renderer = new ReportSSRS(reportFullPath, reportFileName, reportFullPath, isServerReports, UserContext.Current.PersistentSupport))
+				{
+					// MH (11/10/2017) - Report Server credentials
+					if (Configuration.SSRSServer.ContainsCredentials())
+					{
+						renderer.ServerReportInstance.ReportServerCredentials = new ReportServerCredentials(Configuration.SSRSServer.UsernameDecode, Configuration.SSRSServer.PasswordDecode, Configuration.SSRSServer.Domain);
+					}
+					renderer.ConstructReport(UserContext.Current.User, area, historicFieldNames, historicFieldValues, globFields, areasReport, limitation.ToArray(), specialFormulasFields);
 					result = renderer.Render(ReportSSRS.GetExportType(reportOutputFormat));
-	
-                }
+				}
 
 // USE /[MANUAL GQT OVERRIDE_REPORT 5311]/
-
-                Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
+				
+				Response.Headers.Add("FileName", reportFileName + "." + result.FileNameExtension);
                 if (result.FileNameExtension == "pdf") // If pass file extension, browser will download file instead of opening it in PDF Viewer.
                     return File(result.File, result.MimeType);
                 else

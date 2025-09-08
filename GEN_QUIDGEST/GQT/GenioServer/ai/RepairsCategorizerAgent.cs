@@ -42,7 +42,6 @@ namespace GenioServer.ai
 
             repar = (CSGenioArepar) area;
 			Files = new List<DBFile>();
-
 			// Documents to load
 
             // Areas dependent on base table

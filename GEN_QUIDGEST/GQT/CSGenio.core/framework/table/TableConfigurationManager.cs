@@ -427,9 +427,8 @@ public static class TableConfigurationManager
 			// Check for saved configuration
 			CSGenioAtblcfg userTableConfig = userTableConfigs.Where(config => config.ValName.Equals(configName)).ToList().FirstOrDefault();
 
-			// If record already exists, throw an exception
-			if (userTableConfig != null)
-				throw new BusinessException(Translations.Get("Essa vista já existe.", user.Language), "CopyConfig", $"Table configuration already exists: {configName}.");
+			// If a record already exists, delete it
+			userTableConfig?.delete(sp);
 
 			if (isDefault == 1)
 				ClearDefaultConfig(user, sp, uuid);

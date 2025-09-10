@@ -215,7 +215,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.LOGIN_DE_ACESSO_A_BA52816
 		}
 		get databaseConnectionTitle() {
-			return this.resources.AUTENTICACAO_DE__BAS42362
+			return this.resources.AUTENTICACAO_NA_BASE39084
 		}
 		get encryptConnectionLabel() {
 			return this.resources.ENCRIPTAR_LIGACAO12834
@@ -260,7 +260,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.RELATORIO62426
 		}
 		get reportsByLanguageTitle() {
-			return this.resources.RELATORIOS_POR_LINGU35356
+			return this.resources.RELATORIOS_POR_LINGU09488
 		}
 		get elasticsearchTitle() {
 			return this.resources.ELASTICSEARCH49143
@@ -344,7 +344,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.RELATORIO62426
 		}
 		get reportsByLanguage() {
-			return this.resources.RELATORIOS_POR_LINGU35356
+			return this.resources.RELATORIOS_POR_LINGU09488
 		}
 		get configuracaoDoSistema() {
 			return this.resources.CONFIGURACAO_DO_SIST39343

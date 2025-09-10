@@ -220,8 +220,8 @@ namespace CSGenio.business
 			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("equip","equip");
 			info.Pathways.Add("famil","tpequ");
-			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("wareh","equip");
+			info.Pathways.Add("decom","equip");
 			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
 			info.Pathways.Add("item","equip");

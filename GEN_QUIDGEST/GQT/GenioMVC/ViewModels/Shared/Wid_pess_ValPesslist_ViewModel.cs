@@ -476,6 +476,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioApesso.FldCodpesso, CSGenioApesso.Fl
                         new SpecialRenderingVariable { Variable = "content-alignment", Value = "left" },
                         new SpecialRenderingVariable { Variable = "custom-followup-default-target", Value = "blank" },
                         new SpecialRenderingVariable { Variable = "display-mode", Value = "grid" },
+                        new SpecialRenderingVariable { Variable = "grid-mode", Value = "fixed" },
                         new SpecialRenderingVariable { Variable = "container-alignment", Value = "left" },
                         new SpecialRenderingVariable { Variable = "hover-scale-amount", Value = "1.00" },
                         new SpecialRenderingVariable { Variable = "image-shape", Value = "rectangular" },

@@ -247,7 +247,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Wid_iequ"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Wid_iequ"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Wid_iequ"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValRegistnr: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValRegistnr: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Formula of the 'ValBought' field *@
@@ -258,7 +258,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Wid_iequ"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Wid_iequ"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Wid_iequ"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValBought: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValBought: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Recalculate formulas (server side) *@

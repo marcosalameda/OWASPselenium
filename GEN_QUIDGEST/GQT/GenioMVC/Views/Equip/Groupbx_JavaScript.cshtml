@@ -271,7 +271,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Groupbx"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Groupbx"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Groupbx"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValRegistnr: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValRegistnr: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Default of the 'ValDesignat' field *@
@@ -287,7 +287,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Groupbx"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Groupbx"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Groupbx"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValBought: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValBought: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Recalculate formulas (server side) *@

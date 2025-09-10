@@ -345,7 +345,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Equigrou"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Equigrou"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Equigrou"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValRegistnr: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValRegistnr: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Formula of the 'ValBought' field *@
@@ -356,7 +356,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Equigrou"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Equigrou"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Equigrou"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValBought: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValBought: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Default of the 'ValDesignat' field *@

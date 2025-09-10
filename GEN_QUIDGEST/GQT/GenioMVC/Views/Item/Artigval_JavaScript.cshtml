@@ -241,7 +241,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValDisponib', $('[data-form="Artigval"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValDisponib', $('[data-form="Artigval"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValDisponib', $('[data-form="Artigval"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValDisponib: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValDisponib: ' + err.message, err.stack, window.location.href); }
 		});
 		
 

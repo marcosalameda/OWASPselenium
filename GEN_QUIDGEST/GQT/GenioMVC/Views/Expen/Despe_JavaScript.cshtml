@@ -228,7 +228,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValYearprev', $('[data-form="Despe"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValYearprev', $('[data-form="Despe"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValYearprev', $('[data-form="Despe"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValYearprev: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValYearprev: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Recalculate formulas (server side) *@

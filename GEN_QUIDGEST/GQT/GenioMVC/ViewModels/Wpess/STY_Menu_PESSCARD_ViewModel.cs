@@ -545,6 +545,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAwpess.FldCodpess, CSGenioAwpess.Fld
                         new SpecialRenderingVariable { Variable = "custom-insert-card", Value = "false" },
                         new SpecialRenderingVariable { Variable = "custom-insert-card-style", Value = "secondary" },
                         new SpecialRenderingVariable { Variable = "display-mode", Value = "grid" },
+                        new SpecialRenderingVariable { Variable = "grid-mode", Value = "fixed" },
                         new SpecialRenderingVariable { Variable = "container-alignment", Value = "left" },
                         new SpecialRenderingVariable { Variable = "show-empty-column-titles", Value = "true" },
                     },

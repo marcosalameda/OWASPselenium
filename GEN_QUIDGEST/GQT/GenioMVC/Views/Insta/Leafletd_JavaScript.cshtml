@@ -239,7 +239,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValHours', $('[data-form="Leafletd"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValHours', $('[data-form="Leafletd"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValHours', $('[data-form="Leafletd"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValHours: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValHours: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Formula of the 'ValValue' field *@
@@ -250,7 +250,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValValue', $('[data-form="Leafletd"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValValue', $('[data-form="Leafletd"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValValue', $('[data-form="Leafletd"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValValue: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValValue: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Recalculate formulas (server side) *@

@@ -219,7 +219,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValFimperio', $('[data-form="Evcat"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValFimperio', $('[data-form="Evcat"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValFimperio', $('[data-form="Evcat"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValFimperio: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValFimperio: ' + err.message, err.stack, window.location.href); }
 		});
 		
 

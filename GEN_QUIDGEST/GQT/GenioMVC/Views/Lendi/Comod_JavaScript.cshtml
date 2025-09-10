@@ -235,7 +235,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValWarndt', $('[data-form="Comod"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValWarndt', $('[data-form="Comod"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValWarndt', $('[data-form="Comod"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValWarndt: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValWarndt: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Formula of the 'ValEnd' field *@
@@ -246,7 +246,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValEnd', $('[data-form="Comod"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValEnd', $('[data-form="Comod"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValEnd', $('[data-form="Comod"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValEnd: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValEnd: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Formula of the 'ValReturned' field *@
@@ -257,7 +257,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValReturned', $('[data-form="Comod"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValReturned', $('[data-form="Comod"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValReturned', $('[data-form="Comod"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValReturned: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValReturned: ' + err.message, err.stack, window.location.href); }
 		});
 		
 

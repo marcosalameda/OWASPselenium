@@ -221,7 +221,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValSaldo1', $('[data-form="Proje"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValSaldo1', $('[data-form="Proje"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValSaldo1', $('[data-form="Proje"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValSaldo1: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValSaldo1: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Formula of the 'ValSaldo2' field *@
@@ -232,7 +232,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValSaldo2', $('[data-form="Proje"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValSaldo2', $('[data-form="Proje"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValSaldo2', $('[data-form="Proje"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValSaldo2: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValSaldo2: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Recalculate formulas (server side) *@

@@ -236,7 +236,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValDate', $('[data-form="Dentr"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValDate', $('[data-form="Dentr"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValDate', $('[data-form="Dentr"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValDate: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValDate: ' + err.message, err.stack, window.location.href); }
 		});
 		
 

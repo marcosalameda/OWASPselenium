@@ -1980,7 +1980,7 @@ namespace CSGenio.framework
                     if (table.Columns.Count > colIndex && colIndex >= 0)
                     {
                         var column = table.Columns[colIndex];
-                        string func = aggregate.GetAggregateFunction(column.Name);
+                        string func = aggregate.GetAggregateFunction($"[{column.Name}]");
 
                         if (!string.IsNullOrEmpty(func))
                         {

@@ -2683,7 +2683,7 @@ namespace CSGenio.business
                         modelFieldsToUpdate.AddRange(loadFieldsToUpdate(childInfo));
 
                         //RMR(2022-11-11) - If it has more child record to duplicate after, it cannot enforce conditions
-                        bool needsValidation = cascata.Any(x => x.TargetTable == relacao.SourceTable);
+                        bool needsValidation = !cascata.Any(x => x.TargetTable == relacao.SourceTable);
                         var sourceRecords = LoadAndSortRecords(sp, childInfo, relacao, filha.Key);
 
                         //filter all the records that actually can be duplicated

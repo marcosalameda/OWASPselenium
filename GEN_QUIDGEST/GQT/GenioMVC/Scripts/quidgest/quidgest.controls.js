@@ -2748,6 +2748,36 @@ Object.defineProperty(QNumericControl.prototype, 'renderedValue', {
     }
 });
 
+Object.defineProperty(QNumericControl.prototype, 'Value', {
+    set: function (val) {
+        var num = val
+
+        // If the element declares number-formatting data attributes, try to normalize it
+        if ($(this.element).is('[data-number-format]')) {
+            try {
+                num = $.number(val, $(this.element).attr('data-number-decimals'), '.', '', $(this.element).attr('data-number-integer'));
+                num = parseFloat(num)
+            }
+            catch (error)
+            {
+                console.error("QNumericControl: ", error)
+            }
+        }
+
+        // Check if the internal value actually changed
+        var eValue = (this.value !== num);
+        if (eValue) {
+            this.value = num;
+            this.UpdateControlValue();
+            this.TriggerChange();
+        }
+    },
+    get: function () {
+        this.ParseControlValue();
+        return this.value;
+    }
+});
+
 QNumericControl.prototype.ParseControlValue = function () {
     /// <summary>
     /// Parses the html to extract the value

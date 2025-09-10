@@ -285,7 +285,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValIdade', $('[data-form="Pesso1"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValIdade', $('[data-form="Pesso1"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValIdade', $('[data-form="Pesso1"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValIdade: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValIdade: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Recalculate formulas (server side) *@

@@ -342,7 +342,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Equip"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Equip"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValRegistnr', $('[data-form="Equip"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValRegistnr: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValRegistnr: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Default of the 'ValDesignat' field *@
@@ -358,7 +358,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Equip"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Equip"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValBought', $('[data-form="Equip"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValBought: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValBought: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Formula of the 'ValIfabatif' field *@
@@ -369,7 +369,7 @@
 								setFieldValue($(':not([elem-identifier="Multiform"]) > #ValIfabatif', $('[data-form="Equip"]')), result);
 								if($(':not([elem-identifier="Multiform"]) > #ValIfabatif', $('[data-form="Equip"]')).data('QObject') === undefined) $(':not([elem-identifier="Multiform"]) > #ValIfabatif', $('[data-form="Equip"]')).change(); //TODO: Remove this later...
 						});
-				} catch (err) { QError.AppendError('Formula of field ValIfabatif: ' + err.message, err.stack, window.location.href); }
+				} catch (err) { window.QError?.AppendError('Formula of field ValIfabatif: ' + err.message, err.stack, window.location.href); }
 		});
 		
 		@* Recalculate formulas (server side) *@

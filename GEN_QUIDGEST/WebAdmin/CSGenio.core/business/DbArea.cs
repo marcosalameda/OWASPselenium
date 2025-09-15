@@ -1713,7 +1713,8 @@ namespace CSGenio.business
                     {
                         try
                         {
-                            bool condResult = condition.ExecuteCondition(this, sp, ConditionToFunctionType(type));
+							var fdc = new FormulaDbContext(this);
+                            bool condResult = condition.ExecuteCondition(this, sp, ConditionToFunctionType(type), fdc);
                             if (!condResult)
                             {
                                 var status = StatusMessage.Error(condition.GetMessage(user));

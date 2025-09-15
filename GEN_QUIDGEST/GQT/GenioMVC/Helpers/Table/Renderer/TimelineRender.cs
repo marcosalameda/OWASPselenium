@@ -388,7 +388,7 @@ namespace GenioMVC.Helpers.Table.Renderer
             {
                 //Acoordion
                 TagBuilder acordBody = new TagBuilder("div");
-                acordBody.AddCssClass("collapse");
+                acordBody.AddCssClass("collapse show");
                 acordBody.Attributes.Add("elem-identifier", "AccordionBody");
                 acordBody.Attributes.Add("id", "timelineAccordion");
 

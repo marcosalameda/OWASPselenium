@@ -4645,6 +4645,128 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <data name="STRING29433" xml:space="preserve">
     <value>string</value>
   </data>
+  <data name="EQUIPMENT____C_GROUP25618" xml:space="preserve">
+    <value>Equipment -&gt; c-groupbox--minor-border-top</value>
+  </data>
+  <data name="BACKGROUND_COLOR07511" xml:space="preserve">
+    <value>Background Color</value>
+  </data>
+  <data name="MAU_SUP_16499" xml:space="preserve">
+    <value>Mau Sup.</value>
+  </data>
+  <data name="IDENTIFIER_TYPE60623" xml:space="preserve">
+    <value>Identifier type</value>
+  </data>
+  <data name="SHADOW_URL57805" xml:space="preserve">
+    <value>Shadow URL</value>
+  </data>
+  <data name="ACCESS_TO_ORGANIZATI29823" xml:space="preserve">
+    <value>Access to Organization</value>
+  </data>
+  <data name="EQUIPMENT_FAMILY41883" xml:space="preserve">
+    <value>Equipment family</value>
+  </data>
+  <data name="LIST____DB61131" xml:space="preserve">
+    <value>List -&gt; DB</value>
+  </data>
+  <data name="ORDER__INTEGER_FIELD38959" xml:space="preserve">
+    <value>Order (Integer field)</value>
+  </data>
+  <data name="__25811037" xml:space="preserve">
+    <value>Escolher que tipo de Scorecard se vai utilizar.</value>
+  </data>
+  <data name="__30142044" xml:space="preserve">
+    <value>Código</value>
+  </data>
+  <data name="__26904988" xml:space="preserve">
+    <value>Aviso de alerta relativamente ao resultado.</value>
+  </data>
+  <data name="___2916088" xml:space="preserve">
+    <value>This help is for a field of type Image</value>
+  </data>
+  <data name="DESIGNATION_35800" xml:space="preserve">
+    <value>Designation:</value>
+  </data>
+  <data name="__30344822" xml:space="preserve">
+    <value>Ordem pai</value>
+  </data>
+  <data name="PERPSPECTIVE16685" xml:space="preserve">
+    <value>Perpspective</value>
+  </data>
+  <data name="TYPE__TEXT_50814" xml:space="preserve">
+    <value>Type (Text)</value>
+  </data>
+  <data name="NORMAL_LIST29699" xml:space="preserve">
+    <value>Normal List</value>
+  </data>
+  <data name="ESTADO_DA_INICIATIVA15413" xml:space="preserve">
+    <value>Estado da Iniciativa</value>
+  </data>
+  <data name="TOTAL_INDICADORES28989" xml:space="preserve">
+    <value>Total Indicadores</value>
+  </data>
+  <data name="ALL_CONTACTS25646" xml:space="preserve">
+    <value>ALL CONTACTS</value>
+  </data>
+  <data name="LAST49207" xml:space="preserve">
+    <value>Last</value>
+  </data>
+  <data name="CARGO15596" xml:space="preserve">
+    <value>Cargo</value>
+  </data>
+  <data name="DATETIME__MINUTES_59352" xml:space="preserve">
+    <value>DateTime (Minutes)</value>
+  </data>
+  <data name="MANUALS14730" xml:space="preserve">
+    <value>Manuals</value>
+  </data>
+  <data name="PROSPECT_AND_QUALIFY62319" xml:space="preserve">
+    <value>Prospect and Qualify</value>
+  </data>
+  <data name="COMPLETION_DATE22888" xml:space="preserve">
+    <value>Completion Date</value>
+  </data>
+  <data name="EVALUATION_TYPE12257" xml:space="preserve">
+    <value>Evaluation Type</value>
+  </data>
+  <data name="_2A_CLASSE35193" xml:space="preserve">
+    <value>2ª Classe</value>
+  </data>
+  <data name="__SUPERADO39113" xml:space="preserve">
+    <value>% Superado</value>
+  </data>
+  <data name="_3__C_GROUPBOX__MINO47300" xml:space="preserve">
+    <value>3. c-groupbox--minor-border-top</value>
+  </data>
+  <data name="CONDICAO44011" xml:space="preserve">
+    <value>Condition</value>
+  </data>
+  <data name="PLANEADO30031" xml:space="preserve">
+    <value>Planeado</value>
+  </data>
+  <data name="__39955504" xml:space="preserve">
+    <value>Resultado: Definen los logros obtenidos con relación a los objetivos y metas planteados.
+Producto:  Miden los bienes y servicios que de manera cuantitativa son producidos y provistos por un determinado organismo público
+Proceso:  Centran su medición en el desarrollo de las actividades, las cuales están vinculadas a garantizar la prestación de servicios o generación de productos</value>
+  </data>
+  <data name="INITIAL_VALUE45123" xml:space="preserve">
+    <value>Initial Value</value>
+  </data>
+  <data name="_114630263" xml:space="preserve">
+    <value>Help in the second enumeration item</value>
+  </data>
+  <data name="__13431422" xml:space="preserve">
+    <value>Tipo de meta para os Segmentos. Se os segmentos são Acumulados por Média ou por Somatório.</value>
+  </data>
+  <data name="LATITUDES_RANGE_FROM48085" xml:space="preserve">
+    <value>Latitudes range from -90 to 90.</value>
+  </data>
+  <data name="FLAG51937" xml:space="preserve">
+    <value>Flag</value>
+  </data>
+  <data name="CHAVE_PRIMARIA61422" xml:space="preserve">
+    <value>Chave Primária</value>
+  </data>
   <data name="UPPERCASE48238" xml:space="preserve">
     <value>Uppercase</value>
   </data>
@@ -4767,9 +4889,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </data>
   <data name="CLASSE_ECONOMICA36282" xml:space="preserve">
     <value>Classe Económica</value>
-  </data>
-  <data name="CHAVE_PRIMARIA61422" xml:space="preserve">
-    <value>Chave Primária</value>
   </data>
   <data name="__30747434" xml:space="preserve">
     <value>Extensão</value>
@@ -5019,81 +5138,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </data>
   <data name="_0__PERC_32208" xml:space="preserve">
     <value>0% Perc.</value>
-  </data>
-  <data name="EQUIPMENT____C_GROUP25618" xml:space="preserve">
-    <value>Equipment -&gt; c-groupbox--minor-border-top</value>
-  </data>
-  <data name="BACKGROUND_COLOR07511" xml:space="preserve">
-    <value>Background Color</value>
-  </data>
-  <data name="MAU_SUP_16499" xml:space="preserve">
-    <value>Mau Sup.</value>
-  </data>
-  <data name="IDENTIFIER_TYPE60623" xml:space="preserve">
-    <value>Identifier type</value>
-  </data>
-  <data name="SHADOW_URL57805" xml:space="preserve">
-    <value>Shadow URL</value>
-  </data>
-  <data name="ACCESS_TO_ORGANIZATI29823" xml:space="preserve">
-    <value>Access to Organization</value>
-  </data>
-  <data name="EQUIPMENT_FAMILY41883" xml:space="preserve">
-    <value>Equipment family</value>
-  </data>
-  <data name="LIST____DB61131" xml:space="preserve">
-    <value>List -&gt; DB</value>
-  </data>
-  <data name="ORDER__INTEGER_FIELD38959" xml:space="preserve">
-    <value>Order (Integer field)</value>
-  </data>
-  <data name="__25811037" xml:space="preserve">
-    <value>Escolher que tipo de Scorecard se vai utilizar.</value>
-  </data>
-  <data name="__30142044" xml:space="preserve">
-    <value>Código</value>
-  </data>
-  <data name="__26904988" xml:space="preserve">
-    <value>Aviso de alerta relativamente ao resultado.</value>
-  </data>
-  <data name="___2916088" xml:space="preserve">
-    <value>This help is for a field of type Image</value>
-  </data>
-  <data name="DESIGNATION_35800" xml:space="preserve">
-    <value>Designation:</value>
-  </data>
-  <data name="__30344822" xml:space="preserve">
-    <value>Ordem pai</value>
-  </data>
-  <data name="PERPSPECTIVE16685" xml:space="preserve">
-    <value>Perpspective</value>
-  </data>
-  <data name="TYPE__TEXT_50814" xml:space="preserve">
-    <value>Type (Text)</value>
-  </data>
-  <data name="NORMAL_LIST29699" xml:space="preserve">
-    <value>Normal List</value>
-  </data>
-  <data name="ESTADO_DA_INICIATIVA15413" xml:space="preserve">
-    <value>Estado da Iniciativa</value>
-  </data>
-  <data name="TOTAL_INDICADORES28989" xml:space="preserve">
-    <value>Total Indicadores</value>
-  </data>
-  <data name="ALL_CONTACTS25646" xml:space="preserve">
-    <value>ALL CONTACTS</value>
-  </data>
-  <data name="LAST49207" xml:space="preserve">
-    <value>Last</value>
-  </data>
-  <data name="CARGO15596" xml:space="preserve">
-    <value>Cargo</value>
-  </data>
-  <data name="DATETIME__MINUTES_59352" xml:space="preserve">
-    <value>DateTime (Minutes)</value>
-  </data>
-  <data name="MANUALS14730" xml:space="preserve">
-    <value>Manuals</value>
   </data>
   <data name="INDICATOR_RESPONSIBL35030" xml:space="preserve">
     <value>Indicator Responsible</value>
@@ -5846,11 +5890,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <data name="JUSTIFICACAO_DOS_ALV14775" xml:space="preserve">
     <value>Justificação dos Alvos</value>
   </data>
-  <data name="__39955504" xml:space="preserve">
-    <value>Resultado: Definen los logros obtenidos con relación a los objetivos y metas planteados.
-Producto:  Miden los bienes y servicios que de manera cuantitativa son producidos y provistos por un determinado organismo público
-Proceso:  Centran su medición en el desarrollo de las actividades, las cuales están vinculadas a garantizar la prestación de servicios o generación de productos</value>
-  </data>
   <data name="TOILET13557" xml:space="preserve">
     <value>Toilet</value>
   </data>
@@ -6544,9 +6583,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;accessed 17-12-2018&#93;.<
   <data name="___2512436" xml:space="preserve">
     <value>This help is for a field of type Logical</value>
   </data>
-  <data name="PROSPECT_AND_QUALIFY62319" xml:space="preserve">
-    <value>Prospect and Qualify</value>
-  </data>
   <data name="CONJUNTO_DE_DADOS_ES36750" xml:space="preserve">
     <value>Conjunto de dados Estatísticos e administrativos</value>
   </data>
@@ -7095,9 +7131,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
   <data name="__RECEIPT04632" xml:space="preserve">
     <value>&gt;&gt;RECEIPT</value>
   </data>
-  <data name="_3__C_GROUPBOX__MINO47300" xml:space="preserve">
-    <value>3. c-groupbox--minor-border-top</value>
-  </data>
   <data name="ASSET_TYPES33420" xml:space="preserve">
     <value>Asset types</value>
   </data>
@@ -7286,39 +7319,6 @@ https://dicionario.priberam.org/comodante &#91;accessed 17-12-2018&#93;.</value>
   </data>
   <data name="BONIFICACOES_AUTOMAT45559" xml:space="preserve">
     <value>Bonificações Automáticas</value>
-  </data>
-  <data name="COMPLETION_DATE22888" xml:space="preserve">
-    <value>Completion Date</value>
-  </data>
-  <data name="EVALUATION_TYPE12257" xml:space="preserve">
-    <value>Evaluation Type</value>
-  </data>
-  <data name="_2A_CLASSE35193" xml:space="preserve">
-    <value>2ª Classe</value>
-  </data>
-  <data name="__SUPERADO39113" xml:space="preserve">
-    <value>% Superado</value>
-  </data>
-  <data name="CONDICAO44011" xml:space="preserve">
-    <value>Condition</value>
-  </data>
-  <data name="PLANEADO30031" xml:space="preserve">
-    <value>Planeado</value>
-  </data>
-  <data name="INITIAL_VALUE45123" xml:space="preserve">
-    <value>Initial Value</value>
-  </data>
-  <data name="_114630263" xml:space="preserve">
-    <value>Help in the second enumeration item</value>
-  </data>
-  <data name="__13431422" xml:space="preserve">
-    <value>Tipo de meta para os Segmentos. Se os segmentos são Acumulados por Média ou por Somatório.</value>
-  </data>
-  <data name="LATITUDES_RANGE_FROM48085" xml:space="preserve">
-    <value>Latitudes range from -90 to 90.</value>
-  </data>
-  <data name="FLAG51937" xml:space="preserve">
-    <value>Flag</value>
   </data>
   <data name="BILL_TO10407" xml:space="preserve">
     <value>Bill To</value>

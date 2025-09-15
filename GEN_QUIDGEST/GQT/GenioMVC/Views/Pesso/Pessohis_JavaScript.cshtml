@@ -113,11 +113,11 @@
 {
 	<text>
 	@*Hidden Foreign Keys Controls*@
-			this.Controls.LED_PESSOHISCATEGCODCATEG = new QHiddenControl($('[data-identifier="LED_PESSOHISCATEGCODCATEG"]', this.element), window.Form_Pessohis);
 			this.Controls.LED_PESSOHISREGI1CODREGIA = new QHiddenControl($('[data-identifier="LED_PESSOHISREGI1CODREGIA"]', this.element), window.Form_Pessohis);
 			this.Controls.LED_PESSOHISCNTRYCODCNTRY = new QHiddenControl($('[data-identifier="LED_PESSOHISCNTRYCODCNTRY"]', this.element), window.Form_Pessohis);
 			this.Controls.LED_PESSOHISCMPNYCODEMPRE = new QHiddenControl($('[data-identifier="LED_PESSOHISCMPNYCODEMPRE"]', this.element), window.Form_Pessohis);
 			this.Controls.LED_PESSOHISPAIS1CODCNTRY = new QHiddenControl($('[data-identifier="LED_PESSOHISPAIS1CODCNTRY"]', this.element), window.Form_Pessohis);
+			this.Controls.LED_PESSOHISCATEGCODCATEG = new QHiddenControl($('[data-identifier="LED_PESSOHISCATEGCODCATEG"]', this.element), window.Form_Pessohis);
 	</text>
 }
 			this.Controls.LED_PESSOHISPESSOCODPESSO = new QHiddenControl($('[data-identifier="LED_PESSOHISPESSOCODPESSO"]', this.element), window.Form_Pessohis);
@@ -191,11 +191,11 @@
 @{
 	<text>
 		window.Form_Pessohis.Data.RelationKeysSelector = {
-				get categ() { return $(':not([elem-identifier="Multiform"]) > #ValCodcateg', $('[data-form="Pessohis"]')); /* Hidden */ },
 				get regi1() { return $(':not([elem-identifier="Multiform"]) > #ValCodregia', $('[data-form="Pessohis"]')); /* Hidden */ },
 				get cntry() { return $(':not([elem-identifier="Multiform"]) > #ValCodpaise', $('[data-form="Pessohis"]')); /* Hidden */ },
 				get cmpny() { return $(':not([elem-identifier="Multiform"]) > #ValCodempre', $('[data-form="Pessohis"]')); /* Hidden */ },
 				get pais1() { return $(':not([elem-identifier="Multiform"]) > #ValCodcntry', $('[data-form="Pessohis"]')); /* Hidden */ },
+				get categ() { return $(':not([elem-identifier="Multiform"]) > #ValCodcateg', $('[data-form="Pessohis"]')); /* Hidden */ },
 		};
 
 		window.Form_Pessohis.getAllForeignKeySelectors = function () {
@@ -205,8 +205,6 @@
 
 		window.Form_Pessohis.Data.RelationKeys = {
 			get formContext() { return window.Form_Pessohis; },
-			get categ() { return (this.formContext.Data.RelationKeysSelector.categ.getQControl() || {}).Value; /* Hidden FK */ },
-			set categ(newValue) { (this.formContext.Data.RelationKeysSelector.categ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get regi1() { return (this.formContext.Data.RelationKeysSelector.regi1.getQControl() || {}).Value; /* Hidden FK */ },
 			set regi1(newValue) { (this.formContext.Data.RelationKeysSelector.regi1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get cntry() { return (this.formContext.Data.RelationKeysSelector.cntry.getQControl() || {}).Value; /* Hidden FK */ },
@@ -215,6 +213,8 @@
 			set cmpny(newValue) { (this.formContext.Data.RelationKeysSelector.cmpny.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 			get pais1() { return (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value; /* Hidden FK */ },
 			set pais1(newValue) { (this.formContext.Data.RelationKeysSelector.pais1.getQControl() || {}).Value = newValue; /* Hidden FK */ },
+			get categ() { return (this.formContext.Data.RelationKeysSelector.categ.getQControl() || {}).Value; /* Hidden FK */ },
+			set categ(newValue) { (this.formContext.Data.RelationKeysSelector.categ.getQControl() || {}).Value = newValue; /* Hidden FK */ },
 		};
 	</text>
 }

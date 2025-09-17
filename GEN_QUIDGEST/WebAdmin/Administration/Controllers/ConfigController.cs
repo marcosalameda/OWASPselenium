@@ -15,6 +15,7 @@ using System.Data;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.core.messaging;
 using Administration.Models;
+using GenioServer.security;
 
 namespace Administration.Controllers
 {

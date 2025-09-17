@@ -66,7 +66,7 @@
 					</dl>
 					<dl class="row">
 						<dt>{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
-						<dd>2959</dd>
+						<dd>2954</dd>
 						<dt>{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
 						<dd>{{ Model.VersionDbGen }}</dd>
 						<dt>{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
@@ -74,9 +74,9 @@
 						<dt>{{ Resources.VERSAO_DOS_INDICES49454 }}</dt>
 						<dd>{{ Model.VersionIdxDbGen }}</dd>
 						<dt>{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
-						<dd>373.39</dd>
+						<dd>372.05</dd>
 						<dt>{{ Resources.GERADO_EM27272 }}</dt>
-						<dd>09/17/2025</dd>
+						<dd>08/08/2025</dd>
 					</dl>
 					<dl class="row">
 						<span class="app-brand">

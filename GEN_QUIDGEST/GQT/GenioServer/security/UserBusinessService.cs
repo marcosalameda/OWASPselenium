@@ -1,55 +1,103 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Security.Principal;
 using CSGenio.framework;
 using CSGenio.business;
 using CSGenio.persistence;
 using Quidgest.Persistence.GenericQuery;
-using System.Threading;
 using CSGenio;
 
 namespace GenioServer.security
 {    
     /// <summary>
-    /// Business layer methods that are necessary to create users
+    /// Provider for creating users from a registration from and associating them with roles and EPH's
     /// </summary>
-    public class UserBusinessService : IUserBusinessManager
+    public abstract class BaseUserRegistration
     {
-        private PersistentSupport sp;
-        private  User user;
-
-        public void SetLocalProperties(PersistentSupport sp, User user)
+        /// <summary>
+        /// Full user registration process
+        /// </summary>
+        /// <param name="psw">User login information</param>
+        /// <param name="area">The business information to associate with this user</param>
+        /// <param name="secret">Primary credentials to use for user authentication</param>
+        /// <returns>The created user</returns>
+        public virtual User Register(CSGenioApsw psw, IArea area, CredentialSecret secret = null)
         {
-            this.sp = sp;
-            this.user = user;
+            var sp = ResolvePersistentSupport(psw, area);
+
+            //prevalidate business record, to prevent having to rollback external user creation
+            if (area is Area business)
+            {
+                sp.openConnection();
+                StatusMessage status = Validation.validateFieldsChange(business, sp, area.User);
+                if (status.Status == Status.E)
+                    throw new FieldValidationException(status, "BaseUserRegistration.Register");
+                sp.closeConnection();
+            }
+
+            User newUser = CreateUser(psw, secret);
+            try
+            {
+                sp.openTransaction();
+                CreateEph(newUser, area, sp);
+                sp.closeTransaction();
+            }
+            catch (Exception)
+            {
+                sp.rollbackTransaction();
+                throw;
+            }
+
+            return newUser;
         }
 
         /// <summary>
-        /// Creates the necessary association for COMODANTE EPH
+        /// Creates a user in the user directory
         /// </summary>
-        /// <param name="psw">A userlogin (psw) record</param>
-        /// <param name="valEph">The value of the link field of the EPH (CODPESS1)</param>
-        public void CreateEph_COMODANTE(CSGenioApsw psw, string valEph)
+        /// <param name="psw">User login information</param>
+        /// <param name="secret">Primary credentials to use for user authentication</param>
+        /// <returns>The created user</returns>
+        public virtual User CreateUser(CSGenioApsw psw, CredentialSecret secret = null)
         {
-            CSGenioApwcom record = new CSGenioApwcom(user, "Public");
-            record.ValCodpess1 = valEph;
-            record.ValCodpsw = psw.ValCodpsw;
-            record.UserRecord = true; //Change by [TMV] (03-08-2022) -> Makes sense to be a user record, to stamp the audit fields. And the action is triggred by a user
-			
-			//Using insert creates a new record but this record should already exist when the user is created
-			List<CSGenioApwcom> dbRecords = CSGenioApwcom.searchList(sp, user, CriteriaSet.And()
-                .Equal(CSGenioApwcom.FldCodpess1, record.ValCodpess1)
-                .Equal(CSGenioApwcom.FldCodpsw, record.ValCodpsw)
-                .Equal(CSGenioApwcom.FldZzstate, 0));
-            //If user record does not exist
-            if(dbRecords == null || dbRecords.Count == 0) {
-                record.insert(sp);
-            }
-            //User record exists
-            else {
-                record.update(sp);
-            }
+            //Setup the user to be created with its associated roles
+            User user = new User(psw.ValNome, "", Configuration.DefaultYear);
+            user.Years.Add(Configuration.DefaultYear);
+            user.CurrentModule = "Public";
+            user.Status = 2;
+            CreateRoles(user);
+
+            //Any extra information that was collected is passed to the provider as claims
+            //The provider can decide to persist the values, modify them, map them, ignore them, etc.
+            //user will have user.Codpsw filled by the provider
+            Dictionary<string, object> claims = new Dictionary<string, object>();
+            foreach (var field in psw.Fields.Values)
+                claims.Add(field.Name, field.Value);
+            SecurityFactory.CreateNewUser(user, claims, secret);
+
+            return user;
         }
+
+        /// <summary>
+        /// Creates the default user permissions for this user
+        /// </summary>
+        /// <param name="user">The user</param>
+        public virtual void CreateRoles(User user) { }
+
+        /// <summary>
+        /// Determines the database connection to use in the registration act
+        /// </summary>
+        /// <param name="psw">User login information</param>
+        /// <param name="area">The business information to associate with this user</param>
+        /// <returns>A persistent support</returns>
+        public virtual PersistentSupport ResolvePersistentSupport(CSGenioApsw psw, IArea area)
+			=> PersistentSupport.getPersistentSupport(Configuration.DefaultYear);
+
+        /// <summary>
+        /// Associates the user to the business information
+        /// </summary>
+        /// <param name="newUser">The newly created user</param>
+        /// <param name="area">The business information to associate with this user</param>
+        /// <param name="sp">Persistent support</param>
+        public virtual void CreateEph(User newUser, IArea area, PersistentSupport sp) { }
     }
 }

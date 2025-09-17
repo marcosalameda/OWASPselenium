@@ -653,7 +653,7 @@ namespace CSGenio
 
     [XmlRoot("dictionary")]
     public class SerializableDictionary<TKey, TValue>
-        : Dictionary<TKey, TValue>, IXmlSerializable
+        : Dictionary<TKey, TValue>, IXmlSerializable, ICloneable
     {
         #region IXmlSerializable Members
         public System.Xml.Schema.XmlSchema GetSchema()
@@ -681,22 +681,22 @@ namespace CSGenio
                 reader.ReadStartElement("item");
 
                 //no attributes means we are using elements instead
-                if(ak == null)
+                if (ak == null)
                 {
-                reader.ReadStartElement("key");
+                    reader.ReadStartElement("key");
                     ak = keySerializer.Deserialize(reader);
-                reader.ReadEndElement();
-                }                
-                if(av == null)
+                    reader.ReadEndElement();
+                }
+                if (av == null)
                 {
-                reader.ReadStartElement("value");
+                    reader.ReadStartElement("value");
                     av = valueSerializer.Deserialize(reader);
-                reader.ReadEndElement();
+                    reader.ReadEndElement();
                 }
                 this.Add((TKey)ak, (TValue)av);
 
-                if(!isEmpty)
-                reader.ReadEndElement();
+                if (!isEmpty)
+                    reader.ReadEndElement();
                 reader.MoveToContent();
 
             }
@@ -713,7 +713,7 @@ namespace CSGenio
             foreach (TKey key in this.Keys)
             {
                 //string dictionarys can be simplified a single element with attributes
-                if(simplified)
+                if (simplified)
                 {
                     writer.WriteStartElement("item");
                     writer.WriteAttributeString("key", key.ToString());
@@ -722,20 +722,28 @@ namespace CSGenio
                 }
                 else //otherwise do a full key and value serialization
                 {
-	                writer.WriteStartElement("item");
-	                writer.WriteStartElement("key");
-	                keySerializer.Serialize(writer, key);
-	                writer.WriteEndElement();
-	                writer.WriteStartElement("value");
-	                TValue value = this[key];
-	                valueSerializer.Serialize(writer, value);
-	                writer.WriteEndElement();
-	                writer.WriteEndElement();
+                    writer.WriteStartElement("item");
+                    writer.WriteStartElement("key");
+                    keySerializer.Serialize(writer, key);
+                    writer.WriteEndElement();
+                    writer.WriteStartElement("value");
+                    TValue value = this[key];
+                    valueSerializer.Serialize(writer, value);
+                    writer.WriteEndElement();
+                    writer.WriteEndElement();
                 }
             }
         }
 
         #endregion
+        
+        public object Clone()
+        {
+            var res = new SerializableDictionary<TKey, TValue>();
+            foreach (var kvp in this)
+                res.Add(kvp.Key, kvp.Value);
+            return res;
+        }
     }
 
 	[Serializable]
@@ -1023,9 +1031,9 @@ namespace CSGenio
         }
     }
 
-	[Serializable]
+    [Serializable]
     [XmlRoot("identityProvider")]
-    public class IdentityProviderCfgEl: ICloneable
+    public class IdentityProviderCfgEl : ICloneable
     {
         public object Clone()
         {
@@ -1034,7 +1042,7 @@ namespace CSGenio
                 Name = Name,
                 Description = Description,
                 Type = Type,
-                Config = Config
+                Options = Options.Clone() as SerializableDictionary<string, string>
             };
 
             return identity;
@@ -1048,58 +1056,39 @@ namespace CSGenio
 
         [XmlAttribute("type")]
         public string Type { get; set; }
-
-        [XmlAttribute("config")]
-        public string Config { get; set; }
+        
+        [XmlElement("options")]
+        public SerializableDictionary<string, string> Options { get; set; } = new SerializableDictionary<string, string>();
     }
 
 	[Serializable]
     [XmlRoot("roleProvider")]
     public class RoleProviderCfgEl: ICloneable
     {
-        private string m_name;
-        private string m_type;
-        private string m_config;
-        private string m_precond;
-
         public object Clone()
         {
-            RoleProviderCfgEl role = new RoleProviderCfgEl();
-            role.m_name = m_name;
-            role.m_type = m_type;
-            role.m_config = m_config;
-            role.m_precond = m_precond;
+            RoleProviderCfgEl role = new RoleProviderCfgEl()
+            {
+                Name = Name,
+                Type = Type,
+                Options = Options.Clone() as SerializableDictionary<string, string>,
+                Precond = Precond
+            };
 
             return role;
         }
 
         [XmlAttribute("name")]
-        public string Name
-        {
-            get { return m_name; }
-            set { m_name = value; }
-        }
+        public string Name { get; set; }
 
         [XmlAttribute("type")]
-        public string Type
-        {
-            get { return m_type; }
-            set { m_type = value; }
-        }
+        public string Type { get; set; }
 
-        [XmlAttribute("config")]
-        public string Config
-        {
-            get { return m_config; }
-            set { m_config = value; }
-        }
+        [XmlElement("options")]
+        public SerializableDictionary<string, string> Options { get; set; } = new SerializableDictionary<string, string>();
 
         [XmlAttribute("precond")]
-        public string Precond
-        {
-            get { return m_precond; }
-            set { m_precond = value; }
-        }
+        public string Precond { get; set; }
     }
 
 	[XmlRoot("moreProperty")]

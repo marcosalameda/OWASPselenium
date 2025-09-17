@@ -166,17 +166,6 @@ namespace CSGenio.business
             return null;
         }
 
-        public string[] getModules()
-        {
-        
-             string[] modulos=new string[5];
-            modulos[0]="GQT";
-            modulos[1]="PTN";
-            modulos[2]="TBS";
-            modulos[3]="REG";
-            modulos[4]="STY";
-            return modulos;
-        }
 
 	}
 }

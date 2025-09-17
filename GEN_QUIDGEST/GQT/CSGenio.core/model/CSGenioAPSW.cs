@@ -61,6 +61,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "NAME31974";
 
 			Qfield.Dupmsg = "";
+            Qfield.NotDup = true;
 //Actualiza as seguintes réplicas:
 			Qfield.ReplicaDestinationList = new List<ReplicaDestination>();
 			Qfield.ReplicaDestinationList.Add( new ReplicaDestination("GQT", "gqtpwcom", "codpsw", "name"));
@@ -743,20 +744,7 @@ namespace CSGenio.business
 
      
 
-                       
-        public string[] getModules()
-        {
-        
-             string[] modulos=new string[5];
-            modulos[0]="GQT";
-            modulos[1]="PTN";
-            modulos[2]="TBS";
-            modulos[3]="REG";
-            modulos[4]="STY";
-            return modulos;
-        }
-
-        /// <summary>
+                               /// <summary>
         /// Set decrypted value to encrypted field
         /// </summary>
         /// <param name="fieldName">Field name</param>

@@ -205,8 +205,8 @@ namespace Administration.Models
                     DecimalSeparator = AuxFunctions.ToSelectList<HardCodedLists.DisplayNumberFormatDecimal>(),
                     GroupSeparator = AuxFunctions.ToSelectList<HardCodedLists.DisplayNumberFormatGroup>(),
                     DisplayUserType = AuxFunctions.ToSelectList<DisplayUserType>(),
-                    IdentityProviderTypeList = IdentityProviderCfg.TypeList,
-                    RoleProviderTypeList = RoleProviderCfg.TypeList,
+                    IdentityProviderTypeList = IdentityProviderCfg.TypeList(),
+                    RoleProviderTypeList = RoleProviderCfg.TypeList(),
                     PropertyList = MorePropertyCfg.PropertyList,
                     SchedulerTaskList = ScheduleTaskFactory.GetTaskOptions(),
                 };
@@ -365,8 +365,9 @@ namespace Administration.Models
     public class IdentityProviderCfg
     {
         private static IEnumerable<SecurityProviderMetainfo> idProviderList = AppDomain.CurrentDomain.GetLoadableTypes()
-            .Where(p => p.GetInterfaces().Contains(typeof(GenioServer.security.IIdentityProvider)))
+            .Where(p => p.GetInterfaces().Contains(typeof(GenioServer.security.IIdentityProvider)) && !p.IsAbstract)
             .Select(x => new SecurityProviderMetainfo(x));
+        public static IEnumerable<SecurityProviderMetainfo> TypeList() => idProviderList;
 
         public IdentityProviderCfg()
         {
@@ -377,11 +378,6 @@ namespace Administration.Models
         {
             obj = o;
         }
-        
-        /// <summary>
-        /// Gets the corresponding metadata info for this type
-        /// </summary>
-        public SecurityProviderMetainfo MetaData => idProviderList.FirstOrDefault(x => x.Type.FullName == this.Type);
 
         [Display(Name = "NOME47814", ResourceType = typeof(Resources.Resources))]
         public string Name
@@ -404,20 +400,11 @@ namespace Administration.Models
             set { obj.Type = value; }
         }
 
-        [Display(Name = "TIPO55111", ResourceType = typeof(Resources.Resources))]
-        public static IEnumerable<SecurityProviderMetainfo> TypeList
-        {
-            get
-            {
-				return idProviderList;
-            }
-        }
-
         [Display(Name = "CONFIGURACAO10928", ResourceType = typeof(Resources.Resources))]
-        public string Config
+        public CSGenio.SerializableDictionary<string, string> Options
         {
-            get { return obj.Config; }
-            set { obj.Config = value; }
+            get { return obj.Options; }
+            set { obj.Options = value; }
         }
 
         [JsonIgnore]
@@ -431,8 +418,9 @@ namespace Administration.Models
     public class RoleProviderCfg
     {
         private static IEnumerable<SecurityProviderMetainfo> roleProviderList = AppDomain.CurrentDomain.GetLoadableTypes()
-            .Where(p => p.GetInterfaces().Contains(typeof(GenioServer.security.IRoleProvider)))
+            .Where(p => p.GetInterfaces().Contains(typeof(GenioServer.security.IRoleProvider)) && !p.IsAbstract)
             .Select(x => new SecurityProviderMetainfo(x));
+        public static IEnumerable<SecurityProviderMetainfo> TypeList() => roleProviderList;
 
         public RoleProviderCfg()
         {
@@ -444,12 +432,6 @@ namespace Administration.Models
             obj = o;
         }
         
-        /// <summary>
-        /// Gets the corresponding metadata info for this type
-        /// </summary>
-        public SecurityProviderMetainfo MetaData => roleProviderList.FirstOrDefault(x => x.Type.FullName == this.Type);
-
-
         [Display(Name = "NOME47814", ResourceType = typeof(Resources.Resources))]
         public string Name
         {
@@ -464,20 +446,11 @@ namespace Administration.Models
             set { obj.Type = value; }
         }
 
-        [Display(Name = "TIPO55111", ResourceType = typeof(Resources.Resources))]
-        public static IEnumerable<SecurityProviderMetainfo> TypeList
-        {
-            get
-            {
-				return roleProviderList;
-            }
-        }
-
         [Display(Name = "CONFIGURACAO10928", ResourceType = typeof(Resources.Resources))]
-        public string Config
+        public CSGenio.SerializableDictionary<string, string> Options
         {
-            get { return obj.Config; }
-            set { obj.Config = value; }
+            get { return obj.Options; }
+            set { obj.Options = value; }
         }
 
         [Display(Name = "PRECONDICAO44917", ResourceType = typeof(Resources.Resources))]

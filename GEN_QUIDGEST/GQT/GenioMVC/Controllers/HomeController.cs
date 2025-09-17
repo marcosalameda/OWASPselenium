@@ -872,10 +872,9 @@ namespace GenioMVC.Controllers
 				qToken.OriginUrl = GetOidRegistUrl();
                 qToken.Token = id_token;
 
-                bool validToken = ip.RegisterExternalId(qToken, UserContext.Current.User);
-
-				if (validToken) //When user authenticated successfull we will save user info
-					SuccessMessage(Resources.Resources.CONTA_FOI_CRIADA_COM31537);
+				var identity = ip.Authenticate(qToken);
+				SecurityFactory.RegisterExternalId(UserContext.Current.User, identity);
+				SuccessMessage(Resources.Resources.CONTA_FOI_CRIADA_COM31537);
 			}
 			catch (Exception ex)
 			{

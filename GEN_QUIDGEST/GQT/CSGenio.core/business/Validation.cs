@@ -208,20 +208,18 @@ namespace CSGenio.business
             if (!Qfield.NotNull && Qfield.isEmptyValue(fieldValue))
                 return true;
 
-            // Retrieve the Qvalue of the primary key
+            // Query to check if the value is not unique
+            CriteriaSet criteria = CriteriaSet.And()
+                    .Equal(area.Alias, Qfield.Name, fieldValue)
+                    .Equal(area.Alias, "zzstate", 0);
             string codIntValue = area.QPrimaryKey;
+            if (!string.IsNullOrEmpty(codIntValue))
+                criteria = criteria.NotEqual(area.Alias, area.PrimaryKeyName, codIntValue);
 
-            if (String.IsNullOrEmpty(codIntValue))
-                return true;
-
-            // Query to check if the Qvalue is not unique
             SelectQuery qs = new SelectQuery()
                 .Select(area.Alias, Qfield.Name)
                 .From(area.QSystem, area.TableName, area.Alias)
-                .Where(CriteriaSet.And()
-                    .NotEqual(area.Alias, area.PrimaryKeyName, codIntValue)
-                    .Equal(area.Alias, Qfield.Name, fieldValue)
-                    .Equal(area.Alias, "zzstate", 0));
+                .Where(criteria);
 
             // Check if Qfield sets another Qfield as prefix for non-duplication
             if (!String.IsNullOrEmpty(Qfield.PrefNDup))

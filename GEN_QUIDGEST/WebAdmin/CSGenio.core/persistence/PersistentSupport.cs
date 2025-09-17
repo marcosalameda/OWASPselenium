@@ -1800,186 +1800,131 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
 
         /// <summary>
-        /// Method to return EPH values depending on user (level and password)
+        /// Method to return EPH values depending on user
         /// </summary>
-        /// <param name="codpsw">internal user code on psw table</param>
-        /// <param name="condicoes">array with EPH conditions</param>
-        /// <param name="modulo">module to consider</param>
-        /// <returns>list with the conditions to each EPH to this user</returns>
-        public string[] ValuesEPH(string codpsw, EPHCondition condition, string module)
+        /// <param name="codpsw">internal unique user code</param>
+        /// <param name="condition">EPH to fetch values for</param>
+        /// <returns>list with the EPH values for this user</returns>
+        public string[] ValuesEPH(string codpsw, EPHCondition condition)
         {
-            //AV 20091229 Redone conditions to allow Tree EPH, with multiple values and
-            //applied to different key fields
             try
             {
-                List<string> Qvalues = new List<string>();
-
-                // constructs the query to interrogate the BD about the value of the EPH limiter field
+                AreaInfo tabelaEPH = Area.GetInfoArea(condition.EPHTable);
                 SelectQuery query = new SelectQuery();
-                if (condition.TableName == condition.EPHTable)
+                //TODO: This field needs to be modeled instead of hardcoded to allow external user directories to work with EPH
+                var useridField = "codpsw";
+
+                if (tabelaEPH.TableName == condition.TableName)
                 {
-                    query.Select(condition.AliasTable, condition.EPHField);
+                    //Get the values from the same table
+                    query.Select(tabelaEPH.Alias, condition.EPHField)
+                        .From(condition.TableSystem, condition.TableName, tabelaEPH.Alias)
+                        .Where(CriteriaSet.And()
+                            .Equal(condition.AliasTable, useridField, codpsw));
                 }
                 else
                 {
-                    query.Select(condition.AliasTable, condition.RelationField);
-                }
+                    //The values we are after are in a table above this one, so we need to follow the relation
+                    AreaInfo tabelaAssoc = Area.GetInfoArea(condition.AliasTable);
+                    Relation rel = tabelaAssoc.ParentTables[tabelaEPH.Alias];
 
-                query.From(condition.TableSystem, condition.TableName, condition.AliasTable);
-                query.Where(CriteriaSet.And()
-                    .Equal(condition.AliasTable, "codpsw", codpsw));
-                ArrayList valorChaves = executeReaderOneColumn(query);
-
-                if (valorChaves != null)
-                {
-                    // MH [10/25/2016] - EPHTable may contain the long table name which is not supported by GetInfoArea because it will look for a CSGenioA class
-                    AreaInfo tabelaEPH = Area.GetInfoArea(condition.EPHTable/*.substring(3)*/);
-
-                    if (condition.TableName == tabelaEPH.TableName)
-                        foreach (object chaveBD in valorChaves)
-                        {
-                            Qvalues.Add(DBConversion.ToString(chaveBD));
-                        }
+                    //If the EPHfield we are after is the primary key of the Value table
+                    //then we can use the foreign key of the relation to that table and avoid the inner join
+                    if (condition.EPHField == rel.TargetIntKey)
+                    {
+                        query.Select(tabelaEPH.Alias, rel.SourceRelField)
+                            .From(condition.TableSystem, condition.TableName, tabelaEPH.Alias)
+                            .Where(CriteriaSet.And()
+                                .Equal(condition.AliasTable, useridField, codpsw));
+                    }
                     else
                     {
-                        foreach (object chaveBD in valorChaves)
-                        {
-                            object key = chaveBD;
-                            if (key != null && !Object.Equals(key, "") && !Object.Equals(key, Guid.Empty))
-                            {
-                                SelectQuery queryvalores = new SelectQuery()
-                                    .Select(tabelaEPH.TableName, condition.EPHField)
-                                    .From(tabelaEPH.TableName)
-                                    .Where(CriteriaSet.And()
-                                        .Equal(tabelaEPH.TableName, tabelaEPH.PrimaryKeyName, key));
-                                ArrayList valorEPHs = executeReaderOneColumn(queryvalores);
-                                // if there is no input to the user in the table that makes the interface to this EPH
-                                // a condition should be placed in the session which does not allow it to view any
-                                foreach (object Qvalue in valorEPHs)
-                                {
-                                    if (Qvalue != null)
-                                        Qvalues.Add(DBConversion.ToString(Qvalue));
-                                    else
-                                    {
-                                        Qvalues.Clear();
-                                        return Qvalues.ToArray();
-                                    }
-                                }
-                            }
-                        }
+                        query.Select(tabelaEPH.Alias, condition.EPHField)
+                            .From(condition.TableSystem, condition.TableName, condition.AliasTable)
+                            .Join(tabelaEPH.TableName, tabelaEPH.Alias)
+                            .On(CriteriaSet.And().Equal(rel.AliasSourceTab, rel.SourceRelField, rel.AliasTargetTab, rel.TargetIntKey))
+                            .Where(CriteriaSet.And()
+                                .Equal(condition.AliasTable, useridField, codpsw));
                     }
                 }
-                else
-                {
-                    Qvalues.Clear();
-                    return Qvalues.ToArray();
-                }                    // another hypothesis is to throw an exception to the user's warning
+                ArrayList valorChaves = executeReaderOneColumn(query);
+                if (valorChaves == null)
+                    return [];
+                List<string> Qvalues = new List<string>();
+                foreach (object chaveBD in valorChaves)
+                    Qvalues.Add(DBConversion.ToString(chaveBD));
                 return Qvalues.ToArray();
             }
             catch (PersistenceException ex)
             {
-                throw new PersistenceException(ex.UserMessage, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + " for module " + module + "where " + condition.ToString() + ": " + ex.Message, ex);
+                throw new PersistenceException(ex.UserMessage, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + "where " + condition.ToString() + ": " + ex.Message, ex);
             }
             catch (Exception ex)
             {
-				throw new PersistenceException(null, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + " for module " + module + "where " + condition.ToString() + ": " + ex.Message, ex);
+				throw new PersistenceException(null, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + "where " + condition.ToString() + ": " + ex.Message, ex);
             }
         }
 
-		        /// <summary>
+		/// <summary>
         /// Return initial eph values
         /// </summary>
-        /// <param name="codpsw">internal user code on psw table</param>
-        /// <param name="condicoes">array with EPH conditions</param>
-        /// <param name="modulo">module to consider</param>
+        /// <param name="condition">The initial EPH to fetch values for</param>
         /// <param name="values">values to filter</param>
-        /// <returns>list with the conditions to each EPH to this user</returns>
-        public string[] ValuesEphInitial(string codpsw, EPHCondition condition, string module, string[] values)
+        /// <returns>list with the initial EPH values for this user</returns>
+        public string[] ValuesEphInitial(EPHCondition condition, string[] values)
         {
             try
             {
-                List<string> Qvalues = new List<string>();
-
-                string primaryKeyName = Area.GetInfoArea(condition.EPHTable).PrimaryKeyName;
-				string ligacao = primaryKeyName;
-
-                // constructs the query to interrogate the BD about the value of the EPH limiter field
+                AreaInfo tabelaEPH = Area.GetInfoArea(condition.EPHTable);
+                string primaryKeyName = tabelaEPH.PrimaryKeyName;
                 SelectQuery query = new SelectQuery();
-                if (condition.TableName == condition.EPHTable)
+
+                if (tabelaEPH.TableName == condition.TableName)
                 {
+                    //If the values we want are exactly the values of the primary keys we got, then just return them as is
                     if (condition.EPHField == primaryKeyName)
                         return values;
 
-                    query.Select(condition.AliasTable, condition.EPHField);
+                    //otherwise we need to exchange the primary key values for another field of this same table
+                    query.Select(tabelaEPH.Alias, condition.EPHField)
+                        .From(condition.TableSystem, condition.TableName, tabelaEPH.Alias)
+                        .Where(CriteriaSet.And()
+                            .In(condition.AliasTable, primaryKeyName, new List<string>(values)));
                 }
                 else
                 {
-                    //if the connection is not the same as in the eph
-                    string ligacao_nova = Area.GetInfoArea(condition.AliasTable).PrimaryKeyName;
+                    //The values we are after are in a table above this one, so we need to follow the relation
+                    AreaInfo tabelaAssoc = Area.GetInfoArea(condition.AliasTable);
+                    Relation rel = tabelaAssoc.ParentTables[tabelaEPH.Alias];
 
-                    if(ligacao_nova != primaryKeyName)
-                        ligacao = ligacao_nova;
+                    //If the EPHfield we are after is the primary key of the Value table,
+                    //then we again already have the values we are looking for
+                    if (condition.EPHField == rel.TargetIntKey)
+                        return values;                    
 
-                    query.Select(condition.AliasTable, condition.RelationField);
+                    query.Select(tabelaEPH.Alias, condition.EPHField)
+                        .From(condition.TableSystem, condition.TableName, condition.AliasTable)
+                        .Join(tabelaEPH.TableName, tabelaEPH.Alias)
+                        .On(CriteriaSet.And().Equal(rel.AliasSourceTab, rel.SourceRelField, rel.AliasTargetTab, rel.TargetIntKey))
+                        .Where(CriteriaSet.And()
+                            .In(condition.AliasTable, primaryKeyName, new List<string>(values)));
                 }
 
-                query.From(condition.TableSystem, condition.TableName, condition.AliasTable);
-                query.Where(CriteriaSet.And()
-                    .In(condition.AliasTable, ligacao, new List<string>(values)));
                 ArrayList valorChaves = executeReaderOneColumn(query);
-
-                if (valorChaves != null)
-                {
-                    AreaInfo tabelaEPH = Area.GetInfoArea(condition.EPHTable);
-
-                    if (condition.TableName == tabelaEPH.TableName)
-                        foreach (object chaveBD in valorChaves)
-                        {
-                            Qvalues.Add(DBConversion.ToString(chaveBD));
-                        }
-                    else
-                    {
-                        foreach (object chaveBD in valorChaves)
-                        {
-                            object key = chaveBD;
-                            if (key != null && !Object.Equals(key, "") && !Object.Equals(key, Guid.Empty))
-                            {
-                                SelectQuery queryvalores = new SelectQuery()
-                                    .Select(tabelaEPH.TableName, condition.EPHField)
-                                    .From(tabelaEPH.TableName)
-                                    .Where(CriteriaSet.And()
-                                        .Equal(tabelaEPH.TableName, tabelaEPH.PrimaryKeyName, key));
-                                ArrayList valorEPHs = executeReaderOneColumn(queryvalores);
-                                // if there is no input to the user in the table that makes the interface to this EPH
-                                // a condition should be placed in the session which does not allow it to view any
-                                foreach (object Qvalue in valorEPHs)
-                                {
-                                    if (Qvalue != null)
-                                        Qvalues.Add(DBConversion.ToString(Qvalue));
-                                    else
-                                    {
-                                        Qvalues.Clear();
-                                        return Qvalues.ToArray();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    Qvalues.Clear();
-                    return Qvalues.ToArray();
-                }                    // another hypothesis is to throw an exception to the user's warning
+                if (valorChaves == null)
+                    return [];
+                List<string> Qvalues = new List<string>();
+                foreach (object chaveBD in valorChaves)
+                    Qvalues.Add(DBConversion.ToString(chaveBD));
                 return Qvalues.ToArray();
             }
             catch (PersistenceException ex)
             {
-                throw new PersistenceException(ex.UserMessage, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + " for module " + module + "where " + condition.ToString() + ": " + ex.Message, ex);
+                throw new PersistenceException(ex.UserMessage, "PersistentSupport.devolveCampos", "Error returning EPHs for " + condition.ToString() + ": " + ex.Message, ex);
             }
             catch (Exception ex)
             {
-                throw new PersistenceException(null, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + " for module " + module + "where " + condition.ToString() + ": " + ex.Message, ex);
+                throw new PersistenceException(null, "PersistentSupport.devolveCampos", "Error returning EPHs for " + condition.ToString() + ": " + ex.Message, ex);
             }
         }
 

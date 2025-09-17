@@ -666,6 +666,21 @@ namespace Administration.Controllers
         }
 
         [HttpPost]
+        public IActionResult SetupProviders()
+        {
+            var appId = FromQuery("appId");
+            var conf = configManager.GetExistingConfig();
+            SecurityCfgEl security = conf.GetSecurity(appId);
+            foreach (var provider in security.RoleProviders)
+            {
+                var providerInstance = SecurityFactory.ParseRoleProvider(provider);
+                if(providerInstance.HasUserDirectory)
+                    providerInstance.SetupUserDirectory();
+            }
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
         public IActionResult SaveUserCfg([FromBody]Models.UserCfg model)
         {
             var appId = FromQuery("appId");

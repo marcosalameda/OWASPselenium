@@ -1,12 +1,12 @@
-﻿using System;
-using System.Text;
-using System.Security.Principal;
+﻿using CSGenio;
 using CSGenio.business;
-using CSGenio.persistence;
-using Quidgest.Persistence.GenericQuery;
-using System.Collections.Generic;
 using CSGenio.framework;
+using CSGenio.persistence;
 using OtpNet;
+using Quidgest.Persistence.GenericQuery;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace GenioServer.security
 {
@@ -15,7 +15,16 @@ namespace GenioServer.security
     public class TOTPIdentityProvider : BaseIdentityProvider
     {
         /// <inheritdoc/>
-        public override IIdentity Authenticate(Credential credential)
+        public TOTPIdentityProvider(IdentityProviderCfgEl config) : base(config)
+        {
+        }
+
+        public TOTPIdentityProvider() : base(new IdentityProviderCfgEl() { Name = "Totp" })
+        {
+        }
+
+        /// <inheritdoc/>
+        public override GenioIdentity Authenticate(Credential credential)
         {
             IList<string> anos = new List<string>(Configuration.Years);
             if (Configuration.Years.Count == 0)
@@ -23,7 +32,7 @@ namespace GenioServer.security
                 anos.Add(Configuration.DefaultYear);
             }
             Type classname = credential.GetType();
-            IIdentity id = null;
+            GenioIdentity id = null;
 
             foreach (string Qyear in anos)
             {
@@ -37,7 +46,7 @@ namespace GenioServer.security
                     known = true;
                 }
                 if (!known)
-                    throw new Exception("The type " + credential.GetType().FullName + " is not supported for QuidgestIdentityProvider authentication.");
+                    throw new InvalidOperationException("The type " + credential.GetType().FullName + " is not supported for QuidgestIdentityProvider authentication.");
 
                 sp.closeConnection();
 
@@ -56,7 +65,7 @@ namespace GenioServer.security
             return pass == genCode;
         }
 
-        private IIdentity Authenticate(UserPassCredential credential, PersistentSupport sp)
+        private GenioIdentity Authenticate(UserPassCredential credential, PersistentSupport sp)
         {
             SelectQuery select = new SelectQuery()
                 .Select("psw", "psw2favl")
@@ -90,7 +99,13 @@ namespace GenioServer.security
                     sp.Execute(updQ);
                 }
 
-                return new GenericIdentity(credential.Username);
+                return new()
+                {
+                    Name = credential.Username,
+                    IsAuthenticated = true,
+                    AuthenticationType = this.GetType().Name,
+                    IdProperty = GenioIdentityType.InternalId
+                };
             }
 
             //add one more attempt if user fail the pass

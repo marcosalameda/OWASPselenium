@@ -314,7 +314,7 @@ namespace CSGenio.framework
 		/// <summary>
 		/// Método que permite devolver o id da sessão
 		/// </summary>
-		public string SessionId { get; }
+		public string SessionId { get; set; }
 
 
         private string Qyear; //Qyear actual
@@ -348,7 +348,7 @@ namespace CSGenio.framework
 		/// <summary>
 		/// Lista de anos em que o user tem permissão de entrar
 		/// </summary>
-		public List<string> Years { get; set; }
+		public List<string> Years { get; set; } = [];
 
 		/// <summary>
 		/// Método que verifica se o user tem level definido to o módulo
@@ -547,8 +547,10 @@ namespace CSGenio.framework
 		/// Adds a role module to the list of allowed roles for the user
 		public void AddModuleRole(string module, Role role)
 		{
-			if(!ModuleRoles.ContainsKey(module))
-				ModuleRoles[module] = new List<Role> ();
+			if (role is null || role == Role.INVALID)
+				return;
+			if (!ModuleRoles.ContainsKey(module))
+				ModuleRoles[module] = new List<Role>();
 			ModuleRoles[module].Add(role);
 		}
 

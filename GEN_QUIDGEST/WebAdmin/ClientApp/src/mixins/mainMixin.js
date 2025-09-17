@@ -80,54 +80,10 @@ export const reusableMixin = {
 
 
 
-function ParseQueryString(query) {
-    let res = {};
-    if (!query || typeof query !== 'string')
-        return res;
-    let vars = query.split('&');
-    for (var i = 0; i < vars.length; i++) {
-        let pair = vars[i].split('=');
-        let d0 = decodeURIComponent(pair[0]);
-        let d1 = decodeURIComponent(pair[1] || '');
-        res[d0] = d1;
-    }
-    return res;
-}
-function EncodeQueryString(obj) {
-    //%26 : &
-    //%3D : =
-    //%25 : %
-    //just replace these so the final config string is a bit more readable when encoding json
-    let miniUriEncode = (s) => s.replaceAll('%', '%25').replaceAll('&', '%26').replaceAll('=', '%3D');
-    return Object.entries(obj)
-        .map(([key, value]) => miniUriEncode(key) + '=' + miniUriEncode(value))
-        .join('&');
-}
-export function NormalizeValue(option, config) {
-    let parsedConfig;
-    if (typeof config === 'string') {
-        try {
-            parsedConfig = JSON.parse(config);
-        } catch (error) {
-            parsedConfig = {};
-        }
-    } else {
-        parsedConfig = config;
-    }
-    let res;
-    res = parsedConfig[option.PropertyName];
-
-    //json lists are going to be objects, so we need to transform them to strings
-    if (option.Type.startsWith('List') && res)
-        res = Array.isArray(res) ? res.join(',') : res;
-
-    if (!res) res = "";
-    return res;
-}
-
 
 export function ReadProviderConfig(type, config, ProviderTypeList) {
-    let tempConfig = [];
+	let tempConfig = [];
+
     if (!type)
         return tempConfig;
 
@@ -135,17 +91,9 @@ export function ReadProviderConfig(type, config, ProviderTypeList) {
     if (!provider)
         return tempConfig;
 
-    let c = ParseQueryString(config);
-
-    //expand json string objects if they belong the the parent of an option
-    for (const o of provider.Options) {
-        if (o.Parent.length > 0 && (typeof c[o.Parent]) == 'string')
-            c[o.Parent] = JSON.parse(c[o.Parent]);
-    }
-
     //create the temporary value array that the UI will need to supply editors for
     tempConfig = provider.Options.map(o => ({
-        Value: NormalizeValue(o, c),
+		PValue: config[o.PropertyName],
         ...o
     }));
 
@@ -157,41 +105,13 @@ export function WriteProviderConfig(tempConfig, type, ProviderTypeList) {
 
     let provider = ProviderTypeList.find(x => x.TypeFullName == type);
     if (!provider) return;
-    let obj = {};
+	let obj = {};
 
-    //group all the options by parent
-    for (const o of provider.Options) {
-        let value = tempConfig.find(x => x.PropertyName == o.PropertyName).Value;
-        if (!value || value == "")
-            continue;
+	for (const o of provider.Options) {
+		let prop = tempConfig.find(x => x.PropertyName == o.PropertyName);
+		if (prop.PValue && prop.PValue.trim() !== '')
+			obj[o.PropertyName] = prop.PValue;
+	}
 
-        //reconstitute json lists back into an object
-        if (o.Type.startsWith('List'))
-            value = value.split(',');
-
-        if (o.Parent.length > 0) {
-            if (!obj[o.Parent]) obj[o.Parent] = {};
-            obj[o.Parent][o.PropertyName] = value;
-        }
-        else
-            obj[o.PropertyName] = value;
-    }
-
-    //convert to json the parented options
-    for (const o of provider.Options) {
-        if (o.Parent.length > 0 && obj[o.Parent] && (typeof obj[o.Parent]) != 'string') {
-            obj[o.Parent] = JSON.stringify(obj[o.Parent]);
-        }
-    }
-
-    //Format as `property=value&property=value` if LdapQuery or LdapIdentity
-    if (type === 'GenioServer.security.LdapQueryIdentityProvider' ||
-	type === 'GenioServer.security.LdapIdentityProvider') {
-        return Object.entries(obj)
-		.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-		.join('&');
-    } else {
-        //query string encode all the values
-        return EncodeQueryString(obj);
-    }
+	return obj;
 }

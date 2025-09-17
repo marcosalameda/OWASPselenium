@@ -1,119 +1,79 @@
- using System;
-using System.Collections;
+using System;
 
-namespace CSGenio.framework
+namespace CSGenio.framework;
+
+/// <summary>
+/// Defines how a set of EPH values should be fetched
+/// </summary>
+public class EPHCondition : ICloneable
 {
-	/// <summary>
-	/// Summary description for EPH.
-	/// </summary>
-	/// 
-	
-	public class EPHCondition : ICloneable
-	{
-        //AV 20091229 Alterei a classe to permitir EPH em árvore, com múltiplos Qvalues e 
-        //aplicadas a fields diferentes de chaves
-		private string nomeEPH;
-		private string sistemaTabela;//system da table relacionada com a table psw
-		private string QtableName;//name da table relacionada com a table psw
-		private string aliasTabela;//alias da table relacionada com a table psw
-		private string relationalField;//Qfield que estabelece a relação
-        private string tabelaEPH;//table da ficha a usar na EPH
-        private string campoEPH;//Qfield com o Qvalue a usar na EPH
-        private FieldType tipoCampoEPH;
-		private string intialForm;
+    /// <summary>
+    /// Constructor
+    /// </summary>
+    /// <param name="ephName">Id of the EPH</param>
+    /// <param name="tableSystem">System of the Association table</param>
+    /// <param name="table">Physical name of the Association table</param>
+    /// <param name="tableAlias">Alias to use for the Association table</param>
+    /// <param name="relationField">Foreign key from the Association table to the Value table</param>
+    /// <param name="ephTable">Alias name of the Value table</param>
+    /// <param name="ephField">Value to fetch from the Value table</param>
+    /// <param name="ephFieldType">Type of value</param>
+    /// <param name="intialForm">Initial form for the EPH</param>
+    public EPHCondition(string ephName, string tableSystem, string table, string tableAlias, string relationField, string ephAlias, string ephField, FieldType ephFieldType, string intialForm)
+    {
+        EPHName = ephName;
+        TableSystem = tableSystem;
+        TableName = table;
+        AliasTable = tableAlias;
+        RelationField = relationField;
+        EPHTable = ephAlias;
+        EPHField = ephField;
+        EPHFieldType = ephFieldType;
+        IntialForm = intialForm;
+    }
 
-        public EPHCondition(string nomeEPH, string sistemaTabela, string QtableName, string aliasTabela, string relationalField, string tabelaEPH, string campoEPH, FieldType tipoCampoEPH, string intialForm)
-        {
-            this.nomeEPH = nomeEPH;
-            this.sistemaTabela = sistemaTabela;
-            this.QtableName = QtableName;
-            this.aliasTabela = aliasTabela;
-            this.relationalField = relationalField;
-            this.tabelaEPH = tabelaEPH;
-            this.campoEPH = campoEPH;
-            this.tipoCampoEPH = tipoCampoEPH;
-			this.intialForm = intialForm;
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public string TableSystem
-		{
-			get{return sistemaTabela;}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		public string TableName
-		{
-			get{return QtableName;}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		public string AliasTable
-		{
-			get{return aliasTabela;}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		public string RelationField
-		{
-			get{return relationalField;}
-		}
-
-		/// <summary>
-		/// 
-		/// </summary>
-		public string EPHName
-		{
-			get{return nomeEPH;}
-		}
-		
-        /// <summary>
-        /// 
-        /// </summary>
-        public string EPHTable
-        {
-            get { return tabelaEPH; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public string EPHField
-        {
-            get { return campoEPH; }
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public FieldType EPHFieldType
-        {
-            get { return tipoCampoEPH; }
-        }
-
-		/// <summary>
-        /// Get the Intial form set to EPH
-        /// </summary>
-        public string IntialForm
-        {
-            get { return intialForm; }
-        }
-
-        /// <summary>
-        /// Clone EPHCondition
-        /// </summary>
-        /// <returns></returns>
-        public object Clone()
-        {
-			return new EPHCondition(nomeEPH, sistemaTabela, QtableName, aliasTabela, relationalField, tabelaEPH, campoEPH, tipoCampoEPH, IntialForm);
-        }
-	}
+    /// <summary>
+    /// Id of the EPH
+    /// </summary>
+    public string EPHName { get; }
+    /// <summary>
+    /// System of the Association table
+    /// </summary>
+    public string TableSystem { get; }
+    /// <summary>
+    /// Physical name of the Association table
+    /// </summary>
+    public string TableName { get; }
+    /// <summary>
+    /// Alias to use for the Association table
+    /// </summary>
+    public string AliasTable { get; }
+    /// <summary>
+    /// Foreign key from the Association table to the Value table
+    /// </summary>
+    public string RelationField { get; }
+    /// <summary>
+    /// Alias name of the Value table
+    /// </summary>
+    public string EPHTable { get; }
+    /// <summary>
+    /// Value to fetch from the Value table
+    /// </summary>
+    public string EPHField { get; }
+    /// <summary>
+    /// Type of value
+    /// </summary>
+    public FieldType EPHFieldType { get; }
+    /// <summary>
+    /// Initial form for the EPH
+    /// </summary>
+    /// <remarks>
+    /// Leave empty for EPH's that are associated by login
+    /// </remarks>
+    public string IntialForm { get; }
+    /// <inheritdoc/>
+    public object Clone()
+    {
+	    return new EPHCondition(EPHName, TableSystem, TableName, AliasTable, RelationField, EPHTable, EPHField, EPHFieldType, IntialForm);
+    }
 }

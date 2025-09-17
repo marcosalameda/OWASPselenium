@@ -217,23 +217,23 @@ namespace GenioMVC.Controllers
             {
                 if(ModelState.IsValid)
                 {
-                    User u = UserContext.Current.User;
-                    PersistentSupport sp = PersistentSupport.getPersistentSupport(u.Year, u.Name);
-                    UserFactory userFactory = new UserFactory(sp, u);
-                    IPrincipal principal = HttpContext.User;
-                    //Check if the user with this email exists
-                    //var user = userFactory.GetUserFromEmail(model.Email);
-                    var user = SecurityFactory.GetUserFromEmail(principal.Identity, model.Email, u, sp);
+                    User user = SecurityFactory.Authorize(new()
+                    {
+                        Name = model.Email,
+                        AuthenticationType = "RecoverPassword",
+                        IsAuthenticated = false,
+                        IdProperty = GenioIdentityType.Email
+                    });
 
                     string emailBody = "";
                     string appName = Configuration.Application.Name;
                     string lang = RouteData.GetRequiredString("culture");
                     if (user != null)
                     {
-                        ResourceUser rec = new ResourceUser(user.ValNome, user.ValCodpsw);
-                        var ticket = QResources.CreateTicketEncryptedBase64(u.Name, u.Location, rec);
+                        ResourceUser rec = new ResourceUser(user.Name, user.Codpsw);
+                        var ticket = QResources.CreateTicketEncryptedBase64(user.Name, user.Location, rec);
 
-                        string userName = user.ValNome;
+                        string userName = user.Name;
                         string urlToken= Url.Action("RecoverPasswordChange", "Account", new { ticket }, Request.Url.Scheme);
 
                         emailBody = UserRegistration.GetEmailForLanguage("PasswordChangeEmail", lang);
@@ -246,6 +246,7 @@ namespace GenioMVC.Controllers
                         emailBody = String.Format(emailBody, appName, baseUrl);
                     }
 
+                    UserFactory userFactory = new(null, m_userContext.User);
                     userFactory.SendPasswordRecoveryMail(model.Email, emailBody);
                     model.IsEmailSent = true;
 
@@ -629,79 +630,14 @@ namespace GenioMVC.Controllers
 
 		public ActionResult Register(string Form, string Pswform, string Id)
         {
-            ViewModels.RegisterViewModel model = new ViewModels.RegisterViewModel();
-
-            RegistrationConfig(model, Form, Id);
-            RegistrationConfig(model, Pswform, Id);
-
-            return View(model);
-        }
-
-		/// <summary>
-		/// A dictionary with all user regitration defined (The form order ie defined by list object)
-		/// </summary>
-		private Dictionary<string, List<string>> registrationFormList = new Dictionary<string, List<string>>
-		{
-			{
-				"b19bed66-a6e9-4494-92e5-78deac2ba837", new List<string> { "Defaultpsw", "Pess1" }
-			},
-        };
-
-		/// <summary>
-		/// Get the form order of each user registration
-		/// </summary>
-		/// <param name="form">form to get order</param>
-		/// <param name="formRegistor">user registration ID</param>
-		/// <returns>form order</returns>
-		private int GetRegistrationFormOrder(string form,  string registrationID)
-		{
-			if (string.IsNullOrEmpty(registrationID) || string.IsNullOrEmpty(form))
-				return -1;
-
-			if (registrationFormList.ContainsKey(registrationID))
-			{
-				List<string> formlist = registrationFormList[registrationID];
-				if (formlist.Count == 2)
-				{
-					if (formlist[0].Equals(form))
-						return 1;
-					else
-						return 2;
-				}
-			}
-
-			return -1;
-		}
-
-        public void RegistrationConfig(ViewModels.RegisterViewModel model, string Form, string registrationID)
-        {
-            switch (Form)
+            switch(Id)
             {
-                case "Pess1"://Setup Form
-                    {
-                        if (!Navigation.CurrentLevel.CheckEntry("pess1") || model.FormData == null)
-                            model.FormData = Pess1_New(true);
-
-                        model.partialView = "Pess1_Support";
-                        model.partialViewJS = "PESS1";
-                        model.redirect = "Pess1_Register";
-                        model.DivID = "Pess1_well";
-						model.FormDataOrdem = GetRegistrationFormOrder(Form, registrationID);
-                        break;
-                    }
-                case "Defaultpsw": //Psw form
-                    {
-                        if (model.FormPswData == null)
-                            model.FormPswData =  new ViewModels.Psw.Defaultpsw_ViewModel(Navigation, true);
-
-                        model.PswpartialView = "Defaultpsw_Support";
-                        model.Pswredirect = "Defaultpsw_Register";
-                        model.PswDivID = "Defaultpsw_well";
-                        model.FormPswOrdem = GetRegistrationFormOrder(Form, registrationID);
-                        break;
-                    }
+                case "b19bed66-a6e9-4494-92e5-78deac2ba837":
+                    return View(Pess1_GetViewModel(null, null));
+                default:
+                    return RedirectToAction("HttpRedirectIndex", "Home", new { nav = Navigation.NavigationId });
             }
-		}
+        }
 
 		public ActionResult CreationSuccess()
         {
@@ -709,238 +645,131 @@ namespace GenioMVC.Controllers
         }
 
 
+		private ViewModels.RegisterViewModel Pess1_GetViewModel(ViewModels.Pess1.Pess1_ViewModel formData, ViewModels.Psw.Defaultpsw_ViewModel pswData)
+		{
+
+            var model = new ViewModels.RegisterViewModel();
+            if (!Navigation.CurrentLevel.CheckEntry("pess1") || model.FormData == null)
+                model.FormData = Pess1_New(true);
+
+            model.partialView = "Pess1_Support";
+            model.partialViewJS = "PESS1";
+            model.redirect = "Pess1_Register";
+            model.DivID = "Pess1_well";
+			model.FormDataOrdem = 2;
+
+            if (model.FormPswData == null)
+                model.FormPswData = new ViewModels.Psw.Defaultpsw_ViewModel(Navigation, true);
+
+            model.PswpartialView = "Defaultpsw_Support";
+            model.Pswredirect = "Defaultpsw_Register";
+            model.PswDivID = "Defaultpsw_well";
+			model.FormPswOrdem = 1;
+
+            return model;
+		}
+
 		public ViewModels.Pess1.Pess1_ViewModel Pess1_New(bool isNewInitialization = false)
         {
-            ViewModels.Pess1.Pess1_ViewModel model = new ViewModels.Pess1.Pess1_ViewModel(Navigation, true);
-            var qs = Request.QueryString;
-
-
             PersistentSupport sp = UserContext.Current.PersistentSupport;
-            try
+            ViewModels.Pess1.Pess1_ViewModel model = new ViewModels.Pess1.Pess1_ViewModel(Navigation, true);
+
+            if (isNewInitialization)
             {
+                CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + Navigation.CurrentLevel.Location.ShortDescription());
 
-                if (isNewInitialization)
-                {
-                    CSGenio.framework.Audit.registAction(UserContext.Current.User, Resources.Resources.FORM54242 + " " + Navigation.CurrentLevel.Location.ShortDescription());
-
-                    sp.openTransaction();
-
-                    var Model = new Models.Pess1();
-                    Model.klass.UserRecord = false;
-                    Model.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level);
-                    Model.New("Pess1");
-
-					                    Navigation.SetValue("pess1", Model.ValCodpesso);
-					Navigation.CurrentLevel.SetMode(FormMode.New);
-                    model.MapFromModel(Model);
-                    sp.closeTransaction();
-
-                    sp.openConnection();
-
-                    model.NewLoad();
-
-                    sp.closeConnection();
-                }
-                else
-                {
-                    model.NestedForm = true;
-                    model.Navigation = Navigation;
-                    sp.openConnection();
-                    model.Load(qs, true, Request.IsAjaxRequest());
-                    sp.closeConnection();
-                }
-
-            }
-            catch (ModelNotFoundException)
-            {
-                sp.rollbackTransaction();
+                sp.openConnection();
+                var Model = new Models.Pess1();
+                Model.klass.UserRecord = false;
+                Model.LoadKeysFormHistory(Navigation, Navigation.CurrentLevel.Level);
+                Navigation.SetValue("pess1", Model.ValCodpesso);
+                Navigation.CurrentLevel.SetMode(FormMode.New);
+                model.MapFromModel(Model);
+                model.NewLoad();
                 sp.closeConnection();
-                return model;
             }
-            catch (Exception e)
+            else
             {
-                sp.rollbackTransaction();
+                model.NestedForm = true;
+                model.Navigation = Navigation;
+                sp.openConnection();
+                model.Load(Request.QueryString, true, Request.IsAjaxRequest());
                 sp.closeConnection();
-
-                model.LoadPartial(Request.QueryString);
-                model.MapFromModel();
-
-                var exceptionUserMessage = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-                if (e is GenioException && (e as GenioException).UserMessage != null)
-                    exceptionUserMessage = Translations.Get((e as GenioException).UserMessage, UserContext.Current.User.Language);
-
-                ModelState.AddModelError("Erro", exceptionUserMessage);
-
-                CSGenio.framework.Log.Error("Pess1_New - GET " + e.Message);
-
-                ErrorMessage(exceptionUserMessage);
             }
             return model;
         }
- 
+
         // POST: /Account/Register
         [HttpPost, CaptchaMvc.Attributes.CaptchaVerify("Invalid captcha")]
         public ActionResult Pess1_Register(
             [Bind(Prefix = "model2")] ViewModels.Pess1.Pess1_ViewModel FormData,
             [Bind(Prefix = "model1")] ViewModels.Psw.Defaultpsw_ViewModel FormPswData)
         {
-            //TODO: If(!Config.RegisterUsers) return "ERROR UNAUTHORIZED";
-            ViewModels.RegisterViewModel returnModel = new ViewModels.RegisterViewModel();
-            const string registrationId = "b19bed66-a6e9-4494-92e5-78deac2ba837";
+
+            ActionResult ReturnError(string errorMessage)
+            {
+                ViewModels.RegisterViewModel returnModel = Pess1_GetViewModel(FormData, FormPswData);
+                FormData.Navigation = Navigation;
+                FormData.LoadPartial(Request.QueryString);
+                FormData.MapFromModel();
+                FormPswData.Navigation = Navigation;
+                return Json(new { Success = false, Form = "Form_Pess1", Operation = "New", View = RenderPartialViewToString(this, "Register", returnModel), Message = errorMessage });
+            }
 
             if (!ModelState.IsValid)
-            {
-
-				returnModel.FormData = FormData;
-				RegistrationConfig(returnModel,"Pess1", registrationId);
-				(returnModel.FormData as ViewModels.Pess1.Pess1_ViewModel).Navigation = Navigation;
-				(returnModel.FormData as ViewModels.Pess1.Pess1_ViewModel).LoadPartial(Request.QueryString);
-				(returnModel.FormData as ViewModels.Pess1.Pess1_ViewModel).MapFromModel();
-
-                returnModel.FormPswData = FormPswData;
-                RegistrationConfig(returnModel,"Defaultpsw", registrationId);
-                (returnModel.FormPswData as ViewModels.Psw.Defaultpsw_ViewModel).Navigation = Navigation;
-
-                return Json(new { Success = false, Form = "Form_Pess1" ,Operation = "New", View = RenderPartialViewToString(this, "Register", returnModel), Message = Resources.Resources.PEDIMOS_DESCULPA__OC63848});
-            }
+                return ReturnError(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
 
             string UserName = FormPswData.ValNome;
             string Email = FormPswData.ValEmail;
             string Password = FormPswData.ValPassword;
             string ConfirmPassword = FormPswData.ConfirmValPassword;
 
-            CSGenioApsw user;
-
-            PersistentSupport sp = UserContext.Current.PersistentSupport;
-
             try
             {
-                Password password = new Password(Password,ConfirmPassword);
-                UserFactory factory = new UserFactory(sp, UserContext.Current.User);
-                sp.openTransaction();
+                //The session user during registration is a guest, we need to create internal admin user that
+                //has enough permissions to insert the psw and business tables
+                User adminUser = SecurityFactory.ElevateUserToAdmin(m_userContext.User);
+                adminUser.Name = UserName;
 
-                //Create new user psw record
-                user = factory.CreateNewPsw(
-                    userName : UserName, email: Email, phone: string.Empty,
-                    status: 2, //Account starts disabled
-                    password: password);
-                user.User.Public = true;
- 
+                //Parse the viewmodels into a psw and a business class
+                CSGenioApsw userRecord = new CSGenioApsw(adminUser);
+                Psw pswModel = new Psw(userRecord);
+                FormPswData.MapToModel(pswModel);
+
+                CSGenioApess1 area = new CSGenioApess1(adminUser);
+                Pess1 areaModel = new Pess1(area);
+                FormData.MapToModel(areaModel);
+
+                //Parse the secret from the UI (currently only supports password)
+                // CredentialSecret secret = MapSecretFromModel(formPswData);
+                CredentialSecret secret = new PasswordSecret()
+                {
+                    Username = UserName,
+                    NewPass = Password,
+                    ConfirmPass = ConfirmPassword
+                };
+
 // USE /[MANUAL GQT USER_CREATION_CONTROLLER]/
+                //Create the user through through the current provider
+                UserRegistrationRegisto de novo utilizador userRegisterService = new();
+                User newUser = userRegisterService.Register(userRecord, area, secret);
 
-                //Insert new user data into database
-				user.UserRecord = true; //Change by [TMV] (03-08-2022) -> Makes sense to be a user record, to stamp the audit fields. And the action is triggred by a user
-                user.insert(sp);
-                factory.CreateUser_PESS1(user);
-
-				//Set foreign key to primary key of record in user table (USERLOGIN / PSW)
-                //Change by [TMV] (16.03.2021) -> Returns the CSGenio to be able to create eph with formula fields
-                CSGenioApess1 area = Pess1_New_Registration(FormData);
-
-                if (area is null)
-                {
-                    sp.rollbackTransaction();
-                    sp.closeConnection();
-
-                    returnModel.FormData = FormData;
-                    RegistrationConfig(returnModel,"Pess1", registrationId);
-                    (returnModel.FormData as ViewModels.Pess1.Pess1_ViewModel).Navigation = Navigation;
-                    (returnModel.FormData as ViewModels.Pess1.Pess1_ViewModel).LoadPartial(Request.QueryString);
-                    (returnModel.FormData as ViewModels.Pess1.Pess1_ViewModel).MapFromModel();
-
-                    returnModel.FormPswData = FormPswData;
-                    RegistrationConfig(returnModel,"Defaultpsw", registrationId);
-                    (returnModel.FormPswData as ViewModels.Psw.Defaultpsw_ViewModel).Navigation = Navigation;
-
-                    return Json(new { Success = false, Form = "Form_Pess1", Operation = "New", View = RenderPartialViewToString(this, "Register", returnModel), Message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 });
-                }
-
-				factory.CreateEph_COMODANTE(user, area.ValCodpesso);
-
-                string lang = "";
-                try
-                {
-                    lang = RouteData.GetRequiredString("culture");
-                }
-                catch (Exception) { }
-
-                UserFactory.MailSender(user, Url.Action("ConfirmEmail", "Account", new { ticket = "fldTicket" }, Request.Url.Scheme), lang);
-
-                sp.closeTransaction();
-
-                return Json(new { Success = true, Operation = "New", Message = Resources.Resources.REGISTO_CRIADO_COM_S18746, Url = Url.Action("CreationSuccess") });
+                //send email
+                UserFactory.MailSender(userRecord, Url.Action("ConfirmEmail", "Account", new { ticket = "fldTicket" }, Request.Url.Scheme), m_userContext.User.Language);
             }
-            catch (BusinessException e)
+            catch (GenioException e)
             {
-                sp.rollbackTransaction();
-                sp.closeConnection();
                 ModelState.AddModelError("Erro", e.UserMessage);
-                Log.Error(e.Message);
-            }
-            catch (FrameworkException e)
-            {
-                sp.rollbackTransaction();
-                sp.closeConnection();
-                ModelState.AddModelError("Erro", e.UserMessage);
-                Log.Error(e.Message);
             }
             catch (Exception e)
             {
-                sp.rollbackTransaction();
-                sp.closeConnection();
                 ModelState.AddModelError("Erro", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
                 Log.Error(e.Message);
             }
 
-            returnModel.FormData = FormData;
-            RegistrationConfig(returnModel,"Pess1", registrationId);
-            (returnModel.FormData as ViewModels.Pess1.Pess1_ViewModel).Navigation = Navigation;
-            (returnModel.FormData as ViewModels.Pess1.Pess1_ViewModel).LoadPartial(Request.QueryString);
-            (returnModel.FormData as ViewModels.Pess1.Pess1_ViewModel).MapFromModel();
-
-            returnModel.FormPswData = FormPswData;
-            RegistrationConfig(returnModel,"Defaultpsw", registrationId);
-            (returnModel.FormPswData as ViewModels.Psw.Defaultpsw_ViewModel).Navigation = Navigation;
-
-            return Json(new { Success = false, Form = "Form_Pess1", Operation = "New", View = RenderPartialViewToString(this, "Register", returnModel), Message = Resources.Resources.PEDIMOS_DESCULPA__OC63848 });
+            return ReturnError(Resources.Resources.PEDIMOS_DESCULPA__OC63848);
         }
 
-		public CSGenioApess1 Pess1_New_Registration(ViewModels.Pess1.Pess1_ViewModel model)
-        {
-			User u = UserContext.Current.User;
-            u.AddModuleRole("GQT", CSGenio.framework.Role.ADMINISTRATION);
-			try
-			{
-				//TMV adds the module to be able to check the permisions
-				u.CurrentModule = "GQT";
-				var Model = new Models.Pess1
-				{
-					ValZzstate = 0,
-				};
-				model.MapToModel(Model);
-
-				PersistentSupport sp = UserContext.Current.PersistentSupport;
-
-				Model.klass.removeCalculatedFields();
-				Model.klass.change(sp, (Quidgest.Persistence.GenericQuery.CriteriaSet)null);
-
-				u.RemoveModuleRole("GQT", CSGenio.framework.Role.ADMINISTRATION);
-				u.CurrentModule = null;
-
-
-				// MH - Visualizar os warnings obtidos durante gravação. (ex: Condição de escrita que não impede gravação)
-				if (model.flashMessage != null && (model.flashMessage.Status == Status.W || model.flashMessage.Status == Status.OK_MAIS_W))
-					GetFlashMessage(model.flashMessage, Navigation.CurrentLevel.FormMode);
-
-				return Model.klass;
-			}
-			catch
-            {
-                u.RemoveModuleRole("GQT", CSGenio.framework.Role.ADMINISTRATION);
-                u.CurrentModule = null;
-                throw;
-            }
-        }
 
 		// GET: /Account/ConfirmEmail
         [HttpGet]
@@ -958,14 +787,12 @@ namespace GenioMVC.Controllers
                     try
                     {
                         ResourceUser recq = rec as ResourceUser;
-                        PersistentSupport sp = UserContext.Current.PersistentSupport;
                         if (DateTime.UtcNow < recq.CreationDate.AddHours(24))
                         {
-                            Psw psw = Psw.Find(recq.ID);
-                            sp.openConnection();
-                            psw.ValStatus = 0;
-                            psw.Apply();
-                            sp.closeConnection();
+                            User user = new User(recq.Name, "", Configuration.DefaultYear);
+                            user.Years.Add(Configuration.DefaultYear);
+                            user.Codpsw = recq.ID;
+                            SecurityFactory.SetUserEnabled(user, 0);
                         }
                     }
                     catch (Exception e)
@@ -1060,28 +887,27 @@ namespace GenioMVC.Controllers
 
         private User AuthenticateUser(BasicUserModel model, string year)
         {
-            User user = new User(model.UserName, HttpContext.Session.SessionID, Configuration.DefaultYear, Request.UserHostName);
-
-            IPrincipal principal = null;
-
             try
             {
-                principal = SecurityFactory.Authenticate(
+                User user = SecurityFactory.Authenticate(
                        new UserPassCredential() { Username = model.UserName, Password = model.Password, Year = year });
-                if (principal == null)
+                if (user == null)
                 {
 					throw new BusinessException(Resources.Resources.LOGIN_OU_PASSWORD_IN32183, "InterfaceXml.pedidoEXW()", Resources.Resources.LOGIN_OU_PASSWORD_IN32183);
                 }
+                user.SessionId = HttpContext.Session.SessionID;
+                user.Location = Request.UserHostName;
+                user.Year = Configuration.DefaultYear;
 
                 //o user entra no primeiro Qyear a que tem direito
                 Exception lastException = null;
                 bool sucess = false;
                 // tentar fazer login no DefaultYear
-                if (principal.IsInRole(user.Year))
+                if (user.Years.Contains(user.Year))
                 {
                     try
                     {
-                        user = UserFactory.FillUser(principal, user);
+                        user = UserFactory.ReadEphs(user);
                         sucess = true;
                     }
                     catch (Exception e)
@@ -1093,13 +919,13 @@ namespace GenioMVC.Controllers
                 {
                     foreach (string Qyear in Configuration.Years)
                     {
-                        if (principal.IsInRole(Qyear))
+                        if (user.Years.Contains(Qyear))
                         {
                             user.Year = Qyear;
 
                             try
                             {
-                                user = UserFactory.FillUser(principal, user);
+                                user = UserFactory.ReadEphs(user);
                                 sucess = true;
                             }
                             catch (Exception e)
@@ -1128,16 +954,15 @@ namespace GenioMVC.Controllers
                     throw lastException;
                 }
 
-                QCache.Instance.User.Put("principal." + principal.Identity.Name, principal);
+                QCache.Instance.User.Put("user." + user.Name, user);
                 UserContext.Current.User = user;
+                return user;
             }
             catch (Exception)
             {
-                user = null;
                 ModelState.AddModelError("", Resources.Resources.ENTRADA_INCORRETA__T45717);
+                return null;
             }
-
-            return user;
         }
 
         [AuthorizeForUsers]

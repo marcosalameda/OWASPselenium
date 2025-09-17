@@ -1,156 +1,75 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Reflection;
-using System.Security.Principal;
-using System.Web;
-using CSGenio;
+﻿using CSGenio;
 using CSGenio.framework;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Principal;
 
 namespace GenioServer.security
 {
 
-    //public class IdentityProviderRegistry
-    //{
-    //    public string ProviderName { get; set; }
-    //    public Type CredentialClassType { get; set; }
-    //    public Type ProviderClassType { get; set; }
-    //}
+	/// <summary>
+	/// Implements the security login for the server application. All user identification and autorization
+	/// services and policies are configured and abstracted here.
+	/// </summary>
+	public static class SecurityFactory
+	{
 
-    /// <summary>
-    /// Implements the security login for the server application. All user identification and autorization
-    /// services and policies are configured and abstracted here.
-    /// </summary>
-    public static class SecurityFactory
-    {
-		private class PrecondKeys
-		{
-			// The identity provider that validated the user credentials
-			public const string IDENTITY__PROVIDER_NAME = "identity.providerName";
-		}
-
-		private class RoleProviderConfig
-		{
-			/// <summary>
-			/// The provider
-			/// </summary>
-			public IRoleProvider Provider
-			{
-				get;
-				private set;
-			}
-
-			/// <summary>
-			/// The name for this provider
-			/// </summary>
-			public string Name
-			{
-				get;
-				private set;
-			}
-
-			/// <summary>
-			/// Pre-condition expression for use of the provider
-			/// </summary>
-			public string Precond
-			{
-				get;
-				private set;
-			}
-
-			/// <summary>
-			/// ctor
-			/// </summary>
-			/// <param name="provider">the provider</param>
-			/// <param name="name">the name for this provider</param>
-			/// <param name="precond">pre-condition expression for use of the provider</param>
-			public RoleProviderConfig(IRoleProvider provider, string name, string precond)
-			{
-				Provider = provider;
-				Name = name;
-				Precond = precond;
-			}
-		}
-
-		private class AuthenticationContext
-		{
-			public IIdentityProvider IdentityProviderCfg
-			{
-				get;
-				private set;
-			}
-
-			public AuthenticationContext(IIdentityProvider identityProviderCfg)
-			{
-				IdentityProviderCfg = identityProviderCfg;
-			}
-		}
-
-        /// <summary>
-        /// The authentication algorithm to use when multiple providers are configured
-        /// </summary>
-        public static AuthenticationMode AuthenticationMode { get; set; }
+		/// <summary>
+		/// The authentication algorithm to use when multiple providers are configured
+		/// </summary>
+		public static AuthenticationMode AuthenticationMode { get; set; }
 
 		/// <summary>
 		/// If the authentication should be recovered when it expires
 		/// </summary>
 		public static bool AllowAuthenticationRecovery { get; set; }
 
-        /// <summary>
-        /// The list of identity providers
-        /// </summary>
+		/// <summary>
+		/// The list of identity providers
+		/// </summary>
 		private static List<IIdentityProvider> m_idProviders = new List<IIdentityProvider>();
-        /// <summary>
-        /// The role provider
-        /// </summary>
-		private static List<RoleProviderConfig> m_roleProviders = new List<RoleProviderConfig>();
-
-        ///// <summary>
-        ///// Mapping between providers and credential types
-        ///// </summary>      
-        //private List<IdentityProviderRegistry> m_identityRegistry = new List<IdentityProviderRegistry>();
+		/// <summary>
+		/// The role provider
+		/// </summary>
+		private static List<IRoleProvider> m_roleProviders = new List<IRoleProvider>();
 
 		public static IEnumerable<IIdentityProvider> IdentityProviderList => m_idProviders;
-        public static IEnumerable<IRoleProvider> RoleProviderList => m_roleProviders.Select(i => i.Provider);
+		public static IEnumerable<IRoleProvider> RoleProviderList => m_roleProviders;
 
-        /// <summary>
-        /// Static constructor
-        /// </summary>
-        static SecurityFactory()
-        {
+		/// <summary>
+		/// Static constructor
+		/// </summary>
+		static SecurityFactory()
+		{
 			if (Configuration.Security == null)
 			{
 				AuthenticationMode = AuthenticationMode.AcceptOnFirstSucess;
 				AllowAuthenticationRecovery = Configuration.LoginType == Configuration.LoginTypes.AD;
 				if (Configuration.LoginType == Configuration.LoginTypes.PUREAD)
 				{
-                    m_idProviders.Add(ParseIdentityProvider(new IdentityProviderCfgEl()
+					m_idProviders.Add(ParseIdentityProvider(new IdentityProviderCfgEl()
 					{
 						Name = "ldap",
 						Description = "Ldap",
 						Type = typeof(LdapIdentityProvider).FullName,
-						Config = "Dominio=" + Configuration.Domain
+						Options = { { "Dominio", Configuration.Domain } }
 					}));
 				}
 				else
 				{
-                    m_idProviders.Add(ParseIdentityProvider(new IdentityProviderCfgEl()
-                    {
-                        Name = "quidgest",
-                        Description = "Quidgest",
-                        Type = typeof(QuidgestIdentityProvider).FullName,
-                        Config = null
-                    }));
+					m_idProviders.Add(ParseIdentityProvider(new IdentityProviderCfgEl()
+					{
+						Name = "quidgest",
+						Description = "Quidgest",
+						Type = typeof(QuidgestIdentityProvider).FullName
+					}));
 				}
-				m_roleProviders.Add(new RoleProviderConfig(ParseRoleProvider(new RoleProviderCfgEl()
+				m_roleProviders.Add(ParseRoleProvider(new RoleProviderCfgEl()
 				{
 					Name = "quidgest",
-					Type = typeof(QuidgestRoleProvider).FullName,
-					Config = null
-                })
-					, "quidgest"
-                    , null));
+					Type = typeof(QuidgestRoleProvider).FullName
+				}));
 			}
 			else
 			{
@@ -160,14 +79,14 @@ namespace GenioServer.security
 				//aqui deve ir ler das configurações e inicializar a cadeia de providers
 				foreach (IdentityProviderCfgEl provider in Configuration.Security.IdentityProviders)
 				{
-                    m_idProviders.Add(ParseIdentityProvider(provider));
+					m_idProviders.Add(ParseIdentityProvider(provider));
 				}
 				foreach (RoleProviderCfgEl provider in Configuration.Security.RoleProviders)
 				{
-					m_roleProviders.Add(new RoleProviderConfig(ParseRoleProvider(provider), provider.Name, provider.Precond));
+					m_roleProviders.Add(ParseRoleProvider(provider));
 				}
 			}
-        }
+		}
 
 		/// <summary>
 		/// Instantiates a identity provider of the correct type class, and configures its options
@@ -176,326 +95,209 @@ namespace GenioServer.security
 		/// <returns>An instatiated Identity provider</returns>
 		public static IIdentityProvider ParseIdentityProvider(IdentityProviderCfgEl config)
 		{
-            Type providerType = Type.GetType(config.Type);
+			Type providerType = Type.GetType(config.Type);
 
-            IIdentityProvider provider = Activator.CreateInstance(providerType) as IIdentityProvider;
-
-            if (provider == null)
-            {
-                throw new NotImplementedException(config.Type + " does not implement interface GenioServer.security.IIdentityProvider");
-            }
-
-            provider.Id = config.Name;
-            provider.Description = config.Description ?? "";
-
-            if (config.Config != null)
-            {
-                bool needsJsonInit = false;
-                string[] keyValues = config.Config.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
-                foreach (string keyValue in keyValues)
-                {
-                    string key = HttpUtility.UrlDecode(keyValue.Substring(0, keyValue.IndexOf("=")));
-                    string value = HttpUtility.UrlDecode(keyValue.Substring(keyValue.IndexOf("=") + 1));
-
-                    PropertyInfo pi = providerType.GetProperty(key);
-                    if (pi != null)
-                    {
-                        try
-                        {
-                            pi.SetValue(provider, Convert.ChangeType(value, pi.PropertyType, CultureInfo.InvariantCulture), null);
-                        }
-                        catch (InvalidCastException)
-                        {
-                            //json options are not convertible
-                            needsJsonInit = true;
-                        }
-                    }
-                }
-
-                //Legacy mechanism so we can initialize the json options without doing it in the constructor
-                //TODO: The complex options configuration format needs to be refactored!
-                if (needsJsonInit)
-                {
-                    MethodInfo mi = providerType.GetMethod("InitJsonOptions");
-                    mi?.Invoke(provider, null);
-                }
-            }
-			return provider;
-        }
-
-        /// <summary>
-        /// Instantiates a role provider of the correct type class, and configures its options
-        /// </summary>
-        /// <param name="config">The configuration element</param>
-        /// <returns>An instatiated Role provider</returns>
-        public static IRoleProvider ParseRoleProvider(RoleProviderCfgEl config)
-        {
-            Type providerType = Type.GetType(config.Type);
-
-            IRoleProvider provider = Activator.CreateInstance(providerType) as IRoleProvider;
-
-            if (provider == null)
-            {
-                throw new NotImplementedException(config.Type + " does not implement interface GenioServer.security.IRoleProvider");
-            }
-
-			if (config.Config != null)
-			{
-				string[] keyValues = config.Config.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
-				foreach (string keyValue in keyValues)
-				{
-					string[] parts = keyValue.Split('=');
-					string key = HttpUtility.UrlDecode(parts[0]);
-					string value = HttpUtility.UrlDecode(parts[1]);
-
-					PropertyInfo pi = providerType.GetProperty(key);
-					if (pi != null)
-					{
-						pi.SetValue(provider, Convert.ChangeType(value, pi.PropertyType, CultureInfo.InvariantCulture), null);
-					}
-				}
-			}
+			IIdentityProvider provider = Activator.CreateInstance(providerType, config) as IIdentityProvider
+				?? throw new NotImplementedException(config.Type + " does not implement interface GenioServer.security.IIdentityProvider");
+			provider.Id = config.Name;
 
 			return provider;
-        }
-
-        /// <summary>
-        /// Authenticates a user
-        /// </summary>
-        /// <param name="credential">The user credentials</param>
-        /// <returns>The user identity</returns>
-        public static IPrincipal Authenticate(Credential credential)
-        {
-            IIdentity id = null;
-            string error = "";
-            AuthenticationContext authCtx = null;
-            foreach (IIdentityProvider provider in m_idProviders)
-            {
-                try
-                {
-                    id = provider.Authenticate(credential);
-                }
-                catch (FrameworkException ex)
-                {
-                    error = ex.UserMessage;
-                }
-				catch(Exception ex)
-                {
-					error = ex.Message;
-                }
-
-                authCtx = new AuthenticationContext(provider);
-                if (AuthenticationMode == AuthenticationMode.RejectOnFirstFail && id == null)
-                    break;
-                if (AuthenticationMode == AuthenticationMode.AcceptOnFirstSucess && id != null)
-                    break;
-            }
-
-            if (id == null)
-            {
-                if (!string.IsNullOrEmpty(error))
-                    return new ErrorPrincipal(error);
-
-                return null;
-            }
-
-            return GetUserRoles(id, authCtx);
-        }
-
-        /// <summary>
-        /// Obtains the roles for an authenticated user
-        /// </summary>
-        /// <param name="identity">the user identity</param>
-        /// <returns>The user roles</returns>
-		public static IPrincipal GetUserRoles(IIdentity identity)
-		{
-			return GetUserRoles(identity, null);
 		}
 
-        private static IPrincipal GetUserRoles(IIdentity identity, AuthenticationContext context)
-        {
-			try
-			{
-				RoleProviderConfig cfg = m_roleProviders.FirstOrDefault(p => SatisfyPrecond(p.Precond, identity, context));				
-				return cfg.Provider.GetUserRoles(identity);
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"Error in GetUserRoles principal: {ex.Message}");
-				return new ErrorPrincipal(ex.Message);
-			}
-        }
+		/// <summary>
+		/// Instantiates a role provider of the correct type class, and configures its options
+		/// </summary>
+		/// <param name="config">The configuration element</param>
+		/// <returns>An instatiated Role provider</returns>
+		public static IRoleProvider ParseRoleProvider(RoleProviderCfgEl config)
+		{
+			Type providerType = Type.GetType(config.Type);
+			IRoleProvider provider = Activator.CreateInstance(providerType, config) as IRoleProvider
+				?? throw new NotImplementedException(config.Type + " does not implement interface GenioServer.security.IRoleProvider");
+
+			return provider;
+		}
+
 
 		/// <summary>
-		/// Get the user for an authenticated user
+		/// Authenticate user given a credential
 		/// </summary>
-		/// <param name="identity"></param>
-		/// <param name="user"></param>
-		/// <param name="sp"></param>
-		/// <returns></returns>
-		public static CSGenio.business.CSGenioApsw GetUser(IIdentity identity,User user, CSGenio.persistence.PersistentSupport sp)
+		/// <param name="credential">The credentials the user presented</param>
+		/// <param name="providerId">Optionally specify the provider id you want to authenticate with, or null to use the full provider chain</param>
+		/// <returns>A autenticated user with associated roles</returns>
+		public static User Authenticate(Credential credential, string providerId = null)
 		{
-			foreach (RoleProviderConfig cfg in m_roleProviders)
+			GenioIdentity id = null;
+
+			//use the provider chain to authenticate the user
+			if (string.IsNullOrEmpty(providerId))
 			{
-				if (SatisfyPrecond(cfg.Precond, identity, null))
+				foreach (IIdentityProvider provider in m_idProviders)
 				{
-					return cfg.Provider.GetUser(identity.Name, user, sp);
+					id = provider.Authenticate(credential);
+
+					if (AuthenticationMode == AuthenticationMode.RejectOnFirstFail && id == null)
+						break;
+					if (AuthenticationMode == AuthenticationMode.AcceptOnFirstSucess && id != null)
+						break;
 				}
 			}
-			return null;
-		}
-
-		/// <summary>
-		/// Get the user by email for an authenticated user 
-		/// </summary>
-		/// <param name="identity"></param>
-		/// <param name="email"></param>
-		/// <param name="user"></param>
-		/// <param name="sp"></param>
-		/// <returns></returns>
-		public static CSGenio.business.CSGenioApsw GetUserFromEmail(IIdentity identity,string email, User user, CSGenio.persistence.PersistentSupport sp)
-		{
-			foreach (RoleProviderConfig cfg in m_roleProviders)
+			//use the specified provider to authenticate the user
+			else
 			{
-				if (SatisfyPrecond(cfg.Precond, identity, null))
-				{
-					return cfg.Provider.GetUserFromEmail(email, user,sp);
-				}
+				IIdentityProvider provider = m_idProviders.FirstOrDefault(p => p.Id == providerId);
+				if (provider == null)
+					throw new ArgumentException($"No identity provider found with id '{providerId}'");
+				id = provider.Authenticate(credential);
 			}
-			return null;
+
+			if (id == null)
+				throw new FrameworkException("Authentication failed. No identity returned from providers.", "SecurityFactory.Authenticate", "Authentication failed");
+
+			return Authorize(id);
 		}
 
 
 		/// <summary>
-        /// Checks if the system needs to have password management features
-        /// </summary>
-        public static bool HasPasswordManagement()
-        {
-            //For now only systems with Quidgest identity provider manage passwords
-            return m_idProviders.Any(x => x is QuidgestIdentityProvider);
-        }
+		/// Authorize user given a previously authenticated identity
+		/// </summary>
+		/// <param name="identity">The known identity</param>
+		/// <returns>A authorized user with associated roles</returns>
+		public static User Authorize(GenioIdentity identity)
+		{
+			foreach (var cfg in m_roleProviders)
+			{
+				User res = cfg.Authorize(identity);
+				if (res != null)
+					return res;
+			}
+			throw new FrameworkException("Authorization failed. No user returned from providers.", "SecurityFactory.Authorize", "Authorization failed");
+		}
 
-        /// <summary>
-        /// Determines whether username and password authentication is enabled.
-        /// </summary>
-        /// <remarks>
-        /// This method returns true if either QuidgestIdentityProvider or LdapIdentityProvider is present in the list of identity providers.
-        /// This is used to determine if username and password authentication is enabled, assuming that either QuidgestIdentityProvider
-        /// or LdapIdentityProvider supports this method of authentication.
+		/// <summary>
+		/// Associates an external user identity to an existing internal identity
+		/// </summary>
+		/// <param name="user">The user to which the identity will e associated</param>
+		/// <param name="identity">The identity to associate</param>
+		public static void RegisterExternalId(User user, GenioIdentity identity)
+		{
+			foreach (var cfg in m_roleProviders)
+				cfg.RegisterExternalId(user, identity);
+		}
+
+		/// <summary>
+		/// Automates the creation of a new user in the provider
+		/// </summary>
+		/// <param name="user">The user to create</param>
+		/// <param name="claims">Optional set of attributes to set on the user if possible</param>
+		/// <param name="credential">The initial credential to associate (some providers may not support some types of credential)</param>
+		public static void CreateNewUser(User user, Dictionary<string, object> claims = null, CredentialSecret credential = null)
+		{
+			foreach (var cfg in m_roleProviders)
+				cfg.CreateNewUser(user, claims, credential);
+		}
+		/// <summary>
+		/// Changes the enabled status of a user
+		/// </summary>
+		/// <param name="user">User to modify</param>
+		/// <param name="status">New status for the user</param>
+		public static void SetUserEnabled(User user, int status)
+		{
+			foreach (var cfg in m_roleProviders)
+				cfg.SetUserEnabled(user, status);
+		}
+		/// <summary>
+		/// Checks if the system needs to have password management features
+		/// </summary>
+		public static bool HasPasswordManagement()
+		{
+			//For now only systems with Quidgest identity provider manage passwords
+			return m_idProviders.Any(x => x is QuidgestIdentityProvider);
+		}
+
+		/// <summary>
+		/// Determines whether username and password authentication is enabled.
+		/// </summary>
+		/// <remarks>
+		/// This method returns true if either QuidgestIdentityProvider or LdapIdentityProvider is present in the list of identity providers.
+		/// This is used to determine if username and password authentication is enabled, assuming that either QuidgestIdentityProvider
+		/// or LdapIdentityProvider supports this method of authentication.
 		/// Note: This method checks for the presence of specific identity providers but does not verify the specific login mode (e.g., AD, Certificate, Username/Password) they are configured for. 
 		/// 	Further checks might be necessary to determine the exact authentication mode each provider supports.
-        /// </remarks>
-        public static bool HasUsernameAuth()
-        {
-            return m_idProviders.Any(x => x.HasUsernameAuth());
-        }
+		/// </remarks>
+		public static bool HasUsernameAuth()
+		{
+			return m_idProviders.Any(x => x.HasUsernameAuth());
+		}
+
+
+		private static string m_guestName = Configuration.Security
+			?.Users
+			?.FirstOrDefault((x) => x.Type == UserType.Guest)
+			?.Name
+			?? "guest";
+
 
 		/// <summary>
-		/// Checks if the supplied identity satisfies the pre-condition expression
+		/// True if a guest user should be allowed on the public site pages, 
+		/// false if all users must be redirected to login page immediately
 		/// </summary>
-		/// <param name="identity">the user identity</param>
-		/// <returns>True if the identity satisfies the pre-conditon expression, otherwise false</returns>
-		private static bool SatisfyPrecond(string precond, IIdentity identity, AuthenticationContext context)
-		{
-			if (identity == null)
-			{
-				return false;
-			}
+		public static bool AutoLoginGuest => Configuration.Security
+			?.Users
+			?.FirstOrDefault((x) => x.Type == UserType.Guest)
+			?.AutoLogin
+			?? false;
 
-			IDictionary<string, object> parsedPrecond = ParsePrecond(precond);
+		/// <summary>
+		/// Check if this username can be considered a guest
+		/// </summary>
+		/// <param name="username">The username to check</param>
+		/// <returns>Trues if its a guest username, false otherwise</returns>
+		public static bool IsGuest(string username) => username == m_guestName;
 
-			bool satisfy = true;
-			foreach (KeyValuePair<string, object> cond in parsedPrecond)
-			{
-				switch (cond.Key)
-				{
-					case PrecondKeys.IDENTITY__PROVIDER_NAME :
-						satisfy &= cond.Value.Equals(context == null ? String.Empty : context.IdentityProviderCfg.Id);
-						break;
-					default:
-						// ignore unknown keys
-						break;
-				}
-			}
-
-			return satisfy;
-		}
-
-		private static IDictionary<string, object> ParsePrecond(string precond)
-		{
-			IDictionary<string, object> result = new Dictionary<string, object>();
-
-			if (!String.IsNullOrEmpty(precond))
-			{
-				string[] keyValues = precond.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
-				foreach (string keyValue in keyValues)
-				{
-					string[] parts = keyValue.Split('=');
-					string key = HttpUtility.UrlDecode(parts[0]);
-					string value = HttpUtility.UrlDecode(parts[1]);
-
-					result.Add(key, ParsePrecondValue(key, value));
-				}
-			}
-
-			return result;
-		}
-
-		private static object ParsePrecondValue(string key, string value)
-		{
-			switch (key)
-			{
-				case PrecondKeys.IDENTITY__PROVIDER_NAME :
-					return Convert.ToString(value);
-				default:
-					return value;
-			}
-		}
-
-		public static bool AutoLoginGuest
-		{
-			get
-			{
-				if (Configuration.Security == null || Configuration.Security.Users == null)
-				{
-					return false;
-				}
-
-				UserCfgEl guest = Configuration.Security.Users.Find((x) => x.Type == UserType.Guest);
-				return guest != null && guest.AutoLogin;
-			}
-		}
-
-		public static bool IsGuest(string username)
-		{
-			if (Configuration.Security == null || Configuration.Security.Users == null)
-			{
-				return false;
-			}
-
-			return Configuration.Security.Users.Find((x) => x.Name == username && x.Type == UserType.Guest) != null;
-		}
-
+		/// <summary>
+		/// Check if this identity can be considered a guest
+		/// </summary>
+		/// <param name="identity">The identity to check</param>
+		/// <returns>Trues if its a guest identity, false otherwise</returns>
 		public static bool IsGuest(IIdentity identity)
 		{
 			return IsGuest(identity.Name);
 		}
 
-		public static IPrincipal GetGuest()
+		/// <summary>
+		/// Creates a guest user
+		/// </summary>
+		/// <returns>A guest user</returns>
+		public static User GetGuest()
 		{
-			if (Configuration.Security == null || Configuration.Security.Users == null)
-			{
-				return null;
-			}
-
-			UserCfgEl guest = Configuration.Security.Users.Find((x) => x.Type == UserType.Guest);
-
-			if (guest == null)
-			{
-				return null;
-			}
-
-			return new GenericPrincipal(new GenericIdentity(guest.Name, "guest"), new string[] { "guest" });
+			User user = new User(m_guestName, "", Configuration.DefaultYear);
+			user.Language = System.Threading.Thread.CurrentThread.CurrentCulture.Name.Replace("-", "").ToUpperInvariant();
+			user.Years.Add(Configuration.DefaultYear);
+			user.Public = true;
+			
+			foreach (string module in Configuration.Modules)
+				user.AddModuleRole(module, Role.UNAUTHORIZED);
+			user.AddModuleRole("Public", Role.UNAUTHORIZED);
+			
+			return user;
+		}
+		
+		/// <summary>
+		/// Creates a admin user that will perform tasks on behalf of a normal user.
+		/// </summary>
+		/// <remarks>
+		/// The returned user retains the original user's name, year, and current module, 
+		/// but is assigned the administrator role for the current module.
+		/// </remarks>
+		/// <param name="user">The user to be elevated. The user must have a valid name and current module assigned.</param>
+		/// <returns>A new <see cref="User"/> instance with the administrator role assigned to the user's current module.</returns>
+		public static User ElevateUserToAdmin(User user)
+		{
+			User adminUser = new User(user.Name, "", user.Year);
+			adminUser.CurrentModule = user.CurrentModule ?? "Public";
+			adminUser.AddModuleRole(adminUser.CurrentModule, CSGenio.framework.Role.ADMINISTRATION);
+			return adminUser;
 		}
 	}
 }

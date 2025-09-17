@@ -3024,7 +3024,7 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT BEFORE_FILL_EPH]/
 
                 // Fill in the initial EPH value in the User object and get the values to be cached
-                Dictionary<string, InitialEPHCache> initialEPHCache = GenioServer.security.UserFactory.FillEphRuntime(ref user, modules, ids, formId);
+                Dictionary<string, InitialEPHCache> initialEPHCache = GenioServer.security.UserFactory.FillEphRuntime(user, modules, ids, formId);
 
                 // If the values of the other initial PHE are in the cache, we merge them.
                 var cachedInitialPHE = Session["user.eph.initial"] as Dictionary<string, InitialEPHCache>;

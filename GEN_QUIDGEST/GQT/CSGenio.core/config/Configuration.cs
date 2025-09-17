@@ -66,6 +66,11 @@ namespace CSGenio.framework
         public static readonly ClientApplication Application = ClientApplication.GQT;
 
         /// <summary>
+        /// Modules
+        /// </summary>
+        public static readonly List<string> Modules = ["GQT","PTN","TBS","REG","STY"];
+
+        /// <summary>
         /// Currency
         /// </summary>
         public static string Currency { get; } = "EUR";
@@ -103,12 +108,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "373.39";
+        public const string GenioVersion = "372.05";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2955;
+        public const int BuildVersionGen = 2954;
 
         /// <summary>
         /// Solution release version

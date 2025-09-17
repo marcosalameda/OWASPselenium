@@ -1,10 +1,10 @@
-﻿using System;
+﻿using CSGenio;
+using CSGenio.framework;
+using System;
 using System.ComponentModel;
-using System.DirectoryServices;
 using System.DirectoryServices.Protocols;
 using System.Net;
 using System.Security.Principal;
-using CSGenio.framework;
 
 namespace GenioServer.security
 {
@@ -18,28 +18,33 @@ namespace GenioServer.security
         [Description("Query to perform against ldap. In the form of 'cn=username,ou=domain users,dc=example,dc=com'")]
         public string Domain { get; set; }
 		
-        [SecurityProviderOption()]
+        [SecurityProviderOption(optional:true)]
         [Description("Port number of the LDAP service. Leave blank for default. LDAPS usually 636.")]
 		public string Port { get; set; }
 
-        public override IIdentity Authenticate(Credential credential)
+        /// <inheritdoc/>
+        public LdapQueryIdentityProvider(IdentityProviderCfgEl config) : base(config)
         {
-            Type classname = credential.GetType();
-            IIdentity id = null;
-
-            if (classname == typeof(UserPassCredential))
-            {
-                id = Authenticate_p(credential as UserPassCredential);
-            }
-            if (classname == typeof(DomainCredential))
-            {
-                id = Authenticate_p(credential as DomainCredential);
-            }
-
-            return id;
         }
+		
+		public override GenioIdentity Authenticate(Credential credential)
+		{
+			Type classname = credential.GetType();
+			GenioIdentity id = null;
 
-        private IIdentity Authenticate_p(UserPassCredential credential)
+			if (classname == typeof(UserPassCredential))
+			{
+				id = Authenticate_p(credential as UserPassCredential);
+			}
+			if (classname == typeof(DomainCredential))
+			{
+				id = Authenticate_p(credential as DomainCredential);
+			}
+
+			return id;
+		}
+
+        private GenioIdentity Authenticate_p(UserPassCredential credential)
         {
 			//this method support OpenLDAP
 
@@ -80,7 +85,13 @@ namespace GenioServer.security
 					{
 						ldap.AuthType = AuthType.Basic;
 						ldap.Bind(new NetworkCredential(dn, credential.Password));
-						return new GenericIdentity(credential.Username);
+                        return new()
+                        {
+                            Name = credential.Username,
+                            IsAuthenticated = true,
+                            AuthenticationType = this.GetType().Name,
+                            IdProperty = GenioIdentityType.InternalId,
+                        };
 					}
 					catch (DirectoryOperationException ex1)
 					{ //Invalid user.
@@ -99,10 +110,16 @@ namespace GenioServer.security
 			return null;
         }
 
-        private IIdentity Authenticate_p(DomainCredential credential)
+        private GenioIdentity Authenticate_p(DomainCredential credential)
         {
             //if (DirectoryEntry.Exists("LDAP://" + Domain + "/" + credential.DomainUser))
-				return new GenericIdentity(credential.DomainUser);
+				return new()
+                {
+                    Name = credential.DomainUser,
+                    IsAuthenticated = true,
+                    AuthenticationType = this.GetType().Name,
+                    IdProperty = GenioIdentityType.InternalId,
+                };
 
             //return null;
         }

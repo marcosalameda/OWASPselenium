@@ -10,8 +10,8 @@ namespace CSGenio.framework
 	public abstract class EPH
 	{
 		protected string moduleName; // Name of the module defined in child classes
-		protected static string[] niveis; // Defined levels for each module that are subjected to PHEs
-		private static Hashtable todosEphs = new Hashtable(); // Hashtable with all PHEs
+		private readonly static Dictionary<string, EPH> todosEphs;
+        private readonly static Dictionary<string, EPHCondition> allConditions;
 
 		/// <summary>
 		/// Class constructor
@@ -19,9 +19,16 @@ namespace CSGenio.framework
 		/// </summary>
 		static EPH()
 		{
-			todosEphs = new Hashtable();
-			todosEphs.Add("GQT", new GQTEPH("GQT"));
-			todosEphs.Add("REG", new REGEPH("REG"));
+            allConditions = new(){
+                {"COMODANTE", new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "") },
+                {"USER", new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "") },
+                {"ORGAN", new EPHCondition("ORGAN", "GQT", "gqtpworg", "pworg", "codorgan", "pworg", "codorgan", FieldType.KEY_GUID, "") },
+            };
+
+            todosEphs = new() {
+			    {"GQT", new GQTEPH("GQT")},
+			    {"REG", new REGEPH("REG")},
+            };
 		}
 
 		/// <summary>
@@ -30,16 +37,14 @@ namespace CSGenio.framework
 		public string ModuleName
 		{
 			get { return moduleName; }
-			set { moduleName = value; }
 		}
 
 		/// <summary>
 		/// The names of the levels subjected to a PHE
 		/// </summary>
-		public string[] Levels
+		public abstract string[] Levels
 		{
-			get { return niveis; }
-			set { niveis = value; }
+			get;
 		}
 
         /// <summary>
@@ -47,26 +52,17 @@ namespace CSGenio.framework
         /// </summary>
         public static EPHCondition GetEphConditionById(string id)
         {
-            switch (id)
-            {
-                case "COMODANTE":
-                    return new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
-                case "USER":
-                    return new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
-                case "ORGAN":
-                    return new EPHCondition("ORGAN", "GQT", "gqtpworg", "pworg", "codorgan", "pworg", "codorgan", FieldType.KEY_GUID, "");
-                default:
-                    return null;
-            }
+            if (allConditions.TryGetValue(id, out var result))
+                return result;
+            return null;
         }
 
 		/// <summary>
 		/// The PHEs per module, it's set in the child classes
 		/// </summary>
-		public abstract Hashtable EphsPerModule
+		public abstract Dictionary<string, List<EPHCondition>> EphsPerModule
 		{
 			get;
-			set;
 		}
 
 		/// <summary>
@@ -78,7 +74,9 @@ namespace CSGenio.framework
 		{
 			if (todosEphs == null)
 				return null;
-			return (EPH)todosEphs[moduleName];
+            if(todosEphs.TryGetValue(moduleName, out var result))
+                return result;
+            return null;
 		}
 
         /* JMT and TR 2009 09 27
@@ -210,7 +208,6 @@ namespace CSGenio.framework
         public abstract Dictionary<string, List<string>> MenusNotSubjectEPH
         {
             get;
-            set;
         }
 
 		/// <summary>
@@ -229,30 +226,21 @@ namespace CSGenio.framework
         /// <param name="roles">A list of roles</param>
         /// <param name="formID">The id of the form</param>
         /// <returns>A list with the PHE names that correspond to the specified parameters</returns>
-        public static List<string> getEPHName(string module, List<Role> roles, string formID)
+        public static List<EPHCondition> GetEPHForms(string module, List<Role> roles, string formID)
         {
-            List<string> ephName = new List<string>();
+            List<EPHCondition> ephName = [];
 
             // Gets the PHE for the module
             EPH eph = EPH.getEPH(module);
+            if (eph is null)
+                return ephName;
 
-            if (eph != null)
-            {
-                foreach (Role role in roles)
-                {
-                    EPHCondition[] condicoesEPH = (EPHCondition[])eph.EphsPerModule[role.ToString()];
-
-                    if (condicoesEPH != null)
-                    {
-                        foreach (EPHCondition condition in condicoesEPH)
-                        {
-                            // Checks if the ids match and the list does't contain the id
-                            if (condition.IntialForm == formID && !ephName.Contains(condition.EPHName))
-                                ephName.Add(condition.EPHName);
-                        }
-                    }
-                }
-            }
+            foreach (Role role in roles)
+                if (eph.EphsPerModule.TryGetValue(role.ToString(), out var condicoesEPH))
+                    foreach (EPHCondition condition in condicoesEPH)
+                        // Checks if the ids match and the list does't contain the id
+                        if (condition.IntialForm == formID && !ephName.Exists(x => x.EPHName == condition.EPHName))
+                            ephName.Add(condition);
 
             return ephName;
         }
@@ -265,27 +253,17 @@ namespace CSGenio.framework
         public static List<string> GetEphCurrentForm(User user)
         {
             string modulo = user.CurrentModule;
-
             List<string> forms = new List<string>();
 
             EPH eph = EPH.getEPH(modulo);
+            if (eph is null)
+                return forms;
 
-            if (eph != null)
-            {
-                foreach (Role role in user.GetModuleRoles(user.CurrentModule))
-                {
-                    EPHCondition[] condicoesEPH = (EPHCondition[])eph.EphsPerModule[role.ToString()];
-
-                    if (condicoesEPH != null)
-                    {
-                        foreach (EPHCondition cond in condicoesEPH)
-                        {
-                            if (!string.IsNullOrEmpty(cond.IntialForm) && !string.IsNullOrWhiteSpace(cond.IntialForm) && !forms.Contains(cond.IntialForm))
-                                forms.Add(cond.IntialForm);
-                        }
-                    }
-                }
-            }
+            foreach (Role role in user.GetModuleRoles(user.CurrentModule))
+                if(eph.EphsPerModule.TryGetValue(role.ToString(), out var condicoesEPH))
+                    foreach (EPHCondition cond in condicoesEPH)
+                        if (!string.IsNullOrEmpty(cond.IntialForm) && !string.IsNullOrWhiteSpace(cond.IntialForm) && !forms.Contains(cond.IntialForm))
+                            forms.Add(cond.IntialForm);
 
             return forms;
         }

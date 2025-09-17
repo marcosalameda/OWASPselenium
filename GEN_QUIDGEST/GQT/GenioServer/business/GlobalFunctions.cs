@@ -267,21 +267,23 @@ namespace CSGenio.business
         /// <param name="password"></param>
         /// <param name="ano"></param>
         /// <param name="certificado"></param>
-        public void regista_certificado(String identificacion, String password, ClientCertificate Qcertificate)
+        public void regista_certificado(string identificacion, string password, ClientCertificate Qcertificate)
         {
             //Verifica a password (se não for correcta, uma excepção é lançada)
             GenioServer.security.UserPassCredential credential = new GenioServer.security.UserPassCredential();
             credential.Year = Configuration.DefaultYear;
             credential.Username = identificacion;
             credential.Password = password;
-            IPrincipal principal = GenioServer.security.SecurityFactory.Authenticate(credential);
-            if (principal == null || principal is ErrorPrincipal)
-            {
-                string error = "Login ou password incorretos.";
-                if (principal is ErrorPrincipal)
-                    error = (principal as ErrorPrincipal).ErrorMessage;
 
-                throw new BusinessException("Dados de login incorretos.", "GlobalFunctions.regista_certificado", error);
+
+            User principal = null;
+            try
+            {
+                principal = GenioServer.security.SecurityFactory.Authenticate(credential);
+            }
+            catch (Exception ex)
+            {
+                throw new BusinessException("Dados de login incorretos.", "GlobalFunctions.regista_certificado", ex.Message, ex);
             }
 
             SelectQuery certificateNotUsedQuery = new SelectQuery()
@@ -296,7 +298,7 @@ namespace CSGenio.business
             if (certificateNotUsed.NumRows > 0)
                 throw new BusinessException("Dados de login incorretos.", "GlobalFunctions.regista_certificado", "Certificate already used by another user.");
 
-            GenioServer.security.UserFactory.FillUser(principal, User);
+            user = GenioServer.security.UserFactory.ReadEphs(principal);
 
             //Numero Serie do Certificado
             registerCertificateSerialNumber(Qcertificate.returnSerialNumber());
@@ -336,11 +338,6 @@ namespace CSGenio.business
         {
             try
             {
-                string[] modulos = psw.getModules();
-
-                //introduce o name dos modulos
-                for (int i = 0; i < modulos.Length; i++)
-                    psw.insertNameValueField("psw." + modulos[i].ToLower(), "");
                 psw.insertNameValueField("psw.codpsw", "");
                 psw.insertNameValueField("psw.password", "");
                 psw.insertNameValueField("psw.nome", "");
@@ -1746,7 +1743,7 @@ namespace CSGenio.business
         /// <returns>EPH (first) Value</returns>
         public static string GetEph(User user, string ephID)
         {
-            var values = UserFactory.GetEPH(user, ephID);
+            var values = user.GetEph(user.CurrentModule, ephID);
             if (values != null && values.Length > 0)
                 return values[0];
 

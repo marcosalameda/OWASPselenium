@@ -60,4 +60,6 @@
 	passwordVulnerableToKnownPasswords: 'PASSWORD_VULNERAVEL_00083',
 	authentication: 'AUTENTICACAO37999',
 	active: 'ATIVO30536',
+	type: 'TIPO55111',
+	executeMaintenanceTasks: 'EXECUTAR_TAREFAS_DE_40767',
 }

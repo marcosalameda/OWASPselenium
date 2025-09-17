@@ -172,6 +172,14 @@
 							</q-button>
 						</td>
 					</tr>
+					<tr>
+						<td colspan="5">
+							<q-button :label="hardcodedTexts.executeMaintenanceTasks"
+									  @click="setupProviders">
+								<q-icon icon="tools" />
+							</q-button>
+						</td>
+					</tr>
 				</template>
 			</qtable>
 		</row>
@@ -347,11 +355,12 @@
 							:label="c.DisplayName"
 							:id="c.DisplayName"
 							:isVisible="true"
+							:isRequired="!c.Optional"
 							:showPopoverButton="true"
 							:popoverTitle="c.DisplayName"
 							:popoverText="c.Description">
 							<q-text-field
-								v-model="c.Value"
+								v-model="c.PValue"
 								size="large"
 								:readonly="inDeleteMode"
 								:required="!c.Optional" />
@@ -387,24 +396,21 @@
 							:readonly="inDeleteMode"
 							size="large" />
 					</base-input-structure>
-					<q-text-field
-						v-model="rolePrecond"
-						:label="resources.precondition"
-						:readonly="inDeleteMode"
-						size="large" />
-					<div v-for="c in tempConfig" :key="c.PropertyName">
-					<base-input-structure
-						:label="c.DisplayName"
-						:isVisible="true"
-						:showPopoverButton="true"
-						:popoverTitle="c.DisplayName"
-						:popoverText="c.Description">
-						<q-text-field
-							v-model="c.Value"
-							:required="!c.Optional"
-							:readonly="inDeleteMode"
-							size="large" />
-					</base-input-structure>
+					<div v-for="c in tempRoleConfig" :key="c.PropertyName">
+						<base-input-structure
+							:label="c.DisplayName"
+							:id="c.DisplayName"
+							:isVisible="true"
+							:isRequired="!c.Optional"
+							:showPopoverButton="true"
+							:popoverTitle="c.DisplayName"
+							:popoverText="c.Description">
+							<q-text-field
+								v-model="c.PValue"
+								:required="!c.Optional"
+								:readonly="inDeleteMode"
+								size="large" />
+						</base-input-structure>
 					</div>
 				</div>
 			</template>
@@ -456,7 +462,7 @@
 
 <script>
 	// @ is an alias to /src
-	import { reusableMixin, NormalizeValue, ReadProviderConfig } from '@/mixins/mainMixin';
+	import { reusableMixin, ReadProviderConfig, WriteProviderConfig } from '@/mixins/mainMixin';
 	import { QUtils } from '@/utils/mainUtils';
 	import { reactive, computed } from 'vue';
 	import QAlert from '@/components/QAlert.vue';
@@ -542,8 +548,8 @@
 					},
 					{
 						label: computed(() => this.Resources[texts.configuration]),
-						name: "Config",
-						sort: true
+						name: "Options",
+						sort: false
 					}],
 					config: {
 						table_title: this.resources.identityProvidersTitle,
@@ -580,13 +586,8 @@
 					},
 					{
 						label: computed(() => this.Resources[texts.configuration]),
-						name: "Config",
-						sort: true
-					},
-					{
-						label: this.resources.precondition,
-						name: "Precond",
-						sort: true
+						name: "Options",
+						sort: false
 					}],
 					config: {
 						table_title: this.resources.roleProvidersTitle,
@@ -647,11 +648,10 @@
 				return this.userName === '' || this.userType === '' || (this.dialogMode === 'new' && this.isSameName)
 			},
 			invalidIdentityProps() {
-				const configArray = Array.isArray(this.tempConfig) ? this.tempConfig : [this.tempConfig];
-				return this.rowName === '' || this.rowType === '' || configArray.some(c => !c.Value || c.Value.trim() === '')
+				return this.rowName === '' || this.rowType === '' || this.tempConfig.some(c => c.Optional === false && (!c.PValue || c.PValue.trim() === ''))
 			},
 			invalidRoleProps() {
-				return this.roleName === '' || this.roleType === ''
+				return this.roleName === '' || this.roleType === '' || this.tempRoleConfig.some(c => c.Optional === false && (!c.PValue || c.PValue.trim() === ''))
 			},
 			inDeleteMode() {
 				return this.dialogMode === 'delete';
@@ -699,12 +699,10 @@
 					securityLabel: this.Resources[texts.securityLabel],
 					pathsLabel: this.Resources[texts.pathsLabel],
 					configuration: this.Resources[texts.configuration],
-					precondin: this.Resources[texts.autoLogin],
-					identitition: this.Resources[texts.precondition],
-					autoLogyProvidersTitle: this.Resources[texts.identityProvidersTitle],
 					roleProvidersTitle: this.Resources[texts.roleProvidersTitle],
 					fixedUsersTitle: this.Resources[texts.fixedUsersTitle],
-					authentication: this.Resources[texts.authentication]
+					authentication: this.Resources[texts.authentication],
+					executeMaintenanceTasks: this.Resources[texts.executeMaintenanceTasks]
 				};
 			},
 		},
@@ -951,72 +949,14 @@
 					}
 				})
 			},
-			onTypeChange(context) {
-				switch (context) {
-					case 'identityProvider':
-						if (this.rowType === 'GenioServer.security.LdapQueryIdentityProvider' ||
-							this.rowType === 'GenioServer.security.LdapIdentityProvider') {
-							this.tempConfig = ReadProviderConfig(this.rowType, this.tempConfig, this.SelectLists.IdentityProviderTypeList);
-						} else {
-							this.tempConfig = this.getProviderConfig(this.rowType);
-						}
-						break;
-					case 'roleProvider':
-						this.tempRoleConfig = this.getRoleProviderConfig(this.roleType);
-						break;
-					default:
-						break;
-				}
-			},
-			getProviderConfig(type) {
-				const provider = this.SelectLists.IdentityProviderTypeList.find(
-					(p) => p.TypeFullName === type
-				);
-				if (!provider) return [];
-				return provider.Options.map((option) => ({
-					Value: NormalizeValue(option, this.tempConfig),
-					...option,
-				}));
-			},
-			getRoleProviderConfig(type) {
-				const roleProvider = this.SelectLists.RoleProviderTypeList.find(
-					(p) => p.TypeFullName === type
-				);
-				if (!roleProvider) return [];
-				return roleProvider.Options.map((option) => ({
-					Value: NormalizeValue(option, this.tempRoleConfig),
-					...option,
-				}));
-			},
-			buildConfigFromTempConfig(tempConfig) {
-				let config = {};
 
-				tempConfig.forEach(option => {
-					config[option.PropertyName] = option.Value || "";
-				});
-				const optionsString = JSON.stringify(config);
-				return `Options=${optionsString}`;
-			},
 			SaveIdentityProvider() {
-				let config;
-				if (this.tempConfig && Object.keys(this.tempConfig).length > 0) {
-					if (this.rowType === 'GenioServer.security.LdapQueryIdentityProvider' ||
-					this.rowType === 'GenioServer.security.LdapIdentityProvider') {
-						config = Object.entries(this.tempConfig.reduce((acc, curr) => {
-							acc[curr.PropertyName] = curr.Value;
-							return acc;
-						}, {}))
-						.map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-						.join('&');
-					} else {
-						config = this.buildConfigFromTempConfig(this.tempConfig);
-					}
-				}
+				let config = WriteProviderConfig(this.tempConfig, this.rowType, this.SelectLists.IdentityProviderTypeList);
 				const idProValues = {
 					Name: this.rowName,
 					Description: this.rowDescription,
 					Type: this.rowType,
-					Config: config,
+					Options: config,
 					FormMode: this.dialogMode,
 					Rownum: this.rowNum
 				}
@@ -1030,7 +970,7 @@
 										Name: this.rowName,
 										Description: this.rowDescription,
 										Type: this.rowType,
-										Config: config,
+										Options: config,
 										Rownum: this.identityProvidersRows.length
 									}
 								)
@@ -1040,7 +980,7 @@
 								this.identityProvidersRows[newPropIndex].Type = this.rowType;
 								this.identityProvidersRows[newPropIndex].Name = this.rowName;
 								this.identityProvidersRows[newPropIndex].Description = this.rowDescription;
-								this.identityProvidersRows[newPropIndex].Config = config;
+								this.identityProvidersRows[newPropIndex].Options = config;
 								this.identityProvidersRows[newPropIndex].Rownum = this.rowNum;
 								break;
 							case 'delete':
@@ -1076,11 +1016,8 @@
 				this.rowDescription = identityProvidersRows.Description;
 				this.rowType = identityProvidersRows.Type;
 				this.rowNum = identityProvidersRows.Rownum;
-				let configString = identityProvidersRows.Config;
 
-				this.tempConfig = configString?.startsWith("Options=")
-				? configString.substring(8)
-				: configString || {};
+				this.tempConfig = ReadProviderConfig(this.rowType, identityProvidersRows.Options, this.SelectLists.IdentityProviderTypeList);
 
 				this.showIdentityProviderModal('edit');
 			},
@@ -1089,11 +1026,8 @@
 				this.rowDescription = identityProvidersRows.Description;
 				this.rowType = identityProvidersRows.Type;
 				this.rowNum = identityProvidersRows.Rownum;
-				let configString = identityProvidersRows.Config;
 
-				this.tempConfig = configString?.startsWith("Options=")
-				? configString.substring(8)
-				: configString || {};
+				this.tempConfig = ReadProviderConfig(this.rowType, identityProvidersRows.Options, this.SelectLists.IdentityProviderTypeList);
 
 				this.showIdentityProviderModal('delete');
 			},
@@ -1184,12 +1118,12 @@
 				this.showUserModal('new');
 			},
 			SaveRoleProvider() {
-				const roleConfig = this.buildConfigFromTempConfig(this.tempRoleConfig);
+				let roleConfig = WriteProviderConfig(this.tempRoleConfig, this.roleType, this.SelectLists.RoleProviderTypeList);
 				const roleValues = {
 					Name: this.roleName,
 					Type: this.roleType,
 					Precond: this.rolePrecond,
-					Config: roleConfig.Options,
+					Options: roleConfig,
 					FormMode: this.dialogMode,
 					Rownum: this.roleNum
 				}
@@ -1202,7 +1136,7 @@
 										Name: this.roleName,
 										Type: this.roleType,
 										Precond: this.rolePrecond,
-										Config: roleConfig.Options,
+										Options: roleConfig,
 										FormMode: this.dialogMode,
 										Rownum: this.roleRows.length
 									}
@@ -1212,7 +1146,7 @@
 								const newRoleRowsIndex = this.roleRows.findIndex(value => value.Rownum == this.roleNum)
 								this.roleRows[newRoleRowsIndex].Type = this.roleType;
 								this.roleRows[newRoleRowsIndex].Precond = this.rolePrecond;
-								this.roleRows[newRoleRowsIndex].Config = roleConfig.Options;
+								this.roleRows[newRoleRowsIndex].Options = roleConfig;
 								this.roleRows[newRoleRowsIndex].Name = this.roleName;
 								break;
 							case 'delete':
@@ -1251,18 +1185,28 @@
 				this.roleName = roleRows.Name
 				this.roleType = roleRows.Type
 				this.rolePrecond = roleRows.Precond
-				this.tempRoleConfig =  JSON.parse(roleRows.Config)
+				this.tempRoleConfig = ReadProviderConfig(roleRows.Type, roleRows.Options, this.SelectLists.RoleProviderTypeList);
 				this.showRoleProviderModal('edit');
 			},
 			deleteRoleProvider(roleRows) {
 				this.roleName = roleRows.Name
 				this.roleType = roleRows.Type
 				this.rolePrecond = roleRows.Precond
-				this.tempRoleConfig =  JSON.parse(roleRows.Config)
+				this.tempRoleConfig = ReadProviderConfig(roleRows.Type, roleRows.Options, this.SelectLists.RoleProviderTypeList);
 				this.showRoleProviderModal('delete');
 			},
 			createRoleProvider() {
 				this.showRoleProviderModal('new');
+			},
+			setupProviders() {
+				QUtils.postData('Config', 'SetupProviders', {}, { appId: this.$store.state.currentApp }, (data) => {
+					if (data.success) {
+						this.$emit('alert-class', { ResultMsg: "ok", AlertType: 'success' });
+					}
+					else {
+						this.$emit('alert-class', { ResultMsg: data.Message, AlertType: 'danger' });
+					}
+				});
 			},
 		},
 		created() {
@@ -1300,13 +1244,17 @@
 					this.buttons[0].props.disabled = newValue
 			},
 			rowType(newValue) {
-				if (newValue) {
-					this.onTypeChange("identityProvider");
+				if (newValue && this.showIdentityDialog) {
+					//if the dialog is open and the provider type changes, try to match up the current options with the new type list of properties
+					const propIndex = this.identityProvidersRows.findIndex(value => value.Rownum == this.rowNum);
+					this.tempConfig = ReadProviderConfig(newValue, this.identityProvidersRows[propIndex].Options, this.SelectLists.IdentityProviderTypeList);
 				}
 			},
 			roleType(newValue) {
-				if (newValue) {
-					this.onTypeChange("roleProvider");
+				if (newValue && this.showRoleDialog) {
+					//if the dialog is open and the provider type changes, try to match up the current options with the new type list of properties
+					const propIndex = this.roleRows.findIndex(value => value.Rownum == this.roleNum);
+					this.tempRoleConfig = ReadProviderConfig(newValue, this.roleRows[propIndex].Options, this.SelectLists.RoleProviderTypeList);
 				}
 			}
 		}

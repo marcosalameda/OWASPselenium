@@ -1,7 +1,8 @@
-﻿using CSGenio.framework;
+﻿using CSGenio;
+using CSGenio.framework;
 using System;
 using System.Collections.Generic;
-using System.Security.Principal;
+using System.Linq;
 
 namespace GenioServer.security
 {
@@ -25,7 +26,7 @@ namespace GenioServer.security
         /// </summary>
         /// <param name="credential">The user credentials</param>
         /// <returns>The user identity</returns>
-        IIdentity Authenticate(Credential credential);
+        GenioIdentity Authenticate(Credential credential);
 
         /// <summary>
         /// Determines whether username and password authentication is enabled.
@@ -59,15 +60,6 @@ namespace GenioServer.security
         /// <param name="state">Optional opaque state to send to the provider, that is supposed to be reflected to the callback</param>
         /// <returns>The fully formed logout uri</returns>
         string GetRedirectLogoutUrl(string callback, string state = null);
-
-        /// <summary>
-        /// Extracts the external unique id from the credential and saves it to the internal user.
-        /// If the credential is invalid or the user is inconsistent the method should fail.
-        /// </summary>
-        /// <param name="credential">The credential to associate</param>
-        /// <param name="user">The user where the credential will be associated</param>
-        /// <returns>True if the registration is sucessfull, false otherwise</returns>
-        bool RegisterExternalId(Credential credential, User user);
     }
 
     /// <summary>
@@ -91,13 +83,42 @@ namespace GenioServer.security
         public virtual string GetRedirectLogoutUrl(string callback, string state = null) => "";
 
         /// <inheritdoc/>
-        public virtual bool RegisterExternalId(Credential credential, User user) => true;
-
-        /// <inheritdoc/>
         public virtual bool HasUsernameAuth() => false;
 
         /// <inheritdoc/>
-        public abstract IIdentity Authenticate(Credential credential);
+        public abstract GenioIdentity Authenticate(Credential credential);
+
+        /// <summary>
+        /// Initializes the provider with all the options read from the config
+        /// </summary>
+        /// <param name="config">The provide configuration</param>
+        /// <remarks>
+        /// Subclasses need to mark properties they wish parsed with SecurityProviderOptionAttribute
+        /// </remarks>
+        public BaseIdentityProvider(IdentityProviderCfgEl config)
+        {
+            Id = config.Name;
+            Description = config.Description ?? "";
+
+            var t = GetType();
+            var props = t.GetProperties();
+            foreach (var p in props)
+            {
+                var attrs = p.GetCustomAttributes(typeof(SecurityProviderOptionAttribute), true);
+                if (attrs == null || attrs.Length == 0)
+                    continue;
+
+                if (config.Options.TryGetValue(p.Name, out var optValue))
+                {
+                    if (p.PropertyType.IsAssignableFrom(typeof(List<string>)))
+                        p.SetValue(this, optValue.Split(';').ToList());
+                    else
+                        p.SetValue(this, Convert.ChangeType(optValue, p.PropertyType, System.Globalization.CultureInfo.InvariantCulture), null);
+                }
+                else if (!(attrs[0] as SecurityProviderOptionAttribute).Optional)
+                    throw new FrameworkException($"Invalid provider parameters", "BaseIdentityProvider.ctor", $"Property {p.Name} is mandatory for provider {Id}");
+            }
+        }
     }
 
     /// <summary>

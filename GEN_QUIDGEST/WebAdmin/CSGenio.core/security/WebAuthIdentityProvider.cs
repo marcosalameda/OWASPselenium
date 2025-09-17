@@ -1,5 +1,5 @@
-﻿using CSGenio.business;
-using CSGenio.framework;
+﻿using CSGenio;
+using CSGenio.business;
 using CSGenio.persistence;
 using Fido2NetLib;
 using Fido2NetLib.Development;
@@ -9,7 +9,6 @@ using Quidgest.Persistence.GenericQuery;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
@@ -60,7 +59,12 @@ namespace GenioServer.security
     public class WebAuthIdentityProvider : BaseIdentityProvider
     {
         /// <inheritdoc/>
-        public override IIdentity Authenticate(Credential credential)
+        public WebAuthIdentityProvider(IdentityProviderCfgEl config) : base(config)
+        {
+        }
+
+        /// <inheritdoc/>
+        public override GenioIdentity Authenticate(Credential credential)
         {
             throw new NotImplementedException();
         }
@@ -68,7 +72,7 @@ namespace GenioServer.security
         private Fido2 _lib;
         public static IMetadataService _mds;
 
-        public WebAuthIdentityProvider(WebAuthValues valuesWA)
+        public WebAuthIdentityProvider(WebAuthValues valuesWA) : base(new IdentityProviderCfgEl() { Name = "WebAuth"})
         {
 			//Currently unused code
             //var MDSAccessKey = valuesWA.MDSAccessKey;

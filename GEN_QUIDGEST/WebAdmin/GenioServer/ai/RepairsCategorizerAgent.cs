@@ -99,6 +99,7 @@ namespace GenioServer.ai
                 Category = new
                 {
                     type = "string",
+                    title = Translations.Get("Technical area", user.Language),
                     description = "A one letter with the correct mapping"
                 }            }
         };

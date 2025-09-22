@@ -56,6 +56,10 @@ namespace CSGenio.core.ai
         /// <summary>
         /// Makes a function call to the chatbot service and returns the result of type T
         /// </summary>
-        Task<T> CallChabotAgentPromptAsync<T>(object requestData);
+
+        /// <summary>
+        /// Makes a function call to the chatbot service and returns the result of type T
+        /// </summary>
+        Task<T> CallChabotAgentPromptAsync<T>(AgentRequestData requestData);
     }
 }

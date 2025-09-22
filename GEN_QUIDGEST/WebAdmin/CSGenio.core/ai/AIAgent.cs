@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.IO;
 using System.Net.Http;
+using Newtonsoft.Json.Linq;
 namespace CSGenio.core.ai;
 
 /// <summary>
@@ -72,7 +73,7 @@ public abstract class AiAgent
             {
 
                 // Construct the request payload with necessary parameters
-                AgentRequestDataWithFiles requestData = BuildRequestData();
+                AgentRequestData requestData = BuildRequestData();
                 Log.Info($"User ${user.Name} called {AGENT_ID}"); 
                 // Call the chatbot service asynchronously and return the result
                 return await _service.CallChatbotFunctionAsync<OutData>(requestData)
@@ -86,9 +87,26 @@ public abstract class AiAgent
         }
     }
 
-    public AgentRequestDataWithFiles BuildRequestData()
+    public AgentRequestData BuildRequestData()
     {
-        return new AgentRequestDataWithFiles(JsonSchema, BuildUserPrompt(), BuildSystemPrompt(), Configuration.Application.Name, Files);
+        var requestData = new AgentRequestData(
+                JsonSchema,
+                BuildUserPrompt(),
+                BuildSystemPrompt(),
+                Configuration.Application.Name,
+                Files,
+                null
+            );
+
+        return requestData;
+    }
+
+    public AgentRequestData BuildRequestData(AgentContextData contextData)
+    {
+        var requestData = BuildRequestData();
+        requestData.AgentContextData = contextData;
+
+        return requestData;
     }
 
     /// <summary>
@@ -96,20 +114,9 @@ public abstract class AiAgent
     /// </summary>
     /// <param name="requestData"> The request data </param>
     /// <returns></returns>
-    public object GetAgentPromptJobId(User user, string formKey)
+    public object GetAgentPromptJobId(AgentContextData contextData)
     {
-        var agentData = BuildRequestData();
-        var requestData = new
-        {
-            agentData.JsonSchema,
-            agentData.Prompt,
-            agentData.SystemPrompt,
-            agentData.Project,
-
-            username = user.Name,
-            agentId = AGENT_ID,
-            formId = formKey,
-        };
+        var requestData = BuildRequestData(contextData);
 
         var jobId = _service.CallChabotAgentPromptAsync<object>(requestData)
                         .GetAwaiter()

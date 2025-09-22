@@ -103,7 +103,7 @@ namespace CSGenio.core.ai
             form.Add(new StringContent(requestData.SystemPrompt), "systemPrompt");
             form.Add(new StringContent(requestData.Project), "project");
 
-            if (requestData is AgentRequestDataWithFiles requestDataWithFiles && requestDataWithFiles.Files != null)
+            if (requestData is AgentRequestData requestDataWithFiles && requestDataWithFiles.Files != null)
             {
                 foreach (DBFile file in requestDataWithFiles.Files)
                 {
@@ -259,11 +259,15 @@ namespace CSGenio.core.ai
 
 
         /// <summary>
-        /// Calls a structured prompt on the chatbot API.
+        /// Calls an agent prompt on the chatbot API.
         /// </summary>
-        public Task<T> CallChabotAgentPromptAsync<T>(object requestData)
+        public Task<T> CallChabotAgentPromptAsync<T>(AgentRequestData requestData)
         {
-            return CallChatbotApiAsync<T>(requestData, "prompt/structured");
+            // If the AgentContextData.UserPrompt comes filled it's because a message was sent via the input while on the Agent chat
+            string path = string.IsNullOrEmpty(requestData.AgentContextData.UserPrompt) ? "prompt/structured" : "prompt/direct-agent-chat";
+            var data = requestData.FlattenData();
+
+            return CallChatbotApiAsync<T>(data, path);
         }
 
         /// <summary>

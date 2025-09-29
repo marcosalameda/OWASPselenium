@@ -617,31 +617,40 @@ namespace GenioMVC.Controllers
 			bool success = false;
 			string error = string.Empty;
 
+			var years = UserContext.Current.User.Years;
 			var user = UserContext.Current.User;
-			var sp = UserContext.Current.PersistentSupport;
+			List<string> yearsFailed = new List<string>();
 
 			if (user.Codpsw != model.ValCodpsw)
 				error = Resources.Resources.NAO_PODE_ALTERAR_A_P42871;
 			else
 			{
-				try
+				// Change the password in each database the user has access to
+				foreach (var year in years)
 				{
-					sp.openConnection();
-					var userOldValues = CSGenioApsw.search(sp, user.Codpsw, user, new string[] { CSGenioApsw.FldPassword.Field, CSGenioApsw.FldSalt.Field, CSGenioApsw.FldPswtype.Field });
-					var factory = new UserFactory(sp, user);
-					factory.ChangePassword(userOldValues, model.NewPassword, model.ConfirmPassword, model.OldPassword);
-				}
-				catch(InvalidPasswordException ipe)
-				{
-					error = ipe.Message;
-				}
-				catch
-				{
-					error = Resources.Resources.PEDIMOS_DESCULPA__OC63848;
-				}
-				finally
-				{
-					sp.closeConnection();
+					var sp = PersistentSupport.getPersistentSupport(year);
+
+					try
+					{
+						sp.openConnection();
+						var factory = new UserFactory(sp, user);
+						var psw = factory.GetUser(user.Name);
+						factory.ChangePassword(psw, model.NewPassword, model.ConfirmPassword, model.OldPassword);
+						psw.update(sp);
+					}
+					catch(InvalidPasswordException ipe)
+					{
+						error = ipe.Message;
+					}
+					catch (Exception ex)
+					{
+						Log.Error($"Profile - error changing password in system {year}. Error: {ex.Message}");
+						yearsFailed.Add(year);
+					}
+					finally
+					{
+						sp.closeConnection();
+					}
 				}
 			}
 
@@ -649,23 +658,17 @@ namespace GenioMVC.Controllers
 				ModelState.AddModelError(error, error);
 			else
 			{
+				SuccessMessage(Resources.Resources.A_SUA_PASSWORD_FOI_A50177);
+				success = true;
+
 				try
 				{
-					sp.openTransaction();
-					model.Save();
-					sp.closeTransaction();
-
-					SuccessMessage(Resources.Resources.A_SUA_PASSWORD_FOI_A50177);
-					success = true;
-
 					//recriar user logado, caso contrário
 					if (GenFunctions.emptyN(UserContext.Current.User.Status) == 0 && UserContext.Current.User.Status == 1)
 						recreateUser();
 				}
 				catch (Exception e)
 				{
-					sp.rollbackTransaction();
-
 					if (e is GenioException && (e as GenioException).UserMessage != null)
 						ModelState.AddModelError("Erro", (e as GenioException).UserMessage);
 					else
@@ -678,7 +681,10 @@ namespace GenioMVC.Controllers
 			model.NewPassword = "";
 			model.ConfirmPassword = "";
 
-			if (success)
+			// If update failed for any databases
+			if (yearsFailed.Count > 0)
+				return JsonERROR(Resources.Resources.ERRO_AO_ATUALIZAR_A_25317 + ": " + string.Join(", ", [..yearsFailed]), yearsFailed);
+			else if (success)
 				// redirecting to GET method
 				return RedirectToAction("Index", new { nav = Navigation.NavigationId });
 			else

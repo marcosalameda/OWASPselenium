@@ -6,7 +6,7 @@
 
 @{
 	ViewBag.Form = "Pess1";
-	ViewBag.Title = @Resources.COMODANTE63029;
+	ViewBag.Title = @Resources.PERSON10446;
     ViewBag.formmode = Model.GetFormMode;
 	ViewBag.ClassForFormLayout = "form-flow";
 }
@@ -53,7 +53,7 @@
 						<div class="control-join-group">
 						<div class="i-text draggable " id="CONTAINER_LED_PESS1___PESS1NAME____">
 								<div class="d-flex">
-								@Html.LabelFor(model => model.ValName, new { label_id="LED_PESS1___PESS1NAME____", @class = " i-text__label", id="LABEL_LED_PESS1___PESS1NAME____"}, true, true)
+								@Html.LabelFor(model => model.ValName, new { label_id="LED_PESS1___PESS1NAME____", @class = " i-text__label", id="LABEL_LED_PESS1___PESS1NAME____"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_PESS1___PESS1NAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
 								@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_PESS1___PESS1NAME____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PESS1___PESS1NAME____", @pers_cs_area = "Pess1", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.NAME31974, maxlength = "85", rows = "85" })
@@ -72,7 +72,7 @@
 								@Html.LabelFor(model => model.ValGender, new { label_id="LED_PESS1___PESS1GENDER__", @class = " i-text__label", id="LABEL_LED_PESS1___PESS1GENDER__"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_PESS1___PESS1GENDER__','Genero')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.ArrayDropDownListFor(model => model.ValGender, Model.List_ValGender, CSGenio.business.ArrayGenero.GetElement, "", new {help_id = "LED_PESS1___PESS1GENDER__", @class = "i-select chosen-dropdown input-medium", data_identifier = "LED_PESS1___PESS1GENDER__", @pers_cs_area = "Pess1", @pers_cs_field = "ValGender", @db_field = "ValGender", title = @Resources.GENDER44172, data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValGender.SelectedValue, data_is_array = "true" })
+								@Html.ArrayDropDownListFor(model => model.ValGender, Model.List_ValGender, CSGenio.business.ArrayGenero.GetElement, "", new {help_id = "LED_PESS1___PESS1GENDER__", @class = "i-select chosen-dropdown input-mini", data_identifier = "LED_PESS1___PESS1GENDER__", @pers_cs_area = "Pess1", @pers_cs_field = "ValGender", @db_field = "ValGender", title = @Resources.GENDER44172, data_array_type = "AC", data_placeholder = @Resources.ESCOLHA___40245, data_no_results_text = @Resources.NAO_HA_RESULTADOS_PA53055, data_value = Model.List_ValGender.SelectedValue, data_is_array = "true" })
 								@Html.ValidationMessageFor(model => model.ValGender)
 							</div>
 						</div>
@@ -93,10 +93,10 @@
 							</div>
 						<div class="i-text draggable " id="CONTAINER_LED_PESS1___PESS1IDFUNCIO">
 								<div class="d-flex">
-								@Html.LabelFor(model => model.ValIdfuncio, new { label_id="LED_PESS1___PESS1IDFUNCIO", @class = " i-text__label", id="LABEL_LED_PESS1___PESS1IDFUNCIO"}, true, true)
+								@Html.LabelFor(model => model.ValIdfuncio, new { label_id="LED_PESS1___PESS1IDFUNCIO", @class = " i-text__label", id="LABEL_LED_PESS1___PESS1IDFUNCIO"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_PESS1___PESS1IDFUNCIO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.NumberFor(model => model.ValIdfuncio, new {help_id = "LED_PESS1___PESS1IDFUNCIO", @class = "Number text-right i-text__field i-text input-small", data_sequencial = "M1", data_identifier = "LED_PESS1___PESS1IDFUNCIO", @pers_cs_area = "Pess1", @pers_cs_field = "ValIdfuncio", @db_field = "ValIdfuncio", title = @Resources.EMPLOYEE_NO_01176, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
+								@Html.NumberFor(model => model.ValIdfuncio, new {help_id = "LED_PESS1___PESS1IDFUNCIO", @class = "Number text-right i-text__field i-text input-mini", data_sequencial = "M1", data_identifier = "LED_PESS1___PESS1IDFUNCIO", @pers_cs_area = "Pess1", @pers_cs_field = "ValIdfuncio", @db_field = "ValIdfuncio", title = @Resources.EMPLOYEE_NO_01176, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
 								@Html.ValidationMessageFor(model => model.ValIdfuncio)
 							</div>
 						<div class="i-text draggable " id="CONTAINER_LED_PESS1___PESS1TELEPHON">
@@ -104,7 +104,7 @@
 								@Html.LabelFor(model => model.ValTelephon, new { label_id="LED_PESS1___PESS1TELEPHON", @class = " i-text__label", id="LABEL_LED_PESS1___PESS1TELEPHON"}, true, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								<a href="javascript:OpenSuggestion('LED_PESS1___PESS1TELEPHON','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.TextBoxFor(model => model.ValTelephon, new {help_id = "LED_PESS1___PESS1TELEPHON", @class = "i-text__field i-text input-medium", data_identifier = "LED_PESS1___PESS1TELEPHON", @pers_cs_area = "Pess1", @pers_cs_field = "ValTelephon", @db_field = "ValTelephon", title = @Resources.TELEPHONE28697, maxlength = "20", rows = "20" })
+								@Html.TextBoxFor(model => model.ValTelephon, new {help_id = "LED_PESS1___PESS1TELEPHON", @class = "i-text__field i-text input-large", data_identifier = "LED_PESS1___PESS1TELEPHON", @pers_cs_area = "Pess1", @pers_cs_field = "ValTelephon", @db_field = "ValTelephon", title = @Resources.TELEPHONE28697, maxlength = "20", rows = "20" })
 								@Html.ValidationMessageFor(model => model.ValTelephon)
 							</div>
 						</div>
@@ -178,7 +178,7 @@
 								@Html.ValidationMessageFor(model => model.ValDtultcat)
 							</div>
 						<div class="i-checkbox draggable " id="CONTAINER_LED_PESS1___PESS1EXTERNA_">
-								@Html.CheckBoxFor(model => model.ValExterna, new {help_id = "LED_PESS1___PESS1EXTERNA_", @class = "i-checkbox__field i-checkbox input-small", data_identifier = "LED_PESS1___PESS1EXTERNA_", @pers_cs_area = "Pess1", @pers_cs_field = "ValExterna", @db_field = "ValExterna", title = @Resources.EXTERNAL13375 }, @Model.IsEditableMode, false)
+								@Html.CheckBoxFor(model => model.ValExterna, new {help_id = "LED_PESS1___PESS1EXTERNA_", @class = "i-checkbox__field i-checkbox input-mini", data_identifier = "LED_PESS1___PESS1EXTERNA_", @pers_cs_area = "Pess1", @pers_cs_field = "ValExterna", @db_field = "ValExterna", title = @Resources.EXTERNAL13375 }, @Model.IsEditableMode, false)
 								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 								@Html.ValidationMessageFor(model => model.ValExterna)
 							</div>

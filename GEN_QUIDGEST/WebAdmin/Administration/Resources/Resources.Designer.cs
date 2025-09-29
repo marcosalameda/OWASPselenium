@@ -3301,6 +3301,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Create Mock Person"
+        /// </summary>
+        public static string CREATE_MOCK_PERSON54221 {
+            get {
+                return ResourceManager.GetString("CREATE_MOCK_PERSON54221", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "  316"
         /// </summary>
         public static string __31620801 {
@@ -15037,6 +15046,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "Mock Person Creation"
+        /// </summary>
+        public static string MOCK_PERSON_CREATION57826 {
+            get {
+                return ResourceManager.GetString("MOCK_PERSON_CREATION57826", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Operational objectives"
         /// </summary>
         public static string OPERATIONAL_OBJECTIV52684 {
@@ -17724,6 +17742,15 @@ namespace Administration.Resources {
         public static string ASYNC_PROCESS_ATTACH04785 {
             get {
                 return ResourceManager.GetString("ASYNC_PROCESS_ATTACH04785", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "AI Agents"
+        /// </summary>
+        public static string AI_AGENTS01181 {
+            get {
+                return ResourceManager.GetString("AI_AGENTS01181", resourceCulture);
             }
         }
 
@@ -43297,6 +43324,15 @@ namespace Administration.Resources {
         }
 
         /// <summary>
+        ///   Looks up a localized string similar to "A importar..."
+        /// </summary>
+        public static string A_IMPORTAR___42816 {
+            get {
+                return ResourceManager.GetString("A_IMPORTAR___42816", resourceCulture);
+            }
+        }
+
+        /// <summary>
         ///   Looks up a localized string similar to "Relatório do Sistema"
         /// </summary>
         public static string RELATORIO_DO_SISTEMA49744 {
@@ -53454,6 +53490,15 @@ namespace Administration.Resources {
         public static string VOLTAR_PARA50593 {
             get {
                 return ResourceManager.GetString("VOLTAR_PARA50593", resourceCulture);
+            }
+        }
+
+        /// <summary>
+        ///   Looks up a localized string similar to "Erro ao atualizar a palavra-passe em"
+        /// </summary>
+        public static string ERRO_AO_ATUALIZAR_A_25317 {
+            get {
+                return ResourceManager.GetString("ERRO_AO_ATUALIZAR_A_25317", resourceCulture);
             }
         }
 

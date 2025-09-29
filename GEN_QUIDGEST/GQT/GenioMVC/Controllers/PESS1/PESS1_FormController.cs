@@ -34,12 +34,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_PESS1_CANCEL = new NavigationLocation("COMODANTE63029", "Pess1_Cancel", "Pess1") { vueRouteName = "form-PESS1", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_PESS1_SHOW = new NavigationLocation("COMODANTE63029", "Pess1_Show", "Pess1") { vueRouteName = "form-PESS1", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_PESS1_NEW = new NavigationLocation("COMODANTE63029", "Pess1_New", "Pess1") { vueRouteName = "form-PESS1", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_PESS1_EDIT = new NavigationLocation("COMODANTE63029", "Pess1_Edit", "Pess1") { vueRouteName = "form-PESS1", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_PESS1_DUPLICATE = new NavigationLocation("COMODANTE63029", "Pess1_Duplicate", "Pess1") { vueRouteName = "form-PESS1", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_PESS1_DELETE = new NavigationLocation("COMODANTE63029", "Pess1_Delete", "Pess1") { vueRouteName = "form-PESS1", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_PESS1_CANCEL = new NavigationLocation("PERSON10446", "Pess1_Cancel", "Pess1") { vueRouteName = "form-PESS1", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_PESS1_SHOW = new NavigationLocation("PERSON10446", "Pess1_Show", "Pess1") { vueRouteName = "form-PESS1", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PESS1_NEW = new NavigationLocation("PERSON10446", "Pess1_New", "Pess1") { vueRouteName = "form-PESS1", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_PESS1_EDIT = new NavigationLocation("PERSON10446", "Pess1_Edit", "Pess1") { vueRouteName = "form-PESS1", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_PESS1_DUPLICATE = new NavigationLocation("PERSON10446", "Pess1_Duplicate", "Pess1") { vueRouteName = "form-PESS1", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_PESS1_DELETE = new NavigationLocation("PERSON10446", "Pess1_Delete", "Pess1") { vueRouteName = "form-PESS1", mode = "DELETE" };
 
 		#endregion
 

@@ -1209,6 +1209,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <data name="ECONOMICA05942" xml:space="preserve">
     <value>Económica</value>
   </data>
+  <data name="CREATE_MOCK_PERSON54221" xml:space="preserve">
+    <value>Create Mock Person</value>
+  </data>
   <data name="__31620801" xml:space="preserve">
     <value>Integra c/ Documental?</value>
   </data>
@@ -5146,6 +5149,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <data name="____409508" xml:space="preserve">
     <value>Non-fungible thing, which must be returned after the stipulated period.</value>
   </data>
+  <data name="MOCK_PERSON_CREATION57826" xml:space="preserve">
+    <value>Mock Person Creation</value>
+  </data>
   <data name="OPERATIONAL_OBJECTIV52684" xml:space="preserve">
     <value>Operational objectives</value>
   </data>
@@ -6051,6 +6057,9 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
   </data>
   <data name="ASYNC_PROCESS_ATTACH04785" xml:space="preserve">
     <value>Async process attachments</value>
+  </data>
+  <data name="AI_AGENTS01181" xml:space="preserve">
+    <value>AI Agents</value>
   </data>
   <data name="INDICATOR_ICON40009" xml:space="preserve">
     <value>Indicator icon</value>
@@ -14607,6 +14616,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
   <data name="A_EXPORTAR___20494" xml:space="preserve">
     <value>Exporting...</value>
   </data>
+  <data name="A_IMPORTAR___42816" xml:space="preserve">
+    <value>Importing...</value>
+  </data>
   <data name="RELATORIO_DO_SISTEMA49744" xml:space="preserve">
     <value>System report</value>
   </data>
@@ -17993,5 +18005,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
   </data>
   <data name="VOLTAR_PARA50593" xml:space="preserve">
     <value>Back to</value>
+  </data>
+  <data name="ERRO_AO_ATUALIZAR_A_25317" xml:space="preserve">
+    <value>Error updating the password in</value>
   </data>
 </root>

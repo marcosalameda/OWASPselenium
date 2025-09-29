@@ -84,17 +84,31 @@ qapi.prototype.RGB = function (red, green, blue) //** retorna o hexadecimal
 	return hexa
 }
 
-qapi.prototype.iif = function (teste, v1, v2)
-{ //** apenas para compatibilidade    o iif será implementado na geração
+qapi.prototype.iif = function (test, v1, v2) {
 	this.LogCmd("iif", arguments);
-	if (eval(teste) === true || teste === 1 || teste === true)
-	{
-		return v1;
-	} else
-	{
+
+	//JGF This function used to do eval(test), but that is unsafe, and the implementation was changed
+	if (typeof test === "boolean") {
+		return test ? v1 : v2;
+	}
+
+	if (typeof test === "number") {
+		// maintain legacy: only 1 is true
+		return (test === 1) ? v1 : v2;
+	}
+
+	if (typeof test === "string") {
+		const s = test.trim().toLowerCase();
+		if (s === "true" || s === "1") return v1;
+		if (s === "false" || s === "0" || s === "") return v2;
+
+		this.LogCmd("WARN: qapi.iif - string expressions are no longer supported");
 		return v2;
 	}
-}
+
+	this.LogCmd("WARN: qapi.iif -  test type not supported");
+	return v2; // default: false
+};
 
 qapi.prototype.emptyD = function (date)
 { //** retorna 1 se data vazia ou zero no caso contrario
@@ -192,15 +206,10 @@ qapi.prototype.emptyT = function (obj)
 }
 
 qapi.prototype.IsValid = function (data)
-{ //** retorna 1 se data valida, caso contrario 0
+{ 
+	//** retorna 1 se data valida, caso contrario 0
 	this.LogCmd("IsValid (deprecated)", arguments);
-	if (data === null || data === undefined || !eval(Date.parse(data)))
-	{
-		return 0;
-	} else
-	{
-		return 1;
-	}
+	return this.emptyD(data) === 1 ? 0 : 1;
 }
 
 qapi.prototype.KeyToString = function (obj)

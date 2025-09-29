@@ -35,12 +35,6 @@
 			</Scripts>
 		</Function>
 
-		<Function Id="CREATEFORMULAGROUPS" Name="Create formula groups stored procedures" Help="" Connection="Normal" Selected="true" Selectable="true">
-			<Scripts>
-				<Script>CalcFormulaGroup.sql</Script>
-			</Scripts>
-		</Function>
-
 		<Function Id="UPDATEFUNCTIONS" Name="Update Functions" Help="" Connection="Normal" Selected="true" Selectable="true">
 			<Scripts>
 				<Script>UpdateFunctions.sql</Script>
@@ -112,6 +106,11 @@
 		<Function Id="CREATEFORMULASPROCS" Name="Create formula stored procedures" Help="" Connection="Normal" Selected="true" Selectable="true">
 			<Scripts>
 				<Script>RecalcTabelas.sql</Script>
+			</Scripts>
+		</Function>
+		<Function Id="CREATEFORMULAGROUPS" Name="Create formula groups stored procedures" Help="" Connection="Normal" Selected="true" Selectable="true">
+			<Scripts>
+				<Script>CalcFormulaGroup.sql</Script>
 			</Scripts>
 		</Function>
 		<Function Id="UPDATEREPLICAS" Name="Update Replicas" Help="" Connection="Normal" Selected="true" Selectable="true">

@@ -48,7 +48,6 @@ namespace GenioMVC.ViewModels.Pess1
 
 		/// <summary>Campo : "Name" Tipo:"C"</summary>
 		[Display(Name = "NAME31974", ResourceType = typeof(Resources.Resources))]
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
 		[AllowHtml]
 		[StringLength(85, ErrorMessageResourceName = "O_COMPRIMENTO_MAXIMO21747", ErrorMessageResourceType = typeof(Resources.Resources))]
 		public string ValName { get; set; }
@@ -93,7 +92,7 @@ namespace GenioMVC.ViewModels.Pess1
 		/// <summary>Campo : "Photo" Tipo:"IJ"</summary>
 		[Display(Name = "PHOTO51874", ResourceType = typeof(Resources.Resources))]
 		[UIHint("DBJpegImage")]
-		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 100, 50, false, true)]
+		[Newtonsoft.Json.JsonConverter(typeof(Helpers.ResizeImageSerializer), 30, 50, false, true)]
 		public byte[] ValPhotogra { get; set; }
 
 		/// <summary>Campo : "Since" Tipo:"D"</summary>

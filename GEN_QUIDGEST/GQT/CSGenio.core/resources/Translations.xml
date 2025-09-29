@@ -1078,6 +1078,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Económica" code="ECONOMICA05942">
     <ENUS>Económica</ENUS>
   </msg>
+  <msg id="Create Mock Person" code="CREATE_MOCK_PERSON54221">
+    <ENUS>Create Mock Person</ENUS>
+  </msg>
   <msg id="  316" code="__31620801">
     <ENUS>Integra c/ Documental?</ENUS>
   </msg>
@@ -4942,6 +4945,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="    4" code="____409508">
     <ENUS>Non-fungible thing, which must be returned after the stipulated period.</ENUS>
   </msg>
+  <msg id="Mock Person Creation" code="MOCK_PERSON_CREATION57826">
+    <ENUS>Mock Person Creation</ENUS>
+  </msg>
   <msg id="Operational objectives" code="OPERATIONAL_OBJECTIV52684">
     <ENUS>Operational objectives</ENUS>
   </msg>
@@ -5829,6 +5835,9 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
   </msg>
   <msg id="Async process attachments" code="ASYNC_PROCESS_ATTACH04785">
     <ENUS>Async process attachments</ENUS>
+  </msg>
+  <msg id="AI Agents" code="AI_AGENTS01181">
+    <ENUS>AI Agents</ENUS>
   </msg>
   <msg id="Indicator icon" code="INDICATOR_ICON40009">
     <ENUS>Indicator icon</ENUS>
@@ -14248,6 +14257,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="A exportar..." code="A_EXPORTAR___20494">
     <ENUS>Exporting...</ENUS>
   </msg>
+  <msg id="A importar..." code="A_IMPORTAR___42816">
+    <ENUS>Importing...</ENUS>
+  </msg>
   <msg id="Relatório do Sistema" code="RELATORIO_DO_SISTEMA49744">
     <ENUS>System report</ENUS>
   </msg>
@@ -17634,5 +17646,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Voltar para" code="VOLTAR_PARA50593">
     <ENUS>Back to</ENUS>
+  </msg>
+  <msg id="Erro ao atualizar a palavra-passe em" code="ERRO_AO_ATUALIZAR_A_25317">
+    <ENUS>Error updating the password in</ENUS>
   </msg>
 </Messages>

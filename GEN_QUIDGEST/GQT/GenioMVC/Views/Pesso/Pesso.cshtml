@@ -93,7 +93,7 @@ else {
 												<div class="control-join-group">
 												<div class="i-text draggable " id="CONTAINER_LED_PESSO___PESSOIDFUNCIO">
 													<div class="d-flex">
-													@Html.LabelFor(model => model.ValIdfuncio, new { label_id="LED_PESSO___PESSOIDFUNCIO", @class = " i-text__label", id="LABEL_LED_PESSO___PESSOIDFUNCIO"}, true, true)
+													@Html.LabelFor(model => model.ValIdfuncio, new { label_id="LED_PESSO___PESSOIDFUNCIO", @class = " i-text__label", id="LABEL_LED_PESSO___PESSOIDFUNCIO"}, true, false)
 													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 													<a href="javascript:OpenSuggestion('LED_PESSO___PESSOIDFUNCIO','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
 													@Html.NumberFor(model => model.ValIdfuncio, new {help_id = "LED_PESSO___PESSOIDFUNCIO", @class = "Number text-right i-text__field i-text input-small", data_sequencial = "M1", data_identifier = "LED_PESSO___PESSOIDFUNCIO", @pers_cs_area = "Pesso", @pers_cs_field = "ValIdfuncio", @db_field = "ValIdfuncio", title = @Resources.EMPLOYEE_NO_01176, data_number_integer = "6", data_number_decimals = "0", data_number_format = "999999" })
@@ -101,7 +101,7 @@ else {
 													</div>
 												<div class="i-text draggable " id="CONTAINER_LED_PESSO___PESSONAME____">
 													<div class="d-flex">
-													@Html.LabelFor(model => model.ValName, new { label_id="LED_PESSO___PESSONAME____", @class = " i-text__label", id="LABEL_LED_PESSO___PESSONAME____"}, true, true)
+													@Html.LabelFor(model => model.ValName, new { label_id="LED_PESSO___PESSONAME____", @class = " i-text__label", id="LABEL_LED_PESSO___PESSONAME____"}, true, false)
 													<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
 													<a href="javascript:OpenSuggestion('LED_PESSO___PESSONAME____','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
 													@Html.TextBoxFor(model => model.ValName, new {help_id = "LED_PESSO___PESSONAME____", @class = "i-text__field i-text input-xxlarge", data_identifier = "LED_PESSO___PESSONAME____", @pers_cs_area = "Pesso", @pers_cs_field = "ValName", @db_field = "ValName", title = @Resources.NAME_23841, maxlength = "85", rows = "85" })

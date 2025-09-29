@@ -302,6 +302,7 @@
     <Compile Include="business\RequestFlashWFRela.cs" />
     <Compile Include="persistence\PersistentSupportExtra.cs" />
     <Compile Include="security\**" />
+    <Compile Include="ai\MockPersonCreatorAgent.cs" />
     <Compile Include="ai\RepairsCategorizerAgent.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

@@ -77,7 +77,6 @@ namespace CSGenio.business
 			Qfield.FieldSize =  85;
 			Qfield.CavDesignation = "NAME31974";
 
-            Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
 
@@ -118,7 +117,6 @@ namespace CSGenio.business
 			Qfield.IntegerDigits = 6;
 			Qfield.CavDesignation = "OFFICIAL_NO_34819";
 
-            Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
             Qfield.NotDup = true;
             Qfield.PrefNDup = "codempre";

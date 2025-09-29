@@ -93,7 +93,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1899;
+        public const int VersionIdxDbGen = 1901;
 
         /// <summary>
         /// Version of the latest upgrade index version
@@ -108,12 +108,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "373.44";
+        public const string GenioVersion = "373.59";
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2955;
+        public const int BuildVersionGen = 2957;
 
         /// <summary>
         /// Solution release version

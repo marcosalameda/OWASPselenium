@@ -52,7 +52,6 @@ namespace GenioMVC.ViewModels.Pesso
 
 		/// <summary>Campo : "Name:" Tipo:"C"</summary>
 		[Display(Name = "NAME_23841", ResourceType = typeof(Resources.Resources))]
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
 		[AllowHtml]
 		[StringLength(85, ErrorMessageResourceName = "O_COMPRIMENTO_MAXIMO21747", ErrorMessageResourceType = typeof(Resources.Resources))]
 		public string ValName { get; set; }

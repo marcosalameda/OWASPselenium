@@ -152,7 +152,7 @@ namespace GenioServer.security
 			}
 
 			if (id == null)
-				throw new FrameworkException("Authentication failed. No identity returned from providers.", "SecurityFactory.Authenticate", "Authentication failed");
+				throw new FrameworkException(Translations.Get("Falha na autenticação. As credenciais estão incorretas."), "SecurityFactory.Authenticate", "Authentication failed");
 
 			return Authorize(id);
 		}

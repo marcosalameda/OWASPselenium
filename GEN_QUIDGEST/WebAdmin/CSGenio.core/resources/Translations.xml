@@ -4643,6 +4643,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id=" 1103_VERBOSE" code="_1103_VERBOSE48229">
     <ENUS>ISO 3166 3 letter codes can be used in place of a human readable country name.</ENUS>
   </msg>
+  <msg id="Rest" code="REST58206">
+  </msg>
   <msg id="Header" code="HEADER35023">
     <ENUS>Header</ENUS>
   </msg>
@@ -17649,5 +17651,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Erro ao atualizar a palavra-passe em" code="ERRO_AO_ATUALIZAR_A_25317">
     <ENUS>Error updating the password in</ENUS>
+  </msg>
+  <msg id="Falha na autenticação. As credenciais estão incorretas." code="FALHA_NA_AUTENTICACA09267">
+    <ENUS>Authentication failed. The credentials are incorrect.</ENUS>
   </msg>
 </Messages>

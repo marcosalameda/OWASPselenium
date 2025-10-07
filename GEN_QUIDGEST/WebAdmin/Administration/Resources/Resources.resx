@@ -4843,6 +4843,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <data name="_1103_VERBOSE48229" xml:space="preserve">
     <value>ISO 3166 3 letter codes can be used in place of a human readable country name.</value>
   </data>
+  <data name="REST58206" xml:space="preserve">
+    <value>Rest</value>
+  </data>
   <data name="HEADER35023" xml:space="preserve">
     <value>Header</value>
   </data>
@@ -18008,5 +18011,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</valu
   </data>
   <data name="ERRO_AO_ATUALIZAR_A_25317" xml:space="preserve">
     <value>Error updating the password in</value>
+  </data>
+  <data name="FALHA_NA_AUTENTICACA09267" xml:space="preserve">
+    <value>Authentication failed. The credentials are incorrect.</value>
   </data>
 </root>

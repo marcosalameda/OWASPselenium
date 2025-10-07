@@ -14130,6 +14130,15 @@ namespace GenioMVC.Resources
 		}
 
 		/// <summary>
+		///   Looks up a localized string similar to "Rest"
+		/// </summary>
+		public static string REST58206 {
+			get {
+				return ResourceManager.GetString("REST58206", resourceCulture);
+			}
+		}
+
+		/// <summary>
 		///   Looks up a localized string similar to "Header"
 		/// </summary>
 		public static string HEADER35023 {
@@ -53501,6 +53510,15 @@ namespace GenioMVC.Resources
 		public static string ERRO_AO_ATUALIZAR_A_25317 {
 			get {
 				return ResourceManager.GetString("ERRO_AO_ATUALIZAR_A_25317", resourceCulture);
+			}
+		}
+
+		/// <summary>
+		///   Looks up a localized string similar to "Falha na autenticação. As credenciais estão incorretas."
+		/// </summary>
+		public static string FALHA_NA_AUTENTICACA09267 {
+			get {
+				return ResourceManager.GetString("FALHA_NA_AUTENTICACA09267", resourceCulture);
 			}
 		}
 

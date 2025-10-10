@@ -291,6 +291,81 @@
 	<data name="EM_CURSO28102" xml:space="preserve">
 		<value>Em Curso</value>
 	</data>
+	<data name="GEOGRAPHIC_COORDINAT21394" xml:space="preserve">
+		<value>Geographic coordinate</value>
+	</data>
+	<data name="ICON41974" xml:space="preserve">
+		<value>Icon</value>
+	</data>
+	<data name="ORDER_IN_GROUP__INTE56416" xml:space="preserve">
+		<value>Order in group (Integer field)</value>
+	</data>
+	<data name="BANDEIRA32255" xml:space="preserve">
+		<value>Bandeira</value>
+	</data>
+	<data name="EDIT_MODE04880" xml:space="preserve">
+		<value>Edit Mode</value>
+	</data>
+	<data name="APRIL13388" xml:space="preserve">
+		<value>April</value>
+	</data>
+	<data name="ID_OF_THE_NOTIFICATI28920" xml:space="preserve">
+		<value>ID of the notification that generated the message</value>
+	</data>
+	<data name="SHIP_TO13065" xml:space="preserve">
+		<value>Ship To</value>
+	</data>
+	<data name="DISPATCH_LINES01224" xml:space="preserve">
+		<value>Dispatch lines</value>
+	</data>
+	<data name="__13732555" xml:space="preserve">
+		<value>Períodos de Acumulação de um Indicador. Se a escolha dos dados apenas se deve fazer no período para o qual o Scorecard for calculado deve-se escolher por Período. Se a escolha dos dados se faz no período mas no caso da inexistência de dados nesse período é necessário que o Indicador demonstre os dados do histórico então deve-se escolher Acumulado.</value>
+	</data>
+	<data name="MAPA_ESTRATEGICO48340" xml:space="preserve">
+		<value>Mapa Estratégico</value>
+	</data>
+	<data name="LIST_OF_ITEMS23324" xml:space="preserve">
+		<value>List of Items</value>
+	</data>
+	<data name="ADDRESS_USE16014" xml:space="preserve">
+		<value>Address Use</value>
+	</data>
+	<data name="_114530146" xml:space="preserve">
+		<value>Help in the enumeration item</value>
+	</data>
+	<data name="TYPE_A35795" xml:space="preserve">
+		<value>Type A</value>
+	</data>
+	<data name="VISON_ICON32559" xml:space="preserve">
+		<value>Vison icon</value>
+	</data>
+	<data name="LOCATION_EXTENSION_C33560" xml:space="preserve">
+		<value>Location Extension Components</value>
+	</data>
+	<data name="ORDER_IN_GROUP__FLOA51083" xml:space="preserve">
+		<value>Order in group (Float field)</value>
+	</data>
+	<data name="ASSET_TAGS23725" xml:space="preserve">
+		<value>Asset tags</value>
+	</data>
+	<data name="LOCAL41011" xml:space="preserve">
+		<value>LOCAL</value>
+	</data>
+	<data name="DESCRICAO_DO_MAPA35856" xml:space="preserve">
+		<value>Descrição do mapa</value>
+	</data>
+	<data name="EDITOR_RECURSOS23553" xml:space="preserve">
+		<value>Editor recursos</value>
+	</data>
+	<data name="PROJECT_DATA_54316" xml:space="preserve">
+		<value>Project data?</value>
+	</data>
+	<data name="YEAR61794" xml:space="preserve">
+		<value>Year</value>
+	</data>
+	<data name="MAPA_FECHADO00912" xml:space="preserve">
+		<value>Mapa Fechado</value>
+	</data>
 	<data name="CREATION_YEAR_OF_THE06011" xml:space="preserve">
 		<value>Creation year of the airport</value>
 	</data>
@@ -616,9 +691,6 @@ cdmSchemas:&#91;&quot;/core/applicationCommon/Address.cdm.json/Address/hasAttrib
 	<data name="ARRIVAL_TIME43684" xml:space="preserve">
 		<value>Arrival Time</value>
 	</data>
-	<data name="ID_OF_THE_NOTIFICATI28920" xml:space="preserve">
-		<value>ID of the notification that generated the message</value>
-	</data>
 	<data name="BUILDING13586" xml:space="preserve">
 		<value>Building</value>
 	</data>
@@ -688,9 +760,6 @@ cdmSchemas:&#91;&quot;/core/applicationCommon/Address.cdm.json/Address/hasAttrib
 	<data name="_102804625" xml:space="preserve">
 		<value>Indica se é um mapa pai (Agregador)</value>
 	</data>
-	<data name="ICON41974" xml:space="preserve">
-		<value>Icon</value>
-	</data>
 	<data name="__32528939" xml:space="preserve">
 		<value>Número de ordem utilizado para ordenação dos objetivos</value>
 	</data>
@@ -755,9 +824,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	</data>
 	<data name="A_TRADUZIR48203" xml:space="preserve">
 		<value>A traduzir</value>
-	</data>
-	<data name="LOCAL41011" xml:space="preserve">
-		<value>LOCAL</value>
 	</data>
 	<data name="REPORTING_SERVICES65225" xml:space="preserve">
 		<value>Reporting services</value>
@@ -1316,9 +1382,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	</data>
 	<data name="DATA_TYPE22885" xml:space="preserve">
 		<value>Data Type</value>
-	</data>
-	<data name="GEOGRAPHIC_COORDINAT21394" xml:space="preserve">
-		<value>Geographic coordinate</value>
 	</data>
 	<data name="REAL_ESTATE07188" xml:space="preserve">
 		<value>Real Estate</value>
@@ -2388,9 +2451,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	<data name="PERSON_SPECIALTY62734" xml:space="preserve">
 		<value>Person specialty</value>
 	</data>
-	<data name="ORDER_IN_GROUP__INTE56416" xml:space="preserve">
-		<value>Order in group (Integer field)</value>
-	</data>
 	<data name="BUTON_ADDON17405" xml:space="preserve">
 		<value>Buton addon</value>
 	</data>
@@ -2435,9 +2495,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
 	</data>
 	<data name="GAME_DATE09550" xml:space="preserve">
 		<value>Game date</value>
-	</data>
-	<data name="DISPATCH_LINES01224" xml:space="preserve">
-		<value>Dispatch lines</value>
 	</data>
 	<data name="COMPANHY_S_PEOPLE_CO22385" xml:space="preserve">
 		<value>Companhy&apos;s people counting</value>
@@ -2617,9 +2674,6 @@ Period is not used for a duration (a measure of elapsed time).</value>
 	</data>
 	<data name="FALSE_KEY49203" xml:space="preserve">
 		<value>False key</value>
-	</data>
-	<data name="PROJECT_DATA_54316" xml:space="preserve">
-		<value>Project data?</value>
 	</data>
 	<data name="PHASE_CAPTION_PLACEH06557" xml:space="preserve">
 		<value>Phase Caption Placehoder Text</value>
@@ -3424,9 +3478,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	<data name="__19044270" xml:space="preserve">
 		<value>Definição de unidade.</value>
 	</data>
-	<data name="TYPE_A35795" xml:space="preserve">
-		<value>Type A</value>
-	</data>
 	<data name="___7032878" xml:space="preserve">
 		<value>Indicate here if there are any funds available and budgeted for this Initiative / Project.</value>
 	</data>
@@ -3609,9 +3660,6 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
 	</data>
 	<data name="COLLAPSIBLE_ROW_LIST23728" xml:space="preserve">
 		<value>Collapsible Row lists</value>
-	</data>
-	<data name="DESCRICAO_DO_MAPA35856" xml:space="preserve">
-		<value>Descrição do mapa</value>
 	</data>
 	<data name="CARD_IMAGE_THUMBNAIL58531" xml:space="preserve">
 		<value>Card Image Thumbnail</value>
@@ -4199,54 +4247,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 	</data>
 	<data name="ICON_ANCHOR__X_AXIS_18664" xml:space="preserve">
 		<value>Icon anchor (x-axis)</value>
-	</data>
-	<data name="BANDEIRA32255" xml:space="preserve">
-		<value>Bandeira</value>
-	</data>
-	<data name="EDIT_MODE04880" xml:space="preserve">
-		<value>Edit Mode</value>
-	</data>
-	<data name="APRIL13388" xml:space="preserve">
-		<value>April</value>
-	</data>
-	<data name="SHIP_TO13065" xml:space="preserve">
-		<value>Ship To</value>
-	</data>
-	<data name="__13732555" xml:space="preserve">
-		<value>Períodos de Acumulação de um Indicador. Se a escolha dos dados apenas se deve fazer no período para o qual o Scorecard for calculado deve-se escolher por Período. Se a escolha dos dados se faz no período mas no caso da inexistência de dados nesse período é necessário que o Indicador demonstre os dados do histórico então deve-se escolher Acumulado.</value>
-	</data>
-	<data name="MAPA_ESTRATEGICO48340" xml:space="preserve">
-		<value>Mapa Estratégico</value>
-	</data>
-	<data name="LIST_OF_ITEMS23324" xml:space="preserve">
-		<value>List of Items</value>
-	</data>
-	<data name="ADDRESS_USE16014" xml:space="preserve">
-		<value>Address Use</value>
-	</data>
-	<data name="_114530146" xml:space="preserve">
-		<value>Help in the enumeration item</value>
-	</data>
-	<data name="VISON_ICON32559" xml:space="preserve">
-		<value>Vison icon</value>
-	</data>
-	<data name="LOCATION_EXTENSION_C33560" xml:space="preserve">
-		<value>Location Extension Components</value>
-	</data>
-	<data name="ORDER_IN_GROUP__FLOA51083" xml:space="preserve">
-		<value>Order in group (Float field)</value>
-	</data>
-	<data name="ASSET_TAGS23725" xml:space="preserve">
-		<value>Asset tags</value>
-	</data>
-	<data name="EDITOR_RECURSOS23553" xml:space="preserve">
-		<value>Editor recursos</value>
-	</data>
-	<data name="YEAR61794" xml:space="preserve">
-		<value>Year</value>
-	</data>
-	<data name="MAPA_FECHADO00912" xml:space="preserve">
-		<value>Mapa Fechado</value>
 	</data>
 	<data name="GLOBAL_ARTICLES62131" xml:space="preserve">
 		<value>Global articles</value>

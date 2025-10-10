@@ -499,7 +499,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAcmpki.FldCodcmpki, CSGenioAcmpki.Fl
             var sp = UserContext.Current.PersistentSupport;
             sp.openConnection();
             var row = CSGenioAcmpki.search(sp, id, u);
-            row.Reorder_Order(sp, int.Parse(position), baseConditions);
+            row.Reorder_Order(sp, int.Parse(position));
             sp.closeConnection();
 
         }

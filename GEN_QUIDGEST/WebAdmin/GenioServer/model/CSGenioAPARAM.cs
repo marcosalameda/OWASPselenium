@@ -398,7 +398,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX PARAM]/
 
      
-
       
 
 	}

@@ -571,7 +571,13 @@ namespace CSGenio.business
             else if (isChanged) //Check if changed value already exists, or if from manual entry value cannot be trusted
             {
                 if (Qfield.DefaultValue.existsSequentialValue(this, QPrimaryKey, Qfield.PrefNDup, nDupPrefValue, formCampoPrefNDup, sequentialFieldValue, Qfield.FieldFormat, sp))
-                    needsToBeCalculated = true;
+                {
+                    // Fields with an active Ordering option will be reordered when the value already exists in the database. (method: ReorderOrderingFields)
+                    if(!Qfield.HasOrdering || Qfield.FieldFormat != FieldFormatting.FLOAT)
+                    {
+                        needsToBeCalculated = true;
+                    }
+                }
             }
             //-------------------------
 
@@ -723,6 +729,167 @@ namespace CSGenio.business
                 fillInternalOperations(sp, Qfield, fdc, oldvalues);
             }
 		}
+
+        /// <summary>
+        /// Determines whether an ordering value already exists for another record in the same scope.
+        /// If a non-duplicating prefix field is provided, the check is constrained to that group.
+        /// The current record (identified by <paramref name="primaryKeyValue"/>) is excluded.
+        /// </summary>
+        /// <param name="area">Area</param>
+        /// <param name="sp">The current <see cref="PersistentSupport"/> context.</param>
+        /// <param name="primaryKeyValue">Primary key of the current record.</param>
+        /// <param name="orderingField">Name of the ordering field.</param>
+        /// <param name="orderingValue">Ordering value to check.</param>
+        /// <param name="prefixField">Optional prefix field to constrain the scope.</param>
+        /// <param name="prefixValue">Optional prefix value to constrain the scope.</param>
+        /// <returns>
+        /// <c>true</c> if another record with a different primary key already has the same ordering value
+        /// within the applicable scope; otherwise <c>false</c>.
+        /// </returns>
+        public bool ExistsOrderingValue(IArea area, PersistentSupport sp, object primaryKeyValue, string orderingField, object orderingValue, string prefixField = null, object prefixValue = null)
+        {
+            // ── Guard clauses ─────────────────────────────────────────────────────────────-
+            if (area == null) throw new ArgumentNullException(nameof(area));
+            if (sp == null) throw new ArgumentNullException(nameof(sp));
+            if (string.IsNullOrWhiteSpace(orderingField))
+                throw new ArgumentException("Ordering field name must be provided.", nameof(orderingField));
+
+            try
+            {
+                CriteriaSet where = CriteriaSet.And()
+                    .Equal(area.TableName, orderingField, orderingValue)
+                    .NotEqual(area.TableName, area.PrimaryKeyName, primaryKeyValue);
+
+                // Apply prefix scoping whenever a prefix field is supplied.
+                if (!string.IsNullOrEmpty(prefixField))
+                    where.Equal(area.TableName, prefixField, prefixValue);
+
+                SelectQuery qs = new SelectQuery()
+                    .Select(area.TableName, area.PrimaryKeyName)
+                    .From(area.QSystem, area.TableName, area.TableName)
+                    .Where(where);
+
+                object value = sp.ExecuteScalar(qs);
+
+                return value is not null and not DBNull;
+            }
+            catch (Exception ex)
+            {
+                var userMessage = (ex as GenioException)?.UserMessage;
+                throw new BusinessException(
+                    userMessage, 
+                    nameof(ExistsOrderingValue),
+                    $"Error checking ordering duplication - [area]={area}; [pk]={primaryKeyValue}; " +
+                    $"[field]={orderingField}; [value]={orderingValue}; " +
+                    $"[prefixField]={prefixField}; [prefixValue]={prefixValue}; " +
+                    $"[sp] {sp}; Exception message: {ex.Message}",
+                    ex);
+            }
+        }
+
+        /// <summary>
+        /// Applies sequence re-ordering for all fields marked with the “Order” option.
+        /// If a non-duplication (scoping) prefix exist, re-ordering is constrained to that group. 
+        /// When the prefix changes, the previous group is re-ordered to close any gap.
+        /// Notes:
+        /// - Ordering is 1-based (positions must be >= 1).
+        /// - Re-ordering occurs only on collision; oversize or invalid requests are ignored.
+        /// - Decimal values are truncated; ordering is effectively integer-only.
+        /// - Pseudo-new records (Zzstate == 1) are ignored.
+        /// - An empty prefix represents its own distinct “empty” group and is also re-sequenced.
+        /// - If there is no previous values (oldValues == null), the old group is not re-sequenced.
+        ///
+        /// TODO: To achieve optimization and reduce query repetition, this method should become part of «fillInternalOperations» 
+        /// and be merged with the default calculations. When sequential numbering is active, 
+        /// it is automatically excluded if the number already exists, a reorder is performed; otherwise, the default value prevails.
+        /// </summary>
+        /// <param name="sp">The current <see cref="PersistentSupport"/> context.</param>
+        /// <param name="oldValues">
+        /// Previous persisted values for this record (when available). 
+        /// When <c>null</c>, the incoming order is still treated as a change for collision resolution,
+        /// but the previous prefix is unknown so no “old scope” clean-up is attempted.
+        /// </param>
+        private void ReorderOrderingFields(PersistentSupport sp, Area oldValues)
+        {
+            // Pseudo-new rows are not processed here. They are typically inserted prior to
+            // opening the UI, and may temporarily carry negative order values.
+            if (Zzstate == 1) // TODO: check if missing «&& UserRecord == true» ??
+                return;
+
+            // Only numeric “ordering” fields are relevant.
+            var orderingFields = Information.DBFieldsList
+                .Where(field => field.HasOrdering && field.FieldFormat == FieldFormatting.FLOAT);
+
+            foreach (Field field in orderingFields)
+            {
+                // Fetch raw decimals; returnValueField guarantees decimal (0m when empty).
+                decimal currentRaw = (decimal)returnValueField(field.FullName);
+                decimal previousRaw = (decimal)(oldValues?.returnValueField(field.FullName) ?? field.GetValorEmpty());
+
+                // Decimal order values are not supported;
+                // Convert to integer positions by truncation (no rounding surprises)
+                int previousPosition = (int)decimal.Truncate(previousRaw);
+                int requestedPosition = (int)decimal.Truncate(currentRaw);
+
+                // Validate the requested (new) position. Order is 1-based; values below 1 are invalid.
+                if (requestedPosition < 1)
+                    continue; // Nothing to reorder.
+
+                // If there are no previous values (oldValues == null)
+                bool hasPreviousValues = oldValues != null;
+
+                // Treat as “changed” only when a previous value exists and differs.
+                bool valueChanged = hasPreviousValues && !requestedPosition.Equals(previousPosition);
+
+                // Determine the non-duplicate prefix scope, if any, and whether it changed.
+                object currentPrefix = null;
+                object oldPrefix = null;
+                bool prefixChanged = false;
+                FieldFormatting prefixFieldFormat = FieldFormatting.CARACTERES;
+
+                if (!string.IsNullOrEmpty(field.PrefNDup))
+                {
+                    // Read current and previous prefix values and field format
+                    prefixFieldFormat = returnFormattingDBField(field.PrefNDup);
+                    currentPrefix = returnValueField(Alias + "." + field.PrefNDup);
+                    oldPrefix = oldValues?.returnValueField(Alias + "." + field.PrefNDup) ?? Field.GetValorEmpty(prefixFieldFormat);
+
+                    bool currentEmpty = Field.isEmptyValue(currentPrefix, prefixFieldFormat);
+                    bool oldEmpty = Field.isEmptyValue(oldPrefix, prefixFieldFormat);
+
+                    // Compare only if at least one side is non-empty.
+                    if (!currentEmpty || !oldEmpty)
+                    {
+                        // Compare with case-insensitivity for strings; otherwise, value equality.
+                        // There was a case where the non-duplication prefix, which came from a FK field by an arithmetic formula, had a different case.
+                        bool different = prefixFieldFormat == FieldFormatting.CARACTERES
+                            ? !string.Equals(currentPrefix as string, oldPrefix as string, StringComparison.InvariantCultureIgnoreCase)
+                            : !Equals(currentPrefix, oldPrefix);
+
+                        // Changed if non-empty -> empty, or non-empty -> different value (case-insensitive for strings).
+                        prefixChanged = (currentEmpty && !oldEmpty) || (!currentEmpty && different);
+                    }
+                }
+
+                // Check whether another record already occupies the requested position within the scope.
+                // When true, a shift of the existing sequence is required.
+                bool valueAlreadyExists = ExistsOrderingValue(this, sp, QPrimaryKey, field.Name, requestedPosition, field.PrefNDup, currentPrefix);
+
+                // Re-order only when the value changed AND there is a collision to resolve.
+                // If there is no collision (e.g., oversize -> append), do not shift the sequence.
+                // For system inserts (UserRecord == false) with no previous state, treat as change too.
+                if (valueAlreadyExists && (valueChanged || (!UserRecord && !hasPreviousValues)))
+                {
+                    ReorderByField(field, sp, previousPosition, requestedPosition);
+                }
+
+                // If the non-duplicate prefix changed, close any gap left behind in the old scope.
+                if (prefixChanged && hasPreviousValues)
+                {
+                    sp.ReorderSequence(this, field, CriteriaSet.And().Equal(field.PrefNDup, oldPrefix));
+                }
+            }
+        }
 
 		/// <summary>
         /// Verifica se a condição to não recalcular está activa.
@@ -2013,6 +2180,8 @@ namespace CSGenio.business
                 fdc.AddPropagations();
 				fillInternalOperations(sp, oldvalues, fdc);
 
+                ReorderOrderingFields(sp, oldvalues);
+
                 // validar o registo
                 // (RS 2011.06.30) Quando não é o user a gravar a ficha não devemos validar as outras fichas porque podem ainda estar incompletas
                 // No entanto isto pode deixar gravar fichas num estado invalido. Tem de se avaliar se devemos só evitar esta validação no caso de fichas
@@ -2278,6 +2447,8 @@ namespace CSGenio.business
             fdc.AddPropagations();
             fillInternalOperations(sp, oldvalues, fdc);
 
+            ReorderOrderingFields(sp, oldvalues);
+
             var validationResults = Validation.validateFieldsChange(this, sp, User, true);
             if (Zzstate != 0)
                 calculateTemporarySequentials();
@@ -2411,6 +2582,8 @@ namespace CSGenio.business
                 fdc.AddInternalOperations();
                 fdc.AddPropagations();
                 fillInternalOperations(sp, oldvalues, fdc);
+
+                ReorderOrderingFields(sp, oldvalues);
 
                 // validar o registo
                 // (RS 2011.06.30) Quando não é o user a gravar a ficha não devemos validar as outras fichas porque podem ainda estar incompletas
@@ -3707,6 +3880,135 @@ namespace CSGenio.business
 
 
             return DBConversion.ToInteger(sp.ExecuteScalar(query)) > 0;
+        }
+
+        /// <summary>
+        /// Generic primitive to re-sequence an ordering field within a partition.
+        /// Adjusts neighbouring rows inside the subset (non duplication prefix, if have)
+        /// to move the current record from <paramref name="currentPosition"/> 
+        /// to <paramref name="newPosition"/>, ensuring a contiguous 1-based sequence is preserved.
+        /// Notes:
+        /// - Oversize requests (newPosition > maxOrder) do not shift the sequence.
+        /// - Positions are 1-based; invalid (<= 0) are ignored.
+        /// - The moved row is temporarily set to 0 to avoid unique/index conflicts during neighbour shifts.
+        /// - The moved row itself can optionally be updated to <paramref name="newPosition"/>
+        ///   if <paramref name="placeMovedRow"/> is true. In typical flows this is not needed,
+        ///   because a subsequent Save/Update will persist the new value anyway, avoiding a redundant UPDATE.
+        /// </summary>
+        /// <param name="orderingField">The ordering field.</param>
+        /// <param name="sp">The current <see cref="PersistentSupport"/> context.</param>
+        /// <param name="currentPosition">
+        /// Current 1-based position of the row in the partition. May be ≤ 0 when the row has no valid
+        /// persisted position (e.g., insert-like flows with temporary values).
+        /// </param>
+        /// <param name="newPosition">Target 1-based position in the partition.</param>
+        /// <param name="placeMovedRow">
+        /// If true, this method explicitly updates the moved row to <paramref name="newPosition"/>.
+        /// If false, only neighbouring rows are re-sequenced, leaving the caller (or subsequent Save/Update)
+        /// to persist the new order. Use false for efficiency when a Save will immediately follow.
+        /// </param>
+        public void ReorderByField(
+            Field orderingField, PersistentSupport sp,
+            int currentPosition, int newPosition, bool placeMovedRow = false)
+        {
+            if (orderingField.Alias != Alias)
+                throw new ArgumentException("Ordering field must belongs to this area.", nameof(orderingField));
+
+            CriteriaSet condition = CriteriaSet.And();
+            ColumnReference orderingFieldColumn = new(Alias, orderingField.Name);
+
+            // 1) Determine the highest order inside the partition (respecting condition).
+            int maxOrder;
+
+            if (!string.IsNullOrEmpty(orderingField.PrefNDup))
+            {
+                var currentPrefix = returnValueField(Alias + "." + orderingField.PrefNDup);
+                condition = CriteriaSet.And()
+                    .Equal(Alias, orderingField.PrefNDup, currentPrefix);
+            }
+
+            try
+            {
+                maxOrder = sp.GetMaxFieldValue(this, orderingField, condition);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return;
+            }
+
+            // 2) Guard clauses.
+            // Oversize requests do not shift the sequence (leave as-is).
+            if (newPosition > maxOrder)
+                return;
+
+            // No-op when already at target or invalid target (ordering is 1-based).
+            if (newPosition == currentPosition || newPosition < 1)
+                return;
+
+            // 3) Temporarily set moved row to 0 to avoid collisions while neighbours are shifted.
+            if (currentPosition > 0 && currentPosition <= maxOrder)
+            {
+                UpdateQuery up_temp = new UpdateQuery()
+                            .Update(TableName)
+                            .Set(orderingField.Name, 0)
+                            .Where(CriteriaSet.And().Equal(TableName, PrimaryKeyName, QPrimaryKey));
+                sp.Execute(up_temp);
+            }
+
+            // 4) Compute affected range and start position for resequencing.
+            int posLow;
+            int posHigh;
+            int startPos;
+
+            if(currentPosition <= 0)
+            {
+                // Insert-style move: there was no previous valid position.
+                // Shift (newPosition .. maxOrder) down by +1 to open a slot at newPosition.
+                posLow = newPosition;
+                posHigh = maxOrder;
+                startPos = newPosition + 1;
+            }
+            //If new position is greater than previous position
+            else if (newPosition > currentPosition)
+            {
+                // Moving down: shift (currentPosition+1 .. newPosition) up by -1.
+                posLow = currentPosition + 1;
+                posHigh = newPosition;
+                startPos = posLow - 1;
+            }
+            //If new position is less than previous position
+            else
+            {
+                // Moving up: shift (newPosition .. currentPosition-1) down by +1.
+                posLow = newPosition;
+                posHigh = currentPosition - 1;
+                startPos = posLow + 1;
+            }
+
+            CriteriaSet range_condition = CriteriaSet.And();
+            range_condition.SubSet(condition);
+            range_condition.GreaterOrEqual(orderingFieldColumn, posLow);
+            range_condition.LesserOrEqual(orderingFieldColumn, posHigh);
+
+            // 5) Resequence neighbours in the [posLow..posHigh] range within the partition.
+            sp.ReorderSequence(this, orderingField, range_condition, startPos);
+
+            // 6) Optionally place the moved row at its target position.
+            //    Not always necessary: in most cases a subsequent Save/Update operation 
+            //    will persist the new field value anyway. Skipping this avoids an extra 
+            //    UPDATE on the same column, making the operation lighter.
+            if (placeMovedRow)
+            {
+                var upFinal = new UpdateQuery()
+                    .Update(TableName)
+                    .Set(orderingField.Name, newPosition)
+                    .Where(CriteriaSet.And().Equal(TableName, PrimaryKeyName, QPrimaryKey));
+                sp.Execute(upFinal);
+            }
+
+            // 7) Invoke optional callback.
+            orderingField.OnReorder?.Invoke(this, sp, currentPosition, condition);
         }
 	}
 

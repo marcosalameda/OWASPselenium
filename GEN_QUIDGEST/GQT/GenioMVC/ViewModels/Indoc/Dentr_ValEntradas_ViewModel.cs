@@ -447,7 +447,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAldent.FldCodldent, CSGenioAldent.Fl
             var sp = UserContext.Current.PersistentSupport;
             sp.openConnection();
             var row = CSGenioAldent.search(sp, id, u);
-            row.Reorder_Line(sp, int.Parse(position), baseConditions, relations);
+            row.Reorder_Line(sp, int.Parse(position));
             sp.closeConnection();
         }
 

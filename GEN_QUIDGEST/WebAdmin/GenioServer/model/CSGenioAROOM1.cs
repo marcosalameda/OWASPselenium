@@ -349,7 +349,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX ROOM1]/
 
      
-
     
 
 	}

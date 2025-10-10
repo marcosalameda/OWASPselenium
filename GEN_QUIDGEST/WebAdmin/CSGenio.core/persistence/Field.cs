@@ -235,6 +235,16 @@ namespace CSGenio.framework
         /// </summary>
         public bool AlignRightPad { get; set; }
 
+        /// <summary>
+        /// If this field is Ordering field
+        /// </summary>
+        public bool HasOrdering { get; set; }
+
+        public delegate void OnReorderHandler(Area area, persistence.PersistentSupport sp, int oldPossition, Quidgest.Persistence.GenericQuery.CriteriaSet condition);
+        /// <summary>
+        /// Callback invoked after neighbour re-sequencing.
+        /// </summary>
+        public OnReorderHandler OnReorder;
 
         //---------------------------------------------------------------------------------
         // For Advanced Query

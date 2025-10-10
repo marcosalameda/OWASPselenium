@@ -105,7 +105,7 @@ namespace CSGenio.business
 			Qfield.ShowWhen = new ConditionFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {
 				return GenFunctions.emptyD(((DateTime)args[0]))==1&&GenFunctions.emptyD(((DateTime)args[1]))==0;
 			});
-      Qfield.Formula = new EndPeriodFormula("since", "codpesso");
+			Qfield.Formula = new EndPeriodFormula("since", "codpesso");
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -491,7 +491,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX EVCAT]/
 
      
-
          
 
 	}

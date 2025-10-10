@@ -851,7 +851,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX S_APR]/
 
      
-
                           
 
 	}

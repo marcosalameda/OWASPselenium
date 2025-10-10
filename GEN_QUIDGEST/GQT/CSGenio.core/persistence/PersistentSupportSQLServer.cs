@@ -148,7 +148,7 @@ namespace CSGenio.persistence
 
             //database side keys use sequences instead of the Codigos_Sequenciais table
             Int64 codigoNovo;
-            if (DatabaseSidePk)
+            if (DatabaseSidePk || Configuration.ExistsProperty("SYS_PK_SEQUENCES"))
             {
                 var codParam = new SqlParameter("range_first_value", SqlDbType.Variant) { Direction = ParameterDirection.Output };
                 ExecuteProcedure("sp_sequence_get_range", [

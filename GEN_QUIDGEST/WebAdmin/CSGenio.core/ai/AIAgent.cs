@@ -27,7 +27,7 @@ public abstract class AiAgent
     /// </summary>
     /// <param name="service">An implementation of IChatbotService to communicate with the chatbot.</param>
     /// <exception cref="ArgumentNullException">Thrown if the service is null.</exception>
-    public AiAgent(IChatbotService service)
+    protected AiAgent(IChatbotService service)
     {
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }

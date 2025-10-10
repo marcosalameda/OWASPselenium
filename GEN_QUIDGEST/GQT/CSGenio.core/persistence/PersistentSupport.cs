@@ -2263,13 +2263,36 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             return query;
         }
 
-		/// <summary>
+        /// <summary>
         /// Reorders a field within a subset from startPos to N maintaining the relative order of the records
         /// </summary>
-        /// <param name="arearef">The table to reorder</param>
+        /// <param name="area">The table to reorder</param>
         /// <param name="orderField">The field to reorder</param>
         /// <param name="partition">The partition corresponding to the rows to be reordered</param>
-        public void ReorderSequence(AreaRef arearef, FieldRef orderField, CriteriaSet partition, List<Relation> relations = null, int startPos = 1)
+        public void ReorderSequence(AreaRef area, FieldRef orderField, CriteriaSet partition, int startPos = 1)
+        {
+            AreaInfo areaInfo = Area.GetInfoArea(area.Alias);
+            ReorderSequence(areaInfo, orderField.Field, partition, startPos);
+        }
+
+        /// <summary>
+        /// Reorders a field within a subset from startPos to N maintaining the relative order of the records
+        /// </summary>
+        /// <param name="area">The table to reorder</param>
+        /// <param name="orderField">The field to reorder</param>
+        /// <param name="partition">The partition corresponding to the rows to be reordered</param>
+        public void ReorderSequence(Area area, Field orderField, CriteriaSet partition, int startPos = 1)
+        {
+            ReorderSequence(area.Information, orderField.Name, partition, startPos);
+        }
+
+        /// <summary>
+        /// Reorders a field within a subset from startPos to N maintaining the relative order of the records
+        /// </summary>
+        /// <param name="area">The table to reorder</param>
+        /// <param name="orderField">The field to reorder</param>
+        /// <param name="partition">The partition corresponding to the rows to be reordered</param>
+        public void ReorderSequence(AreaInfo area, string orderField, CriteriaSet partition, int startPos = 1)
         {
             // UPDATE [GENNOV0].[dbo].[gencmpbd]
             // SET [num] = [renum_campo].[new_num]
@@ -2279,28 +2302,22 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             //          WHERE ([campo].[codtabel] = @param1)) AS [renum_campo]
             // ON ([renum_campo].[pk] = [campo].[codcmpbd])
 
-            string pkName = Area.GetInfoArea(arearef.Alias).PrimaryKeyName;
+            ColumnReference orderingFieldColumn = new(area.Alias, orderField);
+            ColumnSort[] orderBy = [new ColumnSort(orderingFieldColumn, GenericSortOrder.Ascending)];
 
-			//RowNumber starts at 1 so, add startPos - 1 to RowNumber to start numbering at startPos
+            //RowNumber starts at 1 so, add startPos - 1 to RowNumber to start numbering at startPos
             SelectQuery sq = new SelectQuery()
-                .Select(SqlFunctions.Add(SqlFunctions.RowNumber(orderField, GenericSortOrder.Ascending, orderField), startPos - 1), "new_num")
-                .Select(arearef.Alias, pkName, "pk")
-                .From(arearef)
+                .Select(SqlFunctions.Add(SqlFunctions.RowNumber(orderBy), startPos - 1), "new_num")
+                .Select(area.Alias, area.PrimaryKeyName, "pk")
+                .From(area.TableName, area.Alias)
                 .Where(partition);
 
-            if(relations != null)
-            {
-                foreach (Relation r in relations)
-                {
-                    sq.Join(r.TargetTable, r.AliasTargetTab, TableJoinType.Left)
-                        .On(CriteriaSet.And()
-                            .Equal(r.AliasSourceTab, r.SourceRelField, r.AliasTargetTab, r.TargetRelField));
-                }
-            }
-
-            UpdateQuery up = new UpdateQuery().Update(arearef)
-                .Set(orderField.Field, new ColumnReference("renum_" + arearef.Alias, "new_num"))
-                .Join(sq, "renum_" + arearef.Alias, TableJoinType.Inner).On(CriteriaSet.And().Equal("renum_" + arearef.Alias, "pk", arearef.Alias, pkName));
+            string renumArea = "renum_" + area.Alias;
+            UpdateQuery up = new UpdateQuery().Update(area.TableName)
+                .Set(orderField, new ColumnReference(renumArea, "new_num"))
+                .Join(sq, renumArea, TableJoinType.Inner)
+                .On(CriteriaSet.And()
+                    .Equal(renumArea, "pk", area.TableName, area.PrimaryKeyName));
 
             Execute(up);
         }
@@ -2311,20 +2328,13 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="area">The table</param>
         /// <param name="field">The field</param>
         /// <param name="partition">The partition corresponding to the rows</param>
-        /// <param name="relations">Relations</param>
-        public int GetMaxFieldValue(AreaRef area, FieldRef field, CriteriaSet partition, List<Relation> relations = null)
+        public int GetMaxFieldValue(Area area, Field field, CriteriaSet partition)
         {
-            SelectQuery maxOrderQuery = new SelectQuery().Select(SqlFunctions.Max(field), "maxOrder").From(area).Where(partition);
-
-            if (relations != null)
-            {
-                foreach (Relation r in relations)
-                {
-                    maxOrderQuery.Join(r.TargetTable, r.AliasTargetTab, TableJoinType.Left)
-                        .On(CriteriaSet.And()
-                            .Equal(r.AliasSourceTab, r.SourceRelField, r.AliasTargetTab, r.TargetRelField));
-                }
-            }
+            SelectQuery maxOrderQuery = new SelectQuery()
+                .Select(SqlFunctions
+                    .Max(new ColumnReference(area.Alias, field.Name)), "maxOrder")
+                .From(area.TableName, area.Alias)
+                .Where(partition);
 
             DataMatrix maxOrderRows = Execute(maxOrderQuery);
 

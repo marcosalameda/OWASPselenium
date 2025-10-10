@@ -447,7 +447,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAoutpu.FldCodoutpu, CSGenioAoutpu.Fl
             var sp = UserContext.Current.PersistentSupport;
             sp.openConnection();
             var row = CSGenioAoutpu.search(sp, id, u);
-            row.Reorder_Line(sp, int.Parse(position), baseConditions, relations);
+            row.Reorder_Line(sp, int.Parse(position));
             sp.closeConnection();
         }
 

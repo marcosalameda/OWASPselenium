@@ -53520,5 +53520,14 @@ namespace Administration.Resources {
             }
         }
 
+        /// <summary>
+        ///   Looks up a localized string similar to "Insert below"
+        /// </summary>
+        public static string INSERT_BELOW30358 {
+            get {
+                return ResourceManager.GetString("INSERT_BELOW30358", resourceCulture);
+            }
+        }
+
     }
 }

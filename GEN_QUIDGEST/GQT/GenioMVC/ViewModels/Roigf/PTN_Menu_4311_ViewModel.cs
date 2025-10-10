@@ -496,7 +496,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAroigf.FldCodroigf, CSGenioAroigf.Fl
             var sp = UserContext.Current.PersistentSupport;
             sp.openConnection();
             var row = CSGenioAroigf.search(sp, id, u);
-            row.Reorder_Order(sp, int.Parse(position), baseConditions);
+            row.Reorder_Order(sp, int.Parse(position));
             sp.closeConnection();
 
         }

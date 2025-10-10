@@ -743,7 +743,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX PSW]/
 
      
-
                                /// <summary>
         /// Set decrypted value to encrypted field
         /// </summary>

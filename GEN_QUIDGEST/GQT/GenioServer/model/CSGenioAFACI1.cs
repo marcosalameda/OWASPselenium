@@ -624,7 +624,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX FACI1]/
 
      
-
                
 
 	}

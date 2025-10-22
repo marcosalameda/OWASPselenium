@@ -1230,15 +1230,12 @@ namespace CSGenio.business
 
         private void AuxUpdateSr(FormulaDbContext context, PersistentSupport sp, RelatedSumArgument argSR, string areaTarget, string valorRel, decimal diff)
         {
+            //SR requires the oldvalues freshly read, so it can apply the correct increment
+            var readRow = context.ReadRecord(areaTarget, valorRel, sp);
             Area other = context.UpdateRecord(areaTarget, valorRel);
             var srFieldName = other.Alias + "." + argSR.SRField;
+            other.insertNameValueField(srFieldName, readRow.returnValueField(srFieldName));
 
-            //if the field is not already set in the target record we need to fetch it from the database values
-            if (!other.Fields.ContainsKey(argSR.SRField))
-            {
-                var dboutra = context.ReadRecord(areaTarget, valorRel, sp);
-                other.insertNameValueField(srFieldName, dboutra.returnValueField(srFieldName));
-            }
             decimal valorSR = Convert.ToDecimal(other.returnValueField(srFieldName));
             if (argSR.Signal == '+')
                 valorSR += diff;
@@ -1328,26 +1325,30 @@ namespace CSGenio.business
                     Field campoReplica = DBFields[Information.FieldsParametersReplicas[i]];
                     object valorReplica = returnValueField(Alias + "." + campoReplica.Name);
                     object oldReplica = oldValues.returnValueField(Alias + "." + campoReplica.Name);
-                    //só propaga se o Qvalue mudou
-                    if (!valorReplica.Equals(oldReplica))
+                    //If the calculated value is the same, skip update
+                    if (valorReplica.Equals(oldReplica))
                     {
-                        foreach (ReplicaDestination target in campoReplica.ReplicaDestinationList)
+                        continue;
+                    }
+                    
+                    foreach (ReplicaDestination target in campoReplica.ReplicaDestinationList)
+                    {
+                        UpdateQuery uq = null;
+                        updates.TryGetValue(target.ReplicaDestinationTable+"_"+target.ForeignKey, out uq);
+                        if (uq == null)
                         {
-                            UpdateQuery uq = null;
-                            updates.TryGetValue(target.ReplicaDestinationTable+"_"+target.ForeignKey, out uq);
-                            if (uq == null)
-                            {
-                                // MH (25/09/2017) - Alterado to utilizar "destino.TabelaDestinoReplica" em vez do "Alias"  no Where do UpdateQuery.
-                                // Alias referencia a table atual e não a table que vamos change. Ex: Alias: "factura" e TargetTable: "linhas da fatura".
-                                uq = new UpdateQuery().Update(target.ReplicaDestinationSystem, target.ReplicaDestinationTable)
-                                    .Where(CriteriaSet.And().Equal(target.ReplicaDestinationTable, target.ForeignKey, QPrimaryKey));
-                                updates.Add(target.ReplicaDestinationTable+"_"+target.ForeignKey, uq);
-                            }
-
-                            uq.Set(target.ReplicaTargetFields, ((campoReplica.FieldType == FieldType.KEY_GUID || campoReplica.FieldType == FieldType.KEY_GUID || campoReplica.FieldType == FieldType.KEY_GUID) && String.Equals(valorReplica, "")) ?
-                                    null :
-                                    valorReplica);
+                            // MH (25/09/2017) - Alterado to utilizar "destino.TabelaDestinoReplica" em vez do "Alias"  no Where do UpdateQuery.
+                            // Alias referencia a table atual e não a table que vamos change. Ex: Alias: "factura" e TargetTable: "linhas da fatura".
+                            uq = new UpdateQuery().Update(target.ReplicaDestinationSystem, target.ReplicaDestinationTable)
+                                .Where(CriteriaSet.And().Equal(target.ReplicaDestinationTable, target.ForeignKey, QPrimaryKey));
+                            updates.Add(target.ReplicaDestinationTable + "_" + target.ForeignKey, uq);
                         }
+
+                        //Empty key replicas should be set to null
+                        if (campoReplica.isKey() && campoReplica.isEmptyValue(valorReplica))
+                            valorReplica = null;
+
+                        uq.Set(target.ReplicaTargetFields, valorReplica);
                     }
                 }
 
@@ -1614,12 +1615,12 @@ namespace CSGenio.business
         /// Método to eliminate um registo
         /// </summary>
         /// <param name="sp">Persistent support</param>
-        /// <param name="sp">The root record that originated the deletion. Pass self otherwise</param>
+        /// <param name="rootRecord">The root record that originated the deletion. Pass self otherwise</param>
         private void delete(PersistentSupport sp, Area rootRecord)
         {
-            //ler os Qvalues da ficha antiga
-            Area oldvalues = Area.createArea(this.Alias, user, module);
-            sp.getRecord(oldvalues, QPrimaryKey);
+            //obter os valores actuais da base de dados
+            sp.getBookmark(this);
+            Area oldvalues = Area.createFromBookmark(this);
             //durante o apagar os Qvalues novos são sempre iguais aos antigos
             CloneFrom(oldvalues);
 
@@ -2139,18 +2140,10 @@ namespace CSGenio.business
 				}
 
                 //ler os Qvalues da ficha antiga
-                Area oldvalues = Area.createArea(this.Alias, user, module);
-                sp.getRecord(oldvalues, codIntValue, true);
-
                 //garantir que todos os fields estão preenchidos, se o interface não forneceu um Qvalue então usamos o antigo
                 //isto permite ás rotinas seguintes não ter de sistematicamente tentar fazer queries à BD
-                foreach (string key in oldvalues.Fields.Keys)
-				{
-                    if (!Fields.ContainsKey(key))
-					{
-                        Fields[key] = new RequestedField(oldvalues.Fields[key]);
-					}
-				}
+                sp.getBookmark(this);
+                Area oldvalues = Area.createFromBookmark(this);
 
                 //Acontece nos pedidos GET1 com em dbedits com fields dependentes
                 removeFieldsOtherAreas(); //TODO: Não devia ser possivel a área chegar a este estado
@@ -2412,28 +2405,19 @@ namespace CSGenio.business
         /// Actualiza um registo existente com os dados actuais com validação das regras de business escolhidas no Genio.
         /// </summary>
         /// <param name="sp">O suporte de persistence</param>
-        public override void apply(PersistentSupport sp, bool isGoingBack = false)
+        public override void apply(PersistentSupport sp)
         {
             //ler os Qvalues da ficha antiga
             if (string.IsNullOrEmpty(QPrimaryKey))
             {
                 throw new BusinessException(null, "DbArea.apply", "ChavePrimaria is null.");
             }
-            Area oldvalues = Area.createArea(this.Alias, user, module);
-            sp.getRecord(oldvalues, QPrimaryKey);
 
-            if (!isGoingBack)
-            {
-                //garantir que todos os fields estão preenchidos, se o interface não forneceu um Qvalue então usamos o antigo
-                //isto permite ás rotinas seguintes não ter de sistematicamente tentar fazer queries à BD
-                foreach (string key in oldvalues.Fields.Keys)
-                {
-                    if (!Fields.ContainsKey(key))
-                    {
-                        Fields[key] = new RequestedField(oldvalues.Fields[key]);
-                    }
-                }
-            }
+            //ler os Qvalues da ficha antiga
+            //garantir que todos os fields estão preenchidos, se o interface não forneceu um Qvalue então usamos o antigo
+            //isto permite ás rotinas seguintes não ter de sistematicamente tentar fazer queries à BD
+            sp.getBookmark(this);
+            Area oldvalues = Area.createFromBookmark(this);
 
             //Acontece nos pedidos GET1 com em dbedits com fields dependentes
             removeFieldsOtherAreas(); //TODO: Não devia ser possivel a área chegar a este estado

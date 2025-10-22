@@ -577,7 +577,7 @@ namespace GenioMVC.Controllers
 
 			var profile = new ProfileModel();
 			profile.Load(user.Codpsw);
-			profile.Enable2FAOptions = Configuration.Security.Activate2FA != Auth2FAModes.None;
+			profile.Enable2FAOptions = SecurityFactory.IdentityProviderList.Any(p => p.Is2FA);
 
 			try
 			{
@@ -698,7 +698,7 @@ namespace GenioMVC.Controllers
 
 			var userPsw = Models.Psw.Find(UserContext.Current.User.Codpsw);
 			model.HasTotp = userPsw.ValPsw2fatp == Auth2FAModes.TOTP.ToString() ? 1 : 0;
-			model.HasWebAuthN = userPsw.ValPsw2fatp == Auth2FAModes.WebAuth.ToString() ? 1 : 0;
+			model.HasWebAuthN = 0;
 			model.ShowTotp = false;
 
 			//give to user a message if is mandatory to create 2FA
@@ -714,131 +714,42 @@ namespace GenioMVC.Controllers
 		{
 			if (model.HasTotp == 1)
 			{
-				var secret = model.TotpDisplayCode;
-				//Only save if the user has correctly inserted the 6 code, otherwise they may be locked out of the system
-				if (new TOTPIdentityProvider().IsOk(secret, model.Totp6Code))
+				try
 				{
-					var sp = UserContext.Current.PersistentSupport;
-                    try
-					{
-                        sp.openConnection();
-                        var userPsw = Models.Psw.Find(UserContext.Current.User.Codpsw);
-                        userPsw.ValPsw2fatp = Auth2FAModes.TOTP.ToString();
-                        userPsw.ValPsw2favl = secret;
-                        userPsw.Save(sp);
-                        sp.closeConnection();
-                    }
-					catch(Exception ex)
-					{
-                        sp.closeConnection();
-                        Log.Error(ex.Message);
-
-                        ModelState.AddModelError("user", Resources.Resources.PEDIMOS_DESCULPA__OC63848);
-                        CreateTOTPModel(ref model, secret);
-						return View("2FAChange", model);
-                    }
-					recreateUser();
+					string providerId = SecurityFactory.IdentityProviderList.First(p => p.Is2FA && SecurityFactory.GetCredentialType(p) == "UserPassCredential").Id;
+                    SecurityFactory.StoreCredential(providerId, UserContext.Current.User, UserContext.Current.User.Code, model.Totp6Code);
 				}
-				else
+                catch (Exception)
 				{
-					ModelState.AddModelError(Resources.Resources.THE_CODE_YOU_ENTERED21835, Resources.Resources.THE_CODE_YOU_ENTERED21835);
-					CreateTOTPModel(ref model, secret);
-					return View("2FAChange", model);
-				}
+                    ModelState.AddModelError("user", Resources.Resources.THE_CODE_YOU_ENTERED21835);
+                    return View("2FAChange", model);
+                }
 			}
 			return RedirectToAction("Index");
 		}
 
-		private string getUrlQrCodeTOTP (string secret)
-		{
-			return TOTPIdentityProvider.GetUrlQrCode(UserContext.Current.User.Name, secret);
-		}
 
-		private void CreateTOTPModel(ref TwoFAViewModel model, string secret)
+		private void CreateTOTPModel(TwoFAViewModel model)
 		{
 			model.HasTotp = 1;
 			model.HasWebAuthN = 0;
 			model.ShowTotp = true;
-
-			var qrUrl = getUrlQrCodeTOTP(secret);			
+			var totp = SecurityFactory.IdentityProviderList.First(p => p.Is2FA && SecurityFactory.GetCredentialType(p) == "UserPassCredential");
+			var qrUrl = totp.NewCredentialRequest(UserContext.Current.User.Name);
 			model.TotpUrl = qrUrl;
-			model.TotpDisplayCode = secret;
+
+            var otpParams = HttpUtility.ParseQueryString(new Uri(qrUrl).Query);
+            model.TotpDisplayCode = otpParams.Get("secret");
 		}
 
 		[AuthorizeForUsers]
 		public ActionResult CreateTOTP ()
 		{
 			var model = new TwoFAViewModel();
-
-			//Creation 2FA based on TOTP
-			string secret = PasswordFactory.StringRandom(20, true);
-
-			//save the 2FA secret
-			UserContext.Current.User.Code = secret;
-
-			CreateTOTPModel(ref model, secret);
+            CreateTOTPModel(model);
+            UserContext.Current.User.Code = model.TotpUrl;
 
 			return View("2FAChange", model);
-		}
-
-		[AuthorizeForUsers]
-		public ActionResult CreateWebAuthN()
-		{
-			var model = new TwoFAViewModel();
-
-			model.HasTotp = 0;
-			model.HasWebAuthN = 1;
-			model.ShowWebAuthN = true;
-
-			return View("2FAChange", model);
-		}
-
-		public ActionResult WebAuthn2FAMakeCredentialOptions()
-		{
-			WebAuthIdentityProvider credWebAuth = new WebAuthIdentityProvider(new WebAuthValues()
-			{
-				MDSAccessKey = ValueProvider.GetValue("fido2:MDSAccessKey")?.AttemptedValue,
-				MDSCacheDirPath = ValueProvider.GetValue("fido2:MDSCacheDirPath")?.AttemptedValue,
-				TimestampDriftTolerance = ValueProvider.GetValue("fido2:TimestampDriftTolerance")?.AttemptedValue,
-				Fido2Options = new WebAuthFido2Options() { Origin = Request.Url.GetLeftPart(UriPartial.Authority) }
-			});
-
-			var returnWebAuth = credWebAuth.MakeCredentialOptions(UserContext.Current.User.Name);
-
-			if (returnWebAuth.Success)
-			{
-				//Temporarily store options, session/in-memory cache/redis/db
-				HttpContext.Session["fido2.attestationOptions"] = returnWebAuth.Options;
-				return Json(new { Success = true, options = returnWebAuth.Options });
-			}
-			else
-			{
-				return Json(new { Success = false, ErrorMessage = returnWebAuth.ErrorMessage });
-			}
-		}
-
-		public async Task<ActionResult> WebAuthn2FAMakeCredentialOptions2(string data)
-		{
-			WebAuthIdentityProvider credWebAuth = new WebAuthIdentityProvider(new WebAuthValues()
-			{
-				MDSAccessKey = ValueProvider.GetValue("fido2:MDSAccessKey")?.AttemptedValue,
-				MDSCacheDirPath = ValueProvider.GetValue("fido2:MDSCacheDirPath")?.AttemptedValue,
-				TimestampDriftTolerance = ValueProvider.GetValue("fido2:TimestampDriftTolerance")?.AttemptedValue,
-				Fido2Options = new WebAuthFido2Options() { Origin = Request.Url.GetLeftPart(UriPartial.Authority) }
-			});
-
-			User u = UserContext.Current.User;
-			PersistentSupport sp = PersistentSupport.getPersistentSupport(u.Year, u.Name);
-			var returnWebAuth = await credWebAuth.MakeCredential(data, (string)HttpContext.Session["fido2.attestationOptions"], UserContext.Current.User.Codpsw, sp);
-
-			if (returnWebAuth.Success)
-			{
-				return Json(new { Success = returnWebAuth.Success, options = returnWebAuth.Options });
-			}
-			else
-			{
-				return Json(new { Success = returnWebAuth.Success, ErrorMessage = returnWebAuth.ErrorMessage });
-			}
 		}
 
 		private string GetOidRegistUrl()

@@ -179,7 +179,7 @@ namespace GenioServer.security
                 return "";
 
             double pswStrength = PasswordFactory.scorePassword(pass);
-            
+
             if (!((configStrength == PasswordStrength.Forte && pswStrength > 80) ||
                 (configStrength == PasswordStrength.Bom && pswStrength > 60) ||
                 (configStrength == PasswordStrength.Fraco && pswStrength >= 30)))
@@ -204,7 +204,7 @@ namespace GenioServer.security
             var ct = DBConversion.ToInteger(sp.executeScalar(select));
             if (ct > 0)
                 return Translations.GetByCode("PASSWORD_VULNERAVEL_00083", user.Language);
-            
+
             return "";
         }
 
@@ -450,6 +450,7 @@ namespace GenioServer.security
                         //eph inicial só pode ser avaliado no contexto da aplicação
                         if (!string.IsNullOrWhiteSpace(condition.IntialForm))
                         {
+                            user.EphTofill ??= new EphsToFill();
                             user.EphTofill.AddNew(module, condition);
                             continue;
                         }

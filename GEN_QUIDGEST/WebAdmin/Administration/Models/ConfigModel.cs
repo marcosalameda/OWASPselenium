@@ -309,7 +309,9 @@ namespace Administration.Models
     {
         [JsonIgnore]
         public Type Type { get; set; }
-        public string TypeFullName { get {  return Type.FullName; } }
+        public string TypeFullName => Type.Assembly.GetName().Name == "CSGenio.core"
+            ? Type.FullName
+            : Type.FullName + ", " + Type.Assembly.GetName().Name;
         public string DisplayName { get; set; }
         public string Description { get; set; }
         public List<SecurityOptionMetainfo> Options { get; set; } = new List<SecurityOptionMetainfo>();
@@ -398,6 +400,13 @@ namespace Administration.Models
         {
             get { return obj.Type; }
             set { obj.Type = value; }
+        }
+
+        [Display(Name = "2FA")]
+        public bool Is2FA
+        {
+            get { return obj.Is2FA; }
+            set { obj.Is2FA = value; }
         }
 
         [Display(Name = "CONFIGURACAO10928", ResourceType = typeof(Resources.Resources))]
@@ -832,8 +841,6 @@ namespace Administration.Models
         public GenioServer.security.MultiSessionMode AllowMultiSessionPerUser { get; set; }
         [Display(Name = "PERMITE_RECUPERACAO_41959", ResourceType = typeof(Resources.Resources))]
         public bool AllowAuthenticationRecovery { get; set; }
-		[Display(Name = "ATIVAR_AUTENTICACAO_40943", ResourceType = typeof(Resources.Resources))]
-        public bool Activate2FA { get; set; }
 		[Display(Name = "OBRIGATORIO_A_UTILIZ32451", ResourceType = typeof(Resources.Resources))]
         public bool Mandatory2FA { get; set; }
 

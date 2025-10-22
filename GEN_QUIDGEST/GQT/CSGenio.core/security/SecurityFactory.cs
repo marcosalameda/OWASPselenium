@@ -145,14 +145,13 @@ namespace GenioServer.security
 			//use the specified provider to authenticate the user
 			else
 			{
-				IIdentityProvider provider = m_idProviders.FirstOrDefault(p => p.Id == providerId);
-				if (provider == null)
-					throw new ArgumentException($"No identity provider found with id '{providerId}'");
+				IIdentityProvider provider = m_idProviders.FirstOrDefault(p => p.Id == providerId)
+					?? throw new ArgumentException($"No identity provider found with id '{providerId}'");
 				id = provider.Authenticate(credential);
 			}
 
-			if (id == null)
-				throw new FrameworkException(Translations.Get("Falha na autenticação. As credenciais estão incorretas."), "SecurityFactory.Authenticate", "Authentication failed");
+			if (id is null)
+				return null;
 
 			return Authorize(id);
 		}
@@ -275,14 +274,14 @@ namespace GenioServer.security
 			user.Language = System.Threading.Thread.CurrentThread.CurrentCulture.Name.Replace("-", "").ToUpperInvariant();
 			user.Years.Add(Configuration.DefaultYear);
 			user.Public = true;
-			
+
 			foreach (string module in Configuration.Modules)
 				user.AddModuleRole(module, Role.UNAUTHORIZED);
 			user.AddModuleRole("Public", Role.UNAUTHORIZED);
-			
+
 			return user;
 		}
-		
+
 		/// <summary>
 		/// Creates a admin user that will perform tasks on behalf of a normal user.
 		/// </summary>
@@ -298,6 +297,50 @@ namespace GenioServer.security
 			adminUser.CurrentModule = user.CurrentModule ?? "Public";
 			adminUser.AddModuleRole(adminUser.CurrentModule, CSGenio.framework.Role.ADMINISTRATION);
 			return adminUser;
+		}
+
+		/// <summary>
+		/// Requests the settings supported by this provider for creating a new credential
+		/// </summary>
+		/// <param name="providerId">Id of the Provider</param>
+		/// <param name="username">The username for which the new credentials are being requested</param>
+		/// <returns>A opaque string representing the settings for this request to use. The client side UI must know how parse this information.</returns>
+		public static string NewCredentialRequest(string providerId, string username)
+		{
+			IIdentityProvider provider = IdentityProviderList.FirstOrDefault(x => x.Id == providerId);
+			return provider.NewCredentialRequest(username);
+		}
+
+		/// <summary>
+		/// Checks that the user can correctly acknowledge a challenge, and creates a secret that can be stored with the user
+		/// </summary>
+		/// <param name="providerId">Id of the Provider</param>
+		/// <param name="username">Username that requested the challenge</param>
+		/// <param name="originalChallenge">The original challenge that was sent to the user</param>
+		/// <param name="assertion">Proof sent by the user that he has the key for the challenge</param>
+		public static void StoreCredential(string providerId, User user, string originalRequest, string credential)
+		{
+			IIdentityProvider provider = IdentityProviderList.FirstOrDefault(x => x.Id == providerId);
+			//use the identity provider to parse the challenge into a CredentialSecret
+			CredentialSecret secret = provider.NewCredentialCreate(user.Name, originalRequest, credential);
+			//pass the secret into the role provider so it can store it in the appropriate user attributes
+			foreach (var role in RoleProviderList)
+				role.StoreCredential(user, secret);
+		}
+		
+		/// <summary>
+		/// Extracts the credential type of a identity provider
+		/// </summary>
+		/// <param name="provider">The provider</param>
+		/// <returns>The name of the credential type</returns>
+		public static string GetCredentialType(IIdentityProvider provider)
+		{
+			var credentials = provider.GetType().GetCustomAttributes(typeof(CredentialProviderAttribute), false);
+			if (credentials is null || credentials.Length == 0)
+				return "";
+			if (credentials[0] is not CredentialProviderAttribute attr)
+				return "";
+			return attr.CredentialType.Name;
 		}
 	}
 }

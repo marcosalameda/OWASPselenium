@@ -116,7 +116,12 @@ namespace GenioMVC.Models
 			this.baseklass.RemovePasswordFields(true);
 			//navigation direction from wizard forward/back
 			bool isGoingBack = Convert.ToBoolean(UserContext.Current.CurrentNavigation.GetValue("clearData"));
-			this.baseklass.apply(sp, isGoingBack);
+			//force all the missing current field values to empty
+			if (isGoingBack)
+				foreach (var dbfield in this.baseklass.DBFields)
+					if (!this.baseklass.Fields.ContainsKey(dbfield.Value.FullName))
+						this.baseklass.insertNameValueField(dbfield.Value.FullName, null);
+			this.baseklass.apply(sp);
 		}
 
 		public StatusMessage Destroy()

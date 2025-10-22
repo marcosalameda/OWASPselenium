@@ -22,6 +22,11 @@ namespace GenioServer.security
         string Description { get; set; }
 
         /// <summary>
+        /// True if this provider will be used for 2FA
+        /// </summary>
+        bool Is2FA {  get; set; }
+
+        /// <summary>
         /// Authenticates a user
         /// </summary>
         /// <param name="credential">The user credentials</param>
@@ -60,6 +65,30 @@ namespace GenioServer.security
         /// <param name="state">Optional opaque state to send to the provider, that is supposed to be reflected to the callback</param>
         /// <returns>The fully formed logout uri</returns>
         string GetRedirectLogoutUrl(string callback, string state = null);
+
+
+        /// <summary>
+        /// Creates a challenge for a login attempt
+        /// </summary>
+        /// <param name="username">The username for which the new credentials are being requested</param>
+        /// <returns>A opaque string representing the challenge for the login to use. The client side UI must know how parse this information.</returns>
+        public string AuthenticateChallenge(string username);
+
+        /// <summary>
+        /// Requests the settings supported by this provider for creating a new credential
+        /// </summary>
+        /// <param name="username">The username for which the new credentials are being requested</param>
+        /// <returns>A opaque string representing the settings for this request to use. The client side UI must know how parse this information.</returns>
+        public string NewCredentialRequest(string username);
+
+        /// <summary>
+        /// Checks that the user can correctly acknowledge a challenge, and creates a secret that can be stored with the user
+        /// </summary>
+        /// <param name="username">Username that requested the challenge</param>
+        /// <param name="originalChallenge">The original challenge that was sent to the user</param>
+        /// <param name="assertion">Proof sent by the user that he has the key for the challenge</param>
+        public CredentialSecret NewCredentialCreate(string username, string originalChallenge, string assertion);
+
     }
 
     /// <summary>
@@ -72,6 +101,9 @@ namespace GenioServer.security
 
         /// <inheritdoc/>
         public virtual string Description { get; set; }
+
+        /// <inheritdoc/>
+        public virtual bool Is2FA { get; set; } = false;
 
         /// <inheritdoc/>
         public virtual bool HasRedirectLogin() => false;
@@ -88,6 +120,17 @@ namespace GenioServer.security
         /// <inheritdoc/>
         public abstract GenioIdentity Authenticate(Credential credential);
 
+        /// <inheritdoc/>
+        public virtual string AuthenticateChallenge(string username) => "";
+
+        /// <inheritdoc/>
+        public virtual string NewCredentialRequest(string username) => "";
+
+        /// <inheritdoc/>
+        public virtual CredentialSecret NewCredentialCreate(string username, string originalChallenge, string assertion)
+        {
+            throw new NotImplementedException("Storing credentials not supported");
+        }
         /// <summary>
         /// Initializes the provider with all the options read from the config
         /// </summary>
@@ -99,6 +142,7 @@ namespace GenioServer.security
         {
             Id = config.Name;
             Description = config.Description ?? "";
+            Is2FA = config.Is2FA;
 
             var t = GetType();
             var props = t.GetProperties();
@@ -119,6 +163,8 @@ namespace GenioServer.security
                     throw new FrameworkException($"Invalid provider parameters", "BaseIdentityProvider.ctor", $"Property {p.Name} is mandatory for provider {Id}");
             }
         }
+
+
     }
 
     /// <summary>

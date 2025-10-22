@@ -354,12 +354,15 @@ namespace Administration.Controllers
         {
             try
             {
+                if(!ModelState.IsValid)            
+                    throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);                    
+
                 //Check if something is running
-                if (RdxItem != null)
-                {
-                    if (RdxItem.Progress.State == RdxProgressStatus.RUNNING)
-                        return Json(new { Success = true });
-                }
+                if (RdxItem?.Progress.State == RdxProgressStatus.RUNNING)
+                    return Json(new { Success = true });
+
+                //Dispose previous cancellation token source if it exists
+                reindexCTknSrc?.Dispose();
 
                 //Create cancellation token
                 reindexCTknSrc = new CancellationTokenSource();
@@ -1799,7 +1802,8 @@ namespace Administration.Controllers
 
                         documList = sp.Execute(query);
 
-                        /* Start the cancellation token */
+                        /* Dispose and start the cancellation token */
+                        cancelTknSrc?.Dispose();
                         cancelTknSrc = new CancellationTokenSource();
                         CancellationToken cToken = cancelTknSrc.Token;
                         /*------------------------------*/
@@ -1871,7 +1875,7 @@ namespace Administration.Controllers
                                 }
                                 else
                                 {
-                                    migrateFilesProgress.Percent = (qtd * 100) / qtdDocsToMigrate;
+                                    migrateFilesProgress.Percent = (qtd * 100m) / qtdDocsToMigrate;
                                     migrateFilesProgress.Text = Resources.Resources.FILE07547 + " (" + qtd.ToString() + "/" + qtdDocsToMigrate + "): "
                                     + dataMatrix.GetString(0, "docums.nome") + " [" + dataMatrix.GetString(0, "docums.tabela").ToUpper() + "->"
                                     + dataMatrix.GetString(0, "docums.campo") + "]";

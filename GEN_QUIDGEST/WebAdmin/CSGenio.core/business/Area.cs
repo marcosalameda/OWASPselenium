@@ -592,6 +592,21 @@ namespace CSGenio.business
         }
 
         /// <summary>
+        /// Creates a new record with its current values set to the bookmarked values of another record
+        /// </summary>
+        /// <param name="other">The area to copy values from</param>
+        /// <returns>A new record</returns>
+        public static Area createFromBookmark(Area other)
+        {
+            Area area = createArea(other.GetType(), other.User, other.Module);
+            foreach(var field in other.Fields)
+                area.insertNameValueField(field.Key, field.Value.OldValue, true);
+            area.IsBookmarkLocked = other.IsBookmarkLocked;
+            area.UserRecord = other.UserRecord;
+            return area;
+        }
+
+        /// <summary>
         /// Returns the type of the area from the area name. Also caches the type in memory
         /// </summary>
         /// <param name="name">Area Id</param>
@@ -901,11 +916,12 @@ namespace CSGenio.business
         /// The name of the field to update. Supports both "area.field" (fully qualified) and "field" formats.
         /// If the field has a database name, it is expected to be provided instead of the field id.
         /// </param>
-        /// <param name="valorCampo">The value to assign to the field.</param>
+        /// <param name="fieldValue">The value to assign to the field.</param>
+        /// <param name="fromDatabase">True if the value is being read directly from the database, so it can be used as a bookmarked value</param>
         /// <exception cref="BusinessException">
         /// Thrown if the specified field does not exist or if an error occurs during the update.
         /// </exception>
-        public void insertNameValueField(string fieldName, object fieldValue)
+        public void insertNameValueField(string fieldName, object fieldValue, bool fromDatabase = false)
         {
             try
             {
@@ -934,6 +950,9 @@ namespace CSGenio.business
                     campoPedido.FieldType = fieldType;
                     campoPedido.Value = Conversion.internal2InternalValid(fieldValue, fieldType.GetFormatting());
                     trimPrecision(campoPedido);
+                    //set the bookmark if the caller indicated the value is coming from the database
+                    if (fromDatabase)
+                        campoPedido.OldValue = campoPedido.Value;
                 }
                 //field belongs to another area
                 else
@@ -1862,7 +1881,7 @@ namespace CSGenio.business
             return StatusMessage.OK("Alteração bem sucedida.");
         }
 
-        public virtual void apply(PersistentSupport sp, bool isGoingBack = false)
+        public virtual void apply(PersistentSupport sp)
         {
             try
             {
@@ -2205,6 +2224,11 @@ namespace CSGenio.business
             get => Information.PasswordFields;
         }
 
+        /// <summary>
+        /// True when the last information read was locked so that we can assume the old values wont change,
+        /// false otherwise.
+        /// </summary>
+        public bool IsBookmarkLocked { get; set; } = false;
 
         /// <summary>
         /// Validate all area level conditions

@@ -19,7 +19,7 @@ namespace GenioServer.framework
     public class ConfigXMLMigration
     {
 
-        public static int CurConfigurationVerion = 13;
+        public static int CurConfigurationVerion = 14;
 
         public static void Migration(IConfigurationManager configManager, int fileConfigVersion)
         {            
@@ -49,6 +49,7 @@ namespace GenioServer.framework
                 configFileTxt = migrateConfigToVersion11(fileConfigVersion, configFileTxt);
                 configFileTxt = migrateConfigToVersion12(fileConfigVersion, configFileTxt);
                 configFileTxt = migrateConfigTo(Version13, 13, fileConfigVersion, configFileTxt);
+                configFileTxt = migrateConfigTo(Version14, 14, fileConfigVersion, configFileTxt);
             }
 
             //write the final file
@@ -974,5 +975,67 @@ namespace GenioServer.framework
 
             return xdoc.Declaration.ToString() + Environment.NewLine + xdoc.ToString();
         }
+
+        /// <summary>
+        /// Move Activate2FA into a identiy provider line
+        /// </summary>
+        /// <param name="fileVersion"></param>
+        /// <param name="configFileTxt"></param>
+        /// <returns></returns>
+        private static string Version14(string configFileTxt)
+        {
+            XDocument xdoc = XDocument.Parse(configFileTxt);
+
+            var securityList = xdoc.Root.Elements("Security")
+                .Elements("AppSecurity");
+            foreach (var element in securityList)
+            {
+                var iactivate = element.Attribute("activate2FA");
+                if (iactivate == null)
+                    continue;
+
+                var vactivate = iactivate.Value;
+                iactivate.Remove();
+
+                if (vactivate == "TOTP")
+                {
+                    //create the provider declaration
+                    var provider = new XElement("identityProvider",
+                        new XAttribute("name", "TOTP"),
+                        new XAttribute("description", "TOTP"),
+                        new XAttribute("type", "GenioServer.security.TOTPIdentityProvider"),
+                        new XAttribute("is2fa", "true")
+                        );
+                    var optionsElem = new XElement("options");
+                    optionsElem.Add(new XElement("item",
+                        new XAttribute("key", "Issuer"),
+                        new XAttribute("value", Configuration.Program)
+                        ));
+                    provider.Add(optionsElem);
+                    element.Element("identityProviders").Add(provider);
+                }
+                else if (vactivate == "WebAuth")
+                {
+                    //create the provider declaration
+                    var provider = new XElement("identityProvider",
+                        new XAttribute("name", "Webauth"),
+                        new XAttribute("description", "WebAuthN"),
+                        new XAttribute("type", "GenioServer.security.WebauthnIdentityProvider, GenioServer"),
+                        new XAttribute("is2fa", "true")
+                        );
+                    var optionsElem = new XElement("options");
+                    //note, its impossible to know the actual server deployment url, so we generate a default placeholder
+                    optionsElem.Add(new XElement("item",
+                        new XAttribute("key", "Origin"),
+                        new XAttribute("value", "https://localhost:5173")
+                        ));
+                    provider.Add(optionsElem);
+                    element.Element("identityProviders").Add(provider);
+                }
+            }
+
+            return xdoc.Declaration.ToString() + Environment.NewLine + xdoc.ToString();
+        }
+
     }
 }

@@ -146,7 +146,12 @@ namespace Administration.Controllers
 
         private bool UpdateProgressBar(QueueProgressStatus status)
         {
-            QueueProgressStatus expQProgress = new QueueProgressStatus { id = status.id };
+            QueueProgressStatus expQProgress = new()
+            { 
+                id = status.id,
+                Message = status.Message
+            };
+
             if (status.Completed)
             {
                 expQProgress.Count = 100;
@@ -156,8 +161,6 @@ namespace Administration.Controllers
             {
                 if (status.Total != 0)
                     expQProgress.Count = status.Count * 100 / status.Total;
-
-                expQProgress.Message = status.Message;
             }
 
             lock (exportProgressList)
@@ -211,6 +214,7 @@ namespace Administration.Controllers
                         exportQueueProgress.Message = Translations.Get(e.Message, CultureInfo.CurrentCulture.Name.Replace("-", "").ToUpper());
                     }
                     exportQueueProgress.Completed = true;
+                    UpdateProgressBar(exportQueueProgress);
                 });
             }
             catch (GenioException e)

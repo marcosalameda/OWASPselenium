@@ -26,10 +26,6 @@
 						v-model="Security.AllowAuthenticationRecovery"
 						:label="resources.allowAuthenticationRecovery" />
 					<q-checkbox
-						v-model="Security.Activate2FA"
-						:label="resources.activateTwoFactorAuth" />
-					<q-checkbox
-						v-if="Security.Activate2FA"
 						v-model="Security.Mandatory2FA"
 						:label="resources.mandatoryTwoFactorAuth" />
 					<numeric-input
@@ -350,6 +346,9 @@
 							item-value="Value"
 							item-label="Text" />
 					</base-input-structure>
+					<q-checkbox v-model="rowIs2fa"
+								label="2FA"
+								:readonly="inDeleteMode" />
 					<div v-for="c in tempConfig" :key="c.PropertyName">
 						<base-input-structure
 							:label="c.DisplayName"
@@ -501,6 +500,7 @@
 				rowName: "",
 				rowDescription: "",
 				rowType: "",
+				rowIs2fa: false,
 				tempConfig: [],
 				showUserDialog: false,
 				userRows: [],
@@ -545,6 +545,11 @@
 						label: computed(() => this.Resources[texts.type]),
 						name: "Type",
 						sort: true
+					},
+					{
+						label: '2FA',
+						name: "Is2FA",
+						sort: false
 					},
 					{
 						label: computed(() => this.Resources[texts.configuration]),
@@ -955,6 +960,7 @@
 				const idProValues = {
 					Name: this.rowName,
 					Description: this.rowDescription,
+					Is2FA: this.rowIs2fa,
 					Type: this.rowType,
 					Options: config,
 					FormMode: this.dialogMode,
@@ -969,6 +975,7 @@
 										FormMode: this.dialogMode,
 										Name: this.rowName,
 										Description: this.rowDescription,
+										Is2FA: this.rowIs2fa,
 										Type: this.rowType,
 										Options: config,
 										Rownum: this.identityProvidersRows.length
@@ -980,6 +987,7 @@
 								this.identityProvidersRows[newPropIndex].Type = this.rowType;
 								this.identityProvidersRows[newPropIndex].Name = this.rowName;
 								this.identityProvidersRows[newPropIndex].Description = this.rowDescription;
+								this.identityProvidersRows[newPropIndex].Is2FA = this.rowIs2fa;
 								this.identityProvidersRows[newPropIndex].Options = config;
 								this.identityProvidersRows[newPropIndex].Rownum = this.rowNum;
 								break;
@@ -999,12 +1007,13 @@
 				});
 			},
 			clearIdentityProviderValues(){
-				this.dialogMode = '',
-				this.rowType = '',
-				this.rowName = '',
-				this.rowDescription = '',
-				this.tempConfig = []
-				this.buttons = []
+				this.dialogMode = '';
+				this.rowType = '';
+				this.rowName = '';
+				this.rowDescription = '';
+				this.rowIs2fa = false;
+				this.tempConfig = [];
+				this.buttons = [];
 			},
 			showIdentityProviderModal(mode) {
 				this.dialogMode = mode;
@@ -1014,6 +1023,7 @@
 			changeIdentityProvider(identityProvidersRows) {
 				this.rowName = identityProvidersRows.Name;
 				this.rowDescription = identityProvidersRows.Description;
+				this.rowIs2fa = identityProvidersRows.Is2FA;
 				this.rowType = identityProvidersRows.Type;
 				this.rowNum = identityProvidersRows.Rownum;
 
@@ -1024,6 +1034,7 @@
 			deleteIdentityProvider(identityProvidersRows) {
 				this.rowName = identityProvidersRows.Name;
 				this.rowDescription = identityProvidersRows.Description;
+				this.rowIs2fa = identityProvidersRows.Is2FA;
 				this.rowType = identityProvidersRows.Type;
 				this.rowNum = identityProvidersRows.Rownum;
 
@@ -1226,11 +1237,6 @@
 			this.roleRows = this.Security.RoleProviders || [];
 		},
 		watch: {
-			'Security.Activate2FA': function (val) {
-				if (!val) {
-					this.Security.Mandatory2FA = false;
-				}
-			},
 			invalidUserProps(newValue) {
 				if (this.buttons.length > 0)
 					this.buttons[0].props.disabled = newValue

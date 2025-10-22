@@ -338,7 +338,6 @@ namespace Administration.Controllers
             model.AuthenticationMode = security.AuthenticationMode;
             model.AllowMultiSessionPerUser = security.AllowMultiSessionPerUser;
             model.AllowAuthenticationRecovery = security.AllowAuthenticationRecovery;
-			model.Activate2FA = security.Activate2FA != GenioServer.security.Auth2FAModes.None; //change this when have multiple 2FA
 			model.Mandatory2FA = security.Mandatory2FA;
             model.ExpirationDateBool = security.ExpirationDateBool;
             model.ExpirationDate = security.ExpirationDate;
@@ -995,8 +994,7 @@ namespace Administration.Controllers
                         security.AllowAuthenticationRecovery = model.AllowAuthenticationRecovery;
                         security.AllowMultiSessionPerUser = model.AllowMultiSessionPerUser;
                         security.AuthenticationMode = model.AuthenticationMode;
-                        security.Activate2FA = model.Activate2FA ? GenioServer.security.Auth2FAModes.TOTP : GenioServer.security.Auth2FAModes.None;
-                        security.Mandatory2FA = model.Activate2FA && model.Mandatory2FA;
+                        security.Mandatory2FA = model.Mandatory2FA;
                         security.SessionTimeOut = model.SessionTimeOut;
                     }
                     //this variables will be the same for all modules

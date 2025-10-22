@@ -935,6 +935,10 @@ namespace CSGenio.persistence
             //use the first row as a header to create the update query
             UpdateQuery query = new UpdateQuery();
             QueryUtils.fillQueryUpdate(query, rows.First());
+            //if we have no columns to update then do nothing
+            if (query.SetValues.Count == 0)
+                return;
+
             var renderer = new QueryRenderer(this);
             renderer.SchemaMapping = SchemaMapping;
             var sql = renderer.GetSql(query);

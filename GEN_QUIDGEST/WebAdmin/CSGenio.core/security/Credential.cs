@@ -66,14 +66,10 @@ namespace GenioServer.security
         public string OldPass { get; set; }
     }
 
-    public class TotpSecret : CredentialSecret
+    public class TwoFaSecret : CredentialSecret
     {
-        public string Code { get; set; }
-    }
-
-    public class WebauthnSecret : CredentialSecret
-    {
-        public string Code { get; set; }
+        public Auth2FAModes Mode { get; set; }
+        public string Value { get; set; }
     }
 
     public class CertificateSecret : CredentialSecret

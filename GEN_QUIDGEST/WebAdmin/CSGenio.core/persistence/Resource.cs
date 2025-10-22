@@ -361,7 +361,7 @@ namespace CSGenio.framework
     /// </summary>
     public static class QResources
     {
-		private static ConcurrentDictionary<string, Type> ResourceTypes { get; set; } = new ConcurrentDictionary<string, Type>();
+        private static ConcurrentDictionary<string, Type> ResourceTypes { get; set; } = new ConcurrentDictionary<string, Type>();
 
         // a key e o vector de inicialização que são re-gerados sempre que o application pool arranca
         // o que implica que os tickets gerados anteriormente ficam inválidos to leitura
@@ -369,30 +369,21 @@ namespace CSGenio.framework
         // key de cifra simétrica utilizada to cifrar e decifrar os recursos
         private static byte[] m_key;
 
-        // vector de inicialização utilizado to cifrar e decifrar os recursos
-        private static byte[] m_iv;
-
         private static byte[] Key
         {
             get { InitializeValues(); return m_key; }
         }
 
-        private static byte[] IV
-        {
-            get { InitializeValues(); return m_iv; }
-        }
-
         // cria uma nova key e vector de inicialização, caso algum deles não esteja definido
         private static void InitializeValues()
         {
-            if (m_key == null || m_iv == null)
+            if (m_key == null)
             {
                 // derivar as passwords de forma deterministica a partir de uma password
                 byte[] SALT = new byte[] { 0x26, 0xdc, 0xff, 0x00, 0xad, 0xed, 0x7a, 0xee, 0xc5, 0xfe, 0x07, 0xaf, 0x4d, 0x08, 0x22, 0x3c };
                 var passphrase = Configuration.GetProperty("RESTSECRET", "default_secret_please_reconfigure_with_jwtkey_property");
                 Rfc2898DeriveBytes pdb = new Rfc2898DeriveBytes(passphrase, SALT);
                 m_key = pdb.GetBytes(32);
-                m_iv = pdb.GetBytes(16);
             }
         }
 
@@ -413,8 +404,8 @@ namespace CSGenio.framework
                 writer.Write(username);
                 writer.Write(location);
                 Type type = resource.GetType();
-				writer.Write(type.FullName);
-				writer.Write(type.Assembly.GetName().Name);
+                writer.Write(type.FullName);
+                writer.Write(type.Assembly.GetName().Name);
                 writer.Write(allowWrite);
                 resource.ToBinaryStream(writer);
                 objsByteArray = stream.ToArray();
@@ -422,7 +413,7 @@ namespace CSGenio.framework
 
             // a key e o vector de inicialização são acedidos através das
             // propriedades da classe to garantir que foram inicializados
-            byte[] objsCrypt = CryptographicFunctions.EncryptData(QResources.Key, QResources.IV, objsByteArray);
+            byte[] objsCrypt = CryptographicFunctions.EncryptData(Key, objsByteArray);
             return Convert.ToBase64String(objsCrypt).Replace('+', '.').Replace('=', '-').Replace('/', '_');
         }
 
@@ -439,7 +430,7 @@ namespace CSGenio.framework
             byte[] ticket = Convert.FromBase64String(ticket64.Replace('.', '+').Replace('-', '=').Replace('_', '/'));
             // a key e o vector de inicialização são acedidos através das
             // propriedades da classe to garantir que foram inicializados
-            byte[] ticketClean = CryptographicFunctions.DecryptData(QResources.Key, QResources.IV, ticket);
+            byte[] ticketClean = CryptographicFunctions.DecryptData(Key, ticket);
 
             object[] objs = new object[4];
             using (var stream = new MemoryStream(ticketClean))
@@ -470,6 +461,35 @@ namespace CSGenio.framework
 
             return objs;
         }
+        
+        /// <summary>
+        /// Serializa, cifra e gera uma string em base 64.
+        /// </summary>
+        /// <param name="recurso">Resource em si</param>
+        /// <returns>string em base 64 com a representação dos objectos serializados e cifrados</returns>
+        public static string CreatePayloadEncryptedBase64(string payload)
+        {
+            // a key e o vector de inicialização são acedidos através das
+            // propriedades da classe to garantir que foram inicializados
+            byte[] payloadBytes = Encoding.UTF8.GetBytes(payload);
+            byte[] objsCrypt = CryptographicFunctions.EncryptData(Key, payloadBytes);
+            return Convert.ToBase64String(objsCrypt).Replace('+', '.').Replace('=', '-').Replace('/', '_');
+        }
+
+        /// <summary>
+        /// Converte a representação de um ticket em base 64 to os objectos que foram utilizados na sua criação,
+        /// decifrando e desserializando o seu conteúdo.
+        /// </summary>
+        /// <param name="ticket64">Representação do ticket em base 64</param>
+        /// <returns>A string original</returns>
+        public static string DecryptPayloadBase64(string ticket64)
+        {
+            byte[] ticket = Convert.FromBase64String(ticket64.Replace('.', '+').Replace('-', '=').Replace('_', '/'));
+            // a key e o vector de inicialização são acedidos através das
+            // propriedades da classe to garantir que foram inicializados
+            byte[] ticketClean = CryptographicFunctions.DecryptData(Key, ticket);
+            return Encoding.UTF8.GetString(ticketClean);
+        }
     }
 
 	public static class QResourcesSign
@@ -480,9 +500,6 @@ namespace CSGenio.framework
         // key de cifra simétrica utilizada to cifrar e decifrar os recursos
         private static byte[] m_key;
 
-        // vector de inicialização utilizado to cifrar e decifrar os recursos
-        private static byte[] m_iv;
-
         //public static Dictionary<string, Type> ResourceTypes { get; set; } = new Dictionary<string, Type>();
 
         private static byte[] Key
@@ -490,20 +507,14 @@ namespace CSGenio.framework
             get { InitializeValues(); return m_key; }
         }
 
-        private static byte[] IV
-        {
-            get { InitializeValues(); return m_iv; }
-        }
-
         // cria uma nova key e vector de inicialização, caso algum deles não esteja definido
         private static void InitializeValues()
         {
-            if (m_key == null || m_iv == null)
+            if (m_key == null)
             {
                 // instancia-se um objecto da classe apenas to gerar as chaves
                 RijndaelManaged dummyRijndael = new RijndaelManaged();
                 m_key = dummyRijndael.Key;
-                m_iv = dummyRijndael.IV;
             }
         }
 
@@ -532,7 +543,7 @@ namespace CSGenio.framework
 
             // a key e o vector de inicialização são acedidos através das
             // propriedades da classe to garantir que foram inicializados
-            byte[] objsCrypt = CryptographicFunctions.EncryptData(QResourcesSign.Key, QResourcesSign.IV, objsByteArray);
+            byte[] objsCrypt = CryptographicFunctions.EncryptData(Key, objsByteArray);
             return Convert.ToBase64String(objsCrypt).Replace('+', '.').Replace('=', '-').Replace('/', '_');
         }
 
@@ -549,7 +560,7 @@ namespace CSGenio.framework
             byte[] ticket = Convert.FromBase64String(ticket64.Replace('.', '+').Replace('-', '=').Replace('_', '/'));
             // a key e o vector de inicialização são acedidos através das
             // propriedades da classe to garantir que foram inicializados
-            byte[] ticketClean = CryptographicFunctions.DecryptData(QResourcesSign.Key, QResourcesSign.IV, ticket);
+            byte[] ticketClean = CryptographicFunctions.DecryptData(Key, ticket);
 
             object[] objs = new object[3];
             using (var stream = new MemoryStream(ticketClean))

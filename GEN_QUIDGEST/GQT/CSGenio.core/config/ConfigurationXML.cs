@@ -125,7 +125,7 @@ namespace CSGenio
         /// </summary>
         public bool HasAnyApplicationWith2FA()
         {
-            return Security.Where(s => s.Activate2FA.Equals(GenioServer.security.Auth2FAModes.None)).Count() != Security.Count();
+            return Security.Any(s => s.IdentityProviders.Any(p => p.Is2FA));
         }
 
         private List<PathCfgEl> m_path = null;
@@ -752,7 +752,6 @@ namespace CSGenio
     {
         private AuthenticationMode m_authenticationMode;
         private MultiSessionMode m_allowMultiSessionPerUser;
-		private Auth2FAModes m_activate2FA = Auth2FAModes.None;
 		private bool m_mandatory2FA = false;
         private bool m_allowAuthenticationRecovery;
         private bool m_expirationDateBool;
@@ -776,7 +775,6 @@ namespace CSGenio
             SecurityCfgEl security = new SecurityCfgEl();
             security.m_authenticationMode = m_authenticationMode;
             security.m_allowMultiSessionPerUser = m_allowMultiSessionPerUser;
-            security.m_activate2FA = m_activate2FA;
             security.m_mandatory2FA = m_mandatory2FA;
             security.m_allowAuthenticationRecovery = m_allowAuthenticationRecovery;
             security.m_expirationDateBool = m_expirationDateBool;
@@ -860,13 +858,6 @@ namespace CSGenio
         {
             get { return m_allowMultiSessionPerUser; }
             set { m_allowMultiSessionPerUser = value; }
-        }
-
-		[XmlAttribute("activate2FA")]
-        public Auth2FAModes Activate2FA
-        {
-            get { return m_activate2FA; }
-            set { m_activate2FA = value; }
         }
 
 		[XmlAttribute("Mandatory2FA")]
@@ -1042,6 +1033,7 @@ namespace CSGenio
                 Name = Name,
                 Description = Description,
                 Type = Type,
+                Is2FA = Is2FA,
                 Options = Options.Clone() as SerializableDictionary<string, string>
             };
 
@@ -1056,6 +1048,9 @@ namespace CSGenio
 
         [XmlAttribute("type")]
         public string Type { get; set; }
+
+        [XmlAttribute("is2fa")]
+        public bool Is2FA { get; set; } = false;
         
         [XmlElement("options")]
         public SerializableDictionary<string, string> Options { get; set; } = new SerializableDictionary<string, string>();

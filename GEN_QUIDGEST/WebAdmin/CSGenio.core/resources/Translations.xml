@@ -171,80 +171,6 @@
   <msg id="Em Curso" code="EM_CURSO28102">
     <ENUS>Em Curso</ENUS>
   </msg>
-  <msg id="Geographic coordinate" code="GEOGRAPHIC_COORDINAT21394">
-    <ENUS>Geographic coordinate</ENUS>
-  </msg>
-  <msg id="Icon" code="ICON41974">
-    <ENUS>Icon</ENUS>
-  </msg>
-  <msg id="Order in group (Integer field)" code="ORDER_IN_GROUP__INTE56416">
-    <ENUS>Order in group (Integer field)</ENUS>
-  </msg>
-  <msg id="Bandeira" code="BANDEIRA32255">
-    <ENUS>Bandeira</ENUS>
-  </msg>
-  <msg id="Edit Mode" code="EDIT_MODE04880">
-    <ENUS>Edit Mode</ENUS>
-  </msg>
-  <msg id="April" code="APRIL13388">
-    <ENUS>April</ENUS>
-  </msg>
-  <msg id="ID of the notification that generated the message" code="ID_OF_THE_NOTIFICATI28920">
-    <ENUS>ID of the notification that generated the message</ENUS>
-  </msg>
-  <msg id="Ship To" code="SHIP_TO13065">
-    <ENUS>Ship To</ENUS>
-  </msg>
-  <msg id="Dispatch lines" code="DISPATCH_LINES01224">
-    <ENUS>Dispatch lines</ENUS>
-  </msg>
-  <msg id="  137" code="__13732555">
-    <ENUS>Períodos de Acumulação de um Indicador. Se a escolha dos dados apenas se deve fazer no período para o qual o Scorecard for calculado deve-se escolher por Período. Se a escolha dos dados se faz no período mas no caso da inexistência de dados nesse período é necessário que o Indicador demonstre os dados do histórico então deve-se escolher Acumulado.</ENUS>
-  </msg>
-  <msg id="Mapa Estratégico" code="MAPA_ESTRATEGICO48340">
-    <ENUS>Mapa Estratégico</ENUS>
-  </msg>
-  <msg id="List of Items" code="LIST_OF_ITEMS23324">
-    <ENUS>List of Items</ENUS>
-  </msg>
-  <msg id="Address Use" code="ADDRESS_USE16014">
-    <ENUS>Address Use</ENUS>
-  </msg>
-  <msg id=" 1145" code="_114530146">
-    <ENUS>Help in the enumeration item</ENUS>
-  </msg>
-  <msg id="Type A" code="TYPE_A35795">
-    <ENUS>Type A</ENUS>
-  </msg>
-  <msg id="Vison icon" code="VISON_ICON32559">
-    <ENUS>Vison icon</ENUS>
-  </msg>
-  <msg id="Location Extension Components" code="LOCATION_EXTENSION_C33560">
-    <ENUS>Location Extension Components</ENUS>
-  </msg>
-  <msg id="Order in group (Float field)" code="ORDER_IN_GROUP__FLOA51083">
-    <ENUS>Order in group (Float field)</ENUS>
-  </msg>
-  <msg id="Asset tags" code="ASSET_TAGS23725">
-  </msg>
-  <msg id="LOCAL" code="LOCAL41011">
-    <ENUS>LOCAL</ENUS>
-  </msg>
-  <msg id="Descrição do mapa" code="DESCRICAO_DO_MAPA35856">
-    <ENUS>Descrição do mapa</ENUS>
-  </msg>
-  <msg id="Editor recursos" code="EDITOR_RECURSOS23553">
-    <ENUS>Editor recursos</ENUS>
-  </msg>
-  <msg id="Project data?" code="PROJECT_DATA_54316">
-    <ENUS>Project data?</ENUS>
-  </msg>
-  <msg id="Year" code="YEAR61794">
-    <ENUS>Year</ENUS>
-  </msg>
-  <msg id="Mapa Fechado" code="MAPA_FECHADO00912">
-    <ENUS>Mapa Fechado</ENUS>
-  </msg>
   <msg id="Creation year of the airport" code="CREATION_YEAR_OF_THE06011">
     <ENUS>Creation year of the airport</ENUS>
   </msg>
@@ -426,6 +352,7 @@ cdmSchemas:&#91;&quot;/core/applicationCommon/Address.cdm.json/Address/hasAttrib
     <ENUS>Digital Attachement</ENUS>
   </msg>
   <msg id="A validação da tabela deu um warning" code="A_VALIDACAO_DA_TABEL53583">
+    <ENUS>A validação da tabela deu um warning</ENUS>
   </msg>
   <msg id="Teste 2" code="TESTE_225519">
   </msg>
@@ -563,6 +490,9 @@ cdmSchemas:&#91;&quot;/core/applicationCommon/Address.cdm.json/Address/hasAttrib
   </msg>
   <msg id="Arrival Time" code="ARRIVAL_TIME43684">
   </msg>
+  <msg id="ID of the notification that generated the message" code="ID_OF_THE_NOTIFICATI28920">
+    <ENUS>ID of the notification that generated the message</ENUS>
+  </msg>
   <msg id="Building" code="BUILDING13586">
     <ENUS>Building</ENUS>
   </msg>
@@ -632,6 +562,9 @@ cdmSchemas:&#91;&quot;/core/applicationCommon/Address.cdm.json/Address/hasAttrib
   <msg id=" 1028" code="_102804625">
     <ENUS>Indica se é um mapa pai (Agregador)</ENUS>
   </msg>
+  <msg id="Icon" code="ICON41974">
+    <ENUS>Icon</ENUS>
+  </msg>
   <msg id="  325" code="__32528939">
     <ENUS>Número de ordem utilizado para ordenação dos objetivos</ENUS>
   </msg>
@@ -696,6 +629,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   </msg>
   <msg id="A traduzir" code="A_TRADUZIR48203">
     <ENUS>A traduzir</ENUS>
+  </msg>
+  <msg id="LOCAL" code="LOCAL41011">
+    <ENUS>LOCAL</ENUS>
   </msg>
   <msg id="Reporting services" code="REPORTING_SERVICES65225">
     <ENUS>Reporting services</ENUS>
@@ -1248,6 +1184,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   </msg>
   <msg id="Data Type" code="DATA_TYPE22885">
     <ENUS>Data Type</ENUS>
+  </msg>
+  <msg id="Geographic coordinate" code="GEOGRAPHIC_COORDINAT21394">
+    <ENUS>Geographic coordinate</ENUS>
   </msg>
   <msg id="Real Estate" code="REAL_ESTATE07188">
   </msg>
@@ -2300,6 +2239,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Person specialty" code="PERSON_SPECIALTY62734">
     <ENUS>Person specialty</ENUS>
   </msg>
+  <msg id="Order in group (Integer field)" code="ORDER_IN_GROUP__INTE56416">
+    <ENUS>Order in group (Integer field)</ENUS>
+  </msg>
   <msg id="Buton addon" code="BUTON_ADDON17405">
     <ENUS>Buton addon</ENUS>
   </msg>
@@ -2343,6 +2285,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   </msg>
   <msg id="Game date" code="GAME_DATE09550">
     <ENUS>Game date</ENUS>
+  </msg>
+  <msg id="Dispatch lines" code="DISPATCH_LINES01224">
+    <ENUS>Dispatch lines</ENUS>
   </msg>
   <msg id="Companhy&apos;s people counting" code="COMPANHY_S_PEOPLE_CO22385">
     <ENUS>Companhy&apos;s people counting</ENUS>
@@ -2516,6 +2461,9 @@ Period is not used for a duration (a measure of elapsed time).</ENUS>
   </msg>
   <msg id="False key" code="FALSE_KEY49203">
     <ENUS>False key</ENUS>
+  </msg>
+  <msg id="Project data?" code="PROJECT_DATA_54316">
+    <ENUS>Project data?</ENUS>
   </msg>
   <msg id="Phase Caption Placehoder Text" code="PHASE_CAPTION_PLACEH06557">
     <ENUS>Phase Caption Placehoder Text</ENUS>
@@ -3300,6 +3248,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
   <msg id="  190" code="__19044270">
     <ENUS>Definição de unidade.</ENUS>
   </msg>
+  <msg id="Type A" code="TYPE_A35795">
+    <ENUS>Type A</ENUS>
+  </msg>
   <msg id="   70" code="___7032878">
     <ENUS>Indicate here if there are any funds available and budgeted for this Initiative / Project.</ENUS>
   </msg>
@@ -3474,6 +3425,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
   </msg>
   <msg id="Collapsible Row lists" code="COLLAPSIBLE_ROW_LIST23728">
     <ENUS>Collapsible Row lists</ENUS>
+  </msg>
+  <msg id="Descrição do mapa" code="DESCRICAO_DO_MAPA35856">
+    <ENUS>Descrição do mapa</ENUS>
   </msg>
   <msg id="Card Image Thumbnail" code="CARD_IMAGE_THUMBNAIL58531">
     <ENUS>Card Image Thumbnail</ENUS>
@@ -4057,6 +4011,53 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   </msg>
   <msg id="Icon anchor (x-axis)" code="ICON_ANCHOR__X_AXIS_18664">
     <ENUS>Icon anchor (x-axis)</ENUS>
+  </msg>
+  <msg id="Bandeira" code="BANDEIRA32255">
+    <ENUS>Bandeira</ENUS>
+  </msg>
+  <msg id="Edit Mode" code="EDIT_MODE04880">
+    <ENUS>Edit Mode</ENUS>
+  </msg>
+  <msg id="April" code="APRIL13388">
+    <ENUS>April</ENUS>
+  </msg>
+  <msg id="Ship To" code="SHIP_TO13065">
+    <ENUS>Ship To</ENUS>
+  </msg>
+  <msg id="  137" code="__13732555">
+    <ENUS>Períodos de Acumulação de um Indicador. Se a escolha dos dados apenas se deve fazer no período para o qual o Scorecard for calculado deve-se escolher por Período. Se a escolha dos dados se faz no período mas no caso da inexistência de dados nesse período é necessário que o Indicador demonstre os dados do histórico então deve-se escolher Acumulado.</ENUS>
+  </msg>
+  <msg id="Mapa Estratégico" code="MAPA_ESTRATEGICO48340">
+    <ENUS>Mapa Estratégico</ENUS>
+  </msg>
+  <msg id="List of Items" code="LIST_OF_ITEMS23324">
+    <ENUS>List of Items</ENUS>
+  </msg>
+  <msg id="Address Use" code="ADDRESS_USE16014">
+    <ENUS>Address Use</ENUS>
+  </msg>
+  <msg id=" 1145" code="_114530146">
+    <ENUS>Help in the enumeration item</ENUS>
+  </msg>
+  <msg id="Vison icon" code="VISON_ICON32559">
+    <ENUS>Vison icon</ENUS>
+  </msg>
+  <msg id="Location Extension Components" code="LOCATION_EXTENSION_C33560">
+    <ENUS>Location Extension Components</ENUS>
+  </msg>
+  <msg id="Order in group (Float field)" code="ORDER_IN_GROUP__FLOA51083">
+    <ENUS>Order in group (Float field)</ENUS>
+  </msg>
+  <msg id="Asset tags" code="ASSET_TAGS23725">
+  </msg>
+  <msg id="Editor recursos" code="EDITOR_RECURSOS23553">
+    <ENUS>Editor recursos</ENUS>
+  </msg>
+  <msg id="Year" code="YEAR61794">
+    <ENUS>Year</ENUS>
+  </msg>
+  <msg id="Mapa Fechado" code="MAPA_FECHADO00912">
+    <ENUS>Mapa Fechado</ENUS>
   </msg>
   <msg id="Global articles" code="GLOBAL_ARTICLES62131">
     <ENUS>Global articles</ENUS>
@@ -10328,6 +10329,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Entrada incorreta! Tente outra vez..." code="ENTRADA_INCORRETA__T45717">
     <ENUS>Incorrect entry! Try again...</ENUS>
   </msg>
+  <msg id="Estado de autenticação inválido ou expirado! Tente outra vez..." code="ESTADO_DE_AUTENTICAC50027">
+    <ENUS>Invalid authentication state! Try again...</ENUS>
+  </msg>
   <msg id="O ano do sistema é anterior a %d!" code="O_ANO_DO_SISTEMA_E_A33552">
     <ENUS>The system&apos;s year is former to %d!</ENUS>
   </msg>
@@ -13930,6 +13934,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Ações coletivas" code="ACOES_COLETIVAS25162">
     <ENUS>Group actions</ENUS>
+  </msg>
+  <msg id="Todos registos selecionados" code="TODOS_REGISTOS_SELEC49231">
+    <ENUS>All records selected</ENUS>
   </msg>
   <msg id="registo(s) selecionado(s)" code="REGISTO_S__SELECIONA64172">
     <ENUS>selected record(s)</ENUS>

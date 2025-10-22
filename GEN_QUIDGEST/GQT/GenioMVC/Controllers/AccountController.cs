@@ -340,56 +340,6 @@ namespace GenioMVC.Controllers
             return View(model);
         }
 
-        public ActionResult WebAuthn2FAAssertionOptions()
-        {
-            WebAuthIdentityProvider credWebAuth = new WebAuthIdentityProvider(new WebAuthValues()
-            {
-                MDSAccessKey = ValueProvider.GetValue("fido2:MDSAccessKey")?.AttemptedValue,
-                MDSCacheDirPath = ValueProvider.GetValue("fido2:MDSCacheDirPath")?.AttemptedValue,
-                TimestampDriftTolerance = ValueProvider.GetValue("fido2:TimestampDriftTolerance")?.AttemptedValue,
-                Fido2Options = new WebAuthFido2Options() { Origin = Request.Url.GetLeftPart(UriPartial.Authority) }
-            });
-
-            User user = UserContext.Current.User;
-            PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-            var returnWebAuth = credWebAuth.AssertionOptionsPost(user.Codpsw, sp);
-
-            if (returnWebAuth.Success)
-            {
-                //Temporarily store options, session/in-memory cache/redis/db
-                HttpContext.Session["fido2.assertionOptions"] = returnWebAuth.Options;
-                return Json(new { Success = true, options = returnWebAuth.Options });
-            }
-            else
-            {
-                return Json(new { Success = false, ErrorMessage = returnWebAuth.ErrorMessage });
-            }
-        }
-
-        public async Task<ActionResult> WebAuthn2FAMakeAssertion(string data, string returnUrl)
-        {
-            WebAuthIdentityProvider credWebAuth = new WebAuthIdentityProvider(new WebAuthValues()
-            {
-                MDSAccessKey = ValueProvider.GetValue("fido2:MDSAccessKey")?.AttemptedValue,
-                MDSCacheDirPath = ValueProvider.GetValue("fido2:MDSCacheDirPath")?.AttemptedValue,
-                TimestampDriftTolerance = ValueProvider.GetValue("fido2:TimestampDriftTolerance")?.AttemptedValue,
-                Fido2Options = new WebAuthFido2Options() { Origin = Request.Url.GetLeftPart(UriPartial.Authority) }
-            });
-
-            User user = UserContext.Current.User;
-
-            PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-            var returnWebAuth = await credWebAuth.MakeAssertion(data, (string)HttpContext.Session["fido2.assertionOptions"], user.Codpsw, sp);
-
-            if (returnWebAuth.Success)
-            {
-                return finalizeAuthentication(user, returnUrl, true);
-            }
-            else
-            {
-                return Json(new { Success = returnWebAuth.Success, ErrorMessage = returnWebAuth.ErrorMessage });
-            }
-        }
 
 		/// <summary>
         /// After user request to authenticate with OpenId Connect we will redirect user to the authentication page from the provider

@@ -168,10 +168,10 @@ public class QuidgestRoleProvider : BaseRoleProvider
         {
             psw.ValPasswordDecrypted = userpass.NewPass;
         }
-        else if (credential is TotpSecret totpSecret)
+        else if (credential is TwoFaSecret twofaSecret)
         {
-            psw.ValPsw2favl = totpSecret.Code;
-            psw.ValPsw2fatp = Auth2FAModes.TOTP.ToString();
+            psw.ValPsw2favl = twofaSecret.Value;
+            psw.ValPsw2fatp = twofaSecret.Mode.ToString();
         }
     }
 
@@ -298,6 +298,44 @@ public class QuidgestRoleProvider : BaseRoleProvider
             userPsw.ValUserid = identity.Name;
         userPsw.updateDirect(sp);
         sp.closeConnection();
+    }
+
+
+    /// <inheritdoc/>
+    public override void StoreCredential(User user, CredentialSecret credential)
+    {
+        if (credential is not null)
+            ValidateSecret(credential);
+
+        var yearList = string.IsNullOrEmpty(AuxDb)
+            //if aux db is not set, we create the user for all years
+            ? user.Years
+            //if aux db is set, we only create the user for the current year
+            : [user.Year];
+
+        foreach (var Qyear in yearList)
+        {
+            //user gets the role information per year according to the currently set year
+            user.Year = Qyear;
+
+            PersistentSupport sp = GetPersistence(Qyear);
+            try
+            {
+                sp.openTransaction();
+
+                CSGenioApsw psw = CSGenioApsw.search(sp, user.Codpsw, _loginuser);
+                if (credential is not null)
+                    RegisterSecret(psw, credential);
+                psw.update(sp);
+
+                sp.closeTransaction();
+            }
+            catch (Exception)
+            {
+                sp.rollbackTransaction();
+                throw;
+            }
+        }
     }
 
 

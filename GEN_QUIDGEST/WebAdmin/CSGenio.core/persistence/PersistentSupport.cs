@@ -2053,23 +2053,45 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     if (isLed)
                     {
                         ControlQueryDefinition queryGenio = controlQueries[identifier];
-                        //NH(02.08.2010) - Does not place the condition zzstate = 0
-                        /*Não funcionava to os casos de inserção de registos através de um expõe table de um form em que a ficha ainda era Pseudo-nova.
-                          Não carimbava a relação.
-                        */
-                        if (queryGenio.WhereConditions != null
-                            && (queryGenio.WhereConditions.Criterias.Count > 1 || queryGenio.WhereConditions.SubSets.Count > 0))
+
+                        if (queryGenio.WhereConditions != null)
                         {
+                            //Find a criteria for the area's primary key because it means we have a specific selection
+                            Criteria critPrimaryKey = conditions.FindCriteria(area.Alias, area.PrimaryKeyName, CriteriaOperator.Equal, CriteriaSet.FindVariable.Any);
+                            if (critPrimaryKey is null || critPrimaryKey.RightTerm is null)
+                            {
+                                foreach (CriteriaSet sub in conditions.SubSets)
+                                {
+                                    critPrimaryKey = sub.FindCriteria(area.Alias, area.PrimaryKeyName, CriteriaOperator.Equal, CriteriaSet.FindVariable.Any);
+                                    if (critPrimaryKey != null && critPrimaryKey.RightTerm != null)
+                                        break;
+                                }
+                            }
+
                             CriteriaSet where = CriteriaSet.And();
-                            for (int i = 1; i < queryGenio.WhereConditions.Criterias.Count; i++)
+                            //When there isn't a specific selection we include the zzstate condition to ensure the returned records are valid
+                            //Use case: QWeb autocomplete searches should not include zzstate invalid records
+                            if (critPrimaryKey is null && queryGenio.WhereConditions.Criterias.Count > 0)
                             {
-                                where.Criterias.Add(queryGenio.WhereConditions.Criterias[i]);
+                                foreach (Criteria crit in queryGenio.WhereConditions.Criterias)
+                                    where.Criterias.Add(crit);
                             }
-                            foreach (CriteriaSet subSet in queryGenio.WhereConditions.SubSets)
+                            //When there's a specific selection there's no need to include the zzstate = 0 condition (previously handled on the selection moment)
+                            //This is particularly important when inserting a record through a table list of a pseudo-new record (it ensures the relation is correctly mapped)
+                            else if (queryGenio.WhereConditions.Criterias.Count > 1)
                             {
-                                where.SubSets.Add(subSet);
+                                for (int i = 1; i < queryGenio.WhereConditions.Criterias.Count; i++)
+                                    where.Criterias.Add(queryGenio.WhereConditions.Criterias[i]);
                             }
-                            query.WhereCondition.SubSet(where);
+
+                            if (queryGenio.WhereConditions.SubSets.Count > 0)
+                            {
+                                foreach (CriteriaSet subSet in queryGenio.WhereConditions.SubSets)
+                                    where.SubSets.Add(subSet);
+                            }
+
+                            if (where.Criterias.Count > 0 || where.SubSets.Count > 0)
+                                query.WhereCondition.SubSet(where);
                         }
                     }
 
@@ -2367,7 +2389,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             //if we are allocating pk's in the database then read back the result of the query
             if(DatabaseSidePk)
-                area.insertNameValueField(area.PrimaryKeyName, DBConversion.ToKey(res));
+                area.insertNameValueField(area.PrimaryKeyName, DBConversion.ToKey(res), fromDatabase: true);
         }
 
         /// <summary>
@@ -2618,7 +2640,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                                 Execute(insert);
 
                                 //update the record that references the document
-                                area.insertNameValueField(campoPedido.FullName, documid);
+                                area.insertNameValueField(campoPedido.FullName, documid, fromDatabase: true);
                             }
                         }
                     }
@@ -2759,6 +2781,10 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             UpdateQuery query = new UpdateQuery();
             QueryUtils.fillQueryUpdate(query, area);
+
+            //there is no reason to execute a update to 0 columns
+            if (query.SetValues.Count == 0)
+                return;
 
             int linha = Execute(query);
             if (linha == 0)
@@ -3514,7 +3540,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                         // Since this field no longer exists in the structure, an exception would obviously arise from this.
                         if (area.DBFields.ContainsKey(qs.SelectFields[j].Alias.Split('.')[1])) //I'm assuming that the keys are the long names and that's never going to change
                         {
-                            area.insertNameValueField(qs.SelectFields[j].Alias, mx.GetDirect(i, j));
+                            area.insertNameValueField(qs.SelectFields[j].Alias, mx.GetDirect(i, j), fromDatabase: true);
                         }
                     }
                     Qresult.Add(area);
@@ -3825,18 +3851,25 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="internalCodeValue">The value of the primary key with which we position the record</param>
         /// <param name="fields">The fields to fill in the area. Null to get all fields</param>
         /// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
+        /// <param name="bookmarkOnly">True if the current values should be perserved and only oldvalues or missing values should be read</param>
         /// <returns>True if the record was correctly positioned, false otherwise</returns>
-        public virtual bool getRecord(IArea area, object internalCodeValue, string[] fields=null, bool forUpdate=false)
+        public virtual bool getRecord(IArea area, object internalCodeValue, string[] fields=null, bool forUpdate=false, bool bookmarkOnly=false)
         {
             try
             {
-                bool result = false;
+                string[] fields2 = fields;
+                if (bookmarkOnly)
+                    fields2 = GetFieldsForBookmark(area, fields, forUpdate);
 
                 SelectQuery select = new SelectQuery();
                 if (forUpdate)
                     select.updateLock = true;
 
-                select.SelectDatabaseFields(area, fields);
+                select.SelectDatabaseFields(area, fields2);
+
+                //if we end up with zero fields to read then we don't need to execute the query
+                if (select.SelectFields.Count == 0)
+                    return true;
 
                 select.From(area.QSystem, area.TableName, area.Alias);
                 var pk = QueryUtils.ToValidDbValue(internalCodeValue, area.DBFields[area.PrimaryKeyName]);
@@ -3844,36 +3877,63 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     .Equal(area.Alias, area.PrimaryKeyName, pk));
 
                 DataMatrix mx = Execute(select);
-                if (mx.NumRows > 0)
-                {
-                    result = true;
+                if (mx.NumRows == 0)
+                    return false;
 
-                    for (int i = 0; i < mx.NumCols; i++)
+                for (int i = 0; i < mx.NumCols; i++)
+                {
+                    // Don't take this condition off. Explanation: The user can remove columns from an area in the settings
+                    // and the database still to be had on the corresponding table. If the user querys with "*", the
+                    // below call would try to search in the corresponding Area structure all fields returned by SQL query.
+                    // Since this field no longer exists in the structure, an exception would obviously arise from this.
+                    if(area.DBFields.TryGetValue(select.SelectFields[i].Alias.Split('.')[1], out var fieldInfo))
                     {
-                        // Don't take this condition off. Explanation: The user can remove columns from an area in the settings
-                        // and the database still to be had on the corresponding table. If the user querys with "*", the
-                        // below call would try to search in the corresponding Area structure all fields returned by SQL query.
-                        // Since this field no longer exists in the structure, an exception would obviously arise from this.
-                        if (area.DBFields.ContainsKey(select.SelectFields[i].Alias.Split('.')[1])) //I'm assuming that the keys are the long names and that's never going to change
-                        {
-                            area.insertNameValueField(select.SelectFields[i].Alias, mx.GetDirect(0, i));
-                        }
+                        var internalValue = DBConversion.ToInternal(mx.GetDirect(0, i), fieldInfo.FieldFormat);
+                        if (area.Fields.TryGetValue(fieldInfo.FullName, out var dbfield) && bookmarkOnly)
+                            dbfield.OldValue = internalValue;
+                        else 
+                            area.insertNameValueField(select.SelectFields[i].Alias, internalValue, fromDatabase: true);
                     }
                 }
 
-                return result;
+                //primary key is always the same
+                area.insertNameValueField(area.PrimaryKeyName, internalCodeValue, fromDatabase: true);
+                area.IsBookmarkLocked = forUpdate;
+
+                return true;
             }
-			catch (GenioException ex)
+			catch (Exception ex)
             {
-                throw new PersistenceException(ex.UserMessage, "PersistentSupport.getRecord",
-				                               "Error selecting fields " + fields + " from table " + area.TableName + " where code is " + internalCodeValue.ToString() + ": " + ex.Message, ex);
+                string usermessage = (ex as GenioException)?.UserMessage;
+                throw new PersistenceException(usermessage
+                    , "PersistentSupport.getRecord"
+                    , "Error selecting fields " + fields + " from table " + area.TableName + " where code is " + internalCodeValue.ToString() + ": " + ex.Message
+                    , ex);
             }
-            catch (Exception ex)
+        }
+
+        private static string[] GetFieldsForBookmark(IArea area, string[] fields, bool forUpdate)
+        {
+            //add only non-bookmarked fields
+            List<string> bookmarkFields = [];
+            foreach (var fieldInfo in area.DBFields.Values)
             {
-                // closeConnection(); to have a uniform behavior with other catch of other sp functions and not close the connection for no apparent reason to this.
-                throw new PersistenceException(null, "PersistentSupport.getRecord",
-				                               "Error selecting fields " + fields + " from table " + area.TableName + " where code is " + internalCodeValue.ToString() + ": " + ex.Message, ex);
+                //primary key cannot change, we already have it, so we never need to read it
+                if (fieldInfo.Name == area.PrimaryKeyName)
+                    continue;
+                //if this is a update critical operation and the current bookmark was not update locked
+                // we need to read all fields again
+                //otherwise we read the fields that have not been bookmarked yet
+                if (!(forUpdate && !area.IsBookmarkLocked)
+                    && area.Fields.TryGetValue(fieldInfo.FullName, out var reqField) && reqField.IsBookmarked)
+                    continue;
+                //skip non-requested fields
+                if (fields is not null && !fields.Contains(fieldInfo.Name))
+                    continue;
+
+                bookmarkFields.Add(fieldInfo.Name);
             }
+            return bookmarkFields.ToArray();
         }
 
         /// <summary>
@@ -4185,6 +4245,16 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
 
         /// <summary>
+        /// Update the bookmark (old values) of a record with their current database value
+        /// </summary>
+        /// <remarks>Any missing current value will be set as equal to the read bookmark, and existing current value will be perserved</remarks>
+        /// <param name="area">The area to read</param>
+        public virtual void getBookmark(IArea area)
+        {
+            getRecord(area, area.QPrimaryKey, null, true, true);
+        }
+
+        /// <summary>
         /// Function that executes a query that returns a database record
         /// </summary>
         /// <param name="query">query to be executed</param>
@@ -4210,7 +4280,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                         // Since this field no longer exists in the structure, an exception would obviously arise from this.
                         string colName = dr.GetName(i).ToLower();
                         if (area.DBFields.TryGetValue(colName, out var fieldInfo))
-                            area.insertNameValueField(fieldInfo.FullName, dr.GetValue(i));
+                            area.insertNameValueField(fieldInfo.FullName, dr.GetValue(i), fromDatabase: true);
                     }
                 }
                 dr.Close();

@@ -287,7 +287,7 @@ namespace CSGenio.framework
                     if (Qvalue is Boolean)
                         return (bool)Qvalue == false;
                      //When a boolean field has a default value in the table (true or false), Qvalue is an int (1 or 0).
-                    else if ((int)Qvalue == 0)
+                    else if (Convert.ToInt32(Qvalue) == 0)
                         return true;
                     break;
                 case FieldFormatting.CARACTERES:

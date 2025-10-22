@@ -58,6 +58,12 @@ public interface IRoleProvider
     /// Creates all the roles and metadata necessary for the provider to match the role needs of this application.
     /// </summary>
     void SetupUserDirectory();
+    /// <summary>
+    /// Adds a new credential or updates an existing one for the user
+    /// </summary>
+    /// <param name="user">The user where to store the credential</param>
+    /// <param name="credential">The credential to add (some providers may not support some credential types)</param>
+    void StoreCredential(User user, CredentialSecret credential);
 }
 
 /// <summary>
@@ -124,5 +130,10 @@ public abstract class BaseRoleProvider : IRoleProvider
     public virtual void SetupUserDirectory()
     {
         throw new InvalidOperationException("Providers must supply this method if HasUserDirectory is true.");
+    }
+
+    /// <inheritdoc/>
+    public virtual void StoreCredential(User user, CredentialSecret credential)
+    {
     }
 }

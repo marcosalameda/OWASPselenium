@@ -80,7 +80,7 @@
                     }
                     else
                     {
-                        <div id="panelTOTP" class="row-group">
+                        <div id="panelTOTP">
                             <div class="zone-field">
                                 <p>@Resources._1__INSTALL_ONE_OF_T16684</p>
                                 <ul>
@@ -91,31 +91,11 @@
                                 <p>@Resources._2__USE_THE_APPLICAT04769</p>
                                 <div class="i-text__error mb-2">@Resources.ESTA_INFORMACAO_SO_S55226</div>
                                 <div id="qrcode"></div>
-                                <b>@Resources.CODIGO_27320</b>
-                                @Html.TextBoxFor(m => m.TotpDisplayCode, new { @readonly = "readonly", style = "border: none; background-color: transparent;" })
+                                <b>@Resources.CODIGO_27320</b> @Model.TotpDisplayCode
                                 <p>@Resources._3__FILL_THE_6_DIGIT12132</p>
                                 @Html.TextBoxFor(m => m.Totp6Code)
                             </div>
                         </div>
-                    }
-                </div>
-                <div class="col">
-                    <span class="f-header__title mb-2">@Resources.SECURITY_KEY47415</span>
-                    @Html.ArrayLogicalFor(m => m.HasWebAuthN, Model.EmptySelectList, s => null, true, null)
-                    @if (!Model.ShowWebAuthN)
-                    {
-                    <p>@Resources.A_SECURITY_KEY_IS_A_56031</p>
-                    <button type="button" class="b-icon-text b-icon-text--primary mb-3" onclick=" QUtils.NavigateTo = '@HttpUtility.JavaScriptStringEncode(Url.Action("CreateWebAuthN", "Home"))'">
-                        <i class="glyphicons glyphicons-rotation-lock e-icon"></i>@Resources.ADD_SECURITY_KEY18935
-                    </button>
-                    }
-                    else
-                    {
-                    <p>@Resources.ADD_SECURITY_KEY18935</p>
-                    <p>@Resources.MAKE_SURE_YOU_HAVE_Y33627<a href="https://www.google.com/search?q=fido+u2f+security+key" target="_blank">@Resources.ORDER_ONE_AT_A_SUPPL48566</a></p>
-                    <button type="button" class="b-icon-text b-icon-text--primary mb-3" onclick="javascript:createRegisterWebAuth()">
-                        <i class="glyphicons glyphicons-rotation-lock e-icon"></i>@Resources.SETUP44001
-                    </button>
                     }
                 </div>
             </div>

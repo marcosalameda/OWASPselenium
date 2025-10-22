@@ -208,6 +208,12 @@ namespace CSGenio.business
             if (!Qfield.NotNull && Qfield.isEmptyValue(fieldValue))
                 return true;
 
+            // Only validate if there was a relevant change of the record
+            var prefndupInfo = String.IsNullOrEmpty(Qfield.PrefNDup) ? null : area.DBFields[Qfield.PrefNDup];
+            if (!area.Fields[Qfield.FullName].IsDirty()
+                && (prefndupInfo is null || !area.Fields[prefndupInfo.FullName].IsDirty()))
+                return true;
+
             // Query to check if the value is not unique
             CriteriaSet criteria = CriteriaSet.And()
                     .Equal(area.Alias, Qfield.Name, fieldValue)
@@ -226,8 +232,8 @@ namespace CSGenio.business
             {
                 // Retrieve the Qvalue of the prefix Qfield
                 object nDupPrefValue;
-                if (area.Fields.ContainsKey(area.Alias + "." + Qfield.PrefNDup))
-                    nDupPrefValue = area.returnValueField(area.Alias + "." + Qfield.PrefNDup);
+                if (area.Fields.ContainsKey(prefndupInfo.FullName))
+                    nDupPrefValue = area.returnValueField(prefndupInfo.FullName);
                 else
                 {
                     // Retrieve the Qvalue of the prefix Qfield from the database

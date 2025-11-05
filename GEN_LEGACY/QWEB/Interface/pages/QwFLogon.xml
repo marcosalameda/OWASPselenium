@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFLogon" TIT="Identificação do Utilizador" STYLE="QwFLogon" UPDSTATUS="N">
+
+	<FORM ID="FrmLogon" PROVIDER="LOGON" FUNC="EXE">
+		<COL ID="nome" TYPE="A20" TIT="Código de utilizador" OBRIG="N"/>
+		<COL ID="password" TYPE="A" TIT="Senha de acesso" OBRIG="N"/>
+		<COL ID="nivel" TYPE="A60" TIT="Nivel" OBRIG="N"/>
+		<COL ID="anodb" TYPE="A4" TIT="Ano" OBRIG="N"/>
+		<COL ID="permtab" TYPE="A60" TIT="Permtab" OBRIG="N"/>
+    <COL ID="modulus" TYPE="A1" TIT="Modulus" OBRIG="N" />
+    <COL ID="exponent" TYPE="A1" TIT="Exponent" OBRIG="N" />
+    <COL ID="anos" TYPE="A60" TIT="Anos possiveis" OBRIG="N"/>
+		<COL ID="cc" TYPE="A1" TIT="CertificadoCliente" OBRIG="N" />
+		<EVENT ID="AFTERREAD">
+		  <ACT>
+			;
+			var user = api.GetVal("", "FrmLogon", "nome");
+			if (qApi.emptyC(user) == 1) {
+			  api.SetVal("", "FrmLogon", "anodb", "");
+			  api.Show("", "pLogIn");
+			}
+			else {
+			  api.ExecRotina("", "AUTOLOGON");
+			}
+		  </ACT>
+		</EVENT>
+    <EVENT ID="AFTERUPDATE" ACT="DoLogon(««[GetVal(FrmLogon,nivel]»»,[GetVal(FrmLogon,permtab],[GetVal(FrmLogon,anodb],[GetVal(FrmLogon,nome]{SetVal(logon_nome,{SetVal(logon_password,{ClosePage({OpenPage(QwFLogoff,,,,"/>
+  </FORM>
+      
+  <ROTINA ID="AUTOLOGON" FUNCTIONID="*">
+    <EVENT ID="AFTEREXECUTE" ACT="DoLogon(««[GetVal(FrmLogon,nivel]»»,[GetVal(FrmLogon,permtab],[GetVal(FrmLogon,anodb],[GetVal(FrmLogon,nome]{SetVal(logon_nome,{SetVal(logon_password,{ClosePage({OpenPage(QwFLogoff,,,,"/>
+  </ROTINA>
+
+  <ROTINA ID="ENCRYPTPASS" FUNCTIONID="EncryptPass">
+    <ARG ID="A1" DATACTL="FrmLogon" DATAFLD="password"/>
+    <ARG ID="A2" DATACTL="FrmLogon" DATAFLD="modulus"/>
+    <ARG ID="A3" DATACTL="FrmLogon" DATAFLD="exponent"/>
+    <RESULT ID="R1" DATACTL="FrmLogon" DATAFLD="password"/>
+  </ROTINA>
+
+  <PANEL LOCATION="0,0" SIZE="*,*" STYLE="DEFAULT">
+		<LABEL LOCATION="0,0" SIZE="100,20" ALIGN="left" STYLE="LIGHT" TXT="Identificação"/>
+		<TEXT ID="logon_nome" LOCATION="0,20" SIZE="100,20" DATAFLD="nome" DATACTL="FrmLogon"/>
+		<LABEL LOCATION="110,0" SIZE="100,20" ALIGN="left" STYLE="LIGHT" TXT="Palavra passe"/>
+		<TEXT ID="logon_password" LOCATION="110,20" SIZE="100,20" DATAFLD="password" DATACTL="FrmLogon" PW="S">
+			<EVENT ID="ENTER" ACT="ExecRotina(ENCRYPTPASS{Execute(FrmLogon,NoClose{SetVal(logon_password,"/>
+		</TEXT>
+
+		<BOTAO LOCATION="220,20" SIZE="25,21" TXT="Ok" ACT="ExecRotina(ENCRYPTPASS{Execute(FrmLogon,NoClose{SetVal(logon_password," STYLE="BGRAVAR"/>
+	</PANEL>
+</PAGE>

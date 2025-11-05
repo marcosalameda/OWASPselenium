@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFDELEGALOGIN" TIT="Delegações" STYLE="QwFDELEGALOGIN" SCROLL="S">
+
+  <MULTIFORM ID="APPDELEGALOGIN" PROVIDER="delega" MSGCTL="Msgstd" DEFCOLORD="delega.auditusr ASC">
+    <COL ID="delega.coddelega" TYPE="A" TIT="" LARG="0" VIS="N" KEY="S" HISTID="delega"/>
+    <COL ID="delega.auditusr" TYPE="A20" TIT="Id para auditoria" LARG="140" VIS="S" HISTID="delega.auditusr"/>
+    <COL ID="pswup.nome" TYPE="A20" TIT="Delegador" LARG="140" VIS="S" HISTID="pswup.nome"/>
+    <COL ID="delega.dateini" TYPE="D10" TIT="Data de início" LARG="109" VIS="S" HISTID="delega.dateini"/>
+    <COL ID="delega.dateend" TYPE="D10" TIT="Data limite" LARG="85" VIS="S" HISTID="delega.dateend"/>
+    <COL ID="delega.message" TYPE="A" TIT="Mensagem" LARG="0" VIS="N" HISTID="delega.message"/>
+
+    <EVENT ID="PROPRIO" SELOBRIG="N" ACT="ClosePage("/>
+    <EVENT ID="OUTRO" SELOBRIG="U" ACT="ExecRotina(DELEGAUSR"/>
+    <EVENT ID="DBL" SELOBRIG="U" ACT="ExecRotina(DELEGAUSR"/>
+    <EVENT ID="CANCEL" SELOBRIG="N" ACT="ClosePage({DoLogoff("/>
+    <EVENT ID="CLK" ACT="SetVal(txtmsg,[GetVal(APPDELEGALOGIN,delega.message]" SELOBRIG="S"/>
+  </MULTIFORM>
+
+  <ROTINA ID="DELEGAUSR" PROVIDER="DELEGAUSR">
+    <ARG ID="A1" DATACTL="APPDELEGALOGIN" DATAFLD="delega.coddelega"/>
+    <EVENT ID="AFTEREXECUTE" ACT="SetUsrId(#1#,{SetUsrNivel(#2#{SetUsrPerm(#3#{ClosePage("/>
+  </ROTINA>
+
+  <!-- Espaço para rotinas manuais -->
+
+  <PANEL LOCATION="0,0" SIZE="620,500">
+
+    <TITLE LOCATION="0,0" SIZE="*-2,25" ALIGN="LEFT"/>
+
+    <MSG ID="Msgstd" LOCATION="0,25" SIZE="*-2,17" ALIGN="LEFT"/>
+
+    <LABEL LOCATION="5,30" SIZE="600,50" TXT="Foram-lhe delegados os acessos abaixo listados. Pressione 'Próprio' para usar o seu login normal, ou seleccione a delegação pretendida e pressione 'Outro'."/>
+
+    <MULTIGRID ID="dbgrid1" DATACTL="APPDELEGALOGIN" LOCATION="5,70" SIZE="500,290" ALLOWCOLSEL="N">
+      <HEADERPANEL SIZE="0,20" AUTOLAYOUT="QRY" AUTOSCROLL="S"/>
+      <HEADERPANEL SIZE="0,20" AUTOLAYOUT="CAB" AUTOSCROLL="S"/>
+      <DATAPANEL AUTOLAYOUT="DET" SIZE="0,22"/>
+    </MULTIGRID>
+
+    <TEXT ID="txtmsg" LOCATION="5,370" SIZE="500,100" READONLY="S" MULTILINE="S"/>
+
+    <BOTAO ICONID="bselecc.png" ID="PROPRIO" LOCATION="520,70" SIZE="80,21" TXT="Próprio" DATACTL="APPDELEGALOGIN" ACT="Execute(APPDELEGALOGIN,PROPRIO" STYLE="BDBEDIT"/>
+    <BOTAO ICONID="balterar.png" ID="OUTRO" LOCATION="520,110" SIZE="80,21" TXT="Outro" DATACTL="APPDELEGALOGIN" ACT="Execute(APPDELEGALOGIN,OUTRO" STYLE="BDBEDIT"/>
+    <BOTAO ICONID="bcancel.png" ID="Bcancel" LOCATION="520,450" SIZE="80,21" TXT="Cancelar" DATACTL="APPDELEGALOGIN" ACT="Execute(APPDELEGALOGIN,CANCEL" STYLE="BDBEDIT"/>
+  </PANEL>
+</PAGE>

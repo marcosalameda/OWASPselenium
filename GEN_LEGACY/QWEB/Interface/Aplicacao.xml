@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<APP ID="GQT" TIT="QWeb" VER="2968" NOVAWEB="N" CURRENCY="&#x20AC;" WAITIMG="images/wait_screen.gif">
+<PAGSRC ID="REMOTE" TYPE="REMOTE" ADDR="pages/"/>
+<IMGSRC ID="REMOTE" TYPE="REMOTE" ADDR="images/"/>
+  <DB ID="REMOTE" TYPE="REMOTEJSON" ADDR="InterfaceJson.aspx"/>
+
+  <SERVICE ID="UPLOAD" TYPE="REMOTE" ADDR="qwebupload.aspx" />
+  <SERVICE ID="EXPLISTAGEM" TYPE="REMOTE" ADDR="exportarListagem.aspx" />
+  <SERVICE ID="RECURSO" TYPE="REMOTE" ADDR="obterRecurso.aspx" />
+
+  <include FILE="LayoutApp.xml"/>
+
+
+  <include FILE="CustomStyle2.xml"/>
+  <include FILE="CustomStyle1.xml"/>
+  <include FILE="CustomStyle.xml"/>
+  <include FILE="LayoutStyle.xml"/>
+  <include FILE="BaseStyle.xml"/>
+
+</APP>

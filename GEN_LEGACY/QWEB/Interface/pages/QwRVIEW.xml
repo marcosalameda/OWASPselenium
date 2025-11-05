@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwRVIEW" TIT="" STYLE="QwRVIEW" SCROLL="N" VIS ="N">
+  <PANEL LOCATION="500,500" SIZE="0,0" >
+
+    <WEBPAGE LOCATION="500,500" SIZE="0,0" SRC="obterRecurso.aspx" HISTPARMS="rec[open"/>
+  </PANEL>
+</PAGE>

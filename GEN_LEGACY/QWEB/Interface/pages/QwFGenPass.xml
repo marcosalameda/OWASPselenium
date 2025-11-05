@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFGenPass" TIT="Geração de Password" STYLE="QwFGenPass" SCROLL="S">
+
+<FORM ID="FGenPass" PROVIDER="password_gerar" FUNC="EXE" AUTOSTART="S" MSGCTL="Msgstd">
+	<COL ID="psw.codpsw" TYPE="A" TIT="chave primaria" HISTGETID="psw" KEY="S"/>
+	<COL ID="email" TYPE="A150" TIT="Password Antiga" OBRIG="N"/>
+</FORM>
+   
+<PANEL LOCATION="0,0" SIZE="300,260">
+  <PANEL LOCATION="1,1" SIZE="*-2,20">
+    <PATH LOCATION="0,0" SIZE="*-2,17"/>
+  </PANEL>
+  <PANEL LOCATION="0,21" SIZE="*,*">
+
+	<TITLE LOCATION="10,1" SIZE="*-2,25" ALIGN="LEFT"/>
+	<MSG ID="Msgstd" LOCATION="10,26" SIZE="*-2,17" ALIGN="LEFT"/>
+	  <LABEL LOCATION="15,60" SIZE="150,17" ALIGN="left" TXT="E-mail:"/>
+	  <TEXT LOCATION="15,80" SIZE="250,17" DATAFLD="email" DATACTL="FGenPass"/>
+
+
+    <LABEL LOCATION="15,130" SIZE="270,50" ALIGN="left" TXT="Por favor indique um email válido ou a password irá ficar perdida e terá de ser re-gerada." STYLE="LABELCINZA" />
+
+    <BOTAO ICONID="bselecc.png" LOCATION="60,205" SIZE="80,21" TXT="Ok" DATACTL="FGenPass" ACT="Execute(FGenPass" STYLE="BGRAVAR"/>
+
+    <BOTAO ICONID="bcancel.png" LOCATION="150,205" SIZE="80,21" TXT="Cancelar" DATACTL="FGenPass" ACT="ClosePage(" STYLE="BCANCELAR"/>
+
+  </PANEL>
+</PANEL>
+
+</PAGE> 
+

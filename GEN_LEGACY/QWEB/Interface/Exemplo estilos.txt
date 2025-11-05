@@ -1,0 +1,301 @@
+<!--
+*******************************************************************************************************
+****     Definição de Estilos
+*******************************************************************************************************
+-->
+  <STYLE FOR="AREA" ID="DEFAULT" PADDING="0">
+    <NORM BGCLASS="BrancoSemBorder" />
+    <DISA BGCLASS="BrancoSemBorder" />
+  </STYLE>
+  <STYLE FOR="PAGE" ID="DEFAULT" PADDING="4" ANIMIN="NONE,1,S">
+    <NORM BGCLASS="BrancoSemBorder" />
+    <DISA BGCLASS="BrancoSemBorder" />
+  </STYLE>
+  <STYLE FOR="DIALOG" ID="DEFAULT" TEMAID="qstema_DialogBg_800_800_20_20.png" TEMASIZE="800,800,20,20,Z" PADDING="8,26,8,8" ANIMIN="GROW-T,10,S" ANIMOUT="SHRINK-T,6,S">
+    <NORM BGTEMA="1" />
+    <DISA BGTEMA="2" />
+  </STYLE>
+  <!-- ************* Windows e seus componentes *************** -->
+  <STYLE FOR="WINPANEL" ID="DEFAULT" TEMA="" PADDING="3" ANIMIN="GROW-T,1,S" ANIMOUT="SHRINK-T,1,S">
+    <NORM BGCLASS="AzulComBorder" />
+  </STYLE>
+  <STYLExxx FOR="WINCONTROLPANEL" ID="DEFAULT" TEMA="" PADDING="2" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="AzuladoSemBorder" />
+  </STYLExxx>
+  <STYLE FOR="WINDOW" ID="DEFAULT" TEMAID="qstema_DialogBg_800_800_20_20.png" TEMASIZE="800,800,20,20,Z" PADDING="8,26,14,14" ANIMIN="GROW-T4,22,S" ANIMOUT="SHRINK-T,10,S">
+    <NORM BGTEMA="1" />
+  </STYLE>
+  <STYLE FOR="WINCAP" ID="DEFAULT" TEMAID="qstema_wincap_1000_20_0_0.png" TEMASIZE="1000,20,0,0,H" PADDING="2,0,2,2" ANIMIN="" ANIMOUT="">
+    <NORM BGTEMA="1" />
+    <HIGH BGTEMA="2" />
+    <SELE BGTEMA="3" />
+    <DISA BGTEMA="4" />
+  </STYLE>
+  <STYLE FOR="PANEL" ID="DEFAULT" TEMA="" PADDING="3" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="Transparente" />
+    <DISA BGCLASS="Transparente" />
+  </STYLE>
+  <STYLE FOR="TABPANEL" ID="DEFAULT" TEMAID="qstema_PanelBranco_1000_1000_5_5.png" TEMASIZE="1000,1000,5,5,Z" PADDING="8">
+    <NORM BGTEMA="1" />
+    <DISA BGTEMA="2" />
+  </STYLE>
+  <STYLE FOR="MSG" ID="DEFAULT" PADDING="2,0,0,0">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoVermelhoBold" />
+  </STYLE>
+  <STYLE FOR="TITLE" ID="DEFAULT" PADDING="3,2,0,0">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoPretoBold" />
+  </STYLE>
+  <STYLE FOR="PATH" ID="DEFAULT" TEMA="" PADDING="2,0,0,0">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGCLASS="AzuladoSemBorder" TXTCLASS="TextoPretoNormal" />
+  </STYLE>
+  <STYLE FOR="LABEL" ID="DEFAULT" TEMA="" PADDING="0">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoAzulNormal" />
+  </STYLE>
+  <STYLE FOR="TEXT" ID="DEFAULT" TEMAID="qstema_TextShadow_600_20_5_0.png" TEMASIZE="600,20,5,0,H" PADDING="4,1,6,3" ANIMIN="GROW-L3,8,N" ANIMOUT="">
+    <NORM BGTEMA="1" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoPretoNormal" />
+    <SELE BGTEMA="3" TXTCLASS="TextoBrancoNormal" />
+    <OBRI BGTEMA="4" TXTCLASS="TextoPretoNormal" />
+    <ERRO BGTEMA="5" TXTCLASS="TextoPretoNormal" />
+    <DISA BGTEMA="6" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="TEXTM" ID="DEFAULT" TEMAID="qstema_TextMShadow_600_400_5_5.png" TEMASIZE="600,400,5,5,Z" PADDING="4,1,6,4" ANIMIN="GROW-L3,8,N" ANIMOUT="">
+    <NORM BGTEMA="1" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoPretoNormal" />
+    <SELE BGTEMA="3" TXTCLASS="TextoBrancoNormal" />
+    <OBRI BGTEMA="4" TXTCLASS="TextoPretoNormal" />
+    <ERRO BGTEMA="5" TXTCLASS="TextoPretoNormal" />
+    <DISA BGTEMA="6" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="LEDTXT" ID="DEFAULT" TEMAID="qstema_TextShadow_600_20_5_0.png" TEMASIZE="600,20,5,0,H" PADDING="4,1,6,3" ANIMIN="GROW-L3,8,N" ANIMOUT="">
+    <NORM BGTEMA="1" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoPretoNormal" />
+    <SELE BGTEMA="3" TXTCLASS="TextoBrancoNormal" />
+    <OBRI BGTEMA="4" TXTCLASS="TextoPretoNormal" />
+    <ERRO BGTEMA="5" TXTCLASS="TextoPretoNormal" />
+    <DISA BGTEMA="6" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="COLOR" ID="DEFAULT" TEMAID="qstema_TextShadow_600_20_5_0.png" TEMASIZE="600,20,5,0,H" PADDING="4,2,4,4" ANIMIN="GROW-L3,8,N" ANIMOUT="">
+    <NORM BGTEMA="1" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoPretoNormal" />
+    <SELE BGTEMA="3" TXTCLASS="TextoBrancoNormal" />
+    <OBRI BGTEMA="4" TXTCLASS="TextoPretoNormal" />
+    <ERRO BGTEMA="5" TXTCLASS="TextoPretoNormal" />
+    <DISA BGTEMA="6" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="COLORPAD" ID="DEFAULT" TEMA="" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="BrancoSemBorder" />
+  </STYLE>
+  <STYLE FOR="COLOR.DROPPANEL" ID="DEFAULT" TEMAID="qstema_PanelBranco_1000_1000_5_5.png" TEMASIZE="1000,1000,5,5,Z" PADDING="4" ANIMIN="GROW-T,10,N" ANIMOUT="SHRINK-T,6,N">
+    <NORM BGTEMA="1" />
+  </STYLE>
+  <STYLE FOR="PARAGRAPH" ID="DEFAULT" PADDING="0,0,0,0">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoAzulNormal" />
+  </STYLE>
+  <STYLE FOR="CHECK" ID="DEFAULT" TEMAID="qstema_check_13_13_0_0.png" TEMASIZE="13,13,0,0,F" PADDING="0,0,0,0" ANIMIN="GROW-T,1,N">
+    <NORM0 BGTEMA="1" />
+    <NORM1 BGTEMA="2" />
+    <HIGH0 BGTEMA="3" />
+    <HIGH1 BGTEMA="4" />
+    <DISA0 BGTEMA="5" />
+    <DISA1 BGTEMA="6" />
+  </STYLE>
+  <STYLE FOR="RADBOT" ID="DEFAULT" TEMAID="qstema_radio_13_13_0_0.png" TEMASIZE="13,13,0,0,F" PADDING="0,0,0,0" ANIMIN="GROW-T,1,N">
+    <NORM0 BGTEMA="1" />
+    <NORM1 BGTEMA="2" />
+    <HIGH0 BGTEMA="3" />
+    <HIGH1 BGTEMA="4" />
+    <DISA0 BGTEMA="5" />
+    <DISA1 BGTEMA="6" />
+  </STYLE>
+  <STYLE FOR="TAB" ID="DEFAULT" TEMAID="qstema_TabBranca_400_20_16_0.png" TEMASIZE="400,20,16,0,H" PADDING="0,0,0,0">
+    <NORM BGTEMA="1" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoPretoNormal" />
+    <SELE BGTEMA="3" TXTCLASS="TextoPretoNormal" />
+    <DISA BGTEMA="4" TXTCLASS="TextoPretoNormal" />
+  </STYLE>
+  <STYLE FOR="TAB" ID="TABMENU" TEMAID="qstema_TabBrancaVertical_20_400_0_16.png" TEMASIZE="20,400,0,16,V" PADDING="0,0,0,0">
+    <NORM BGTEMA="1" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoPretoNormal" />
+    <SELE BGTEMA="3" TXTCLASS="TextoPretoNormal" />
+    <DISA BGTEMA="4" TXTCLASS="TextoPretoNormal" />
+  </STYLE>
+  <STYLE FOR="GRPBOX" ID="DEFAULT" TEMAID="qstema_PanelBranco_1000_1000_5_5.png" TEMASIZE="1000,1000,5,5,Z" PADDING="5">
+    <NORM BGTEMA="1" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="IMG" ID="DEFAULT" TEMA="" PADDING="0">
+    <NORM BGCLASS="Transparente" />
+  </STYLE>
+  <STYLE FOR="DOC" ID="DEFAULT" TEMAID="qstema_doc_30_30_0_0.png" TEMASIZE="30,30,0,0,F" PADDING="0">
+    <NORM BGTEMA="1" />
+    <HIGH BGTEMA="2" />
+    <SELE BGTEMA="3" />
+    <DISA BGTEMA="4" />
+  </STYLE>
+  <STYLE FOR="MENU" ID="DEFAULT" PADDING="0">
+    <NORM BGCLASS="AzuladoSemBorder" TXTCLASS="TextoPretoBold" />
+    <HIGH BGCLASS="AzulComBorder" TXTCLASS="TextoBrancoBold" />
+  </STYLE>
+  <STYLE FOR="MENU.STACKPANEL" ID="DEFAULT" PADDING="1" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="Transparente" />
+  </STYLE>
+  <STYLE FOR="MENU.DATAPANEL.TEXT" ID="DEFAULT" PADDING="4,4,4,4" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGCLASS="Transparente" TXTCLASS="TextoPretoBold" />
+    <SELE BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <DISA BGCLASS="Transparente" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="MENU.DATAPANEL" ID="DEFAULT" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="BrancoSemBorder" />
+    <HIGH BGCLASS="AzuladoSemBorder" />
+    <SELE BGCLASS="AzulComBorder" />
+    <DISA BGCLASS="GradientCinza30" />
+  </STYLE>
+  <STYLE FOR="MENU.DROPPANEL" ID="DEFAULT" TEMAID="qstema_panel shadow_600_600_15_15.png" TEMASIZE="600,600,15,15,Z" PADDING="8" ANIMIN="GROW-T,5,N" ANIMOUT="SHRINK-T,2,N">
+    <NORM BGTEMA="1" />
+  </STYLE>
+  <STYLE FOR="COMBO" ID="DEFAULT" TEMAID="qstema_TextShadow_600_20_5_0.png" TEMASIZE="600,20,5,0,H" ICONID="qstema_IconSetaBaixo_14_14_0_0.png" ICONSIZE="14,14" ICONLOCATION="*-5,2" PADDING="4,1,0,0" ANIMIN="GROW-L2,8,N" ANIMOUT="">
+    <NORM BGTEMA="1" TXTCLASS="TextoPretoNormal" ICONTEMA="1" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoPretoNormal" ICONTEMA="2" />
+    <SELE BGTEMA="3" TXTCLASS="TextoBrancoNormal" ICONTEMA="3" />
+    <OBRI BGTEMA="4" TXTCLASS="TextoPretoNormal" ICONTEMA="1" />
+    <ERRO BGTEMA="5" TXTCLASS="TextoPretoNormal" ICONTEMA="1" />
+    <DISA BGTEMA="6" TXTCLASS="TextoCinzaNormal" ICONTEMA="4" />
+  </STYLE>
+  <STYLE FOR="COMBO.MULTIGRID" ID="DEFAULT" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="BrancoSemBorder" />
+  </STYLE>
+  <STYLE FOR="COMBO.MULTIGRID.AUTODATAPANEL" ID="DEFAULT" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="BrancoSemBorder" />
+    <HIGH BGCLASS="AzuladoSemBorder" />
+    <SELE BGCLASS="AzulComBorder" />
+  </STYLE>
+  <STYLE FOR="COMBO.DROPPANEL" ID="DEFAULT" TEMAID="qstema_PanelBranco_1000_1000_5_5.png" TEMASIZE="1000,1000,5,5,Z" PADDING="4" ANIMIN="GROW-T,10,N" ANIMOUT="SHRINK-T,6,N">
+    <NORM BGTEMA="1" />
+  </STYLE>
+  <STYLE FOR="CALEND" ID="DEFAULT" TEMAID="qstema_TextMShadow_600_400_5_5.png" TEMASIZE="600,400,5,5,Z" PADDING="5">
+    <NORM BGTEMA="1" />
+  </STYLE>
+  <STYLE FOR="CALEND.MULTIGRID" ID="DEFAULT" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="BrancoSemBorder" />
+  </STYLE>
+  <STYLE FOR="CALEND.MULTIGRID.HEADERPANEL.TEXT" ID="DEFAULT" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoAzulBold" />
+    <HIGH BGCLASS="Transparente" TXTCLASS="TextoPretoBold" />
+    <SELE BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <DISA BGCLASS="Transparente" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="CALEND.MULTIGRID.DATAPANEL.TEXT" ID="DEFAULT" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGCLASS="Transparente" TXTCLASS="TextoPretoBold" />
+    <SELE BGCLASS="Transparente" TXTCLASS="TextoBrancoBold" />
+  </STYLE>
+  <STYLE FOR="MULTIFORM.MULTIGRID" ID="DEFAULT" TEMAID="qstema_PanelBranco_1000_1000_5_5.png" TEMASIZE="1000,1000,5,5,Z" PADDING="4" ANIMIN="" ANIMOUT="">
+    <NORM BGTEMA="1" />
+  </STYLE>
+  <STYLE FOR="MULTIGRID.STACKPANEL" ID="DEFAULT" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="BrancoSemBorder" />
+  </STYLE>
+  <STYLE FOR="AUTOHEADERPANEL" ID="DEFAULT" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="BrancoSemBorder" />
+  </STYLE>
+  <STYLE FOR="AUTOQUERYPANEL" ID="DEFAULT" PADDING="0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="CinzaSemBorder" />
+  </STYLE>
+  <STYLE FOR="CONTEXTPANEL" ID="DEFAULT" TEMAID="qstema_panel shadow_600_600_15_15.png" TEMASIZE="600,600,15,15,Z" PADDING="8" ANIMIN="GROW-T,15,N" ANIMOUT="SHRINK-T,10,N">
+    <NORM BGTEMA="1" />
+  </STYLE>
+  <STYLE FOR="FOOTERPANEL" ID="DEFAULT" PADDING="2,2,0,0" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="CinzaSemBorder" />
+  </STYLE>
+  <STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL" ID="DEFAULT" TEMAID="" TEMASIZE="" PADDING="2" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="BrancoSemBorder" />
+    <HIGH BGCLASS="AzuladoSemBorder" />
+    <SELE BGCLASS="AzulComBorder" />
+  </STYLE>
+  <STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="DEFAULT" TEMAID="" TEMASIZE="" PADDING="4" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <SELE BGCLASS="Transparente" TXTCLASS="TextoBrancoNormal" />
+    <DISA BGCLASS="Transparente" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="MULTIGRID" ID="DEFAULT" TEMAID="qstema_PanelBranco_1000_1000_5_5.png" TEMASIZE="1000,1000,5,5,Z" PADDING="5" ANIMIN="" ANIMOUT="">
+    <NORM BGTEMA="1" />
+    <DISA BGTEMA="2" />
+  </STYLE>
+  <STYLE FOR="MULTIGRID.AUTODATAPANEL" ID="DEFAULT" PADDING="0" ANIMIN="GROW-T,2,S" ANIMOUT="">
+    <NORM BGCLASS="BrancoSemBorder" />
+    <NOR2 BGCLASS="CinzaSemBorder" />
+    <HIGH BGCLASS="AzuladoSemBorder" />
+    <SELE BGCLASS="AzulComBorder" />
+  </STYLE>
+  <STYLE FOR="MULTIGRID.AUTODATAPANEL.TEXT" ID="DEFAULT" PADDING="4,4,4,4" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <SELE BGCLASS="Transparente" TXTCLASS="TextoBrancoNormal" />
+    <DISA BGCLASS="Transparente" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="MULTIGRID.AUTODATAPANEL.COMBO" ID="DEFAULT" PADDING="4,4,4,4" ANIMIN="" ANIMOUT="">
+    <NORM BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGCLASS="Transparente" TXTCLASS="TextoPretoNormal" />
+    <SELE BGCLASS="Transparente" TXTCLASS="TextoBrancoNormal" />
+    <DISA BGCLASS="Transparente" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="HEADER" ID="DEFAULT" TEMAID="qstema_headercinza_600_20_4_4.png" TEMASIZE="600,20,4,4,H" PADDING="1">
+    <NORM BGTEMA="1" TXTCLASS="TextoPretoBold" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoBrancoBold" />
+    <SELE BGTEMA="3" TXTCLASS="TextoPretoBold" />
+  </STYLE>
+  <STYLE FOR="BOTAO" ID="DEFAULT" TEMAID="qstema_BotCinzaGeral_200_30_6_6.png" TEMASIZE="200,30,6,6,Z" PADDING="2">
+    <NORM BGTEMA="1" TXTCLASS="TextoBrancoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoBrancoBold" />
+    <SELE BGTEMA="3" TXTCLASS="TextoBrancoNormal" />
+    <DISA BGTEMA="4" TXTCLASS="TextoCinzaNormal" />
+    <FOCU BGTEMA="2" TXTCLASS="TextoBrancoNormal" />
+  </STYLE>
+  <STYLE FOR="BOTAO" ID="BTREE+" TEMAID="qstema_BotTreeMais_12_12_0_0.png" TEMASIZE="12,12,0,0,F" PADDING="0">
+    <NORM BGTEMA="1" TXTCLASS="TextoBrancoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoBrancoBold" />
+    <SELE BGTEMA="3" TXTCLASS="TextoBrancoNormal" />
+    <DISA BGTEMA="4" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="BOTAO" ID="BTREE-" TEMAID="qstema_BotTreeMenos_12_12_0_0.png" TEMASIZE="12,12,0,0,F" PADDING="0">
+    <NORM BGTEMA="1" TXTCLASS="TextoBrancoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoBrancoBold" />
+    <SELE BGTEMA="3" TXTCLASS="TextoBrancoNormal" />
+    <DISA BGTEMA="4" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="BOTAO" ID="BCLOSE" TEMAID="qstema_BotClose_16_16_0_0.png" TEMASIZE="16,16,0,0,F" PADDING="0">
+    <NORM BGTEMA="1" />
+    <HIGH BGTEMA="2" />
+    <SELE BGTEMA="3" />
+    <DISA BGTEMA="4" />
+  </STYLE>
+  <STYLE FOR="BOTAO" ID="BMINIMIZE" TEMAID="qstema_BotMinimize_16_16_0_0.png" TEMASIZE="16,16,0,0,F" PADDING="0">
+    <NORM BGTEMA="1" />
+    <HIGH BGTEMA="2" />
+    <SELE BGTEMA="3" />
+    <DISA BGTEMA="4" />
+  </STYLE>
+  <STYLE FOR="BOTAO" ID="BRESTORE" TEMAID="qstema_BotRestore_16_16_0_0.png" TEMASIZE="16,16,0,0,F" PADDING="0">
+    <NORM BGTEMA="1" />
+    <HIGH BGTEMA="2" />
+    <SELE BGTEMA="3" />
+    <DISA BGTEMA="4" />
+  </STYLE>
+  <STYLE FOR="DATAPANEL" ID="DEFAULT" TEMAID="" TEMASIZE="" PADDING="0,0,0,0" ANIMIN="" ANIMOUT="" ICONID="" ICONSIZE="" ICONLOCATION="">
+    <NORM BGCLASS="BrancoSemBorder" TXTCLASS="BaseText" />
+    <HIGH BGCLASS="AzuladoSemBorder" TXTCLASS="BaseText" />
+    <SELE BGCLASS="AzulComBorder" TXTCLASS="BaseText" />
+  </STYLE>
+  <STYLE FOR="SHARE" ID="DEFAULT" TEMAID="" TEMASIZE="" PADDING="1">
+    <NORM BGCLASS="BrancoSemBorder" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+  <STYLE FOR="ACORDEON" ID="DEFAULT" TEMAID="qstema_AcordeonBranco_1000_40_8_8.png" TEMASIZE="1000,40,8,8,Z" PADDING="10,2,10,2" ANIMIN=",," ANIMOUT=",," ICONID="" ICONSIZE="" ICONLOCATION="">
+    <NORM BGTEMA="1" TXTCLASS="TextoPretoNormal" />
+    <HIGH BGTEMA="2" TXTCLASS="TextoPretoNormal" />
+    <SELE BGTEMA="3" TXTCLASS="TextoPretoNormal" />
+    <DISA BGTEMA="4" TXTCLASS="TextoCinzaNormal" />
+  </STYLE>
+</APP>

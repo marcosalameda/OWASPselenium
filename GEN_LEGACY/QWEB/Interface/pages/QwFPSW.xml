@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFPSW" TIT="Dados do utilizador" STYLE="QwFPSW" SCROLL="S">
+
+  <FORM ID="FPSW" PROVIDER="psw" MSGCTL="Msgstd">
+	  <COL ID="psw.codpsw" TYPE="A" OBRIG="S" KEY="S" HISTID="psw" HISTGETID="psw" TIT="PK"/>
+	  <COL ID="psw.nome" TYPE="A30" OBRIG="S" TIT="Identificação"/>
+  </FORM>
+  
+  <MULTIFORM ID="APPAUTHORIZATIONLIST" PROVIDER="userauthorization" MSGCTL="Msgstd">
+    <COL ID="userauthorization.codua" TYPE="A" TIT="" KEY="S" VIS="N" LARG="0" HISTID="userauthorization" />
+    <COL ID="userauthorization.modulo" TYPE="A50" TIT="Designação" VIS="S" LARG="158"/>
+    <COL ID="userauthorization.nivel" TYPE="A240" TIT="Valor" VIS="S" LARG="52" />
+    <COL ID="userauthorization.codpsw" TYPE="A" LIMITCTL="FPSW" LIMITFLD="psw.codpsw" LARG="0" VIS="N"/>
+  </MULTIFORM>
+  
+
+  
+  <PANEL LOCATION="0,0" SIZE="*,*" SIZEDIALOG="834,385" STYLE="BARRA" SCROLL="N">
+    <PATH LOCATION="1,0" SIZE="*-2,17"/>
+    <TITLE LOCATION="1,17" SIZE="*-2,30" ALIGN="LEFT"/>
+    <MSG ID="Msgstd" LOCATION="1,45" SIZE="*-2,17" ALIGN="LEFT"/>
+ 
+    <PANEL LOCATION="0,65" SIZE="*,*" STYLE="DEFAULT" SCROLL="S" SCROLLDIALOG="N">
+    <PANEL LOCATION="0,5" SIZE="385,385"  STYLE="CONTEUDO" SCROLL="N">
+
+    <TEXT ID="IFF_PSW_____PSW__NOME____" LOCATION="10,30" SIZE="300,20" DATACTL="FPSW" DATAFLD="psw.nome"/>
+    <LABEL ID="LBL_PSW_____PSW__NOME____" LOCATION="10,15" SIZE="80,13" ALIGN="left" TXT="Identificação"/>
+
+    <GRPBOX LOCATION="5,70" SIZE="400,100" SCROLL="N" TXT="Password"/>
+    <BOTAO ICONID="balterar.png" ID="Balterar" LOCATION="15,105" SIZE="80,21" TXT="Alterar" ACT="OpenDialog(QwFAltPass,,,," STYLE="BGRAVAR"/>
+    <LABEL ID="LBL_Alterar" LOCATION="100,110" SIZE="300,13" ALIGN="left" TXT="Alterar manualmente a password de utilizador."/>
+    <BOTAO ICONID="bdisk.png" ID="Bgerar" LOCATION="15,130" SIZE="80,21" TXT="Gerar" ACT="OpenDialog(QwFGenPass,,,," STYLE="BGRAVAR"/>
+    <LABEL ID="LBL_Gerar" LOCATION="100,135" SIZE="300,13" ALIGN="left" TXT="Gerar automaticamente uma nova password."/>
+
+
+
+      <LABEL LOCATION="10,185" SIZE="400,13" SCROLL="N" TXT="Nivel de acesso"/>
+		<MULTIGRID ID="dbgrid1" DATACTL="APPAUTHORIZATIONLIST" FORCOL="userauthorization.modulo" LOCATION="5,200" SIZE="400,130" ALLOWMULTISEL="N" ALLOWCHANGE="S" ALLOWINSERT="S" ALLOWDELETE="S">
+		<DATAPANEL ID="gdetQWB" AUTOLAYOUT="N" SIZE="370,35" HREPEAT="1" FORVAL="QWB" HANDCURSOR="N"  ALLOWCHANGE="N">
+			<LABEL LOCATION="5,1" SIZE="360,15" ALIGN="left" TXT="QWB - QWeb"/>
+			<COMBO ID="IFF_USERAUTHORIZATION_____USERAUTHORIZATIONQWB" LOCATION="5,17" SIZE="360,17" DATACTL="APPAUTHORIZATIONLIST" DATAFLD="userauthorization.nivel" VAL="0[Desautorizado"/>
+		</DATAPANEL>
+		<DATAPANEL ID="gdetXRS" AUTOLAYOUT="N" SIZE="370,35" HREPEAT="1" FORVAL="XRS" HANDCURSOR="N"  ALLOWCHANGE="N">
+			<LABEL LOCATION="5,1" SIZE="360,15" ALIGN="left" TXT="XRS - Wharehouse api"/>
+			<COMBO ID="IFF_USERAUTHORIZATION_____USERAUTHORIZATIONXRS" LOCATION="5,17" SIZE="360,17" DATACTL="APPAUTHORIZATIONLIST" DATAFLD="userauthorization.nivel" VAL="99[Administrator{0[Desautorizado"/>
+		</DATAPANEL>
+      </MULTIGRID>
+	      <BOTAO ID="Bcancel" LOCATION="320,350" SIZE="80,21" TXT="Sair" IMG="bcancel.gif" IMGDIS="bcancel_dis.gif" DATACTL="FPSW" ACT="Execute(FPSW,Cancel" STYLE="BCANCELAR"/>
+    <BOTAO ID="Bok" LOCATION="230,350" SIZE="80,21" TXT="Gravar" IMG="bgravar.gif" IMGDIS="bgravar_dis.gif" DATACTL="FPSW" ACT="Execute(FPSW" STYLE="BGRAVAR"/>
+
+      </PANEL>
+    </PANEL>
+  </PANEL>
+
+</PAGE>

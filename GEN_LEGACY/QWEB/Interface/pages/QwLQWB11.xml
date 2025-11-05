@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwLQWB11" TIT="Field Types" STYLE="QwLQWB11" SCROLL="S">
+
+  <MULTIFORM ID="ML11" PROVIDER="flds" MSGCTL="Msgstd"  DEFCOLORD="flds.duration ASC">
+	<COL ID="flds.codflds" TYPE="A" TIT="" LARG="0" VIS="N" KEY="S" HISTID="flds"/>
+	<COL ID="aero.name" TYPE="A50" TIT="Nome da companhia aérea" LARG="202" VIS="S" HISTID="aero.name"/>
+	<COL ID="flds.descrip" TYPE="A" TIT="Description" LARG="202" VIS="S" HISTID="flds.descrip"/>
+	<COL ID="flds.npassage" TYPE="N3" TIT="Numeric" LARG="78" VIS="S" HISTID="flds.npassage"/>
+	<COL ID="flds.duration" TYPE="N5.2" TIT="Numeric Decimal" LARG="117" VIS="S" HISTID="flds.duration"/>
+	<COL ID="flds.price" TYPE="$6" TIT="Currency" LARG="78" VIS="S" HISTID="flds.price"/>
+	<COL ID="flds.precobil" TYPE="$6" TIT="Currency Decimal" LARG="124" VIS="S" HISTID="flds.precobil"/>
+	<COL ID="flds.date" TYPE="D10" TIT="Date (DD/MM/YY)" LARG="124" VIS="S" HISTID="flds.date"/>
+	<COL ID="flds.datetime" TYPE="H" TIT="DateTime" LARG="124" VIS="S" HISTID="flds.datetime"/>
+	<COL ID="flds.dateseco" TYPE="S" TIT="DateSecond" LARG="124" VIS="S" HISTID="flds.dateseco"/>
+	<COL ID="flds.time" TYPE="T5" TIT="Time" LARG="62" VIS="S" HISTID="flds.time"/>
+	<COL ID="flds.year" TYPE="N4" TIT="Year" LARG="62" VIS="S" HISTID="flds.year"/>
+	<COL ID="flds.primviag" TYPE="N1" TIT="Logical" LARG="70" VIS="S" HISTID="flds.primviag"/>
+	<COL ID="flds.conditio" TYPE="N" TIT="Conditional" LARG="93" VIS="S" HISTID="flds.conditio"/>
+	<COL ID="flds.class" TYPE="A16" TIT="Text Enumeration" LARG="124" VIS="S" VAL="1C[1ªClasse{2C[2ªClasse{CE[Classe Económica" HISTID="flds.class"/>
+	<COL ID="flds.classnum" TYPE="A9" TIT="Numeric Enumeration" LARG="140" VIS="S" VAL="1[1º Classe{2[2ª Classe{3[Económica" HISTID="flds.classnum"/>
+	<COL ID="flds.logicenu" TYPE="A3" TIT="Logical Enumeration" LARG="132" VIS="S" VAL="1[Yes{0[No" HISTID="flds.logicenu"/>
+	<COL ID="flds.creatuse" TYPE="A20" TIT="Created by" LARG="140" VIS="S" HISTID="flds.creatuse"/>
+	<COL ID="flds.creatdat" TYPE="D8" TIT="Date of Creation (DD/MM/YY)" LARG="187" VIS="S" HISTID="flds.creatdat"/>
+	<COL ID="flds.creathou" TYPE="A5" TIT="Hour of Creation" LARG="117" VIS="S" HISTID="flds.creathou"/>
+	<COL ID="flds.creatins" TYPE="S" TIT="Complete Date of Creation" LARG="163" VIS="S" HISTID="flds.creatins"/>
+	<COL ID="equip.registnr" TYPE="A6" TIT="No. register" LARG="85" VIS="S" HISTID="equip.registnr"/>
+	<COL ID="flds.txtfield" TYPE="A50" TIT="Text Field" LARG="202" VIS="S" HISTID="flds.txtfield"/>
+	<COL ID="flds.emailfld" TYPE="A50" TIT="Email" LARG="202" VIS="S" HISTID="flds.emailfld"/>
+	<COL ID="flds.zipfield" TYPE="A8" TIT="Zipcode" LARG="78" VIS="S" HISTID="flds.zipfield"/>
+	<COL ID="flds.ibanfiel" TYPE="A34" TIT="IBAN" LARG="202" VIS="S" HISTID="flds.ibanfiel"/>
+	<COL ID="flds.ssnumber" TYPE="A11" TIT="Social Security No" LARG="124" VIS="S" HISTID="flds.ssnumber"/>
+	<COL ID="flds.licplate" TYPE="A8" TIT="Licence plate" LARG="101" VIS="S" HISTID="flds.licplate"/>
+	<COL ID="flds.vatnumbr" TYPE="A9" TIT="VAT Number" LARG="101" VIS="S" HISTID="flds.vatnumbr"/>
+	<COL ID="flds.banknmbr" TYPE="A24" TIT="Banking Account Number" LARG="163" VIS="S" HISTID="flds.banknmbr"/>
+	<COL ID="flds.upprtext" TYPE="A50" TIT="Uppercase" LARG="202" VIS="S" HISTID="flds.upprtext"/>
+	<COL ID="flds.clrpicke" TYPE="A50" TIT="Colorpicker" LARG="202" VIS="S" HISTID="flds.clrpicke"/>
+	<COL ID="flds.shwrc" TYPE="N1" TIT="Show record" LARG="101" VIS="S" HISTID="flds.shwrc"/>
+	<COL ID="flds.radiob" TYPE="A7" TIT="Radio Btn" LARG="85" VIS="S" VAL="Radio[Radio{op2[Opção 2" HISTID="flds.radiob"/>
+	<EVENT ID="SEL" SELOBRIG="U" ACT="OpenPage(QwFQWEBFORM,VIS"/>
+	<EVENT ID="DBL" SELOBRIG="U" ACT="OpenPage(QwFQWEBFORM,VIS"/>
+  </MULTIFORM>
+
+<!-- Espaço para rotinas manuais -->
+
+  <PANEL LOCATION="0,0" SIZE="*,65" STYLE="BARRA">
+    <PATH LOCATION="1,0" SIZE="*-2,17"/>
+<TITLE LOCATION="1,17" SIZE="*-2,30" ALIGN="LEFT"/>
+    <MSG ID="Msgstd" LOCATION="1,45" SIZE="*-2,17" ALIGN="LEFT"/>
+  </PANEL>
+ 
+  <PANEL LOCATION="0,65" SIZE="*,*" STYLE="DEFAULT" SCROLL="S">
+    <PANEL LOCATION="0,5" SIZE="*,*" STYLE="CONTEUDO" SCROLL="N">    
+	    <MULTIGRID ID="dbgrid1" DATACTL="ML11" LOCATION="5,0" SIZE="*-100,*-5" ALLOWORDER="S" AUTOCOLRESIZE="10">
+		  <HEADERPANEL SIZE="0,20" AUTOLAYOUT="QRY" AUTOSCROLL="S"/>
+    	  <HEADERPANEL SIZE="0,20" AUTOLAYOUT="CAB" AUTOSCROLL="S"/>
+    	  <DATAPANEL AUTOLAYOUT="DET" SIZE="0,22"/>
+
+		  <FOOTERPANEL SIZE="*,20" AUTOLAYOUT="N" AUTOSCROLL="N">
+		    <BOTAO LOCATION="0,2" SIZE="16,16" DATACTL="ML11" ACT="Execute(ML11,GET-" STYLE="DPPAG-" TIP="Página anterior"/>
+		    <TEXT LOCATION="16,2" SIZE="25,20" DATACTL="ML11" DATAFLD="$page" PROT="S" READONLY="S" ALIGN="CENTER" STYLE="TRANSP"/>
+		    <LABEL LOCATION="40,2" TXT="/"/>
+		    <TEXT LOCATION="45,2" SIZE="25,20" DATACTL="ML11" DATAFLD="$pages" PROT="S" READONLY="S" ALIGN="CENTER" STYLE="TRANSP"/>
+		    <BOTAO LOCATION="65,2" SIZE="16,16" DATACTL="ML11" ACT="Execute(ML11,GET+" STYLE="DPPAG+" TIP="Página seguinte"/>
+		  </FOOTERPANEL>
+	    </MULTIGRID>
+  
+	<PANEL LOCATION="*-100,0" SIZE="*,*" STYLE="DEFAULT" SCROLL="S">
+	<BOTAO ID="Bprocurar" LOCATION="*-90,0" SIZE="80,21" TXT="Procurar" ICONID="bproc.png" DATACTL="ML11" ACT="Execute(ML11,GET" STYLE="BDBEDIT"/>
+	<BOTAO ID="SEL" LOCATION="*-90,40" SIZE="80,21" TXT="Consultar" ICONID="bselecc.png" DATACTL="ML11" ACT="Execute(ML11,SEL" STYLE="BDBEDIT"/>
+	<BOTAO ID="Bcancel" LOCATION="*-90,65" SIZE="80,21" TXT="Cancelar" ICONID="bcancel.png" DATACTL="ML11" ACT="ClosePage(" STYLE="BDBEDIT"/>
+	</PANEL>
+
+    </PANEL>
+  </PANEL>	
+
+
+
+</PAGE>
+

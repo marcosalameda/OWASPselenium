@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwIdMenu" TIT="Identificação / Menu Geral" STYLE="QwIdMenu">
+
+	<MENUSRC ID="Menu1" AUTOCOLLAPSE="S">
+		<include FILE="QwIncQWBMenu.xml"/>		
+    <include FILE="QwIncAdminMenu.xml"/>
+		<EVENT ID="CLK" SELOBRIG="S" ACT="Execute(Menu1,NAVIGATEX"/>
+	</MENUSRC>
+
+	<PANEL LOCATION="0,0" SIZE="*,*" STYLE="QwIdMenu">
+
+    	<include FILE="MenuVTemplate.xml"/>
+
+	</PANEL>
+</PAGE>

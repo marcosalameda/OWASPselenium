@@ -1,0 +1,137 @@
+﻿<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>Quidgest Qweb Debug</title>
+
+<style>
+.BACKGROUND   { background-color: #FFFCF0; color: #000000; font-family: Microsoft Sans Serif, Verdana, Arial;	font-size: 8pt}
+.TREEAREA     { background-color: #FFFFFF;; font-family: Courier New, Courier, monospace; font-size: 8pt; font-weight: normal; color: #000000}
+.TABAREA      { background-color: #EFECDA; border-style: outset; border-width: 2; display: block; }
+.BOTABACT     { background-color: #EFECDA; background-repeat: no-repeat; background-position: left; border-width: 2;
+                border-style: outset; border-bottom-style: none; 
+		cursor: hand; cursor: pointer; font-family: Microsoft Sans Serif, Verdana, Arial; font-size: 8pt; font-weight: normal; color: #000000}
+.BOTABINACT   { background-color: #E5E2D0; background-repeat: no-repeat; background-position: left; border-width: 2;
+                border-style: outset; border-bottom-style: none; 
+		cursor: hand; cursor: pointer; font-family: Microsoft Sans Serif, Verdana, Arial; font-size: 8pt; font-weight: normal; color: #808080}
+.FORMFLD      { color: #000000; height: 17px; overflow: hidden; text-overflow: ellipsis; 
+		font-family: Microsoft Sans Serif, Verdana, Arial; font-size: 8pt; font-weight: normal; padding: 0px 3px;}
+</style>
+</head>
+
+<body topmargin="0" leftmargin="0" class="BACKGROUND">
+
+<table border="0" cellpadding="0" cellspacing="0" border="0" width="100%">
+  <tr>
+    <td width="100%" bgcolor="#C00000" align="right" height="22">
+    <font face="Verdana" size="1" color="#FFFCF0"><b>Quidgest - Qweb Debug&nbsp;&nbsp;</b></font></td>
+  </tr>
+</table>
+
+<div style="position: absolute; left: 10px; top: 30px; width: 480px; height: 22px">
+	<span  style="position: absolute; left: 10px; top: 3px; width: 40px; height: 20px">Areas:&nbsp;</span>
+	<select id="SelArea" size="1" style="position: absolute; left: 50px; top: 0px; width: 150px; height: 20px" onchange="SelAreaChange()"></select>
+	<input type="button" id="Brefresh" value="Refresh" style="position: absolute; left: 240px; top: 0px; width: 100px; height: 20px" onclick="RefreshArea()"></input>
+	<input type="button" id="Bparm" class="BOTABACT" value="Parametros" style="position: absolute; left: 0px; top: 24px; width: 120px; height: 22px" onclick="TabClick('Bparm')"></input>
+	<input type="button" id="Bhist" class="BOTABINACT" value="Historial" style="position: absolute; left: 120px; top: 24px; width: 120px; height: 22px" onclick="TabClick('Bhist')"></input>
+	<input type="button" id="Bcom" class="BOTABINACT" value="Comunicação" style="position: absolute; left: 240px; top: 24px; width: 120px; height: 22px" onclick="TabClick('Bcom')"></input>
+</div>
+
+<div ID="Tparm" class="TABAREA"
+  style="position: absolute; left: 10px; top: 76px; right: 10px; bottom: 10px; display: block">
+  <div ID="Aparm" class="TREEAREA" style="position: absolute; left: 2px; top: 2px;right: 2px; height: 200px; overflow: auto"></div>
+  <span style="position: absolute; left: 2px; top: 250px; width: 472px; height: 20px; overflow: hidden">Últimos comandos: &nbsp;&nbsp;&nbsp;(use o botão Refresh p/ actualizar)</span>
+  <div ID="Acmd" class="TREEAREA" style="position: absolute; left: 2px; top: 270px; right: 2px; bottom: 2px; padding: 5px; overflow: auto"></div>
+</div>
+
+<div ID="Thist" class="TABAREA"
+  style="position: absolute; left: 10px; top: 76px; right: 10px; bottom: 10px; display: none">
+  <div ID="Ahist" class="TREEAREA" style="position: absolute; left: 2px; top: 2px; right: 2px; bottom: 2px; overflow: auto"></div>
+</div>
+
+<div ID="Tcom" class="TABAREA"
+  style="position: absolute; left: 10px; top: 76px; right: 10px; bottom: 10px; display: none">
+  <div ID="Acom" class="TREEAREA" style="position: absolute; left: 2px; top: 2px; right: 2px; bottom: 2px; overflow: auto"></div>
+</div>
+
+<script language="javascript">
+Aareas = opener.GetLogAreas()
+Aareas = Aareas.split(";")
+var nod=document.getElementById("SelArea")
+for (var i=0; i<Aareas.length; i++) {
+	var wopt=document.createElement("OPTION")
+	nod.options.add(wopt)
+	wopt.innerHTML=Aareas[i]
+	wopt.value=Aareas[i]
+}
+
+SelectedArea = Aareas[0]
+RefreshArea()
+
+function RefreshArea() {
+	var nod=document.getElementById("Aparm")
+	nod.innerHTML=opener.GetLogParm(SelectedArea)
+	var nod=document.getElementById("Ahist")
+	nod.innerHTML=opener.GetLogHist(SelectedArea)
+	var nod=document.getElementById("Acom")
+	nod.innerHTML=opener.GetLogCom(SelectedArea)
+	var nod=document.getElementById("Acmd")
+	nod.innerHTML=opener.GetLogCmd()
+}
+
+function SelAreaChange() {
+	var nod=document.getElementById("SelArea")
+	var ix = nod.selectedIndex
+	SelectedArea = Aareas[ix]
+	RefreshArea()
+}
+
+function TabClick(b) {
+	if (b == "Bparm") {
+		var nod=document.getElementById("Tparm")
+		nod.style.display="block"
+		var nod=document.getElementById("Thist")
+		nod.style.display="none"
+		var nod=document.getElementById("Tcom")
+		nod.style.display="none"
+		var nod=document.getElementById("Bparm")
+		nod.className="BOTABACT"
+		var nod=document.getElementById("Bhist")
+		nod.className="BOTABINACT"
+		var nod=document.getElementById("Bcom")
+		nod.className="BOTABINACT"
+	}
+	if (b == "Bhist") {
+		var nod=document.getElementById("Tparm")
+		nod.style.display="none"
+		var nod=document.getElementById("Thist")
+		nod.style.display="block"
+		var nod=document.getElementById("Tcom")
+		nod.style.display="none"
+		var nod=document.getElementById("Bparm")
+		nod.className="BOTABINACT"
+		var nod=document.getElementById("Bhist")
+		nod.className="BOTABACT"
+		var nod=document.getElementById("Bcom")
+		nod.className="BOTABINACT"
+	}
+	if (b == "Bcom") {
+		var nod=document.getElementById("Tparm")
+		nod.style.display="none"
+		var nod=document.getElementById("Thist")
+		nod.style.display="none"
+		var nod=document.getElementById("Tcom")
+		nod.style.display="block"
+		var nod=document.getElementById("Bparm")
+		nod.className="BOTABINACT"
+		var nod=document.getElementById("Bhist")
+		nod.className="BOTABINACT"
+		var nod=document.getElementById("Bcom")
+		nod.className="BOTABACT"
+	}
+}
+
+</script>
+
+</body>
+</html>

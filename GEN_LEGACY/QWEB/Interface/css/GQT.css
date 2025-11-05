@@ -1,0 +1,285 @@
+/****************************************************************************************************/
+/***                             Estilos custom da aplicacao                                      ***/
+/***                                                                                              ***/
+/****************************************************************************************************/
+
+/****************************************************************************************************/
+/***                             Classes CSS para Qweb3                                           ***/
+/***                                                                                              ***/
+/****************************************************************************************************/
+
+/***************************************** CSS RESET ************************************************/
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt, dd, ol, ul, li, 
+fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary, time, mark, audio, video, input, textarea { margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline;}
+
+/* Retirar aureola de focus que o Chrome faz */
+
+*:focus {outline: none; }
+
+/* Retirar marcas de selecgco no browser do Android */
+
+* { -webkit-tap-highlight-color: rgba(0,0,0,0); } 
+
+/* Retirar cor roxa dos links visitados*/
+a { text-decoration: none; color: #FFFFFF; }
+
+body, input, textarea { font-family: Verdana; font-size: 8pt; font-weight: normal; color: #000000; margin: 0; }
+
+/**************************************************************************/
+/* DIV's e estilos relativos ao index.htm
+/**************************************************************************/
+body { overflow: hidden; background: url("../images/topo_site.jpg") center top repeat-x; }
+#PageLogo { left: 0px; position: absolute; top: 0px; z-index: 0; background: url("../images/TOPO_ESQ.jpg") left top no-repeat; width: 450px; height:110px;}
+#PageFooter { color: #ffffff; background: #363635; left: 0px; position: absolute; bottom: 0px; width: 100%; height: 24px; line-height: 24px; }
+#PageFooter div { padding: 0 12px 0 12px ; }
+#PageFooter div.left { float: left; }
+#PageFooter div.right { float: right; }
+
+/**************************************************************************/
+/* Forms LOGON e LOGOFF
+/**************************************************************************/
+.PageHeaderText { color: #FFFFFF; }
+.PageHeaderText.High { color: #FFFFFF; }
+.PageHeaderText.Sele { color: #FFFFFF; }
+
+/**************************************************************************/
+/* Bases com nomes hardcoded do Qweb
+/**************************************************************************/
+.BaseFrame { background-color: #FFFFFF; border-width: 1px; border-color: #333; border-style: solid; }  /* Nao retirar esta*/
+.BaseText { color: #000000; }   /* Nao retirar esta */
+
+
+/**************************************************************************/
+/* Buttons
+/**************************************************************************/
+.ButtonBack { background-image: url("../images/GradientButtonNorm2.png"); border-radius: 2px; border: 1px solid #58595b; }
+.ButtonBack.High { background-image: url("../images/GradientButtonHigh2.png"); border:1px solid #58595b; }
+.ButtonBack.Sele { background-image: url("../images/GradientButtonSele2.png"); border-color: #58595b; }
+.ButtonBack.Disa { background-image: url("../images/GradientButtonDisa2.png"); border-color: #58595b; }
+
+.ButtonText { color: #FFFFFF; }
+.ButtonText.High { font-weight: normal; }
+.ButtonText.Sele { }
+.ButtonText.Disa { color: #939598; }
+
+
+/**************************************************************************/
+/* Links
+/**************************************************************************/
+.LinkText { color: #007dc5; }
+.LinkText.High { }
+.LinkText.Sele { }
+.LinkText.Disa { color: #939598; }
+.LinkText.Focu { }
+
+
+/**************************************************************************/
+/* Controlos de input
+/**************************************************************************/
+.InputBack { border-radius: 2px; border: 1px solid #6D6D6D; background-color: #FFFFFF; box-shadow: 0px 0px 3px 0px #000000; -moz-box-shadow: 0px 0px 3px 0px #000000; -webkit-box-shadow: 0px 0px 3px 0px #000000; }
+.InputBack.High { }
+.InputBack.Sele { }
+.InputBack.Obri { border-color: #B70000; }
+.InputBack.Erro { border-color: #B70000; background-color: #fff685; }
+.InputBack.Disa { border-color: #B4B4B4; background-color: #FAFAFA; box-shadow: 0px 0px 3px 0px #000000; -moz-box-shadow: 0px 0px 3px 0px #000000; -webkit-box-shadow: 0px 0px 3px 0px #000000; }
+
+.InputText { color: #000000; }
+.InputText.High { }
+.InputText.Sele { color: #FFFFFF; }
+.InputText.Obri { }
+.InputText.Erro { }
+.InputText.Disa { color: #909090; }
+
+.FloatingInputBack { border-width: 0px; border-color: #FFFFFF; border-style: none; background-color: transparent; }
+
+
+/**************************************************************************/
+/* Controlos de filtro
+/**************************************************************************/
+.FilterBack { border-radius: 2px 2px 0px 0px; border: 1px solid #B4B4B4; background-color: #FFFFFF; }
+.FilterBack.High { }
+.FilterBack.Sele {border: 2px solid; }
+.FilterBack.Obri {border-color: #B70000; }
+.FilterBack.Erro {border-color: #B70000; background-color: #fff685; }
+.FilterBack.Disa {border-color: #B4B4B4; background-color: #FAFAFA; }
+
+.FilterText { color: #58595b; }
+.FilterText.High { }
+.FilterText.Sele { }
+.FilterText.Obri { }
+.FilterText.Erro { }
+.FilterText.Disa { color: #A0A0A0; }
+
+
+/**************************************************************************/
+/* ComboBox
+/**************************************************************************/
+.ComboDrop {border-width: 1px; border-color: #000000; border-style: inset; background-color: #FFFFFF; }
+
+.ComboItem { background-color: #FFFFFF; border-width: 0px; border-color: #000000; border-style: none; }
+.ComboItem.High { background-color: #bcbec0; border-color: #a7a9ac; }
+.ComboItem.Sele { background-color: #a7a9ac; }
+
+
+/**************************************************************************/
+/* Listas
+/**************************************************************************/
+.HeaderBack { border: 1px solid #58595b; background-image: url("../images/GradientCinza8.png"); background-size: 100% 100%; background-color: #FFFFFF; }
+.HeaderBack.High { background-image: url("../images/GradientCinza9.png"); }
+
+.HeaderText { font-weight: normal; color: #FFFFFF; }
+.HeaderText.High { color: #FFFFFF; }
+
+.ListItemBack { border-width: 0px; border-color: #000000; border-style: none; background-color: #FFFFFF; }
+.ListItemBack.Odd { background-color: #E6E6E6; }
+.ListItemBack.High { background-color: #dcddde; }
+.ListItemBack.Sele { background-color: #d1d3d4; }
+
+.ListItemText { color: #000000; } 
+.ListItemText.Odd { }
+.ListItemText.High { }
+.ListItemText.Sele { }
+
+
+/**************************************************************************/
+/* Menu horizontal
+/**************************************************************************/
+.MenuItemBack { border-radius: 2px; border-width: 1px; border-color: #000000; border-style: none; background-color: #e6e7e8; }
+.MenuItemBack.Odd { }
+.MenuItemBack.High { background-color: #d1d3d4; }
+.MenuItemBack.Sele { background-color: #d1d3d4; }
+.MenuItemBack.Disa { color: #AAA }
+
+.MenuItemBack.Menu0 { font-weight: bold; font-size:14px; }
+
+.MenuItemText { color: #ffffff; text-align: left; }
+.MenuItemText.High { }
+.MenuItemText.Sele { }
+
+.MenuPanelBack { border-radius: 2px; border-width: 1px; border-color: #000000; border-style: none; background-color: #e6e7e8; }
+
+
+/**************************************************************************/
+/* Context Menu
+/**************************************************************************/
+.ContextPanel { border-radius: 2px; border: 1px solid #58595b; box-shadow: 0px 0px 3px 0px #000000; background-color: #FFFFFF; -moz-box-shadow: 0px 0px 3px 0px #000000; -webkit-box-shadow: 0px 0px 3px 0px #000000; } 
+
+.ContextItemBack { border-width: 0px; border-color: #000000; border-style: none; background-color: #ffffff; }
+.ContextItemBack.High { background-color: #d1d3d4; }
+.ContextItemBack.Sele { background-color: #d1d3d4; }
+.ContextItemBack.Disa { background-color: #f7f7f7; }
+.ContextItemBack.Focu { background-color: #e6e7e8; }
+
+.ContextItemText { color: #000000; } 
+.ContextItemText.High { }
+.ContextItemText.Sele { color: #FFFFFF; }
+.ContextItemText.Disa { color: #C0C0C0; }
+.ContextItemText.Focu { }
+
+
+
+/**************************************************************************/
+/* Tab
+/**************************************************************************/
+.TabItemBack { border-radius: 2px 2px 0px 0px; border: 1px solid #58595b; background-color: #E6E6E6; }
+.TabItemBack.High { background-color: #F2F2F2; }
+.TabItemBack.Sele { border-style: solid solid none solid; background-color: #FFFFFF; }
+.TabItemBack.Disa { }
+
+.TabItemText { color: #000000; }
+.TabItemText.High { font-weight: bold; }
+.TabItemText.Sele { font-weight: bold; }
+.TabItemText.Disa { color: #C0C0C0; }
+
+.TabPanel {border-radius: 2px; border: 1px solid #58595b; background-color: #FFFFFF}
+.TabPanel.Disa { }
+
+
+/**************************************************************************/
+/* Acordeon
+/**************************************************************************/
+.AcordeonBack {border-radius: 8px; border: 1px solid #6D6D6D; background-color: #FFFFFF; }
+.AcordeonBack.High { background-color: #D2E2F2; }
+.AcordeonBack.Sele { background-color: #0093DD; }
+.AcordeonBack.Disa { border: 1px solid #B4B4B4; }
+
+.AcordeonText { color: #000000; }
+.AcordeonText.High { }
+.AcordeonText.Sele { font-weight: bold; color: #FFF}
+.AcordeonText.Disa { color: #C0C0C0; }
+
+
+/**************************************************************************/
+/* Calendario
+/**************************************************************************/
+.CalendDrop { border-radius: 4px; border: 1px solid #6D6D6D; box-shadow: 1px 1px 6px 0px #777777; background-color: #FFFFFF; -moz-box-shadow: 1px 1px 6px 0px #777777; -webkit-box-shadow: 1px 1px 6px 0px #777777; }
+
+
+/**************************************************************************/
+/* Paineis
+/**************************************************************************/
+.PanelHidden { border-width: 0px; border-color: #FFFFFF; border-style: none; background-color: transparent; }
+.PanelFlat { border-width: 0px; border-color: #FFFFFF; border-style: none; background-color: #FFFFFF; }
+.PanelPostit { border-radius: 4px; border: 1px solid #6D6D6D; background-color: #FFFFC4; box-shadow: 1px 1px 6px 0px #777777; -moz-box-shadow: 1px 1px 6px 0px #777777; -webkit-box-shadow: 1px 1px 6px 0px #777777; }
+.PanelFooter { background-image: url("../images/GradientCinza10.png"); }
+
+.Dialog { border-width: 2px; border-color: #D0D0D0; border-style: solid; background-color: #F9F9FB; background-image: url("../images/GradientCinza4.png"); background-repeat: repeat-x; }
+.Dialog.Disa { background-color: #999999; }
+
+.DialogMover { border-width: 0px; border-color: #000000; border-style: none; background-color: rgba(0, 0, 0, 0); }
+.DialogMover.Disa { background-color: rgba(0, 0, 0, 0.05); }
+.DialogMover.High { background-color: rgba(0, 0, 0, 0.10); }
+.DialogMover.Sele { background-color: rgba(0, 0, 0, 0.20); }
+
+.GroupBoxBack { border-radius: 5px; border: 1px solid #A0A0A0; background-color: #FFFFFF; box-shadow: 1px 1px 9px 0px #AAAAAA; -moz-box-shadow: 1px 1px 9px 0px #AAAAAA; -webkit-box-shadow: 1px 1px 9px 0px #AAAAAA; }
+.GroupBoxText { font-family: Tahoma, Geneva, sans-serif; font-size: 8pt; font-weight: normal; color: #C0C0C0; }
+
+
+/**************************************************************************/
+/* Tipos de texto
+/**************************************************************************/
+.LabelText { color: #58595b; }
+.LabelText.High { color: #808285; }
+.LabelText.Sele { color: #808285; }
+.MsgText { font-weight: bold; color: #A00000; }
+.TitleText { font-family: Tahoma; font-size: 11pt; }
+.ParagraphText { color: #231f20; }
+.TokenText { color: #231f20; }
+
+
+/**************************************************************************/
+/* Paths
+/**************************************************************************/
+.PathBack { border-radius: 8px; border-width: 0px; border-color: #FFFFFF; border-style: none; background-color: transparent; background-image: url("../images/GradientCinza6.png"); background-repeat: repeat-x; }
+.PathBack.High { }
+
+.PathText { }
+.PathText.High { }
+
+.PathElemBack { border-width: 0px; border-color: #FFFFFF; border-style: none; background-color: transparent; margin: 2px 8px; vertical-align: middle; }
+.PathElemBack.High { }
+
+.PathElemText { color: #004A8F; }
+.PathElemText.High { color: #2094EE; text-decoration:underline; }
+
+
+/**************************************************************************/
+/* Focus addorner
+/**************************************************************************/
+.Focus { background-color: #666666; border-width: 0px; border-color: #000000; border-style: none; border-radius: 2px 2px 2px 2px; -moz-box-shadow: 0px 0px 5px #000000; -webkit-box-shadow: 0px 0px 10px #000000; box-shadow: 0px 0px 5px #000000; }
+
+/**************************************************************************/
+/* Internal Scrollbars for mobile devices
+/**************************************************************************/
+.IscrollBack { background-color: #D2E2F2; }
+.IscrollCursor { background-color: #0093DD; }
+
+/**************************************************************************/
+/* Timeline
+/**************************************************************************/
+ .TimelineText { font-weight:normal; color:#000000; font-size:9pt;}
+ .GroupBoxTimeline {border: 1px solid rgb(160, 160, 160); background-color: #FFFFFF; }

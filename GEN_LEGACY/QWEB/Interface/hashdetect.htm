@@ -1,0 +1,19 @@
+﻿<html>
+<head>
+
+<script language="JavaScript">
+function pageLoaded() {
+	window.parent.HashIframeLoaded(window.location);
+	document.getElementById("output").innerHTML = window.location;
+}
+</script>
+
+</head>
+
+<body onload="pageLoaded();">
+
+	<p>Esta pagina é necessaria para detectar alterações no hash no Internet Explorer</p>
+	<p id="output"></p>
+
+</body>
+</html>

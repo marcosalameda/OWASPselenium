@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFQWEBFORM" TIT="Qweb Form Example" STYLE="QwFQWEBFORM" SCROLL="S">
+
+
+  <FORM ID="FQWEBFORM" PROVIDER="flds" MSGCTL="Msgstd">
+
+	<COL ID="flds.codflds" TYPE="A" OBRIG="S" KEY="S" HISTGETID="flds" HISTID="flds" TIT="chave primária"/>
+	<COL ID="flds.shwrc" TYPE="N1" TIT="Show record"/>
+	<COL ID="flds.txtfield" TYPE="A50" TIT="Text Field"/>
+	<COL ID="flds.descrip" TYPE="A" TIT="Multine Text"/>
+	<COL ID="flds.primviag" TYPE="N1" TIT="Logical"/>
+	<COL ID="flds.logicenu" TYPE="L" TIT="Yes or no"/>
+	<COL ID="flds.classnum" TYPE="N" TIT="Numeric Enumeration"/>
+	<COL ID="flds.radiob" TYPE="A7" TIT="Radio Btn"/>
+	<COL ID="flds.year" TYPE="N4" TIT="Year"/>
+	<COL ID="flds.time" TYPE="T5" TIT="Time"/>
+	<COL ID="flds.date" TYPE="D10" TIT="Date"/>
+	<COL ID="flds.datetime" TYPE="H" TIT="Date time"/>
+	<COL ID="flds.dateseco" TYPE="S" TIT="Date second"/>
+	<COL ID="flds.duration" TYPE="N5.2" TIT="Numeric decimal"/>
+	<COL ID="flds.npassage" TYPE="N3" TIT="Numeric"/>
+	<COL ID="flds.precobil" TYPE="$6" TIT="Currency Decimal"/>
+	<COL ID="flds.price" TYPE="$6" TIT="Currency"/>
+	<COL ID="flds.ssnumber" TYPE="A11" TIT="Social Security No"/>
+	<COL ID="flds.zipfield" TYPE="A8" TIT="Zipcode"/>
+	<COL ID="flds.vatnumbr" TYPE="A9" TIT="VAT Number"/>
+	<COL ID="flds.licplate" TYPE="A8" TIT="Licence plate"/>
+	<COL ID="flds.banknmbr" TYPE="A24" TIT="Banking Account Number"/>
+	<COL ID="flds.emailfld" TYPE="A50" TIT="Email"/>
+	<COL ID="flds.ibanfiel" TYPE="A34" TIT="IBAN"/>
+	<COL ID="flds.upprtext" TYPE="A50" TIT="Uppercase"/>
+	<COL ID="flds.attachfk" TYPE="A" HISTID="attachfk"/>
+	<COL ID="flds.attach" TYPE="A" TIT="Document"/>
+	<COL ID="flds.creatdat" TYPE="D8" TIT="Day"/>
+	<COL ID="flds.creatuse" TYPE="A20" TIT="Created by"/>
+	<COL ID="flds.conditio" TYPE="N" TIT="Conditional"/>
+	<COL ID="flds.class" TYPE="A16" TIT="Text Enumeration"/>
+	<COL ID="flds.codaero" TYPE="A8" HISTGETID="aero" TIT="Nome da companhia aérea"/>
+	<COL ID="flds.tblcond" TYPE="N1"/>
+
+
+<EVENT ID="AFTERREAD" ACT="SetHistorial(key,[GetHist(flds,EQ],EQ{SetHistorial(keyOpen,[GetHist(attachfk,EQ],EQ"/>
+	<EVENT ID="AFTERINSERT" ACT="SetHistorial(key,[GetHist(flds,EQ],EQ{SetHistorial(keyOpen,[GetHist(attachfk,EQ],EQ"/>
+	<EVENT ID="BEFOREUPDATE" ACT="ExecRotina(RP_QWEBFORMFLDS_ZIPFIELD"/>
+  </FORM>
+
+<LEDIT ID="LED_QWEBFORMAERO_" PROVIDER="aero" DATAFLD="flds.codaero" DATACTL="FQWEBFORM">
+	<COL ID="aero.codaero" TYPE="A" TIT="" KEY="S" VIS="N" LARG="0" HISTID="aero"/>
+	<COL ID="aero.name" TYPE="A50" TIT="Airline name"/>
+	<EVENT ID="LIST" ACT="OpenDialog(QwBL_QWEBFORMAERO_"/>
+</LEDIT>
+
+	<ROTINA ID="RP_QWEBFORMFLDS_ZIPFIELD" FUNCTIONID="filtraCodigoPostal">
+		<ARG ID="codigoPostal" DATACTL="FQWEBFORM" DATAFLD="flds.zipfield" TRIGGER="MOD"/>
+		<RESULT DATACTL="FQWEBFORM" DATAFLD="flds.zipfield"/>
+	</ROTINA>
+  <PANEL LOCATION="0,0" SIZE="*,*" SIZEDIALOG="797,671" STYLE="BARRA" SCROLL="N">
+    <PATH LOCATION="1,0" SIZE="*-2,17"/>
+ <TITLE LOCATION="1,17" SIZE="*-2,30" ALIGN="LEFT"/>
+     <MSG ID="Msgstd" LOCATION="1,45" SIZE="*-2,17" ALIGN="LEFT"/>
+ 
+    <PANEL LOCATION="0,65" SIZE="*,*" STYLE="DEFAULT" SCROLL="S" SCROLLDIALOG="S">
+      <PANEL LOCATION="0,5" SIZE="767,571"  STYLE="CONTEUDO" SCROLL="N">
+
+	<GRPBOX LOCATION="10,43" SIZE="187,108" TXT="Text inputs"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_TXTFIELD" LOCATION="20,73" SIZE="167,20" DATACTL="FQWEBFORM" DATAFLD="flds.txtfield" TIP="Help in the text field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_TXTFIELD" LOCATION="20,58" SIZE="167,13" ALIGN="left" TXT="Text Field"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_DESCRIP_" LOCATION="20,113" SIZE="167,23" DATACTL="FQWEBFORM" DATAFLD="flds.descrip" MULTILINE="S" TIP="Help in the Multiline field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_DESCRIP_" LOCATION="20,98" SIZE="167,13" ALIGN="left" TXT="Multine Text"/>
+
+	<GRPBOX LOCATION="207,15" SIZE="500,136"/>
+
+	<CHECK ID="IFF_QWEBFORMFLDS_PRIMVIAG" LOCATION="217,46" DATACTL="FQWEBFORM" DATAFLD="flds.primviag" TIP="Help in a logic field (checkbox)"/>
+	<LABEL ID ="LBL_QWEBFORMFLDS_PRIMVIAG" LOCATION="235,46" SIZE="42,17" ALIGN="left" TXT="Logical"/>
+
+	<COMBO ID="IFF_QWEBFORMFLDS_LOGICENU" LOCATION="287,45" SIZE="52,18" DATACTL="FQWEBFORM" DATAFLD="flds.logicenu" VAL="1[Yes{0[No" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_LOGICENU" LOCATION="287,30" SIZE="52,13" ALIGN="left" TXT="Yes or no"/>
+
+	<COMBO ID="IFF_QWEBFORMFLDS_CLASSNUM" LOCATION="349,45" SIZE="108,18" DATACTL="FQWEBFORM" DATAFLD="flds.classnum" VAL="1[1º Classe{2[2ª Classe{3[Económica" TIP="Help in numeric enumeration field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_CLASSNUM" LOCATION="349,30" SIZE="108,13" ALIGN="left" TXT="Numeric Enumeration"/>
+
+	<RADIO ID="IFF_QWEBFORMFLDS_RADIOB__" DATACTL="FQWEBFORM" DATAFLD="flds.radiob">
+		<RADBOT LOCATION="467,46" VAL="Radio"/>
+		<RADBOT LOCATION="520,46" VAL="op2"/>
+	</RADIO>
+	<LABEL LOCATION="487,46" SIZE="33,17" TXT="Radio" ALIGN="left"/>
+	<LABEL LOCATION="540,46" SIZE="46,17" TXT="Opção 2" ALIGN="left"/>
+
+	<LABEL ID="IFF_QWEBFORMPSEUDFIELD002" LOCATION="217,68" SIZE="480,20" ALIGN="left" TXT="Static Text " STYLE="TFIXO"/>
+
+	<GRPBOX LOCATION="10,236" SIZE="132,185" TXT="Date/Time Inputs"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_YEAR____" LOCATION="20,266" SIZE="41,20" DATACTL="FQWEBFORM" DATAFLD="flds.year" TIP="Help in the year field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_YEAR____" LOCATION="20,251" SIZE="41,13" ALIGN="left" TXT="Year"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_TIME____" LOCATION="71,266" SIZE="44,20" DATACTL="FQWEBFORM" DATAFLD="flds.time" TIP="Help in the time field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_TIME____" LOCATION="71,251" SIZE="44,13" ALIGN="left" TXT="Time"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_DATE____" LOCATION="20,306" SIZE="75,20" DATACTL="FQWEBFORM" DATAFLD="flds.date" TIP="Help in the date field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_DATE____" LOCATION="20,291" SIZE="75,13" ALIGN="left" TXT="Date"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_DATETIME" LOCATION="20,346" SIZE="105,20" DATACTL="FQWEBFORM" DATAFLD="flds.datetime" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_DATETIME" LOCATION="20,331" SIZE="105,13" ALIGN="left" TXT="Date time"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_DATESECO" LOCATION="20,386" SIZE="112,20" DATACTL="FQWEBFORM" DATAFLD="flds.dateseco" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_DATESECO" LOCATION="20,371" SIZE="112,13" ALIGN="left" TXT="Date second"/>
+
+	<GRPBOX LOCATION="152,236" SIZE="110,185" TXT="Numeric Inputs"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_DURATION" LOCATION="162,266" SIZE="85,20" DATACTL="FQWEBFORM" DATAFLD="flds.duration" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_DURATION" LOCATION="162,251" SIZE="85,13" ALIGN="left" TXT="Numeric decimal"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_NPASSAGE" LOCATION="162,306" SIZE="46,20" DATACTL="FQWEBFORM" DATAFLD="flds.npassage" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_NPASSAGE" LOCATION="162,291" SIZE="46,13" ALIGN="left" TXT="Numeric"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_PRECOBIL" LOCATION="162,346" SIZE="90,20" DATACTL="FQWEBFORM" DATAFLD="flds.precobil" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_PRECOBIL" LOCATION="162,331" SIZE="90,13" ALIGN="left" TXT="Currency Decimal"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_PRICE___" LOCATION="162,386" SIZE="56,20" DATACTL="FQWEBFORM" DATAFLD="flds.price" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_PRICE___" LOCATION="162,371" SIZE="56,13" ALIGN="left" TXT="Currency"/>
+
+	<GRPBOX LOCATION="272,156" SIZE="247,265" TXT="Inputs with Masks"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_SSNUMBER" LOCATION="282,186" SIZE="94,20" DATACTL="FQWEBFORM" DATAFLD="flds.ssnumber" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_SSNUMBER" LOCATION="282,171" SIZE="94,13" ALIGN="left" TXT="Social Security No"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_ZIPFIELD" LOCATION="386,186" SIZE="62,20" DATACTL="FQWEBFORM" DATAFLD="flds.zipfield" MASK="0000-000" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_ZIPFIELD" LOCATION="386,171" SIZE="62,13" ALIGN="left" TXT="Zipcode"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_VATNUMBR" LOCATION="282,226" SIZE="71,20" DATACTL="FQWEBFORM" DATAFLD="flds.vatnumbr" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_VATNUMBR" LOCATION="282,211" SIZE="71,13" ALIGN="left" TXT="VAT Number"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_LICPLATE" LOCATION="363,226" SIZE="71,20" DATACTL="FQWEBFORM" DATAFLD="flds.licplate" MASK="&&-&&-&&" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_LICPLATE" LOCATION="363,211" SIZE="71,13" ALIGN="left" TXT="Licence plate"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_BANKNMBR" LOCATION="282,266" SIZE="161,20" DATACTL="FQWEBFORM" DATAFLD="flds.banknmbr" MASK="0000-0000-00000000000-00" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_BANKNMBR" LOCATION="282,251" SIZE="161,13" ALIGN="left" TXT="Banking Account Number"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_EMAILFLD" LOCATION="282,306" SIZE="167,20" DATACTL="FQWEBFORM" DATAFLD="flds.emailfld" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_EMAILFLD" LOCATION="282,291" SIZE="167,13" ALIGN="left" TXT="Email"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_IBANFIEL" LOCATION="282,346" SIZE="167,20" DATACTL="FQWEBFORM" DATAFLD="flds.ibanfiel" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_IBANFIEL" LOCATION="282,331" SIZE="167,13" ALIGN="left" TXT="IBAN"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_UPPRTEXT" LOCATION="282,386" SIZE="227,20" DATACTL="FQWEBFORM" DATAFLD="flds.upprtext" UCASE="S" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_UPPRTEXT" LOCATION="282,371" SIZE="227,13" ALIGN="left" TXT="Uppercase"/>
+
+	<GRPBOX LOCATION="10,426" SIZE="500,65" TXT="Documents"/>
+
+	<FCONTROL ID="IFF_QWEBFORMFLDS_ATTACH__" LOCATION="20,456" SIZE="307,20" DATACTL="FQWEBFORM" DATAFLD="flds.codflds" SOURCE="flds.attachfk,flds.attach">
+		<FDIGITALIZAR ACT="" VIS="N"/>
+		<FIMAGES ACT="" VIS="N"/>
+		<FTEMPLATE ACT="OpenDialog(QwBL_QWEBFORMATTACH" VIS="S"/>
+	</FCONTROL>
+	<LABEL ID="LBL_QWEBFORMFLDS_ATTACH__" LOCATION="20,441" SIZE="56,13" ALIGN="left" TXT="Document"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_CREATDAT" LOCATION="10,511" SIZE="75,20" DATACTL="FQWEBFORM" READONLY="S" PROT="S" DATAFLD="flds.creatdat" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_CREATDAT" LOCATION="10,496" SIZE="75,13" ALIGN="left" TXT="Day"/>
+
+	<TEXT ID="IFF_QWEBFORMFLDS_CREATUSE" LOCATION="95,511" SIZE="117,20" DATACTL="FQWEBFORM" READONLY="S" PROT="S" DATAFLD="flds.creatuse" TIP="Help in the field"/>
+	<LABEL ID="LBL_QWEBFORMFLDS_CREATUSE" LOCATION="95,496" SIZE="117,13" ALIGN="left" TXT="Created by"/>
+
+
+	<BOTAO ID="Bcancel" ICONID="bcancel.png" LOCATION="677,536" SIZE="80,21" TXT="Sair" DATACTL="FQWEBFORM" ACT="Execute(FQWEBFORM,Cancel" STYLE="BCANCELAR"/>
+	<BOTAO ID="Bok" ICONID="bselecc.png" LOCATION="587,536" SIZE="80,21" TXT="Gravar" DATACTL="FQWEBFORM" ACT="Execute(FQWEBFORM" STYLE="BGRAVAR"/>
+
+      </PANEL>
+    </PANEL>
+  </PANEL>
+
+</PAGE>
+

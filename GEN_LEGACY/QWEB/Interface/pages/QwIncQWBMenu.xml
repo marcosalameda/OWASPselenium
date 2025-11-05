@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<includeentry>
+<LIN ID="QWB" NIV="0" MOD="QWB" NIVSEG="1-99" LABEL="QWeb"/>
+		<LIN ID="QWB_1" NIV="1" MOD="QWB" NIVSEG="1-99" LABEL="Fields" ACT="OpenFirstPage(QwLQWB11,ALT,,,Apage,QWB" />
+
+</includeentry>

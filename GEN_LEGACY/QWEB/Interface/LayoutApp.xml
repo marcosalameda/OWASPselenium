@@ -1,0 +1,32 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<includeentry>
+
+  <AREA ID="Amenu" TARGET="Apage" LOCATION="0,110" SIZE="250,*-25" STYLE="DEFAULT" START="OpenPage(QwIdMenu,,,,Amenu"/>
+  <AREA ID="Apage" TARGET="Apage" LOCATION="250,110" SIZE="*,*-25" STYLE="DEFAULT" START=""/>
+  <AREA ID="Alogon" TARGET="Alogon" LOCATION="*-360,30" SIZE="340,70" STYLE="LOGON" START=";
+        if(typeof logonCtx != 'undefined')
+        {
+          api.DoLogon(logonCtx.nivel, logonCtx.permtab, logonCtx.ano, logonCtx.nome, logonCtx.nome);
+          api.OpenPage('', 'QwFLogoff', '', '', '', 'Alogon');
+        }
+        else
+        {
+          if(api.GetUserId() == '')
+            api.OpenPage('', 'QwFLogon', '', '', '', 'Alogon');
+          else
+          {
+            api.OpenPage('', 'QwFLogoff', '', '', '', 'Alogon');
+          }
+        }"/>
+
+  <EVENT ID="ONLOGON" ACT=""/>
+  <EVENT ID="ONLOGOFF" ACT=";
+         api.CloseAllPages('Apage');
+         api.OpenFirstPage('','QwFLogon','','','','Alogon');"/>
+  <EVENT ID="ONSESSIONTIMEOUT" ACT=";api.OpenFirstPage('','QwFLogon','','','','Alogon');"/>
+  <EVENT ID="ONYEARDBCHANGE" ACT=";               
+               api.CloseAllPages('Apage');               
+               User.ResetCtls();
+               "/>
+			
+</includeentry>

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwTapi" TIT="Central Telefónica" STYLE="TRANSP" UPDSTATUS="N">
+
+  <!-- Carregar apenas no inicio as opções da combo -->
+  <EVENT ID="AFTERACTIVATE" ACT="ExecRotina(TAPILIST"/>
+
+  <!-- o form tem FUNC EXR aprenas de read para poder ser reexecutado ciclicamente -->
+  <FORM ID="FrmTapi" PROVIDER="TAPI" FUNC="EXR">
+    <COL ID="line" TYPE="A" TIT="Linha" OBRIG="N"/>
+    <COL ID="linestate" TYPE="A" TIT="Estado Linha" OBRIG="N"/>
+    <COL ID="callerid" TYPE="A" TIT="Chamada" OBRIG="N"/>
+    <COL ID="callstate" TYPE="A" TIT="Estado Chamada" OBRIG="N"/>
+
+    <!-- Reexecutar o form cada 2 segundos -->
+    <EVENT ID="AFTERREAD" ACT=";
+api.ExecRotina('Atapi', 'TAPISTATE');
+api.ExecRotina('Atapi', 'CALLSTATE');
+if(api.GetVal('Atapi', 'FrmTapi', 'linestate') == 'on') {
+  api.ExecDelayed('Atapi', 'Execute(FrmTapi');
+}
+     "/>
+  </FORM>
+
+  <!-- Detectar alterações no capo   linestate  e agir em conformidade -->
+  <ROTINA ID="TAPISTATE" FUNCTIONID="*">
+    <ARG ID="A1" DATACTL="FrmTapi" DATAFLD="linestate" TRIGGER="ALLWAYS"/>
+    <EVENT ID="AFTEREXECUTE" ACT=";
+if (api.GetVal('Atapi', 'FrmTapi', 'linestate') == 'on') {
+ 	api.Hide('Atapi', 'Boff');
+	api.Show('Atapi', 'Bon');
+	api.Disable('Atapi', 'line', 'tapi');
+} else {
+	api.Hide('Atapi', 'Bon');
+	api.Show('Atapi', 'Boff');
+	api.Enable('Atapi', 'line', 'tapi');
+}
+    "/>
+  </ROTINA>
+
+  <ROTINA ID="CALLSTATE" FUNCTIONID="*">
+    <ARG ID="A1" DATACTL="FrmTapi" DATAFLD="callstate" TRIGGER="ALLWAYS"/>
+    <EVENT ID="AFTEREXECUTE" ACT=";
+var cs = api.GetVal('Atapi', 'FrmTapi', 'callstate');
+if (cs == 'D' || cs == '') {
+	api.Disable('Atapi', 'Binfo', 'tapi');
+} else {
+	api.Enable('Atapi', 'Binfo', 'tapi');
+}
+    "/>
+  </ROTINA>
+
+  <ROTINA ID="TAPILIST" PROVIDER="TAPILIST">
+    <EVENT ID="AFTEREXECUTE" ACT="SetList(line,#1#{SetVal(line,#2#"/>"/>
+  </ROTINA>
+
+  <ROTINA ID="TAPICHANGE" PROVIDER="TAPICHANGE">
+    <ARG ID="A1" DATACTL="FrmTapi" DATAFLD="line" TRIGGER="MOD"/>
+    <EVENT ID="AFTEREXECUTE" ACT="SetVal(FrmTapi,linestate,off"/>
+  </ROTINA>
+
+  <ROTINA ID="TAPION" PROVIDER="TAPION">
+    <EVENT ID="AFTEREXECUTE" ACT="SetVal(FrmTapi,linestate,on{ExecDelayed(Execute(FrmTapi"/>
+  </ROTINA>
+
+  <ROTINA ID="TAPIOFF" PROVIDER="TAPIOFF">
+    <EVENT ID="AFTEREXECUTE" ACT="SetVal(FrmTapi,linestate,off"/>
+  </ROTINA>
+
+  <ROTINA ID="TAPIINFO" PROVIDER="TAPIINFO">
+    <ARG ID="A1" DATACTL="FrmTapi" DATAFLD="callerid"/>
+    <EVENT ID="AFTEREXECUTE" ACT=";OpenTapiForm('#1#','#2#');"/>
+  </ROTINA>
+
+  <PANEL LOCATION="0,0" SIZE="*,*" STYLE="DEFAULT">
+    <LABEL LOCATION="5,3" SIZE="100,20" ALIGN="right" STYLE="LIGHT" TXT="Linha:"/>
+    <COMBO ID="line" LOCATION="110,1" SIZE="150,20" DATACTL="FrmTapi" DATAFLD="line" STYLE="TRANSP"/>
+    <!-- Em vez de um botao passou a haver dois (um para cada estado) porque facilita os estilos -->
+    <BOTAO ID="Bon" LOCATION="270,00" SIZE="20,20" TXT="" TIP="Conexão" ACT="ExecRotina(TAPIOFF" VIS="N" STYLE="BTAPION"/>
+    <BOTAO ID="Boff" LOCATION="270,00" SIZE="20,20" TXT="" TIP="Conexão" ACT="ExecRotina(TAPION" VIS="N" STYLE="BTAPIOFF"/>
+
+    <LABEL LOCATION="295,3" SIZE="80,20" ALIGN="right" STYLE="LIGHT" TXT="Chamada:"/>
+    <TEXT ID="callerid" LOCATION="380,2" SIZE="100,20" DATAFLD="callerid" DATACTL="FrmTapi" READONLY="S" PROT="S" STYLE="TRANSP"/>
+    <BOTAO ID="Binfo" LOCATION="490,00" SIZE="20,20" TXT="" TIP="Informação" STYLE="BINFO" ACT="ExecRotina(TAPIINFO"/>
+    <!-- button to see caller info -->
+  </PANEL>
+
+</PAGE>

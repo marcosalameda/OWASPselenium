@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwVERSIONS" TIT="Versões do Documento" STYLE="QwVERSIONS" SCROLL="S">
+
+  <MULTIFORM ID="VERSIONS" PROVIDER="docums" MSGCTL="Msgstd" DEFCOLORD="docums.datacria DESC">
+    <COL ID="docums.coddocums" TYPE="A" TIT="" LARG="0" VIS="N" KEY="S" HISTID="docums"/>
+    <COL ID="docums.documid" TYPE="A80" LARG="230" VIS="N" HISTGETID="keyOpen"/>
+    <COL ID="docums.versao" TYPE="A50" TIT="Versão" LARG="80" VIS="S" />
+    <COL ID="docums.nome" TYPE="A50" TIT="Documento" LARG="200" VIS="S" />
+    <COL ID="docums.tamanho" TYPE="A50" TIT="Bytes" LARG="100" VIS="S" />
+    <COL ID="docums.opercria" TYPE="A50" TIT="Autor" LARG="100" VIS="S" />
+    <COL ID="docums.datacria" TYPE="A50" TIT="Data" LARG="80" VIS="S" />
+
+    <EVENT ID="DBL" SELOBRIG="S" ACT="ExecRotina(versaoClicked"/>
+    
+  </MULTIFORM>
+  
+  <ROTINA ID="versaoClicked" FUNCTIONID="versaoClicked">
+  </ROTINA>
+
+  <PANEL LOCATION="0,0" SIZE="800,384" STYLE="BARRA">
+    <PATH LOCATION="1,0" SIZE="*-2,17"/>
+    <TITLE LOCATION="1,25" SIZE="*-2,17" ALIGN="LEFT"/>
+    <MSG ID="Msgstd" LOCATION="1,45" SIZE="*-2,17" ALIGN="LEFT"/>
+  </PANEL>
+
+  <PANEL LOCATION="0,80" SIZE="800,384" STYLE="DEFAULT" SCROLL="N">
+    <PANEL LOCATION="0,5" SIZE="800,384" STYLE="CONTEUDO" SCROLL="N">
+      <MULTIGRID ID="dbgrid1" DATACTL="VERSIONS" LOCATION="5,0" SIZE="575,254" SHOWCAB="S" SHOWQRY="S" ALLOWORDER="S" ALLOWCOLSEL="N">
+	<HEADERPANEL SIZE="0,20" AUTOSCROLL="S" AUTOLAYOUT="QRY"/>
+	<HEADERPANEL SIZE="0,20" AUTOSCROLL="S" AUTOLAYOUT="CAB"/>
+	<DATAPANEL SIZE="0,22" AUTOLAYOUT="DET"/>
+      </MULTIGRID>
+
+      <BOTAO ICONID="bproc.png" ID="Bprocurar" LOCATION="610,0" SIZE="80,21" TXT="Procurar" DATACTL="VERSIONS" ACT="Execute(VERSIONS,GET" STYLE="BDBEDIT"/>
+      <BOTAO ID="Bmenos" LOCATION="610,25" SIZE="32,21" TXT="-" DATACTL="VERSIONS" ACT="Execute(VERSIONS,GET-" STYLE="BGET-" TIP="página anterior"/>
+      <BOTAO ID="Bmais" LOCATION="658,25" SIZE="32,21" TXT="+" DATACTL="VERSIONS" ACT="Execute(VERSIONS,GET+" STYLE="BGET+" TIP="página seguinte"/>
+      <BOTAO ICONID="bcancel.png" ID="Bcancel" LOCATION="610,85" SIZE="80,21" TXT="Cancelar" DATACTL="VERSIONS" ACT="ClosePage(UpdateCtls" STYLE="BDBEDIT"/>
+
+    </PANEL>
+  </PANEL>
+
+
+</PAGE>
+

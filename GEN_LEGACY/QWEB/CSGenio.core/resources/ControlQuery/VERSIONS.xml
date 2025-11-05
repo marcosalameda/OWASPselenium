@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ControlQueryDefinitionSurrogate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Distinct>false</Distinct>
+  <SelectFields>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>docums</TableAlias><ColumnName>coddocums</ColumnName></Column>
+      <Alias>docums.coddocums</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>docums</TableAlias><ColumnName>documid</ColumnName></Column>
+      <Alias>docums.documid</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>docums</TableAlias><ColumnName>versao</ColumnName></Column>
+      <Alias>docums.versao</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>docums</TableAlias><ColumnName>nome</ColumnName></Column>
+      <Alias>docums.nome</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>docums</TableAlias><ColumnName>tamanho</ColumnName></Column>
+      <Alias>docums.tamanho</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>docums</TableAlias><ColumnName>opercria</ColumnName></Column>
+      <Alias>docums.opercria</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>docums</TableAlias><ColumnName>datacria</ColumnName></Column>
+      <Alias>docums.datacria</Alias>
+    </SelectFieldSurrogate>
+  </SelectFields>
+  <FromTable>
+	  <TableName>docums</TableName>
+    <TableAlias>docums</TableAlias>
+  </FromTable>
+  <Joins>
+  </Joins>
+  <WhereConditions>
+    <Operation>And</Operation>
+    <Criterias>
+        <CriteriaSurrogate>
+            <Operation>Equal</Operation>
+            <LeftColumn>
+                <TableAlias>docums</TableAlias>
+                <ColumnName>zzState</ColumnName>
+            </LeftColumn>
+            <RightValue xsi:type="xsd:int">0</RightValue>
+            <Operation>NotEqual</Operation>
+            <LeftColumn>
+                <TableAlias>docums</TableAlias>
+                <ColumnName>versao</ColumnName>
+            </LeftColumn>
+            <RightValue xsi:type="xsd:string">CHECKOUT</RightValue>
+        </CriteriaSurrogate>
+    </Criterias>
+</WhereConditions>
+</ControlQueryDefinitionSurrogate>

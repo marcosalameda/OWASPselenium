@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ControlQueryDefinitionSurrogate xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Distinct>false</Distinct>
+  <SelectFields>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>aero</TableAlias><ColumnName>codaero</ColumnName></Column>
+      <Alias>aero.codaero</Alias>
+    </SelectFieldSurrogate>
+    <SelectFieldSurrogate>
+      <Column><TableAlias>aero</TableAlias><ColumnName>name</ColumnName></Column>
+      <Alias>aero.name</Alias>
+    </SelectFieldSurrogate>
+  </SelectFields>
+  <FromTable>
+	  <TableName>gqtaero</TableName>
+    <TableAlias>aero</TableAlias>
+    <SchemaName>gqt</SchemaName>
+  </FromTable>
+  <Joins>
+  </Joins>
+  <WhereConditions><Operation>And</Operation><Criterias><CriteriaSurrogate><Operation>Equal</Operation><LeftColumn><TableAlias>aero</TableAlias><ColumnName>zzState</ColumnName></LeftColumn><RightValue xsi:type="xsd:int">0</RightValue></CriteriaSurrogate></Criterias><SubSets /></WhereConditions>
+</ControlQueryDefinitionSurrogate>

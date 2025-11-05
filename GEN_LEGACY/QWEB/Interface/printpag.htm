@@ -1,0 +1,27 @@
+﻿<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Impressão de página</title>
+</head>
+<body topmargin="0" leftmargin="0" onload="PagLoad()">
+<div id="divprt">
+</div>
+</body>
+
+<script language="javascript">
+function PagLoad() {
+	var pag=opener.GetPrintContent()
+	var dprt=document.getElementById("divprt")
+	var BrowserName = navigator.appName.toUpperCase()
+	if (BrowserName.indexOf("INTERNET EXPLORER") > -1) {
+		dprt.innerHTML=pag
+	} else {
+		dprt.appendChild(pag)
+	}
+	window.print()
+	window.close()
+}
+</script>
+</html>
+
+

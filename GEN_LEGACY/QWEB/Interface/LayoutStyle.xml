@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<includeentry>
+
+	<STYLE FOR="AREA" ID="LOGON" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+
+	<STYLE FOR="PAGE" ID="QwFLogon" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+  <STYLE FOR="PAGE" ID="QwMenu" PADDING="0">
+    <NORM BGCLASS="PanelHidden" />
+    <DISA BGCLASS="PanelHidden" />
+  </STYLE>
+  
+  <STYLE FOR="PAGE" ID="QwIdMenu" PADDING="0">
+		<NORM BGCLASS="MenuPanelBack" />
+		<DISA BGCLASS="MenuPanelBack" />
+	</STYLE>
+
+  <STYLE FOR="MULTIGRID" ID="MenuV" PADDING="2,2,10,10">
+    <NORM BGCLASS="MenuPanelBack" />
+    <DISA BGCLASS="MenuPanelBack" />
+  </STYLE>
+  <STYLE FOR="MULTIGRID.DATAPANEL" ID="MenuV" PADDING="2,2,2,2">
+    <NORM BGCLASS="MenuItemBack" TXTCLASS="ListItemText" />
+    <NOR2 BGCLASS="MenuItemBack Odd" TXTCLASS="ListItemText Odd" />
+    <HIGH BGCLASS="MenuItemBack High" TXTCLASS="ListItemText High" />
+    <SELE BGCLASS="MenuItemBack Sele" TXTCLASS="ListItemText Sele" />
+  </STYLE>
+  <STYLE FOR="MULTIGRID.DATAPANEL" ID="MenuV0" PADDING="2,2,2,2">
+    <NORM BGCLASS="MenuItemBack Menu0" TXTCLASS="ListItemText" />
+    <NOR2 BGCLASS="MenuItemBack Menu0 Odd" TXTCLASS="ListItemText Odd" />
+    <HIGH BGCLASS="MenuItemBack Menu0 High" TXTCLASS="ListItemText High" />
+    <SELE BGCLASS="MenuItemBack Menu0 Sele" TXTCLASS="ListItemText Sele" />
+  </STYLE>
+
+
+	<STYLE FOR="MENUSRC.MULTIGRID" ID="MenuV" PADDING="3">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelFlat" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL" ID="DEFAULT" PADDING="2">
+		<NORM BGCLASS="MenuItemBack" />
+		<HIGH BGCLASS="MenuItemBack High" />
+		<SELE BGCLASS="MenuItemBack Sele" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv0" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText0" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv1" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText0" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv2" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText1" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText1 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText1 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText1 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv3" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText2" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv4" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText2" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv5" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText2" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Disa" />
+	</STYLE>
+
+  <!--Timeline-->
+
+ <STYLE FOR="MULTIGRID" ID="TIMELINE" PADDING="0">
+  <NORM BGCLASS="PanelHidden" />
+  <DISA BGCLASS="PanelHidden" />
+ </STYLE>
+
+ <STYLE FOR="MULTIFORM.MULTIGRID.DATAPANEL" ID="TIMELINE" PADDING="0">
+  <NORM BGCLASS="ListItemBack" />
+  <HIGH BGCLASS="ListItemBack" />
+  <SELE BGCLASS="ListItemBack" />
+ </STYLE>
+
+ <STYLE FOR="MULTIFORM.MULTIGRID.DATAPANEL.TEXT" ID="TIMELINE" PADDING="4,4,0,0">
+  <NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText"/>
+  <HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText"/>
+  <SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText"/>
+ </STYLE>
+
+ <STYLE FOR="BOTAO" ID="TIMELINE" PADDING="0">
+  <NORM BGCLASS="ListItemBack" TXTCLASS="TimelineText"/>
+  <HIGH BGCLASS="ListItemBack High" TXTCLASS="TimelineText"/>
+  <SELE BGCLASS="ListItemBack" TXTCLASS="TimelineText"/>
+  <DISA BGCLASS="ListItemBack Disa" TXTCLASS="TimelineText"/>
+  <FOCU BGCLASS="ListItemBack" TXTCLASS="TimelineText"/>
+ </STYLE>
+
+ <STYLE FOR="GRPBOX" ID="TIMELINE" PADDING="0">
+  <NORM BGCLASS="GroupBoxTimeline" />
+ </STYLE>
+	
+</includeentry>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFInfoT" TIT="Visualização de Informação" STYLE="DEFAULT">
+
+  <PANEL LOCATION="0,0" SIZE="*,*">
+    <LABEL ID="Titulo" LOCATION="0,1" SIZE="*,20" ALIGN="CENTER" READONLY="S" TXT=""/>
+
+    <PANEL LOCATION="10,40" SIZE="*,*-35" SCROLL="S">
+	<PARAGRAPH ID="Texto" TXT=""/>
+    </PANEL>
+
+    
+    <BOTAO LOCATION="*-90,*-25" SIZE="70,20" TXT="Fechar" ACT="ClosePage(" STYLE="BCAN"/>
+
+  </PANEL>
+</PAGE>

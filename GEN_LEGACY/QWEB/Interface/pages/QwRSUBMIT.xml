@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwRSUBMIT" TIT="Submissão de ficheiros" STYLE="QwRSUBMIT" SCROLL="N">
+
+  <PANEL LOCATION="0,0" SIZE="500,320">
+
+    <TITLE LOCATION="0,0" SIZE="*-2,25" ALIGN="LEFT"/>
+    <WEBPAGE LOCATION="10,40" SIZE="*-10,*-40" SRC="qwebuploadFC.aspx" HISTPARMS="lastVersion" PARMS="mode[subm"/>
+
+    <BOTAO ICONID="bcancel.png" LOCATION="380,270" SIZE="80,21" TXT="Sair" ACT="ClosePage(" STYLE="BCANCELAR"/>
+
+  </PANEL>
+
+</PAGE>

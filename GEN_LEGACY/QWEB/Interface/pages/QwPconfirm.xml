@@ -1,0 +1,19 @@
+﻿<PAGE ID="QwPconfirm" TIT="Pagina de confirmação" STYLE="Pconfirm">
+  <FORM ID="Fconfirm" PROVIDER="*">
+    <COL ID="texto" TYPE="A" TIT="" OBRIG="N" HISTGETID="_texto" HISTOP="EQ"/>
+    <COL ID="result" TYPE="A" TIT="" OBRIG="N" HISTGETID="_result" HISTOP="EQ"/>
+    <COL ID="txtbot1" TYPE="A" TIT="" OBRIG="N" HISTGETID="_txtbot1" HISTOP="EQ"/>
+    <COL ID="txtbot2" TYPE="A" TIT="" OBRIG="N" HISTGETID="_txtbot2" HISTOP="EQ"/>
+    <COL ID="idDbedit" TYPE="A" TIT="" OBRIG="N" HISTGETID="_idDbedit" HISTOP="EQ"/>
+	<COL ID="CancelBot" TYPE="A" TIT="" OBRIG="N" HISTGETID="_CancelBot" HISTOP="EQ"/>
+
+    <EVENT ID="AFTERINSERT" ACT="Enable(Bcancel,HIST{Enable(Texto,HIST{Enable(Bot1,HIST{Enable(Bot2,HIST" />
+  </FORM>
+
+  <PANEL LOCATION="0,0" SIZE="400,120">
+    <TEXT ID="Texto" LOCATION="15,30" SIZE="370,30" DATAFLD="texto" DATACTL="Fconfirm" READONLY="S"/>
+    <BOTAO ID="Bot1" LOCATION="15,90" SIZE="80,19" TXT="" DATACTL="Fconfirm" DATAFLD="txtbot1" ACT="SetVal(Fconfirm,result,1{ClosePageReturn("/>
+    <BOTAO ID="Bot2" LOCATION="115,90" SIZE="80,19" TXT="" DATACTL="Fconfirm" DATAFLD="txtbot2" ACT="SetVal(Fconfirm,result,2{ClosePageReturn("/>
+    <BOTAO ID="Bcancel" ICONID="bcancel.png" LOCATION="305,90" SIZE="80,21" TXT="" DATACTL="Fconfirm" DATAFLD="CancelBot" ACT="ClosePage(" STYLE="BCANCELAR"/>
+  </PANEL>
+</PAGE>

@@ -1,0 +1,105 @@
+﻿<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Quidgest Log de Mensagens</title>
+
+    <style>
+        .BACKGROUND {
+            background-color: #FFFCF0;
+            color: #000000;
+            font-family: Microsoft Sans Serif, Verdana, Arial;
+            font-size: 8pt;
+        }
+
+        .TREEAREA {
+            background-color: #FFFFFF;
+        }
+
+        .TABAREA {
+            background-color: #EFECDA;
+            border-style: outset;
+            border-width: 2;
+            display: block;
+        }
+
+        .BOTABACT {
+            background-color: #EFECDA;
+            background-repeat: no-repeat;
+            background-position: left;
+            border-width: 2;
+            border-style: outset;
+            border-bottom-style: none;
+            cursor: hand;
+            cursor: pointer;
+            font-family: Microsoft Sans Serif, Verdana, Arial;
+            font-size: 8pt;
+            font-weight: normal;
+            color: #000000;
+        }
+
+        .BOTABINACT {
+            background-color: #E5E2D0;
+            background-repeat: no-repeat;
+            background-position: left;
+            border-width: 2;
+            border-style: outset;
+            border-bottom-style: none;
+            cursor: hand;
+            cursor: pointer;
+            font-family: Microsoft Sans Serif, Verdana, Arial;
+            font-size: 8pt;
+            font-weight: normal;
+            color: #808080;
+        }
+
+        .FORMFLD {
+            color: #000000;
+            height: 17px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            font-family: Microsoft Sans Serif, Verdana, Arial;
+            font-size: 8pt;
+            font-weight: normal;
+            padding: 0px 3px;
+        }
+    </style>
+</head>
+
+<body topmargin="0" leftmargin="0" class="BACKGROUND">
+
+    <table border="0" cellpadding="0" cellspacing="0" border="0" width="100%">
+        <tr>
+            <td width="100%" bgcolor="#C00000" align="right" height="22">
+                <font face="Verdana" size="1" color="#FFFCF0"><b>Quidgest - Mensagens de Erro / Error messages&nbsp;&nbsp;</b></font>
+            </td>
+        </tr>
+    </table>
+
+    <div style="position: absolute; left: 10px; top: 30px; width: 480px; height: 22px">
+        <input type="button" id="Brefresh" value="Refresh" style="position: absolute; left: 20px; top: 0px; width: 100px; height: 24px" onclick="RefreshArea()"></input>
+        <input type="button" id="Copy" value="Copy" style="position: absolute; left: 160px; top: 0px; width: 100px; height: 24px" onclick="CopyMsg()"></input>
+    </div>
+
+    <div ID="Tparm" class="TABAREA"
+         style="position: absolute; left: 10px; top: 76px; width: 480px; height: 550px; display: block">
+        <div ID="Aparm" class="TREEAREA" style="position: absolute; left: 2px; top: 2px; width: 472px; height: 540px; overflow: auto"></div>
+    </div>
+
+    <script language="javascript">
+        RefreshArea()
+
+
+        function RefreshArea() {
+            var nod = document.getElementById("Aparm")
+            nod.innerHTML = opener.GetLogMsg("html")
+        }
+
+        function CopyMsg() {
+            var wmsg = opener.GetLogMsg("text")
+            var r = clipboardData.setData("Text", wmsg)
+        }
+
+    </script>
+</body>
+</html>

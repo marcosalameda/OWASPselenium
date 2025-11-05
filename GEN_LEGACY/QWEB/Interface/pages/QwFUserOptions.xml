@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFUserOptions" TIT="Dados do utilizador" STYLE="QwFUserOptions" SCROLL="S">
+
+  <!--Form mudar password-->
+  <FORM ID="FAltPass" PROVIDER="password_alterar" FUNC="EXE" AUTOSTART="S" MSGCTL="Msgstd">
+    <COL ID="psw.codpsw" TYPE="A" TIT="chave primaria" HISTGETID="psw" KEY="S"/>
+    <COL ID="passAntiga" TYPE="A50" TIT="Password Antiga" OBRIG="N"/>
+    <COL ID="passNova1" TYPE="A50" TIT="Password Nova" OBRIG="N"/>
+    <COL ID="passNova2" TYPE="A50" TIT="Repetição Password Nova" OBRIG="N"/>
+	<EVENT ID="AFTERUPDATE">
+      <ACT>
+        ;
+        var status = api.GetuserStatus();
+        if(status=="1"){
+          api.SetUserStatus("0");
+          api.DoLogoff();
+        }
+      </ACT>
+    </EVENT>
+  </FORM>
+  <!--Form Gerar password-->
+  <FORM ID="FGenPass" PROVIDER="password_gerar" FUNC="EXE" AUTOSTART="S" MSGCTL="Msgstd">
+    <COL ID="psw.codpsw" TYPE="A" TIT="chave primaria" HISTGETID="psw" KEY="S"/>
+    <COL ID="email" TYPE="A150" TIT="Password Antiga" OBRIG="N"/>
+  </FORM>
+  
+
+  
+  <PANEL LOCATION="0,0" SIZE="*,*" SIZEDIALOG="834,385" STYLE="BARRA" SCROLL="N">
+    <PATH LOCATION="1,0" SIZE="*-2,17"/>
+            <TITLE LOCATION="1,17" SIZE="*-2,30" ALIGN="LEFT"/>
+    <MSG ID="Msgstd" LOCATION="1,45" SIZE="*-2,17" ALIGN="LEFT"/>
+ 
+    <PANEL LOCATION="0,65" SIZE="*,*" STYLE="DEFAULT" SCROLL="S" SCROLLDIALOG="N">
+    <PANEL LOCATION="0,5" SIZE="605,500" STYLE="CONTEUDO" SCROLL="N">
+     <!--PASSWORD-->
+        <GRP SIZE="*,30" BREAKBEFORE="S" BREAKAFTER="S">
+          <ACORDEON LOCATION="0,10" SIZE="*,20" TXT="Password" PANEL="groupPassword" SELECTED="S"/>
+        </GRP>
+        <GRP ID="groupPassword" LOCATION="5,100" SIZE="*,*" VIS="N" BREAKBEFORE="S" BREAKAFTER="S">
+          <GRPBOX LOCATION="0,0" SIZE="590,160" SCROLL="N"/>
+          <LABEL LOCATION="8,20" SIZE="150,17" ALIGN="left" TXT="Alterar"/>
+          <LABEL LOCATION="8,40" SIZE="150,17" ALIGN="left" TXT="Password Antiga:"/>
+          <LABEL LOCATION="8,60" SIZE="250,17" ALIGN="left" TXT="-"/>
+          <LABEL LOCATION="8,80" SIZE="150,17" ALIGN="left" TXT="Password Nova:"/>
+          <LABEL LOCATION="8,100" SIZE="150,17" ALIGN="left" TXT="Confirmar Password:"/>
+          <TEXT LOCATION="120,40" SIZE="85,17" DATAFLD="passAntiga" DATACTL="FAltPass" PW="S"/>
+          <TEXT LOCATION="120,80" SIZE="85,17" DATAFLD="passNova1" DATACTL="FAltPass" PW="S"/>
+          <TEXT LOCATION="120,100" SIZE="85,17" DATAFLD="passNova2" DATACTL="FAltPass" PW="S"/>
+
+          <LABEL LOCATION="225,40" SIZE="260,34" ALIGN="left" TXT="OR" STYLE="LABELCINZA" />
+
+          <LABEL LOCATION="260,20" SIZE="260,34" ALIGN="left" TXT="Gerar" STYLE="LABELCINZA"/>
+          <LABEL LOCATION="260,40" SIZE="150,17" ALIGN="left" TXT="E-mail:"/>
+          <TEXT LOCATION="320,40" SIZE="250,17" DATAFLD="email" DATACTL="FGenPass"/>
+          <LABEL LOCATION="260,80" SIZE="250,34" ALIGN="left" TXT="Please enter a valid email address and a new password will be sent to you." STYLE="LABELCINZA" />
+
+          <BOTAO ICONID="bselecc.png" LOCATION="123,125" SIZE="80,21" TXT="Ok" DATACTL="FAltPass" ACT="Execute(FAltPass" STYLE="BGRAVAR"/>
+          <BOTAO ICONID="bselecc.png" LOCATION="460,125" SIZE="80,21" TXT="Ok" DATACTL="FGenPass" ACT="Execute(FGenPass" STYLE="BGRAVAR"/>
+        </GRP>
+        
+        <!--Cartão-->
+        <!--Delegação-->
+		<BOTAO ICONID="bcancel.png" LOCATION="465,300" SIZE="80,21" TXT="Cancel" ACT="ClosePage(" STYLE="BCANCELAR"/>
+      </PANEL>
+    </PANEL>
+  </PANEL>
+</PAGE>

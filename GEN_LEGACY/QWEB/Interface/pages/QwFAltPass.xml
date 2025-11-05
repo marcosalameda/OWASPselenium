@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFAltPass" TIT="Password" STYLE="QwFAltPass" SCROLL="S">
+
+<FORM ID="FAltPass" PROVIDER="password_alterar" FUNC="EXE" AUTOSTART="S" MSGCTL="Msgstd">
+  <COL ID="psw.codpsw" TYPE="A" TIT="chave primaria" HISTGETID="psw" KEY="S"/>
+	<COL ID="passAntiga" TYPE="A9" TIT="Password Antiga" OBRIG="N"/>
+	<COL ID="passNova1" TYPE="A9" TIT="Password Nova" OBRIG="N"/>
+	<COL ID="passNova2" TYPE="A9" TIT="Repetição Password Nova" OBRIG="N"/>
+</FORM>
+  
+<ROTINA ID="password_verificaAntiga" PROVIDER="password_verificaAntiga">
+  <ARG ID="A1" DATACTL="FAltPass" DATAFLD="psw.codpsw" TRIGGER="NOTNULL"/>
+  <ARG ID="A2" DATACTL="FAltPass" DATAFLD="passAntiga" TRIGGER="NOTNULL"/>
+</ROTINA>
+<ROTINA ID="password_verificaNova" FUNCTIONID="password_verificaNova">
+  <ARG ID="A2" DATACTL="FAltPass" DATAFLD="passNova1" TRIGGER="NOTNULL"/>
+  <ARG ID="A3" DATACTL="FAltPass" DATAFLD="passNova2" TRIGGER="NOTNULL"/>
+</ROTINA>
+  
+<PANEL LOCATION="0,0" SIZE="*,*" SIZEDIALOG="320,270">
+  <PANEL LOCATION="1,1" SIZE="*-2,20">
+    <PATH LOCATION="0,0" SIZE="*-2,17"/>
+  </PANEL>
+  <PANEL LOCATION="0,21" SIZE="*,*">
+
+	<TITLE LOCATION="10,1" SIZE="*-2,25" ALIGN="LEFT"/>
+	<MSG ID="Msgstd" LOCATION="10,26" SIZE="*-2,17" ALIGN="LEFT"/>
+	  <LABEL LOCATION="15,60" SIZE="150,17" ALIGN="left" TXT="Password Antiga:"/>
+	  <LABEL LOCATION="15,80" SIZE="250,17" ALIGN="left" TXT="-------------------------------------------------------"/>
+	  <LABEL LOCATION="15,100" SIZE="150,17" ALIGN="left" TXT="Password Nova:"/>
+	  <LABEL LOCATION="15,125" SIZE="150,17" ALIGN="left" TXT="Confirmar Password:"/>
+	  <TEXT LOCATION="150,60" SIZE="85,17" DATAFLD="passAntiga" DATACTL="FAltPass" PW="S"/>
+	  <TEXT LOCATION="150,100" SIZE="85,17" DATAFLD="passNova1" DATACTL="FAltPass" PW="S"/>
+	  <TEXT LOCATION="150,125" SIZE="85,17" DATAFLD="passNova2" DATACTL="FAltPass" PW="S"/>
+<!--
+    <LABEL LOCATION="15,160" SIZE="250,17" ALIGN="left" TXT="A password deve ter um máximo de 9 caracteres" STYLE="LABELCINZA" />
+-->
+    <BOTAO ICONID="bselecc.png" LOCATION="60,205" SIZE="80,21" TXT="Guardar" DATACTL="FAltPass" ACT="Execute(FAltPass" STYLE="BGRAVAR"/>
+
+    <BOTAO ICONID="bcancel.png" LOCATION="150,205" SIZE="80,21" TXT="Cancelar" DATACTL="FAltPass" ACT="ClosePage(" STYLE="BCANCELAR"/>
+
+  </PANEL>
+</PANEL>
+
+</PAGE> 
+

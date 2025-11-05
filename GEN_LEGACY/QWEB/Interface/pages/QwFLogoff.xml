@@ -1,0 +1,49 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFLogoff" STYLE="QwFLogon" UPDSTATUS="N">
+
+  <FORM ID="FrmLogoff" PROVIDER="LOGOFF" FUNC="EXE">
+    <COL ID="anodb" TYPE="A4" TIT="Ano" OBRIG="N"/>
+    <EVENT ID="AFTERREAD" ACT="ExecDelayed200(ExecRotina(ANOSLIST"/>
+  </FORM>
+
+  <ROTINA ID="ANOSLIST" PROVIDER="ANOSLIST">
+    <EVENT ID="AFTEREXECUTE">
+      <ACT>;
+        api.Show('','DbPanel');
+        api.SetList('','AnoDB','#1#');        
+      </ACT>
+    </EVENT>
+  </ROTINA>
+  <ROTINA ID="ANOCHANGE" PROVIDER="ANOCHANGE">
+    <ARG ID="A1" DATACTL="FrmLogoff" DATAFLD="anodb" TRIGGER="NOTNULLMOD"/>
+    <EVENT ID="AFTEREXECUTE">
+      <ACT>;
+	  api.DoAnoChange('#4#','#3#','#5#');
+      </ACT>
+    </EVENT>
+  </ROTINA>
+
+  <PANEL LOCATION="0,0" SIZE="*,*" STYLE="TRANSP">
+    <PANEL ID="DbPanel" LOCATION="0,0" SIZE="90,*" STYLE="TRANSP" VIS="N">
+      <IMG ID="imgAnoBD" LOCATION="0,C" SIZE="24,24" STYLE="ANODB"/>
+      <COMBO ID="AnoDB" LOCATION="30,C" SIZE="60,20" STYLE="LOGOFF" DATAFLD="anodb" DATACTL="FrmLogoff" TIP="Ano">
+        <EVENT ID="NOLIST">
+          <ACT>
+            ;
+            api.Hide('','DbPanel');
+          </ACT>
+        </EVENT>
+      </COMBO>
+    </PANEL>
+
+    <LINK LOCATION="200,20" SIZE="120,21" STYLE="LIGHT" TXT="Opções do utilizador" TIP="Opções do utilizador" ACT="OpenPage(QwFUserOptions,ALT,,,Apage"/>
+    <LINK LOCATION="200,0" SIZE="120,21" STYLE="LIGHT" TXT="Logout" TIP="Log out" ACT="Execute(FrmLogoff,NoClose{DoLogoff(FORCE"/>
+  </PANEL>
+
+  <EVENT ID="AFTERACTIVATE">
+    <ACT>;
+      api.SetVal('','logon_nome',api.GetUserId());
+    </ACT>
+  </EVENT>
+
+</PAGE>

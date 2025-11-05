@@ -1,0 +1,769 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<includeentry>
+<!--  Definição de Estilos -->
+	<STYLE FOR="AREA" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelFlat" />
+		<DISA BGCLASS="PanelFlat" />
+	</STYLE>
+
+  <STYLE FOR="AREA" ID="TRANSP" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="AREA" ID="LOGON" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="AREA" ID="LANG" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+	
+	<STYLE FOR="PAGE" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelFlat" />
+		<DISA BGCLASS="PanelFlat" />
+	</STYLE>
+	<STYLE FOR="PAGE" ID="TRANSP" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="PAGE" ID="QwFLogon" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+  <STYLE FOR="PAGE" ID="QwMenu" PADDING="0">
+    <NORM BGCLASS="PanelHidden" />
+    <DISA BGCLASS="PanelHidden" />
+  </STYLE>
+  <STYLE FOR="PAGE" ID="LANG" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+
+	<STYLE FOR="DIALOG" ID="DEFAULT" PADDING="4,10,20,4">
+		<NORM BGCLASS="Dialog" />
+		<DISA BGCLASS="Dialog Disa" />
+	</STYLE>
+	
+	<STYLE FOR="WINDOW" ID="DEFAULT" PADDING="4,10,20,4">
+		<NORM BGCLASS="Dialog" />
+	</STYLE>	
+	<STYLE FOR="WINDOW" ID="GADGET" PADDING="2">
+		<NORM BGCLASS="PanelHidden"/>
+	</STYLE>
+	<STYLE FOR="WINPANEL" ID="DEFAULT" PADDING="1">
+		<NORM BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="WINCAP" ID="DEFAULT" PADDING="2,0,0,2">
+		<NORM BGCLASS="DialogMover" />
+		<HIGH BGCLASS="DialogMover High" />
+		<SELE BGCLASS="DialogMover Sele" />
+		<DISA BGCLASS="DialogMover Disa" />
+	</STYLE>	
+	<STYLE FOR="WINRESIZER" ID="DEFAULT" TEMAID="qstema_winresize_20_20_0_0.png" TEMASIZE="20,20,0,0,F">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+	
+	<STYLE FOR="PANEL" ID="DEFAULT" PADDING="3">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="PANEL" ID="LANG" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="PANEL" ID="NOBORDER" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="PANEL" ID="POSTIT" PADDING="0">
+		<NORM BGCLASS="PanelPostit" />
+		<DISA BGCLASS="PanelPostit" />
+	</STYLE>
+	<STYLE FOR="PANEL" ID="PANELFILTRO" PADDING="1">
+		<NORM BGCLASS="PanelFiltro" />
+		<DISA BGCLASS="PanelFiltro" />
+	</STYLE>
+	
+	<STYLE FOR="LABEL" ID="LIGHT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="PageHeaderText" />
+		<HIGH BGCLASS="PanelHidden" TXTCLASS="PageHeaderText High" />
+		<SELE BGCLASS="PanelHidden" TXTCLASS="PageHeaderText Sele" />
+	</STYLE>
+	<STYLE FOR="LINK" ID="LIGHT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="PageHeaderText" />
+		<HIGH BGCLASS="PanelHidden" TXTCLASS="PageHeaderText High" />
+		<SELE BGCLASS="PanelHidden" TXTCLASS="PageHeaderText Sele" />
+	</STYLE>	
+  
+	<STYLE FOR="CONTEXTPANEL" ID="DEFAULT" PADDING="8">
+		<NORM BGCLASS="ContextPanel" />
+	</STYLE>
+	
+	<STYLE FOR="TABPANEL" ID="DEFAULT" PADDING="8">
+		<NORM BGCLASS="TabPanel" />
+		<DISA BGCLASS="TabPanel Disa" />
+	</STYLE>
+	<STYLE FOR="TAB" ID="DEFAULT" PADDING="2,2,2,0">
+		<NORM BGCLASS="TabItemBack" TXTCLASS="TabItemText" />
+		<HIGH BGCLASS="TabItemBack High" TXTCLASS="TabItemText High" />
+		<SELE BGCLASS="TabItemBack Sele" TXTCLASS="TabItemText Sele" />
+		<DISA BGCLASS="TabItemBack Disa" TXTCLASS="TabItemText Disa" />
+	</STYLE>
+		
+	<STYLE FOR="GRPBOX" ID="DEFAULT" PADDING="5,5,5,5">
+		<NORM BGCLASS="GroupBoxBack" TXTCLASS="GroupBoxText"/>
+	</STYLE>
+	<STYLE FOR="MSG" ID="DEFAULT" PADDING="2,0,0,0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="MsgText" />
+	</STYLE>
+	<STYLE FOR="TITLE" ID="DEFAULT" PADDING="3,2,0,0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="TitleText" />
+	</STYLE>
+	<STYLE FOR="LABEL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="LabelText" />
+		<HIGH BGCLASS="PanelHidden" TXTCLASS="LabelText High" />
+		<SELE BGCLASS="PanelHidden" TXTCLASS="LabelText Sele" />
+	</STYLE>
+	<STYLE FOR="LABEL" ID="HEADERFILTRO" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="HeaderFiltroText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="HeaderFiltroText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="HeaderFiltroText High" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="HeaderFiltroText Disa" />
+	</STYLE>
+	<STYLE FOR="PARAGRAPH" ID="DEFAULT" PADDING="0,0,0,0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="ParagraphText" />
+	</STYLE>
+	<STYLE FOR="TOKEN" ID="DEFAULT" PADDING="0,0,0,0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="TokenText" />
+	</STYLE>	
+	<STYLE FOR="PATH" ID="DEFAULT" PADDING="2,0,0,0">
+		<NORM BGCLASS="PathBack" TXTCLASS="PathText" />
+		<HIGH BGCLASS="PathBack High" TXTCLASS="PathText High" />
+	</STYLE>
+	<STYLE FOR="PATHELEM" ID="DEFAULT" PADDING="0,0,0,0">
+		<NORM BGCLASS="PathElemBack" TXTCLASS="PathElemText" />
+		<HIGH BGCLASS="PathElemBack High" TXTCLASS="PathElemText High" />
+	</STYLE>	
+	
+	<STYLE FOR="CHECK" ID="DEFAULT" TEMAID="qstema_check_13_13_0_0.png" TEMASIZE="13,13,0,0,F" PADDING="0,0,0,0">
+		<NORM0 BGTEMA="1" />
+		<NORM1 BGTEMA="2" />
+		<HIGH0 BGTEMA="3" />
+		<HIGH1 BGTEMA="4" />
+		<DISA0 BGTEMA="5" />
+		<DISA1 BGTEMA="6" />
+	</STYLE>
+	<STYLE FOR="RADBOT" ID="DEFAULT" TEMAID="qstema_radio_13_13_0_0.png" TEMASIZE="13,13,0,0,F" PADDING="0,0,0,0">
+		<NORM0 BGTEMA="1" />
+		<NORM1 BGTEMA="2" />
+		<HIGH0 BGTEMA="3" />
+		<HIGH1 BGTEMA="4" />
+		<DISA0 BGTEMA="5" />
+		<DISA1 BGTEMA="6" />
+	</STYLE>
+	<STYLE FOR="RADBOT" ID="CHECK" TEMAID="qstema_check_13_13_0_0.png" TEMASIZE="13,13,0,0,F" PADDING="0,0,0,0">
+		<NORM0 BGTEMA="1" />
+		<NORM1 BGTEMA="2" />
+		<HIGH0 BGTEMA="3" />
+		<HIGH1 BGTEMA="4" />
+		<DISA0 BGTEMA="5" />
+		<DISA1 BGTEMA="6" />
+	</STYLE>
+	<STYLE FOR="SHARE" ID="DEFAULT" PADDING="1">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="TextoCinzaNormal" />
+	</STYLE>
+	<STYLE FOR="IMG" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" />
+	</STYLE>
+	<STYLE FOR="DOC" ID="DEFAULT" TEMAID="qstema_doc_30_30_0_0.png" TEMASIZE="30,30,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+	
+	
+	<STYLE FOR="TEXT" ID="DEFAULT" PADDING="4,4,0,0">
+		<NORM BGCLASS="InputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="InputBack High" TXTCLASS="InputText High" />
+		<SELE BGCLASS="InputBack Sele" TXTCLASS="InputText" />
+		<OBRI BGCLASS="InputBack Obri" TXTCLASS="InputText Obri" />
+		<ERRO BGCLASS="InputBack Erro" TXTCLASS="InputText Erro" />
+		<DISA BGCLASS="InputBack Disa" TXTCLASS="InputText Disa" />
+	</STYLE>
+	<STYLE FOR="TEXTM" ID="DEFAULT" PADDING="4,4,0,0">
+		<NORM BGCLASS="InputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="InputBack High" TXTCLASS="InputText High" />
+		<SELE BGCLASS="InputBack Sele" TXTCLASS="InputText" />
+		<OBRI BGCLASS="InputBack Obri" TXTCLASS="InputText Obri" />
+		<ERRO BGCLASS="InputBack Erro" TXTCLASS="InputText Erro" />
+		<DISA BGCLASS="InputBack Disa" TXTCLASS="InputText Disa" />
+	</STYLE>
+	<STYLE FOR="COMBO" ID="DEFAULT" PADDING="4,4,0,0" ICONID="qstema_IconSetaBaixo_14_14_0_0.png" ICONSIZE="14,14" ICONLOCATION="*-5,2">
+		<NORM BGCLASS="Combo InputBack" TXTCLASS="InputText" ICONTEMA="0"/>
+		<HIGH BGCLASS="Combo InputBack High" TXTCLASS="InputText High" ICONTEMA="0"/>
+		<SELE BGCLASS="Combo InputBack Sele" TXTCLASS="InputText" ICONTEMA="0"/>
+		<OBRI BGCLASS="Combo InputBack Obri" TXTCLASS="InputText Obri" ICONTEMA="0"/>
+		<ERRO BGCLASS="Combo InputBack Erro" TXTCLASS="InputText Erro" ICONTEMA="0"/>
+		<DISA BGCLASS="Combo InputBack Disa" TXTCLASS="InputText Disa" ICONTEMA="0"/>
+	</STYLE>
+	<STYLE FOR="LEDTXT" ID="DEFAULT" PADDING="4,4,0,0">
+		<NORM BGCLASS="InputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="InputBack High" TXTCLASS="InputText High" />
+		<SELE BGCLASS="InputBack Sele" TXTCLASS="InputText" />
+		<OBRI BGCLASS="InputBack Obri" TXTCLASS="InputText Obri" />
+		<ERRO BGCLASS="InputBack Erro" TXTCLASS="InputText Erro" />
+		<DISA BGCLASS="InputBack Disa" TXTCLASS="InputText Disa" />
+	</STYLE>
+	
+	
+	
+
+	<STYLE FOR="TEXT" ID="TRANSP" PADDING="4,4,0,0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText Sele" />
+		<OBRI BGCLASS="FloatingInputBack" TXTCLASS="InputText Obri" />
+		<ERRO BGCLASS="FloatingInputBack" TXTCLASS="InputText Erro" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" />
+	</STYLE>
+	<STYLE FOR="TEXTM" ID="TRANSP" PADDING="4,4,0,0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText Sele" />
+		<OBRI BGCLASS="FloatingInputBack" TXTCLASS="InputText Obri" />
+		<ERRO BGCLASS="FloatingInputBack" TXTCLASS="InputText Erro" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" />
+	</STYLE>
+	<STYLE FOR="COMBO" ID="TRANSP" PADDING="4,4,0,0" ICONID="qstema_IconSetaBaixo_14_14_0_0.png" ICONSIZE="14,14" ICONLOCATION="*-5,2">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" ICONTEMA="0" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" ICONTEMA="0" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText" ICONTEMA="0" />
+		<OBRI BGCLASS="FloatingInputBack" TXTCLASS="InputText Obri" ICONTEMA="0" />
+		<ERRO BGCLASS="FloatingInputBack" TXTCLASS="InputText Erro" ICONTEMA="0" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" ICONTEMA="4" />
+	</STYLE>
+	<STYLE FOR="LEDTXT" ID="TRANSP" PADDING="4,4,0,0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText Sele" />
+		<OBRI BGCLASS="FloatingInputBack" TXTCLASS="InputText Obri" />
+		<ERRO BGCLASS="FloatingInputBack" TXTCLASS="InputText Erro" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" />
+	</STYLE>
+	
+	<STYLE FOR="TEXT" ID="TXTSEARCH" PADDING="4,4,0,0">
+		<NORM BGCLASS="InputBack" TXTCLASS="InputTextBig" />
+		<HIGH BGCLASS="InputBack High" TXTCLASS="InputTextBig High" />
+		<SELE BGCLASS="InputBack Sele" TXTCLASS="InputTextBig" />
+		<OBRI BGCLASS="InputBack Obri" TXTCLASS="InputTextBig Obri" />
+		<ERRO BGCLASS="InputBack Erro" TXTCLASS="InputTextBig Erro" />
+		<DISA BGCLASS="InputBack Disa" TXTCLASS="InputTextBig Disa" />
+	</STYLE>
+	
+	<STYLE FOR="FCONTROL" ID="DEFAULT" PADDING="4,4,0,0">
+    <NORM BGCLASS="InputBack" TXTCLASS="InputText" />
+  </STYLE>
+	
+	
+	
+	<STYLE FOR="COMBO.DROPPANEL" ID="DEFAULT" PADDING="4">
+		<NORM BGCLASS="ComboDrop" />
+	</STYLE>
+	<STYLE FOR="COMBO.MULTIGRID" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" />
+	</STYLE>
+	<STYLE FOR="COMBO.MULTIGRID.AUTODATAPANEL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="ComboItem" />
+		<HIGH BGCLASS="ComboItem High" />
+		<SELE BGCLASS="ComboItem Sele" />
+	</STYLE>
+	
+
+	
+	<STYLE FOR="CALEND" ID="DEFAULT" PADDING="5">
+		<NORM BGCLASS="InputBack" />
+	</STYLE>
+	<STYLE FOR="CALEND.DROPPANEL" ID="DEFAULT" PADDING="4">
+		<NORM BGCLASS="CalendDrop" />
+	</STYLE>
+	<STYLE FOR="CALEND.MULTIGRID" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="CALEND.MULTIGRID.HEADERPANEL.TEXT" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="InputText" />
+		<HIGH BGCLASS="PanelHidden" TXTCLASS="InputText High" />
+		<SELE BGCLASS="PanelHidden" TXTCLASS="InputText Sele" />
+		<DISA BGCLASS="PanelHidden" TXTCLASS="InputText Disa" />
+	</STYLE>
+	<STYLE FOR="CALEND.MULTIGRID.DATAPANEL.TEXT" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="InputText" />
+		<HIGH BGCLASS="PanelHidden" TXTCLASS="InputText High" />
+		<SELE BGCLASS="PanelHidden" TXTCLASS="InputText Sele" />
+	</STYLE>
+	
+	
+	
+	<STYLE FOR="HEADER" ID="DEFAULT" PADDING="1">
+		<NORM BGCLASS="HeaderBack" TXTCLASS="HeaderText" />
+		<HIGH BGCLASS="HeaderBack High" TXTCLASS="HeaderText High" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID" ID="DEFAULT" PADDING="3">
+		<NORM BGCLASS="InputBack" />
+		<DISA BGCLASS="InputBack.Disa" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID" ID="MGRIDFILTRO" PADDING="2">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.CONTEXTPANEL" ID="DEFAULT" PADDING="8">
+		<NORM BGCLASS="ContextPanel" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.FOOTERPANEL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelFooter" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.STACKPANEL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.AUTOHEADERPANEL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.AUTOQUERYPANEL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.AUTOQUERYPANEL.TEXT" ID="DEFAULT" PADDING="4,4,0,0">
+		<NORM BGCLASS="FilterBack" TXTCLASS="FilterText" />
+		<HIGH BGCLASS="FilterBack High" TXTCLASS="FilterText High" />
+		<SELE BGCLASS="FilterBack Sele" TXTCLASS="FilterText Sele" />
+		<OBRI BGCLASS="FilterBack Obri" TXTCLASS="FilterText Obri" />
+		<ERRO BGCLASS="FilterBack Erro" TXTCLASS="FilterText Erro" />
+		<DISA BGCLASS="FilterBack Disa" TXTCLASS="FilterText Disa" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.AUTOQUERYPANEL.COMBO" ID="DEFAULT" PADDING="4,4,0,0" ICONID="qstema_IconSetaBaixo_14_14_0_0.png" ICONSIZE="14,14" ICONLOCATION="*-5,2">
+		<NORM BGCLASS="FilterBack" TXTCLASS="FilterText" ICONTEMA="0" />
+		<HIGH BGCLASS="FilterBack High" TXTCLASS="FilterText High" ICONTEMA="0" />
+		<SELE BGCLASS="FilterBack Sele" TXTCLASS="FilterText Sele" ICONTEMA="0" />
+		<OBRI BGCLASS="FilterBack Obri" TXTCLASS="FilterText Obri" ICONTEMA="0" />
+		<ERRO BGCLASS="FilterBack Erro" TXTCLASS="FilterText Erro" ICONTEMA="0" />
+		<DISA BGCLASS="FilterBack Disa" TXTCLASS="FilterText Disa" ICONTEMA="0" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.AUTODATAPANEL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="ListItemBack" TXTCLASS="ListItemText" />
+		<NOR2 BGCLASS="ListItemBack Odd" TXTCLASS="ListItemText.Odd" />
+		<HIGH BGCLASS="ListItemBack High" TXTCLASS="ListItemText.High" />
+		<SELE BGCLASS="ListItemBack Sele" TXTCLASS="ListItemText.Sele" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.AUTODATAPANEL.TEXT" ID="DEFAULT" PADDING="4,4,0,0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" />
+		<EDIT BGCLASS="IngInputBack" TXTCLASS="InputText" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.AUTODATAPANEL.COMBO" ID="DEFAULT" PADDING="4,4,0,0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" />
+		<EDIT BGCLASS="IngInputBack" TXTCLASS="InputText" />
+	</STYLE>
+	<STYLE FOR="DATAPANEL" ID="DEFAULT" PADDING="0,0,0,0">
+		<NORM BGCLASS="ListItemBack" TXTCLASS="FilterText" />
+		<HIGH BGCLASS="ListItemBack High" TXTCLASS="FilterText High" />
+		<SELE BGCLASS="ListItemBack Sele" TXTCLASS="FilterText Sele" />
+	</STYLE>
+	<STYLE FOR="MULTIFORM.MULTIGRID" ID="DEFAULT" PADDING="2">
+		<NORM BGCLASS="InputBack" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.DATAPANEL" ID="MGRIDFILTRO" PADDING="0">
+		<NORM BGCLASS="ListItemFiltroBack" TXTCLASS="ListItemText" />
+		<HIGH BGCLASS="ListItemFiltroBack High" TXTCLASS="ListItemText.High" />
+		<SELE BGCLASS="ListItemFiltroBack Sele" TXTCLASS="ListItemText.Sele" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.DATAPANEL.TEXT" ID="MGRIDFILTRO" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" />
+	</STYLE>
+	<STYLE FOR="MULTIGRID.DATAPANEL.TEXT" ID="FILTROCONT" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="FiltroContText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="FiltroContText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="FiltroContText High" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="FiltroContText Disa" />
+	</STYLE>
+
+  
+  <STYLE FOR="BOTAO" ID="DPPAG-" PADDING="0,0,0,0" ICONID="Paging.png" ICONSIZE="16,16">
+    <NORM BGCLASS="ButtonBackTrans" TXTCLASS="ButtonText" ICONTEMA="1" />
+    <HIGH BGCLASS="ButtonBackTrans High" TXTCLASS="ButtonText High" ICONTEMA="5"/>
+    <SELE BGCLASS="ButtonBackTrans Sele" TXTCLASS="ButtonText Sele" ICONTEMA="5"/>
+    <DISA BGCLASS="ButtonBackTrans Disa" TXTCLASS="ButtonText Disa" ICONTEMA="3"/>
+  </STYLE>
+  <STYLE FOR="BOTAO" ID="DPPAG+" PADDING="0,0,0,0" ICONID="Paging.png" ICONSIZE="16,16">
+    <NORM BGCLASS="ButtonBackTrans" TXTCLASS="ButtonText" ICONTEMA="2" />
+    <HIGH BGCLASS="ButtonBackTrans High" TXTCLASS="ButtonText High" ICONTEMA="6"/>
+    <SELE BGCLASS="ButtonBackTrans Sele" TXTCLASS="ButtonText Sele" ICONTEMA="6"/>
+    <DISA BGCLASS="ButtonBackTrans Disa" TXTCLASS="ButtonText Disa" ICONTEMA="4"/>
+  </STYLE>
+
+  <STYLE FOR="MULTIGRID" ID="MenuV" PADDING="2,2,10,10">
+    <NORM BGCLASS="MenuPanelBack" />
+    <DISA BGCLASS="MenuPanelBack" />
+  </STYLE>
+  <STYLE FOR="MULTIGRID.DATAPANEL" ID="MenuV" PADDING="2,2,2,2">
+    <NORM BGCLASS="MenuItemBack" TXTCLASS="ListItemText" />
+    <NOR2 BGCLASS="MenuItemBack Odd" TXTCLASS="ListItemText Odd" />
+    <HIGH BGCLASS="MenuItemBack High" TXTCLASS="ListItemText High" />
+    <SELE BGCLASS="MenuItemBack Sele" TXTCLASS="ListItemText Sele" />
+  </STYLE>
+  <STYLE FOR="MULTIGRID.DATAPANEL" ID="MenuV0" PADDING="2,2,2,2">
+    <NORM BGCLASS="MenuItemBack Menu0" TXTCLASS="ListItemText" />
+    <NOR2 BGCLASS="MenuItemBack Menu0 Odd" TXTCLASS="ListItemText Odd" />
+    <HIGH BGCLASS="MenuItemBack Menu0 High" TXTCLASS="ListItemText High" />
+    <SELE BGCLASS="MenuItemBack Menu0 Sele" TXTCLASS="ListItemText Sele" />
+  </STYLE>
+	
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" />
+	</STYLE>
+	<STYLE FOR="TREESRC.MULTIGRID.DATAPANEL.TEXT" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" />
+	</STYLE>
+	
+  <STYLE FOR="MENU" ID="DEFAULT" PADDING="0,0,0,0">
+    <NORM BGCLASS="PanelHidden" />
+    <HIGH BGCLASS="PanelHidden" />
+  </STYLE>
+  <STYLE FOR="MENU.DATAPANEL" ID="DEFAULT" PADDING="0,0,0,0">
+    <NORM BGCLASS="MenuItemBack" />
+    <HIGH BGCLASS="MenuItemBack High" />
+    <SELE BGCLASS="MenuItemBack Sele" />
+    <DISA BGCLASS="MenuItemBack Disa" />
+  </STYLE>
+	<STYLE FOR="MENU.DATAPANEL.TEXT" ID="DEFAULT" PADDING="4,4,4,4">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="InputText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="InputText Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="InputText Disa" />
+	</STYLE>
+	
+	<STYLE FOR="MENU.DATAPANEL.TEXT" ID="MenuH" PADDING="0">
+    <NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuItemText" />
+    <HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuItemText High" />
+    <SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuItemText Sele" />
+    <DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuItemText Disa" />
+  </STYLE>
+
+	<STYLE FOR="MENU.STACKPANEL" ID="DEFAULT" PADDING="1">
+		<NORM BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="MENU.DROPPANEL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="ContextPanel" />
+	</STYLE>
+	<STYLE FOR="LINK" ID="DEFAULT" PADDING="2">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="LinkText" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="LinkText High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="LinkText Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="LinkText Disa" />
+		<FOCU BGCLASS="FloatingInputBack" TXTCLASS="LinkText Focu" />
+	</STYLE>
+	
+	<STYLE FOR="BOTAO" ID="DEFAULT" PADDING="2,2,2,2">
+		<NORM BGCLASS="ButtonBack" TXTCLASS="ButtonText" />
+		<HIGH BGCLASS="ButtonBack High" TXTCLASS="ButtonText High" />
+		<SELE BGCLASS="ButtonBack Sele" TXTCLASS="ButtonText Sele" />
+		<DISA BGCLASS="ButtonBack Disa" TXTCLASS="ButtonText Disa" />
+	</STYLE>
+
+  <STYLE FOR="BOTAO" ID="BTREE+" TEMAID="qstema_IconSetaDireita_14_14_0_0.png" TEMASIZE="14,14,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2"/>
+		<SELE BGTEMA="3"/>
+		<DISA BGTEMA="4"/>
+	</STYLE>
+  <STYLE FOR="BOTAO" ID="BTREE-" TEMAID="qstema_IconSetaBaixo_14_14_0_0.png" TEMASIZE="14,14,0,0,F" PADDING="0">
+		<NORM BGTEMA="1"/>
+		<HIGH BGTEMA="2"/>
+		<SELE BGTEMA="3"/>
+		<DISA BGTEMA="4"/>
+	</STYLE>
+	<STYLE FOR="BOTAO" ID="BCLOSE" TEMAID="qstema_BotClose_16_16_0_0.png" TEMASIZE="16,16,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+	<STYLE FOR="BOTAO" ID="BMINIMIZE" TEMAID="qstema_BotMinimize_16_16_0_0.png" TEMASIZE="16,16,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+	<STYLE FOR="BOTAO" ID="BRESTORE" TEMAID="qstema_BotRestore_16_16_0_0.png" TEMASIZE="16,16,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+
+	<STYLE FOR="BOTAO" ID="BINFO" PADDING="1,1,1,1" ICONID="qstema_Info_16_16_0_0.png" ICONSIZE="16,16" ICONLOCATION="1,1">
+    <NORM BGCLASS="ButtonBackTrans" TXTCLASS="ButtonText" ICONTEMA="1" />
+    <HIGH BGCLASS="ButtonBackTrans High" TXTCLASS="ButtonText High" ICONTEMA="1"/>
+    <SELE BGCLASS="ButtonBackTrans Sele" TXTCLASS="ButtonText Sele" ICONTEMA="1"/>
+    <DISA BGCLASS="ButtonBackTrans Disa" TXTCLASS="ButtonText Disa" ICONTEMA="2"/>
+  </STYLE>
+  <STYLE FOR="BOTAO" ID="BTAPION" PADDING="1,1,1,1" ICONID="qstema_TapiOn_16_16_0_0.png" ICONSIZE="16,16" ICONLOCATION="1,1">
+    <NORM BGCLASS="ButtonBackTrans" TXTCLASS="ButtonText" ICONTEMA="0" />
+    <HIGH BGCLASS="ButtonBackTrans High" TXTCLASS="ButtonText High" ICONTEMA="0"/>
+    <SELE BGCLASS="ButtonBackTrans Sele" TXTCLASS="ButtonText Sele" ICONTEMA="0"/>
+    <DISA BGCLASS="ButtonBackTrans Disa" TXTCLASS="ButtonText Disa" ICONTEMA="0"/>
+  </STYLE>
+  <STYLE FOR="BOTAO" ID="BTAPIOFF" PADDING="1,1,1,1" ICONID="qstema_TapiOff_16_16_0_0.png" ICONSIZE="16,16" ICONLOCATION="1,1">
+    <NORM BGCLASS="ButtonBackTrans" TXTCLASS="ButtonText" ICONTEMA="0" />
+    <HIGH BGCLASS="ButtonBackTrans High" TXTCLASS="ButtonText High" ICONTEMA="0"/>
+    <SELE BGCLASS="ButtonBackTrans Sele" TXTCLASS="ButtonText Sele" ICONTEMA="0"/>
+    <DISA BGCLASS="ButtonBackTrans Disa" TXTCLASS="ButtonText Disa" ICONTEMA="0"/>
+  </STYLE>
+
+	<STYLE FOR="BOTAO" ID="BOTAOCONTEXT" PADDING="2,2,2,2">
+		<NORM BGCLASS="ContextItemBack" TXTCLASS="ContextItemText" />
+		<HIGH BGCLASS="ContextItemBack High" TXTCLASS="ContextItemText High" />
+		<SELE BGCLASS="ContextItemBack Sele" TXTCLASS="ContextItemText Sele" />
+		<DISA BGCLASS="ContextItemBack Disa" TXTCLASS="ContextItemText Disa" />
+		<FOCU BGCLASS="ContextItemBack Focu" TXTCLASS="ContextItemText Focu" />
+	</STYLE>
+
+	<STYLE FOR="BOTAO" ID="BGETFAVORITE" TEMAID="qstema_favviewbw_25_25_0_0.png" TEMASIZE="25,25,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+	
+	<STYLE FOR="BOTAO" ID="BADDFAVORITE" TEMAID="qstema_favaddbw_25_25_0_0.png" TEMASIZE="25,25,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+
+	<STYLE FOR="BOTAO" ID="BDELFAVORITE" TEMAID="qstema_BotClose_16_16_0_0.png" TEMASIZE="16,16,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+
+	<STYLE FOR="BOTAO" ID="BSEARCH" TEMAID="qstema_searchbw_25_25_0_0.png" TEMASIZE="25,25,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+
+	<STYLE FOR="BOTAO" ID="SEARCHDOC" TEMAID="qstema_docbw_25_25_0_0.png" TEMASIZE="25,25,0,0,F" PADDING="0">
+		<NORM BGTEMA="1" />
+		<HIGH BGTEMA="2" />
+		<SELE BGTEMA="3" />
+		<DISA BGTEMA="4" />
+	</STYLE>
+	
+	
+	<STYLE FOR="HTMLBOX" ID="DEFAULT" PADDING="5">
+		<NORM BGCLASS="InputBack" />
+	</STYLE>
+	
+	<STYLE FOR="UPLOAD.CONTEXTPANEL" ID="DEFAULT" PADDING="8">
+		<NORM BGCLASS="ContextPanel" />
+	</STYLE>
+	
+	<STYLE FOR="ACORDEON" ID="DEFAULT" TEMAID="" TEMASIZE="" PADDING="10,10,2,2" ICONID="qstema_IconSetaAcordeon_14_14_0_0.png" ICONSIZE="14,14" ICONLOCATION="*-6,2">
+		<NORM BGCLASS="AcordeonBack" TXTCLASS="AcordeonText" ICONTEMA="1" />
+		<HIGH BGCLASS="AcordeonBack High" TXTCLASS="AcordeonText High" ICONTEMA="2" />
+		<SELE BGCLASS="AcordeonBack Sele" TXTCLASS="AcordeonText Sele" ICONTEMA="3" />
+		<DISA BGCLASS="AcordeonBack Disa" TXTCLASS="AcordeonText Disa" ICONTEMA="4" />
+	</STYLE>
+	
+	<STYLE FOR="FLVIDEO" ID="DEFAULT" PADDING="0,0,0,0">
+		<NORM BGCLASS="FloatingInputBack" />
+	</STYLE>
+	
+	<STYLE FOR="COLOR" ID="DEFAULT" PADDING="4,2,4,4">
+		<NORM BGCLASS="InputBack" TXTCLASS="InputText" />
+		<HIGH BGCLASS="InputBack High" TXTCLASS="InputText High" />
+		<SELE BGCLASS="InputBack Sele" TXTCLASS="InputText Sele" />
+		<OBRI BGCLASS="InputBack Obri" TXTCLASS="InputText Obri" />
+		<ERRO BGCLASS="InputBack Erro" TXTCLASS="InputText Erro" />
+		<DISA BGCLASS="InputBack Disa" TXTCLASS="InputText Disa" />
+	</STYLE>
+	<STYLE FOR="COLORPAD" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+	</STYLE>
+	<STYLE FOR="COLOR.DROPPANEL" ID="DEFAULT" PADDING="4">
+		<NORM BGCLASS="ContextPanel" />
+	</STYLE>
+	
+	<STYLE FOR="FOCUS" ID="DEFAULT" PADDING="0,0,0,0">
+		<NORM BGCLASS="Focus" />
+	</STYLE>
+	
+	<STYLE FOR="FOCUS" ID="TRANSP" PADDING="0,0,0,0">
+		<NORM BGCLASS="PanelHidden" />
+	</STYLE>
+
+	<STYLE FOR="SCROLLBAR" ID="DEFAULT" PADDING="1,1,0,0">
+		<NORM BGCLASS="IscrollBack" />
+	</STYLE>
+	<STYLE FOR="SCROLLBAR.CURSOR" ID="DEFAULT" PADDING="1,1,0,0">
+		<NORM BGCLASS="IscrollCursor" />
+	</STYLE>
+	
+	
+
+<!--  *********************** Menu Modulos *************************  -->
+
+	<STYLE FOR="AREA" ID="MENUMOD" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+
+	<STYLE FOR="PAGE" ID="QwIdMenu" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+
+	<STYLE FOR="MULTIGRID" ID="QwIdMenu" PADDING="0,0,0,0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+
+	<STYLE FOR="DATAPANEL" ID="QwIdMenu" PADDING="0,0,0,0">
+		<NORM BGCLASS="ListModBack" TXTCLASS="ListItemText" />
+		<HIGH BGCLASS="ListModBack High" TXTCLASS="ListItemText High" />
+		<SELE BGCLASS="ListModBack Sele" TXTCLASS="ListItemText Sele" />
+	</STYLE>
+
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXTM" ID="QwIdMenu" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText2" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Disa" />
+	</STYLE>
+
+
+
+<!--  *********************** Menu Vertical *************************  -->
+
+	<STYLE FOR="MENUSRC.MULTIGRID" ID="MenuV" PADDING="3">
+
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelFlat" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL" ID="DEFAULT" PADDING="2">
+		<NORM BGCLASS="MenuItemBack" />
+		<HIGH BGCLASS="MenuItemBack High" />
+		<SELE BGCLASS="MenuItemBack Sele" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv0" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText0" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv1" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText0" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText0 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv2" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText1" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText1 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText1 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText1 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv3" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText2" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv4" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText2" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Disa" />
+	</STYLE>
+	<STYLE FOR="MENUSRC.MULTIGRID.DATAPANEL.TEXT" ID="MenuVNiv5" PADDING="0">
+		<NORM BGCLASS="FloatingInputBack" TXTCLASS="MenuText2" />
+		<HIGH BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 High" />
+		<SELE BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Sele" />
+		<DISA BGCLASS="FloatingInputBack" TXTCLASS="MenuText2 Disa" />
+	</STYLE>
+
+<!--  *********************** Gadgets *************************  -->
+
+	<STYLE FOR="PANEL" ID="TRANSP" PADDING="0">
+		<NORM BGCLASS="PanelHidden" />
+		<DISA BGCLASS="PanelHidden" />
+	</STYLE>
+
+	<STYLE FOR="CONTEXTPANEL" ID="QwGInfo" PADDING="8" ANIMIN="GROW-R,15,-6,N" ANIMOUTxx="SHRINK-R,5,0,N">
+		<NORM BGCLASS="PanelInfo"/>
+	</STYLE>
+
+	<STYLE FOR="LABEL" ID="QwGInfo" PADDING="0">
+		<NORM BGCLASS="PanelHidden" TXTCLASS="PageHeaderText" />
+	</STYLE>
+
+	<STYLE FOR="EXTCTL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="PanelHidden"/>
+	</STYLE>
+	
+<!--  *********************** Novo File Control *************************  -->
+
+	<STYLE FOR="FILECTL" ID="DEFAULT" PADDING="18,4,0,0" ICONID="qstema_document_16_16_0_0.png" ICONSIZE="16,16" ICONLOCATION="0,1">
+		<NORM BGCLASS="InputBack" TXTCLASS="InputText" ICONTEMA="1"/>
+		<HIGH BGCLASS="InputBack High" TXTCLASS="InputText High" ICONTEMA="1"/>
+		<SELE BGCLASS="InputBack Sele" TXTCLASS="InputText" ICONTEMA="1"/>
+		<OBRI BGCLASS="InputBack Obri" TXTCLASS="InputText Obri" ICONTEMA="1"/>
+		<ERRO BGCLASS="InputBack Erro" TXTCLASS="InputText Erro" ICONTEMA="1"/>
+		<DISA BGCLASS="InputBack Disa" TXTCLASS="InputText Disa" ICONTEMA="1"/>
+		<ONED BGCLASS="InputBack" TXTCLASS="InputText Oned" ICONTEMA="2"/>
+		<LOCK BGCLASS="InputBack" TXTCLASS="InputText Lock" ICONTEMA="3"/>
+	</STYLE>
+
+	<STYLE FOR="FILECTL.DROPPANEL" ID="DEFAULT" PADDING="0">
+		<NORM BGCLASS="ComboDrop" />
+	</STYLE>
+
+	<STYLE FOR="FILECTL.BOTAO" ID="DEFAULT" PADDING="0,0,2,2">
+		<NORM BGCLASS="ListItemBack" TXTCLASS="ListItemText" />
+		<HIGH BGCLASS="ListItemBack High" TXTCLASS="ListItemText High" />
+		<SELE BGCLASS="ListItemBack Sele" TXTCLASS="ListItemText Sele" />
+		<DISA BGCLASS="ListItemBack Disa" TXTCLASS="ListItemText Disa" />
+	</STYLE>
+
+	<STYLE FOR="FILECTL.BOTAO" ID="MOREOPT" PADDING="0,10,2,2" ICONID="qstema_IconSetaDireita_14_14_0_0.png" ICONSIZE="14,14" ICONLOCATION="*-2,2">
+		<NORM BGCLASS="ListItemBack" TXTCLASS="ListItemText" ICONTEMA="0"/>
+		<HIGH BGCLASS="ListItemBack High" TXTCLASS="ListItemText High" ICONTEMA="1"/>
+		<SELE BGCLASS="ListItemBack Sele" TXTCLASS="ListItemText Sele" ICONTEMA="2"/>
+		<DISA BGCLASS="ListItemBack Disa" TXTCLASS="ListItemText Disa" ICONTEMA="3"/>
+	</STYLE>
+
+	<STYLE FOR="FILECTL.BOTAO" ID="SEPARATOR" PADDING="0">
+		<NORM BGCLASS="ListSeparatorBack" TXTCLASS="ButtonText" />
+	</STYLE>
+
+</includeentry>

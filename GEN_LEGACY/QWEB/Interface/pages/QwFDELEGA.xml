@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<PAGE ID="QwFDELEGA" TIT="Delegação" STYLE="QwFDELEGA" SCROLL="S">
+
+  <FORM ID="FDELEGA" PROVIDER="delega" MSGCTL="Msgstd">
+
+	<COL ID="delega.coddelega" TYPE="A" OBRIG="S" KEY="S" HISTID="delega" HISTGETID="delega" TIT="chave primária"/>
+	<COL ID="delega.dateini" TYPE="D10" TIT="Data de início" OBRIG="S"/>
+	<COL ID="delega.dateend" TYPE="D10" TIT="Data limite" OBRIG="S"/>
+	<COL ID="delega.auditusr" TYPE="A20" TIT="Id para auditoria" OBRIG="S"/>
+	<COL ID="delega.revoked" TYPE="N1" TIT="Revogada?"/>
+	<COL ID="delega.message" TYPE="A8000" TIT="Mensagem"/>
+	<COL ID="delega.datacria" TYPE="D8" TIT="Criado em:"/>
+	<COL ID="delega.opercria" TYPE="A20" TIT="Criado por:"/>
+	<COL ID="delega.datamuda" TYPE="D8" TIT="Mudado em:"/>
+	<COL ID="delega.opermuda" TYPE="A20" TIT="Mudado por:"/>
+	<COL ID="delega.codpswup" TYPE="A6" HISTGETID="pswup" TIT="Delegador" OBRIG="S"/>
+	<COL ID="delega.codpswdw" TYPE="A6" HISTGETID="psw" TIT="Utilizador" OBRIG="S"/>
+
+  </FORM>
+
+  <LEDIT ID="LED_DELEGA___PSWUP" PROVIDER="pswup" DATAFLD="delega.codpswup" DATACTL="FDELEGA">
+	  <COL ID="pswup.codpsw" TYPE="A" TIT="" KEY="S" VIS="N" LARG="0" HISTID="pswup"/>
+	  <COL ID="pswup.nome" TYPE="A20" TIT="Nome"/>
+  </LEDIT>
+  <LEDIT ID="LED_DELEGA___PSW__" PROVIDER="psw" DATAFLD="delega.codpswdw" DATACTL="FDELEGA">
+	  <COL ID="psw.codpsw" TYPE="A" TIT="" KEY="S" VIS="N" LARG="0" HISTID="psw"/>
+	  <COL ID="psw.nome" TYPE="A20" TIT="Nome"/>
+	  <EVENT ID="LIST" ACT="OpenDialog(QwBL_DELEGA___PSW__"/>
+  </LEDIT>
+
+  <PANEL LOCATION="0,0" SIZE="*,*" SIZEDIALOG="615,279" STYLE="BARRA" SCROLL="N">
+    <PATH LOCATION="1,0" SIZE="*-2,17"/>
+    <TITLE LOCATION="1,17" SIZE="*-2,30" ALIGN="LEFT"/>
+    <MSG ID="Msgstd" LOCATION="1,45" SIZE="*-2,17" ALIGN="LEFT"/>
+
+    <PANEL LOCATION="0,65" SIZE="*,*" STYLE="DEFAULT" SCROLL="S" SCROLLDIALOG="N">
+      <PANEL LOCATION="0,5" SIZE="615,209"  STYLE="CONTEUDO" SCROLL="N">
+
+	      <TEXT ID="IFF_DELEGA___PSWUPNOME____" LOCATION="10,30" SIZE="117,20" DATACTL="LED_DELEGA___PSWUP" PROT="S" DATAFLD="pswup.nome"/>
+	      <LABEL ID="LBL_DELEGA___PSWUPNOME____" LOCATION="10,15" SIZE="56,13" ALIGN="left" TXT="Delegador"/>
+
+	      <BOTAO ID="IBL_DELEGA___PSW__NOME____" LOCATION="264,30" SIZE="20,20" TXT="..." ICONID="ilist.png" DATACTL="LED_DELEGA___PSW__" ACT="Execute(LED_DELEGA___PSW__,LIST" STYLE="BLIST" TIP="ver lista"/>
+	      <LEDTXT ID="IFF_DELEGA___PSW__NOME____" LOCATION="144,30" SIZE="117,20" DATACTL="LED_DELEGA___PSW__" DATAFLD="psw.nome"/>
+	      <LABEL ID="LBL_DELEGA___PSW__NOME____" LOCATION="144,15" SIZE="50,13" ALIGN="left" TXT="Utilizador"/>
+
+	      <TEXT ID="IFF_DELEGA___DELEGADATEINI_" LOCATION="301,30" SIZE="75,20" DATACTL="FDELEGA" DATAFLD="delega.dateini"/>
+	      <LABEL ID="LBL_DELEGA___DELEGADATEINI_" LOCATION="301,15" SIZE="74,13" ALIGN="left" TXT="Data de início"/>
+
+	      <TEXT ID="IFF_DELEGA___DELEGADATEEND_" LOCATION="393,30" SIZE="75,20" DATACTL="FDELEGA" DATAFLD="delega.dateend"/>
+	      <LABEL ID="LBL_DELEGA___DELEGADATEEND_" LOCATION="393,15" SIZE="56,13" ALIGN="left" TXT="Data limite"/>
+
+	      <TEXT ID="IFF_DELEGA___DELEGAAUDITUSR" LOCATION="485,30" SIZE="117,20" DATACTL="FDELEGA" DATAFLD="delega.auditusr"/>
+	      <LABEL ID="LBL_DELEGA___DELEGAAUDITUSR" LOCATION="485,15" SIZE="83,13" ALIGN="left" TXT="Id para auditoria"/>
+
+	      <CHECK ID="IFF_DELEGA___DELEGAREVOKED_" LOCATION="10,55" DATACTL="FDELEGA" DATAFLD="delega.revoked"/>
+	      <LABEL LOCATION="28,55" SIZE="64,17" ALIGN="left" TXT="Revogada?"/>
+
+	      <TEXT ID="IFF_DELEGA___DELEGAMESSAGE_" LOCATION="10,92" SIZE="592,62" DATACTL="FDELEGA" DATAFLD="delega.message" MULTILINE="S"/>
+	      <LABEL ID="LBL_DELEGA___DELEGAMESSAGE_" LOCATION="10,77" SIZE="59,13" ALIGN="left" TXT="Mensagem"/>
+
+	      <TEXT ID="IFF_DELEGA___DELEGADATACRIA" LOCATION="137,174" SIZE="75,20" DATACTL="FDELEGA" PROT="S" DATAFLD="delega.datacria"/>
+	      <LABEL ID="LBL_DELEGA___DELEGADATACRIA" LOCATION="137,159" SIZE="57,13" ALIGN="left" TXT="Criado em:"/>
+
+	      <TEXT ID="IFF_DELEGA___DELEGAOPERCRIA" LOCATION="10,174" SIZE="117,20" DATACTL="FDELEGA" PROT="S" DATAFLD="delega.opercria"/>
+	      <LABEL ID="LBL_DELEGA___DELEGAOPERCRIA" LOCATION="10,159" SIZE="58,13" ALIGN="left" TXT="Criado por:"/>
+
+	      <TEXT ID="IFF_DELEGA___DELEGADATAMUDA" LOCATION="349,174" SIZE="75,20" DATACTL="FDELEGA" PROT="S" DATAFLD="delega.datamuda"/>
+	      <LABEL ID="LBL_DELEGA___DELEGADATAMUDA" LOCATION="349,159" SIZE="66,13" ALIGN="left" TXT="Mudado em:"/>
+
+	      <TEXT ID="IFF_DELEGA___DELEGAOPERMUDA" LOCATION="222,174" SIZE="117,20" DATACTL="FDELEGA" PROT="S" DATAFLD="delega.opermuda"/>
+	      <LABEL ID="LBL_DELEGA___DELEGAOPERMUDA" LOCATION="222,159" SIZE="67,13" ALIGN="left" TXT="Mudado por:"/>
+
+        <BOTAO ICONID="bcancel.png" ID="Bcancel" LOCATION="525,174" SIZE="80,21" TXT="Sair" DATACTL="FDELEGA" ACT="Execute(FDELEGA,Cancel" STYLE="BCANCELAR"/>
+        <BOTAO ICONID="bselecc.png" ID="Bok" LOCATION="435,174" SIZE="80,21" TXT="Gravar" DATACTL="FDELEGA" ACT="Execute(FDELEGA" STYLE="BGRAVAR"/>
+      </PANEL>
+    </PANEL>
+  </PANEL>
+</PAGE>

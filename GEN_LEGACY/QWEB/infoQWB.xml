@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Projecto>
+	<Definicoes>
+		<Sistema>GQT</Sistema>
+		<Cliente>LEGACY</Cliente>
+		<Versao>4355</Versao>
+	</Definicoes>
+	<Modulos>
+		<Modulo ID="QWB">
+			<PROG>QWeb</PROG>
+			<PLATAFOR>QWEB</PLATAFOR>
+		</Modulo>
+	</Modulos>
+</Projecto>

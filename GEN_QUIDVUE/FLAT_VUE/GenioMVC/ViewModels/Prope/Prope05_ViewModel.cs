@@ -80,6 +80,8 @@ namespace GenioMVC.ViewModels.Prope
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.City> TableCityCity { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -365,6 +367,17 @@ namespace GenioMVC.ViewModels.Prope
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -497,7 +510,7 @@ namespace GenioMVC.ViewModels.Prope
 
 			if (prope05_agentname____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableAgentName, "sTableAgentName", "dTableAgentName", qs, "agent");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -547,7 +560,7 @@ namespace GenioMVC.ViewModels.Prope
 
 				TableAgentName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableAgentName.Query = query;
-				TableAgentName.Elements = listing.RowsForViewModel<GenioMVC.Models.Agent>((r) => new GenioMVC.Models.Agent(m_userContext, r, true, _fieldsToSerialize_PROPE05_AGENTNAME____));
+				TableAgentName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Agent(m_userContext, r, true, _fieldsToSerialize_PROPE05_AGENTNAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -687,7 +700,7 @@ namespace GenioMVC.ViewModels.Prope
 
 			if (prope05_city_city____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableCityCity, "sTableCityCity", "dTableCityCity", qs, "city");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -737,7 +750,7 @@ namespace GenioMVC.ViewModels.Prope
 
 				TableCityCity.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableCityCity.Query = query;
-				TableCityCity.Elements = listing.RowsForViewModel<GenioMVC.Models.City>((r) => new GenioMVC.Models.City(m_userContext, r, true, _fieldsToSerialize_PROPE05_CITY_CITY____));
+				TableCityCity.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.City(m_userContext, r, true, _fieldsToSerialize_PROPE05_CITY_CITY____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

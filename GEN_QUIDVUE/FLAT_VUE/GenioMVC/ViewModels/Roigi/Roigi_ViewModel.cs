@@ -50,6 +50,8 @@ namespace GenioMVC.ViewModels.Roigi
 		/// </summary>
 		public string ValTitle { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -304,6 +306,17 @@ namespace GenioMVC.ViewModels.Roigi
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -434,7 +447,7 @@ namespace GenioMVC.ViewModels.Roigi
 
 			if (roigi___rogl1title___DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableRogl1Title, "sTableRogl1Title", "dTableRogl1Title", qs, "rogl1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -484,7 +497,7 @@ namespace GenioMVC.ViewModels.Roigi
 
 				TableRogl1Title.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableRogl1Title.Query = query;
-				TableRogl1Title.Elements = listing.RowsForViewModel<GenioMVC.Models.Rogl1>((r) => new GenioMVC.Models.Rogl1(m_userContext, r, true, _fieldsToSerialize_ROIGI___ROGL1TITLE___));
+				TableRogl1Title.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Rogl1(m_userContext, r, true, _fieldsToSerialize_ROIGI___ROGL1TITLE___));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

@@ -1,6 +1,7 @@
 ﻿import _assignIn from 'lodash-es/assignIn'
 import cloneDeep from 'lodash-es/cloneDeep'
 import _get from 'lodash-es/get'
+import _isEmpty from 'lodash-es/isEmpty'
 import _keyBy from 'lodash-es/keyBy'
 import _toString from 'lodash-es/toString'
 import { nextTick, ref, unref, markRaw, toValue } from 'vue'
@@ -23,9 +24,7 @@ export class BaseColumn
 	 */
 	_watchScope
 
-	#fnVisibility
-
-	constructor(options, modelCtx, eventEmitter, init = true)
+	constructor(options, modelCtx, eventEmitter, init = true, additionalReactiveOptions = {})
 	{
 		// All watchers created inside this scope are collected automatically.
 		// https://vuejs.org/api/reactivity-advanced#effectscope
@@ -37,6 +36,8 @@ export class BaseColumn
 		})
 
 		this.order = 0
+		this.sortOrder = 0
+		this.sortAsc = true
 		this.dataType = 'None'
 		this.searchFieldType = null
 		this.dataDisplay = null
@@ -55,7 +56,6 @@ export class BaseColumn
 		this.export = true
 		this.array = null
 		this.useDistinctValues = false
-		this.isOrderingColumn = false
 		this.initialSort = false
 		this.initialSortOrder = ''
 		this.isDefaultSearch = false
@@ -68,21 +68,24 @@ export class BaseColumn
 
 		this._stopModelCtxWatcher = null
 
+		const defaultVisible = toValue(additionalReactiveOptions?.visible) ?? true
+		const defaultVisibilityEval = toValue(additionalReactiveOptions?.visibilityEval) ?? false
+
 		Object.defineProperties(this, {
 			visible: {
-				value: ref(true),
+				value: ref(defaultVisible),
 				configurable: true,
 				writable: true,
 				enumerable: false
 			},
 			visibilityEval: {
-				value: ref(false),
+				value: ref(defaultVisibilityEval),
 				configurable: true,
 				writable: true,
 				enumerable: false
 			},
 			_isVisible: {
-				value: ref(false),
+				value: ref(defaultVisible && defaultVisibilityEval),
 				configurable: true,
 				writable: true,
 				enumerable: false
@@ -118,7 +121,7 @@ export class BaseColumn
 			}
 		})
 
-		this.#fnVisibility = async () => {
+		this.fnVisibility = async () => {
 			const isVisible = toValue(this.isVisible)
 			this.visibilityEval.value = await validateFormula(this.showWhen, this.modelCtx)
 
@@ -127,10 +130,11 @@ export class BaseColumn
 				for (let listener of this.visibilityListeners)
 					listener(toValue(this.isVisible))
 		}
+		Object.defineProperty(this, 'fnVisibility', { enumerable: false })
 
-		this._watchScope.watch([this.visible, this.visibilityEval], ([visible, visibilityEval]) => {
-			this._isVisible.value = toValue(visible) && toValue(visibilityEval)
-		})
+		this._watchScope.watch(
+			[this.visible, this.visibilityEval],
+			([visible, visibilityEval]) => (this._isVisible.value = visible && visibilityEval))
 
 		// Add all properties to itself
 		_assignIn(this, options)
@@ -154,13 +158,12 @@ export class BaseColumn
 		if (this.showWhen && this.eventEmitter instanceof QEventEmitter)
 		{
 			this.modelCtx = unref(modelCtx)
-			if(this._stopModelCtxWatcher)
-				this._stopModelCtxWatcher()
+			this._stopModelCtxWatcher?.()
 			this._stopModelCtxWatcher = this._watchScope.watch(() => modelCtx, (value) => this.modelCtx = unref(value), { deep: true })
 
-			this.eventEmitter.offMany(this.showWhen.dependencyEvents, this.#fnVisibility)
-			this.eventEmitter.onMany(this.showWhen.dependencyEvents, this.#fnVisibility)
-			await this.#fnVisibility()
+			this.eventEmitter.offMany(this.showWhen.dependencyEvents, this.fnVisibility)
+			this.eventEmitter.onMany(this.showWhen.dependencyEvents, this.fnVisibility)
+			await this.fnVisibility()
 		}
 		else
 			this.visibilityEval.value = true
@@ -189,21 +192,24 @@ export class BaseColumn
 		// - The reason isVisible is not protected from override is that we have generated code that overrides isVisible with primitive, on columns defined as non-visible.
 		delete clonedThis.isVisible
 		delete clonedThis._stopModelCtxWatcher
-		// TODO: Arrays after deepUnwrap lose reactivity in the Computed of translated texts.
-		// 		 Check if they need a clone with creation of the new array object.
-		const clonedCol = new this.constructor(clonedThis, this.modelCtx, this.eventEmitter, false)
 
 		// This is needed since non-enumerable properties won't be set, as "cloneDeep" will ignore them.
-		clonedCol.visible.value = toValue(this.visible) ?? true
-		clonedCol.visibilityEval.value = toValue(this.visibilityEval) ?? false
+		const additionalReactiveOptions = {
+			visible: toValue(this.visible),
+			visibilityEval: toValue(this.visibilityEval)
+		}
+
+		// TODO: Arrays after deepUnwrap lose reactivity in the Computed of translated texts.
+		// 		 Check if they need a clone with creation of the new array object.
+		const clonedCol = new this.constructor(clonedThis, this.modelCtx, this.eventEmitter, false, additionalReactiveOptions)
 
 		return clonedCol
 	}
 
 	/**
-	 * Normalize a value based on the column type
-	 * @param {string} value Field value
-	 * @returns {string} A Date object representing the given date and time.
+	 * Normalizes a value based on the column type.
+	 * @param {any} value Field value
+	 * @returns The normalized value.
 	 */
 	getNormalizedValue(value)
 	{
@@ -212,7 +218,7 @@ export class BaseColumn
 
 	destroy()
 	{
-		if(this._stopModelCtxWatcher)
+		if (this._stopModelCtxWatcher)
 			this._stopModelCtxWatcher()
 		this._stopModelCtxWatcher = null
 
@@ -225,7 +231,7 @@ export class BaseColumn
 		this.visibilityListeners.splice(0)
 		this.visibilityListeners = null
 		if (this.showWhen && this.eventEmitter instanceof QEventEmitter)
-			this.eventEmitter.offMany(this.showWhen.dependencyEvents, this.#fnVisibility)
+			this.eventEmitter.offMany(this.showWhen.dependencyEvents, this.fnVisibility)
 		this.eventEmitter = null
 
 		delete this.label
@@ -235,20 +241,20 @@ export class BaseColumn
 
 export class TextColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			dataType: 'Text',
 			searchFieldType: 'text',
 			dataDisplay: listFunctions.textDisplayCell,
 			dataDisplayText: listFunctions.textDisplayCell
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 
 export class NumericColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		const genericDataStore = useGenericDataStore()
 
@@ -266,7 +272,7 @@ export class NumericColumn extends BaseColumn
 			showTotal: true,
 			columnClasses: 'c-table__cell-numeric row-numeric',
 			columnHeaderClasses: 'c-table__head-numeric'
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 
 	/**
@@ -277,14 +283,30 @@ export class NumericColumn extends BaseColumn
 		super.init(modelCtx, eventEmitter)
 
 		// Add class for column with row re-order controls
-		if (this.isOrderingColumn)
+		if (this.sortOrder > 0)
 			this.columnHeaderClasses += ' thead-order'
+	}
+
+	/**
+	 * Normalizes the specified value as numeric.
+	 * @param {any} value The value of the column
+	 * @returns {number} A numeric value, or undefined.
+	 */
+	getNormalizedValue(value)
+	{
+		const groupSep = this.numberFormat.groupSeparator
+		value = value?.toString()
+			.replace(groupSep ? new RegExp('\\' + groupSep, 'g') : '', '')
+			.replace(new RegExp('\\' + this.numberFormat.decimalSeparator, 'g'), '.')
+
+		const numericVal = Number(value)
+		return Number.isFinite(numericVal) ? numericVal : undefined
 	}
 }
 
 export class CurrencyColumn extends NumericColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			dataType: 'Currency',
@@ -293,13 +315,13 @@ export class CurrencyColumn extends NumericColumn
 			dataDisplayText: listFunctions.currencyDisplayCell,
 			currency: systemInfo.system.baseCurrency.code,
 			currencySymbol: systemInfo.system.baseCurrency.symbol
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 
 export class DateColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		const genericDataStore = useGenericDataStore()
 
@@ -310,9 +332,9 @@ export class DateColumn extends BaseColumn
 			dateFormats: genericDataStore.dateFormat,
 			dataDisplay: listFunctions.dateDisplayCell,
 			dataDisplayText: listFunctions.dateDisplayCell
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 
-		this.format = genericDataStore.dateFormat[options?.dateTimeType]
+		this.format = genericDataStore.dateFormat[this.dateTimeType]
 	}
 
 	/**
@@ -322,26 +344,17 @@ export class DateColumn extends BaseColumn
 	 */
 	getNormalizedValue(value)
 	{
-		const genericDataStore = useGenericDataStore()
-
-		// Get date format based on the column
-		const dateFormat = genericDataStore.dateFormat[this.dateTimeType]
-
 		// Convert to date object
-		let parsedDate = genericFunctions.stringToDate(value, dateFormat)
-
-		// If invalid date
-		if (parsedDate === null)
-			return ''
-
-		// Convert to ISO string
-		return parsedDate.toISOString()
+		const parsedDate = genericFunctions.stringToDate(value, this.format)
+		return parsedDate === null
+			? ''
+			: parsedDate.toISOString()
 	}
 }
 
 export class BooleanColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			dataType: 'Boolean',
@@ -349,13 +362,26 @@ export class BooleanColumn extends BaseColumn
 			component: 'q-render-boolean',
 			dataDisplay: listFunctions.booleanDisplayCell,
 			dataDisplayText: listFunctions.booleanDisplayCell
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
+	}
+
+	/**
+	 * Normalizes the specified value as boolean.
+	 * @param {any} value The value of the column
+	 * @returns {boolean} A boolean value, or undefined.
+	 */
+	getNormalizedValue(value)
+	{
+		const isBool = typeof value === 'boolean' ||
+			value === 1 || value === 0 ||
+			value === 'true' || value === 'false'
+		return isBool ? Boolean(value) : undefined
 	}
 }
 
 export class ImageColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			dataType: 'Image',
@@ -363,13 +389,13 @@ export class ImageColumn extends BaseColumn
 			cellAction: true,
 			dataDisplay: listFunctions.imageDisplayCell,
 			dataDisplayText: listFunctions.imageDisplayCell
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 
 export class DocumentColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			dataType: 'Document',
@@ -378,21 +404,22 @@ export class DocumentColumn extends BaseColumn
 			dataDisplay: listFunctions.documentDisplayCell,
 			dataDisplayText: listFunctions.documentDisplayCell,
 			isSerialized: true
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 
 export class ArrayColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			dataType: 'Array',
 			component: 'q-render-array',
 			searchFieldType: 'enum',
+			array: [],
 			dataDisplay: listFunctions.enumerationDisplayCell,
 			dataDisplayText: listFunctions.enumerationDisplayCell
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 
 	get arrayAsObj()
@@ -410,11 +437,25 @@ export class ArrayColumn extends BaseColumn
 			}
 		})
 	}
+
+	/**
+	 * @override
+	 */
+	getNormalizedValue(value)
+	{
+		// Check if value is already a key.
+		if (!_isEmpty(this.arrayAsObj[value]))
+			return value
+
+		// If it's not a key, we check if it matches any of the labels.
+		const options = this.array.filter((e) => unref(e.value).toUpperCase().startsWith(value.toUpperCase()))
+		return options.length === 1 ? options[0].key : undefined
+	}
 }
 
 export class GeographicColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		const genericDataStore = useGenericDataStore()
 
@@ -426,35 +467,35 @@ export class GeographicColumn extends BaseColumn
 				decimalSeparator: genericDataStore.numberFormat.decimalSeparator,
 				groupSeparator: genericDataStore.numberFormat.thousandsSeparator,
 			}
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 
 export class GeographicShapeColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			dataType: 'GeographicShape',
 			dataDisplay: listFunctions.geographicShapeDisplayCell,
 			dataDisplayText: listFunctions.geographicShapeDisplayCell
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 
 export class GeometricShapeColumn extends GeographicShapeColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			dataType: 'GeometricShape'
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 
 export class HyperLinkColumn extends BaseColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			dataType: 'Text',
@@ -462,29 +503,29 @@ export class HyperLinkColumn extends BaseColumn
 			dataDisplay: listFunctions.hyperLinkDisplayCell,
 			dataDisplayText: listFunctions.hyperLinkDisplayCell,
 			component: 'q-render-hyperlink'
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 
 export class HtmlColumn extends TextColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			component: 'q-render-html',
 			isHtmlField: true
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 
 export class MarkdownColumn extends TextColumn
 {
-	constructor(options, modelCtx, eventEmitter, init)
+	constructor(options, modelCtx, eventEmitter, init, additionalReactiveOptions)
 	{
 		super(_assignIn({
 			component: 'q-render-markdown',
 			isHtmlField: true
-		}, options), modelCtx, eventEmitter, init)
+		}, options), modelCtx, eventEmitter, init, additionalReactiveOptions)
 	}
 }
 

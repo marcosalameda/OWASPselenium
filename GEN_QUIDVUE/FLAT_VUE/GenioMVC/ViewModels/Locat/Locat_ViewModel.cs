@@ -55,6 +55,8 @@ namespace GenioMVC.ViewModels.Locat
 		/// </summary>
 		public string ValGln { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -309,6 +311,17 @@ namespace GenioMVC.ViewModels.Locat
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -440,7 +453,7 @@ namespace GenioMVC.ViewModels.Locat
 
 			if (locat___entitname____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableEntitName, "sTableEntitName", "dTableEntitName", qs, "entit");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -490,7 +503,7 @@ namespace GenioMVC.ViewModels.Locat
 
 				TableEntitName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableEntitName.Query = query;
-				TableEntitName.Elements = listing.RowsForViewModel<GenioMVC.Models.Entit>((r) => new GenioMVC.Models.Entit(m_userContext, r, true, _fieldsToSerialize_LOCAT___ENTITNAME____));
+				TableEntitName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Entit(m_userContext, r, true, _fieldsToSerialize_LOCAT___ENTITNAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -637,7 +650,7 @@ namespace GenioMVC.ViewModels.Locat
 
 			if (locat___facilname____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableFacilName, "sTableFacilName", "dTableFacilName", qs, "facil");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -687,7 +700,7 @@ namespace GenioMVC.ViewModels.Locat
 
 				TableFacilName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableFacilName.Query = query;
-				TableFacilName.Elements = listing.RowsForViewModel<GenioMVC.Models.Facil>((r) => new GenioMVC.Models.Facil(m_userContext, r, true, _fieldsToSerialize_LOCAT___FACILNAME____));
+				TableFacilName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Facil(m_userContext, r, true, _fieldsToSerialize_LOCAT___FACILNAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

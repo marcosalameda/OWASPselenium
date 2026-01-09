@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_IMGBACKGROUND]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuSTY_IMGBACKGROUNDViewModel.js'
 
@@ -269,6 +270,18 @@
 								sortable: false,
 								searchable: false,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.BooleanColumn({
+								order: 14,
+								name: 'ValShowreco',
+								area: 'WPESS',
+								field: 'SHOWRECO',
+								label: computed(() => this.Resources.SHOW_RECORD11620),
+								scrollData: 1,
+								isVisible: false,
+								sortable: false,
+								searchable: false,
+								export: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'STY_Menu_IMGBACKGROUND',
@@ -283,8 +296,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -385,6 +397,7 @@
 							rowClickAction: {
 								id: 'RCA_STY_22111',
 								name: 'form-ARMAPESS',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -394,7 +407,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARMAPESS',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARMAPESS'
 								}
 							},
 							formsDefinition: {
@@ -444,6 +457,7 @@
 										allowsMultiple: true,
 										sources: [
 											'WPESS.EMAIL',
+											'WPESS.SHOWRECO',
 										]
 									},
 									image: {
@@ -486,6 +500,10 @@
 										rawValue: 'grid',
 										isMapped: false
 									},
+									gridMode: {
+										rawValue: 'fixed',
+										isMapped: false
+									},
 									containerAlignment: {
 										rawValue: 'left',
 										isMapped: false
@@ -512,6 +530,7 @@
 							},
 						],
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

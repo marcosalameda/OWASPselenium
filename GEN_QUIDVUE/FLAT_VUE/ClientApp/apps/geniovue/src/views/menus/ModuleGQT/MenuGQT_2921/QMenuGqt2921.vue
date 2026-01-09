@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_2921]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_2921ViewModel.js'
 
@@ -168,8 +169,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -270,6 +270,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_29211',
 								name: 'form-FAMI1',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -279,7 +280,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'FAMI1',
+									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'FAMI1'
 								}
 							},
 							formsDefinition: {
@@ -299,6 +300,7 @@
 						uuid: '7d41ceb4-cb60-497f-b5c3-07676a99758b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

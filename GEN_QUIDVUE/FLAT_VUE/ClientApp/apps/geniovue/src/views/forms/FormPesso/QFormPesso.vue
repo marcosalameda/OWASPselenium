@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,37 +94,36 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="PESSO"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.PESSO___PSEUDNOVOGR08.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.PESSO___PSEUDNOVOGR08.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.PESSO___PSEUDNOVOGR08.isVisible">
+					<q-col v-if="controls.PESSO___PSEUDNOVOGR08.isVisible">
 						<q-group-box-container
+							v-if="controls.PESSO___PSEUDNOVOGR08.isVisible"
 							id="PESSO___PSEUDNOVOGR08"
 							v-bind="controls.PESSO___PSEUDNOVOGR08"
 							no-border
 							:is-visible="controls.PESSO___PSEUDNOVOGR08.isVisible">
 							<!-- Start PESSO___PSEUDNOVOGR08 -->
-							<q-row-container v-show="controls.PESSO___PSEUDNOVOGR04.isVisible || controls.PESSO___PSEUDNOVOGR02.isVisible">
-								<q-control-wrapper
-									v-show="controls.PESSO___PSEUDNOVOGR04.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PESSO___PSEUDNOVOGR04.isVisible || controls.PESSO___PSEUDNOVOGR02.isVisible">
+								<q-col
+									v-if="controls.PESSO___PSEUDNOVOGR04.isVisible"
+									cols="auto">
 									<q-group-box-container
+										v-if="controls.PESSO___PSEUDNOVOGR04.isVisible"
 										id="PESSO___PSEUDNOVOGR04"
 										v-bind="controls.PESSO___PSEUDNOVOGR04"
 										:is-visible="controls.PESSO___PSEUDNOVOGR04.isVisible">
 										<!-- Start PESSO___PSEUDNOVOGR04 -->
-										<q-row-container v-show="controls.PESSO___PESSOPHOTOGRA.isVisible">
-											<q-control-wrapper
-												v-show="controls.PESSO___PESSOPHOTOGRA.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PESSO___PESSOPHOTOGRA.isVisible">
+											<q-col
+												v-if="controls.PESSO___PESSOPHOTOGRA.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___PESSOPHOTOGRA.isVisible"
 													class="q-image"
 													v-bind="controls.PESSO___PESSOPHOTOGRA"
 													v-on="controls.PESSO___PESSOPHOTOGRA.handlers"
@@ -128,24 +135,26 @@
 														v-bind="controls.PESSO___PESSOPHOTOGRA.props"
 														v-on="controls.PESSO___PESSOPHOTOGRA.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End PESSO___PSEUDNOVOGR04 -->
 									</q-group-box-container>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PESSO___PSEUDNOVOGR02.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PESSO___PSEUDNOVOGR02.isVisible"
+									cols="auto">
 									<q-group-box-container
+										v-if="controls.PESSO___PSEUDNOVOGR02.isVisible"
 										id="PESSO___PSEUDNOVOGR02"
 										v-bind="controls.PESSO___PSEUDNOVOGR02"
 										:is-visible="controls.PESSO___PSEUDNOVOGR02.isVisible">
 										<!-- Start PESSO___PSEUDNOVOGR02 -->
-										<q-row-container v-show="controls.PESSO___PESSOIDFUNCIO.isVisible || controls.PESSO___PESSONAME____.isVisible">
-											<q-control-wrapper
-												v-show="controls.PESSO___PESSOIDFUNCIO.isVisible || controls.PESSO___PESSONAME____.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PESSO___PESSOIDFUNCIO.isVisible || controls.PESSO___PESSONAME____.isVisible">
+											<q-col
+												v-if="controls.PESSO___PESSOIDFUNCIO.isVisible || controls.PESSO___PESSONAME____.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___PESSOIDFUNCIO.isVisible"
 													class="i-text"
 													v-bind="controls.PESSO___PESSOIDFUNCIO"
 													v-on="controls.PESSO___PESSOIDFUNCIO.handlers"
@@ -158,6 +167,7 @@
 														@update:model-value="model.ValIdfuncio.fnUpdateValue" />
 												</base-input-structure>
 												<base-input-structure
+													v-if="controls.PESSO___PESSONAME____.isVisible"
 													class="i-text"
 													v-bind="controls.PESSO___PESSONAME____"
 													v-on="controls.PESSO___PESSONAME____.handlers"
@@ -169,13 +179,14 @@
 														@blur="onBlur(controls.PESSO___PESSONAME____, model.ValName.value)"
 														@change="model.ValName.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PESSO___PESSOGENDER__.isVisible">
-											<q-control-wrapper
-												v-show="controls.PESSO___PESSOGENDER__.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PESSO___PESSOGENDER__.isVisible">
+											<q-col
+												v-if="controls.PESSO___PESSOGENDER__.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___PESSOGENDER__.isVisible"
 													class="i-radio-container"
 													v-bind="controls.PESSO___PESSOGENDER__"
 													v-on="controls.PESSO___PESSOGENDER__.handlers"
@@ -194,13 +205,14 @@
 															:value="radio.key" />
 													</q-radio-group>
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PESSO___PESSODTNASCIM.isVisible || controls.PESSO___PESSOIDADE___.isVisible">
-											<q-control-wrapper
-												v-show="controls.PESSO___PESSODTNASCIM.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PESSO___PESSODTNASCIM.isVisible || controls.PESSO___PESSOIDADE___.isVisible">
+											<q-col
+												v-if="controls.PESSO___PESSODTNASCIM.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___PESSODTNASCIM.isVisible"
 													class="i-text"
 													v-bind="controls.PESSO___PESSODTNASCIM"
 													v-on="controls.PESSO___PESSODTNASCIM.handlers"
@@ -214,11 +226,12 @@
 														@reset-icon-click="model.ValDtnascim.fnUpdateValue(model.ValDtnascim.originalValue ?? new Date())"
 														@update:model-value="model.ValDtnascim.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PESSO___PESSOIDADE___.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PESSO___PESSOIDADE___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___PESSOIDADE___.isVisible"
 													class="i-text"
 													v-bind="controls.PESSO___PESSOIDADE___"
 													v-on="controls.PESSO___PESSOIDADE___.handlers"
@@ -230,13 +243,14 @@
 														v-bind="controls.PESSO___PESSOIDADE___.props"
 														@update:model-value="model.ValIdade.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PESSO___PESSOINTERNA_.isVisible || controls.PESSO___PESSOEXTERNA_.isVisible">
-											<q-control-wrapper
-												v-show="controls.PESSO___PESSOINTERNA_.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PESSO___PESSOINTERNA_.isVisible || controls.PESSO___PESSOEXTERNA_.isVisible">
+											<q-col
+												v-if="controls.PESSO___PESSOINTERNA_.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___PESSOINTERNA_.isVisible"
 													class="i-checkbox"
 													v-bind="controls.PESSO___PESSOINTERNA_"
 													v-on="controls.PESSO___PESSOINTERNA_.handlers"
@@ -244,17 +258,18 @@
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<template #label>
-														<q-checkbox-input
+														<q-checkbox
 															v-if="controls.PESSO___PESSOINTERNA_.isVisible"
 															v-bind="controls.PESSO___PESSOINTERNA_.props"
 															v-on="controls.PESSO___PESSOINTERNA_.handlers" />
 													</template>
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PESSO___PESSOEXTERNA_.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PESSO___PESSOEXTERNA_.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___PESSOEXTERNA_.isVisible"
 													class="i-checkbox"
 													v-bind="controls.PESSO___PESSOEXTERNA_"
 													v-on="controls.PESSO___PESSOEXTERNA_.handlers"
@@ -262,19 +277,20 @@
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<template #label>
-														<q-checkbox-input
+														<q-checkbox
 															v-if="controls.PESSO___PESSOEXTERNA_.isVisible"
 															v-bind="controls.PESSO___PESSOEXTERNA_.props"
 															v-on="controls.PESSO___PESSOEXTERNA_.handlers" />
 													</template>
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PESSO___CATEGCATEGORY.isVisible || controls.PESSO___PESSODTULTCAT.isVisible">
-											<q-control-wrapper
-												v-show="controls.PESSO___CATEGCATEGORY.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PESSO___CATEGCATEGORY.isVisible || controls.PESSO___PESSODTULTCAT.isVisible">
+											<q-col
+												v-if="controls.PESSO___CATEGCATEGORY.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___CATEGCATEGORY.isVisible"
 													class="i-text"
 													v-bind="controls.PESSO___CATEGCATEGORY"
 													v-on="controls.PESSO___CATEGCATEGORY.handlers"
@@ -290,11 +306,12 @@
 														v-bind="controls.PESSO___CATEGCATEGORY.seeMoreParams"
 														v-on="controls.PESSO___CATEGCATEGORY.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PESSO___PESSODTULTCAT.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PESSO___PESSODTULTCAT.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___PESSODTULTCAT.isVisible"
 													class="i-text"
 													v-bind="controls.PESSO___PESSODTULTCAT"
 													v-on="controls.PESSO___PESSODTULTCAT.handlers"
@@ -308,13 +325,14 @@
 														@reset-icon-click="model.ValDtultcat.fnUpdateValue(model.ValDtultcat.originalValue ?? new Date())"
 														@update:model-value="model.ValDtultcat.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PESSO___PAIS1COUNTRY_.isVisible">
-											<q-control-wrapper
-												v-show="controls.PESSO___PAIS1COUNTRY_.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PESSO___PAIS1COUNTRY_.isVisible">
+											<q-col
+												v-if="controls.PESSO___PAIS1COUNTRY_.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PESSO___PAIS1COUNTRY_.isVisible"
 													class="i-text"
 													v-bind="controls.PESSO___PAIS1COUNTRY_"
 													v-on="controls.PESSO___PAIS1COUNTRY_.handlers"
@@ -330,90 +348,91 @@
 														v-bind="controls.PESSO___PAIS1COUNTRY_.seeMoreParams"
 														v-on="controls.PESSO___PAIS1COUNTRY_.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End PESSO___PSEUDNOVOGR02 -->
 									</q-group-box-container>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PESSO___PSEUDNOVOGR08 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.PESSO___PSEUDNOVOGR11.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.PESSO___PSEUDNOVOGR11.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESSO___PSEUDNOVOGR11.isVisible">
+					<q-col v-if="controls.PESSO___PSEUDNOVOGR11.isVisible">
 						<q-group-box-container
+							v-if="controls.PESSO___PSEUDNOVOGR11.isVisible"
 							id="PESSO___PSEUDNOVOGR11"
 							v-bind="controls.PESSO___PSEUDNOVOGR11"
 							:is-visible="controls.PESSO___PSEUDNOVOGR11.isVisible">
 							<!-- Start PESSO___PSEUDNOVOGR11 -->
-							<q-row-container v-show="controls.PESSO___PSEUDESPECIAL.isVisible">
-								<q-control-wrapper
-									v-show="controls.PESSO___PSEUDESPECIAL.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PESSO___PSEUDESPECIAL.isVisible">
+								<q-col
+									v-if="controls.PESSO___PSEUDESPECIAL.isVisible"
+									cols="auto">
 									<q-table
-										v-show="controls.PESSO___PSEUDESPECIAL.isVisible"
+										v-if="controls.PESSO___PSEUDESPECIAL.isVisible"
 										v-bind="controls.PESSO___PSEUDESPECIAL"
-										v-on="controls.PESSO___PSEUDESPECIAL.handlers" />
+										v-on="controls.PESSO___PSEUDESPECIAL.handlers">
 									<q-table-extra-extension
+										v-if="controls.PESSO___PSEUDESPECIAL.isVisible"
 										:list-ctrl="controls.PESSO___PSEUDESPECIAL"
 										:filter-operators="controls.PESSO___PSEUDESPECIAL.filterOperators"
 										v-on="controls.PESSO___PSEUDESPECIAL.handlers" />
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PESSO___PSEUDESPECITL.isVisible">
-								<q-control-wrapper
-									v-show="controls.PESSO___PSEUDESPECITL.isVisible"
-									class="control-join-group">
+										<!-- USE /[MANUAL GQT CUSTOM_TABLE PESSO___PSEUDESPECIAL]/ -->
+									</q-table>
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PESSO___PSEUDESPECITL.isVisible">
+								<q-col
+									v-if="controls.PESSO___PSEUDESPECITL.isVisible"
+									cols="auto">
 									<q-table
-										v-show="controls.PESSO___PSEUDESPECITL.isVisible"
+										v-if="controls.PESSO___PSEUDESPECITL.isVisible"
 										v-bind="controls.PESSO___PSEUDESPECITL"
-										v-on="controls.PESSO___PSEUDESPECITL.handlers" />
+										v-on="controls.PESSO___PSEUDESPECITL.handlers">
 									<q-table-extra-extension
+										v-if="controls.PESSO___PSEUDESPECITL.isVisible"
 										:list-ctrl="controls.PESSO___PSEUDESPECITL"
 										:filter-operators="controls.PESSO___PSEUDESPECITL.filterOperators"
 										v-on="controls.PESSO___PSEUDESPECITL.handlers" />
-								</q-control-wrapper>
-							</q-row-container>
+										<!-- USE /[MANUAL GQT CUSTOM_TABLE PESSO___PSEUDESPECITL]/ -->
+									</q-table>
+								</q-col>
+							</q-row>
 							<!-- End PESSO___PSEUDNOVOGR11 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.PESSO___PSEUDNOVOGR06.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.PESSO___PSEUDNOVOGR06.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESSO___PSEUDNOVOGR06.isVisible">
+					<q-col v-if="controls.PESSO___PSEUDNOVOGR06.isVisible">
 						<q-accordion
 							v-if="controls.PESSO___PSEUDNOVOGR06.isVisible"
 							id="PESSO___PSEUDNOVOGR06"
-							v-model="controls.PESSO___PSEUDNOVOGR06.openChild"
-							v-bind="controls.PESSO___PSEUDNOVOGR06">
+							v-model="controls.PESSO___PSEUDNOVOGR06.openChild">
 							<!-- Start PESSO___PSEUDNOVOGR06 -->
 							<q-accordion-item
+								v-if="controls.PESSO___PSEUDNOVOGR07.isVisible"
 								id="PESSO___PSEUDNOVOGR07-container"
 								value="PESSO___PSEUDNOVOGR07"
 								:title="controls.PESSO___PSEUDNOVOGR07.label">
 								<!-- Start PESSO___PSEUDNOVOGR07 -->
-								<q-row-container v-show="controls.PESSO___PSEUDNOVOGR03.isVisible || controls.PESSO___PSEUDNOVOGR09.isVisible">
-									<q-control-wrapper
-										v-show="controls.PESSO___PSEUDNOVOGR03.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.PESSO___PSEUDNOVOGR03.isVisible || controls.PESSO___PSEUDNOVOGR09.isVisible">
+									<q-col
+										v-if="controls.PESSO___PSEUDNOVOGR03.isVisible"
+										cols="auto">
 										<q-group-box-container
+											v-if="controls.PESSO___PSEUDNOVOGR03.isVisible"
 											id="PESSO___PSEUDNOVOGR03"
 											v-bind="controls.PESSO___PSEUDNOVOGR03"
 											:is-visible="controls.PESSO___PSEUDNOVOGR03.isVisible">
 											<!-- Start PESSO___PSEUDNOVOGR03 -->
-											<q-row-container v-show="controls.PESSO___PESSOTELEPHON.isVisible || controls.PESSO___PESSOEMAIL___.isVisible">
-												<q-control-wrapper
-													v-show="controls.PESSO___PESSOTELEPHON.isVisible"
-													class="control-join-group">
+											<q-row v-if="controls.PESSO___PESSOTELEPHON.isVisible || controls.PESSO___PESSOEMAIL___.isVisible">
+												<q-col
+													v-if="controls.PESSO___PESSOTELEPHON.isVisible"
+													cols="auto">
 													<base-input-structure
+														v-if="controls.PESSO___PESSOTELEPHON.isVisible"
 														class="i-text"
 														v-bind="controls.PESSO___PESSOTELEPHON"
 														v-on="controls.PESSO___PESSOTELEPHON.handlers"
@@ -425,11 +444,12 @@
 															@blur="onBlur(controls.PESSO___PESSOTELEPHON, model.ValTelephon.value)"
 															@change="model.ValTelephon.fnUpdateValueOnChange" />
 													</base-input-structure>
-												</q-control-wrapper>
-												<q-control-wrapper
-													v-show="controls.PESSO___PESSOEMAIL___.isVisible"
-													class="control-join-group">
+												</q-col>
+												<q-col
+													v-if="controls.PESSO___PESSOEMAIL___.isVisible"
+													cols="auto">
 													<base-input-structure
+														v-if="controls.PESSO___PESSOEMAIL___.isVisible"
 														class="i-text"
 														v-bind="controls.PESSO___PESSOEMAIL___"
 														v-on="controls.PESSO___PESSOEMAIL___.handlers"
@@ -441,13 +461,14 @@
 															@blur="onBlur(controls.PESSO___PESSOEMAIL___, model.ValEmail.value)"
 															@change="model.ValEmail.fnUpdateValueOnChange" />
 													</base-input-structure>
-												</q-control-wrapper>
-											</q-row-container>
-											<q-row-container v-show="controls.PESSO___PESSOEMAIL2__.isVisible">
-												<q-control-wrapper
-													v-show="controls.PESSO___PESSOEMAIL2__.isVisible"
-													class="control-join-group">
+												</q-col>
+											</q-row>
+											<q-row v-if="controls.PESSO___PESSOEMAIL2__.isVisible">
+												<q-col
+													v-if="controls.PESSO___PESSOEMAIL2__.isVisible"
+													cols="auto">
 													<base-input-structure
+														v-if="controls.PESSO___PESSOEMAIL2__.isVisible"
 														class="i-text"
 														v-bind="controls.PESSO___PESSOEMAIL2__"
 														v-on="controls.PESSO___PESSOEMAIL2__.handlers"
@@ -459,72 +480,72 @@
 															@blur="onBlur(controls.PESSO___PESSOEMAIL2__, model.ValEmail2.value)"
 															@change="model.ValEmail2.fnUpdateValueOnChange" />
 													</base-input-structure>
-												</q-control-wrapper>
-											</q-row-container>
+												</q-col>
+											</q-row>
 											<!-- End PESSO___PSEUDNOVOGR03 -->
 										</q-group-box-container>
-									</q-control-wrapper>
-									<q-control-wrapper
-										v-show="controls.PESSO___PSEUDNOVOGR09.isVisible"
-										class="control-join-group">
+									</q-col>
+									<q-col
+										v-if="controls.PESSO___PSEUDNOVOGR09.isVisible"
+										cols="auto">
 										<q-group-box-container
+											v-if="controls.PESSO___PSEUDNOVOGR09.isVisible"
 											id="PESSO___PSEUDNOVOGR09"
 											v-bind="controls.PESSO___PSEUDNOVOGR09"
 											:is-visible="controls.PESSO___PSEUDNOVOGR09.isVisible">
 											<!-- Start PESSO___PSEUDNOVOGR09 -->
-											<q-row-container v-show="controls.PESSO___PSEUDCONTACTO.isVisible">
-												<q-control-wrapper
-													v-show="controls.PESSO___PSEUDCONTACTO.isVisible"
-													class="control-join-group">
+											<q-row v-if="controls.PESSO___PSEUDCONTACTO.isVisible">
+												<q-col
+													v-if="controls.PESSO___PSEUDCONTACTO.isVisible"
+													cols="auto">
 													<q-table
-														v-show="controls.PESSO___PSEUDCONTACTO.isVisible"
+														v-if="controls.PESSO___PSEUDCONTACTO.isVisible"
 														v-bind="controls.PESSO___PSEUDCONTACTO"
-														v-on="controls.PESSO___PSEUDCONTACTO.handlers" />
+														v-on="controls.PESSO___PSEUDCONTACTO.handlers">
 													<q-table-extra-extension
+														v-if="controls.PESSO___PSEUDCONTACTO.isVisible"
 														:list-ctrl="controls.PESSO___PSEUDCONTACTO"
 														:filter-operators="controls.PESSO___PSEUDCONTACTO.filterOperators"
 														v-on="controls.PESSO___PSEUDCONTACTO.handlers" />
-												</q-control-wrapper>
-											</q-row-container>
+														<!-- USE /[MANUAL GQT CUSTOM_TABLE PESSO___PSEUDCONTACTO]/ -->
+													</q-table>
+												</q-col>
+											</q-row>
 											<!-- End PESSO___PSEUDNOVOGR09 -->
 										</q-group-box-container>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End PESSO___PSEUDNOVOGR07 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.PESSO___PSEUDNOVOGR05.isVisible"
 								id="PESSO___PSEUDNOVOGR05-container"
 								value="PESSO___PSEUDNOVOGR05"
 								:title="controls.PESSO___PSEUDNOVOGR05.label">
 								<!-- Start PESSO___PSEUDNOVOGR05 -->
-								<q-row-container
-									v-show="controls.PESSO___PSEUDNOVOGR01.isVisible"
-									is-large>
-									<q-control-wrapper
-										v-show="controls.PESSO___PSEUDNOVOGR01.isVisible"
-										class="row-line-group">
+								<q-row v-if="controls.PESSO___PSEUDNOVOGR01.isVisible">
+									<q-col v-if="controls.PESSO___PSEUDNOVOGR01.isVisible">
 										<q-group-box-container
+											v-if="controls.PESSO___PSEUDNOVOGR01.isVisible"
 											id="PESSO___PSEUDNOVOGR01"
 											v-bind="controls.PESSO___PSEUDNOVOGR01"
 											:is-visible="controls.PESSO___PSEUDNOVOGR01.isVisible">
 											<!-- Start PESSO___PSEUDNOVOGR01 -->
-											<q-row-container
-												v-show="controls.PESSO___PSEUDNOVOGR13.isVisible"
-												is-large>
-												<q-control-wrapper
-													v-show="controls.PESSO___PSEUDNOVOGR13.isVisible"
-													class="row-line-group">
+											<q-row v-if="controls.PESSO___PSEUDNOVOGR13.isVisible">
+												<q-col v-if="controls.PESSO___PSEUDNOVOGR13.isVisible">
 													<q-group-box-container
+														v-if="controls.PESSO___PSEUDNOVOGR13.isVisible"
 														id="PESSO___PSEUDNOVOGR13"
 														v-bind="controls.PESSO___PSEUDNOVOGR13"
 														no-border
 														:is-visible="controls.PESSO___PSEUDNOVOGR13.isVisible">
 														<!-- Start PESSO___PSEUDNOVOGR13 -->
-														<q-row-container v-show="controls.PESSO___CMPNYDESIGNAT.isVisible">
-															<q-control-wrapper
-																v-show="controls.PESSO___CMPNYDESIGNAT.isVisible"
-																class="control-join-group">
+														<q-row v-if="controls.PESSO___CMPNYDESIGNAT.isVisible">
+															<q-col
+																v-if="controls.PESSO___CMPNYDESIGNAT.isVisible"
+																cols="auto">
 																<base-input-structure
+																	v-if="controls.PESSO___CMPNYDESIGNAT.isVisible"
 																	class="i-text"
 																	v-bind="controls.PESSO___CMPNYDESIGNAT"
 																	v-on="controls.PESSO___CMPNYDESIGNAT.handlers"
@@ -540,13 +561,14 @@
 																		v-bind="controls.PESSO___CMPNYDESIGNAT.seeMoreParams"
 																		v-on="controls.PESSO___CMPNYDESIGNAT.handlers" />
 																</base-input-structure>
-															</q-control-wrapper>
-														</q-row-container>
-														<q-row-container v-show="controls.PESSO___CNTRYCOUNTRY_.isVisible">
-															<q-control-wrapper
-																v-show="controls.PESSO___CNTRYCOUNTRY_.isVisible"
-																class="control-join-group">
+															</q-col>
+														</q-row>
+														<q-row v-if="controls.PESSO___CNTRYCOUNTRY_.isVisible">
+															<q-col
+																v-if="controls.PESSO___CNTRYCOUNTRY_.isVisible"
+																cols="auto">
 																<base-input-structure
+																	v-if="controls.PESSO___CNTRYCOUNTRY_.isVisible"
 																	class="i-text"
 																	v-bind="controls.PESSO___CNTRYCOUNTRY_"
 																	v-on="controls.PESSO___CNTRYCOUNTRY_.handlers"
@@ -558,17 +580,18 @@
 																		@blur="onBlur(controls.PESSO___CNTRYCOUNTRY_, model.CntryValCountry.value)"
 																		@change="model.CntryValCountry.fnUpdateValueOnChange" />
 																</base-input-structure>
-															</q-control-wrapper>
-														</q-row-container>
+															</q-col>
+														</q-row>
 														<!-- End PESSO___PSEUDNOVOGR13 -->
 													</q-group-box-container>
-												</q-control-wrapper>
-											</q-row-container>
-											<q-row-container v-show="controls.PESSO___REGI1REGIAO__.isVisible">
-												<q-control-wrapper
-													v-show="controls.PESSO___REGI1REGIAO__.isVisible"
-													class="control-join-group">
+												</q-col>
+											</q-row>
+											<q-row v-if="controls.PESSO___REGI1REGIAO__.isVisible">
+												<q-col
+													v-if="controls.PESSO___REGI1REGIAO__.isVisible"
+													cols="auto">
 													<base-input-structure
+														v-if="controls.PESSO___REGI1REGIAO__.isVisible"
 														class="i-text"
 														v-bind="controls.PESSO___REGI1REGIAO__"
 														v-on="controls.PESSO___REGI1REGIAO__.handlers"
@@ -584,52 +607,53 @@
 															v-bind="controls.PESSO___REGI1REGIAO__.seeMoreParams"
 															v-on="controls.PESSO___REGI1REGIAO__.handlers" />
 													</base-input-structure>
-												</q-control-wrapper>
-											</q-row-container>
+												</q-col>
+											</q-row>
 											<!-- End PESSO___PSEUDNOVOGR01 -->
 										</q-group-box-container>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container
-									v-show="controls.PESSO___PSEUDNOVOGR10.isVisible"
-									is-large>
-									<q-control-wrapper
-										v-show="controls.PESSO___PSEUDNOVOGR10.isVisible"
-										class="row-line-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.PESSO___PSEUDNOVOGR10.isVisible">
+									<q-col v-if="controls.PESSO___PSEUDNOVOGR10.isVisible">
 										<q-group-box-container
+											v-if="controls.PESSO___PSEUDNOVOGR10.isVisible"
 											id="PESSO___PSEUDNOVOGR10"
 											v-bind="controls.PESSO___PSEUDNOVOGR10"
 											:is-visible="controls.PESSO___PSEUDNOVOGR10.isVisible">
 											<!-- Start PESSO___PSEUDNOVOGR10 -->
-											<q-row-container v-show="controls.PESSO___PSEUDEVOLUCAO.isVisible">
-												<q-control-wrapper
-													v-show="controls.PESSO___PSEUDEVOLUCAO.isVisible"
-													class="control-join-group">
+											<q-row v-if="controls.PESSO___PSEUDEVOLUCAO.isVisible">
+												<q-col
+													v-if="controls.PESSO___PSEUDEVOLUCAO.isVisible"
+													cols="auto">
 													<q-table
-														v-show="controls.PESSO___PSEUDEVOLUCAO.isVisible"
+														v-if="controls.PESSO___PSEUDEVOLUCAO.isVisible"
 														v-bind="controls.PESSO___PSEUDEVOLUCAO"
-														v-on="controls.PESSO___PSEUDEVOLUCAO.handlers" />
+														v-on="controls.PESSO___PSEUDEVOLUCAO.handlers">
 													<q-table-extra-extension
+														v-if="controls.PESSO___PSEUDEVOLUCAO.isVisible"
 														:list-ctrl="controls.PESSO___PSEUDEVOLUCAO"
 														:filter-operators="controls.PESSO___PSEUDEVOLUCAO.filterOperators"
 														v-on="controls.PESSO___PSEUDEVOLUCAO.handlers" />
-												</q-control-wrapper>
-											</q-row-container>
+														<!-- USE /[MANUAL GQT CUSTOM_TABLE PESSO___PSEUDEVOLUCAO]/ -->
+													</q-table>
+												</q-col>
+											</q-row>
 											<!-- End PESSO___PSEUDNOVOGR10 -->
 										</q-group-box-container>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End PESSO___PSEUDNOVOGR05 -->
 							</q-accordion-item>
 							<!-- End PESSO___PSEUDNOVOGR06 -->
 						</q-accordion>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PESSO___PSEUDOBRIGATO.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESSO___PSEUDOBRIGATO.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESSO___PSEUDOBRIGATO.isVisible">
+					<q-col
+						v-if="controls.PESSO___PSEUDOBRIGATO.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESSO___PSEUDOBRIGATO.isVisible"
 							class="i-static-text"
 							v-bind="controls.PESSO___PSEUDOBRIGATO"
 							v-on="controls.PESSO___PSEUDOBRIGATO.handlers"
@@ -643,26 +667,20 @@
 								:text="controls.PESSO___PSEUDOBRIGATO.label"
 								supports-html />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.PESSO___PSEUDTERRAGRP.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.PESSO___PSEUDTERRAGRP.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESSO___PSEUDTERRAGRP.isVisible">
+					<q-col v-if="controls.PESSO___PSEUDTERRAGRP.isVisible">
 						<q-group-collapsible
+							v-if="controls.PESSO___PSEUDTERRAGRP.isVisible"
 							id="PESSO___PSEUDTERRAGRP"
 							v-bind="controls.PESSO___PSEUDTERRAGRP"
 							v-on="controls.PESSO___PSEUDTERRAGRP.handlers">
 							<!-- Start PESSO___PSEUDTERRAGRP -->
-							<q-row-container
-								v-show="controls.PESSO___PESSOEXTQUERY.isVisible"
-								is-large>
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSOEXTQUERY.isVisible"
-									class="row-line-group">
+							<q-row v-if="controls.PESSO___PESSOEXTQUERY.isVisible">
+								<q-col v-if="controls.PESSO___PESSOEXTQUERY.isVisible">
 									<base-input-structure
+										v-if="controls.PESSO___PESSOEXTQUERY.isVisible"
 										class="i-text"
 										v-bind="controls.PESSO___PESSOEXTQUERY"
 										v-on="controls.PESSO___PESSOEXTQUERY.handlers"
@@ -674,13 +692,14 @@
 											@blur="onBlur(controls.PESSO___PESSOEXTQUERY, model.ValExtquery.value)"
 											@change="model.ValExtquery.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PESSO___PESSOZOOMLVL_.isVisible || controls.PESSO___PESSOEXTMINZM.isVisible || controls.PESSO___PESSOMAPHEIGH.isVisible || controls.PESSO___PESSOOUTWEIGH.isVisible">
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSOZOOMLVL_.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PESSO___PESSOZOOMLVL_.isVisible || controls.PESSO___PESSOEXTMINZM.isVisible || controls.PESSO___PESSOMAPHEIGH.isVisible || controls.PESSO___PESSOOUTWEIGH.isVisible">
+								<q-col
+									v-if="controls.PESSO___PESSOZOOMLVL_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PESSO___PESSOZOOMLVL_.isVisible"
 										class="i-text"
 										v-bind="controls.PESSO___PESSOZOOMLVL_"
 										v-on="controls.PESSO___PESSOZOOMLVL_.handlers"
@@ -692,11 +711,12 @@
 											v-bind="controls.PESSO___PESSOZOOMLVL_.props"
 											@update:model-value="model.ValZoomlvl.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSOEXTMINZM.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PESSO___PESSOEXTMINZM.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PESSO___PESSOEXTMINZM.isVisible"
 										class="i-text"
 										v-bind="controls.PESSO___PESSOEXTMINZM"
 										v-on="controls.PESSO___PESSOEXTMINZM.handlers"
@@ -708,11 +728,12 @@
 											v-bind="controls.PESSO___PESSOEXTMINZM.props"
 											@update:model-value="model.ValExtminzm.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSOMAPHEIGH.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PESSO___PESSOMAPHEIGH.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PESSO___PESSOMAPHEIGH.isVisible"
 										class="i-text"
 										v-bind="controls.PESSO___PESSOMAPHEIGH"
 										v-on="controls.PESSO___PESSOMAPHEIGH.handlers"
@@ -724,11 +745,12 @@
 											@blur="onBlur(controls.PESSO___PESSOMAPHEIGH, model.ValMapheigh.value)"
 											@change="model.ValMapheigh.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSOOUTWEIGH.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PESSO___PESSOOUTWEIGH.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PESSO___PESSOOUTWEIGH.isVisible"
 										class="i-text"
 										v-bind="controls.PESSO___PESSOOUTWEIGH"
 										v-on="controls.PESSO___PESSOOUTWEIGH.handlers"
@@ -740,13 +762,14 @@
 											v-bind="controls.PESSO___PESSOOUTWEIGH.props"
 											@update:model-value="model.ValOutweigh.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PESSO___PESSOLINECLR_.isVisible || controls.PESSO___PESSOPOLYCLR_.isVisible">
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSOLINECLR_.isVisible || controls.PESSO___PESSOPOLYCLR_.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PESSO___PESSOLINECLR_.isVisible || controls.PESSO___PESSOPOLYCLR_.isVisible">
+								<q-col
+									v-if="controls.PESSO___PESSOLINECLR_.isVisible || controls.PESSO___PESSOPOLYCLR_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PESSO___PESSOLINECLR_.isVisible"
 										class="i-text"
 										v-bind="controls.PESSO___PESSOLINECLR_"
 										v-on="controls.PESSO___PESSOLINECLR_.handlers"
@@ -759,6 +782,7 @@
 											@change="model.ValLineclr.fnUpdateValueOnChange" />
 									</base-input-structure>
 									<base-input-structure
+										v-if="controls.PESSO___PESSOPOLYCLR_.isVisible"
 										class="i-text"
 										v-bind="controls.PESSO___PESSOPOLYCLR_"
 										v-on="controls.PESSO___PESSOPOLYCLR_.handlers"
@@ -770,13 +794,14 @@
 											@blur="onBlur(controls.PESSO___PESSOPOLYCLR_, model.ValPolyclr.value)"
 											@change="model.ValPolyclr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PESSO___PESSODRAWMRK_.isVisible || controls.PESSO___PESSOALLOWLIN.isVisible || controls.PESSO___PESSOALLOWPOL.isVisible">
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSODRAWMRK_.isVisible || controls.PESSO___PESSOALLOWLIN.isVisible || controls.PESSO___PESSOALLOWPOL.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PESSO___PESSODRAWMRK_.isVisible || controls.PESSO___PESSOALLOWLIN.isVisible || controls.PESSO___PESSOALLOWPOL.isVisible">
+								<q-col
+									v-if="controls.PESSO___PESSODRAWMRK_.isVisible || controls.PESSO___PESSOALLOWLIN.isVisible || controls.PESSO___PESSOALLOWPOL.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PESSO___PESSODRAWMRK_.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSODRAWMRK_"
 										v-on="controls.PESSO___PESSODRAWMRK_.handlers"
@@ -784,13 +809,14 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSODRAWMRK_.isVisible"
 												v-bind="controls.PESSO___PESSODRAWMRK_.props"
 												v-on="controls.PESSO___PESSODRAWMRK_.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
+										v-if="controls.PESSO___PESSOALLOWLIN.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSOALLOWLIN"
 										v-on="controls.PESSO___PESSOALLOWLIN.handlers"
@@ -798,13 +824,14 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSOALLOWLIN.isVisible"
 												v-bind="controls.PESSO___PESSOALLOWLIN.props"
 												v-on="controls.PESSO___PESSOALLOWLIN.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
+										v-if="controls.PESSO___PESSOALLOWPOL.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSOALLOWPOL"
 										v-on="controls.PESSO___PESSOALLOWPOL.handlers"
@@ -812,19 +839,20 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSOALLOWPOL.isVisible"
 												v-bind="controls.PESSO___PESSOALLOWPOL.props"
 												v-on="controls.PESSO___PESSOALLOWPOL.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PESSO___PESSOCANEXPOR.isVisible || controls.PESSO___PESSOGROUPMRK.isVisible">
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSOCANEXPOR.isVisible || controls.PESSO___PESSOGROUPMRK.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PESSO___PESSOCANEXPOR.isVisible || controls.PESSO___PESSOGROUPMRK.isVisible">
+								<q-col
+									v-if="controls.PESSO___PESSOCANEXPOR.isVisible || controls.PESSO___PESSOGROUPMRK.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PESSO___PESSOCANEXPOR.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSOCANEXPOR"
 										v-on="controls.PESSO___PESSOCANEXPOR.handlers"
@@ -832,13 +860,14 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSOCANEXPOR.isVisible"
 												v-bind="controls.PESSO___PESSOCANEXPOR.props"
 												v-on="controls.PESSO___PESSOCANEXPOR.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
+										v-if="controls.PESSO___PESSOGROUPMRK.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSOGROUPMRK"
 										v-on="controls.PESSO___PESSOGROUPMRK.handlers"
@@ -846,19 +875,20 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSOGROUPMRK.isVisible"
 												v-bind="controls.PESSO___PESSOGROUPMRK.props"
 												v-on="controls.PESSO___PESSOGROUPMRK.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PESSO___PESSOCANEDIT_.isVisible || controls.PESSO___PESSOCANCUT__.isVisible || controls.PESSO___PESSOCANDRAG_.isVisible || controls.PESSO___PESSOCANROT__.isVisible || controls.PESSO___PESSOCANREMOV.isVisible">
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSOCANEDIT_.isVisible || controls.PESSO___PESSOCANCUT__.isVisible || controls.PESSO___PESSOCANDRAG_.isVisible || controls.PESSO___PESSOCANROT__.isVisible || controls.PESSO___PESSOCANREMOV.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PESSO___PESSOCANEDIT_.isVisible || controls.PESSO___PESSOCANCUT__.isVisible || controls.PESSO___PESSOCANDRAG_.isVisible || controls.PESSO___PESSOCANROT__.isVisible || controls.PESSO___PESSOCANREMOV.isVisible">
+								<q-col
+									v-if="controls.PESSO___PESSOCANEDIT_.isVisible || controls.PESSO___PESSOCANCUT__.isVisible || controls.PESSO___PESSOCANDRAG_.isVisible || controls.PESSO___PESSOCANROT__.isVisible || controls.PESSO___PESSOCANREMOV.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PESSO___PESSOCANEDIT_.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSOCANEDIT_"
 										v-on="controls.PESSO___PESSOCANEDIT_.handlers"
@@ -866,13 +896,14 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSOCANEDIT_.isVisible"
 												v-bind="controls.PESSO___PESSOCANEDIT_.props"
 												v-on="controls.PESSO___PESSOCANEDIT_.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
+										v-if="controls.PESSO___PESSOCANCUT__.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSOCANCUT__"
 										v-on="controls.PESSO___PESSOCANCUT__.handlers"
@@ -880,13 +911,14 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSOCANCUT__.isVisible"
 												v-bind="controls.PESSO___PESSOCANCUT__.props"
 												v-on="controls.PESSO___PESSOCANCUT__.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
+										v-if="controls.PESSO___PESSOCANDRAG_.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSOCANDRAG_"
 										v-on="controls.PESSO___PESSOCANDRAG_.handlers"
@@ -894,13 +926,14 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSOCANDRAG_.isVisible"
 												v-bind="controls.PESSO___PESSOCANDRAG_.props"
 												v-on="controls.PESSO___PESSOCANDRAG_.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
+										v-if="controls.PESSO___PESSOCANROT__.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSOCANROT__"
 										v-on="controls.PESSO___PESSOCANROT__.handlers"
@@ -908,13 +941,14 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSOCANROT__.isVisible"
 												v-bind="controls.PESSO___PESSOCANROT__.props"
 												v-on="controls.PESSO___PESSOCANROT__.handlers" />
 										</template>
 									</base-input-structure>
 									<base-input-structure
+										v-if="controls.PESSO___PESSOCANREMOV.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PESSO___PESSOCANREMOV"
 										v-on="controls.PESSO___PESSOCANREMOV.handlers"
@@ -922,21 +956,18 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PESSO___PESSOCANREMOV.isVisible"
 												v-bind="controls.PESSO___PESSOCANREMOV.props"
 												v-on="controls.PESSO___PESSOCANREMOV.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container
-								v-show="controls.PESSO___PESSOTERRAIN_.isVisible"
-								is-large>
-								<q-control-wrapper
-									v-show="controls.PESSO___PESSOTERRAIN_.isVisible"
-									class="row-line-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PESSO___PESSOTERRAIN_.isVisible">
+								<q-col v-if="controls.PESSO___PESSOTERRAIN_.isVisible">
 									<base-input-structure
+										v-if="controls.PESSO___PESSOTERRAIN_.isVisible"
 										class="i-text"
 										v-bind="controls.PESSO___PESSOTERRAIN_"
 										v-on="controls.PESSO___PESSOTERRAIN_.handlers"
@@ -944,14 +975,14 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PESSO___PSEUDTERRAGRP -->
 						</q-group-collapsible>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -960,7 +991,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -969,6 +1000,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -980,12 +1012,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -1005,7 +1037,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormPessoViewModel.js'
 
@@ -1086,7 +1118,8 @@
 					primaryKey: 'ValCodpesso',
 					designation: computed(() => this.Resources.PERSON10446),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -1210,7 +1243,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1320,7 +1357,6 @@
 						isCollapsible: false,
 						anchored: true,
 						directChildren: ['PESSO___PSEUDNOVOGR04', 'PESSO___PSEUDNOVOGR02'],
-						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -1365,7 +1401,6 @@
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['PESSO___PESSOIDFUNCIO', 'PESSO___PESSONAME____', 'PESSO___PESSOGENDER__', 'PESSO___PESSODTNASCIM', 'PESSO___PESSOIDADE___', 'PESSO___PESSOINTERNA_', 'PESSO___PESSOEXTERNA_', 'PESSO___CATEGCATEGORY', 'PESSO___PESSODTULTCAT', 'PESSO___PAIS1COUNTRY_'],
-						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -1382,7 +1417,6 @@
 						maxIntegers: 6,
 						maxDecimals: 0,
 						isSequencial: true,
-						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -1397,12 +1431,10 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO___PSEUDNOVOGR02',
 						maxLength: 85,
-						labelId: 'label_PESSO___PESSONAME____',
-						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
-					PESSO___PESSOGENDER__: new fieldControlClass.ArrayStringControl({
+					PESSO___PESSOGENDER__: new fieldControlClass.RadioGroupControl({
 						modelField: 'ValGender',
 						valueChangeEvent: 'fieldChange:pesso.gender',
 						id: 'PESSO___PESSOGENDER__',
@@ -1412,7 +1444,6 @@
 						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'PESSO___PSEUDNOVOGR02',
 						maxLength: 1,
-						labelId: 'label_PESSO___PESSOGENDER__',
 						arrayName: 'Genero',
 						columns: 3,
 						controlLimits: [
@@ -1506,7 +1537,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [PESSO->INTERNA]==1
@@ -1531,7 +1562,7 @@
 						controlLimits: [
 						],
 						showWhen: {
-							// eslint-disable-next-line no-unused-vars
+							// eslint-disable-next-line @typescript-eslint/no-unused-vars
 							fnFormula(params)
 							{
 								// Formula: [PESSO->INTERNA]==1
@@ -1721,8 +1752,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -1905,7 +1935,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO___PSEUDNOVOGR03',
 						maxLength: 20,
-						labelId: 'label_PESSO___PESSOTELEPHON',
 						controlLimits: [
 						],
 					}, this),
@@ -1920,7 +1949,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO___PSEUDNOVOGR03',
 						maxLength: 254,
-						labelId: 'label_PESSO___PESSOEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -1983,8 +2011,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -2218,7 +2245,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO___PSEUDNOVOGR13',
 						maxLength: 90,
-						labelId: 'label_PESSO___CNTRYCOUNTRY_',
 						controlLimits: [
 						],
 					}, this),
@@ -2333,8 +2359,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -2513,7 +2538,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO___PSEUDNOVOGR03',
 						maxLength: 254,
-						labelId: 'label_PESSO___PESSOEMAIL2__',
 						controlLimits: [
 						],
 					}, this),
@@ -2541,7 +2565,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxLength: 250,
-						labelId: 'label_PESSO___PESSOEXTQUERY',
 						controlLimits: [
 						],
 					}, this),
@@ -2586,7 +2609,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxLength: 50,
-						labelId: 'label_PESSO___PESSOMAPHEIGH',
 						controlLimits: [
 						],
 					}, this),
@@ -2616,7 +2638,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxLength: 50,
-						labelId: 'label_PESSO___PESSOLINECLR_',
 						controlLimits: [
 						],
 					}, this),
@@ -2631,7 +2652,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PESSO___PSEUDTERRAGRP',
 						maxLength: 50,
-						labelId: 'label_PESSO___PESSOPOLYCLR_',
 						controlLimits: [
 						],
 					}, this),
@@ -2948,6 +2968,10 @@
 										source: 'PESSO.CANEXPOR',
 										isMapped: true
 									},
+									allowCenterControl: {
+										rawValue: true,
+										isMapped: false
+									},
 									backgroundOverlay: {
 										rawValue: 'Satellite',
 										isMapped: false
@@ -3190,11 +3214,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -3204,7 +3226,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -3214,7 +3236,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -3234,19 +3256,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -3267,7 +3303,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -3287,19 +3323,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -3318,11 +3368,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -3332,7 +3380,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -3340,8 +3388,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -3349,7 +3395,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -3357,8 +3403,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -3366,7 +3410,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -3374,11 +3418,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -3388,7 +3430,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -3398,7 +3440,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -3459,6 +3501,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PESSO]/
 // eslint-disable-next-line

@@ -676,16 +676,16 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(14);
 			info.Pathways.Add("aero","aero");
 			info.Pathways.Add("equip","equip");
-			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("decom","equip");
-			info.Pathways.Add("item","equip");
+			info.Pathways.Add("wareh","equip");
 			info.Pathways.Add("tpequ","equip");
 			info.Pathways.Add("room1","equip");
 			info.Pathways.Add("cmpny","equip");
+			info.Pathways.Add("item","equip");
 			info.Pathways.Add("pess1","equip");
-			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("famil","equip");
 			info.Pathways.Add("cntry","equip");
+			info.Pathways.Add("gitem","equip");
 			info.Pathways.Add("stake","equip");
 			info.Pathways.Add("cate2","equip");
 		}
@@ -1459,16 +1459,17 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
+		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAflds search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioAflds search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAflds area = new CSGenioAflds(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields))
+            if (sp.getRecord(area, key, fields, forUpdate))
                 return area;
 			return null;
         }
@@ -1535,7 +1536,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX FLDS]/
 
      
-
                                                   
 
 	}

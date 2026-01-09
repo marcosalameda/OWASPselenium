@@ -63,7 +63,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import _foreach from 'lodash-es/forEach'
 	import { computed } from 'vue'
 
@@ -84,7 +84,7 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import qEnums from '@quidgest/clientapp/constants/enums'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	const requiredTextResources = ['QMenuGQT_141', 'hardcoded', 'messages']
 
@@ -145,8 +145,6 @@
 			// does NOT have access to `this` component instance,
 			// because it has not been created yet when this guard is called!
 
-			to.params.isPopup = 'true'
-
 			next((vm) => vm.updateMenuNavigation(to))
 		},
 
@@ -155,7 +153,7 @@
 			// Load resources (translations)
 			this.componentOnLoadProc.addBusy(loadResources(this, requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
 			// Load default limit values
-			let vm = this;
+			const vm = this
 			this.componentOnLoadProc.addBusy(netAPI.postData("LENDI", 'GQT_MenuSE_141', null, (data) => {
 				vm.model = {
 					ValMinvalue: new modelFieldType.DateTime({
@@ -178,25 +176,31 @@
 
 		mounted()
 		{
+			const props = {
+				title: computed(() => this.Resources.LENDING_IN_THE_PERIO23741),
+				dismissible: true,
+				size: 'medium',
+				focusWrap: true
+			}
 			const modalProps = {
 				isActive: true,
-				hideHeader: false,
-				hideFooter: false,
-				dismissWithEsc: true,
-				modalWidth: 'sm',
-				closeButtonEnable: true,
-				dismissAction: this.goBack,
-				headerTitle: computed(() => this.Resources.LENDING_IN_THE_PERIO23741)
+				dismissAction: this.goBack
 			}
 
 			// Show modal after necessary resources are loaded (e.g., header title)
-			this.componentOnLoadProc.once(() => this.setModalProperties(modalProps), this)
+			this.componentOnLoadProc.once(() => this.setModalProperties(props, modalProps), this)
 		},
 
 		beforeUnmount()
 		{
 			// Removes the listener
 			this.internalEvents?.removeAllListeners()
+		},
+		
+		unmounted()
+		{
+			// Focus on the top level navigation menu item
+			genericFunctions.focusElementBySelector('#GQT1 > a:first-child')
 		},
 
 		computed: {

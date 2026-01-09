@@ -2,7 +2,7 @@
 	<teleport
 		v-if="isReady"
 		to="#q-modal-see-more-equip-pess1name-body">
-		<q-row-container>
+		<q-row>
 			<q-table
 				v-if="!isTreeMode"
 				v-bind="listCtrl"
@@ -10,6 +10,7 @@
 				<template #tableTitle>
 					<q-toggle-group
 						v-model="currentMode"
+						required
 						borderless>
 						<q-toggle-group-item value="to-normal-mode">
 							<q-icon icon="list" />
@@ -27,6 +28,7 @@
 				<template #tableTitle>
 					<q-toggle-group
 						v-model="currentMode"
+						required
 						borderless>
 						<q-toggle-group-item value="to-normal-mode">
 							<q-icon icon="list" />
@@ -37,12 +39,12 @@
 					</q-toggle-group>
 				</template>
 			</q-table>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed } from 'vue'
 	import { mapActions } from 'pinia'
 	import _merge from 'lodash-es/merge'
@@ -55,6 +57,7 @@
 	import { TableListControl, TreeTableListControl } from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
@@ -66,7 +69,7 @@
 	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import { removeModal } from '@/utils/layout'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import ViewModelBase from '@/mixins/viewModelBase.js'
 
@@ -148,7 +151,6 @@
 						generalActionsPlacement: 'below',
 						showFooter: true,
 						filtersVisible: false,
-						allowColumnFilters: false,
 						allowColumnSort: false,
 						globalSearch: {
 							visibility: false
@@ -180,15 +182,25 @@
 
 			const modalProps = {
 				id: 'see-more-equip-pess1name',
-				headerTitle: computed(() => this.Resources.COMFORTERS51045),
-				closeButtonEnable: true,
-				hideFooter: true,
-				dismissWithEsc: true,
 				dismissAction: this.close,
-				isActive: true,
 				returnElement: 'EQUIP___PESS1NAME_____see-more_button'
 			}
-			this.setModal(modalProps)
+			const props = {
+				class: 'q-dialog-see-more',
+				title: computed(() => this.Resources.COMFORTERS51045),
+				buttons: [
+					{
+						id: 'dialog-button-close',
+						action: this.close,
+						icon: { icon: 'cancel', type: 'svg' },
+						props: {
+							label: computed(() => this.Resources[hardcodedTexts.cancel]),
+							variant: 'bold'
+						}
+					}
+				]
+			}
+			this.setModal(props, modalProps)
 		},
 
 		beforeUnmount()
@@ -243,27 +255,30 @@
 
 			onTableDBDataChanged()
 			{
-				const params = {
-					id: this.id || null,
-					identifier: 'EQUIP___PESS1NAME____',
-					limits: this.limits,
-					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
-				}
+				// Wait for the computed properties of columns to finish resolving (e.g. "isVisible").
+				setTimeout(() => {
+					const params = {
+						id: this.id || null,
+						identifier: 'EQUIP___PESS1NAME____',
+						limits: this.limits,
+						tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
+					}
 
-				if (this.isTreeMode)
-				{
-					this.treeListCtrl.init()
-					this.componentOnLoadProc.addBusy(this.fetchListData(this.treeListCtrl, params))
-					this.componentOnLoadProc.once(() => {
-						if (!this.treeIsInitialized)
-						{
-							this.treeIsInitialized = true
-							this.treeListCtrl.initData()
-						}
-					}, this)
-				}
-				else
-					this.listCtrl.fetchListData(params)
+					if (this.isTreeMode)
+					{
+						this.treeListCtrl.init()
+						this.componentOnLoadProc.addBusy(this.treeListCtrl.fetchListData(params))
+						this.componentOnLoadProc.once(() => {
+							if (!this.treeIsInitialized)
+							{
+								this.treeIsInitialized = true
+								this.treeListCtrl.initData()
+							}
+						}, this)
+					}
+					else
+						this.listCtrl.fetchListData(params)
+				}, 0)
 			},
 
 			handleRowAction(eventData)
@@ -313,8 +328,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -357,30 +371,28 @@
 							{
 								id: 'filter_Equip_Pess1ValName_FILTER1',
 								isMultiple: true,
-								filters: [
+								items: [
 									{
 										id: 'filter_Equip_Pess1ValName_FILTER1_1',
-										key: '1',
 										value: computed(() => this.Resources.FEMALE46107),
-										selected: false
+										key: '1'
 									},
 								],
-								value: '',
-								defaultValue: ''
+								selected: undefined,
+								default: undefined
 							},
 							{
 								id: 'filter_Equip_Pess1ValName_FILTER2',
 								isMultiple: true,
-								filters: [
+								items: [
 									{
 										id: 'filter_Equip_Pess1ValName_FILTER2_1',
-										key: '1',
 										value: computed(() => this.Resources.MALE32397),
-										selected: false
+										key: '1'
 									},
 								],
-								value: '',
-								defaultValue: ''
+								selected: undefined,
+								default: undefined
 							},
 						],
 						globalEvents: ['changed-PESS1', 'changed-CATE2', 'changed-STAKE', 'changed-CMPNY'],

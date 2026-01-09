@@ -7,22 +7,15 @@ import { numericDisplay } from '../genericFunctions'
  * @param {string} value - The coordinate
  * @returns True if it's a valid coordinate, false otherwise.
  */
-export function validateCoordinate(value)
-{
-	if (typeof value !== 'string')
-		return false
-	if (isEmpty(value))
-		return true
-	if (!value.startsWith('POINT(') || !value.endsWith(')'))
-		return false
+export function validateCoordinate(value) {
+	if (typeof value !== 'string') return false
+	if (isEmpty(value)) return true
+	if (!value.startsWith('POINT(') || !value.endsWith(')')) return false
 
-	try
-	{
+	try {
 		const coords = value.split('(')[1].split(')')[0].split(' ')
 		return !isNaN(coords[0]) && !isNaN(coords[1])
-	}
-	catch
-	{
+	} catch {
 		return false
 	}
 }
@@ -34,19 +27,21 @@ export function validateCoordinate(value)
  * @param {string} groupSep - The group separator to use in numbers
  * @returns A string representation of the specified coordinate.
  */
-export function geographicDisplay(value, decimalSep = '.', groupSep = '')
-{
-	if (typeof value === 'string')
-	{
-		if (!validateCoordinate(value))
-			return ''
+export function geographicDisplay(value, decimalSep = '.', groupSep = '') {
+	if (typeof value === 'string') {
+		if (!validateCoordinate(value)) return ''
 		return value
 	}
-	if (isEmpty(value) || typeof value.Lat !== 'number' || typeof value.Long !== 'number')
-		return ''
+	if (isEmpty(value) || typeof value.Lat !== 'number' || typeof value.Long !== 'number') return ''
 
-	const x = numericDisplay(value.Lat, decimalSep, groupSep, { minimumFractionDigits: 0, maximumFractionDigits: 20 })
-	const y = numericDisplay(value.Long, decimalSep, groupSep, { minimumFractionDigits: 0, maximumFractionDigits: 20 })
+	const x = numericDisplay(value.Lat, decimalSep, groupSep, {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 20
+	})
+	const y = numericDisplay(value.Long, decimalSep, groupSep, {
+		minimumFractionDigits: 0,
+		maximumFractionDigits: 20
+	})
 
 	return `POINT(${y} ${x})`
 }
@@ -56,7 +51,6 @@ export function geographicDisplay(value, decimalSep = '.', groupSep = '')
  * @param {string|object} value - The geographic shape
  * @returns A string representation of the specified geographic shape.
  */
-export function geographicShapeDisplay(value)
-{
+export function geographicShapeDisplay(value) {
 	return typeof value === 'string' ? value : ''
 }

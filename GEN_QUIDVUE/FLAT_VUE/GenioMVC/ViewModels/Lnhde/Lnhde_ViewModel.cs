@@ -90,6 +90,8 @@ namespace GenioMVC.ViewModels.Lnhde
 		/// </summary>
 		public string ValUrl { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -391,6 +393,17 @@ namespace GenioMVC.ViewModels.Lnhde
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -525,7 +538,7 @@ namespace GenioMVC.ViewModels.Lnhde
 
 			if (lnhde___pedidnrpedidoDoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TablePedidNrpedido, "sTablePedidNrpedido", "dTablePedidNrpedido", qs, "pedid");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -574,7 +587,7 @@ namespace GenioMVC.ViewModels.Lnhde
 
 				TablePedidNrpedido.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePedidNrpedido.Query = query;
-				TablePedidNrpedido.Elements = listing.RowsForViewModel<GenioMVC.Models.Pedid>((r) => new GenioMVC.Models.Pedid(m_userContext, r, true, _fieldsToSerialize_LNHDE___PEDIDNRPEDIDO));
+				TablePedidNrpedido.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pedid(m_userContext, r, true, _fieldsToSerialize_LNHDE___PEDIDNRPEDIDO));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -721,7 +734,7 @@ namespace GenioMVC.ViewModels.Lnhde
 
 			if (lnhde___lnhpdline____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableLnhpdLine, "sTableLnhpdLine", "dTableLnhpdLine", qs, "lnhpd");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -770,7 +783,7 @@ namespace GenioMVC.ViewModels.Lnhde
 
 				TableLnhpdLine.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableLnhpdLine.Query = query;
-				TableLnhpdLine.Elements = listing.RowsForViewModel<GenioMVC.Models.Lnhpd>((r) => new GenioMVC.Models.Lnhpd(m_userContext, r, true, _fieldsToSerialize_LNHDE___LNHPDLINE____));
+				TableLnhpdLine.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Lnhpd(m_userContext, r, true, _fieldsToSerialize_LNHDE___LNHPDLINE____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -920,7 +933,7 @@ namespace GenioMVC.ViewModels.Lnhde
 
 			if (lnhde___tpeq1tipoequiDoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableTpeq1Tipoequi, "sTableTpeq1Tipoequi", "dTableTpeq1Tipoequi", qs, "tpeq1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -971,7 +984,7 @@ namespace GenioMVC.ViewModels.Lnhde
 
 				TableTpeq1Tipoequi.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableTpeq1Tipoequi.Query = query;
-				TableTpeq1Tipoequi.Elements = listing.RowsForViewModel<GenioMVC.Models.Tpeq1>((r) => new GenioMVC.Models.Tpeq1(m_userContext, r, true, _fieldsToSerialize_LNHDE___TPEQ1TIPOEQUI));
+				TableTpeq1Tipoequi.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Tpeq1(m_userContext, r, true, _fieldsToSerialize_LNHDE___TPEQ1TIPOEQUI));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

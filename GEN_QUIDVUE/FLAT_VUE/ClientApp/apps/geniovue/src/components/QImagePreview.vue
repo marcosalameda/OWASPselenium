@@ -1,37 +1,38 @@
 ﻿<template>
-	<div
-		class="q-image-preview__modal-main-container">
-		<div class="q-image-preview__modal-container">
-			<img
-				class="q-image-preview__modal-image"
-				:src="imageURL"
-				:alt="dataTitle" />
+	<teleport to="body">
+		<div class="q-image-preview__modal-main-container">
+			<div class="q-image-preview__modal-container">
+				<img
+					class="q-image-preview__modal-image"
+					:src="imageURL"
+					:alt="dataTitle" />
 
-			<div class="q-image-preview__modal-buttons">
-				<q-button
-					id="downloadPreviewBtn"
-					variant="ghost"
-					color="neutral"
-					borderless
-					class="q-image-preview__modal-button"
-					:title="texts.download"
-					@click="download">
-					<q-icon icon="download" />
-				</q-button>
+				<div class="q-image-preview__modal-buttons">
+					<q-button
+						id="downloadPreviewBtn"
+						borderless
+						variant="outlined"
+						color="neutral"
+						class="q-image-preview__modal-button"
+						:title="texts.download"
+						@click="download">
+						<q-icon icon="download" />
+					</q-button>
 
-				<q-button
-					id="closePreviewBtn"
-					variant="ghost"
-					color="neutral"
-					borderless
-					class="q-image-preview__modal-button"
-					:title="texts.close"
-					@click="closePreview">
-					<q-icon icon="close" />
-				</q-button>
+					<q-button
+						id="closePreviewBtn"
+						borderless
+						variant="outlined"
+						color="neutral"
+						class="q-image-preview__modal-button"
+						:title="texts.close"
+						@click="closePreview">
+						<q-icon icon="close" />
+					</q-button>
+				</div>
 			</div>
 		</div>
-	</div>
+	</teleport>
 </template>
 
 <script>
@@ -81,11 +82,14 @@
 
 		mounted()
 		{
+			// We are manipulating the style of the body to prevent overflow when the preview mode is on.
+			document.body.style.setProperty('overflow', 'hidden')
 			document.addEventListener('keydown', this.onKeyPress)
 		},
 
 		beforeUnmount()
 		{
+			document.body.style.removeProperty('overflow')
 			document.removeEventListener('keydown', this.onKeyPress)
 		},
 
@@ -124,17 +128,6 @@
 			{
 				if (this.image && event.key === 'Escape')
 					this.closePreview()
-			}
-		},
-
-		watch: {
-			image(val)
-			{
-				// We are manipulating the style of the body to prevent overflow when the preview mode is on.
-				if (val)
-					document.body.style.setProperty('overflow', 'hidden')
-				else
-					document.body.style.removeProperty('overflow')
 			}
 		}
 	}

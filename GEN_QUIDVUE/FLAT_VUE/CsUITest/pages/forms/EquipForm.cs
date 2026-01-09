@@ -10,7 +10,7 @@ public class EquipForm : Form
 	/// <summary>
 	/// Company
 	/// </summary>
-	public IWebElement PseudNovogr02 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIP___PSEUDNOVOGR02-container");
 
 	/// <summary>
 	/// Company:
@@ -145,7 +145,7 @@ public class EquipForm : Form
 	/// <summary>
 	/// Where did the equipment go
 	/// </summary>
-	public IWebElement PseudNovogr10 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr10 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIP___PSEUDNOVOGR10-container");
 
 	/// <summary>
 	/// Choose room
@@ -165,7 +165,7 @@ public class EquipForm : Form
 	/// <summary>
 	/// PHOTO
 	/// </summary>
-	public IWebElement PseudNovogr06 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr06 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIP___PSEUDNOVOGR06-container");
 
 	/// <summary>
 	/// Photo

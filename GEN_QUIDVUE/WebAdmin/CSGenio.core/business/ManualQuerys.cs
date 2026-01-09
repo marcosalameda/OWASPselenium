@@ -444,4 +444,30 @@ FROM counts";
 			return new Q_dispatchalert().SetParams().ExecuteQuery(sp);
 		}
 	}
+	class Q_emptysearchcountry : ManualQuery
+	{
+
+		public Q_emptysearchcountry()
+		{
+			this.m_parameters = new Dictionary<String, ParameterQuery>();
+			this.m_id = "#_QDG_EMPTYSEARCHCOUNTRY_QDG_#";
+			this.m_query = @"select CAST('00000000-0000-0000-0000-000000000001' as UNIQUEIDENTIFIER) as CODSEARCH, CAST(NULL as UNIQUEIDENTIFIER) as CODPAIS, CAST(NULL as UNIQUEIDENTIFIER) as CODREGIA, '' as HKEY, 0 as ZZSTATE";
+		}
+
+
+		private Q_emptysearchcountry SetParams()
+		{
+			return this;
+		}
+
+		public override DataMatrix Run(PersistentSupport sp)
+		{
+			return this.SetParams().ExecuteQuery(sp);
+		}
+
+		public override DataMatrix Run(IDictionary<String, ParameterQuery> parameters,PersistentSupport sp)
+		{
+			return new Q_emptysearchcountry().SetParams().ExecuteQuery(sp);
+		}
+	}
 }

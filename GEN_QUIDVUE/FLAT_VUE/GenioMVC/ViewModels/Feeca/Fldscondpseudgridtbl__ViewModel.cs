@@ -42,6 +42,8 @@ namespace GenioMVC.ViewModels.Feeca
 		/// </summary>
 		public string ValFeedback { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 

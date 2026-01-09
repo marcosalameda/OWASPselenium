@@ -1,125 +1,55 @@
 ﻿<template>
-	<div class="checklist-col-base">
-		<q-checkbox-input
-			:id="`${tableName}_${rowIndex}_${columnName}`"
-			:classes="classes"
-			:readonly="options.readonly"
-			:model-value="value"
-			data-table-action-selected="false"
-			tabindex="-1"
-			:aria-label="options?.label"
-			@update:model-value="updateValue" />
-	</div>
+	<q-checkbox
+		:id="`${props.tableName}_${props.rowIndex}_${props.columnName}`"
+		:class="classes"
+		:model-value="props.value"
+		data-table-action-selected="false"
+		tabindex="-1"
+		:readonly="props.options.readonly"
+		:aria-label="props.options?.label"
+		@update:model-value="updateValue" />
 </template>
 
-<script>
-	import _isEmpty from 'lodash-es/isEmpty'
+<script setup lang="ts">
+	import { onMounted } from 'vue'
 
-	import { inputSize } from '@quidgest/clientapp/constants/enums'
+	type Options = {
+		readonly?: boolean
+		label?: string
+	}
 
-	import QCheckboxInput from '@/components/inputs/CheckBoxInput.vue'
+	type QEditBooleanProps = {
+		/** * The checked value of the checkbox, can be a boolean or a number corresponding to true or false. */
+		value?: boolean | number
+		/** * The name of the table in the database, used to construct the checkbox ID. */
+		tableName: string
+		/** * The index of the current row, used together with tableName and columnName to construct the checkbox ID. */
+		rowIndex: number | string
+		/** * The name of the column in the database, used to construct the checkbox ID. */
+		columnName: string
+		/** * Options for the checkbox such as readOnly status. */
+		options?: Options
+		/** * An array of additional classes to apply to the checkbox. */
+		classes?: string[]
+	}
 
-	export default {
-		name: 'QEditBoolean',
+	const props = defineProps<QEditBooleanProps>()
 
-		emits: ['update', 'loaded'],
+	const emit = defineEmits<{
+		(e: 'update', value: number): void
+		(e: 'loaded'): void
+	}>()
 
-		components: {
-			QCheckboxInput
-		},
+	onMounted(() => {
+		emit('loaded')
+	})
 
-		props: {
-			/**
-			 * The checked value of the checkbox, can be a boolean or a number corresponding to true or false.
-			 */
-			value: {
-				type: [Boolean, Number],
-				default: false
-			},
+	function updateValue(event: boolean | number) {
+		let newValue = 0
 
-			/**
-			 * The name of the table in the database, used to construct the checkbox ID.
-			 */
-			tableName: {
-				type: String,
-				required: true
-			},
+		if (typeof event === 'number') newValue = event === 0 ? 0 : 1
+		else if (typeof event === 'boolean') newValue = event ? 1 : 0
 
-			/**
-			 * The index of the current row, used together with tableName and columnName to construct the checkbox ID.
-			 */
-			rowIndex: {
-				type: [Number, String],
-				required: true
-			},
-
-			/**
-			 * The name of the column in the database, used to construct the checkbox ID.
-			 */
-			columnName: {
-				type: String,
-				required: true
-			},
-
-			/**
-			 * Options for the checkbox such as readOnly status.
-			 */
-			options: {
-				type: Object,
-				default: () => ({})
-			},
-
-			/**
-			 * Sizing class for the checkbox, based on predefined options.
-			 */
-			size: {
-				type: String,
-				validator: (value) => _isEmpty(value) || Reflect.has(inputSize, value)
-			},
-
-			/**
-			 * An array of additional classes to apply to the checkbox.
-			 */
-			classes: {
-				type: Array,
-				default: () => []
-			},
-
-			/**
-			 * An array of classes to be applied to the checkbox's container.
-			 */
-			containerClasses: {
-				type: Array,
-				default: () => []
-			}
-		},
-
-		expose: [],
-
-		mounted()
-		{
-			this.$emit('loaded')
-		},
-
-		methods: {
-			/**
-			 * Emits an event to communicate that the checkbox value is updated.
-			 * Translates various input event values to 0 or 1 to store boolean as a number.
-			 * @param {Boolean|Number} event - The value of the checkbox after update.
-			 */
-			updateValue(event)
-			{
-				var value = 0
-
-				if (typeof event === 'number')
-					value = event === 0 ? 0 : 1
-				else if (typeof event === 'boolean')
-					value = event === true ? 1 : 0
-				else
-					value = 0
-
-				this.$emit('update', value)
-			}
-		}
+		emit('update', newValue)
 	}
 </script>

@@ -53,7 +53,15 @@ export class NetworkAPI {
 	}
 
 	fetchFormData(controller, formName, formMode, params, _fnCallback, options) {
-		return fetchFormData(controller, formName, formMode, params, _fnCallback, this.navigationId, options)
+		return fetchFormData(
+			controller,
+			formName,
+			formMode,
+			params,
+			_fnCallback,
+			this.navigationId,
+			options
+		)
 	}
 
 	fetchFormFieldData(controller, formName, field, params, _fnCallback) {

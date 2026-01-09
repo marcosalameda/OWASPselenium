@@ -51,8 +51,8 @@ namespace CSGenio.business
 		{
 			return new Dictionary<string, ArrayElement>()
 			{
-				{ E_1C_1, new ArrayElement() { ResourceId = "_1ACLASSE14213", HelpId = "", Group = "" } },
-				{ E_2C_2, new ArrayElement() { ResourceId = "_2ACLASSE01747", HelpId = "", Group = "" } },
+				{ E_1C_1, new ArrayElement() { ResourceId = "_1ACLASSE52698", HelpId = "", Group = "" } },
+				{ E_2C_2, new ArrayElement() { ResourceId = "_2ACLASSE04789", HelpId = "", Group = "" } },
 				{ E_CE_3, new ArrayElement() { ResourceId = "CLASSE_ECONOMICA36282", HelpId = "", Group = "" } },
 			};
 		}

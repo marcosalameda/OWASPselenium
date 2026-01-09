@@ -330,8 +330,7 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false,
-						distinctValues: [],
+						sortable: false
 					},
 					{
 						label: "Text",
@@ -464,51 +463,42 @@ export default {
 					{
 						id: 'filter_GQT_Menu_111_DEVOLUCAO',
 						isMultiple: false,
-						value: '2',
+						selected: '3',
 						filters: [
 							{
-								key: '0',
-								value: {text: 'POR_DEVOLVER13204', selected: false},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
-							},
-
-							{
 								key: '1',
-								value: {text: 'DEVOLVIDOS52106', selected: false},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
+								value: 'To return'
 							},
 							{
 								key: '2',
-								value: {text: 'TODOS59977', selected: true},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
+								value: 'Returned'
 							},
-
+							{
+								key: '3',
+								value: 'All'
+							}
 						]
-					},
+					}
 				],
 				activeFilters: {
-					options: [
+					selected: ['upcoming'],
+					items: [
 						{
-							key: '0',
-							value: {text: 'ACTIVE', selected: false},
-							id: 'filter_GQT_Menu_111_ActiveFilter_A'
+							key: 'current',
+							value: 'Active'
 						},
 						{
-							key: '1',
-							value: {text: 'INACTIVE', selected: false},
-							id: 'filter_GQT_Menu_111_ActiveFilter_I'
+							key: 'previous',
+							value: 'Inactive'
 						},
 						{
-							key: '2',
-							value: {text: 'FUTURE', selected: true},
-							id: 'filter_GQT_Menu_111_ActiveFilter_F'
-						},
-
+							key: 'upcoming',
+							value: 'Futures'
+						}
 					],
 					dateValue: {
 						type: "date",
 						title: "Date",
-						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
@@ -841,8 +831,7 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false,
-						distinctValues: [],
+						sortable: false
 					},
 					{
 						label: "Text",
@@ -939,48 +928,42 @@ export default {
 					{
 						id: 'filter_GQT_Menu_111_DEVOLUCAO',
 						isMultiple: false,
-						value: '2',
+						selected: '3',
 						filters: [
 							{
-								key: '0',
-								value: {text: 'POR_DEVOLVER13204', selected: false},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
-							},
-							{
 								key: '1',
-								value: {text: 'DEVOLVIDOS52106', selected: false},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
+								value: 'To return'
 							},
 							{
 								key: '2',
-								value: {text: 'TODOS59977', selected: true},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
+								value: 'Returned'
 							},
+							{
+								key: '3',
+								value: 'All'
+							}
 						]
-					},
+					}
 				],
 				activeFilters: {
-					options: [
+					selected: ['upcoming'],
+					items: [
 						{
-							key: '0',
-							value: {text: 'ACTIVE', selected: false},
-							id: 'filter_GQT_Menu_111_ActiveFilter_A'
+							key: 'current',
+							value: 'Active'
 						},
 						{
-							key: '1',
-							value: {text: 'INACTIVE', selected: false},
-							id: 'filter_GQT_Menu_111_ActiveFilter_I'
+							key: 'previous',
+							value: 'Inactive'
 						},
 						{
-							key: '2',
-							value: {text: 'FUTURE', selected: true},
-							id: 'filter_GQT_Menu_111_ActiveFilter_F'
-						},
+							key: 'upcoming',
+							value: 'Futures'
+						}
 					],
 					dateValue: {
 						type: "date",
 						title: "Date",
-						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
@@ -1312,8 +1295,7 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false,
-						distinctValues: [],
+						sortable: false
 					},
 					{
 						label: "Text",
@@ -1410,48 +1392,42 @@ export default {
 					{
 						id: 'filter_GQT_Menu_111_DEVOLUCAO',
 						isMultiple: false,
-						value: '2',
+						selected: '3',
 						filters: [
 							{
-								key: '0',
-								value: {text: 'POR_DEVOLVER13204', selected: false},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
-							},
-							{
 								key: '1',
-								value: {text: 'DEVOLVIDOS52106', selected: false},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
+								value: 'To return'
 							},
 							{
 								key: '2',
-								value: {text: 'TODOS59977', selected: true},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
+								value: 'Returned'
 							},
+							{
+								key: '3',
+								value: 'All'
+							}
 						]
-					},
+					}
 				],
 				activeFilters: {
-					options: [
+					selected: ['upcoming'],
+					items: [
 						{
-							key: '0',
-							value: {text: 'ACTIVE', selected: false},
-							id: 'filter_GQT_Menu_111_ActiveFilter_A'
+							key: 'current',
+							value: 'Active'
 						},
 						{
-							key: '1',
-							value: {text: 'INACTIVE', selected: false},
-							id: 'filter_GQT_Menu_111_ActiveFilter_I'
+							key: 'previous',
+							value: 'Inactive'
 						},
 						{
-							key: '2',
-							value: {text: 'FUTURE', selected: true},
-							id: 'filter_GQT_Menu_111_ActiveFilter_F'
-						},
+							key: 'upcoming',
+							value: 'Futures'
+						}
 					],
 					dateValue: {
 						type: "date",
 						title: "Date",
-						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
@@ -2259,8 +2235,7 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false,
-						distinctValues: [],
+						sortable: false
 					},
 					{
 						label: "Text",
@@ -2357,49 +2332,42 @@ export default {
 					{
 						id: 'filter_GQT_Menu_111_DEVOLUCAO',
 						isMultiple: false,
-						value: '2',
+						selected: '3',
 						filters: [
 							{
-								key: '0',
-								value: {text: 'POR_DEVOLVER13204', selected: false},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_0'
-							},
-							{
 								key: '1',
-								value: {text: 'DEVOLVIDOS52106', selected: false},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_1'
+								value: 'To return'
 							},
 							{
 								key: '2',
-								value: {text: 'TODOS59977', selected: true},
-								id: 'filter_GQT_Menu_111_DEVOLUCAO_2'
+								value: 'Returned'
 							},
+							{
+								key: '3',
+								value: 'All'
+							}
 						]
-					},
+					}
 				],
 				activeFilters: {
-					options: [
+					selected: ['upcoming'],
+					items: [
 						{
-							key: '0',
-							value: {text: 'ACTIVE', selected: false},
-							id: 'filter_GQT_Menu_111_ActiveFilter_A'
+							key: 'current',
+							value: 'Active'
 						},
 						{
-							key: '1',
-							value: {text: 'INACTIVE', selected: false},
-							id: 'filter_GQT_Menu_111_ActiveFilter_I'
+							key: 'previous',
+							value: 'Inactive'
 						},
 						{
-							key: '2',
-							value: {text: 'FUTURE', selected: true},
-							id: 'filter_GQT_Menu_111_ActiveFilter_F'
-						},
-
+							key: 'upcoming',
+							value: 'Futures'
+						}
 					],
 					dateValue: {
 						type: "date",
 						title: "Date",
-						id: "GQT_Menu_111_dataRef",
 						value: ""
 					}
 				},
@@ -2595,8 +2563,7 @@ export default {
 						dataType: "Text",
 						dataDisplay: listFunctions.textDisplayCell,
 						dataSearch: listFunctions.textSearchCell,
-						sortable: false,
-						distinctValues: [],
+						sortable: false
 					},
 					{
 						label: "Numeric1",

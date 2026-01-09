@@ -1,13 +1,14 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
-using Newtonsoft.Json;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 using CSGenio.business;
+using CSGenio.core.framework.table;
 using CSGenio.framework;
 using CSGenio.persistence;
 using GenioMVC.Helpers;
@@ -21,8 +22,8 @@ namespace GenioMVC.ViewModels
 	{
 		/// <summary>
 		/// Method that prepares the ViewModel content to be returned to the client-side.
-		/// 	- Sanitizes the ViewModel content by cleaning HTML fragments and documents from constructs that could lead to XSS attacks and compromise application security.
-		/// 	- Assigns ticket to Image fields.
+		///    - Sanitizes the ViewModel content by cleaning HTML fragments and documents from constructs that could lead to XSS attacks and compromise application security.
+		///    - Assigns ticket to Image fields.
 		/// </summary>
 		void PrepareContentForClientSide();
 	}
@@ -151,19 +152,19 @@ namespace GenioMVC.ViewModels
 		}
 
 		[JsonIgnore]
-		public bool CanEdit { get { return this.checkMode(FormMode.Edit); } }
+		public bool CanEdit => this.checkMode(FormMode.Edit);
 
 		[JsonIgnore]
-		public bool CanInsert { get { return this.checkMode(FormMode.New); } }
+		public bool CanInsert => this.checkMode(FormMode.New);
 
 		[JsonIgnore]
-		public bool CanDelete { get { return this.checkMode(FormMode.Delete); } }
+		public bool CanDelete => this.checkMode(FormMode.Delete);
 
 		[JsonIgnore]
-		public bool CanDuplicate { get { return this.checkMode(FormMode.Duplicate); } }
+		public bool CanDuplicate => this.checkMode(FormMode.Duplicate);
 
 		[JsonIgnore]
-		public bool CanView { get { return this.checkMode(FormMode.Show); } }
+		public bool CanView => this.checkMode(FormMode.Show);
 
 		#endregion
 
@@ -178,7 +179,7 @@ namespace GenioMVC.ViewModels
 		{
 			get
 			{
-				//Net Core still enters the property even if it doesn't serialize it
+				// .Net Core still tries to access the property even if it doesn't serialize it
 				if (!ShouldSerialize("Glob"))
 					return _globTable;
 
@@ -212,15 +213,15 @@ namespace GenioMVC.ViewModels
 		{
 			ColumnSort sort = null;
 
-			if (!String.IsNullOrEmpty(qs[sortStr]))
+			if (!string.IsNullOrEmpty(qs[sortStr]))
 			{
 				SortOrder direction = SortOrder.Ascending;
 				string dir = (string)qs[directionStr];
-				if (!String.IsNullOrEmpty(dir) && dir == "DESC")
+				if (!string.IsNullOrEmpty(dir) && dir == "DESC")
 					direction = SortOrder.Descending;
 				string column = (string)qs[sortStr];
 
-				string[] args = column.Split(new char[] { '.' });
+				string[] args = column.Split(['.']);
 				Type areaType = null;
 				FieldRef fieldRef = null;
 				if (args.Count() == 1)
@@ -281,48 +282,28 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		/// <remarks>FOR: MENU LIST SORTING</remarks>
 		/// <param name="t">Menu list</param>
-		/// <param name="sortStr">Name of columns corresponding control that was clicked</param>
-		/// <param name="directionStr">Sort direction of column (ASC or DESC)</param>
-		/// <param name="qs">Request values (name-value pairs representing [column, sort]?)</param>
+		/// <param name="tableConfig">The table configuration</param>
 		/// <param name="area">Table/Area name</param>
 		/// <param name="allSortOrders">Structure of all sortings for the menu list, grouped by column name</param>
 		/// <returns>List of ColumnSorts in the same order the columns are in the sorting for the column clicked.</returns>
-		protected List<ColumnSort> GetRequestSorts<TModel>(TablePartial<TModel> t, string sortStr, string directionStr, NameValueCollection qs, string area, Dictionary<String, OrderedDictionary> allSortOrders) where TModel : class
+		protected List<ColumnSort> GetRequestSorts<TModel>(TablePartial<TModel> t, TableConfiguration tableConfig, string area, Dictionary<string, OrderedDictionary> allSortOrders) where TModel : class
 		{
-			if (String.IsNullOrEmpty(qs[sortStr]))
-				return null;
+			// TODO: Start using several columns for the sorting, instead of just the first one found.
+			ColumnConfiguration columnConfig = tableConfig.ColumnConfigurations.Find(c => c.SortOrder > 0);
 
-			CSGenio.framework.TableConfiguration.ColumnOrderBy columnOrderBy = new CSGenio.framework.TableConfiguration.ColumnOrderBy();
+			if (tableConfig.ColumnConfigurations.Count == 0)
+				return [];
 
-			columnOrderBy.ColumnName = (string)qs[sortStr];
+			List<ColumnSort> allRequestSorts = [];
 
-			columnOrderBy.SortOrder = (string)qs[directionStr];
-
-			return GetRequestSorts<TModel>(t, columnOrderBy, area, allSortOrders);
-		}
-
-		/// <summary>
-		/// Generates and returns a List<ColumnSorts> with all columns to sort by, in order, based on the column clicked and the data structure that represents all sortings for the menu list.
-		/// </summary>
-		/// <remarks>FOR: MENU LIST SORTING</remarks>
-		/// <param name="t">Menu list</param>
-		/// <param name="columnOrderBy">Object with column name and sort direction</param>
-		/// <param name="area">Table/Area name</param>
-		/// <param name="allSortOrders">Structure of all sortings for the menu list, grouped by column name</param>
-		/// <returns>List of ColumnSorts in the same order the columns are in the sorting for the column clicked.</returns>
-		protected List<ColumnSort> GetRequestSorts<TModel>(TablePartial<TModel> t, CSGenio.framework.TableConfiguration.ColumnOrderBy columnOrderBy, string area, Dictionary<String, OrderedDictionary> allSortOrders) where TModel: class
-		{
-			if (String.IsNullOrEmpty(columnOrderBy?.ColumnName))
-				return null;
-
-			List<ColumnSort> allRequestSorts = new List<ColumnSort>();
+			// If no sorting is defined, use the first column.
+			columnConfig ??= tableConfig.ColumnConfigurations[0];
 
 			//< Get name, sort direction, area of column clicked
-			string requestColumn = columnOrderBy.ColumnName;
+			string requestColumn = columnConfig.Name;
+			string requestDir = columnConfig.SortAsc ? "ASC" : "DESC";
 
-			string requestDir = columnOrderBy.SortOrder.ToUpper();
-
-			string[] requestArgs = requestColumn.Split(new char[] { '.' });
+			string[] requestArgs = requestColumn.Split(['.']);
 			string requestFieldName = GetDBColumnNameFromFormFieldName(requestArgs[requestArgs.Count() - 1]);
 
 			string requestArea = area.ToUpper();
@@ -337,8 +318,10 @@ namespace GenioMVC.ViewModels
 			//If requested column is not in the sorting dictionary, add a sorting by the requested column only.
 			if (!allSortOrders.ContainsKey(requestFieldNameFull))
 			{
-				OrderedDictionary requestColumnOrder = new OrderedDictionary();
-				requestColumnOrder.Add(requestFieldNameFull, "A");
+				OrderedDictionary requestColumnOrder = new()
+				{
+					{ requestFieldNameFull, "A" }
+				};
 				allSortOrders.Add(requestFieldNameFull, requestColumnOrder);
 			}
 
@@ -347,19 +330,18 @@ namespace GenioMVC.ViewModels
 			{
 				//< Get name, sort direction, area of column in this sorting
 				string column = (string)sortOrderEntry.Key;
-
 				string dir = (string)sortOrderEntry.Value;
 
 				//For the column that was clicked, use sort direction passed in
-				if (String.Equals(column, requestFieldNameFull))
+				if (string.Equals(column, requestFieldNameFull))
 					dir = requestDir;
 
 				SortOrder direction = SortOrder.Ascending;
-				if (!String.IsNullOrEmpty(dir) && (dir == "DESC" || dir == "D"))
+				if (!string.IsNullOrEmpty(dir) && (dir == "DESC" || dir == "D"))
 					direction = SortOrder.Descending;
 
 				//Get area type
-				string[] args = column.Split(new char[] { '.' });
+				string[] args = column.Split(['.']);
 				Type areaType = null;
 				if (args.Count() == 1)
 					areaType = CSGenio.business.Area.GetTypeArea(area);
@@ -380,7 +362,7 @@ namespace GenioMVC.ViewModels
 				//< Create column reference and check if sortable
 				FieldRef fieldRef = (FieldRef)((PropertyInfo)areaType.GetMember("Fld" + fieldName).GetValue(0)).GetValue(areaType);
 
-				var areaInfo = (CSGenio.business.AreaInfo)areaType.GetMethod("GetInformation").Invoke(areaType, null);
+				var areaInfo = (AreaInfo)areaType.GetMethod("GetInformation").Invoke(areaType, null);
 				var field = areaInfo.DBFields[fieldRef.Field];
 
 				//Column types that are not sorted
@@ -399,7 +381,7 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		/// <param name="searchColumn">The table column.</param>
 		/// <param name="columnConfig">Column configuration specified by the user.</param>
-		protected bool IsColumnVisible(TableSearchColumn searchColumn, List<CSGenio.framework.TableConfiguration.ColumnConfiguration> userColumns)
+		protected bool IsColumnVisible(TableSearchColumn searchColumn, List<ColumnConfiguration> userColumns)
 		{
 			// If there is a user column, use the visibility from the user column, otherwise use the TableSearchColumn value
 			if (userColumns != null)
@@ -414,483 +396,485 @@ namespace GenioMVC.ViewModels
 		}
 
 		/// <summary>
-		/// Process the search filters (advanced filters, column filters, searchbar filters) from a table
+		/// Process the form field filters that affect a table list.
 		/// </summary>
-		/// <typeparam name="A"></typeparam>
-		/// <param name="Menu">Render helper object</param>
-		/// <param name="SearchColumns">Searchable columns in the table</param>
-		/// <param name="requestValues">All request parameters</param>
-		/// <param name="requesValuesPrefix">List table prefix </param>
-		/// <returns>A set of conditions</returns>
-		protected CriteriaSet ProcessSearchFilters<A>(TablePartial<A> Menu, List<TableSearchColumn> SearchColumns, NameValueCollection requestValues, string requesValuesPrefix) where A : class
+		/// <param name="filterValues">Dictionary of filter fields and their respective values. e.g. { area.field: "filterValue" }</param>
+		/// <returns>The set of conditions determined by the filter values</returns>
+		protected CriteriaSet ProcessFieldFilters(Dictionary<string, object> filterValues)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+			CriteriaSet criteria = CriteriaSet.And();
 
-			return ProcessSearchFilters<A>(Menu, SearchColumns, tableConfig);
+			foreach (var filter in filterValues)
+			{
+				string[] fieldParams = filter.Key.Split('.');
+
+				string area = fieldParams[0];
+				string field = fieldParams[1];
+				string fieldName = $"{StringUtils.CapFirst(area)}.Val{StringUtils.CapFirst(field)}";
+
+				if (!FieldsToSerialize.Contains(fieldName))
+					throw new InvalidOperationException($"Filter field {fieldName} is not in the table's field references.");
+
+				FieldRef fieldRef = new(area, field);
+				Field fieldInfo = CSGenio.business.Area.GetFieldInfo(fieldRef);
+
+				if (filter.Value is IEnumerable<object> enumerable && filter.Value is not string)
+				{
+					if (!enumerable.Any())
+						continue;
+
+					// If the filter is an array of multiple values, process each one into an "Or" criteria set
+					CriteriaSet orCriteria = CriteriaSet.Or();
+					foreach (var val in enumerable)
+						orCriteria.Equal(fieldRef, QueryUtils.ToValidDbValue(val, fieldInfo));
+
+					criteria.SubSets.Add(orCriteria);
+				}
+				else
+				{
+					var filterVal = QueryUtils.ToValidDbValue(filter.Value, fieldInfo);
+					// Logic fields, when not checked, should not filter anything.
+					if (fieldInfo.FieldType == FieldType.LOGIC && !(bool)filterVal)
+						continue;
+
+					criteria.Equal(fieldRef, filterVal);
+				}
+			}
+
+			return criteria;
 		}
 
 		/// <summary>
 		/// Process the search filters (advanced filters, column filters, searchbar filters) from a table
 		/// </summary>
 		/// <typeparam name="A"></typeparam>
-		/// <param name="Menu">Render helper object</param>
-		/// <param name="SearchColumns">Searchable columns in the table</param>
+		/// <param name="menu">Render helper object</param>
+		/// <param name="searchColumns">Searchable columns in the table</param>
 		/// <param name="tableConfig">Table configuration object</param>
 		/// <returns>A set of conditions</returns>
-		protected CriteriaSet ProcessSearchFilters<A>(TablePartial<A> Menu, List<TableSearchColumn> SearchColumns, CSGenio.framework.TableConfiguration.TableConfiguration tableConfig) where A : class
+		protected CriteriaSet ProcessSearchFilters<A>(TablePartial<A> menu, List<TableSearchColumn> searchColumns, TableConfiguration tableConfig) where A : class
 		{
-			//Create dictionary of search columns using full names as keys (TABLE.COLUMN)
-			Dictionary<string, TableSearchColumn> SearchColumnsDic = new Dictionary<string, TableSearchColumn>();
-			foreach (TableSearchColumn tsc in SearchColumns)
-				SearchColumnsDic.Add(tsc.AreaField.FullName.ToUpper(), tsc);
+			// Create dictionary of search columns using full names as keys (TABLE.COLUMN)
+			Dictionary<string, TableSearchColumn> searchColumnsDic = [];
+			foreach (TableSearchColumn tsc in searchColumns)
+				searchColumnsDic.Add(tsc.AreaField.FullName.ToUpper(), tsc);
 
-			string query = Menu.Filters.Query = Menu.Query = tableConfig.Query ?? "";
+			List<ColumnFilter> validSearchFilters = tableConfig.GetValidSearchFilters(menu.TableName, searchColumnsDic.Keys.ToList());
+			CriteriaSet searchFilters = CriteriaSet.And();
 
-			List<CSGenio.framework.TableConfiguration.SearchFilter> validSearchFilters = CSGenio.framework.TableConfiguration.TableConfiguration.getValidSearchFilters(tableConfig, Menu.TableName, SearchColumnsDic.Keys.ToList());
-
-			CriteriaSet search_filters = CriteriaSet.And();
-			//Search with filters for each field
 			if (validSearchFilters != null)
 			{
-				//Iterate search filters
-				foreach (CSGenio.framework.TableConfiguration.SearchFilter sf in validSearchFilters)
+				foreach (ColumnFilter filter in validSearchFilters)
 				{
-					//Inactive condition
-					if (!sf.Active)
+					// If the condition is inactive, or it's a global filter, continue
+					if (!filter.IsActive || string.IsNullOrWhiteSpace(filter.Field))
 						continue;
 
-					CriteriaSet conditions = CriteriaSet.Or();
-
-					//Iterate conditions in search filter
-					foreach (CSGenio.framework.TableConfiguration.SearchFilterCondition sfc in sf.Conditions)
+					// If the column doesn't exist anymore in the list
+					if (!searchColumnsDic.ContainsKey(filter.Field))
 					{
-						//Inactive condition
-						if (!sfc.Active)
-							continue;
+						filter.IsActive = false;
+						continue;
+					}
 
-						//if the column doesn't exist anymore in the list
-						if (!SearchColumnsDic.ContainsKey(sfc.Field))
-						{
-							sfc.Active = false;
-							continue;
-						}
+					CriteriaSet conditions = CriteriaSet.Or();
+					TableSearchColumn sc = searchColumnsDic[filter.Field];
+					Field fieldInfo = CSGenio.business.Area.GetFieldInfo(sc.AreaField);
 
-						//Active condition
-						TableSearchColumn sc = SearchColumnsDic[sfc.Field];
-						Field fieldInfo = CSGenio.business.Area.GetFieldInfo(sc.AreaField);
-						if (sc.FieldType.Equals(typeof(DateTime?)))
-						{
-							//Parse values
-							//Values must be an array because the number of values depends on the operation
-							DateTime[] Values = new DateTime[sfc.Values.Length];
-							DateTime parsedValue = new DateTime();
-							int x = 0;
-							foreach (string value in sfc.Values)
-								if (DateTime.TryParse(value, System.Globalization.CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedValue) && CSGenio.framework.GenFunctions.emptyD(parsedValue) == 0)
-									Values[x++] = parsedValue;
+					if (sc.FieldType.Equals(typeof(DateTime?)))
+					{
+						// Values must be an array because the number of values depends on the operation
+						DateTime[] Values = new DateTime[filter.Values.Count];
+						DateTime parsedValue = new();
+						int x = 0;
+						foreach (string value in filter.Values)
+							if (DateTime.TryParse(value, CultureInfo.InvariantCulture, DateTimeStyles.None, out parsedValue) && GenFunctions.emptyD(parsedValue) == 0)
+								Values[x++] = parsedValue;
 
-							//Create criteria based on operator code
-							switch (sfc.Operator)
-							{
-								case "BETW":
-									if (x < 2)
-										continue;
-									CriteriaSet between = CriteriaSet.And();
-									between.GreaterOrEqual(sc.AreaField, Values[0]);
-									between.LesserOrEqual(sc.AreaField, Values[1]);
-									conditions.SubSets.Add(between);
-									break;
-								case "EQ":
-									if (x < 1)
-										continue;
-									// The types Date, DateTime and DateTimeSeconds are all stored as full date times, including fractional seconds
-									// To account for this, comparisons for equals and not equals must use a range
-									// with the lower bound rounded down to the unit of highest precision being compared
-									// and the upper bound one unit higher than the lower bound
-									if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATASEGUNDO)
-									{
-										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0]);
-										eqRange.Lesser(sc.AreaField, Values[0].AddSeconds(1));
-										conditions.SubSets.Add(eqRange);
-									}
-									else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
-									{
-										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0]);
-										eqRange.Lesser(sc.AreaField, Values[0].AddMinutes(1));
-										conditions.SubSets.Add(eqRange);
-									}
-									else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA)
-									{
-										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0]);
-										eqRange.Lesser(sc.AreaField, Values[0].AddDays(1));
-										conditions.SubSets.Add(eqRange);
-									}
-									else
-										conditions.Equal(sc.AreaField, Values[0]);
-									break;
-								case "NOTEQ":
-									if (x < 1)
-										continue;
-									// The types Date, DateTime and DateTimeSeconds are all stored as full date times, including fractional seconds
-									// To account for this, comparisons for equals and not equals must use a range
-									// with the lower bound rounded down to the unit of highest precision being compared
-									// and the upper bound one unit higher than the lower bound
-									if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATASEGUNDO)
-									{
-										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.Lesser(sc.AreaField, Values[0]);
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0].AddSeconds(1));
-										conditions.SubSets.Add(eqRange);
-									}
-									else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
-									{
-										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.Lesser(sc.AreaField, Values[0]);
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0].AddMinutes(1));
-										conditions.SubSets.Add(eqRange);
-									}
-									else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA)
-									{
-										CriteriaSet eqRange = CriteriaSet.And();
-										eqRange.Lesser(sc.AreaField, Values[0]);
-										eqRange.GreaterOrEqual(sc.AreaField, Values[0].AddDays(1));
-										conditions.SubSets.Add(eqRange);
-									}
-									else
-										conditions.NotEqual(sc.AreaField, Values[0]);
-									break;
-								case "AFT":
-									if (x < 1)
-										continue;
-									conditions.Greater(sc.AreaField, Values[0]);
-									break;
-								case "BEF":
-									if (x < 1)
-										continue;
-									conditions.Lesser(sc.AreaField, Values[0]);
-									break;
-								case "AFTEQ":
-									if (x < 1)
-										continue;
-									conditions.GreaterOrEqual(sc.AreaField, Values[0]);
-									break;
-								case "BEFEQ":
-									if (x < 1)
-										continue;
-									conditions.LesserOrEqual(sc.AreaField, Values[0]);
-									break;
-								case "SET":
-									conditions.NotEqual(sc.AreaField, null);
-									break;
-								case "NOTSET":
-									conditions.Equal(sc.AreaField, null);
-									break;
-							}
-						}
-						else if (sc.FieldType.Equals(typeof(bool)))
+						// Create criteria based on operator code
+						switch (filter.Operator)
 						{
-							//Create criteria based on operator code
-							switch (sfc.Operator)
-							{
-								case "TRUE":
-									conditions.Equal(sc.AreaField, 1);
-									break;
-								case "FALSE":
-									conditions.Equal(sc.AreaField, 0);
-									break;
-							}
-						}
-						else if (sc.FieldType.Equals(typeof(decimal?)))
-						{
-							//Parse values
-							//Values must be an array because the number of values depends on the operation
-							decimal[] Values = new decimal[sfc.Values.Length];
-							decimal parsedValue;
-							int x = 0;
-							bool valueOutOfFieldRangeFound = false;
-							foreach (string value in sfc.Values)
-								if (decimal.TryParse(value, NumberStyles.Any, System.Threading.Thread.CurrentThread.CurrentCulture, out parsedValue))
+							case "BETW":
+								if (x < 2)
+									continue;
+								CriteriaSet between = CriteriaSet.And();
+								between.GreaterOrEqual(sc.AreaField, Values[0]);
+								between.LesserOrEqual(sc.AreaField, Values[1]);
+								conditions.SubSets.Add(between);
+								break;
+							case "EQ":
+								if (x < 1)
+									continue;
+								// The types Date, DateTime and DateTimeSeconds are all stored as full date times, including fractional seconds
+								// To account for this, comparisons for equals and not equals must use a range
+								// with the lower bound rounded down to the unit of highest precision being compared
+								// and the upper bound one unit higher than the lower bound
+								if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATASEGUNDO)
 								{
-									string[] valueParts = value.Split(".");
-									string integerDigits = valueParts[0];
-									string decimalDigits = valueParts.Length > 1 ? valueParts[1] : "";
-
-									//Verify if the number of the search value is more than what the field allows
-									if ((integerDigits != null && integerDigits.Length > fieldInfo.IntegerDigits) ||
-									(decimalDigits != null && decimalDigits.Length > fieldInfo.Decimals))
-									{
-										valueOutOfFieldRangeFound = true;
-									}
-									Values[x++] = parsedValue;
+									CriteriaSet eqRange = CriteriaSet.And();
+									eqRange.GreaterOrEqual(sc.AreaField, Values[0]);
+									eqRange.Lesser(sc.AreaField, Values[0].AddSeconds(1));
+									conditions.SubSets.Add(eqRange);
 								}
-
-							//Create criteria based on operator code
-							switch (sfc.Operator)
-							{
-								case "EQ":
-									//If the search value is more than what the field allows, no results will be returned.
-									if (valueOutOfFieldRangeFound || x < 1)
-										conditions.Equal("1", "0");
-									else
-										conditions.Equal(sc.AreaField, Values[0].ToString(CultureInfo.InvariantCulture));
-									break;
-								case "NOTEQ":
-									if (x < 1)
-										continue;
-									conditions.NotEqual(sc.AreaField, Values[0].ToString(CultureInfo.InvariantCulture));
-									break;
-								case "GREAT":
-									if (x < 1)
-										continue;
-									conditions.Greater(sc.AreaField, Values[0].ToString(CultureInfo.InvariantCulture));
-									break;
-								case "LESS":
-									if (x < 1)
-										continue;
-									conditions.Lesser(sc.AreaField, Values[0].ToString(CultureInfo.InvariantCulture));
-									break;
-								case "GREATEQ":
-									if (x < 1)
-										continue;
-									conditions.GreaterOrEqual(sc.AreaField, Values[0].ToString(CultureInfo.InvariantCulture));
-									break;
-								case "LESSEQ":
-									if (x < 1)
-										continue;
-									conditions.LesserOrEqual(sc.AreaField, Values[0].ToString(CultureInfo.InvariantCulture));
-									break;
-								case "BETW":
-									if (x < 2)
-										continue;
-									CriteriaSet between = CriteriaSet.And();
-									between.GreaterOrEqual(sc.AreaField, Values[0].ToString(CultureInfo.InvariantCulture));
-									between.LesserOrEqual(sc.AreaField, Values[1].ToString(CultureInfo.InvariantCulture));
-									conditions.SubSets.Add(between);
-									break;
-								case "SET":
-									conditions.NotEqual(sc.AreaField, null);
-									break;
-								case "NOTSET":
-									conditions.Equal(sc.AreaField, null);
-									break;
-							}
-						}
-						else if (!String.IsNullOrEmpty(sc.ArrayName))
-						{
-							//Get enumeration dictionary
-							var arrayInfo = new CSGenio.business.ArrayInfo(StringUtils.CapFirst(sc.ArrayName));
-							var objectDic = arrayInfo.GetDictionaryObject();
-
-							//Create enumeration dictionary where keys and values are strings
-							Dictionary<string, string> dic;
-
-							//For normal enums the text exists in the resources, but for dynamic enums those texts don't exist
-							//so when the value is null we add the key as the value to ensure searches with the search bar works properly for dynamic enums
-							if (objectDic is Dictionary<string, string>)
-								dic = (objectDic as Dictionary<string, string>).ToDictionary(p => p.Key, p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key);
-							else if (objectDic is Dictionary<int, string>)
-								dic = (objectDic as Dictionary<int, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
-							else
-								dic = (objectDic as Dictionary<decimal, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
-
-							//Get enumeration codes
-							//Values must be an array because the number of values depends on the operation
-							string[] Values = new string[sfc.Values.Length];
-							int x = 0;
-							foreach (string value in sfc.Values)
-							{
-								foreach (var pair in dic)
+								else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
 								{
-									if (pair.Value.ToLower() == value?.ToLower())
-									{
-										Values[x++] = pair.Key;
-										break;
-									}
+									CriteriaSet eqRange = CriteriaSet.And();
+									eqRange.GreaterOrEqual(sc.AreaField, Values[0]);
+									eqRange.Lesser(sc.AreaField, Values[0].AddMinutes(1));
+									conditions.SubSets.Add(eqRange);
 								}
-							}
-
-							//Create criteria based on operator code
-							switch (sfc.Operator)
-							{
-								case "IS":
-									if (x < 1)
-									{
-										//if the user used the search bar but searched for something that doesn't match any element of the enum
-										//add this condition to make it return no data instead of "ignoring" the user's search and returning all data that matches the other filters
-										conditions.NotEqual(sc.AreaField, sc.AreaField);
-										continue;
-									}
+								else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA)
+								{
+									CriteriaSet eqRange = CriteriaSet.And();
+									eqRange.GreaterOrEqual(sc.AreaField, Values[0]);
+									eqRange.Lesser(sc.AreaField, Values[0].AddDays(1));
+									conditions.SubSets.Add(eqRange);
+								}
+								else
 									conditions.Equal(sc.AreaField, Values[0]);
-									break;
-								case "ISNOT":
-									if (x < 1)
-										continue;
+								break;
+							case "NOTEQ":
+								if (x < 1)
+									continue;
+								// The types Date, DateTime and DateTimeSeconds are all stored as full date times, including fractional seconds
+								// To account for this, comparisons for equals and not equals must use a range
+								// with the lower bound rounded down to the unit of highest precision being compared
+								// and the upper bound one unit higher than the lower bound
+								if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATASEGUNDO)
+								{
+									CriteriaSet eqRange = CriteriaSet.And();
+									eqRange.Lesser(sc.AreaField, Values[0]);
+									eqRange.GreaterOrEqual(sc.AreaField, Values[0].AddSeconds(1));
+									conditions.SubSets.Add(eqRange);
+								}
+								else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATAHORA)
+								{
+									CriteriaSet eqRange = CriteriaSet.And();
+									eqRange.Lesser(sc.AreaField, Values[0]);
+									eqRange.GreaterOrEqual(sc.AreaField, Values[0].AddMinutes(1));
+									conditions.SubSets.Add(eqRange);
+								}
+								else if (fieldInfo.FieldType.GetFormatting() == FieldFormatting.DATA)
+								{
+									CriteriaSet eqRange = CriteriaSet.And();
+									eqRange.Lesser(sc.AreaField, Values[0]);
+									eqRange.GreaterOrEqual(sc.AreaField, Values[0].AddDays(1));
+									conditions.SubSets.Add(eqRange);
+								}
+								else
 									conditions.NotEqual(sc.AreaField, Values[0]);
-									break;
-								case "IN":
-									if (x < 1)
-										continue;
-									conditions.In(sc.AreaField, Values);
-									break;
-								case "SET":
-									conditions.In(sc.AreaField, dic.Keys);
-									break;
-								case "NOTSET":
-									conditions.NotIn(sc.AreaField, dic.Keys);
-									conditions.Equal(sc.AreaField, null);
-									break;
-							}
+								break;
+							case "AFT":
+								if (x < 1)
+									continue;
+								conditions.Greater(sc.AreaField, Values[0]);
+								break;
+							case "BEF":
+								if (x < 1)
+									continue;
+								conditions.Lesser(sc.AreaField, Values[0]);
+								break;
+							case "AFTEQ":
+								if (x < 1)
+									continue;
+								conditions.GreaterOrEqual(sc.AreaField, Values[0]);
+								break;
+							case "BEFEQ":
+								if (x < 1)
+									continue;
+								conditions.LesserOrEqual(sc.AreaField, Values[0]);
+								break;
+							case "SET":
+								conditions.NotEqual(sc.AreaField, null);
+								break;
+							case "NOTSET":
+								conditions.Equal(sc.AreaField, null);
+								break;
 						}
-						else
+					}
+					else if (sc.FieldType.Equals(typeof(bool)))
+					{
+						switch (filter.Operator)
 						{
-							//Text
-							//Create criteria based on operator code
-							switch (sfc.Operator)
+							case "TRUE":
+								conditions.Equal(sc.AreaField, 1);
+								break;
+							case "FALSE":
+								conditions.Equal(sc.AreaField, 0);
+								break;
+						}
+					}
+					else if (sc.FieldType.Equals(typeof(decimal?)))
+					{
+						// Values must be an array because the number of values depends on the operation
+						decimal[] values = new decimal[filter.Values.Count];
+						int x = 0;
+						bool valueOutOfFieldRangeFound = false;
+
+						foreach (decimal value in filter.Values.Select(Convert.ToDecimal))
+						{
+							string[] valueParts = value.ToString(CultureInfo.InvariantCulture).Split('.');
+							string integerDigits = valueParts[0];
+							string decimalDigits = valueParts.Length > 1 ? valueParts[1] : "";
+
+							// Verify if the number of the search value is more than what the field allows
+							if ((integerDigits != null && integerDigits.Length > fieldInfo.IntegerDigits) ||
+								(decimalDigits != null && decimalDigits.Length > fieldInfo.Decimals))
 							{
-								case "LIKE":
-									conditions.Like(sc.AreaField, sfc.Values[0]);
-									break;
-								case "STRTWTH":
-									conditions.Like(sc.AreaField, sfc.Values[0] + "%");
-									break;
-								case "CON":
-									conditions.Like(sc.AreaField, "%" + sfc.Values[0] + "%");
-									break;
-								case "NOTCON":
-									conditions.NotLike(sc.AreaField, "%" + sfc.Values[0] + "%");
-									break;
-								case "EQ":
-									conditions.Equal(sc.AreaField, sfc.Values[0]);
-									break;
-								case "NOTEQ":
-									conditions.NotEqual(sc.AreaField, sfc.Values[0]);
-									break;
-								case "SET":
-									CriteriaSet and = CriteriaSet.And();
-									and.NotEqual(sc.AreaField, null);
-									and.NotEqual(sc.AreaField, "");
-									conditions.SubSets.Add(and);
-									break;
-								case "NOTSET":
-									conditions.Equal(sc.AreaField, null);
-									conditions.Equal(sc.AreaField, "");
-									break;
+								valueOutOfFieldRangeFound = true;
 							}
+							values[x++] = value;
+						}
+
+						switch (filter.Operator)
+						{
+							case "EQ":
+								// If the search value is more than what the field allows, no results will be returned.
+								if (valueOutOfFieldRangeFound || x < 1)
+									conditions.Equal("1", "0");
+								else
+									conditions.Equal(sc.AreaField, values[0].ToString(CultureInfo.InvariantCulture));
+								break;
+							case "NOTEQ":
+								if (x < 1)
+									continue;
+								conditions.NotEqual(sc.AreaField, values[0].ToString(CultureInfo.InvariantCulture));
+								break;
+							case "GREAT":
+								if (x < 1)
+									continue;
+								conditions.Greater(sc.AreaField, values[0].ToString(CultureInfo.InvariantCulture));
+								break;
+							case "LESS":
+								if (x < 1)
+									continue;
+								conditions.Lesser(sc.AreaField, values[0].ToString(CultureInfo.InvariantCulture));
+								break;
+							case "GREATEQ":
+								if (x < 1)
+									continue;
+								conditions.GreaterOrEqual(sc.AreaField, values[0].ToString(CultureInfo.InvariantCulture));
+								break;
+							case "LESSEQ":
+								if (x < 1)
+									continue;
+								conditions.LesserOrEqual(sc.AreaField, values[0].ToString(CultureInfo.InvariantCulture));
+								break;
+							case "BETW":
+								if (x < 2)
+									continue;
+								CriteriaSet between = CriteriaSet.And();
+								between.GreaterOrEqual(sc.AreaField, values[0].ToString(CultureInfo.InvariantCulture));
+								between.LesserOrEqual(sc.AreaField, values[1].ToString(CultureInfo.InvariantCulture));
+								conditions.SubSets.Add(between);
+								break;
+							case "SET":
+								conditions.NotEqual(sc.AreaField, null);
+								break;
+							case "NOTSET":
+								conditions.Equal(sc.AreaField, null);
+								break;
+						}
+					}
+					else if (!string.IsNullOrEmpty(sc.ArrayName))
+					{
+						// Get enumeration dictionary
+						ArrayInfo arrayInfo = new(StringUtils.CapFirst(sc.ArrayName));
+
+						// Get enumeration codes
+						// Values must be an array because the number of values depends on the operation
+						List<string> values = [];
+						foreach (var value in filter.Values)
+						{
+							List<string> stringValues = [];
+
+							if (value is List<object> list)
+							{
+								foreach (object item in list)
+									stringValues.Add(item.ToString());
+							}
+							else
+								stringValues.Add(value.ToString());
+
+							foreach (string stringValue in stringValues)
+								if (arrayInfo.Elements.Contains(stringValue))
+									values.Add(stringValue);
+						}
+
+						switch (filter.Operator)
+						{
+							case "IS":
+								if (values.Count < 1)
+								{
+									// If the user used the search bar but searched for something that doesn't match any element of the enum
+									// add this condition to make it return no data instead of "ignoring" the user's search and returning all data that matches the other filters
+									conditions.NotEqual(sc.AreaField, sc.AreaField);
+									continue;
+								}
+								conditions.Equal(sc.AreaField, values[0]);
+								break;
+							case "ISNOT":
+								if (values.Count < 1)
+									continue;
+								conditions.NotEqual(sc.AreaField, values[0]);
+								break;
+							case "IN":
+								if (values.Count < 1)
+									continue;
+								conditions.In(sc.AreaField, values);
+								break;
+							case "SET":
+								conditions.In(sc.AreaField, arrayInfo.Elements);
+								break;
+							case "NOTSET":
+								conditions.NotIn(sc.AreaField, arrayInfo.Elements);
+								conditions.Equal(sc.AreaField, null);
+								break;
+						}
+					}
+					else
+					{
+						switch (filter.Operator)
+						{
+							case "LIKE":
+								conditions.Like(sc.AreaField, filter.Values[0]);
+								break;
+							case "STRTWTH":
+								conditions.Like(sc.AreaField, filter.Values[0] + "%");
+								break;
+							case "CON":
+								conditions.Like(sc.AreaField, "%" + filter.Values[0] + "%");
+								break;
+							case "NOTCON":
+								conditions.NotLike(sc.AreaField, "%" + filter.Values[0] + "%");
+								break;
+							case "EQ":
+								conditions.Equal(sc.AreaField, filter.Values[0]);
+								break;
+							case "NOTEQ":
+								conditions.NotEqual(sc.AreaField, filter.Values[0]);
+								break;
+							case "SET":
+								CriteriaSet and = CriteriaSet.And();
+								and.NotEqual(sc.AreaField, null);
+								and.NotEqual(sc.AreaField, "");
+								conditions.SubSets.Add(and);
+								break;
+							case "NOTSET":
+								conditions.Equal(sc.AreaField, null);
+								conditions.Equal(sc.AreaField, "");
+								break;
 						}
 					}
 
-					search_filters.SubSets.Add(conditions);
+					if (filter.BinaryOperator == FilterBinaryOperator.OR)
+						searchFilters.SubSets.Last().SubSets.Add(conditions);
+					else
+						searchFilters.SubSets.Add(conditions);
 				}
 			}
 
-			// If search all columns
-			if (query != "")
-				search_filters.SubSets.Add(SearchAllColumns(SearchColumns, query));
+			// If the user wants to search all columns
+			string query = menu.Filters.Query = menu.Query;
+			List<string> globalFilters = validSearchFilters
+				.Where(f => string.IsNullOrWhiteSpace(f.Field))
+				.SelectMany(f => f.Values.Select(v => v.ToString()))
+				.ToList();
 
-			return search_filters;
+			if (!string.IsNullOrWhiteSpace(query))
+				globalFilters.Add(query);
+			if (globalFilters.Count > 0)
+				searchFilters.SubSets.Add(SearchAllColumns(searchColumns, globalFilters));
+
+			return searchFilters;
 		}
 
 		/// <summary>
 		/// Builds a criteria set that searches all given columns for a given query
 		/// </summary>
-		/// <param name="SearchColumns">The list of columns to search</param>
-		/// <param name="query">The string to search</param>
+		/// <param name="searchColumns">The list of columns to search</param>
+		/// <param name="queries">A list of strings to search</param>
 		/// <returns>A criteria set with all the given columns</returns>
-		private CriteriaSet SearchAllColumns(List<TableSearchColumn> SearchColumns, string query)
+		private static CriteriaSet SearchAllColumns(List<TableSearchColumn> searchColumns, List<string> queries)
 		{
-			DateTime t;
-			CriteriaSet search_filters = CriteriaSet.Or();
-			if (!String.IsNullOrEmpty(query))
+			CriteriaSet searchFilters = CriteriaSet.Or();
+
+			foreach (string query in queries)
 			{
-				foreach (TableSearchColumn sc in SearchColumns)
+				foreach (TableSearchColumn sc in searchColumns)
 				{
 					if (sc.FieldType.Equals(typeof(DateTime?)))
 					{
-						if (DateTime.TryParse(query, System.Threading.Thread.CurrentThread.CurrentCulture, DateTimeStyles.None, out t) && CSGenio.framework.GenFunctions.emptyD(t) == 0)
-							search_filters.Equal(sc.AreaField, t);
+						if (DateTime.TryParse(query, Thread.CurrentThread.CurrentCulture, DateTimeStyles.None, out DateTime t) && GenFunctions.emptyD(t) == 0)
+							searchFilters.Equal(sc.AreaField, t);
 					}
-					else if (!String.IsNullOrEmpty(sc.ArrayName))
+					else if (!string.IsNullOrEmpty(sc.ArrayName))
 					{
 						var arrayInfo = new ArrayInfo(sc.ArrayName);
 						var objectDic = arrayInfo.GetDictionaryObject();
 
 						Dictionary<string, string> dic;
 
-						//For normal enums the text exists in the resources, but for dynamic enums those texts don't exist
-						//so when the value is null we add the key as the value to ensure searches with the search bar works properly for dynamic enums
+						// For normal enums the text exists in the resources, but for dynamic enums those texts don't exist.
+						// So, when the value is null, we add the key as the value to ensure searches with the search bar work properly.
 						if (objectDic is Dictionary<string, string>)
-							dic = (objectDic as Dictionary<string, string>).ToDictionary(p => p.Key, p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key);
+							dic = (objectDic as Dictionary<string, string>).ToDictionary(p => p.Key, p => Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key);
 						else if (objectDic is Dictionary<int, string>)
-							dic = (objectDic as Dictionary<int, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
+							dic = (objectDic as Dictionary<int, string>).ToDictionary(p => p.Key.ToString(), p => Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
 						else
-							dic = (objectDic as Dictionary<decimal, string>).ToDictionary(p => p.Key.ToString(), p => GenioMVC.Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
+							dic = (objectDic as Dictionary<decimal, string>).ToDictionary(p => p.Key.ToString(), p => Helpers.Helpers.GetTextFromResources(p.Value) ?? p.Key.ToString());
 
 						foreach (var pair in dic)
 							if (pair.Value.ToLower().Contains(query.ToLower()))
-								search_filters.Equal(sc.AreaField, pair.Key);
+								searchFilters.Equal(sc.AreaField, pair.Key);
 					}
 					else if (sc.FieldType.Equals(typeof(decimal?)))
 					{
 						decimal value = 0;
-						if (decimal.TryParse(query, NumberStyles.Any, System.Threading.Thread.CurrentThread.CurrentCulture, out value))
-							search_filters.Like(SqlFunctions.Cast(SqlFunctions.Cast(sc.AreaField, CustomDbType.StandardDecimalSearch), CustomDbType.StandardAnsiString), "%" + value.ToString(CultureInfo.InvariantCulture) + "%");
+						if (decimal.TryParse(query, NumberStyles.Any, Thread.CurrentThread.CurrentCulture, out value))
+							searchFilters.Like(SqlFunctions.Cast(SqlFunctions.Cast(sc.AreaField, CustomDbType.StandardDecimalSearch), CustomDbType.StandardAnsiString), "%" + value.ToString(CultureInfo.InvariantCulture) + "%");
 					}
 					else
-						search_filters.Like(sc.AreaField, "%" + query + "%");
+						searchFilters.Like(sc.AreaField, "%" + query + "%");
 				}
 			}
 
-			return search_filters;
+			return searchFilters;
 		}
 
 		/// <summary>
 		/// Process the active filter from a table
 		/// </summary>
 		/// <typeparam name="A"></typeparam>
-		/// <param name="Menu">Render helper object</param>
-		/// <param name="requestValues">All request parameters</param>
-		/// <param name="requesValuesPrefix">List table prefix </param>
+		/// <param name="menu">Render helper object</param>
+		/// <param name="tableConfig">The table configuration</param>
 		/// <returns>A builded condition</returns>
-		protected CriteriaSet ProcessActiveFilter<A>(TablePartial<A> Menu, NameValueCollection requestValues, string requesValuesPrefix)
+		protected CriteriaSet ProcessActiveFilter<A>(TablePartial<A> menu, TableConfiguration tableConfig)
 		{
-			CSGenio.framework.TableConfiguration.ActiveFilter activeFilter = new CSGenio.framework.TableConfiguration.ActiveFilter();
+			// Assumes there's at most one active filter (currently only one can be defined through Genio)
+			ActiveFilter activeFilter = tableConfig.ActiveFilters.FirstOrDefault();
 
-			return ProcessActiveFilter<A>(Menu, activeFilter);
-		}
-
-		/// <summary>
-		/// Process the active filter from a table
-		/// </summary>
-		/// <typeparam name="A"></typeparam>
-		/// <param name="Menu">Render helper object</param>
-		/// <param name="activeFilter">Active filter object</param>
-		/// <returns>A builded condition</returns>
-		protected CriteriaSet ProcessActiveFilter<A>(TablePartial<A> Menu, CSGenio.framework.TableConfiguration.ActiveFilter activeFilter)
-		{
-			CriteriaSet activefilters = CriteriaSet.And();
+			CriteriaSet filters = CriteriaSet.And();
 			DateTime hojeDt = DateTime.Today;
 			bool activo = false;
 			bool inactivo = false;
 			bool futuro = false;
 
-			//set active = true, at first load
+			// Set active = true, at first load
 			if (activeFilter == null)
 				activo = true;
 			else
 			{
-				activo = activeFilter.Active;
-				inactivo = activeFilter.Inactive;
-				futuro = activeFilter.Future;
-				DateTime.TryParse(activeFilter.Date, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.RoundtripKind, out hojeDt);
+				activo = activeFilter.Current;
+				inactivo = activeFilter.Previous;
+				futuro = activeFilter.Upcoming;
+				DateTime.TryParse(activeFilter.Date, CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind, out hojeDt);
 			}
 
-			FieldRef datainiColumn = Menu.Filters.FilterDateStart;
-			FieldRef datafimColumn = Menu.Filters.FilterDateEnd;
+			FieldRef datainiColumn = menu.Filters.FilterDateStart;
+			FieldRef datafimColumn = menu.Filters.FilterDateEnd;
 
-			//There are 8 diferent cases
+			// There are 8 diferent cases
 			int value = 0;
 			if (activo)
 				value += 1;
@@ -904,42 +888,42 @@ namespace GenioMVC.ViewModels
 				case 0:
 					{
 						//Estados incongruentes (Data de saída inferior à data de entrada)
-						activefilters.Lesser(datafimColumn, datainiColumn);
-						return activefilters;
+						filters.Lesser(datafimColumn, datainiColumn);
+						return filters;
 					}
 				case 1:
 					{
 						//So activos
-						activefilters.SubSet(CriteriaSet.Or()
+						filters.SubSet(CriteriaSet.Or()
 								.GreaterOrEqual(hojeDt, datainiColumn)
 								.Equal(datainiColumn, null))
 							.SubSet(CriteriaSet.Or()
 								.LesserOrEqual(hojeDt, datafimColumn)
 								.Equal(datafimColumn, null));
 
-						return activefilters;
+						return filters;
 					}
 				case 2:
 					{
 						//So inactivos
-						activefilters.Greater(hojeDt, datafimColumn)
+						filters.Greater(hojeDt, datafimColumn)
 							.NotEqual(datafimColumn, null);
 
-						return activefilters;
+						return filters;
 					}
 				case 3:
 					{
 						//So activos e inactivos
-						activefilters.SubSet(CriteriaSet.Or()
+						filters.SubSet(CriteriaSet.Or()
 							.GreaterOrEqual(hojeDt, datainiColumn)
 							.Equal(datainiColumn, null));
 
-						return activefilters;
+						return filters;
 					}
 				case 4:
 					{
 						//So futuros
-						activefilters.SubSet(CriteriaSet.Or()
+						filters.SubSet(CriteriaSet.Or()
 							.Lesser(hojeDt, datainiColumn) // data actual inferior à data de início
 							.SubSet(CriteriaSet.And() // data de fim é superior à actual e a de início não exists
 								.Greater(datafimColumn, hojeDt)
@@ -948,38 +932,38 @@ namespace GenioMVC.ViewModels
 								.Equal(datainiColumn, null)
 								.Equal(datafimColumn, null)));
 
-						return activefilters;
+						return filters;
 					}
 				case 5:
 					{
 						//So activos e futuros
-						activefilters.SubSet(CriteriaSet.Or()
+						filters.SubSet(CriteriaSet.Or()
 							.LesserOrEqual(hojeDt, datafimColumn)
 							.Equal(datafimColumn, null));
 
-						return activefilters;
+						return filters;
 					}
 				case 6:
 					{
 						//So inactivos e futuros
-						activefilters.SubSet(CriteriaSet.Or()
+						filters.SubSet(CriteriaSet.Or()
 							.Lesser(hojeDt, datainiColumn)
 							.SubSet(CriteriaSet.And()
 								.Greater(hojeDt, datafimColumn)
 								.NotEqual(datafimColumn, null)));
 
-						return activefilters;
+						return filters;
 					}
 				case 7:
 					{
 						//Todos, nao limita nada
-						return activefilters;
+						return filters;
 					}
 				default:
 					break;
 			}
 
-			return activefilters;
+			return filters;
 		}
 
 		protected CriteriaSet GetConditionsToNN(AreaRef table, FieldRef tableKey, AreaRef tableNN, AreaRef otherTable, FieldRef otherTableKey, string otherTableSelectedValue, string identifier = "")
@@ -988,7 +972,7 @@ namespace GenioMVC.ViewModels
 			return GetConditionsToNN(table, tableKey, tableNN, otherTable, otherTableKey, otherTableSelectedValue, null, null, null, false, identifier);
 		}
 
-		protected CriteriaSet GetConditionsToNN(AreaRef table, FieldRef tableKey, AreaRef tableNN, AreaRef otherTable, FieldRef otherTableKey, string otherTableSelectedValue, AreaRef areaCompare, FieldRef areaCompareKey, string areaCompareSelectedValue, bool NaoAplicaSeNulo, string identifier = "")
+		protected CriteriaSet GetConditionsToNN(AreaRef table, FieldRef tableKey, AreaRef tableNN, AreaRef otherTable, FieldRef otherTableKey, string otherTableSelectedValue, AreaRef areaCompare, FieldRef areaCompareKey, string areaCompareSelectedValue, bool naoAplicaSeNulo, string identifier = "")
 		{
 			CriteriaSet criteria = CriteriaSet.And();
 			SelectQuery qs = null;
@@ -1019,7 +1003,7 @@ namespace GenioMVC.ViewModels
 					.On(CriteriaSet.And().Equal(NN_FldOtherTbl, otherTableKey));
 				whereConds.Equal(NN_FldOtherTbl, otherTableSelectedValue);
 
-				if (NaoAplicaSeNulo) //only apply if null condition
+				if (naoAplicaSeNulo) //only apply if null condition
 				{
 					SelectQuery qs2 = (SelectQuery)qs.Clone();
 					CriteriaSet whereConds2 = (CriteriaSet)whereConds.Clone();
@@ -1313,11 +1297,11 @@ namespace GenioMVC.ViewModels
 			return resultList;
 		}
 
-		///<summary>CHN - Used in ViewModels Load() to reference the information of a EPH limit over the listing</summary>
-		///<param name="area_limit"> (ref) limit to be loaded with the information aquired</param>
-		///<param name="model_limit_area"> Area class object responsible for this limit</param>
-		///<param name="menu_identifier"> Menu identifier where to check the EPHs existence</param>
-		///<returns> Returns the List existing EPHs that area being applied to current listing</returns>
+		/// <summary>CHN - Used in ViewModels Load() to reference the information of a EPH limit over the listing</summary>
+		/// <param name="area_limit">(ref) limit to be loaded with the information aquired</param>
+		/// <param name="model_limit_area">Area class object responsible for this limit</param>
+		/// <param name="menu_identifier">Menu identifier where to check the EPHs existence</param>
+		/// <returns>Returns the List existing EPHs that area being applied to current listing</returns>
 		public List<Limit> EPH_Limit_Filler(ref Limit area_limit, CSGenio.business.Area model_limit_area, string menu_identifier)
 		{
 			string current_area = model_limit_area.Alias;
@@ -1366,11 +1350,11 @@ namespace GenioMVC.ViewModels
 			return list_area_limit;
 		}
 
-		///<summary>CHN - Used in ViewModels Load() to reference the information of a EPH limit over the listing</summary>
-		///<param name="area_limit"> (ref) limit to be loaded with the information aquired</param>
-		///<param name="model_limit_area"> Area class object responsible for this limit</param>
-		///<param name="menu_identifier"> Menu identifier where to check the EPHs existence</param>
-		///<returns> Returns the List existing EPHs that area being applied to current listing</returns>
+		/// <summary>CHN - Used in ViewModels Load() to reference the information of a EPH limit over the listing</summary>
+		/// <param name="area_limit">(ref) limit to be loaded with the information aquired</param>
+		/// <param name="model_limit_area">Area class object responsible for this limit</param>
+		/// <param name="menu_identifier">Menu identifier where to check the EPHs existence</param>
+		/// <returns>Returns the List existing EPHs that area being applied to current listing</returns>
 		public void Limit_Filler(ref Limit area_limit, CSGenio.business.Area model_limit_area, string limit_field, string limit_field_value, object this_limit_field, LimitAreaType limitAreaType)
 		{
 			//Limit area information
@@ -1415,7 +1399,7 @@ namespace GenioMVC.ViewModels
 
 				//if limit_field is refering to a related area, then update model to the correct parent
 				string parent_table_name = model_limit_area.ParentTables.Where(x => x.Value.SourceRelField == field.Name).Select(x => x.Key).FirstOrDefault();
-				if(parent_table_name != null)
+				if (parent_table_name != null)
 				{//double check this case!
 					CSGenio.business.Area parent_area = CSGenio.business.Area.createArea(parent_table_name, m_userContext.User, m_userContext.User.CurrentModule);
 					model_limit_area = parent_area; //change model to the one being related by foreign key
@@ -1458,9 +1442,9 @@ namespace GenioMVC.ViewModels
 			}
 			else //only matters the field value (applied to the current limit area)
 			{
-				string[] fields = new string[] { area_info.Alias + "." + area_info.PrimaryKeyName, area_info.Alias + "." + limit_field, area_info.Alias + "." + (area_info.HumanKeyName.Split(',')[0] == "" ? area_info.PrimaryKeyName : area_info.HumanKeyName.Split(',')[0]) }; //3 fields to select, primary, limit and humankey field
+				string[] fields = [area_info.Alias + "." + area_info.PrimaryKeyName, area_info.Alias + "." + limit_field, area_info.Alias + "." + (area_info.HumanKeyName.Split(',')[0] == "" ? area_info.PrimaryKeyName : area_info.HumanKeyName.Split(',')[0])]; //3 fields to select, primary, limit and humankey field
 				model_limit_area.insertNamesFields(fields);
-				SelectQuery select_top1_limit = new SelectQuery();
+				SelectQuery select_top1_limit = new();
 				// Fields to select
 				select_top1_limit.PageSize(0); //this is intended, to fill only the names, not any values that could misslead to believe that those were selected. At this moment no record is being selected.
 				select_top1_limit.Select(model_limit_area.Alias, area_info.PrimaryKeyName);
@@ -1533,7 +1517,7 @@ namespace GenioMVC.ViewModels
 		public void SetMethodInvoke(string propertyName, dynamic value)
 		{
 			var propertyInfo = this.GetType().GetProperty(propertyName);
-			propertyInfo.SetMethod.Invoke(this, new object[] { value });
+			propertyInfo.SetMethod.Invoke(this, [value]);
 		}
 
 		///<summary>CHN - Added function in ViewModels to get a variable value using reflexion</summary>
@@ -1643,8 +1627,8 @@ namespace GenioMVC.ViewModels
 					return 0.0M;
 
 				decimal temp = 0.0M;
-				if (!decimal.TryParse(value.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.CurrentCulture, out temp) &&
-					!decimal.TryParse(value.ToString(), System.Globalization.NumberStyles.Any, System.Globalization.CultureInfo.InvariantCulture, out temp))
+				if (!decimal.TryParse(value.ToString(), NumberStyles.Any, CultureInfo.CurrentCulture, out temp) &&
+					!decimal.TryParse(value.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out temp))
 					return 0.0M;
 				else
 					return temp;
@@ -1678,18 +1662,18 @@ namespace GenioMVC.ViewModels
 			return DBConversion.ToBinary(value);
 		}
 
-		public static byte[] ToImage(GenioMVC.Models.ImageModel value)
+		public static byte[] ToImage(Models.ImageModel value)
 		{
 			byte[] data = value?.OriginalData ?? (value?.Data?.Length > 0 ? System.Convert.FromBase64String(value.Data) : null);
 			return DBConversion.ToBinary(data);
 		}
 
-		public static GenioMVC.Models.ImageModel ToImage(object value)
+		public static Models.ImageModel ToImage(object value)
 		{
 			byte[] image = value is Models.ImageModel imageModelValue ? DBConversion.ToBinary(imageModelValue?.OriginalData) : DBConversion.ToBinary(value);
 			string imageFormat = ImageResizer.GetImageFormat(image);
 
-			GenioMVC.Models.ImageModel imageModel = null;
+			Models.ImageModel imageModel = null;
 			if (image?.Length > 0)
 			{
 				imageModel = new(image)
@@ -1749,5 +1733,4 @@ namespace GenioMVC.ViewModels
 			}
 		}
 	}
-
 }

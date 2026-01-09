@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW TPPRO]/
 
 		[HttpPost]
-		public ActionResult Tppro_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Tppro_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Tppro_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Tppro_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Tppro_Show_GET",
 				AreaName = "tppro",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET TPPRO]/
 		[HttpPost]
-		public ActionResult Tppro_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Tppro_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Tppro_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Tppro_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Tppro_New_GET",
 				AreaName = "tppro",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Tppro_New([FromBody]Tppro_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Tppro_New",
 				ViewName = "Tppro",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET TPPRO]/
 		[HttpPost]
-		public ActionResult Tppro_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Tppro_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Tppro_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Tppro_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Tppro_Edit_GET",
 				AreaName = "tppro",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Tppro_Edit([FromBody]Tppro_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Tppro_Edit",
 				ViewName = "Tppro",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET TPPRO]/
 		[HttpPost]
-		public ActionResult Tppro_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Tppro_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Tppro_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Tppro_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Tppro_Delete_GET",
 				AreaName = "tppro",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Tppro/Tppro_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST TPPRO]/
 		[HttpPost]
-		public ActionResult Tppro_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Tppro_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Tppro_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Tppro_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Tppro_Delete",
 				ViewName = "Tppro",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET TPPRO]/
 
 		[HttpPost]
-		public ActionResult Tppro_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Tppro_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Tppro_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Tppro_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Tppro_Duplicate_GET",
 				AreaName = "tppro",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Tppro_Duplicate([FromBody]Tppro_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Tppro_Duplicate",
 				ViewName = "Tppro",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Tppro(UserContext.Current);
+					GenioMVC.Models.Tppro model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("tppro");
 
 // USE /[MANUAL GQT BEFORE_CANCEL TPPRO]/

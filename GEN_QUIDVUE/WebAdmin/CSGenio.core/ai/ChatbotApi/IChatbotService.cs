@@ -1,7 +1,10 @@
+using CSGenio.business;
+using System;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using CSGenio.framework;
 
 namespace CSGenio.core.ai
 {
@@ -10,20 +13,20 @@ namespace CSGenio.core.ai
         /// <summary>
         /// Sends a request to the chatbot service with specified path, method and optional content
         /// </summary>
-        Task<string> SendChatbotRequestAsync(string path, HttpMethod method, Stream content);
-        Task<string> SendChatbotRequestAsync(HttpRequestMessage request);
+        Task<string> SendChatbotRequestAsync(string path, HttpMethod method, Stream content, User user);
 
         /// <summary>
         /// Gets a stream response from the chatbot service
         /// </summary>
-        Task<Stream> GetChatbotStreamAsync(Stream requestData);
+        Task<Stream> GetChatbotStreamAsync(Stream requestData, User user);
 		
 		/// <summary>
         /// Gets a stream response from the chatbot service(formdata handling)
         /// </summary
         Task<Stream> GetChatbotStreamAsync(
             IEnumerable<KeyValuePair<string, string>> fields,
-            IEnumerable<(string FileName, string ContentType, Stream Content)> files);
+            IEnumerable<(string FileName, string ContentType, Stream Content)> files,
+            User user);
 			
         /// <summary>
         /// Gets the respective file from the chatbot server
@@ -33,16 +36,18 @@ namespace CSGenio.core.ai
         /// <summary>
         /// Makes a function call to the chatbot service and returns the result of type T
         /// </summary>
-        Task<T> CallChatbotFunctionAsync<T>(object requestData);
+        Task<T> CallChatbotFunctionAsync<T>(AgentRequestData requestData);
 
         /// <summary>
-        /// TODO
+        /// Calls a specific function on the Chatbot API and deserializes the response.
         /// </summary>
-        Task<HttpRequestMessage> BuildRequest(string path, HttpMethod method, Stream content);
+        [Obsolete("Use CallChatbotFunctionAsync<T>(AgentRequestData requestData) instead.")]
+        Task<T> CallChatbotFunctionAsync<T>(object requestData);
+
 
         /// <summary>
         /// Makes a function call to the chatbot service and returns the result of type T
         /// </summary>
-        Task<T> CallChabotAgentPromptAsync<T>(object requestData);
+        Task<T> CallChabotAgentPromptAsync<T>(AgentRequestData requestData);
     }
 }

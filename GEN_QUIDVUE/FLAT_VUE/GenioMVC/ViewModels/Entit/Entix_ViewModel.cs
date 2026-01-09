@@ -157,6 +157,8 @@ namespace GenioMVC.ViewModels.Entit
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Faci2> TableFaci2Name { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -538,6 +540,17 @@ namespace GenioMVC.ViewModels.Entit
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -693,7 +706,7 @@ namespace GenioMVC.ViewModels.Entit
 
 			if (entix___faci1name____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableFaci1Name, "sTableFaci1Name", "dTableFaci1Name", qs, "faci1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -742,7 +755,7 @@ namespace GenioMVC.ViewModels.Entit
 
 				TableFaci1Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableFaci1Name.Query = query;
-				TableFaci1Name.Elements = listing.RowsForViewModel<GenioMVC.Models.Faci1>((r) => new GenioMVC.Models.Faci1(m_userContext, r, true, _fieldsToSerialize_ENTIX___FACI1NAME____));
+				TableFaci1Name.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Faci1(m_userContext, r, true, _fieldsToSerialize_ENTIX___FACI1NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -882,7 +895,7 @@ namespace GenioMVC.ViewModels.Entit
 
 			if (entix___faci2name____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableFaci2Name, "sTableFaci2Name", "dTableFaci2Name", qs, "faci2");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -931,7 +944,7 @@ namespace GenioMVC.ViewModels.Entit
 
 				TableFaci2Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableFaci2Name.Query = query;
-				TableFaci2Name.Elements = listing.RowsForViewModel<GenioMVC.Models.Faci2>((r) => new GenioMVC.Models.Faci2(m_userContext, r, true, _fieldsToSerialize_ENTIX___FACI2NAME____));
+				TableFaci2Name.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Faci2(m_userContext, r, true, _fieldsToSerialize_ENTIX___FACI2NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

@@ -18,6 +18,7 @@ namespace CSGenio.framework
                     { "REG", "REGISTRATION03584" },
                     { "IMO", "REAL_ESTATE24996" },
                     { "TRN", "TRAINING_EXERCISES07801" },
+                    { "UIS", "USER_INTERFACE32384" },
                 },
                 Platform = "VUE",
             };
@@ -35,8 +36,19 @@ namespace CSGenio.framework
                     { "TBS", "BASE_TABLES04823" },
                     { "WMS", "WAREHOUSE_MANAGEMENT10443" },
                     { "TRN", "TRAINING_EXERCISES07801" },
+                    { "UIS", "USER_INTERFACE32384" },
                 },
                 Platform = "VUE",
+            };
+
+        public static readonly ClientApplication REST = 
+            new ClientApplication("REST", "Rest") 
+            {
+                Modules = new Dictionary<string, string>
+				{
+                    { "XRS", "WHAREHOUSE_API10412" },
+                },
+                Platform = "REST",
             };
 
         public static readonly ClientApplication WEBADMIN = 
@@ -68,6 +80,7 @@ namespace CSGenio.framework
         {
             FLAT_VUE,      
             HORIZONTAL_VUE,      
+            REST,      
             WEBADMIN
         };
     }

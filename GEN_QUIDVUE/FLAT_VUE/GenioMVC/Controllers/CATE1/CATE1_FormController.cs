@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW CATE1]/
 
 		[HttpPost]
-		public ActionResult Cate1_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Cate1_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Cate1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Cate1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cate1_Show_GET",
 				AreaName = "cate1",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET CATE1]/
 		[HttpPost]
-		public ActionResult Cate1_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Cate1_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Cate1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Cate1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cate1_New_GET",
 				AreaName = "cate1",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Cate1_New([FromBody]Cate1_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cate1_New",
 				ViewName = "Cate1",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET CATE1]/
 		[HttpPost]
-		public ActionResult Cate1_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Cate1_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Cate1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Cate1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cate1_Edit_GET",
 				AreaName = "cate1",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Cate1_Edit([FromBody]Cate1_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cate1_Edit",
 				ViewName = "Cate1",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET CATE1]/
 		[HttpPost]
-		public ActionResult Cate1_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Cate1_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Cate1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Cate1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cate1_Delete_GET",
 				AreaName = "cate1",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Cate1/Cate1_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST CATE1]/
 		[HttpPost]
-		public ActionResult Cate1_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Cate1_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Cate1_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Cate1_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cate1_Delete",
 				ViewName = "Cate1",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET CATE1]/
 
 		[HttpPost]
-		public ActionResult Cate1_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Cate1_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Cate1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Cate1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cate1_Duplicate_GET",
 				AreaName = "cate1",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Cate1_Duplicate([FromBody]Cate1_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cate1_Duplicate",
 				ViewName = "Cate1",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Cate1(UserContext.Current);
+					GenioMVC.Models.Cate1 model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("cate1");
 
 // USE /[MANUAL GQT BEFORE_CANCEL CATE1]/

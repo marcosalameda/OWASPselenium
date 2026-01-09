@@ -60,7 +60,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "__DISPATCH53890";
 
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "linenumb";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -174,13 +173,13 @@ namespace CSGenio.business
 			info.Pathways.Add("perso","dispa");
 			info.Pathways.Add("disst","dispa");
 			info.Pathways.Add("entit","dispa");
-			info.Pathways.Add("faci2","dispa");
 			info.Pathways.Add("faci1","dispa");
+			info.Pathways.Add("faci2","dispa");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");
-			info.Pathways.Add("cntry","produ");
 			info.Pathways.Add("facty","produ");
+			info.Pathways.Add("cntry","produ");
 		}
 
 		/// <summary>
@@ -192,8 +191,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("dilin", "produ", "stock", "delivere", '-', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("dilin", "produ", "outputs", "delivere", '+', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("dilin", "produ", "stock", "delivere", '-', true));
 
 
 
@@ -423,16 +422,17 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
+		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAdilin search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioAdilin search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAdilin area = new CSGenioAdilin(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields))
+            if (sp.getRecord(area, key, fields, forUpdate))
                 return area;
 			return null;
         }
@@ -499,7 +499,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX DILIN]/
 
      
-
          
 
 	}

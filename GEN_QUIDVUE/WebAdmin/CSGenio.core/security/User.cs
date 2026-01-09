@@ -56,12 +56,12 @@ namespace CSGenio.framework
 		/// <summary>
 		/// Instancias das áreas (os registos) com Entradas Permanentes de Historial a que o user é sujeito.
 		/// Tem como identifier um par (moduleName, registoEPH)
-		/// </summary>	
+		/// </summary>
 		public Dictionary<string, Area> EphsRecords { get; set; }
 
 		/// <summary>
 		/// An unique key for this user. Might be different for different years
-		/// </summary>	
+		/// </summary>
 		public String Key { get; set;}
 
 
@@ -103,22 +103,13 @@ namespace CSGenio.framework
 	[Serializable]
 	public class User : ICloneable
 	{
-		
-
 		///Create by [TMV|PG] (26.08.2020)
 		public EphsToFill EphTofill { get; set; }
 
 		/// <summary>
 		/// Returns true if exist eph to fill in current module
 		/// </summary>
-		public bool EphOk
-		{
-			get
-			{
-				return (EphTofill == null || EphTofill.isOK(CurrentModule));
-
-			}
-		}
+		public bool EphOk => EphTofill == null || EphTofill.isOK(CurrentModule);
 
 		private Dictionary<string, QUserCfg> userDataPerYear;
 
@@ -144,8 +135,10 @@ namespace CSGenio.framework
 			this.Qyear = anoAplicacao;
 			Location = location;
 
-			userDataPerYear = new Dictionary<string, QUserCfg> ();
-			userDataPerYear.Add(this.Qyear, new QUserCfg(this.Qyear));
+			userDataPerYear = new Dictionary<string, QUserCfg>
+			{
+				{ this.Qyear, new QUserCfg(this.Qyear) }
+			};
 
 			ModuleRoles = new Dictionary<string, List<Role>> ();
 		}
@@ -303,10 +296,10 @@ namespace CSGenio.framework
 		/// </summary>
 		public string Codpsw
 		{
-			get { 
+			get {
 				return userDataPerYear[this.Qyear].Key;
 			}
-			set { 
+			set {
 				userDataPerYear[this.Qyear].Key = value;
 			}
 		}
@@ -314,7 +307,7 @@ namespace CSGenio.framework
 		/// <summary>
 		/// Método que permite devolver o id da sessão
 		/// </summary>
-		public string SessionId { get; }
+		public string SessionId { get; set; }
 
 
         private string Qyear; //Qyear actual
@@ -324,11 +317,11 @@ namespace CSGenio.framework
         public string Year
 		{
 			get { return Qyear; }
-			set 
-			{ 
+			set
+			{
 				Qyear = value;
-				if(!userDataPerYear.ContainsKey(Qyear)) 
-					userDataPerYear.Add(Qyear, new QUserCfg(Qyear)); 
+				if(!userDataPerYear.ContainsKey(Qyear))
+					userDataPerYear.Add(Qyear, new QUserCfg(Qyear));
 			}
 		}
 
@@ -348,7 +341,7 @@ namespace CSGenio.framework
 		/// <summary>
 		/// Lista de anos em que o user tem permissão de entrar
 		/// </summary>
-		public List<string> Years { get; set; }
+		public List<string> Years { get; set; } = [];
 
 		/// <summary>
 		/// Método que verifica se o user tem level definido to o módulo
@@ -547,8 +540,10 @@ namespace CSGenio.framework
 		/// Adds a role module to the list of allowed roles for the user
 		public void AddModuleRole(string module, Role role)
 		{
-			if(!ModuleRoles.ContainsKey(module))
-				ModuleRoles[module] = new List<Role> ();
+			if (role is null || role == Role.INVALID)
+				return;
+			if (!ModuleRoles.ContainsKey(module))
+				ModuleRoles[module] = new List<Role>();
 			ModuleRoles[module].Add(role);
 		}
 

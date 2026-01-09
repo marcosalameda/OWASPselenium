@@ -65,6 +65,7 @@
 
 						<q-toggle
 							v-if="$app.appAlerts.length > 0 && !suggestionModeOn"
+							id="alerts-btn"
 							:model-value="isActive('alerts-tab')"
 							:title="texts.alerts"
 							:disabled="disableButtons"
@@ -114,7 +115,7 @@
 							title="ChatBot"
 							class="nav-link"
 							:disabled="disableButtons"
-							@click="toggleSidebarTab('chatbot-tab')">
+							@click="toggleChatBot()">
 							<q-icon-img
 								:icon="`${$app.resourcesPath}chatbot.png?v=${$app.genio.buildVersion}`"
 								alt="ChatBot" />
@@ -159,7 +160,11 @@
 							:username="userData.name"
 							:project-path="$app.applicationName"
 							:date-format="dateFormat.dateTimeSeconds"
-							:api-endpoint="chatbotProxyUrl" />
+							:agent-data="currentAgent"
+							:available-agents="availableAgents"
+							:api-endpoint="chatbotProxyUrl"
+							@direct-agent-chat="setAgentData"
+							@apply-fields="applyFields" />
 					</div>
 
 					<div v-show="extendedTab === 'widgets-panel'">
@@ -176,6 +181,8 @@
 	import { mapState, mapActions } from 'pinia'
 
 	import { useGenericDataStore } from '@quidgest/clientapp/stores'
+	import { useAiDataStore } from '@quidgest/clientapp/stores'
+
 	import hardcodedTexts from '@/hardcodedTexts.js'
 	import LayoutHandlers from '@/mixins/layoutHandlers.js'
 	import AlertHandlers from '@/mixins/alertHandlers.js'
@@ -247,7 +254,14 @@
 			})
 
 			this.$eventHub.on('open-sidebar-on-tab', (tabId) => {
+				if (this.extendedTab === tabId)
+					return
+
 				this.openSidebar()
+				this.toggleSidebarTab(tabId)
+			})
+			
+			this.$eventHub.on('toggle-sidebar-on-tab', (tabId) => {
 				this.toggleSidebarTab(tabId)
 			})
 
@@ -277,6 +291,7 @@
 			this.$eventHub.off('changed-form-buttons')
 			this.$eventHub.off('changed-form-tree')
 			this.$eventHub.off('open-sidebar-on-tab')
+			this.$eventHub.off('toggle-sidebar-on-tab')
 			this.$eventHub.off('user-options-menu-open')
 
 			this.onSidebarWidthChange()
@@ -288,6 +303,12 @@
 				'suggestionModeOn',
 				'notifications',
 				'dateFormat'
+			]),
+
+			...mapState(useAiDataStore, [
+				'chatbotProxyUrl',
+				'currentAgent',
+				'availableAgents'
 			]),
 
 			/**
@@ -368,14 +389,6 @@
 			},
 
 			/**
-			 * Backend proxy endpoint to re-route chabot's requests.
-			 */
-			chatbotProxyUrl()
-			{
-				return 'chatbotapi'
-			},
-
-			/**
 			 * The component classes.
 			 */
 			classes()
@@ -405,12 +418,38 @@
 				'removeNotification'
 			]),
 
+			...mapActions(useAiDataStore, [
+				'setCurrentAgent'
+			]),
+
 			onSidebarWidthChange()
 			{
 				if (this.userIsLoggedIn && !this.isSidebarEmpty)
 					this.$emit('changed-sidebar-width', this.sidebarWidth)
 				else
 					this.$emit('changed-sidebar-width', 0)
+			},
+
+			toggleChatBot()
+			{
+				this.toggleSidebarTab('chatbot-tab')
+				this.setCurrentAgent({ id: '' })
+
+				return this.extendedTab === 'chatbot-tab'
+			},
+
+			applyFields(fields)
+			{
+				this.$eventHub.emit('apply-agent-fields', fields)
+			},
+
+			setAgentData(agentId, userPrompt)
+			{
+				const agentData = {
+					agentId: agentId,
+					userPrompt: userPrompt
+				}
+				this.$eventHub.emit('set-agent-data', agentData)
 			},
 
 			openSidebar()
@@ -444,9 +483,9 @@
 
 				// Check if any of the sidebar buttons were focused and, if so, decide which one the focus should move to.
 				// Must be done here, after the CSS transition ends so the element that will be focused is visible and focusable.
-				let sidebarOpenButton = this.$refs?.sidebarOpenButton
-				let sidebarCloseButton = this.$refs?.sidebarCloseButton
-				let sidebar = this.$refs?.sidebar
+				const sidebarOpenButton = this.$refs?.sidebarOpenButton
+				const sidebarCloseButton = this.$refs?.sidebarCloseButton
+				const sidebar = this.$refs?.sidebar
 
 				// If the open button was focused
 				if (this.focusedSidebarButtonId === this.sidebarOpenButtonId)

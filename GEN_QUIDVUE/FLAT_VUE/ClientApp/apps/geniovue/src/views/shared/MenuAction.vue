@@ -13,11 +13,12 @@
 		v-if="hasChildren && hasSubMenuToggle"
 		ref="subMenuItem"
 		:class="[hasLink ? 'dropdown-toggle' : $attrs.class]"
-		href="javascript:void(0)"
+		role="button"
 		:aria-controls="subMenuId"
 		:aria-expanded="showSubMenu"
-		:tabindex="$attrs.tabindex"
+		:tabindex="$attrs.tabindex ?? 0"
 		@click="menuToggle"
+		@keydown.enter="menuToggle"
 		@keyup="$emit('keyup', $event)">
 		<slot v-if="!hasLink && !hasRoutine"></slot>
 	</a>

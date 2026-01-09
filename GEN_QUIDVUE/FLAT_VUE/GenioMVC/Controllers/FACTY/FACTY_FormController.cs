@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW FACTY]/
 
 		[HttpPost]
-		public ActionResult Facty_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Facty_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Facty_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Facty_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Facty_Show_GET",
 				AreaName = "facty",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET FACTY]/
 		[HttpPost]
-		public ActionResult Facty_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Facty_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Facty_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Facty_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Facty_New_GET",
 				AreaName = "facty",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Facty_New([FromBody]Facty_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Facty_New",
 				ViewName = "Facty",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET FACTY]/
 		[HttpPost]
-		public ActionResult Facty_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Facty_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Facty_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Facty_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Facty_Edit_GET",
 				AreaName = "facty",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Facty_Edit([FromBody]Facty_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Facty_Edit",
 				ViewName = "Facty",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET FACTY]/
 		[HttpPost]
-		public ActionResult Facty_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Facty_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Facty_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Facty_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Facty_Delete_GET",
 				AreaName = "facty",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Facty/Facty_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST FACTY]/
 		[HttpPost]
-		public ActionResult Facty_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Facty_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Facty_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Facty_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Facty_Delete",
 				ViewName = "Facty",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET FACTY]/
 
 		[HttpPost]
-		public ActionResult Facty_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Facty_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Facty_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Facty_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Facty_Duplicate_GET",
 				AreaName = "facty",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Facty_Duplicate([FromBody]Facty_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Facty_Duplicate",
 				ViewName = "Facty",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Facty(UserContext.Current);
+					GenioMVC.Models.Facty model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("facty");
 
 // USE /[MANUAL GQT BEFORE_CANCEL FACTY]/

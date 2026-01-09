@@ -6,7 +6,8 @@
 		v-on="stepHandlers">
 		<component
 			:is="isActivated && !isSelected ? 'a' : 'span'"
-			:href="isActivated && !isSelected ? 'javascript:void(0)' : null"
+			:href="isActivated && !isSelected ? '#' : null"
+			role="button"
 			:title="stepData.title">
 			<span
 				v-if="stepData.icon"

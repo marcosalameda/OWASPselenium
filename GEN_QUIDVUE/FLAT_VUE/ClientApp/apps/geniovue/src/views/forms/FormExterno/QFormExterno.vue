@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,27 +94,25 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="EXTERNO"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.EXTERNO_PSEUDNOVOGR01.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EXTERNO_PSEUDNOVOGR01.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.EXTERNO_PSEUDNOVOGR01.isVisible">
+					<q-col v-if="controls.EXTERNO_PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
+							v-if="controls.EXTERNO_PSEUDNOVOGR01.isVisible"
 							id="EXTERNO_PSEUDNOVOGR01"
 							v-bind="controls.EXTERNO_PSEUDNOVOGR01"
 							:is-visible="controls.EXTERNO_PSEUDNOVOGR01.isVisible">
 							<!-- Start EXTERNO_PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.EXTERNO_CMPNYDESIGNAT.isVisible">
-								<q-control-wrapper
-									v-show="controls.EXTERNO_CMPNYDESIGNAT.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EXTERNO_CMPNYDESIGNAT.isVisible">
+								<q-col
+									v-if="controls.EXTERNO_CMPNYDESIGNAT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EXTERNO_CMPNYDESIGNAT.isVisible"
 										class="i-text"
 										v-bind="controls.EXTERNO_CMPNYDESIGNAT"
 										v-on="controls.EXTERNO_CMPNYDESIGNAT.handlers"
@@ -122,28 +128,26 @@
 											v-bind="controls.EXTERNO_CMPNYDESIGNAT.seeMoreParams"
 											v-on="controls.EXTERNO_CMPNYDESIGNAT.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End EXTERNO_PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EXTERNO_PSEUDNOVOGR02.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EXTERNO_PSEUDNOVOGR02.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EXTERNO_PSEUDNOVOGR02.isVisible">
+					<q-col v-if="controls.EXTERNO_PSEUDNOVOGR02.isVisible">
 						<q-group-box-container
+							v-if="controls.EXTERNO_PSEUDNOVOGR02.isVisible"
 							id="EXTERNO_PSEUDNOVOGR02"
 							v-bind="controls.EXTERNO_PSEUDNOVOGR02"
 							:is-visible="controls.EXTERNO_PSEUDNOVOGR02.isVisible">
 							<!-- Start EXTERNO_PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.EXTERNO_PESSONAME____.isVisible">
-								<q-control-wrapper
-									v-show="controls.EXTERNO_PESSONAME____.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EXTERNO_PESSONAME____.isVisible">
+								<q-col
+									v-if="controls.EXTERNO_PESSONAME____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EXTERNO_PESSONAME____.isVisible"
 										class="i-text"
 										v-bind="controls.EXTERNO_PESSONAME____"
 										v-on="controls.EXTERNO_PESSONAME____.handlers"
@@ -155,13 +159,14 @@
 											@blur="onBlur(controls.EXTERNO_PESSONAME____, model.ValName.value)"
 											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.EXTERNO_PESSOGENDER__.isVisible">
-								<q-control-wrapper
-									v-show="controls.EXTERNO_PESSOGENDER__.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.EXTERNO_PESSOGENDER__.isVisible">
+								<q-col
+									v-if="controls.EXTERNO_PESSOGENDER__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EXTERNO_PESSOGENDER__.isVisible"
 										class="i-text"
 										v-bind="controls.EXTERNO_PESSOGENDER__"
 										v-on="controls.EXTERNO_PESSOGENDER__.handlers"
@@ -173,34 +178,31 @@
 											v-bind="controls.EXTERNO_PESSOGENDER__.props"
 											@update:model-value="model.ValGender.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End EXTERNO_PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EXTERNO_PSEUDNOVOGR06.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EXTERNO_PSEUDNOVOGR06.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EXTERNO_PSEUDNOVOGR06.isVisible">
+					<q-col v-if="controls.EXTERNO_PSEUDNOVOGR06.isVisible">
 						<q-accordion
 							v-if="controls.EXTERNO_PSEUDNOVOGR06.isVisible"
 							id="EXTERNO_PSEUDNOVOGR06"
-							v-model="controls.EXTERNO_PSEUDNOVOGR06.openChild"
-							v-bind="controls.EXTERNO_PSEUDNOVOGR06">
+							v-model="controls.EXTERNO_PSEUDNOVOGR06.openChild">
 							<!-- Start EXTERNO_PSEUDNOVOGR06 -->
 							<q-accordion-item
+								v-if="controls.EXTERNO_PSEUDNOVOGR03.isVisible"
 								id="EXTERNO_PSEUDNOVOGR03-container"
 								value="EXTERNO_PSEUDNOVOGR03"
 								:title="controls.EXTERNO_PSEUDNOVOGR03.label">
 								<!-- Start EXTERNO_PSEUDNOVOGR03 -->
-								<q-row-container v-show="controls.EXTERNO_PESSOTELEPHON.isVisible || controls.EXTERNO_PESSOEMAIL___.isVisible">
-									<q-control-wrapper
-										v-show="controls.EXTERNO_PESSOTELEPHON.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.EXTERNO_PESSOTELEPHON.isVisible || controls.EXTERNO_PESSOEMAIL___.isVisible">
+									<q-col
+										v-if="controls.EXTERNO_PESSOTELEPHON.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.EXTERNO_PESSOTELEPHON.isVisible"
 											class="i-text"
 											v-bind="controls.EXTERNO_PESSOTELEPHON"
 											v-on="controls.EXTERNO_PESSOTELEPHON.handlers"
@@ -212,11 +214,12 @@
 												@blur="onBlur(controls.EXTERNO_PESSOTELEPHON, model.ValTelephon.value)"
 												@change="model.ValTelephon.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-									<q-control-wrapper
-										v-show="controls.EXTERNO_PESSOEMAIL___.isVisible"
-										class="control-join-group">
+									</q-col>
+									<q-col
+										v-if="controls.EXTERNO_PESSOEMAIL___.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.EXTERNO_PESSOEMAIL___.isVisible"
 											class="i-text"
 											v-bind="controls.EXTERNO_PESSOEMAIL___"
 											v-on="controls.EXTERNO_PESSOEMAIL___.handlers"
@@ -228,20 +231,22 @@
 												@blur="onBlur(controls.EXTERNO_PESSOEMAIL___, model.ValEmail.value)"
 												@change="model.ValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End EXTERNO_PSEUDNOVOGR03 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.EXTERNO_PSEUDNOVOGR04.isVisible"
 								id="EXTERNO_PSEUDNOVOGR04-container"
 								value="EXTERNO_PSEUDNOVOGR04"
 								:title="controls.EXTERNO_PSEUDNOVOGR04.label">
 								<!-- Start EXTERNO_PSEUDNOVOGR04 -->
-								<q-row-container v-show="controls.EXTERNO_PESSOPHOTOGRA.isVisible">
-									<q-control-wrapper
-										v-show="controls.EXTERNO_PESSOPHOTOGRA.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.EXTERNO_PESSOPHOTOGRA.isVisible">
+									<q-col
+										v-if="controls.EXTERNO_PESSOPHOTOGRA.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.EXTERNO_PESSOPHOTOGRA.isVisible"
 											class="q-image"
 											v-bind="controls.EXTERNO_PESSOPHOTOGRA"
 											v-on="controls.EXTERNO_PESSOPHOTOGRA.handlers"
@@ -253,19 +258,20 @@
 												v-bind="controls.EXTERNO_PESSOPHOTOGRA.props"
 												v-on="controls.EXTERNO_PESSOPHOTOGRA.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End EXTERNO_PSEUDNOVOGR04 -->
 							</q-accordion-item>
 							<!-- End EXTERNO_PSEUDNOVOGR06 -->
 						</q-accordion>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.EXTERNO_PSEUDOBRIGATO.isVisible">
-					<q-control-wrapper
-						v-show="controls.EXTERNO_PSEUDOBRIGATO.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EXTERNO_PSEUDOBRIGATO.isVisible">
+					<q-col
+						v-if="controls.EXTERNO_PSEUDOBRIGATO.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EXTERNO_PSEUDOBRIGATO.isVisible"
 							class="i-static-text"
 							v-bind="controls.EXTERNO_PSEUDOBRIGATO"
 							v-on="controls.EXTERNO_PSEUDOBRIGATO.handlers"
@@ -279,10 +285,10 @@
 								:text="controls.EXTERNO_PSEUDOBRIGATO.label"
 								supports-html />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -291,7 +297,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -300,6 +306,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -311,12 +318,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -336,7 +343,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormExternoViewModel.js'
 
@@ -414,7 +421,8 @@
 					primaryKey: 'ValCodpesso',
 					designation: computed(() => this.Resources.PERSON10446),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -522,7 +530,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -676,7 +688,6 @@
 						isCollapsible: false,
 						anchored: false,
 						directChildren: ['EXTERNO_PESSONAME____', 'EXTERNO_PESSOGENDER__'],
-						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -691,8 +702,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR02',
 						maxLength: 85,
-						labelId: 'label_EXTERNO_PESSONAME____',
-						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -707,7 +716,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR02',
 						maxLength: 1,
-						labelId: 'label_EXTERNO_PESSOGENDER__',
 						arrayName: 'Genero',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -753,7 +761,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR03',
 						maxLength: 20,
-						labelId: 'label_EXTERNO_PESSOTELEPHON',
 						controlLimits: [
 						],
 					}, this),
@@ -768,7 +775,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EXTERNO_PSEUDNOVOGR03',
 						maxLength: 254,
-						labelId: 'label_EXTERNO_PESSOEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -941,11 +947,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -955,7 +959,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -965,7 +969,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -985,19 +989,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1018,7 +1036,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1038,19 +1056,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1069,11 +1101,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1083,7 +1113,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1091,8 +1121,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1100,7 +1128,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1108,8 +1136,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1117,7 +1143,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1125,11 +1151,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1139,7 +1163,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1149,7 +1173,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1210,6 +1234,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EXTERNO]/
 // eslint-disable-next-line

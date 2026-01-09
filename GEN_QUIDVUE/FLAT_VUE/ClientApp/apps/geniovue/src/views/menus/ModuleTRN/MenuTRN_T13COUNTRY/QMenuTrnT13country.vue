@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TRN_Menu_T13COUNTRY]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuTRN_T13COUNTRYViewModel.js'
 
@@ -168,8 +169,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -270,6 +270,7 @@
 							rowClickAction: {
 								id: 'RCA_TRN_1D3111',
 								name: 'form-CTRY03',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -279,7 +280,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'CTRY03',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'CTRY03'
 								}
 							},
 							formsDefinition: {
@@ -299,6 +300,7 @@
 						uuid: 'cbd56417-8510-499a-8b58-650dbb552e6e',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

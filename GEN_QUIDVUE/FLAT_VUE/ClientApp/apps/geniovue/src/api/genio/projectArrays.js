@@ -1,5 +1,5 @@
-﻿/* eslint-disable no-unused-vars */
-import { computed, reactive } from 'vue'
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
+import { computed, reactive, readonly } from 'vue'
 import _merge from 'lodash-es/merge'
 
 import netAPI from '@quidgest/clientapp/network'
@@ -106,13 +106,13 @@ export class GroupOption {
 	}
 }
 
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 /**
  * The a_categ array.
  */
 export class QArrayA_categ
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -142,7 +142,7 @@ export class QArrayA_categ
  */
 export class QArrayA_facili
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -184,7 +184,7 @@ export class QArrayA_facili
  */
 export class QArrayA_nivele
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -220,7 +220,7 @@ export class QArrayA_nivele
  */
 export class QArrayAccustos
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -256,7 +256,7 @@ export class QArrayAccustos
  */
 export class QArrayAcondtst
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -292,7 +292,7 @@ export class QArrayAcondtst
  */
 export class QArrayActive
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -322,7 +322,7 @@ export class QArrayActive
  */
 export class QArrayActivida
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'L'
@@ -352,7 +352,7 @@ export class QArrayActivida
  */
 export class QArrayAdatqual
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -400,7 +400,7 @@ export class QArrayAdatqual
  */
 export class QArrayAddresst
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -439,7 +439,7 @@ export class QArrayAddresst
  */
 export class QArrayAddressu
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -492,7 +492,7 @@ export class QArrayAddressu
  */
 export class QArrayAddrtyco
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -522,7 +522,7 @@ export class QArrayAddrtyco
  */
 export class QArrayAestadm
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -576,7 +576,7 @@ export class QArrayAestadm
  */
 export class QArrayAestado
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -630,7 +630,7 @@ export class QArrayAestado
  */
 export class QArrayAestrate
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -672,7 +672,7 @@ export class QArrayAestrate
  */
 export class QArrayAganttun
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -708,7 +708,7 @@ export class QArrayAganttun
  */
 export class QArrayAhorasse
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -719,13 +719,13 @@ export class QArrayAhorasse
 			new Option({
 				num: 1,
 				key: 35,
-				resourceId: '_3534512',
+				resourceId: '_3554693',
 				fnResources,
 			}),
 			new Option({
 				num: 2,
 				key: 40,
-				resourceId: '_4033029',
+				resourceId: '_4000330',
 				fnResources,
 			}),
 		]
@@ -738,7 +738,7 @@ export class QArrayAhorasse
  */
 export class QArrayAlaglead
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -780,7 +780,7 @@ export class QArrayAlaglead
  */
 export class QArrayAlocregr
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -810,7 +810,7 @@ export class QArrayAlocregr
  */
 export class QArrayAmeses
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -900,7 +900,7 @@ export class QArrayAmeses
  */
 export class QArrayAparttyp
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -942,7 +942,7 @@ export class QArrayAparttyp
  */
 export class QArrayAperacum
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -972,7 +972,7 @@ export class QArrayAperacum
  */
 export class QArrayAperiodi
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -1043,7 +1043,7 @@ export class QArrayAperiodi
 			new Option({
 				num: 11,
 				key: 12,
-				resourceId: '_5_ANOS28378',
+				resourceId: '_5_ANOS50688',
 				fnResources,
 			}),
 		]
@@ -1056,7 +1056,7 @@ export class QArrayAperiodi
  */
 export class QArrayApolarid
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1092,7 +1092,7 @@ export class QArrayApolarid
  */
 export class QArrayApriorid
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1128,7 +1128,7 @@ export class QArrayApriorid
  */
 export class QArrayAreatecn
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1170,7 +1170,7 @@ export class QArrayAreatecn
  */
 export class QArrayArecolha
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1200,7 +1200,7 @@ export class QArrayArecolha
  */
 export class QArrayAscorout
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1230,7 +1230,7 @@ export class QArrayAscorout
  */
 export class QArrayAside
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1272,7 +1272,7 @@ export class QArrayAside
  */
 export class QArrayAsimnao
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1304,11 +1304,127 @@ export class QArrayAsimnao
 }
 
 /**
+ * The assetCategory array.
+ */
+export class QArrayAssetcategory
+{
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(fnResources)
+	{
+		this.type = 'C'
+		this.pluralName = 'ASSET_CATEGORY65154'
+		this.singularName = 'ASSET_CATEGORIES64344'
+
+		this.elements = [
+			new Option({
+				num: 1,
+				key: 'RE',
+				resourceId: 'REAL_ESTATE07188',
+				fnResources,
+				icon: {
+					icon: 'asset-real-estate',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 2,
+				key: 'VCL',
+				resourceId: 'VEHICLE49593',
+				fnResources,
+				icon: {
+					icon: 'asset-vehicle',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 3,
+				key: 'EQUIP',
+				resourceId: 'EQUIPMENT03632',
+				fnResources,
+				icon: {
+					icon: 'asset-equipment',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 4,
+				key: 'FNTR',
+				resourceId: 'FURNITURE42200',
+				fnResources,
+				icon: {
+					icon: 'asset-furniture',
+					type: 'svg',
+				},
+			}),
+		]
+
+	}
+}
+
+/**
+ * The assetTags array.
+ */
+export class QArrayAssettags
+{
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(fnResources)
+	{
+		this.type = 'N'
+		this.pluralName = 'ASSET_TAGS23725'
+		this.singularName = 'ASSET_TAG59305'
+
+		this.elements = [
+			new Option({
+				num: 1,
+				key: 1,
+				resourceId: 'URGENT40554',
+				fnResources,
+				icon: {
+					icon: 'asset-warning',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 2,
+				key: 2,
+				resourceId: 'CHECKED31708',
+				fnResources,
+				icon: {
+					icon: 'asset-check-mark',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 3,
+				key: 3,
+				resourceId: 'IN_REPAIR33602',
+				fnResources,
+				icon: {
+					icon: 'asset-tools-repair',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 4,
+				key: 4,
+				resourceId: 'IMPORTANT21753',
+				fnResources,
+				icon: {
+					icon: 'asset-pin-priority',
+					type: 'svg',
+				},
+			}),
+		]
+
+	}
+}
+
+/**
  * The AssetTyp array.
  */
 export class QArrayAssettyp
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1356,7 +1472,7 @@ export class QArrayAssettyp
  */
 export class QArrayAtipoind
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1392,7 +1508,7 @@ export class QArrayAtipoind
  */
 export class QArrayAtipopro
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1434,7 +1550,7 @@ export class QArrayAtipopro
  */
 export class QArrayAtipouo
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1464,7 +1580,7 @@ export class QArrayAtipouo
  */
 export class QArrayAtpactiv
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1494,7 +1610,7 @@ export class QArrayAtpactiv
  */
 export class QArrayAtpacumu
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1536,7 +1652,7 @@ export class QArrayAtpacumu
  */
 export class QArrayAtpavali
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1572,7 +1688,7 @@ export class QArrayAtpavali
  */
 export class QArrayAtpbonif
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1602,7 +1718,7 @@ export class QArrayAtpbonif
  */
 export class QArrayAtpindic
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1638,7 +1754,7 @@ export class QArrayAtpindic
  */
 export class QArrayAtpmes
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1668,7 +1784,7 @@ export class QArrayAtpmes
  */
 export class QArrayAtpmeta
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1704,7 +1820,7 @@ export class QArrayAtpmeta
  */
 export class QArrayAtpscore
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1734,7 +1850,7 @@ export class QArrayAtpscore
  */
 export class QArrayAtpseg
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1764,7 +1880,7 @@ export class QArrayAtpseg
  */
 export class QArrayAvisperi
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -1806,7 +1922,7 @@ export class QArrayAvisperi
  */
 export class QArrayBaggage
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1836,7 +1952,7 @@ export class QArrayBaggage
  */
 export class QArrayBagtype
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1866,7 +1982,7 @@ export class QArrayBagtype
  */
 export class QArrayBankcomp
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1920,7 +2036,7 @@ export class QArrayBankcomp
  */
 export class QArrayBuildtyp
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1956,7 +2072,7 @@ export class QArrayBuildtyp
  */
 export class QArrayClass
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -1967,13 +2083,13 @@ export class QArrayClass
 			new Option({
 				num: 1,
 				key: '1C',
-				resourceId: '_1ACLASSE14213',
+				resourceId: '_1ACLASSE52698',
 				fnResources,
 			}),
 			new Option({
 				num: 2,
 				key: '2C',
-				resourceId: '_2ACLASSE01747',
+				resourceId: '_2ACLASSE04789',
 				fnResources,
 			}),
 			new Option({
@@ -1992,7 +2108,7 @@ export class QArrayClass
  */
 export class QArrayClassnum
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -2003,7 +2119,7 @@ export class QArrayClassnum
 			new Option({
 				num: 1,
 				key: 1,
-				resourceId: '_1O_CLASSE38057',
+				resourceId: '_1O_CLASSE18418',
 				fnResources,
 				helpResourceId: '_114530146',
 				helpResourceVerboseId: '_1145_VERBOSE04491',
@@ -2011,7 +2127,7 @@ export class QArrayClassnum
 			new Option({
 				num: 2,
 				key: 2,
-				resourceId: '_2A_CLASSE35193',
+				resourceId: '_2A_CLASSE50409',
 				fnResources,
 				helpResourceId: '_114630263',
 				helpResourceVerboseId: '_1146_VERBOSE39468',
@@ -2028,11 +2144,109 @@ export class QArrayClassnum
 }
 
 /**
+ * The componenticons array.
+ */
+export class QArrayComponenticons
+{
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(fnResources)
+	{
+		this.type = 'N'
+		this.pluralName = 'COMPONENTS_ICON53573'
+		this.singularName = 'COMPONENTS_ICON53573'
+
+		this.elements = [
+			new Option({
+				num: 1,
+				key: 2,
+				resourceId: 'DATA_INPUT23684',
+				fnResources,
+				icon: {
+					icon: 'components-class-DataInput-01',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 2,
+				key: 6,
+				resourceId: 'DATA_DISPLAY32113',
+				fnResources,
+				icon: {
+					icon: 'components-class-DataDisplay-02',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 3,
+				key: 3,
+				resourceId: 'DATA_GRID17400',
+				fnResources,
+				icon: {
+					icon: 'components-class-DataGrid',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 4,
+				key: 4,
+				resourceId: 'ACTION41832',
+				fnResources,
+				icon: {
+					icon: 'components-class-Action',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 5,
+				key: 5,
+				resourceId: 'CONTAINER62757',
+				fnResources,
+				icon: {
+					icon: 'components-class-LayoutContainer',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 6,
+				key: 8,
+				resourceId: 'RELATIONAL_STRUCTURE39801',
+				fnResources,
+				icon: {
+					icon: 'components-class-relationalStructure',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 7,
+				key: 7,
+				resourceId: 'INTERACTIVE04535',
+				fnResources,
+				icon: {
+					icon: 'components-class-AdvancedInteractive',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 8,
+				key: 1,
+				resourceId: 'MEDIA07084',
+				fnResources,
+				icon: {
+					icon: 'components-class-media',
+					type: 'svg',
+				},
+			}),
+		]
+
+	}
+}
+
+/**
  * The DataType array.
  */
 export class QArrayDatatype
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2068,7 +2282,7 @@ export class QArrayDatatype
  */
 export class QArrayDecplace
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -2116,7 +2330,7 @@ export class QArrayDecplace
  */
 export class QArrayDispstat
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2152,7 +2366,7 @@ export class QArrayDispstat
  */
 export class QArrayDsiponib
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2188,7 +2402,7 @@ export class QArrayDsiponib
  */
 export class QArrayFaciltyp
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2242,7 +2456,7 @@ export class QArrayFaciltyp
  */
 export class QArrayFreqempr
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -2304,7 +2518,7 @@ export class QArrayFreqempr
  */
 export class QArrayGenconta
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2346,7 +2560,7 @@ export class QArrayGenconta
  */
 export class QArrayGender
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2388,7 +2602,7 @@ export class QArrayGender
  */
 export class QArrayGenero
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2427,7 +2641,7 @@ export class QArrayGenero
  */
 export class QArrayGpsinput
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2457,7 +2671,7 @@ export class QArrayGpsinput
  */
 export class QArrayIdenttyp
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2487,7 +2701,7 @@ export class QArrayIdenttyp
  */
 export class QArrayMonths
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -2577,7 +2791,7 @@ export class QArrayMonths
  */
 export class QArrayObjetype
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -2607,7 +2821,7 @@ export class QArrayObjetype
  */
 export class QArrayPhonepre
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2643,7 +2857,7 @@ export class QArrayPhonepre
  */
 export class QArrayPrimviag
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'L'
@@ -2677,7 +2891,7 @@ export class QArrayPrimviag
  */
 export class QArrayQartipqu
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2725,7 +2939,7 @@ export class QArrayQartipqu
  */
 export class QArrayRadiobtn
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2759,7 +2973,7 @@ export class QArrayRadiobtn
  */
 export class QArrayS_modpro
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2801,6 +3015,13 @@ export class QArrayS_modpro
  */
 export class QArrayS_module
 {
+	/**
+	 * Static cache to store reactive arrays by language code.
+	 * Prevents multiple network requests and ensures reactive consistency.
+	 * @type {Map<string, Ref[]>}
+	 */
+	static _langCache = new Map()
+
 	constructor(lang)
 	{
 		this.type = 'C'
@@ -2808,20 +3029,23 @@ export class QArrayS_module
 		this.singularName = 'MODULE42049'
 
 		this.currentLang = typeof lang === 'string' ? lang.replace('-', '').toUpperCase() : null
-		this.itemsAlreadyRequested = false
-		this.array = reactive([])
+
+		// Initialise cache if missing
+		if (!QArrayS_module._langCache.has(this.currentLang)) {
+			const array = reactive([])
+			QArrayS_module._langCache.set(this.currentLang, array)
+
+			// Fetch only once per language
+			netAPI.fetchDynamicArray('S_module', this.currentLang, (res) => {
+				_merge(array, res)
+			})
+		}
 
 	}
 
 	get elements()
 	{
-		if (!this.itemsAlreadyRequested)
-		{
-			this.itemsAlreadyRequested = true
-			netAPI.fetchDynamicArray('S_module', this.currentLang, (res) => _merge(this.array, res))
-		}
-
-		return this.array
+		return readonly(QArrayS_module._langCache.get(this.currentLang) || [])
 	}
 }
 
@@ -2830,7 +3054,7 @@ export class QArrayS_module
  */
 export class QArrayS_prstat
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2896,7 +3120,7 @@ export class QArrayS_prstat
  */
 export class QArrayS_resul
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -2938,6 +3162,13 @@ export class QArrayS_resul
  */
 export class QArrayS_roles
 {
+	/**
+	 * Static cache to store reactive arrays by language code.
+	 * Prevents multiple network requests and ensures reactive consistency.
+	 * @type {Map<string, Ref[]>}
+	 */
+	static _langCache = new Map()
+
 	constructor(lang)
 	{
 		this.type = 'C'
@@ -2945,20 +3176,23 @@ export class QArrayS_roles
 		this.singularName = 'ROLES61449'
 
 		this.currentLang = typeof lang === 'string' ? lang.replace('-', '').toUpperCase() : null
-		this.itemsAlreadyRequested = false
-		this.array = reactive([])
+
+		// Initialise cache if missing
+		if (!QArrayS_roles._langCache.has(this.currentLang)) {
+			const array = reactive([])
+			QArrayS_roles._langCache.set(this.currentLang, array)
+
+			// Fetch only once per language
+			netAPI.fetchDynamicArray('S_roles', this.currentLang, (res) => {
+				_merge(array, res)
+			})
+		}
 
 	}
 
 	get elements()
 	{
-		if (!this.itemsAlreadyRequested)
-		{
-			this.itemsAlreadyRequested = true
-			netAPI.fetchDynamicArray('S_roles', this.currentLang, (res) => _merge(this.array, res))
-		}
-
-		return this.array
+		return readonly(QArrayS_roles._langCache.get(this.currentLang) || [])
 	}
 }
 
@@ -2967,6 +3201,13 @@ export class QArrayS_roles
  */
 export class QArrayS_tpproc
 {
+	/**
+	 * Static cache to store reactive arrays by language code.
+	 * Prevents multiple network requests and ensures reactive consistency.
+	 * @type {Map<string, Ref[]>}
+	 */
+	static _langCache = new Map()
+
 	constructor(lang)
 	{
 		this.type = 'C'
@@ -2974,20 +3215,23 @@ export class QArrayS_tpproc
 		this.singularName = 'TIPO_DE_PROCESSO20818'
 
 		this.currentLang = typeof lang === 'string' ? lang.replace('-', '').toUpperCase() : null
-		this.itemsAlreadyRequested = false
-		this.array = reactive([])
+
+		// Initialise cache if missing
+		if (!QArrayS_tpproc._langCache.has(this.currentLang)) {
+			const array = reactive([])
+			QArrayS_tpproc._langCache.set(this.currentLang, array)
+
+			// Fetch only once per language
+			netAPI.fetchDynamicArray('S_tpproc', this.currentLang, (res) => {
+				_merge(array, res)
+			})
+		}
 
 	}
 
 	get elements()
 	{
-		if (!this.itemsAlreadyRequested)
-		{
-			this.itemsAlreadyRequested = true
-			netAPI.fetchDynamicArray('S_tpproc', this.currentLang, (res) => _merge(this.array, res))
-		}
-
-		return this.array
+		return readonly(QArrayS_tpproc._langCache.get(this.currentLang) || [])
 	}
 }
 
@@ -2996,7 +3240,7 @@ export class QArrayS_tpproc
  */
 export class QArraySexo
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -3028,11 +3272,35 @@ export class QArraySexo
 }
 
 /**
+ * The Sistema_Contabilistico array.
+ */
+export class QArraySistema_contabilistico
+{
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(fnResources)
+	{
+		this.type = 'C'
+		this.pluralName = 'SISTEMA_CONTABILISTI21743'
+		this.singularName = 'SISTEMA_CONTABILISTI21743'
+
+		this.elements = [
+			new Option({
+				num: 1,
+				key: 'SNC',
+				resourceId: 'SNC09928',
+				fnResources,
+			}),
+		]
+
+	}
+}
+
+/**
  * The SpaceTyp array.
  */
 export class QArraySpacetyp
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -3080,7 +3348,7 @@ export class QArraySpacetyp
  */
 export class QArrayTipoarti
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -3116,7 +3384,7 @@ export class QArrayTipoarti
  */
 export class QArrayTipocond
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -3176,7 +3444,7 @@ export class QArrayTipocond
  */
 export class QArrayTypen
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'N'
@@ -3212,7 +3480,7 @@ export class QArrayTypen
  */
 export class QArrayTypet
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'C'
@@ -3248,7 +3516,7 @@ export class QArrayTypet
  */
 export class QArrayYesno
 {
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(fnResources)
 	{
 		this.type = 'L'
@@ -3304,6 +3572,8 @@ export default {
 	QArrayAscorout,
 	QArrayAside,
 	QArrayAsimnao,
+	QArrayAssetcategory,
+	QArrayAssettags,
 	QArrayAssettyp,
 	QArrayAtipoind,
 	QArrayAtipopro,
@@ -3324,6 +3594,7 @@ export default {
 	QArrayBuildtyp,
 	QArrayClass,
 	QArrayClassnum,
+	QArrayComponenticons,
 	QArrayDatatype,
 	QArrayDecplace,
 	QArrayDispstat,
@@ -3348,6 +3619,7 @@ export default {
 	QArrayS_roles,
 	QArrayS_tpproc,
 	QArraySexo,
+	QArraySistema_contabilistico,
 	QArraySpacetyp,
 	QArrayTipoarti,
 	QArrayTipocond,

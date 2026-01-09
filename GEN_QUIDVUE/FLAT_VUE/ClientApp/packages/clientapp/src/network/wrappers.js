@@ -235,7 +235,15 @@ export function postData(
  * @param {Object} options The Axios additional options
  * @returns A «Promise» to be resolved when the request completes.
  */
-export function fetchFormData(controller, formName, formMode, params, _fnCallback, navigationId, options) {
+export function fetchFormData(
+	controller,
+	formName,
+	formMode,
+	params,
+	_fnCallback,
+	navigationId,
+	options
+) {
 	const action = `${formName}_${formMode}_GET`
 	return postData(controller, action, params, _fnCallback, undefined, options, navigationId)
 }

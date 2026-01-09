@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_2A1]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_2A1ViewModel.js'
 
@@ -238,8 +239,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -340,6 +340,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_2A11',
 								name: 'menu-GQT_2A11',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -348,7 +349,7 @@
 											fnValueSelector: (row) => row.ValCodtpequ
 										},
 									],
-									action: vm.openMenuAction, type: 'menu', menuName: 'GQT_2A11',
+									action: vm.openMenuAction, type: 'menu', menuName: 'GQT_2A11'
 								}
 							},
 							formsDefinition: {
@@ -368,6 +369,7 @@
 						uuid: 'b0d536d8-bb60-4309-a860-eff17d0e5d21',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

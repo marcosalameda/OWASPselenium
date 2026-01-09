@@ -10,4 +10,5 @@ public class Module
     public const string REG = "REG";
     public const string IMO = "IMO";
     public const string TRN = "TRN";
+    public const string UIS = "UIS";
 }

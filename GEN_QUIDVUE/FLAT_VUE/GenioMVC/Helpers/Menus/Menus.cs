@@ -634,6 +634,7 @@ namespace GenioMVC.Helpers.Menus
 
 			return result;
 		}
+
 		/// <summary>
 		/// Gets the menu entry and checks show when conditions of the children
 		/// </summary>
@@ -643,8 +644,11 @@ namespace GenioMVC.Helpers.Menus
 		/// <returns>The menu with the submenus filtered</returns>
 		public static MenuEntry GetFilteredMenu(UserContext userContext, string module, string menuID)
 		{
-			MenuEntry menu = FindMenu(module, menuID);
-			menu.Children = menu.Children.Where(child => AllowMenu(userContext, child, module)).ToList();
+			MenuEntry originalMenu = FindMenu(module, menuID);
+			MenuEntry menu = new(originalMenu)
+			{
+				Children = [.. originalMenu.Children.Where(child => AllowMenu(userContext, child, module))]
+			};
 
 			return menu;
 		}

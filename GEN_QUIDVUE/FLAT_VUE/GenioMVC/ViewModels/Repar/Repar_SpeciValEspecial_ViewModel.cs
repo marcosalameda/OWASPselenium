@@ -1,13 +1,13 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
-using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+﻿using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 using CSGenio.business;
 using CSGenio.core.di;
+using CSGenio.core.framework.table;
 using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Models.Exception;
@@ -22,7 +22,7 @@ namespace GenioMVC.ViewModels.Repar
 		/// <summary>
 		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
-		[JsonPropertyName("Table")]
+		[JsonPropertyName("table")]
 		public TablePartial<Repar_SpeciValEspecial_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
@@ -30,6 +30,7 @@ namespace GenioMVC.ViewModels.Repar
 		public override string TableAlias => "speci";
 
 		/// <inheritdoc/>
+		[JsonPropertyName("uuid")]
 		public override string Uuid => "Repar_SpeciValEspecial";
 
 		/// <inheritdoc/>
@@ -64,7 +65,7 @@ namespace GenioMVC.ViewModels.Repar
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override CriteriaSet baseConditions
+		public override CriteriaSet BaseConditions
 		{
 			get
 			{
@@ -76,7 +77,7 @@ namespace GenioMVC.ViewModels.Repar
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override List<Relation> relations
+		public override List<Relation> Relations
 		{
 			get
 			{
@@ -136,15 +137,15 @@ namespace GenioMVC.ViewModels.Repar
 
 		public void LoadToExport(out ListingMVC<CSGenioAspeci> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
-		public void LoadToExport(out ListingMVC<CSGenioAspeci> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		public void LoadToExport(out ListingMVC<CSGenioAspeci> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
 			listing = null;
 			conditions = null;
-			columns = this.GetExportColumns(tableConfig.ColumnConfiguration);
+			columns = this.GetExportColumns(tableConfig.ColumnConfigurations);
 
 			// Store number of records to reset it after loading
 			int rowsPerPage = tableConfig.RowsPerPage;
@@ -159,18 +160,17 @@ namespace GenioMVC.ViewModels.Repar
 		/// <inheritdoc/>
 		public override CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 			return BuildCriteriaSet(tableConfig, requestValues, out tableReload, crs, isToExport);
 		}
 
 		/// <inheritdoc/>
-		public override CriteriaSet BuildCriteriaSet(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		public override CriteriaSet BuildCriteriaSet(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
 			User u = m_userContext.User;
 			tableReload = true;
 
-			if (crs == null)
-				crs = CriteriaSet.And();
+			crs ??= CriteriaSet.And();
 
 			// Limits Generation
 
@@ -179,16 +179,13 @@ namespace GenioMVC.ViewModels.Repar
 				CSGenio.business.CSGenioAspeci.FldAreatecn,
 				this.ValTipoarea);
 
-
-			if (Menu == null)
-				Menu = new TablePartial<Repar_SpeciValEspecial_RowViewModel>();
+			Menu ??= new TablePartial<Repar_SpeciValEspecial_RowViewModel>();
 			// Set table name (used in getting searchable column names)
 			Menu.TableName = TableAlias;
 
 			Menu.SetFilters(false, false);
 
-
-			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
+			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfigurations), tableConfig));
 
 
 			//Subfilters
@@ -196,6 +193,10 @@ namespace GenioMVC.ViewModels.Repar
 
 
 			crs.SubSets.Add(subfilters);
+
+			// Form field filters
+			if (tableConfig.FieldFilters != null)
+				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
 
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
@@ -260,7 +261,7 @@ namespace GenioMVC.ViewModels.Repar
 		/// <param name="conditions">The conditions.</param>
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAspeci> Qlisting, ref CriteriaSet conditions)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 
 			tableConfig.RowsPerPage = numberListItems;
 
@@ -275,7 +276,7 @@ namespace GenioMVC.ViewModels.Repar
 		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
+		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
 		{
 			ListingMVC<CSGenioAspeci> listing = null;
 
@@ -291,167 +292,167 @@ namespace GenioMVC.ViewModels.Repar
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="Qlisting">The rows.</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAspeci> Qlisting, ref CriteriaSet conditions)
+		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAspeci> Qlisting, ref CriteriaSet conditions)
 		{
-				User u = m_userContext.User;
-				Menu = new TablePartial<Repar_SpeciValEspecial_RowViewModel>();
+			User u = m_userContext.User;
+			Menu = new TablePartial<Repar_SpeciValEspecial_RowViewModel>();
 
-				CriteriaSet repar___speciespecialConds = CriteriaSet.And();
-				bool tableReload = true;
+			CriteriaSet repar___speciespecialConds = CriteriaSet.And();
+			bool tableReload = true;
 
-				//FOR: MENU LIST SORTING
-				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("SPECI.ESPECIAL", new OrderedDictionary());
-				allSortOrders["SPECI.ESPECIAL"].Add("SPECI.ESPECIAL", "A");
+			//FOR: MENU LIST SORTING
+			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+			allSortOrders.Add("SPECI.ESPECIAL", new OrderedDictionary());
+			allSortOrders["SPECI.ESPECIAL"].Add("SPECI.ESPECIAL", "A");
 
 
+			int numberListItems = tableConfig.RowsPerPage;
+			var pageNumber = ajaxRequest ? tableConfig.Page : 1;
 
-				int numberListItems = tableConfig.RowsPerPage;
-				var pageNumber = ajaxRequest ? tableConfig.Page : 1;
+			// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+			if (pageNumber < 1)
+				pageNumber = 1;
 
-				// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-				if (pageNumber < 1)
-					pageNumber = 1;
+			List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig, "speci", allSortOrders);
 
-				List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig.ColumnOrderBy, "speci", allSortOrders);
-
-				if (sorts == null || sorts.Count == 0)
-				{
-					sorts = new List<ColumnSort>();
+			if (sorts == null || sorts.Count == 0)
+			{
+				sorts = new List<ColumnSort>();
 				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAspeci.FldEspecial), SortOrder.Ascending));
 
-				}
+			}
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAspeci.FldCodespec, CSGenioAspeci.FldZzstate, CSGenioAspeci.FldEspecial, CSGenioAspeci.FldAreatecn };
-
-
-				// Totalizers
-				List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
-
-				FieldRef firstVisibleColumn = null;
-
-				if (sorts == null)
-				{
-					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
-
-					firstVisibleColumn ??= new FieldRef("speci", "especial");
-				}
+			FieldRef[] fields = new FieldRef[] { CSGenioAspeci.FldCodespec, CSGenioAspeci.FldZzstate, CSGenioAspeci.FldEspecial, CSGenioAspeci.FldAreatecn };
 
 
-				// Limitations
-				this.tableLimits ??= [];
-				// Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new();
+			// Totalizers
+			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
 
-				//Tooltip for EPHs affecting this viewmodel list
-				{
-					Limit limit = new Limit();
-					limit.TipoLimite = LimitType.EPH;
-					CSGenioAspeci model_limit_area = new CSGenioAspeci(m_userContext.User);
-					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_REPAR___SPECIESPECIAL");
-					if (area_EPH_limits.Count > 0)
-						this.tableLimits.AddRange(area_EPH_limits);
-				}
+			FieldRef firstVisibleColumn = null;
 
-				// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
-				// Limit origin: form 
-				//Limit type: "C"
-				//Current Area = "SPECI"
-				//1st Area Limit: "SPECI"
-				//1st Area Field: "AREATECN"
-				//1st Area Value: ""
-				//2nd Area Limit: "REPAR"
-				//2nd Area Field: "TIPOAREA"
-				{
-					Limit limit = new Limit();
-					limit.TipoLimite = LimitType.C;
-					limit.NaoAplicaSeNulo = false;
-					CSGenioAspeci model_limit_area = new CSGenioAspeci(m_userContext.User);
-					string limit_field = "areatecn", limit_field_value = "";
-					object this_limit_field = Navigation.GetStrValue(limit_field_value);
-					Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+			if (sorts.Count == 0)
+			{
+				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
 
-					CSGenioArepar model_limit_area2 = new CSGenioArepar(m_userContext.User);
-					string limit_field2 = "tipoarea", limit_field_value2 = "";
-					object this_limit_field2 = ValTipoarea;
-					Limit_Filler(ref limit, model_limit_area2, limit_field2, limit_field_value2, this_limit_field2, LimitAreaType.AreaLimitaN);
-					if (!this.tableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
-						this.tableLimits.Add(limit);
-				}
+				firstVisibleColumn ??= new FieldRef("speci", "especial");
+			}
+			// Limitations
+			this.TableLimits ??= [];
+			// Comparer to check if limit is already present in TableLimits
+			LimitComparer limitComparer = new();
 
-				if (conditions == null)
-					conditions = CriteriaSet.And();
+			//Tooltip for EPHs affecting this viewmodel list
+			{
+				Limit limit = new Limit();
+				limit.TipoLimite = LimitType.EPH;
+				CSGenioAspeci model_limit_area = new CSGenioAspeci(m_userContext.User);
+				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_REPAR___SPECIESPECIAL");
+				if (area_EPH_limits.Count > 0)
+					this.TableLimits.AddRange(area_EPH_limits);
+			}
 
-				conditions.SubSets.Add(repar___speciespecialConds);
-				repar___speciespecialConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
-				tableReload &= hasAllRequiredLimits;
+			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+			// Limit origin: form 
+			//Limit type: "C"
+			//Current Area = "SPECI"
+			//1st Area Limit: "SPECI"
+			//1st Area Field: "AREATECN"
+			//1st Area Value: ""
+			//2nd Area Limit: "REPAR"
+			//2nd Area Field: "TIPOAREA"
+			{
+				Limit limit = new Limit();
+				limit.TipoLimite = LimitType.C;
+				limit.NaoAplicaSeNulo = false;
+				CSGenioAspeci model_limit_area = new CSGenioAspeci(m_userContext.User);
+				string limit_field = "areatecn", limit_field_value = "";
+				object this_limit_field = Navigation.GetStrValue(limit_field_value);
+				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+
+				CSGenioArepar model_limit_area2 = new CSGenioArepar(m_userContext.User);
+				string limit_field2 = "tipoarea", limit_field_value2 = "";
+				object this_limit_field2 = ValTipoarea;
+				Limit_Filler(ref limit, model_limit_area2, limit_field2, limit_field_value2, this_limit_field2, LimitAreaType.AreaLimitaN);
+				if (!this.TableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+					this.TableLimits.Add(limit);
+			}
+
+			if (conditions == null)
+				conditions = CriteriaSet.And();
+
+			conditions.SubSets.Add(repar___speciespecialConds);
+			repar___speciespecialConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
+			tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ REPAR_SPECIESPECIAL]/
 
-				bool distinct = false;
+			bool distinct = false;
 
-				if (isToExport)
-				{
-					if (!tableReload)
-						return;
+			if (isToExport)
+			{
+				if (!tableReload)
+					return;
 
-					Qlisting = Models.ModelBase.Where<CSGenioAspeci>(m_userContext, false, repar___speciespecialConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___SPECIESPECIAL", true, firstVisibleColumn: firstVisibleColumn);
+				var exportColumns = GetExportColumns(tableConfig.ColumnConfigurations);
+				var exportFieldRefs = exportColumns.Select(eCol => eCol.Field).Where(fldRef => fldRef != null).ToArray();
+
+				Qlisting = Models.ModelBase.BuildListingForExport<CSGenioAspeci>(m_userContext, false, ref repar___speciespecialConds, exportFieldRefs, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___SPECIESPECIAL", true, firstVisibleColumn: firstVisibleColumn);
 
 // USE /[MANUAL GQT OVERRQLSTEXP REPAR_SPECIESPECIAL]/
 
-					return;
-				}
+				return;
+			}
 
-				if (tableReload)
-				{
+			if (tableReload)
+			{
 // USE /[MANUAL GQT OVERRQLIST REPAR_SPECIESPECIAL]/
 
-					string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_speci"];
-					CriteriaSet m_PagingPosEPHs = null;
+				string QMVC_POS_RECORD = requestValues["Q_POS_RECORD_speci"];
+				CriteriaSet m_PagingPosEPHs = null;
 
-					if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
-					{
-						var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAspeci.GetInformation(), QMVC_POS_RECORD, sorts, repar___speciespecialConds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
-						if (m_iCurPag != -1)
-							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
-					}
-
-					ListingMVC<CSGenioAspeci> listing = Models.ModelBase.Where<CSGenioAspeci>(m_userContext, distinct, repar___speciespecialConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___SPECIESPECIAL", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
-
-					if (listing.CurrentPage > 0)
-						pageNumber = listing.CurrentPage;
-
-					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-					if (pageNumber < 1)
-						pageNumber = 1;
-
-					//Set document field values to objects
-					SetDocumentFields(listing);
-
-					Menu.Elements = MapRepar_SpeciValEspecial(listing);
-
-					Menu.Identifier = "IBL_REPAR___SPECIESPECIAL";
-
-					// Last updated by [CJP] at [2015.02.03]
-					// Adds the identifier to each element
-					foreach (var element in Menu.Elements)
-						element.Identifier = "IBL_REPAR___SPECIESPECIAL";
-
-					Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
-
-					// Set table totalizers
-					if (listing.Totalizers != null && listing.Totalizers.Count > 0)
-						Menu.SetTotalizers(listing.Totalizers);
+				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
+				{
+					var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAspeci.GetInformation(), QMVC_POS_RECORD, sorts, repar___speciespecialConds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
+					if (m_iCurPag != -1)
+						pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 				}
 
-				// Set table limits display property
-				FillTableLimitsDisplayData();
+				ListingMVC<CSGenioAspeci> listing = Models.ModelBase.Where<CSGenioAspeci>(m_userContext, distinct, repar___speciespecialConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_REPAR___SPECIESPECIAL", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
+				if (listing.CurrentPage > 0)
+					pageNumber = listing.CurrentPage;
 
-				// Load the user table configuration names and default name
-				LoadUserTableConfigNameProperties();
+				//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+				if (pageNumber < 1)
+					pageNumber = 1;
+
+				//Set document field values to objects
+				SetDocumentFields(listing);
+
+				Menu.Elements = MapRepar_SpeciValEspecial(listing);
+
+				Menu.Identifier = "IBL_REPAR___SPECIESPECIAL";
+
+				// Last updated by [CJP] at [2015.02.03]
+				// Adds the identifier to each element
+				foreach (var element in Menu.Elements)
+					element.Identifier = "IBL_REPAR___SPECIESPECIAL";
+
+				Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+
+				// Set table totalizers
+				if (listing.Totalizers != null && listing.Totalizers.Count > 0)
+					Menu.SetTotalizers(listing.Totalizers);
+			}
+
+			// Set table limits display property
+			FillTableLimitsDisplayData();
+
+			// Store table configuration so it gets sent to the client-side to be processed
+			CurrentTableConfig = tableConfig;
+
+			// Load the user table configuration names and default name
+			LoadUserTableConfigNameProperties();
 		}
 
 		private List<Repar_SpeciValEspecial_RowViewModel> MapRepar_SpeciValEspecial(ListingMVC<CSGenioAspeci> Qlisting)

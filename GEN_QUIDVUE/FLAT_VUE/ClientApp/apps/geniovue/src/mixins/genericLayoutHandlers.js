@@ -37,6 +37,7 @@ export default {
 
 	computed: {
 		...mapState(useSystemDataStore, [
+			'maintenance',
 			'system'
 		]),
 

@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MC_R]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_MC_RViewModel.js'
 
@@ -203,8 +204,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -226,7 +226,7 @@
 												fnValueSelector: (row) => row.ValCoditem
 											},
 										],
-										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_Menu_LIST_DB_MC_R_MenuR_OPENARTIGVAL,
+										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_Menu_LIST_DB_MC_R_MenuR_OPENARTIGVAL
 									}
 								},
 								{
@@ -239,13 +239,14 @@
 												fnValueSelector: (row) => row.ValCoditem
 											},
 										],
-										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_Menu_LIST_DB_MC_R_MenuR_OPENARTIGINV,
+										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_Menu_LIST_DB_MC_R_MenuR_OPENARTIGINV
 									}
 								},
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_3911',
 								name: 'PTN_MenuMC_LIST_DB_MC_R',
+								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -253,7 +254,7 @@
 											fnValueSelector: (row) => row.ValCoditem
 										},
 									],
-									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_LIST_DB_MC_R,
+									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_LIST_DB_MC_R
 								}
 							},
 							formsDefinition: {
@@ -269,6 +270,7 @@
 						uuid: 'e101ee50-17a2-4e6b-862d-f798f9598d98',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

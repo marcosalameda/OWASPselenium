@@ -63,6 +63,8 @@ namespace GenioMVC.ViewModels.Tradu
 		/// </summary>
 		public string ValTraduzid { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -327,6 +329,17 @@ namespace GenioMVC.ViewModels.Tradu
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -460,7 +473,7 @@ namespace GenioMVC.ViewModels.Tradu
 
 			if (tradu___lang1langua__DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableLang1Langua, "sTableLang1Langua", "dTableLang1Langua", qs, "lang1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -510,7 +523,7 @@ namespace GenioMVC.ViewModels.Tradu
 
 				TableLang1Langua.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableLang1Langua.Query = query;
-				TableLang1Langua.Elements = listing.RowsForViewModel<GenioMVC.Models.Lang1>((r) => new GenioMVC.Models.Lang1(m_userContext, r, true, _fieldsToSerialize_TRADU___LANG1LANGUA__));
+				TableLang1Langua.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Lang1(m_userContext, r, true, _fieldsToSerialize_TRADU___LANG1LANGUA__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -650,7 +663,7 @@ namespace GenioMVC.ViewModels.Tradu
 
 			if (tradu___lang2langua__DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableLang2Langua, "sTableLang2Langua", "dTableLang2Langua", qs, "lang2");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -700,7 +713,7 @@ namespace GenioMVC.ViewModels.Tradu
 
 				TableLang2Langua.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableLang2Langua.Query = query;
-				TableLang2Langua.Elements = listing.RowsForViewModel<GenioMVC.Models.Lang2>((r) => new GenioMVC.Models.Lang2(m_userContext, r, true, _fieldsToSerialize_TRADU___LANG2LANGUA__));
+				TableLang2Langua.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Lang2(m_userContext, r, true, _fieldsToSerialize_TRADU___LANG2LANGUA__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

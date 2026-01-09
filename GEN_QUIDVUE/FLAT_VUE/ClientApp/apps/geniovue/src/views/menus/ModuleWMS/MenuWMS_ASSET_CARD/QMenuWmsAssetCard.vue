@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_ASSET_CARD]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_ASSET_CARDViewModel.js'
 
@@ -235,6 +236,41 @@
 								scrollData: 30,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.MarkdownColumn({
+								order: 10,
+								name: 'ValDescription',
+								area: 'ASSET',
+								field: 'DESCRIPTION',
+								label: computed(() => this.Resources.DESCRIPTION07383),
+								scrollData: 30,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.MarkdownColumn({
+								order: 11,
+								name: 'ValLongdesc',
+								area: 'ASSET',
+								field: 'LONGDESC',
+								label: computed(() => this.Resources.DETAILED_DESCRIPTION36560),
+								scrollData: 30,
+								isVisible: false,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.ArrayColumn({
+								order: 12,
+								multipleValues: true,
+								name: 'AtagsValIcon',
+								area: 'ATAGS',
+								field: 'ICON',
+								label: computed(() => this.Resources.TAGS54909),
+								scrollData: 1,
+								maxDigits: 1,
+								decimalPlaces: 0,
+								sortable: false,
+								searchable: false,
+								export: false,
+								array: computed(() => new qProjArrays.QArrayAssettags(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayAssettags.type,
+								arrayDisplayMode: 'ID',
+								pkColumn: 'ValCodtags',
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'WMS_Menu_ASSET_CARD',
@@ -243,14 +279,14 @@
 							tableAlias: 'ASSET',
 							tableNamePlural: computed(() => this.Resources.ASSETS12081),
 							viewManagement: 'U',
+							hasTextWrap: true,
 							showLimitsInfo: true,
 							tableTitle: computed(() => this.Resources.EQUIPMENTS06276),
 							showAlternatePagination: true,
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -351,6 +387,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_411111',
 								name: 'form-EQUIPM',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -360,7 +397,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'EQUIPM',
+									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'EQUIPM'
 								}
 							},
 							formsDefinition: {
@@ -417,6 +454,8 @@
 										sources: [
 											'ASSET.GRAI',
 											'ASSET.GIAI',
+											'ASSET.DESCRIPTION',
+											'ATAGS.ICON',
 										]
 									},
 									image: {
@@ -463,6 +502,10 @@
 									},
 									displayMode: {
 										rawValue: 'grid',
+										isMapped: false
+									},
+									gridMode: {
+										rawValue: 'fixed',
 										isMapped: false
 									},
 									containerAlignment: {
@@ -557,7 +600,8 @@
 						/** Menu limits */
 						controlLimits: [
 							/** SC */
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

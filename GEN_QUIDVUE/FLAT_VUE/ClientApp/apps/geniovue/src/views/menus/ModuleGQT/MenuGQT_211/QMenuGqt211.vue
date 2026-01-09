@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_211]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_211ViewModel.js'
 
@@ -234,8 +235,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -336,6 +336,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_2111',
 								name: 'form-EQUIP',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -345,7 +346,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'EQUIP',
+									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'EQUIP'
 								}
 							},
 							formsDefinition: {
@@ -363,25 +364,26 @@
 							}
 						},
 						activeFilters: {
-							options: {
-								active: {
-									id: 'filter_GQT_Menu_211_ActiveFilter_A',
+							selected: ['current'],
+							items: [
+								{
+									id: 'filter_GQT_Menu_211_current',
 									value: computed(() => this.Resources.ATIVOS54304),
-									selected: true
+									key: 'current'
 								},
-								inactive: {
-									id: 'filter_GQT_Menu_211_ActiveFilter_I',
+								{
+									id: 'filter_GQT_Menu_211_previous',
 									value: computed(() => this.Resources.INATIVOS00149),
-									selected: false
+									key: 'previous'
 								},
-								future: {
-									id: 'filter_GQT_Menu_211_ActiveFilter_F',
+								{
+									id: 'filter_GQT_Menu_211_upcoming',
 									value: computed(() => this.Resources.FUTUROS10545),
-									selected: false
+									key: 'upcoming'
 								}
-							},
-							dateValue: {
-								id: 'GQT_Menu_211_dataRef',
+							],
+							date: {
+								id: 'filter_GQT_Menu_211_date',
 								type: 'date',
 								value: new Date(),
 								title: computed(() => this.Resources.DATA18071),
@@ -559,6 +561,7 @@
 							},
 						],
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

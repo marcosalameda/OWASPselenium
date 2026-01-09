@@ -32,7 +32,7 @@
 		{
 			// Instead of propagating the action to the DOM,
 			// initialize the dropdown content manually.
-			let obj = { each: (callback) => callback.call(this.$refs.dropdownBtn.$el) }
+			const obj = { each: (callback) => callback.call(this.$refs.dropdownBtn.$el) }
 			Dropdown._jQueryInterface.call(obj)
 		},
 

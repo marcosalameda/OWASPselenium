@@ -156,7 +156,9 @@ namespace Administration.Controllers
             model.Modules.Add(new Module("STY", Resources.Resources.STYLE47121));
             model.Modules.Add(new Module("TBS", Resources.Resources.BASE_TABLES04823));
             model.Modules.Add(new Module("TRN", Resources.Resources.TRAINING_EXERCISES07801));
+            model.Modules.Add(new Module("UIS", Resources.Resources.USER_INTERFACE32384));
             model.Modules.Add(new Module("WMS", Resources.Resources.WAREHOUSE_MANAGEMENT10443));
+            model.Modules.Add(new Module("XRS", Resources.Resources.WHAREHOUSE_API10412));
 
             //Check if the module only has levels.
             foreach(var module in model.Modules)

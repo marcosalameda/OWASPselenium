@@ -25,13 +25,13 @@ class UsersTexts extends BaseResources
 			return this.resources.ATRIBUIR_RAPIDAMENTE15967
 		}
 		get selectUsers() {
-			return this.resources._1__SELECIONE_UTILIZ36383
+			return this.resources._1__SELECIONE_UTILIZA54069
 		}
 		get selectRoles() {
-			return this.resources._2__SELECIONE_FUNCOE01301
+			return this.resources._2__SELECIONE_FUNCOES21542
 		}
 		get reviewAndConfirm() {
-			return this.resources._3__REVEJA_E_CONFIRM63315
+			return this.resources._3__REVEJA_E_CONFIRME45679
 		}
 		get allUsers() {
 			return this.resources.TODOS_OS_UTILIZADORE41512
@@ -65,10 +65,10 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.ATRIBUIR_RAPIDAMENTE15967
 		}
 		get selectUsers() {
-			return this.resources._1__SELECIONE_UTILIZ36383
+			return this.resources._1__SELECIONE_UTILIZA54069
 		}
 		get selectRoles() {
-			return this.resources._2__SELECIONE_FUNCOE01301
+			return this.resources._2__SELECIONE_FUNCOES21542
 		}
 		get integrationSettingsAI() {
 			return this.resources.CONFIGURACOES_DE_INT56161
@@ -215,7 +215,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.LOGIN_DE_ACESSO_A_BA52816
 		}
 		get databaseConnectionTitle() {
-			return this.resources.AUTENTICACAO_DE__BAS42362
+			return this.resources.AUTENTICACAO_NA_BASE39084
 		}
 		get encryptConnectionLabel() {
 			return this.resources.ENCRIPTAR_LIGACAO12834
@@ -260,7 +260,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.RELATORIO62426
 		}
 		get reportsByLanguageTitle() {
-			return this.resources.RELATORIOS_POR_LINGU35356
+			return this.resources.RELATORIOS_POR_LINGU09488
 		}
 		get elasticsearchTitle() {
 			return this.resources.ELASTICSEARCH49143
@@ -344,7 +344,7 @@ class SystemConfigTexts extends BaseResources
 			return this.resources.RELATORIO62426
 		}
 		get reportsByLanguage() {
-			return this.resources.RELATORIOS_POR_LINGU35356
+			return this.resources.RELATORIOS_POR_LINGU09488
 		}
 		get configuracaoDoSistema() {
 			return this.resources.CONFIGURACAO_DO_SIST39343
@@ -372,6 +372,18 @@ class SystemConfigTexts extends BaseResources
 		}
 		get connectionFailed() {
 			return this.resources.FALHA_NA_CONEXAO29916
+		}
+		get mcpSecurityMode() {
+			return this.resources.MODO_DE_SEGURANCA_MC18759
+		}
+		get mcpSecurityModeHelp() {
+			return this.resources.DEFINE_O_MODO_DE_SEG18180
+		}
+		get jwtEncryptionKey() {
+			return this.resources.CHAVE_DE_ENCRIPTACAO37781
+		}
+		get jwtEncryptionKeyHelp() {
+			return this.resources.CHAVE_SECRETA_UTILIZ48448
 		}
 }
 

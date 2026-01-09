@@ -1,90 +1,91 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CSGenio.framework
 {
 	/// <summary>
-	/// Classe que representa as Entradas Permanentes de historial existentes
-	/// em cada modulo.Name da classe [Module]EPH
+	/// Defines the EPH conditions for module REG
 	/// </summary>
 	public class REGEPH : EPH
 	{
         /// <summary>
-        /// Hashtable com as ephs activas em cada nível
+        /// Maps each access level to their list of EPH
         /// </summary>
-		protected static Hashtable ephsPorModulo;
+		private static Dictionary<string, List<EPHCondition>> ephsPorModulo;
 
         /// <summary>
-        /// Código dos vários controlos onde a eph referida não tem efeito
+        /// Id of all the UI control where a EPH should be turned off
         /// </summary>
-		protected static Dictionary<string, List<string>> menusNaoSujeitosEPH;
+		private static Dictionary<string, List<string>> menusNaoSujeitosEPH;
+
+        /// <summary>
+        /// Access levels subject to EPH
+        /// </summary>
+        private static string[] niveis;
 
 		/// <summary>
-		/// Contructor da classe
+		/// Static constructor
 		/// </summary>
 		static REGEPH ()
 		{
-			ephsPorModulo = new Hashtable();
-			//Esta a obter os do cliente e nao os do modulo
-			//PHE in role Query
-			EPHCondition[] eph1 = new EPHCondition[2];
-			eph1[0] = new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
-			eph1[1] = new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, "");
-			ephsPorModulo.Add("1", eph1);
-			niveis = new string[]{ "1" };
+			ephsPorModulo = new ();
+			//PHE in role Query            
+            ephsPorModulo["1"] = [
+                new EPHCondition("USER", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, ""),
+                new EPHCondition("COMODANTE", "GQT", "gqtpwcom", "pwcom", "codpess1", "pwcom", "codpess1", FieldType.KEY_GUID, ""),
+            ];
+
+			niveis = [ "1" ];
+
+			menusNaoSujeitosEPH = new Dictionary<string, List<string>>();
+            //Add self-exceptions to the ui pages that set the initial eph
+            if(ephsPorModulo is not null)
+                foreach(var level in ephsPorModulo)
+                    foreach(var condition in level.Value)
+                        if(!string.IsNullOrEmpty(condition.IntialForm))
+                            AdicionaMenuNaoSujeitoEPH("ML" + condition.IntialForm, condition.EPHName);
+
 		}
 
         /// <summary>
-        /// Construtor
+        /// Constructor
         /// </summary>
-        /// <param name="nome">name do módulo</param>
+        /// <param name="nome">module</param>
         public REGEPH(string name)
         {
             moduleName = name;
         }
 
-		/// <summary>
-		/// Método que coloca e devolve as ephs por módulo
-		/// </summary>
-		public override Hashtable EphsPerModule
+		/// <inheritdoc/>
+		public override Dictionary<string, List<EPHCondition>> EphsPerModule
 		{
 			get{return ephsPorModulo;}
-			set{ephsPorModulo=value;}
+		}
+
+        /// <inheritdoc/>
+        public override string[] Levels
+		{
+			get{return niveis;}
 		}
 
         /// <summary>
-        /// Método que coloca e devolve os menus não sujeitos a EPH
+        /// Id of all the UI control where a EPH should be turned off
         /// </summary>
         public override Dictionary<string, List<string>> MenusNotSubjectEPH
         {
             get { return menusNaoSujeitosEPH; }
-            set { menusNaoSujeitosEPH = value; }
         }
 
-		//02-12-2009
-        public static void AdicionaMenuNaoSujeitoEPH(string identifier, string eph)
+
+        private static void AdicionaMenuNaoSujeitoEPH(string identifier, string eph)
         {
             //verifica se já contem o identifier, caso contenha, adiciona outra entrada ao dicionário
-            //[TMV](2020.09.30) -> initializes if is null
-            if(menusNaoSujeitosEPH == null)
-            {
-                menusNaoSujeitosEPH = new Dictionary<string, List<string>>();
-                menusNaoSujeitosEPH.Add(identifier, new List<string> { eph });
-            }
-            else if (!menusNaoSujeitosEPH.ContainsKey(identifier))
-                menusNaoSujeitosEPH.Add(identifier, new List<string> { eph });
-            else if (!menusNaoSujeitosEPH[identifier].Contains(eph))
-                menusNaoSujeitosEPH[identifier].Add(eph);
-
+            if(!menusNaoSujeitosEPH.TryGetValue(identifier, out var ephs))
+                menusNaoSujeitosEPH[identifier] = [eph];
+            else if(!eph.Contains(eph))
+                ephs.Add(eph);
         }
 
-		/// <summary>
-        /// Verifica se neste módulo o identifier está sujeito à eph da area
-        /// </summary>
-        /// <param name="identificador">identifier do controlo</param>
-        /// <param name="areaeph">area da eph</param>
-        /// <returns>true se o identifier está sujeito a eph</returns>
+		/// <inheritdoc/>
 		public override bool HasIdentifierSubjectEPH(string identifier, string areaeph)
         {
             return !(menusNaoSujeitosEPH != null && menusNaoSujeitosEPH.ContainsKey(identifier)

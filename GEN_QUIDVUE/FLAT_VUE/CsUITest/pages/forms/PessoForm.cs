@@ -189,7 +189,7 @@ public class PessoForm : Form
 	/// <summary>
 	/// Terrain
 	/// </summary>
-	public IWebElement PseudTerragrp => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudTerragrp => new CollapsibleZoneControl(driver, ContainerLocator, "#PESSO___PSEUDTERRAGRP-container");
 
 	/// <summary>
 	/// Query for external API

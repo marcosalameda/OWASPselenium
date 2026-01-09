@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW PERSO]/
 
 		[HttpPost]
-		public ActionResult Perso_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Perso_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Perso_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Perso_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Perso_Show_GET",
 				AreaName = "perso",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET PERSO]/
 		[HttpPost]
-		public ActionResult Perso_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Perso_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Perso_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Perso_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Perso_New_GET",
 				AreaName = "perso",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Perso_New([FromBody]Perso_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Perso_New",
 				ViewName = "Perso",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET PERSO]/
 		[HttpPost]
-		public ActionResult Perso_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Perso_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Perso_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Perso_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Perso_Edit_GET",
 				AreaName = "perso",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Perso_Edit([FromBody]Perso_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Perso_Edit",
 				ViewName = "Perso",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET PERSO]/
 		[HttpPost]
-		public ActionResult Perso_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Perso_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Perso_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Perso_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Perso_Delete_GET",
 				AreaName = "perso",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Perso/Perso_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST PERSO]/
 		[HttpPost]
-		public ActionResult Perso_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Perso_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Perso_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Perso_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Perso_Delete",
 				ViewName = "Perso",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET PERSO]/
 
 		[HttpPost]
-		public ActionResult Perso_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Perso_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Perso_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Perso_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Perso_Duplicate_GET",
 				AreaName = "perso",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Perso_Duplicate([FromBody]Perso_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Perso_Duplicate",
 				ViewName = "Perso",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Perso(UserContext.Current);
+					GenioMVC.Models.Perso model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("perso");
 
 // USE /[MANUAL GQT BEFORE_CANCEL PERSO]/

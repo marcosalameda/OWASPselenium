@@ -35,8 +35,9 @@ export function generateSvgSpriteBundle() {
 		join(__dirname, './public/Content/svgbundle.svg')
 	)
 
+	// eslint-disable-next-line no-console
 	console.log(
-	'\x1b[36m%s\x1b[0m',
+		'\x1b[36m%s\x1b[0m',
 		`✅ SVG sprite bundle generated successfully at: ./public/Content/svgbundle.svg`
 	)
 }

@@ -93,7 +93,7 @@ namespace CSGenio.business
 				{ E_7_8, new ArrayElement() { ResourceId = "ANUAL55239", HelpId = "", Group = "" } },
 				{ E_9_9, new ArrayElement() { ResourceId = "VARIAVEL46886", HelpId = "", Group = "" } },
 				{ E_11_10, new ArrayElement() { ResourceId = "BIANUAL25027", HelpId = "", Group = "" } },
-				{ E_12_11, new ArrayElement() { ResourceId = "_5_ANOS28378", HelpId = "", Group = "" } },
+				{ E_12_11, new ArrayElement() { ResourceId = "_5_ANOS50688", HelpId = "", Group = "" } },
 			};
 		}
 

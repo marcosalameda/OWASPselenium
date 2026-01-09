@@ -2,7 +2,7 @@ services:
   sqlserver:
     image: mcr.microsoft.com/mssql/server:2022-latest
     environment:
-      MSSQL_SA_PASSWORD: "QuidSpark!"
+      MSSQL_SA_PASSWORD: QuidSpark!
       ACCEPT_EULA: "Y"
       MSSQL_PID: "Developer"
     ports:
@@ -16,7 +16,7 @@ services:
       timeout: 3s
       retries: 10
       start_period: 10s
-       
+
   webadmin:
     build: ../WebAdmin
     ports:
@@ -40,6 +40,6 @@ services:
     depends_on:
       sqlserver:
         condition: service_healthy
-
+       
 volumes:
   db_data:

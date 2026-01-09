@@ -1,5 +1,6 @@
 ﻿<template>
 	<q-field
+		:id="id"
 		:readonly="readonly"
 		:disabled="disabled"
 		:size="size">
@@ -13,7 +14,6 @@
 
 		<datepicker
 			v-model="model"
-			:id="id"
 			:disabled="disabled"
 			:readonly="readonly"
 			:time-picker="isTimePicker"

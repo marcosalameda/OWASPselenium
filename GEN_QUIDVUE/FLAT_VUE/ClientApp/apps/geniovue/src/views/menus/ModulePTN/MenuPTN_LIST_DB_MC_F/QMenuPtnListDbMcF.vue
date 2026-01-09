@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MC_F]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_MC_FViewModel.js'
 
@@ -203,8 +204,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -228,7 +228,7 @@
 										],
 										isControlled: true,
 										isRoute: true,
-										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGVAL',
+										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGVAL'
 									}
 								},
 								{
@@ -243,13 +243,14 @@
 										],
 										isControlled: true,
 										isRoute: true,
-										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGINV',
+										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGINV'
 									}
 								},
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_3711',
 								name: 'PTN_MenuMC_LIST_DB_MC_F',
+								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -257,7 +258,7 @@
 											fnValueSelector: (row) => row.ValCoditem
 										},
 									],
-									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_LIST_DB_MC_F,
+									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_LIST_DB_MC_F
 								}
 							},
 							formsDefinition: {
@@ -281,6 +282,7 @@
 						uuid: '0095f644-60e2-4281-9381-45308492694e',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -100,6 +100,8 @@ namespace GenioMVC.ViewModels.Tblb
 		[JsonIgnore]
 		public SelectList List_ValEnumn { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 

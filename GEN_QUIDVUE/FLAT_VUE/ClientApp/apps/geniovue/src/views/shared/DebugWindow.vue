@@ -1,12 +1,6 @@
 ﻿<template>
 	<teleport
 		v-if="isReady"
-		to="#q-modal-form-debug-header">
-		<h5 class="c-modal__header-title">Debug</h5>
-	</teleport>
-
-	<teleport
-		v-if="isReady"
 		to="#q-modal-form-debug-body">
 		<div class="content q-debug-window">
 			<q-row-container>
@@ -258,15 +252,17 @@
 			// eslint-disable-next-line no-console
 			console.warn('Debug window')
 
-			const modalProps = {
-				id: 'form-debug',
-				closeButtonEnable: false,
-				dismissWithEsc: false,
-				isActive: true,
-				modalWidth: 'lg'
+			const props = {
+				title: 'Debug',
+				size: 'large'
 			}
 
-			this.setModal(modalProps)
+			const modalProps = {
+				id: 'form-debug',
+				isActive: true
+			}
+
+			this.setModal(props, modalProps)
 		},
 
 		mounted()
@@ -337,7 +333,7 @@
 			 */
 			getEventInfo(event)
 			{
-				var info = ''
+				let info = ''
 				if (event.type === TraceEventType.REQUEST || event.type === TraceEventType.RESPONSE)
 				{
 					info += _toString(event.requestUrl)

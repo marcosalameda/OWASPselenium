@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_2D21]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_2D21ViewModel.js'
 
@@ -274,8 +275,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -381,7 +381,7 @@
 											},
 										],
 										isRoute: true,
-										action: vm.openMenuAction, type: 'menu', menuName: 'GQT_2D2111',
+										action: vm.openMenuAction, type: 'menu', menuName: 'GQT_2D2111'
 									}
 								},
 								{
@@ -396,7 +396,7 @@
 												fnValueSelector: (row) => row.ValCodtpequ
 											},
 										],
-										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.GQT_Menu_2D21_MenuR_TEST,
+										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.GQT_Menu_2D21_MenuR_TEST
 									}
 								},
 							],
@@ -414,7 +414,7 @@
 											},
 										],
 										isRoute: true,
-										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'TPEQU',
+										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'TPEQU'
 									}
 								},
 								{
@@ -450,16 +450,29 @@
 								sortOrder: 'asc'
 							}
 						},
+						actionIDs: [
+							'GQT_2D211',
+							'GQT_2D212',
+							'GQT_2D213',
+							'GQT_2D214',
+						],
 						globalEvents: ['changed-FAMIL', 'changed-TPEQU'],
 						uuid: '17bc4906-db78-4a9c-845c-30c7e64fb3d6',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 					GQT_2D211: new controlClass.ButtonControl({
 						id: 'GQT_2D211',
 					}, this),
+					GQT_2D212: new controlClass.ButtonControl({
+						id: 'GQT_2D212',
+					}, this),
 					GQT_2D213: new controlClass.ButtonControl({
 						id: 'GQT_2D213',
+					}, this),
+					GQT_2D214: new controlClass.ButtonControl({
+						id: 'GQT_2D214',
 					}, this),
 				}
 			}

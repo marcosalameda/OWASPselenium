@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,25 +94,27 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="GROUPBX"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.GROUPBX_PSEUDNOVOGR01.isVisible">
-					<q-control-wrapper
-						v-show="controls.GROUPBX_PSEUDNOVOGR01.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.GROUPBX_PSEUDNOVOGR01.isVisible">
+					<q-col
+						v-if="controls.GROUPBX_PSEUDNOVOGR01.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.GROUPBX_PSEUDNOVOGR01.isVisible"
 							id="GROUPBX_PSEUDNOVOGR01"
 							v-bind="controls.GROUPBX_PSEUDNOVOGR01"
 							:is-visible="controls.GROUPBX_PSEUDNOVOGR01.isVisible">
 							<!-- Start GROUPBX_PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.GROUPBX_EQUIPSEQUENNR.isVisible || controls.GROUPBX_EQUIPREGISTNR.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPSEQUENNR.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.GROUPBX_EQUIPSEQUENNR.isVisible || controls.GROUPBX_EQUIPREGISTNR.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_EQUIPSEQUENNR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPSEQUENNR.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPSEQUENNR"
 										v-on="controls.GROUPBX_EQUIPSEQUENNR.handlers"
@@ -116,11 +126,12 @@
 											v-bind="controls.GROUPBX_EQUIPSEQUENNR.props"
 											@update:model-value="model.ValSequennr.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPREGISTNR.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.GROUPBX_EQUIPREGISTNR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPREGISTNR.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPREGISTNR"
 										v-on="controls.GROUPBX_EQUIPREGISTNR.handlers"
@@ -132,13 +143,14 @@
 											@blur="onBlur(controls.GROUPBX_EQUIPREGISTNR, model.ValRegistnr.value)"
 											@change="model.ValRegistnr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.GROUPBX_TPEQUTIPOEQUI.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_TPEQUTIPOEQUI.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.GROUPBX_TPEQUTIPOEQUI.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_TPEQUTIPOEQUI.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_TPEQUTIPOEQUI.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_TPEQUTIPOEQUI"
 										v-on="controls.GROUPBX_TPEQUTIPOEQUI.handlers"
@@ -154,13 +166,14 @@
 											v-bind="controls.GROUPBX_TPEQUTIPOEQUI.seeMoreParams"
 											v-on="controls.GROUPBX_TPEQUTIPOEQUI.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.GROUPBX_EQUIPSITEFABR.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPSITEFABR.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.GROUPBX_EQUIPSITEFABR.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_EQUIPSITEFABR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPSITEFABR.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPSITEFABR"
 										v-on="controls.GROUPBX_EQUIPSITEFABR.handlers"
@@ -172,13 +185,14 @@
 											@blur="onBlur(controls.GROUPBX_EQUIPSITEFABR, model.ValSitefabr.value)"
 											@change="model.ValSitefabr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.GROUPBX_WAREHWAREHDES.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_WAREHWAREHDES.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.GROUPBX_WAREHWAREHDES.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_WAREHWAREHDES.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_WAREHWAREHDES.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_WAREHWAREHDES"
 										v-on="controls.GROUPBX_WAREHWAREHDES.handlers"
@@ -194,13 +208,14 @@
 											v-bind="controls.GROUPBX_WAREHWAREHDES.seeMoreParams"
 											v-on="controls.GROUPBX_WAREHWAREHDES.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.GROUPBX_ITEM_ITEMDES_.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_ITEM_ITEMDES_.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.GROUPBX_ITEM_ITEMDES_.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_ITEM_ITEMDES_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_ITEM_ITEMDES_.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_ITEM_ITEMDES_"
 										v-on="controls.GROUPBX_ITEM_ITEMDES_.handlers"
@@ -216,28 +231,26 @@
 											v-bind="controls.GROUPBX_ITEM_ITEMDES_.seeMoreParams"
 											v-on="controls.GROUPBX_ITEM_ITEMDES_.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End GROUPBX_PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.GROUPBX_PSEUDNOVOGR02.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.GROUPBX_PSEUDNOVOGR02.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.GROUPBX_PSEUDNOVOGR02.isVisible">
+					<q-col v-if="controls.GROUPBX_PSEUDNOVOGR02.isVisible">
 						<q-group-box-container
+							v-if="controls.GROUPBX_PSEUDNOVOGR02.isVisible"
 							id="GROUPBX_PSEUDNOVOGR02"
 							v-bind="controls.GROUPBX_PSEUDNOVOGR02"
 							:is-visible="controls.GROUPBX_PSEUDNOVOGR02.isVisible">
 							<!-- Start GROUPBX_PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.GROUPBX_EQUIPDTDECO__.isVisible || controls.GROUPBX_ROOM1ROOMNR__.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPDTDECO__.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.GROUPBX_EQUIPDTDECO__.isVisible || controls.GROUPBX_ROOM1ROOMNR__.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_EQUIPDTDECO__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPDTDECO__.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPDTDECO__"
 										v-on="controls.GROUPBX_EQUIPDTDECO__.handlers"
@@ -251,11 +264,12 @@
 											@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
 											@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.GROUPBX_ROOM1ROOMNR__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.GROUPBX_ROOM1ROOMNR__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_ROOM1ROOMNR__.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_ROOM1ROOMNR__"
 										v-on="controls.GROUPBX_ROOM1ROOMNR__.handlers"
@@ -267,13 +281,14 @@
 											v-bind="controls.GROUPBX_ROOM1ROOMNR__.props"
 											v-on="controls.GROUPBX_ROOM1ROOMNR__.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.GROUPBX_ROOM1DESIGNAT.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_ROOM1DESIGNAT.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.GROUPBX_ROOM1DESIGNAT.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_ROOM1DESIGNAT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_ROOM1DESIGNAT.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_ROOM1DESIGNAT"
 										v-on="controls.GROUPBX_ROOM1DESIGNAT.handlers"
@@ -285,13 +300,14 @@
 											@blur="onBlur(controls.GROUPBX_ROOM1DESIGNAT, model.Room1ValDesignat.value)"
 											@change="model.Room1ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.GROUPBX_EQUIPDESIGNAT.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPDESIGNAT.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.GROUPBX_EQUIPDESIGNAT.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_EQUIPDESIGNAT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPDESIGNAT.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPDESIGNAT"
 										v-on="controls.GROUPBX_EQUIPDESIGNAT.handlers"
@@ -303,13 +319,14 @@
 											@blur="onBlur(controls.GROUPBX_EQUIPDESIGNAT, model.ValDesignat.value)"
 											@change="model.ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.GROUPBX_EQUIPDTAQUISI.isVisible || controls.GROUPBX_EQUIPVALORTOT.isVisible || controls.GROUPBX_EQUIPFREQUENC.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPDTAQUISI.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.GROUPBX_EQUIPDTAQUISI.isVisible || controls.GROUPBX_EQUIPVALORTOT.isVisible || controls.GROUPBX_EQUIPFREQUENC.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_EQUIPDTAQUISI.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPDTAQUISI.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPDTAQUISI"
 										v-on="controls.GROUPBX_EQUIPDTAQUISI.handlers"
@@ -323,11 +340,12 @@
 											@reset-icon-click="model.ValDtaquisi.fnUpdateValue(model.ValDtaquisi.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaquisi.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPVALORTOT.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.GROUPBX_EQUIPVALORTOT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPVALORTOT.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPVALORTOT"
 										v-on="controls.GROUPBX_EQUIPVALORTOT.handlers"
@@ -339,11 +357,12 @@
 											v-bind="controls.GROUPBX_EQUIPVALORTOT.props"
 											@update:model-value="model.ValValortot.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPFREQUENC.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.GROUPBX_EQUIPFREQUENC.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPFREQUENC.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPFREQUENC"
 										v-on="controls.GROUPBX_EQUIPFREQUENC.handlers"
@@ -355,13 +374,14 @@
 											v-bind="controls.GROUPBX_EQUIPFREQUENC.props"
 											@update:model-value="model.ValFrequenc.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.GROUPBX_EQUIPDTREFERE.isVisible || controls.GROUPBX_EQUIPFIRST___.isVisible || controls.GROUPBX_EQUIPBEFORE__.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPDTREFERE.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.GROUPBX_EQUIPDTREFERE.isVisible || controls.GROUPBX_EQUIPFIRST___.isVisible || controls.GROUPBX_EQUIPBEFORE__.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_EQUIPDTREFERE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPDTREFERE.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPDTREFERE"
 										v-on="controls.GROUPBX_EQUIPDTREFERE.handlers"
@@ -375,11 +395,12 @@
 											@reset-icon-click="model.ValDtrefere.fnUpdateValue(model.ValDtrefere.originalValue ?? new Date())"
 											@update:model-value="model.ValDtrefere.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPFIRST___.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.GROUPBX_EQUIPFIRST___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPFIRST___.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPFIRST___"
 										v-on="controls.GROUPBX_EQUIPFIRST___.handlers"
@@ -391,11 +412,12 @@
 											@blur="onBlur(controls.GROUPBX_EQUIPFIRST___, model.ValFirst.value)"
 											@change="model.ValFirst.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPBEFORE__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.GROUPBX_EQUIPBEFORE__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPBEFORE__.isVisible"
 										class="i-text"
 										v-bind="controls.GROUPBX_EQUIPBEFORE__"
 										v-on="controls.GROUPBX_EQUIPBEFORE__.handlers"
@@ -407,13 +429,14 @@
 											@blur="onBlur(controls.GROUPBX_EQUIPBEFORE__, model.ValBefore.value)"
 											@change="model.ValBefore.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.GROUPBX_EQUIPBOUGHT__.isVisible">
-								<q-control-wrapper
-									v-show="controls.GROUPBX_EQUIPBOUGHT__.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.GROUPBX_EQUIPBOUGHT__.isVisible">
+								<q-col
+									v-if="controls.GROUPBX_EQUIPBOUGHT__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.GROUPBX_EQUIPBOUGHT__.isVisible"
 										class="i-checkbox"
 										v-bind="controls.GROUPBX_EQUIPBOUGHT__"
 										v-on="controls.GROUPBX_EQUIPBOUGHT__.handlers"
@@ -421,20 +444,20 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.GROUPBX_EQUIPBOUGHT__.isVisible"
 												v-bind="controls.GROUPBX_EQUIPBOUGHT__.props"
 												v-on="controls.GROUPBX_EQUIPBOUGHT__.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End GROUPBX_PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -443,7 +466,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -452,6 +475,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -463,12 +487,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -488,7 +512,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormGroupbxViewModel.js'
 
@@ -568,7 +592,8 @@
 					primaryKey: 'ValCodequip',
 					designation: computed(() => this.Resources.GROUPBOX00384),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -676,7 +701,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -817,7 +846,6 @@
 						container: 'GROUPBX_PSEUDNOVOGR01',
 						isFormulaBlocked: true,
 						maxLength: 6,
-						labelId: 'label_GROUPBX_EQUIPREGISTNR',
 						controlLimits: [
 						],
 					}, this),
@@ -863,7 +891,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR01',
 						maxLength: 256,
-						labelId: 'label_GROUPBX_EQUIPSITEFABR',
 						controlLimits: [
 						],
 					}, this),
@@ -1004,7 +1031,6 @@
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
 						maxLength: 50,
-						labelId: 'label_GROUPBX_ROOM1DESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -1019,7 +1045,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						maxLength: 85,
-						labelId: 'label_GROUPBX_EQUIPDESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -1103,7 +1128,6 @@
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
 						maxLength: 10,
-						labelId: 'label_GROUPBX_EQUIPFIRST___',
 						controlLimits: [
 						],
 					}, this),
@@ -1119,7 +1143,6 @@
 						container: 'GROUPBX_PSEUDNOVOGR02',
 						isFormulaBlocked: true,
 						maxLength: 10,
-						labelId: 'label_GROUPBX_EQUIPBEFORE__',
 						controlLimits: [
 						],
 					}, this),
@@ -1294,11 +1317,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1308,7 +1329,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1318,7 +1339,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1338,19 +1359,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1371,7 +1406,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1391,19 +1426,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1422,11 +1471,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1436,7 +1483,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1444,8 +1491,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1453,7 +1498,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1461,8 +1506,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1470,7 +1513,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1478,11 +1521,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1492,7 +1533,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1502,7 +1543,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1563,6 +1604,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS GROUPBX]/
 // eslint-disable-next-line

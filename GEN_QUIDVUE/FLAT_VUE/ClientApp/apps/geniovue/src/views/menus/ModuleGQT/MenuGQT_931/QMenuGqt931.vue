@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_931]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_931ViewModel.js'
 
@@ -217,8 +218,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -319,6 +319,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_9311',
 								name: 'form-ANEXD',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -328,7 +329,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ANEXD',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ANEXD'
 								}
 							},
 							formsDefinition: {
@@ -338,7 +339,7 @@
 								},
 							},
 							insertCondition: {
-								// eslint-disable-next-line no-unused-vars
+								// eslint-disable-next-line @typescript-eslint/no-unused-vars
 								fnFormula(params)
 								{
 									return netAPI.postData(
@@ -364,6 +365,7 @@
 						uuid: 'd0edbebe-a828-4bc2-8c79-fd97739f9c49',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

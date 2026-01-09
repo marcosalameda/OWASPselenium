@@ -1,4 +1,4 @@
-﻿/* eslint-disable no-unused-vars */
+﻿/* eslint-disable @typescript-eslint/no-unused-vars */
 import { computed, reactive, watch } from 'vue'
 import _merge from 'lodash-es/merge'
 
@@ -11,7 +11,7 @@ import netAPI from '@quidgest/clientapp/network'
 import qApi from '@/api/genio/quidgestFunctions.js'
 import qFunctions from '@/api/genio/projectFunctions.js'
 import qProjArrays from '@/api/genio/projectArrays.js'
-/* eslint-enable no-unused-vars */
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 /**
  * Represents a ViewModel class.
@@ -25,11 +25,11 @@ export default class ViewModel extends FormViewModelBase
 	 * @param {object} options - The options for the ViewModel
 	 * @param {object} values - A ViewModel instance to copy values from
 	 */
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	constructor(vueContext, options, values)
 	{
 		super(vueContext, options)
-		// eslint-disable-next-line no-unused-vars
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const vm = this.vueContext
 
 		// The view model metadata
@@ -54,6 +54,27 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('decom.coddeco', this.ValCoddeco, newValue, oldValue)))
 
 		/** The remaining form fields. */
+		this.ValDtdeco = reactive(new modelFieldType.DateTime({
+			id: 'ValDtdeco',
+			originId: 'ValDtdeco',
+			area: 'DECOM',
+			field: 'DTDECO',
+			valueFormula: {
+				stopRecalcCondition() { return false },
+				// eslint-disable-next-line @typescript-eslint/no-unused-vars
+				fnFormula(params)
+				{
+					// Formula: [Now]
+					return qApi.Now()
+				},
+				dependencyEvents: [],
+				isServerRecalc: false,
+				isEmpty: qApi.emptyD,
+			},
+			description: computed(() => this.Resources.DECOMISSION14486),
+		}).cloneFrom(values?.ValDtdeco))
+		this.stopWatchers.push(watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue)))
+
 		this.ValDecomnr = reactive(new modelFieldType.Number({
 			id: 'ValDecomnr',
 			originId: 'ValDecomnr',
@@ -64,27 +85,6 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.NO_BATE21045),
 		}).cloneFrom(values?.ValDecomnr))
 		this.stopWatchers.push(watch(() => this.ValDecomnr.value, (newValue, oldValue) => this.onUpdate('decom.decomnr', this.ValDecomnr, newValue, oldValue)))
-
-		this.ValDtdeco = reactive(new modelFieldType.DateTime({
-			id: 'ValDtdeco',
-			originId: 'ValDtdeco',
-			area: 'DECOM',
-			field: 'DTDECO',
-			valueFormula: {
-				stopRecalcCondition() { return false },
-				// eslint-disable-next-line no-unused-vars
-				fnFormula(params)
-				{
-					// Formula: [Now]
-					return qApi.Agora()
-				},
-				dependencyEvents: [],
-				isServerRecalc: false,
-				isEmpty: qApi.emptyD,
-			},
-			description: computed(() => this.Resources.DECOMISSION14486),
-		}).cloneFrom(values?.ValDtdeco))
-		this.stopWatchers.push(watch(() => this.ValDtdeco.value, (newValue, oldValue) => this.onUpdate('decom.dtdeco', this.ValDtdeco, newValue, oldValue)))
 	}
 
 	/**

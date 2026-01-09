@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_121]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuWMS_121ViewModel.js'
 
@@ -222,8 +223,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -324,6 +324,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_1211',
 								name: 'form-RECEI',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -333,7 +334,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'RECEI',
+									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'RECEI'
 								}
 							},
 							formsDefinition: {
@@ -353,28 +354,27 @@
 							{
 								id: 'filter_WMS_Menu_121_VERIFICATI',
 								isMultiple: false,
-								filters: [
+								items: [
 									{
 										id: 'filter_WMS_Menu_121_VERIFICATI_1',
-										key: '1',
 										value: computed(() => this.Resources.TO_CHECK57511),
-										selected: true
+										key: '1'
 									},
 									{
 										id: 'filter_WMS_Menu_121_VERIFICATI_2',
-										key: '2',
 										value: computed(() => this.Resources.CHECKED31708),
-										selected: false
+										key: '2'
 									},
 								],
-								value: '1',
-								defaultValue: '1'
+								selected: '1',
+								default: '1'
 							},
 						],
 						globalEvents: ['changed-ENTIT', 'changed-RECEI'],
 						uuid: 'd5a95839-cfc6-40f7-89d3-b36149d26ab4',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -168,7 +168,7 @@
 			 */
 			params()
 			{
-				let props = {
+				const props = {
 					id: this.widget.uuid,
 					'gs-id': this.widget.uuid,
 					'gs-w': this.widget.Width,

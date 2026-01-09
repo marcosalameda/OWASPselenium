@@ -4,6 +4,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import mkcert from 'vite-plugin-mkcert'
 
+
 import { viteSvgSpritePlugin } from './plugins/svgbundle'
 
 export default defineConfig(({ mode }) => {
@@ -56,25 +57,25 @@ export default defineConfig(({ mode }) => {
 						*/
 						if (id.includes('quidgest/chatbot')) return 'chatbot'
 						if (id.includes('node_modules'))
-							{
-								if (id.includes('leaflet')) return 'leaflet'
-								if (id.includes('ace-builds')) return 'ace'
-								if (id.includes('ace-diff')) return 'ace'
-								if (id.includes('fullcalendar')) return 'fullcalendar'
-								if (id.includes('highcharts')) return 'highcharts'
+						{
+							if (id.includes('leaflet')) return 'leaflet'
+							if (id.includes('ace-builds')) return 'ace'
+							if (id.includes('ace-diff')) return 'ace'
+							if (id.includes('fullcalendar')) return 'fullcalendar'
+							if (id.includes('highcharts')) return 'highcharts'
 							return null
 
 						}
 						//One file per form
 						if (id.includes('views/forms'))
 						{
-							const match = id.match(/\/forms\/([^\/]+)/)
+							const match = id.match(/\/forms\/([^/]+)/)
 							return match ? match[1] : 'forms'
 						}
 						//One file per menu
 						if (id.includes('views/menus'))
 						{
-							const match = id.match(/Menu([^\/]+)/)
+							const match = id.match(/Menu([^/]+)/)
 							return match ? 'Menu' + match[1] : null
 						}
 						if(id.includes('dashboard')) return 'dashboard'

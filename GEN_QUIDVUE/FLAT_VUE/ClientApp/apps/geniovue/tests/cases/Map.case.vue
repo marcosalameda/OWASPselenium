@@ -280,9 +280,9 @@
 						mappedValues.push(newMarker)
 					else
 					{
-						for (let val of mappedValues)
+						for (const val of mappedValues)
 						{
-							for (let geoData of val.geographicData)
+							for (const geoData of val.geographicData)
 							{
 								if (geoData.type !== 'Geographic')
 									continue
@@ -296,11 +296,11 @@
 					mappedValues.push(newMarker)
 				else
 				{
-					for (let val of mappedValues)
+					for (const val of mappedValues)
 					{
 						if (val.rowKey === marker.rowKey)
 						{
-							for (let geoData of val.geographicData)
+							for (const geoData of val.geographicData)
 							{
 								if (geoData.type !== 'Geographic')
 									continue
@@ -319,11 +319,11 @@
 
 				const mappedValues = this[map].viewMode.mappedValues
 
-				for (let val of mappedValues)
+				for (const val of mappedValues)
 				{
 					if (val.rowKey === marker.rowKey)
 					{
-						for (let geoData of val.geographicData)
+						for (const geoData of val.geographicData)
 						{
 							if (geoData.type !== 'Geographic')
 								continue
@@ -351,9 +351,9 @@
 
 				const mappedValues = this[map].viewMode.mappedValues
 
-				for (let val of mappedValues)
+				for (const val of mappedValues)
 				{
-					for (let geoData of val.geographicData)
+					for (const geoData of val.geographicData)
 					{
 						if (geoData.type === 'GeographicShape')
 						{

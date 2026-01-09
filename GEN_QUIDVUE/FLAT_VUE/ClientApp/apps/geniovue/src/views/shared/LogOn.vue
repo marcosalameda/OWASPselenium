@@ -31,7 +31,7 @@
 						</div>
 
 
-						<template v-if="hasUsernameAuth">
+						<template v-if="model.UserPassMethods.length > 0">
 							<hr v-if="!isEmpty(model.AuthRedirectMethods)" />
 
 							<q-input-group
@@ -80,6 +80,8 @@
 
 							<div class="q-logon-btns-container">
 								<q-button
+									v-for="value in model.UserPassMethods"
+									:key="value.Id"
 									id="login-btn"
 									block
 									borderless
@@ -88,7 +90,7 @@
 									:label="texts.enter"
 									:loading="loading"
 									:data-loading="loading"
-									@click="executeLogon" />
+									@click="executeLogon(value)" />
 
 								<q-register-button
 									v-if="allowRegistration && $app.layout.UserRegisterStyle === 'button'"
@@ -176,6 +178,7 @@
 				loading: false,
 
 				model: {
+					UserPassMethods: [],
 					AuthRedirectMethods: []
 				},
 
@@ -201,7 +204,7 @@
 					this.loadedContent(data)
 
 					if (
-						!this.hasUsernameAuth &&
+						this.model.UserPassMethods.length === 0 &&
 						this.model.AuthRedirectMethods.length === 1 &&
 						this.$app.layout.LoginStyle === 'single_page' &&
 						!this.allowRegistration
@@ -251,7 +254,7 @@
 
 			hasError()
 			{
-				return this.returnMessage && this.returnMessage.Error
+				return this.returnMessage && this.returnMessage.Erro
 			},
 
 			errorMessage()
@@ -259,7 +262,7 @@
 				if (this.passError)
 					return this.returnMessage.Password[0]
 				else if (this.hasError)
-					return this.returnMessage.Error[0]
+					return this.returnMessage.Erro[0]
 				return undefined
 			},
 
@@ -289,17 +292,23 @@
 		},
 
 		methods: {
-			async executeLogon()
+			async executeLogon(provider)
 			{
 				if (this.loading)
 					return
 
 				this.loading = true
 
+				//if no specific provider is passed, then go to the first provider available
+				if (!provider) {
+					provider = this.model.UserPassMethods[0]
+				}
+
 				const params = {
 					returnUrl: '',
 					userName: this.currentUser,
-					password: this.password
+					password: this.password,
+					providerId: provider.Id
 				}
 				await postData('Account', 'LogOn', params, this.loginSuccess)
 
@@ -313,12 +322,12 @@
 
 				if (responseData.Success)
 				{
-					if (responseData.Auth2FA && !responseData.Val2FA)
+					if (responseData.Data.Auth2FA)
 					{
-						if (responseData.User.Auth2FATp === 'TOTP')
-							this.confirmBox2FA()
-						else if (responseData.User.Auth2FATp === 'WebAuth')
-							this.handleSignInWebAuth(responseData)
+						if (responseData.Data.Auth2FATp === 'TOTP')
+							this.handleSignInTotp(responseData.Data.ProviderId, responseData.Data.Challenge)
+						else if (responseData.Data.Auth2FATp === 'WebAuth')
+							this.handleSignInWebAuth(responseData.Data.ProviderId, responseData.Data.Challenge)
 					}
 					else
 						this.finalizeLogin()
@@ -386,11 +395,6 @@
 					updateAFToken(),
 					updateMainConfig()
 				]).then(() => {
-					const userData = {
-						Name: this.currentUser
-					}
-					this.setUserData(userData)
-
 					/**
 					 * If the last attempted route is valid, redirect to it; otherwise, go to the default route.
 					 * This way, if the user attempted to open a URL that requires authentication,
@@ -401,7 +405,7 @@
 				})
 			},
 
-			confirmBox2FA()
+			handleSignInTotp(providerId)
 			{
 				const buttons = {
 					confirm: {
@@ -410,10 +414,11 @@
 							const params = {
 								returnUrl: '',
 								userName: this.currentUser,
-								password: value
+								password: value,
+								providerId
 							}
 
-							postData('Account', 'Authentication2FA', params, this.finalizeLogin)
+							postData('Account', 'AuthenticationTotp', params, this.loginSuccess)
 						}
 					},
 					cancel: {
@@ -434,9 +439,23 @@
 					})
 			},
 
-			handleSignInWebAuth()
-			{
-				// TODO
+			async handleSignInWebAuth(providerId, challenge) {
+				try {
+					const publicKeyOptions = PublicKeyCredential.parseRequestOptionsFromJSON(JSON.parse(challenge));
+					const publicKeyCredential = await navigator.credentials.get({ publicKey: publicKeyOptions });
+
+					const params = {
+						returnUrl: '',
+						userName: this.currentUser,
+						assertion: JSON.stringify(publicKeyCredential.toJSON()),
+						providerId
+					}
+
+					postData('Account', 'AuthenticationWebauth', params, this.loginSuccess)
+				}
+				catch (e) {
+					this.returnMessage.Erro = [e.toString()]
+				}
 			},
 
 			showPassword()
@@ -464,8 +483,8 @@
 				if (!this.isVisible)
 					return
 
-				let el = this.$refs.logonMenu
-				let target = event.target
+				const el = this.$refs.logonMenu
+				const target = event.target
 
 				if (el && el !== target && !el.contains(target))
 					this.setLogonVisibility(false)
@@ -476,16 +495,19 @@
 				if (this.isEmpty(data))
 					return
 
+				this.model.UserPassMethods = data.AuthRedirectMethods.filter(x => x.CredentialType === 'UserPassCredential')
+				this.model.AuthRedirectMethods = data.AuthRedirectMethods.filter(x => x.CredentialType === 'TokenCredential')
+
 				// Update the store data
 				this.setPasswordRecovery(data.HasPasswordRecovery)
-				this.setUsernameAuth(data.HasUsernameAuth)
-				this.setOpenIdAuth(data.AuthRedirectMethods?.length > 0)
-
-				this.model.AuthRedirectMethods = data.AuthRedirectMethods
+				this.setUsernameAuth(this.model.UserPassMethods?.length > 0)
+				this.setOpenIdAuth(this.model.AuthRedirectMethods?.length > 0)
 			},
 
 			navigateToRegisterRoute()
 			{
+				this.setLogonVisibility(false)
+
 				const params = {
 					id: this.$app.userRegistration.registrationTypes[0].id
 				}
@@ -500,7 +522,7 @@
 				this.password = newVal
 
 				if (this.hasError)
-					delete this.returnMessage.Error
+					delete this.returnMessage.Erro
 			}
 		}
 	}

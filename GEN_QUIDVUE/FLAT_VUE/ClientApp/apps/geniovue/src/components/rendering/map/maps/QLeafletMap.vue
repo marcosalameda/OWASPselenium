@@ -246,6 +246,7 @@
 				zoomControl: null,
 				searchControl: null,
 				printControl: null,
+				centerControl: null,
 				legendControl: null
 			}
 		},
@@ -304,8 +305,9 @@
 			 */
 			mapMaxBounds()
 			{
-				let bounds = null,
-					southWest = this.styleVariables.boundSouthWest?.value,
+				let bounds = null
+
+				const southWest = this.styleVariables.boundSouthWest?.value,
 					northEast = this.styleVariables.boundNorthEast?.value
 
 				if (typeof southWest === 'object' && typeof northEast === 'object')
@@ -458,7 +460,7 @@
 				if (typeof converter !== 'function')
 					return coordinates
 
-				for (let coords of coordsList ?? [])
+				for (const coords of coordsList ?? [])
 				{
 					let convertedCoord
 					if (Array.isArray(coords) && typeof coords[0] !== 'number')
@@ -505,7 +507,7 @@
 
 					if (this.exclusiveLayers.find((l) => l === overlay.name))
 					{
-						for (let el of this.layersList)
+						for (const el of this.layersList)
 							if (el.name !== overlay.name && this.exclusiveLayers.find((l) => l === el.name))
 								nextTick().then(() => this.map.removeLayer(el.layer))
 					}
@@ -547,6 +549,9 @@
 
 				// Add printing option.
 				this.setPrintingOption()
+				
+				// Add center map control to the map.
+				this.setCenterMapControl()
 
 				// Activate all the layers with shapes by default.
 				this.activateShapeLayers()
@@ -557,7 +562,7 @@
 				this.addOverlays()
 				this.setDrawTexts()
 
-				for (let i in this.baseLayers)
+				for (const i in this.baseLayers)
 					this.baseLayers[i].addTo(this.map)
 
 				await this.resetMapProperties()
@@ -585,7 +590,7 @@
 					this.map.removeControl(this.controlLayer)
 
 				// Remove all the layers already on the map.
-				for (let el of this.layersList)
+				for (const el of this.layersList)
 					this.map.removeLayer(el.layer)
 
 				this.layersList = []
@@ -605,7 +610,7 @@
 				const layerCount = this.layersList.reduce((accum, curr) => curr.name ? accum + 1 : accum, 0) + Object.keys(this.baseLayers).length
 
 				// Set the layers visible on the map.
-				for (let el of this.layersList)
+				for (const el of this.layersList)
 				{
 					if (!el.name)
 						continue
@@ -885,7 +890,7 @@
 				if (typeof layer !== 'object' || typeof layer.getLayers !== 'function')
 					return subLayers
 
-				for (let subLayer of layer.getLayers())
+				for (const subLayer of layer.getLayers())
 				{
 					// Having layers inside means it's not a shape, but a group of shapes.
 					if (typeof subLayer._layers !== 'undefined')
@@ -910,7 +915,7 @@
 
 					layers = []
 
-					for (let layer of this.layersList)
+					for (const layer of this.layersList)
 						if (this.activeLayers.find((l) => l === layer.name))
 							layers.push(...this.getSubLayers(layer.layer))
 				}
@@ -934,7 +939,7 @@
 			 */
 			activateShapeLayers()
 			{
-				for (let layer of this.shapes)
+				for (const layer of this.shapes)
 					this.activateLayer(layer.layerName)
 			},
 
@@ -1204,6 +1209,25 @@
 
 				this.map.pm?.Toolbar.createCustomControl(this.printControl)
 			},
+			
+			/**
+			 * Add center map control to the map.
+			 */
+			setCenterMapControl() {
+				if (!this.styleVariables.allowCenterControl?.value || this.map === null || this.centerControl !== null) return;
+
+				this.centerControl = {
+					name: 'centerMap',
+					block: 'custom',
+					title: computed(() => this.texts.centerControlMap),
+					className: 'leaflet-map-center',
+					onClick: () => {
+						this.fitMapZoom()
+					}
+				};
+
+				this.map.pm.Toolbar.createCustomControl(this.centerControl);
+			},
 
 			/**
 			 * Makes all the controls in the map hidden.
@@ -1212,7 +1236,7 @@
 			 */
 			hideControls(mainControls = [this.controlLayer, this.zoomControl, this.fullscreenControl, this.searchControl], hideEditControls = true)
 			{
-				for (let control of mainControls)
+				for (const control of mainControls)
 					if (control !== null)
 						this.map.removeControl(control)
 
@@ -1227,7 +1251,7 @@
 			 */
 			showControls(mainControls = [this.controlLayer, this.zoomControl, this.fullscreenControl, this.searchControl], showEditControls = true)
 			{
-				for (let control of mainControls)
+				for (const control of mainControls)
 					if (control !== null)
 						this.map.addControl(control)
 
@@ -1261,12 +1285,12 @@
 					layerObj = this.shapesLayer
 				else
 				{
-					for (let layer of this.layersList)
+					for (const layer of this.layersList)
 					{
 						// If there's already a layer with the same name, we add the shapes to that layer instead of creating a new one.
 						if (layer.name === layerData.layerName)
 						{
-							let layerGroup = L.layerGroup(layerData.shapes)
+							const layerGroup = L.layerGroup(layerData.shapes)
 							this.setLayerOptions(layerGroup, layerData)
 
 							layer.layer.addLayer(layerGroup)
@@ -1280,7 +1304,7 @@
 				{
 					if (typeof layerObj === 'undefined')
 					{
-						let layerGroup = L.layerGroup(layerData.shapes)
+						const layerGroup = L.layerGroup(layerData.shapes)
 						this.setLayerOptions(layerGroup, layerData)
 
 						layerObj = L.featureGroup()
@@ -1334,7 +1358,7 @@
 					this.setLayerOptions(this.shapesLayer, layerOptions)
 
 					// Add the shapes already on the map to the shapes layer.
-					for (let shape of shapesList)
+					for (const shape of shapesList)
 						this.shapesLayer.addLayer(shape)
 				}
 
@@ -1422,7 +1446,7 @@
 			 */
 			setShapeOptions(shape, options = {})
 			{
-				for (let i in options)
+				for (const i in options)
 					shape.options[i] = options[i]
 
 				if (!options.opacity && !(shape instanceof L.Marker))
@@ -1517,7 +1541,8 @@
 					removalMode: this.canDraw && (this.styleVariables.allowRemoval ? this.styleVariables.allowRemoval.value : true),
 					rotateMode: this.canDraw && (this.styleVariables.allowRotate ? this.styleVariables.allowRotate.value : true),
 					// Custom features.
-					printMap: this.styleVariables.allowExporting ? this.styleVariables.allowExporting.value : true
+					printMap: this.styleVariables.allowExporting ? this.styleVariables.allowExporting.value : true,
+					centerMap: this.styleVariables.allowCenterControl ? this.styleVariables.allowCenterControl.value : true
 				})
 			},
 
@@ -1635,7 +1660,7 @@
 					})
 				}
 
-				for (let layer of this.layersList)
+				for (const layer of this.layersList)
 				{
 					if (typeof layer.name !== 'string' || typeof layer.layer !== 'object')
 						continue
@@ -1661,7 +1686,7 @@
 
 				const shapes = layer._layers
 
-				for (let i in shapes)
+				for (const i in shapes)
 				{
 					const shape = shapes[i]
 
@@ -1674,7 +1699,7 @@
 						if (shape instanceof L.MarkerClusterGroup)
 							layers = shape.getLayers()
 
-						for (let l of layers)
+						for (const l of layers)
 						{
 							const layerProps = {
 								...layer.options,
@@ -1762,7 +1787,7 @@
 							delete options.latlng
 							delete options.opacity
 							delete options.weight
-							let shapeCoord = this.projectFromCoords(shape.latlng, COORD_TYPES.array)
+							const shapeCoord = this.projectFromCoords(shape.latlng, COORD_TYPES.array)
 							shapeToDraw = shape.type === 'circlemarker' ? L.circleMarker(shapeCoord, options) : L.marker(shapeCoord, options)
 						}
 						break
@@ -1779,12 +1804,12 @@
 			{
 				const shapesLayers = []
 
-				for (let layer of this.shapes)
+				for (const layer of this.shapes)
 				{
 					if (!Array.isArray(layer.shapes))
 						break
 
-					let shapesList = [],
+					const shapesList = [],
 						markers = [],
 						colorOptions = {}
 
@@ -1795,7 +1820,7 @@
 					if (layer.circleColor)
 						colorOptions.circleColor = layer.circleColor
 
-					for (let shape of layer.shapes)
+					for (const shape of layer.shapes)
 					{
 						let options = Object.assign({}, shape)
 						delete options.type
@@ -1856,9 +1881,9 @@
 			 */
 			convertShapesToObjects()
 			{
-				let shapesList = []
+				const shapesList = []
 
-				for (let i in this.shapesLayer._layers)
+				for (const i in this.shapesLayer._layers)
 				{
 					const shapes = this.shapesLayer._layers[i]
 
@@ -1876,7 +1901,7 @@
 					else if (shapes instanceof L.MarkerClusterGroup)
 						parts = shapes.getLayers()
 
-					for (let j in parts)
+					for (const j in parts)
 					{
 						const shape = parts[j]
 
@@ -2024,7 +2049,7 @@
 				{
 					this.activateShapeLayers()
 
-					for (let el of this.layersList)
+					for (const el of this.layersList)
 						if (this.activeLayers.find((l) => l === el.name))
 							el.layer.addTo(this.map)
 				}
@@ -2113,6 +2138,11 @@
 			{
 				this.setDrawingTool()
 			},
+			
+			'styleVariables.allowCenterControl.value'()
+			{
+				this.setDrawingTool()
+			},
 
 			'styleVariables.shapeOutlineWeight.value'()
 			{
@@ -2166,7 +2196,7 @@
 							break
 						case 'GeographicShape':
 						case 'GeometricShape':
-							for (let shape of centerCoord.value?.shapes ?? [])
+							for (const shape of centerCoord.value?.shapes ?? [])
 								features.push(this.getLeafletShape(shape))
 							break
 					}

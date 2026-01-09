@@ -168,8 +168,8 @@
 
 			keyboardRows()
 			{
-				let itemsPerRow = Math.ceil(this.options.length / this.rows) // Round a number up to the nearest integer, ex: 1 => 1 / 1.1 => 2
-				let result = []
+				const itemsPerRow = Math.ceil(this.options.length / this.rows) // Round a number up to the nearest integer, ex: 1 => 1 / 1.1 => 2
+				const result = []
 				for (let i = 0; i < this.rows; i++)
 					result.push(this.options.slice(i * itemsPerRow, (i + 1) * itemsPerRow)) // This slices a portion of options array to create a new inner array (or row).
 				return result

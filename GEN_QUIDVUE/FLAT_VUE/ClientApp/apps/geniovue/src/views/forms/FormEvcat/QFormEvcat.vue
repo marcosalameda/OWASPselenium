@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="EVCAT"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.EVCAT___PESSONAME____.isVisible || controls.EVCAT___CATE1CATEGORY.isVisible || controls.EVCAT___EVCATSINCE___.isVisible || controls.EVCAT___EVCATUNTIL___.isVisible || controls.EVCAT___EVCATUNTILMAN.isVisible || controls.EVCAT___EVCATFIMPERIO.isVisible">
-					<q-control-wrapper
-						v-show="controls.EVCAT___PESSONAME____.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.EVCAT___PESSONAME____.isVisible || controls.EVCAT___CATE1CATEGORY.isVisible || controls.EVCAT___EVCATSINCE___.isVisible || controls.EVCAT___EVCATUNTIL___.isVisible || controls.EVCAT___EVCATUNTILMAN.isVisible || controls.EVCAT___EVCATFIMPERIO.isVisible">
+					<q-col
+						v-if="controls.EVCAT___PESSONAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EVCAT___PESSONAME____.isVisible"
 							class="i-text"
 							v-bind="controls.EVCAT___PESSONAME____"
 							v-on="controls.EVCAT___PESSONAME____.handlers"
@@ -111,11 +120,12 @@
 								v-bind="controls.EVCAT___PESSONAME____.seeMoreParams"
 								v-on="controls.EVCAT___PESSONAME____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.EVCAT___CATE1CATEGORY.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.EVCAT___CATE1CATEGORY.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EVCAT___CATE1CATEGORY.isVisible"
 							class="i-text"
 							v-bind="controls.EVCAT___CATE1CATEGORY"
 							v-on="controls.EVCAT___CATE1CATEGORY.handlers"
@@ -131,11 +141,12 @@
 								v-bind="controls.EVCAT___CATE1CATEGORY.seeMoreParams"
 								v-on="controls.EVCAT___CATE1CATEGORY.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.EVCAT___EVCATSINCE___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.EVCAT___EVCATSINCE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EVCAT___EVCATSINCE___.isVisible"
 							class="i-text"
 							v-bind="controls.EVCAT___EVCATSINCE___"
 							v-on="controls.EVCAT___EVCATSINCE___.handlers"
@@ -149,11 +160,12 @@
 								@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 								@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.EVCAT___EVCATUNTIL___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.EVCAT___EVCATUNTIL___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EVCAT___EVCATUNTIL___.isVisible"
 							class="i-text"
 							v-bind="controls.EVCAT___EVCATUNTIL___"
 							v-on="controls.EVCAT___EVCATUNTIL___.handlers"
@@ -167,11 +179,12 @@
 								@reset-icon-click="model.ValUntil.fnUpdateValue(model.ValUntil.originalValue ?? new Date())"
 								@update:model-value="model.ValUntil.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.EVCAT___EVCATUNTILMAN.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.EVCAT___EVCATUNTILMAN.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EVCAT___EVCATUNTILMAN.isVisible"
 							class="i-text"
 							v-bind="controls.EVCAT___EVCATUNTILMAN"
 							v-on="controls.EVCAT___EVCATUNTILMAN.handlers"
@@ -185,11 +198,12 @@
 								@reset-icon-click="model.ValUntilman.fnUpdateValue(model.ValUntilman.originalValue ?? new Date())"
 								@update:model-value="model.ValUntilman.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.EVCAT___EVCATFIMPERIO.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.EVCAT___EVCATFIMPERIO.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EVCAT___EVCATFIMPERIO.isVisible"
 							class="i-text"
 							v-bind="controls.EVCAT___EVCATFIMPERIO"
 							v-on="controls.EVCAT___EVCATFIMPERIO.handlers"
@@ -203,13 +217,14 @@
 								@reset-icon-click="model.ValFimperio.fnUpdateValue(model.ValFimperio.originalValue ?? new Date())"
 								@update:model-value="model.ValFimperio.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.EVCAT___EVCATOBSERVAT.isVisible">
-					<q-control-wrapper
-						v-show="controls.EVCAT___EVCATOBSERVAT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EVCAT___EVCATOBSERVAT.isVisible">
+					<q-col
+						v-if="controls.EVCAT___EVCATOBSERVAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EVCAT___EVCATOBSERVAT.isVisible"
 							class="i-textarea"
 							v-bind="controls.EVCAT___EVCATOBSERVAT"
 							v-on="controls.EVCAT___EVCATOBSERVAT.handlers"
@@ -221,10 +236,10 @@
 								v-bind="controls.EVCAT___EVCATOBSERVAT.props"
 								v-on="controls.EVCAT___EVCATOBSERVAT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -233,7 +248,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -242,6 +257,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -253,12 +269,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -278,7 +294,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormEvcatViewModel.js'
 
@@ -357,7 +373,8 @@
 					primaryKey: 'ValCodprogr',
 					designation: computed(() => this.Resources.EVOLUTION_IN_THE_CAT03122),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -465,7 +482,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -802,11 +823,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -816,7 +835,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -826,7 +845,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -846,19 +865,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -879,7 +912,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -899,19 +932,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -930,11 +977,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -944,7 +989,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -952,8 +997,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -961,7 +1004,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -969,8 +1012,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -978,7 +1019,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -986,11 +1027,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1000,7 +1039,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1010,7 +1049,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1071,6 +1110,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EVCAT]/
 // eslint-disable-next-line

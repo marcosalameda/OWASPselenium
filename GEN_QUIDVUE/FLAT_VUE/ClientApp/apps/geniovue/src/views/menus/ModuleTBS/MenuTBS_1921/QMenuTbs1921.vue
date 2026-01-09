@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TBS_Menu_1921]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuTBS_1921ViewModel.js'
 
@@ -255,7 +256,7 @@
 								name: 'ValPrimviag',
 								area: 'FLDS',
 								field: 'PRIMVIAG',
-								label: computed(() => this.Resources._1AVIAGEM10982),
+								label: computed(() => this.Resources._1AVIAGEM08604),
 								scrollData: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
@@ -296,7 +297,7 @@
 								name: 'ValLogicenu',
 								area: 'FLDS',
 								field: 'LOGICENU',
-								label: computed(() => this.Resources._1A_VIAGEM__ENUMERAC07656),
+								label: computed(() => this.Resources._1A_VIAGEM__ENUMERACA14864),
 								scrollData: 1,
 								array: computed(() => new qProjArrays.QArrayPrimviag(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayPrimviag.type,
@@ -396,8 +397,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -498,6 +498,7 @@
 							rowClickAction: {
 								id: 'RCA_TBS_19211',
 								name: 'form-CAMPO',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -507,7 +508,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'CAMPO',
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'CAMPO'
 								}
 							},
 							formsDefinition: {
@@ -527,6 +528,7 @@
 						uuid: 'ece7a4a3-4c81-42b8-99a3-ee5e82c2cf5b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -7,7 +7,8 @@
 			<a
 				ref="menuButton"
 				id="modules__toggle"
-				href="javascript:void(0)"
+				role="button"
+				href="#"
 				:class="['nav-link n-sidebar__nav-link', 'has-icon']"
 				:data-key="system.currentModule"
 				@click.stop.prevent="toggleModulesMenu"
@@ -51,7 +52,8 @@
 				<a
 					ref="menuButton"
 					id="modules__toggle_dropdown"
-					href="javascript:void(0)"
+					role="button"
+					href="#"
 					class="nav-link n-sidebar__nav-link has-icon brand"
 					@click="toggleModulesDropdown"
 					@focusout="onDropdownFocusout($event)"
@@ -70,7 +72,8 @@
 						<li v-if="mod.id !== system.currentModule">
 							<a
 								class="dropdown-item"
-								href="javascript:void(0)"
+								role="button"
+								href="#"
 								:data-key="mod.id"
 								@click.prevent="navigateToModule(mod.id)">
 								<q-icon

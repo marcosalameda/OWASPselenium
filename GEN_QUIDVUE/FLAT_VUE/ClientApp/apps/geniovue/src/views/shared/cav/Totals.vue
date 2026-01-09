@@ -107,7 +107,7 @@
 
 		data()
 		{
-			let cavTotals = cavArraysTotals.setResources(this.$getResource)
+			const cavTotals = cavArraysTotals.setResources(this.$getResource)
 			return {
 				totalType: {
 					A: _filter(cavTotals.elements, (t) => ['COUNT', 'MAX', 'MIN'].includes(t.key)),
@@ -141,10 +141,10 @@
 
 		beforeUnmount()
 		{
-			let eventData = []
+			const eventData = []
 
 			_foreach(this.totals, (totalGroup) => {
-				let groupEventData = []
+				const groupEventData = []
 				if (!_isEmpty(totalGroup))
 				{
 					_foreach(totalGroup, (totalGroupField) => {
@@ -175,10 +175,10 @@
 			 */
 			hydrateTotal(total, groupIndex)
 			{
-				let table = _find(this.tables, (t) => t.Id === total.TableId),
+				const table = _find(this.tables, (t) => t.Id === total.TableId),
 					field = _find(table.Fields, (f) => f.Id === total.FieldId)
 
-				let extendedTotal = _assignIn(total, {
+				const extendedTotal = _assignIn(total, {
 					internalKey: uuidv4(),
 					tableTitle: table.Description,
 					Title: field.Description,

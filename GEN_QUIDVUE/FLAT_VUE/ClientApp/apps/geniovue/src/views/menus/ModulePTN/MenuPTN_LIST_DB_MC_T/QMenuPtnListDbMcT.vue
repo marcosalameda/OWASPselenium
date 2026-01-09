@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MC_T]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_MC_TViewModel.js'
 
@@ -229,8 +230,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -337,7 +337,7 @@
 												fnValueSelector: (row) => row.ValCoddespe
 											},
 										],
-										action: vm.PTN_MenuTR_3B111, type: 'trigger',
+										action: vm.PTN_MenuTR_3B111, type: 'trigger'
 									}
 								},
 								{
@@ -350,13 +350,14 @@
 												fnValueSelector: (row) => row.ValCoddespe
 											},
 										],
-										action: vm.PTN_MenuTR_3B121, type: 'trigger',
+										action: vm.PTN_MenuTR_3B121, type: 'trigger'
 									}
 								},
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_3B11',
 								name: 'PTN_MenuMC_LIST_DB_MC_T',
+								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -364,7 +365,7 @@
 											fnValueSelector: (row) => row.ValCoddespe
 										},
 									],
-									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_LIST_DB_MC_T,
+									action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_LIST_DB_MC_T
 								}
 							},
 							formsDefinition: {
@@ -384,6 +385,7 @@
 						uuid: 'd271f8e2-a487-40b9-b6aa-1c69abb862d1',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -449,16 +451,14 @@
 			 * Event triggered by a click on the trigger button 3B111.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3B111(listConf, actionCfg, row)
 			{
 				const id = row.rowKey
 
 				// Parallel trigger execution.
 				await Promise.all([
-					Promise.resolve((async () => {
-						await this.PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_1(id)
-					})()),
+					this.PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_1(id),
 				])
 			},
 
@@ -466,7 +466,7 @@
 			 * Client-side component of action #1 (FLDUPDT) of trigger EMPTYDESCRIPTIO2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_1(id)
 			{
 				try
@@ -517,7 +517,7 @@
 			 * Client-side component of action #2 (PREFRESH) of trigger EMPTYDESCRIPTIO2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3B111_EMPTYDESCRIPTIO2_2(id)
 			{
 				await this.loadList()
@@ -528,16 +528,14 @@
 			 * Event triggered by a click on the trigger button 3B121.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3B121(listConf, actionCfg, row)
 			{
 				const id = row.rowKey
 
 				// Parallel trigger execution.
 				await Promise.all([
-					Promise.resolve((async () => {
-						await this.PTN_MenuTR_3B121_FILLDESCRIPTION2_1(id)
-					})()),
+					this.PTN_MenuTR_3B121_FILLDESCRIPTION2_1(id),
 				])
 			},
 
@@ -545,7 +543,7 @@
 			 * Client-side component of action #1 (FLDUPDT) of trigger FILLDESCRIPTION2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3B121_FILLDESCRIPTION2_1(id)
 			{
 				try
@@ -596,7 +594,7 @@
 			 * Client-side component of action #2 (PREFRESH) of trigger FILLDESCRIPTION2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3B121_FILLDESCRIPTION2_2(id)
 			{
 				await this.loadList()

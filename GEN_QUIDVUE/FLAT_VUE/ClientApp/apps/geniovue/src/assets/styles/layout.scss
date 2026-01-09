@@ -35,12 +35,6 @@
 	color: #b94a48;
 }
 
-/* Inputs */
-.multiline-text {
-	width: auto;
-	height: auto;
-}
-
 // General classes for quick sizes
 /* TODO: remove when QField wrapper is properly used */
 .input-mini {
@@ -546,7 +540,7 @@ nav.main-header .c-header__link--sidebar.action-item {
 		color: $primary;
 		font-size: 0.8rem;
 		font-weight: 600 !important;
-		text-transform: uppercase;
+		text-transform: $headings-text-transform;
 		line-height: 2rem;
 		letter-spacing: 0.02rem;
 		gap: 0.5rem;
@@ -638,10 +632,10 @@ nav.main-header .c-header__link--sidebar.action-item {
 		padding: 0.05rem 0.25rem 0 0.25rem;
 		line-height: 1.2;
 	}
+}
 
-	&-selected {
-		background-color: rgb($primary-rgb / 0.25);
-	}
+#menu-tree-view .n-sidebar__nav-link-selected {
+	background-color: rgb($primary-rgb / 0.25);
 }
 
 .nav-sidebar .nav-link > span:first-child .right {

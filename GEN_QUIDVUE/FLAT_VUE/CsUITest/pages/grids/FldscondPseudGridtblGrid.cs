@@ -5,5 +5,5 @@ public class FldscondPseudGridtblGrid(IWebDriver driver, By containerLocator, st
 	/// <summary>
 	/// Feedback
 	/// </summary>
-	public BaseInputControl FeecaFeedback => new BaseInputControl(driver, lineLocator, "container-FLDSCONDPSEUDGRIDTBL_FEECAFEEDBACK", "#FLDSCONDPSEUDGRIDTBL_FEECAFEEDBACK");
+	public BaseInputControl FeecaFeedback => new BaseInputControl(driver, lineLocator, "container-FLDSCONDPSEUDGRIDTBL___FEECA__FEEDBACK", "#FLDSCONDPSEUDGRIDTBL___FEECA__FEEDBACK");
 }

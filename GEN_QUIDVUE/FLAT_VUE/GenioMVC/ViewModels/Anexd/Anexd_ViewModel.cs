@@ -81,6 +81,8 @@ namespace GenioMVC.ViewModels.Anexd
 		/// </summary>
 		public DocumsProperties_ViewModel ValDocumentPropertiesVM { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -372,6 +374,17 @@ namespace GenioMVC.ViewModels.Anexd
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -513,7 +526,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 			if (anexd___equipregistnrDoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableEquipRegistnr, "sTableEquipRegistnr", "dTableEquipRegistnr", qs, "equip");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -563,7 +576,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 				TableEquipRegistnr.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableEquipRegistnr.Query = query;
-				TableEquipRegistnr.Elements = listing.RowsForViewModel<GenioMVC.Models.Equip>((r) => new GenioMVC.Models.Equip(m_userContext, r, true, _fieldsToSerialize_ANEXD___EQUIPREGISTNR));
+				TableEquipRegistnr.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Equip(m_userContext, r, true, _fieldsToSerialize_ANEXD___EQUIPREGISTNR));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -704,7 +717,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 			if (anexd___langulangua__DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableLanguLangua, "sTableLanguLangua", "dTableLanguLangua", qs, "langu");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -754,7 +767,7 @@ namespace GenioMVC.ViewModels.Anexd
 
 				TableLanguLangua.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableLanguLangua.Query = query;
-				TableLanguLangua.Elements = listing.RowsForViewModel<GenioMVC.Models.Langu>((r) => new GenioMVC.Models.Langu(m_userContext, r, true, _fieldsToSerialize_ANEXD___LANGULANGUA__));
+				TableLanguLangua.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Langu(m_userContext, r, true, _fieldsToSerialize_ANEXD___LANGULANGUA__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

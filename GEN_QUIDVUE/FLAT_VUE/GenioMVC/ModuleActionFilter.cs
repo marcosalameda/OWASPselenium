@@ -9,8 +9,8 @@ namespace GenioMVC;
 
 public class ModuleActionFilter : IActionFilter
 {
-	private static readonly HashSet<(string action, string controller)> allowedActions = new()
-	{
+	private static readonly HashSet<(string action, string controller)> allowedActions =
+	[
 		("Profile", "Home"),
 		("LogOff", "Account"),
 		("GetIfUserLogged", "Account"),
@@ -18,22 +18,21 @@ public class ModuleActionFilter : IActionFilter
 		("NavigationalBar", "Home"),
 		("GetImage", "Account"),
 		("Change2FA", "Home"),
+		("CreateTOTP", "Home"),
 		("GetConfig", "Config"),
 		("ProfileRedirect", "Home"),
 		("HomeRedirect", "Home"),
 		("Change2FARedirect", "Home")
-	};
+	];
 
 	private readonly UserContext m_userContext;
-	private readonly HttpContext m_httpContext;
 	private IDisposable m_loggerScope;
 	private IDisposable m_metricScope;
 
-	public ModuleActionFilter(UserContextService userContext, IHttpContextAccessor httpContextAccessor)
+	public ModuleActionFilter(UserContextService userContext)
 	{
 		m_userContext = userContext.Current;
-		m_httpContext = httpContextAccessor.HttpContext;
-		m_loggerScope = setLoggerContext(userContext.Current.User);
+		m_loggerScope = m_userContext is not null ? setLoggerContext(m_userContext.User) : null;
 	}
 
 	/// <summary>
@@ -54,7 +53,7 @@ public class ModuleActionFilter : IActionFilter
 		}
 
 		//Measure all the controller load times
-		if(context.ActionDescriptor is Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor action)
+		if (m_userContext is not null && context.ActionDescriptor is Microsoft.AspNetCore.Mvc.Controllers.ControllerActionDescriptor action)
 		{
 			m_metricScope = GenioDI.MetricsOtlp.RecordTime("page_load_time", new System.Diagnostics.TagList([
 					new("Controller", action.ControllerName),
@@ -76,7 +75,7 @@ public class ModuleActionFilter : IActionFilter
 			context.HttpContext.Response.Headers["QAjaxIdentifier"] = qAjaxId;
 
 		// MH (07/09/2017) - Ensure that the transaction was not left open after processing the request. And if transaction is still open it will be closed automatically.
-		if (m_userContext.PersistentSupport != null && !m_userContext.PersistentSupport.TransactionIsClosed)
+		if (m_userContext is not null && m_userContext.PersistentSupport != null && !m_userContext.PersistentSupport.TransactionIsClosed)
 		{
 			CSGenio.framework.Log.Error(string.Format("The transaction still open after the action was executed. The transaction will be closed automatically by the application. (URL: {0})",
 				context.HttpContext.Request.Path));
@@ -108,8 +107,8 @@ public class ModuleActionFilter : IActionFilter
 
 	private void AuthorizeForUsers(ActionExecutingContext context)
 	{
-		var u = m_userContext.User;
-		if (!u.IsGuest())
+		var u = m_userContext?.User;
+		if (u is not null && !u.IsGuest())
 		{
 			// Check if user has their account disabled
 			if (u.Status == 2)
@@ -138,7 +137,7 @@ public class ModuleActionFilter : IActionFilter
 	private void VerifyInitialPHE(ActionExecutingContext context)
 	{
 		var currentAction = context.RouteData.Values["action"].ToString();
-		if (!m_userContext.User.EphOk && !ActionsAllowed(context) && !ActionsInitialPHEAllowed(context))
+		if (m_userContext is not null && !m_userContext.User.EphOk && !ActionsAllowed(context) && !ActionsInitialPHEAllowed(context))
 			context.Result = new RedirectToRouteResult(new RouteValueDictionary { { "action", "GetEphFormActionByModule" }, { "controller", "Home" }, { "EphModule", m_userContext.User.CurrentModule } });
 	}
 

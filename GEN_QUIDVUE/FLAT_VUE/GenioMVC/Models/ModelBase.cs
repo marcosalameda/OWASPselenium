@@ -123,7 +123,12 @@ namespace GenioMVC.Models
 			this.baseklass.RemovePasswordFields(true);
 			//navigation direction from wizard forward/back
 			bool isGoingBack = Convert.ToBoolean(m_userContext.CurrentNavigation.GetValue("clearData"));
-			this.baseklass.apply(sp, isGoingBack);
+			//force all the missing current field values to empty
+			if (isGoingBack)
+				foreach (var dbfield in this.baseklass.DBFields)
+					if (!this.baseklass.Fields.ContainsKey(dbfield.Value.FullName))
+						this.baseklass.insertNameValueField(dbfield.Value.FullName, null);
+			this.baseklass.apply(sp);
 		}
 
 		public StatusMessage Destroy()
@@ -651,6 +656,116 @@ namespace GenioMVC.Models
 		}
 
 		/// <summary>
+		/// This method extends the sorts with prefix and suffix fields for non-duplication (if have)
+		/// and also with primary key if no unique field exists, when select is not with distinct.
+		/// Otherwise, if no sort fields is provided, it returns sorts based on the first visible column
+		/// that is sortable.
+		/// </summary>
+		/// <typeparam name="A">The class representing the rows</typeparam>
+		/// <param name="distinct">Does it perform a distinct operation</param>
+		/// <param name="sorts">Fields the result should be sorted by</param>
+		/// <param name="firstVisibleColumn">First visible column</param>
+		/// <returns>The list of ColumnSort items to apply to the list control's query</returns>
+		private static List<ColumnSort> ExtendListSortingColumns<A>(bool distinct, List<ColumnSort> sorts = null, FieldRef firstVisibleColumn = null) where A : CSGenio.business.Area
+		{
+			// `sorts` may arrive null.
+			sorts ??= [];
+
+			// No user-selected sorting method
+			if (sorts.Count == 0)
+			{
+				// Condition for field type added because sorting by an image field causes an error
+				if (firstVisibleColumn != null
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGE
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_POINT
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOMETRY_SHAPE
+					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_SHAPE)
+				{
+					ColumnSort sortFirstVisibleColumn = new(new ColumnReference(firstVisibleColumn), SortOrder.Ascending);
+					sorts.Add(sortFirstVisibleColumn);
+				}
+			}
+
+			if (!distinct)
+			{
+				// Make sure at least one of the fields or combination of fields is unique
+				bool hasUniqueField = false;
+				AreaInfo areaInfo = CSGenio.business.Area.GetInfoArea<A>();
+
+				// Iterate a copy of the sorts because fields can be added to sorts during this
+				List<ColumnSort> originalSorts = new(sorts);
+				foreach (ColumnSort sort in originalSorts)
+				{
+					// Check if this field is unique
+					ColumnReference sortColumnReference = sort.Expression as ColumnReference;
+					if (sortColumnReference == null)
+						continue;
+
+					Field field = CSGenio.business.Area.GetFieldInfo(new FieldRef(sortColumnReference.TableAlias, sortColumnReference.ColumnName));
+					if (
+						// Field has unique property
+						field.NotDup
+						// Field is the table's primary key
+						|| (field.Alias != null && field.Alias.Equals(areaInfo.Alias) && field.Name != null && field.Name.Equals(areaInfo.PrimaryKeyName))
+						// Field is a sequential
+						|| (areaInfo.SequentialDefaultValues != null && areaInfo.SequentialDefaultValues.Contains(field.Name))
+					)
+						hasUniqueField = true;
+
+					// If field has a "prefix to be unique" field, add it to the ordering
+					if (!string.IsNullOrEmpty(field.PrefNDup))
+					{
+						ColumnReference prefixColumnRef = new(field.Alias, field.PrefNDup);
+						ColumnSort prefixColumnSort = new(prefixColumnRef, SortOrder.Ascending);
+						if (!sorts.Contains(prefixColumnSort))
+							sorts.Add(prefixColumnSort);
+					}
+				}
+
+				// If ordering does not have a unique column or combination of columns, add the primary key column
+				// to keep the order of records consistent
+				if (!hasUniqueField)
+				{
+					ColumnSort pkColumnSort = new(new ColumnReference(areaInfo.Alias, areaInfo.PrimaryKeyName), SortOrder.Ascending);
+					sorts.Add(pkColumnSort);
+				}
+			}
+
+			return sorts;
+		}
+
+        /// <summary>
+        /// The method that builds a ListingMVC object to be used by the Export class 
+		/// for data export in the list control.
+        /// </summary>
+        /// <typeparam name="A">Class of rows</typeparam>
+        /// <param name="distinct">Does it perform a distinct operation</param>
+        /// <param name="args">Criteria for the search. Note: The CriteriaSet will be extended with PHE limits.</param>
+        /// <param name="fields">Fields that we want to retrieve from the database</param>
+        /// <param name="offset">Pagination offset</param>
+        /// <param name="numRegs">Pagination size</param>
+        /// <param name="sorts">Fields the result should be sorted by</param>
+        /// <param name="identifier">Interface indentifier</param>
+        /// <param name="noLock">True if dirty reads are allowed</param>
+        /// <param name="pagingPosEPHs">EPH positioning data</param>
+        /// <param name="firstVisibleColumn">First visible column</param>
+        /// <returns>Initialized ListingMVC object rteady to be used by the Export class.</returns>
+        public static ListingMVC<A> BuildListingForExport<A>(UserContext ctx, bool distinct, ref CriteriaSet args, FieldRef[] fields = null, int offset = 0, int numRegs = 0, List<ColumnSort> sorts = null, string identifier = null, bool noLock = true, CriteriaSet pagingPosEPHs = null, FieldRef firstVisibleColumn = null) where A : CSGenio.business.Area
+        {
+            User u = ctx.User;
+
+            // EPH
+            args = AddEPH<A>(ref u, args, identifier);
+
+			// Sorting columns
+			sorts = ExtendListSortingColumns<A>(distinct, sorts, firstVisibleColumn);
+
+			ListingMVC<A> listing = new(fields, sorts, offset, numRegs, distinct, u, noLock, identifier, pagingPosEPHs: pagingPosEPHs);
+
+            return listing;
+        }
+
+		/// <summary>
 		/// Finds rows that obey to a criteria
 		/// </summary>
 		/// <typeparam name="A">Class of rows to find</typeparam>
@@ -675,77 +790,12 @@ namespace GenioMVC.Models
 			// EPH
 			args = AddEPH<A>(ref u, args, identifier);
 
-			// `sorts`, `fieldsWithTotalizer` and `selectedRecords` may arrive null.
-			sorts ??= [];
+			// Sorting columns
+			sorts = ExtendListSortingColumns<A>(distinct, sorts, firstVisibleColumn);
+
+			// `fieldsWithTotalizer` and `selectedRecords` may arrive null.
 			fieldsWithTotalizer ??= [];
 			selectedRecords ??= [];
-
-			// No user-selected sorting method
-			if (!sorts.Any())
-			{
-				// Condition for field type added because sorting by an image field causes an error
-				if (firstVisibleColumn != null
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.IMAGE
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_POINT
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOMETRY_SHAPE
-					&& CSGenio.business.Area.GetFieldInfo(firstVisibleColumn).FieldType != FieldType.GEOGRAPHY_SHAPE)
-				{
-					ColumnSort sortFirstVisibleColumn = new(new ColumnReference(firstVisibleColumn), SortOrder.Ascending);
-					sorts.Add(sortFirstVisibleColumn);
-				}
-			}
-
-			if (!distinct)
-			{
-				// Make sure at least one of the fields or combination of fields is unique
-				bool hasUniqueField = false;
-				AreaInfo areaInfo = CSGenio.business.Area.GetInfoArea<A>();
-
-				// Iterate a copy of the sorts because fields can be added to sorts during this
-				List<ColumnSort> originalSorts = new List<ColumnSort>(sorts);
-				foreach (ColumnSort sort in originalSorts)
-				{
-					// Check if this field is unique
-					ColumnReference sortColumnReference = (ColumnReference)sort.Expression;
-					Field field = CSGenio.business.Area.GetFieldInfo(new Quidgest.Persistence.FieldRef(sortColumnReference.TableAlias, sortColumnReference.ColumnName));
-					if (
-						// Field has unique property
-						field.NotDup
-						// Field is the table's primary key
-						|| (field.Alias != null && field.Alias.Equals(areaInfo.Alias) && field.Name != null && field.Name.Equals(areaInfo.PrimaryKeyName))
-						// Field is a sequential
-						|| (areaInfo.SequentialDefaultValues != null && areaInfo.SequentialDefaultValues.Contains(field.Name))
-					)
-						hasUniqueField = true;
-
-					// If field has a "prefix to be unique" field, add it to the ordering
-					if (!string.IsNullOrEmpty(field.PrefNDup))
-					{
-						ColumnReference prefixColumnRef = new ColumnReference(field.Alias, field.PrefNDup);
-						ColumnSort prefixColumnSort = new ColumnSort(prefixColumnRef, SortOrder.Ascending);
-						if (!sorts.Contains(prefixColumnSort))
-							sorts.Add(prefixColumnSort);
-					}
-
-					// If the field is a "prefix to be unique" field, add its corresponding unique field to the ordering
-					if (!string.IsNullOrEmpty(field.SufNDup))
-					{
-						ColumnReference suffixColumnRef = new ColumnReference(field.Alias, field.SufNDup);
-						ColumnSort suffixColumnSort = new ColumnSort(suffixColumnRef, SortOrder.Ascending);
-						if (!sorts.Contains(suffixColumnSort))
-							sorts.Add(suffixColumnSort);
-						hasUniqueField = true;
-					}
-				}
-
-				// If ordering does not have a unique column or combination of columns, add the primary key column
-				// to keep the order of records consistent
-				if (!hasUniqueField)
-				{
-					ColumnSort pkColumnSort = new(new ColumnReference(areaInfo.Alias, areaInfo.PrimaryKeyName), SortOrder.Ascending);
-					sorts.Add(pkColumnSort);
-				}
-			}
 
 			ListingMVC<A> listing = new(fields, sorts, offset, numRegs, distinct, u, noLock, identifier, getTotal, selectrow, pagingPosEPHs, fieldsWithTotalizer, selectedRecords);
 

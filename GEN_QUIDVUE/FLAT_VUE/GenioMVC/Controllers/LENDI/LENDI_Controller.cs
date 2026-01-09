@@ -208,16 +208,10 @@ namespace GenioMVC.Controllers
 			else
 				parameters = this.Navigation.GetValue<NameValueCollection>("requestValuesPTN_Menu_LIST_DM_MB_R");
 
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				m_userContext.PersistentSupport,
-				model.Uuid,
-				m_userContext.User
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView
-			);
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
+				requestModel.TableConfiguration,
+				requestModel.UserTableConfigName,
+				requestModel.LoadDefaultView);
 
 			// Get CriteriaSet
 			CriteriaSet crs = model.BuildCriteriaSet(tableConfig, parameters, out bool hasAllRequiredLimits);

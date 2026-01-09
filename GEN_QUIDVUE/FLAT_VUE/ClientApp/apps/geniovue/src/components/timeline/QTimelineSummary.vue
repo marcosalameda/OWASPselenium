@@ -78,32 +78,32 @@
 						return new Date(a.Data) - new Date(b.Data)
 					})
 				}
-				var circlList = []
+				const circlList = []
 				if (tlItems.length > 0) {
-					let firstDate = this.toDateTime(new Date(tlItems[0].Data))
-					let lastDate = this.toDateTime(
+					const firstDate = this.toDateTime(new Date(tlItems[0].Data))
+					const lastDate = this.toDateTime(
 						new Date(tlItems[tlItems.length - 1].Data)
 					);
 
-					let scale = this.config.scale
+					const scale = this.config.scale
 
-					let lastInt =
+					const lastInt =
 						(lastDate.Year - firstDate.Year) * 365 +
 						(lastDate.Month - firstDate.Month) * 30 +
 						(lastDate.Day - firstDate.Day)
 
 					// Create other circles
-					for (let key in this.groupedData) {
-						let groupDate = this.toDateTime(
+					for (const key in this.groupedData) {
+						const groupDate = this.toDateTime(
 							new Date(this.groupedData[key][0].Data)
 						)
-						let groupPosition = this.getCirclePosition(
+						const groupPosition = this.getCirclePosition(
 							lastInt,
 							firstDate,
 							groupDate,
 							scale
 						)
-						let circle = {
+						const circle = {
 							date: groupDate,
 							id: key,
 							position: Math.ceil(groupPosition * 100)
@@ -137,7 +137,7 @@
 			 * @returns {Object} The date as an object with Day, Month, and Year properties.
 			 */
 			toDateTime(date) {
-				let dateTimeObj = {
+				const dateTimeObj = {
 					Day: date.getUTCDate(),
 					Month: date.getMonth() + 1, // It starts month from 0
 					Year: date.getFullYear()

@@ -354,12 +354,15 @@ namespace Administration.Controllers
         {
             try
             {
+                if(!ModelState.IsValid)            
+                    throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "DbAdminController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);                    
+
                 //Check if something is running
-                if (RdxItem != null)
-                {
-                    if (RdxItem.Progress.State == RdxProgressStatus.RUNNING)
-                        return Json(new { Success = true });
-                }
+                if (RdxItem?.Progress.State == RdxProgressStatus.RUNNING)
+                    return Json(new { Success = true });
+
+                //Dispose previous cancellation token source if it exists
+                reindexCTknSrc?.Dispose();
 
                 //Create cancellation token
                 reindexCTknSrc = new CancellationTokenSource();
@@ -1483,7 +1486,7 @@ namespace Administration.Controllers
                     // 2) Execução dos scripts da Criação de BD Schema
                     if (model.CriarBD)
                     {
-                        var firstFaseRdx = new List<string>() { "CREATEDB", "CREATESP", "CREATESCHEMA", "CREATEHRDSCHEMA", "TBLREBUILD", "UPDATECFG", "UPDATESP", "ADDINDEX" };
+                        var firstFaseRdx = new List<string>() { "CREATEDB", "CREATESP", "CREATESCHEMA", "CREATEHRDSCHEMA", "UPDATEFUNCTIONS", "TBLREBUILD", "UPDATECFG", "UPDATESP", "ADDINDEX" };
                         reindexOrder.ReIndexItems.ForEach(rdxf => rdxf.Selected = firstFaseRdx.Contains(rdxf.Id));
                         reindexOrder.timeout = model.Timeout;
                         reindexOrder.CalculateOrder();
@@ -1494,6 +1497,10 @@ namespace Administration.Controllers
                             {
                                 ChangeYearProgressBar.Text = "";
                                 ChangeYearProgressBar.Percent = 20;
+                            }
+                            else if (status.State == RdxProgressStatus.ERROR)
+                            {
+                                throw new OperationCanceledException($"{status.Message} - ({status.ActualScript})");
                             }
                             else
                             {
@@ -1517,6 +1524,10 @@ namespace Administration.Controllers
                             {
                                 ChangeYearProgressBar.Text = "";
                                 ChangeYearProgressBar.Percent = 20;
+                            }
+                            else if (status.State == RdxProgressStatus.ERROR)
+                            {
+                                throw new OperationCanceledException($"{status.Message} - ({status.ActualScript})");
                             }
                             else
                             {
@@ -1554,6 +1565,10 @@ namespace Administration.Controllers
                             ChangeYearProgressBar.Text = "";
                             ChangeYearProgressBar.Percent = 90;
                         }
+                        else if (status.State == RdxProgressStatus.ERROR)
+                        {
+                            throw new OperationCanceledException($"{status.Message} - ({status.ActualScript})");
+                        }
                         else
                         {
                             ChangeYearProgressBar.Text = string.Format("Recalc formulas: {0}", status.ActualScript);
@@ -1585,6 +1600,10 @@ namespace Administration.Controllers
                         {
                             ChangeYearProgressBar.Text = "";
                             ChangeYearProgressBar.Percent = 97;
+                        }
+                        else if (status.State == RdxProgressStatus.ERROR)
+                        {
+                            throw new OperationCanceledException($"{status.Message} - ({status.ActualScript})");
                         }
                         else
                         {

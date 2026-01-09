@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW TRSB]/
 
 		[HttpPost]
-		public ActionResult Trsb_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Trsb_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Trsb_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Trsb_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Trsb_Show_GET",
 				AreaName = "trsb",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET TRSB]/
 		[HttpPost]
-		public ActionResult Trsb_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Trsb_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Trsb_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Trsb_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Trsb_New_GET",
 				AreaName = "trsb",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Trsb_New([FromBody]Trsb_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Trsb_New",
 				ViewName = "Trsb",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET TRSB]/
 		[HttpPost]
-		public ActionResult Trsb_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Trsb_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Trsb_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Trsb_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Trsb_Edit_GET",
 				AreaName = "trsb",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Trsb_Edit([FromBody]Trsb_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Trsb_Edit",
 				ViewName = "Trsb",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET TRSB]/
 		[HttpPost]
-		public ActionResult Trsb_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Trsb_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Trsb_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Trsb_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Trsb_Delete_GET",
 				AreaName = "trsb",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Trsb/Trsb_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST TRSB]/
 		[HttpPost]
-		public ActionResult Trsb_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Trsb_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Trsb_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Trsb_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Trsb_Delete",
 				ViewName = "Trsb",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET TRSB]/
 
 		[HttpPost]
-		public ActionResult Trsb_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Trsb_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Trsb_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Trsb_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Trsb_Duplicate_GET",
 				AreaName = "trsb",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Trsb_Duplicate([FromBody]Trsb_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Trsb_Duplicate",
 				ViewName = "Trsb",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Trsb(UserContext.Current);
+					GenioMVC.Models.Trsb model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("trsb");
 
 // USE /[MANUAL GQT BEFORE_CANCEL TRSB]/

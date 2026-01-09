@@ -84,4 +84,8 @@ export function setAppConfig(data) {
 		tracingDataStore.activateEventTracker(data.eventTracking)
 	if (typeof data.enableTracing === 'boolean')
 		tracingDataStore.setTracingState(data.enableTracing)
+
+	// Set the version info
+	if (data.versionInfo)
+		systemDataStore.setVersionInfo(data.versionInfo)
 }

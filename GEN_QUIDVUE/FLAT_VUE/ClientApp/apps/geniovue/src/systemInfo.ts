@@ -1,23 +1,16 @@
-﻿// @ts-expect-error genericFunctions does not export type definitions yet
+﻿// @ts-expect-error -- types still WIP
 import { getLayoutVariables } from '@quidgest/clientapp/utils/genericFunctions'
+import { useSystemDataStore } from '@quidgest/clientapp/stores'
 
 import layoutConfigJson from './assets/config/Layoutconfig.json'
 
 export const systemInfo = {
 	applicationName: 'Vertical layout - Vue',
 
-	genio: {
-		buildVersion: 2935,
-		dbIdxVersion: 1770,
-		dbVersion: '4099',
-		genioVersion: '371,25',
-		trackChangesVersion: '0',
-		assemblyVersion: '371,25.4099.0.2935',
-		generationDate: {
-			year: 2025,
-			month: 7,
-			day: 15
-		}
+	get genio() {
+		// Access the store inside the getter to ensure Pinia is initialized
+		const systemDataStore = useSystemDataStore()
+		return systemDataStore.versionInfo
 	},
 
 	system: {

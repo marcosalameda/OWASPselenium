@@ -208,28 +208,33 @@ namespace CSGenio.business
             if (!Qfield.NotNull && Qfield.isEmptyValue(fieldValue))
                 return true;
 
-            // Retrieve the Qvalue of the primary key
-            string codIntValue = area.QPrimaryKey;
-
-            if (String.IsNullOrEmpty(codIntValue))
+            // Only validate if there was a relevant change of the record
+            var prefndupInfo = String.IsNullOrEmpty(Qfield.PrefNDup) ? null : area.DBFields[Qfield.PrefNDup];
+            if (!area.Fields[area.DBFields["zzstate"].FullName].IsDirty()
+                && !area.Fields[Qfield.FullName].IsDirty()
+                && (prefndupInfo is null || !area.Fields[prefndupInfo.FullName].IsDirty()))
                 return true;
 
-            // Query to check if the Qvalue is not unique
+            // Query to check if the value is not unique
+            CriteriaSet criteria = CriteriaSet.And()
+                    .Equal(area.Alias, Qfield.Name, fieldValue)
+                    .Equal(area.Alias, "zzstate", 0);
+            string codIntValue = area.QPrimaryKey;
+            if (!string.IsNullOrEmpty(codIntValue))
+                criteria = criteria.NotEqual(area.Alias, area.PrimaryKeyName, codIntValue);
+
             SelectQuery qs = new SelectQuery()
                 .Select(area.Alias, Qfield.Name)
                 .From(area.QSystem, area.TableName, area.Alias)
-                .Where(CriteriaSet.And()
-                    .NotEqual(area.Alias, area.PrimaryKeyName, codIntValue)
-                    .Equal(area.Alias, Qfield.Name, fieldValue)
-                    .Equal(area.Alias, "zzstate", 0));
+                .Where(criteria);
 
             // Check if Qfield sets another Qfield as prefix for non-duplication
             if (!String.IsNullOrEmpty(Qfield.PrefNDup))
             {
                 // Retrieve the Qvalue of the prefix Qfield
                 object nDupPrefValue;
-                if (area.Fields.ContainsKey(area.Alias + "." + Qfield.PrefNDup))
-                    nDupPrefValue = area.returnValueField(area.Alias + "." + Qfield.PrefNDup);
+                if (area.Fields.ContainsKey(prefndupInfo.FullName))
+                    nDupPrefValue = area.returnValueField(prefndupInfo.FullName);
                 else
                 {
                     // Retrieve the Qvalue of the prefix Qfield from the database

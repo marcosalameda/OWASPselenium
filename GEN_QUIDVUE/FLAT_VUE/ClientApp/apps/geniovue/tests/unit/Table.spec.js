@@ -26,8 +26,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				readonly: tableTest.readonly
 			}
@@ -52,8 +50,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				readonly: tableTest.readonly
 			}
@@ -81,8 +77,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				readonly: false
 			}
@@ -117,8 +111,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				readonly: true
 			}
@@ -141,8 +133,6 @@ describe('QTable.vue', () => {
 				columns: dataColumns,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				readonly: tableTest.readonly
 			}
@@ -172,8 +162,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				readonly: tableTest.readonly
 			}
@@ -200,8 +188,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				readonly: tableTest.readonly
 			}
@@ -242,8 +228,6 @@ describe('QTable.vue', () => {
 				columns: columnsScroll,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				readonly: tableTest.readonly
 			}
@@ -278,8 +262,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -305,8 +287,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -339,8 +319,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -375,8 +353,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -408,8 +384,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -441,8 +415,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -478,8 +450,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -515,8 +485,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -552,8 +520,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -589,8 +555,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -626,8 +590,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -659,8 +621,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -694,8 +654,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}
@@ -731,8 +689,6 @@ describe('QTable.vue', () => {
 				columns: tableTest.columns.value,
 				config: tableTest.config,
 				totalRows: tableTest.totalRows,
-				groupFilters: tableTest.groupFilters,
-				activeFilters: tableTest.activeFilters,
 				headerLevel: 1,
 				isBlocked: tableTest.isBlocked
 			}

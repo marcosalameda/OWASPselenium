@@ -1,15 +1,9 @@
-using CSGenio.framework;
-using CSGenio;
-using ExecuteQueryCore;
-using System.Globalization;
-using CSGenio.persistence;
 using CSGenio.business;
-using CSGenio.core.persistence;
-using Quidgest.Persistence.GenericQuery;
-using log4net.Core;
-using Microsoft.Extensions.Logging;
-using log4net.Repository.Hierarchy;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioServer.security;
 using log4net;
+using Quidgest.Persistence.GenericQuery;
 
 namespace DbAdmin
 {
@@ -106,6 +100,16 @@ namespace DbAdmin
             {
                 CSGenioAuserauthorization.InsertRole(sp, SysConfiguration.CreateWebAdminUser(), codpsw, module, Role.GetRole(roleId));
             }
+        }
+
+        /// <summary>
+        /// Initializes or updates the list of roles associated with this application in the user provider
+        /// </summary>
+        public void SetupProviders()
+        {
+            foreach (var provider in SecurityFactory.RoleProviderList)
+                if(provider.HasUserDirectory)
+                    provider.SetupUserDirectory();
         }
     }
 }

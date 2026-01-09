@@ -126,9 +126,27 @@
 				{{ Resources[userRole.Designation] }}
 			</q-badge>
 		</template>
+		<template #UIS="props">
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'UIS' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
+		</template>
 		<template #GQT="props">
 			<q-badge
 				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'GQT' && Modules[role.Module].active)"
+				class="q-table__cell--multiple"
+				:key="userRole.Role"
+				variant="bold" >
+				{{ Resources[userRole.Designation] }}
+			</q-badge>
+		</template>
+		<template #XRS="props">
+			<q-badge
+				v-for="userRole in props.row.UserRoles.filter(role => role.Module === 'XRS' && Modules[role.Module].active)"
 				class="q-table__cell--multiple"
 				:key="userRole.Role"
 				variant="bold" >
@@ -198,7 +216,9 @@
 					STY : { active: true, Cod: "STY", Description: 'STYLE47121'},
 					PTN : { active: true, Cod: "PTN", Description: 'PATTERNS16056'},
 					REG : { active: true, Cod: "REG", Description: 'REGISTRATION03584'},
+					UIS : { active: true, Cod: "UIS", Description: 'USER_INTERFACE32384'},
 					GQT : { active: true, Cod: "GQT", Description: 'GENIO_QUALITY_TESTS30896'},
+					XRS : { active: true, Cod: "XRS", Description: 'WHAREHOUSE_API10412'},
 				},
 				Users: {
 					rows: [],
@@ -260,7 +280,9 @@
                     this.Modules.STY.active &&
                     this.Modules.PTN.active &&
                     this.Modules.REG.active &&
-                    this.Modules.GQT.active ;
+                    this.Modules.UIS.active &&
+                    this.Modules.GQT.active &&
+                    this.Modules.XRS.active ;
                 },
                 set(value) {
                     //If we explicitly declare the variables, vue will bind them
@@ -271,7 +293,9 @@
                     this.Modules.STY.active = value;
                     this.Modules.PTN.active = value;
                     this.Modules.REG.active = value;
+                    this.Modules.UIS.active = value;
                     this.Modules.GQT.active = value;
+                    this.Modules.XRS.active = value;
                     return value;
                 }
             },
@@ -453,11 +477,25 @@
 					visibility: vm.Modules.REG.active && vm.columnModules
 				},
 				{
+					label: () => vm.$t(vm.Modules.UIS.Description),
+					name: "UIS",
+					slot_name: "UIS",
+					sort: false,
+					visibility: vm.Modules.UIS.active && vm.columnModules
+				},
+				{
 					label: () => vm.$t(vm.Modules.GQT.Description),
 					name: "GQT",
 					slot_name: "GQT",
 					sort: false,
 					visibility: vm.Modules.GQT.active && vm.columnModules
+				},
+				{
+					label: () => vm.$t(vm.Modules.XRS.Description),
+					name: "XRS",
+					slot_name: "XRS",
+					sort: false,
+					visibility: vm.Modules.XRS.active && vm.columnModules
 				},
 			];
 		},

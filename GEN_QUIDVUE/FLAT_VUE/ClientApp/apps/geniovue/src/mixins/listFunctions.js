@@ -43,24 +43,24 @@ export function hydrateTableData(listControl, viewModel)
 
 	if (listControl.config.viewManagement === tableViewManagementModes.persistOne ||
 		listControl.config.viewManagement === tableViewManagementModes.persistMany ||
-		!_isEmpty(viewModel.CurrentTableConfig))
+		!_isEmpty(viewModel.currentTableConfig))
 	{
 		// Process table configuration (saved view or current configuration)
-		if (!_isEmpty(viewModel.CurrentTableConfig))
-			applyTableConfiguration(listControl, viewModel.CurrentTableConfig)
+		if (!_isEmpty(viewModel.currentTableConfig))
+			applyTableConfiguration(listControl, viewModel.currentTableConfig)
 
 		// List of users views (configurations)
-		if (!_isEmpty(viewModel.UserTableConfigNames))
-			listControl.config.userTableConfigNames = viewModel.UserTableConfigNames
+		if (!_isEmpty(viewModel.tableConfigNames))
+			listControl.config.tableConfigNames = viewModel.tableConfigNames
 		else
-			listControl.config.userTableConfigNames = []
+			listControl.config.tableConfigNames = []
 
 		// Set default table view configuration name
-		if (!_isEmpty(viewModel.UserTableConfigNameDefault))
-			listControl.config.userTableConfigNameDefault = viewModel.UserTableConfigNameDefault
+		if (!_isEmpty(viewModel.defaultTableConfigName))
+			listControl.config.defaultTableConfigName = viewModel.defaultTableConfigName
 	}
 
-	if (typeof viewModel.Table !== 'undefined')
+	if (typeof viewModel.table !== 'undefined')
 	{
 		// Row component properties
 		if (listControl.rowComponent === 'q-form-container' && listControl.formName !== '')
@@ -70,7 +70,7 @@ export function hydrateTableData(listControl, viewModel)
 		}
 
 		// Rows data
-		_forEach(viewModel.Table.Elements, (rowData, idx) => {
+		_forEach(viewModel.table.elements, (rowData, idx) => {
 			newListRows.push(reactive(hydrateTableRow(listControl, rowData, idx)))
 
 			// Multiform properties
@@ -87,37 +87,19 @@ export function hydrateTableData(listControl, viewModel)
 
 		listControl.rows = shallowReactive(newListRows)
 
-		// Get distinct values
-		if (viewModel.Table.Distincts !== undefined)
-		{
-			let distinctValues = {}
-
-			for (let column of listControl.columns ?? [])
-			{
-				if (viewModel.Table.Distincts[column.name])
-				{
-					column.distinctValues = {}
-					distinctValues = viewModel.Table.Distincts[column.name]
-
-					for (let dvIdx in distinctValues)
-						column.distinctValues[distinctValues[dvIdx].value] = distinctValues[dvIdx].value
-				}
-			}
-		}
-
 		// Pagination
-		let p = viewModel.Table.Pagination
-		if (p.HasTotal)
-			listControl.totalRows = p.TotalRows
+		let p = viewModel.table.pagination
+		if (p.hasTotal)
+			listControl.totalRows = p.totalRows
 		else
 			listControl.totalRows = listControl.rows.length
 
-		listControl.hasMorePages = p.HasMore
-		listControl.page = p.PageNumber
-		listControl.config.page = p.PageNumber
+		listControl.hasMorePages = p.hasMore
+		listControl.page = p.pageNumber
+		listControl.config.page = p.pageNumber
 
 		// Totalizers
-		listControl.columnTotalizers = viewModel.Table.Totalizers
+		listControl.columnTotalizers = viewModel.table.totalizers
 	}
 
 	// If table is a checklist
@@ -162,147 +144,74 @@ export function hydrateTableData(listControl, viewModel)
 
 /**
  * Get table configuration from table data
- * @param {object} listConf The list configuration
+ * @param {object} listControl The list control object
  */
-export function getTableConfiguration(listConf)
+export function getTableConfiguration(listControl)
 {
 	const config = {}
 
-	// BEGIN: Name
-	if (!_isEmpty(listConf.config.userTableConfigName))
-		config.name = listConf.config.userTableConfigName
-	// END: Name
+	if (!_isEmpty(listControl.config.userTableConfigName))
+		config.name = listControl.config.userTableConfigName
 
 	// BEGIN: Column order and visibility
-	if (!_isEmpty(listConf.columnsCustom))
+	const columns = []
+
+	for (const column of listControl.columns)
 	{
-		const columnOrder = []
-		let column = {}
-
-		for (let idx in listConf.columnsCustom)
-		{
-			column = listConf.columnsCustom[idx]
-			columnOrder.push({
-				name: column.name,
-				order: column.order,
-				visibility: column.isVisible ? 1 : 0,
-				exportability: column.export ? 1 : 0
-			})
-		}
-
-		config.columnConfiguration = columnOrder
+		columns.push({
+			name: column.name,
+			order: column.order,
+			visibility: column.isVisible ? 1 : 0,
+			exportability: column.export ? 1 : 0,
+			sortOrder: column.sortOrder,
+			sortAsc: column.sortAsc
+		})
 	}
+
+	config.columnConfiguration = columns.toSorted((a, b) => a.order - b.order)
 	// END: Column order and visibility
 
-	// BEGIN: Advanced filters
-	if (!_isEmpty(listConf.advancedFilters))
-	{
-		const advancedFiltersWithoutReactive = deepUnwrap(listConf.advancedFilters)
-		const advancedFilters = cloneDeep(advancedFiltersWithoutReactive)
-		filtersToServerFormat(advancedFilters, listConf.columns)
-		config.advancedFilters = advancedFilters
-	}
-	// END: Advanced filters
+	config.filters = cloneDeep(deepUnwrap(listControl.filters))
 
-	// BEGIN: Column filters
-	if (!_isEmpty(listConf.columnFilters))
+	// BEGIN: Group filters
+	for (const filter of listControl.groupFilters)
 	{
-		const columnFiltersWithoutReactive = deepUnwrap(listConf.columnFilters)
-		const columnFilters = cloneDeep(columnFiltersWithoutReactive)
-		filtersToServerFormat(columnFilters, listConf.columns)
-		config.columnFilters = columnFilters
+		config.filters.push({
+			type: 'GROUP',
+			key: filter.id,
+			value: Array.isArray(filter.selected) ? filter.selected.join('') : filter.selected
+		})
 	}
-	// END: Column filters
-
-	// BEGIN: Search bar filters
-	if (!_isEmpty(listConf.searchBarFilters))
-	{
-		const searchBarFiltersWithoutReactive = deepUnwrap(listConf.searchBarFilters)
-		const searchBarFilters = cloneDeep(searchBarFiltersWithoutReactive)
-		filtersToServerFormat(searchBarFilters, listConf.columns)
-		config.searchBarFilters = searchBarFilters
-	}
-	// END: Search bar filters
-
-	// BEGIN: Static filters
-	if (!_isEmpty(listConf.groupFilters))
-	{
-		// Create hashtable of filters by id and value
-		const groupFilterValues = {}
-		for (let idx in listConf.groupFilters)
-		{
-			const groupFilter = listConf.groupFilters[idx]
-			groupFilterValues[groupFilter.id] = groupFilter.value?.toString()
-		}
-		// Store in configuration
-		config.staticFilters = groupFilterValues
-	}
-	// END: Static filters
+	// END: Group filters
 
 	// BEGIN: Active Filters
-	if (listConf.activeFilters !== undefined && listConf.activeFilters.options !== undefined)
+	if (listControl.activeFilters)
 	{
-		const activeFilter = {}
-
-		// Get checked options
-		for (let activeKey in listConf.activeFilters.options)
-			activeFilter[activeKey] = listConf.activeFilters.options[activeKey].selected
-
-		// Get date
-		if (listConf.activeFilters.dateValue !== undefined && listConf.activeFilters.dateValue !== null
-			&& listConf.activeFilters.dateValue.value !== undefined && listConf.activeFilters.dateValue.value !== null)
-		{
-			// If date value is a date object convert to an ISO string
-			if (typeof listConf.activeFilters.dateValue.value.toISOString === 'function')
-				activeFilter.date = listConf.activeFilters.dateValue.value.toISOString()
-			// If date value is already a string
-			else
-				activeFilter.date = listConf.activeFilters.dateValue.value
-		}
-
-		config.activeFilter = activeFilter
+		const selected = listControl.activeFilters.selected
+		config.filters.push({
+			type: 'ACTIVE',
+			date: (listControl.activeFilters.date.value ?? new Date()).toISOString(),
+			current: selected.includes('current'),
+			previous: selected.includes('previous'),
+			upcoming: selected.includes('upcoming')
+		})
 	}
 	// END: Active Filters
 
-	// BEGIN: Default search column
-	if (listConf.config.defaultSearchColumnName)
-		config.defaultSearchColumn = listConf.config.defaultSearchColumnName
-	// END: Default search column
+	if (listControl.config.defaultSearchColumnName)
+		config.defaultSearchColumn = listControl.config.defaultSearchColumnName
 
-	// BEGIN: Initial sort
-	if (listConf.columnSorting.columnName && listConf.columnSorting.sortOrder)
-		config.columnOrderBy = listConf.columnSorting
-	// END: Initial sort
+	if (listControl.config.hasTextWrap !== undefined && listControl.config.hasTextWrap !== null)
+		config.lineBreak = listControl.config.hasTextWrap
 
-	// BEGIN: Column sizes
-	if (!_isEmpty(listConf.config.columnSizes))
-		config.columnSizes = listConf.config.columnSizes
-	// END: Column sizes
+	if (listControl.config.perPage !== undefined && listControl.config.perPage !== null)
+		config.rowsPerPage = listControl.config.perPage
 
-	// BEGIN: Line break
-	if (listConf.config.hasTextWrap !== undefined && listConf.config.hasTextWrap !== null)
-		config.lineBreak = listConf.config.hasTextWrap
-	// END: Line break
+	if (listControl.config.page !== undefined && listControl.config.page !== null)
+		config.page = listControl.config.page
 
-	// BEGIN: Rows per page
-	if (listConf.config.perPage !== undefined && listConf.config.perPage !== null)
-		config.rowsPerPage = listConf.config.perPage
-	// END: Rows per page
-
-	// BEGIN: Page
-	if (listConf.config.page !== undefined && listConf.config.page !== null)
-		config.page = listConf.config.page
-	// END: Page
-
-	// BEGIN: Search
-	if (!_isEmpty(listConf.searchValue))
-		config.query = listConf.searchValue
-	// END: Search
-
-	// BEGIN: Selected view mode
-	if (!_isEmpty(listConf.activeViewModeId))
-		config.activeViewMode = listConf.activeViewModeId
-	// END: Selected view mode
+	if (!_isEmpty(listControl.activeViewModeId))
+		config.activeViewMode = listControl.activeViewModeId
 
 	return config
 }
@@ -346,7 +255,9 @@ export function applyTableConfiguration(listControl, viewCfg)
 				const customColumn = viewCfg.columnConfiguration[idx]
 				currentColumn.formField = customColumn.name
 				currentColumn.position = customColumn.order
-				currentColumn.isVisible = customColumn.visibility
+				currentColumn.isVisible = !!customColumn.visibility
+				currentColumn.sortOrder = customColumn.sortOrder
+				currentColumn.sortAsc = customColumn.sortAsc
 
 				// Add column at the corresponding index in the array (one less than the order value)
 				columnsOrdered[idx] = currentColumn
@@ -359,126 +270,84 @@ export function applyTableConfiguration(listControl, viewCfg)
 		// Set columns to columns configured by user and then add any columns that do not have the order set
 		// Remove any empty elements
 		listControl.columnsCustom = columnsOrdered.filter((col) => col !== undefined && col !== null).concat(columnsUnordered)
-		listControl.config.hasCustomColumns = true
 	}
 	else
 		listControl.columnsCustom = []
 
-	// Advanced filters
-	if (!_isEmpty(viewCfg.advancedFilters))
-	{
-		const advancedFiltersWithoutReactive = deepUnwrap(viewCfg.advancedFilters)
-		const advancedFilters = cloneDeep(advancedFiltersWithoutReactive)
-		filtersToClientFormat(advancedFilters, listControl.columns)
-		listControl.advancedFilters = advancedFilters
-	}
-	else
-		listControl.advancedFilters = []
+	const filters = deepUnwrap(viewCfg.filters)
 
-	// Column filters
-	if (!_isEmpty(viewCfg.columnFilters))
+	if (Array.isArray(filters))
 	{
-		const columnFiltersWithoutReactive = deepUnwrap(viewCfg.columnFilters)
-		const columnFilters = cloneDeep(columnFiltersWithoutReactive)
-		filtersToClientFormat(columnFilters, listControl.columns)
-		listControl.columnFilters = columnFilters
-	}
-	else
-		listControl.columnFilters = {}
+		const columnFilters = filters.filter((e) => e.type === 'COLUMN')
+		const groupFilters = filters.filter((e) => e.type === 'GROUP')
+		const activeFilter = filters.find((e) => e.type === 'ACTIVE')
 
-	// Search bar filters
-	listControl.searchBarFilters = viewCfg.searchBarFilters ?? {}
+		// Column filters
+		listControl.filters = cloneDeep(columnFilters)
 
-	// Static filters
-	for (let idx in listControl.groupFilters)
-	{
-		// Get reference to filter
-		const groupFilter = listControl.groupFilters[idx]
-		// Get filter value from saved configuration if it exists or use the default value
-		let groupFilterValue = groupFilter.defaultValue
-		if (viewCfg?.staticFilters)
+		// Group filters
+		for (const filter of listControl.groupFilters)
 		{
-			const viewCfgFilterValue = viewCfg?.staticFilters[groupFilter.id]
-			if (viewCfgFilterValue !== undefined && viewCfgFilterValue !== null)
-				groupFilterValue = viewCfgFilterValue
+			const storedFilter = groupFilters.find((e) => e.key === filter.id)
+
+			if (storedFilter)
+			{
+				filter.selected = filter.isMultiple
+					? [...storedFilter.value]
+					: storedFilter.value
+			}
+			else
+				filter.selected = cloneDeep(filter.default)
 		}
 
-		// Set filter value to copy of this value
-		listControl.groupFilters[idx].value = groupFilterValue?.slice?.() ?? ''
-		// Set selected property for each filter option
-		for (let idx in groupFilter.filters)
+		// Active filter
+		if (activeFilter)
 		{
-			const filter = groupFilter.filters[idx]
-			filter.selected = groupFilter.value.indexOf(filter.key) > -1
+			const selected = []
+			if (activeFilter.current)
+				selected.push('current')
+			if (activeFilter.previous)
+				selected.push('previous')
+			if (activeFilter.upcoming)
+				selected.push('upcoming')
+			listControl.activeFilters.selected = selected
+
+			// Set date
+			listControl.activeFilters.date.value = new Date(activeFilter.date)
 		}
-	}
-
-	// Active filter
-	if (!_isEmpty(viewCfg.activeFilter))
-	{
-		// Set checkbox options
-		for (let key in listControl.activeFilters?.options)
-			listControl.activeFilters.options[key].selected = viewCfg.activeFilter[key]
-
-		// Set date
-		listControl.activeFilters.dateValue.value = viewCfg.activeFilter.date
 	}
 
 	// Default search column
 	listControl.config.defaultSearchColumnName = viewCfg.defaultSearchColumn ?? listControl.config.defaultSearchColumnNameOriginal
 
 	// Initial sort
-	if (viewCfg?.columnOrderBy?.columnName && viewCfg?.columnOrderBy?.sortOrder)
-		listControl.columnSorting = {
-			columnName: viewCfg.columnOrderBy.columnName,
-			sortOrder: viewCfg.columnOrderBy.sortOrder
-		}
-	else
-		listControl.columnSorting = listControl.config.defaultColumnSorting
-
-	// Column sizes
-	listControl.config.columnSizes = viewCfg.columnSizes
+	if (!listControl.columns.some((c) => c.sortOrder > 0))
+		resetTableSorting(listControl)
 
 	// Line break
-	listControl.config.hasTextWrap = viewCfg.lineBreak ?? false
+	listControl.config.hasTextWrap = viewCfg.lineBreak
 
 	// Rows per page
 	listControl.config.perPageSelected = viewCfg.rowsPerPage ?? listControl.config.perPageDefault
-
-	// Search
-	listControl.searchValue = viewCfg.query ?? ''
 
 	// View mode
 	listControl.activeViewModeId = viewCfg.activeViewMode ?? listControl.activeViewModeId
 }
 
 /**
- * convert table configuration to format for saving in the database
- * @param {object} tableConfig The table configuration
+ * Resets the sorting of the specified list.
+ * @param {object} listControl The list control object
  */
-export function convertTableConfigurationToDB(tableConfig)
+export function resetTableSorting(listControl)
 {
-	const tableConfigWithoutReactive = deepUnwrap(tableConfig)
-	let tableConfigSave = cloneDeep(tableConfigWithoutReactive)
+	const defaultSorting = listControl.config.defaultColumnSorting
+	const sortColumn = listControl.columns.find((c) => c.name === defaultSorting.columnName)
 
-	// BEGIN: Remove properties that don't get saved
-
-	// Name
-	tableConfigSave.name = undefined
-
-	// Page
-	tableConfigSave.page = undefined
-
-	// Query
-	tableConfigSave.query = undefined
-
-	// SearchBar Filters
-	tableConfigSave.searchBarFilters = undefined
-
-	// END: Remove properties that don't get saved
-
-	// Serialize
-	return JSON.stringify(tableConfigSave)
+	if (sortColumn)
+	{
+		sortColumn.sortOrder = 1
+		sortColumn.sortAsc = defaultSorting.sortOrder === 'asc'
+	}
 }
 
 /**
@@ -531,7 +400,7 @@ class TableRow
 		this.pkField = pkField
 		this.btnPermission = btnPermission
 
-		// reason for not being a normal getter, see in 'rowWithoutChildren'
+		// Reason for not being a normal getter: see in 'rowWithoutChildren'
 		Object.defineProperty(this, 'rowKey', {
 			get() { return !_isEmpty(this.pkField) ? this.Fields[this.pkField] : this.Rownum },
 			enumerable: true,
@@ -539,12 +408,14 @@ class TableRow
 		})
 
 		this.actionVisibility = {}
+		this.actionDisability = {}
 	}
 
 	destroy()
 	{
 		this.btnPermission = null
 		this.actionVisibility = null
+		this.actionDisability = null
 		this.Fields = null
 	}
 }
@@ -582,16 +453,21 @@ export function hydrateTableRow(listControl, rowData, rowIndex)
 	delete rowData?.btnPermission
 
 	const pkColumn = toValue(listControl.config.pkColumn)
-	const row = reactive(new TableRow(
-		rowIndex,
-		rowData,
-		pkColumn,
-		btnPermission
-	))
+	const row = reactive(
+		new TableRow(
+			rowIndex,
+			rowData,
+			pkColumn,
+			btnPermission
+		)
+	)
 
-	// Custom actions visibility
+	// Custom actions visible / disabled status
 	_forEach(listControl.config.customActions, (action) => {
-		row.actionVisibility[action.id] = action.checkIsVisible?.(row) ?? action.isVisible
+		if (typeof action.checkIsVisible === 'function')
+			row.actionVisibility[action.id] = action.checkIsVisible(row)
+		if (typeof action.checkIsDisabled === 'function')
+			row.actionDisability[action.id] = action.checkIsDisabled(row)
 	})
 
 	// The fields of the other tables have a different field identifier. TODO: Use the _get on the Table component
@@ -607,7 +483,7 @@ export function hydrateTableRow(listControl, rowData, rowIndex)
  */
 export function hydrateTimelineData(timelineControl, viewModel)
 {
-	const rows = viewModel?.Menu?.Elements
+	const rows = viewModel?.table?.elements
 	if (!rows)
 		return
 
@@ -834,17 +710,17 @@ class TreeRow
 
 	destroy()
 	{
-		for(let childRowIdx in this._parsedChildren) {
-			if(this._parsedChildren[childRowIdx] instanceof TreeRow) {
+		for (let childRowIdx in this._parsedChildren) {
+			if (this._parsedChildren[childRowIdx] instanceof TreeRow) {
 				this._parsedChildren[childRowIdx].destroy()
 			}
 		}
 
 		this._fnRowModel = null
-		if(this._originalChildren instanceof Array)
+		if (this._originalChildren instanceof Array)
 			this._originalChildren.length = 0
 		this._originalChildren = null
-		if(this._parsedChildren instanceof Array)
+		if (this._parsedChildren instanceof Array)
 			this._parsedChildren.length = 0
 		this._parsedChildren = null
 		this._fields = null
@@ -873,7 +749,7 @@ export function hydrateTreeTableData(listControl, viewModel, rowKeyToScroll)
 	listControl.rows = reactive(_map(viewModel.Tree, (row) => new TreeRow(row, listControl.config.treeListDefinitions?.rowModel, null, { rowKeyToScroll: rowKeyToScroll, rownum: rownum++ })))
 }
 
-class fullCalendarEvent
+class CalendarEvent
 {
 	constructor()
 	{
@@ -889,7 +765,7 @@ class fullCalendarEvent
 	}
 }
 
-class fullCalendarResource
+class CalendarResource
 {
 	constructor()
 	{
@@ -902,7 +778,7 @@ class fullCalendarResource
 	}
 }
 
-class fullCalendarResourceChild
+class CalendarResourceChild
 {
 	constructor()
 	{
@@ -912,18 +788,18 @@ class fullCalendarResourceChild
 }
 
 /**
- * Hydrates the Full Calendar data.
+ * Hydrates the Calendar data.
  * @param {object} listControl The list control object
  * @param {object} viewModel The list view model (C#)
  */
-export function hydrateFullCalendarData(listControl, viewModel)
+export function hydrateCalendarData(listControl, viewModel)
 {
 	let events = [], resources = []
 
-	_forEach(viewModel.Table.Elements, (row) => {
-		let event = new fullCalendarEvent(),
-			resource = new fullCalendarResource(),
-			resourceChild = new fullCalendarResourceChild(),
+	_forEach(viewModel.table.elements, (row) => {
+		let event = new CalendarEvent(),
+			resource = new CalendarResource(),
+			resourceChild = new CalendarResourceChild(),
 			hasChildren = false,
 			dates = 0,
 			texts = 0,
@@ -1068,7 +944,7 @@ export function getDefaultSearchColumn(columns, defaultSearchColumnName)
 	const searchableColumns = getSearchableColumns(columns)
 	if (searchableColumns.length === 0) return null
 
-	return searchableColumns.find(column => column.name === defaultSearchColumnName) || searchableColumns[0]
+	return searchableColumns.find((column) => column.name === defaultSearchColumnName) || searchableColumns[0]
 }
 
 /**
@@ -1376,26 +1252,6 @@ export function getColumnFromTableColumnName(columns, columnName)
 export function getTableColumnFromName(table, columnName)
 {
 	return table.columns.find((obj) => obj.name === columnName)
-}
-
-/**
- * Get column sort ('asc', 'desc', null)
- * @param column {Object} Column
- * @param sorting {Object} Sort information
- * @param fullText {Boolean} Whether to return the full word for the sort direction
- * @returns {String, null}
- */
-export function getTableColumnSort(column, sorting, fullText = false)
-{
-	if (!column || !sorting || column.name !== sorting.columnName)
-		return null
-
-	// If returning the full word
-	if (fullText)
-		return sorting.sortOrder === 'asc' ? 'ascending' : 'descending'
-
-	// Return column sort value (stored as an abbreviation 'asc' or 'desc')
-	return sorting.sortOrder
 }
 
 /**
@@ -1926,9 +1782,7 @@ export function isVisibleColumn(column)
  */
 export function getSearchableColumns(columns)
 {
-	if (!columns)
-		return []
-	return columns.filter(isSearchableColumn)
+	return columns?.filter(isSearchableColumn) ?? []
 }
 
 /**
@@ -1938,96 +1792,152 @@ export function getSearchableColumns(columns)
  */
 export function getSortableColumns(columns)
 {
-	if (!columns)
-		return []
-	return columns.filter(isSortableColumn)
+	return columns?.filter(isSortableColumn) ?? []
 }
 
 /* BEGIN: Filter functions */
 
 /**
- * Create search filter
- * @param {string} name : Name of search filter
- * @param {boolean} active : State of search filter (active or inactive)
- * @param {SearchFilterCondition[]} conditions : Array of conditions
+ * Checks if the specified column has a filter, even if inactive.
+ * @param {Array} filters The table filters
+ * @param {Object} column The table column
+ * @returns True if the column is filtered, false otherwise.
  */
-export function searchFilter(name, active, conditions)
+export function columnIsFiltered(filters, column)
 {
-	if (_isEmpty(conditions))
-		conditions = []
-
-	return {
-		name: name,
-		active: active,
-		conditions: conditions
-	}
+	return filters.some((f) => f.field === `${column.area}.${column.field}` || columnIsFiltered(f.subFilters, column))
 }
 
 /**
- * Create search filter condition
- * @param {string} name : Name of condition
- * @param {bool} active : Active/inactive state
+ * Checks if any of the filtered columns are hidden.
+ * @param {Array} columns The table columns
+ * @param {Array} columnRows The rows with the table columns data
+ * @param {Array} filters The table filters
+ * @returns A list with the hidden filtered columns.
+ */
+export function getHiddenFilterColumns(columns, columnRows, filters)
+{
+	const hiddenFilterCols = []
+
+	for (const rowColumn of columnRows)
+	{
+		const column = columns.find((c) => rowColumn.Value === c.formField || rowColumn.Value === c.name)
+		const columnWasVisible = isVisibleColumn(column) ? 1 : 0
+
+		if (rowColumn.Fields.visibility !== columnWasVisible && columnIsFiltered(filters, column))
+			hiddenFilterCols.push(column)
+	}
+
+	return hiddenFilterCols
+}
+
+/**
+ * Removes the first condition from the specified filter.
+ * @param {Object} filter The filter
+ * @returns The filter without the first condition.
+ */
+export function removeFirstFilterCondition(filter)
+{
+	if (filter.subFilters.length === 0)
+		return null
+
+	// The first sub filter is now the main filter
+	const newFilter = filter.subFilters[0]
+	newFilter.useOr = filter.useOr
+	newFilter.subFilters = filter.subFilters.slice(1)
+	return newFilter
+}
+
+/**
+ * Create search filter
+ * @param {string} name : Name of search filter
+ * @param {boolean} active : State of search filter (active or inactive)
  * @param {string} field : Full name of field (TABLE.COLUMN)
  * @param {string} operator : Operator code (as in operators object)
  * @param {string[]} values : Array of values
  */
-export function searchFilterCondition(name, active, field, operator, values)
+export function searchFilter(name, active, field, operator, values = [])
 {
-	if (_isEmpty(values))
-		values = []
-
 	return {
+		type: 'COLUMN',
 		name: name,
 		active: active,
 		field: field,
 		operator: operator,
-		values: values
+		values: values,
+		subFilters: []
 	}
 }
 
 /**
- * Add condition to search filter at end of condition array
- * @param {object} searchFilter : Search filter
- * @param {SearchFilterCondition} condition : Conditions
+ * Gets a list of the conditions applied to the specified filter
+ * @param {Object} filterOperators
+ * @param {Object} filter
+ * @param {Array} searchableColumns
+ * @param {string} allFieldsText
+ * @returns {Array} A list of conditions
  */
-export function searchFilterAppendCondition(searchFilter, condition)
+function getFilterConditions(filterOperators, filter, searchableColumns, allFieldsText)
 {
-	searchFilter.conditions.push(condition)
-}
+	// Filter name defined
+	if (filter.name.length > 0)
+		return [filter.name]
 
-/**
- * Add condition to search filter
- * @param {object} searchFilter : Search filter
- * @param {number} index : Index
- * @param {SearchFilterCondition} condition : Conditions
- */
-export function searchFilterAddCondition(searchFilter, index, condition)
-{
-	if (index <= searchFilter.conditions.length)
-		searchFilter.conditions.splice(index, 0, condition)
-}
+	const column = getColumnFromTableColumnName(searchableColumns, filter.field)
+	// If there's no column defined, it's going to search all columns
+	if (!column)
+	{
+		const operator = filterOperators.text.CON
+		return [`${allFieldsText} ${operator.title} "${filter.values[0]}"`]
+	}
 
-/**
- * Set condition in search filter
- * @param {object} searchFilter : Search filter
- * @param {number} index : Index
- * @param {SearchFilterCondition} condition : Conditions
- */
-export function searchFilterSetCondition(searchFilter, index, condition)
-{
-	if (index <= searchFilter.conditions.length)
-		searchFilter.conditions.splice(index, 1, condition)
-}
+	const operators = filterOperators[column.searchFieldType],
+		operator = operators[filter.operator],
+		conditionNames = []
 
-/**
- * Remove condition in search filter
- * @param {object} searchFilter : Search filter
- * @param {number} index : Index
- */
-export function searchFilterRemoveCondition(searchFilter, index)
-{
-	if (index <= searchFilter.conditions.length)
-		searchFilter.conditions.splice(index, 1)
+	conditionNames.push(`${column.label} ${operator.title}`)
+
+	if (operator.valueCount > 0)
+	{
+		// Format values
+		let conditionValues = []
+		// Format dates
+		if (column.searchFieldType === 'date')
+		{
+			const genericDataStore = useGenericDataStore()
+			const dateFormat = genericDataStore.dateFormat[column.dateTimeType]
+
+			for (const value of filter.values)
+				conditionValues.push(genericFunctions.dateDisplay(value, dateFormat, column.dateTimeType, false))
+		}
+		else if (column.searchFieldType === 'enum')
+		{
+			// If using array of values in first value (IN operation)
+			const values = Array.isArray(filter.values[0])
+				? filter.values[0]
+				: filter.values
+			conditionValues = deepUnwrap(values.map((value) => column.array?.find((e) => e.key === value)?.value))
+		}
+		else if (column.searchFieldType === 'num')
+		{
+			const groupSeparator = column.numberFormat.groupSeparator
+			const decimalSeparator = column.numberFormat.decimalSeparator
+
+			for (const value of filter.values)
+				conditionValues.push(genericFunctions.numericDisplay(value, decimalSeparator, groupSeparator))
+		}
+		// No formatting needed
+		else
+			conditionValues = filter.values
+
+		conditionNames[0] += ` "${conditionValues.join('", "')}"`
+	}
+
+	// If there are sub filters, add their conditions to the list as well.
+	for (const subFilter of filter.subFilters)
+		conditionNames.push(...getFilterConditions(filterOperators, subFilter, searchableColumns))
+
+	return conditionNames
 }
 
 /**
@@ -2035,82 +1945,13 @@ export function searchFilterRemoveCondition(searchFilter, index)
  * @param {Object} filterOperators
  * @param {Object} filter
  * @param {Array} searchableColumns
- * @param {string resource ID} orText
- * @returns {String}
+ * @param {string} separator
+ * @param {string} allFieldsText
+ * @returns {string}
  */
-export function getFilterName(filterOperators, filter, searchableColumns, orText)
+export function getFilterName(filterOperators, filter, searchableColumns, separator, allFieldsText)
 {
-	// Filter name defined
-	if (filter.name.length > 0)
-		return filter.name
-
-	// Filter name not defined
-	let conditionNames = [],
-		condition = {},
-		column = {},
-		operator = {}
-
-	for (let conditionIdx in filter.conditions)
-	{
-		condition = filter.conditions[conditionIdx]
-		column = getFilterColumnFromName(filter, conditionIdx, searchableColumns)
-
-		// Skip invalid conditions
-		if (column === undefined || column === null)
-			continue
-
-		operator = _get(filterOperators, `${column.searchFieldType}.${condition.operator}`, { Title: 'Unknown', ValueCount: 0 })
-		conditionNames[conditionIdx] = `${column.label} ${operator.Title}`
-
-		if (operator.ValueCount > 0)
-		{
-			// Format values
-			let conditionValues = []
-			// Format dates
-			if (column.searchFieldType === 'date')
-			{
-				const genericDataStore = useGenericDataStore()
-				const dateFormat = genericDataStore.dateFormat[column.dateTimeType]
-
-				for (let idx in condition.values)
-					conditionValues[idx] = genericFunctions.dateDisplay(condition.values[idx], dateFormat, column.dateTimeType, false)
-			}
-			else if (column.searchFieldType === 'enum')
-			{
-				// Fix for enums searched with search bar (would show up as 'X is ""' without this)
-				if (condition.values.length === 1 && typeof condition.values[0] === 'string')
-					conditionValues = condition.values.map((value) => value)
-				else
-					conditionValues = condition.values.map((value) => value?.value)
-			}
-			// No formatting needed
-			else
-				conditionValues = condition.values
-
-			// If using array of values in first value (IN operation)
-			if (Array.isArray(condition.values[0]))
-				conditionNames[conditionIdx] += ` "${condition.values[0].join('", "')}"`
-			// Normal case
-			else
-				conditionNames[conditionIdx] += ` "${conditionValues.join('", "')}"`
-		}
-	}
-
-	return conditionNames.join(` ${orText} `)
-}
-
-/**
- * Get column of condition by index
- * @param {Object} filter
- * @param {number} conditionIdx : index
- * @param {Array} searchableColumns
- * @returns {Object}
- */
-export function getFilterColumnFromName(filter, conditionIdx, searchableColumns)
-{
-	if (filter.conditions.length < 1)
-		return null
-	return getColumnFromTableColumnName(searchableColumns, filter.conditions[conditionIdx].field)
+	return getFilterConditions(filterOperators, filter, searchableColumns, allFieldsText).join(` ${separator} `)
 }
 
 /**
@@ -2130,9 +1971,9 @@ export function getColumnTotalizers(listConf)
  */
 export function getSelectedRows(listConf)
 {
-	if (listConf.config?.showRowsSelectedTotalizer && listConf.allSelectedRows === 'false')
-		return Object.keys(listConf.rowsSelected)
-	return []
+	return listConf.config?.showRowsSelectedTotalizer && listConf.allSelectedRows === 'false'
+		? Object.keys(listConf.rowsSelected)
+		: []
 }
 
 /**
@@ -2180,204 +2021,109 @@ export function getColumnTotalValueDisplay(column, value)
 }
 
 /**
- * Check if a filter condition is valid
- * @param {Object} filter
- * @param {number} conditionIdx : index
- * @param {number} searchableColumns
- * @returns {Boolean}
- */
-export function isValidFilterCondition(filter, conditionIdx, searchableColumns)
-{
-	let condition = filter.conditions[conditionIdx]
-
-	// Check if the field used in the column is searchable / visible
-	return searchableColumns.some((col) => col.area.toUpperCase() + '.' + col.field.toUpperCase() === condition.field.toUpperCase())
-}
-
-/**
- * Check if a filter is valid
- * @param {Object} filter
- * @param {number} searchableColumns
- * @returns {Boolean}
- */
-export function isValidFilter(filter, searchableColumns)
-{
-	// Check if any of the conditions are valid
-	for (let idx = 0; idx < filter?.conditions?.length; idx++)
-	{
-		if (isValidFilterCondition(filter, idx, searchableColumns))
-			return true
-	}
-
-	return false
-}
-
-/**
- * Get the corresponding index of this condition in an array that only has valid conditions
- * @param {Object} filter
- * @param {number} conditionIdx : index
- * @param {number} searchableColumns
- * @returns {Boolean}
- */
-export function getValidFilterConditionRelativeIndex(filter, conditionIdx, searchableColumns)
-{
-	let validConditionIndex = -1
-	let currentConditionIsValid = false
-
-	// Check the conditions up to this index
-	for (let idx = 0; idx <= conditionIdx; idx++)
-	{
-		currentConditionIsValid = isValidFilterCondition(filter, idx, searchableColumns)
-		if (currentConditionIsValid)
-			validConditionIndex++
-	}
-
-	if (!currentConditionIsValid)
-		return -1
-
-	return validConditionIndex
-}
-
-/**
- * Get the number of valid conditions in this filter
- * @param {Object} filter
- * @param {number} searchableColumns
- * @returns {Boolean}
- */
-export function getValidFilterConditionCount(filter, searchableColumns)
-{
-	if (isNaN(filter?.conditions?.length))
-		return 0
-
-	let validConditionCount = 0
-
-	// Check the conditions up to this index
-	for (let idx = 0; idx < filter.conditions.length; idx++)
-	{
-		if (isValidFilterCondition(filter, idx, searchableColumns))
-			validConditionCount++
-	}
-
-	return validConditionCount
-}
-
-/**
  * Get operators for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {number} conditionIdx : index
  * @returns {Object}
  */
-export function getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)
+export function getFilterOperators(filterOperators, filter, searchableColumns)
 {
-	if (filter.conditions.length < 1)
-		return []
-	return filterOperators[getFilterColumnFromName(filter, conditionIdx, searchableColumns)?.searchFieldType]
+	return filterOperators[getColumnFromTableColumnName(searchableColumns, filter.field)?.searchFieldType]
 }
 
 /**
  * Get number of values for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {number} conditionIdx : index
  * @param {Array} searchableColumns
  * @returns {Object}
  */
-export function getFilterValueCount(filterOperators, filter, conditionIdx, searchableColumns)
+export function getFilterValueCount(filterOperators, filter, searchableColumns)
 {
 	if (_isEmpty(filter))
 		return 0
-	if (filter.conditions === undefined || filter.conditions === null)
+	if (filter.operator.length < 1)
 		return 0
-	if (filter.conditions.length < 1)
-		return 0
-	if (filter.conditions[conditionIdx].operator.length < 1)
-		return 0
-	if (getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns) === undefined
-		|| getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator] === undefined)
-		return 0
-	return getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator].ValueCount
+
+	const operators = getFilterOperators(filterOperators, filter, searchableColumns)
+	return operators?.[filter.operator]?.valueCount ?? 0
 }
 
 /**
  * Get input component for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {number} conditionIdx : index
+ * @param {array} searchableColumns
  * @returns {string}
  */
-export function getFilterInputComponent(filterOperators, filter, conditionIdx, searchableColumns)
+export function getFilterInputComponent(filterOperators, filter, searchableColumns)
 {
-	var column = getFilterColumnFromName(filter, conditionIdx, searchableColumns)
-	var operator = getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator]
-	if (column.distinctValues !== undefined && column.distinctValues !== null)
-	{
-		if (Object.keys(column.distinctValues).length > 0)
-			return 'q-edit-enumeration'
-	}
-	else if (operator.inputComponent !== undefined)
-		return operator.inputComponent
-	return searchFilterData.inputComponents[column.searchFieldType]
+	const column = getColumnFromTableColumnName(searchableColumns, filter.field)
+	const operator = getFilterOperators(filterOperators, filter, searchableColumns)[filter.operator]
+
+	return operator.inputComponent !== undefined
+		? operator.inputComponent
+		: searchFilterData.inputComponents[column.searchFieldType]
 }
 
 /**
  * Get placeholder for condition input by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {number} conditionIdx : index
+ * @param {array} searchableColumns
  * @returns {string}
  */
-export function getFilterPlaceholder(filterOperators, filter, conditionIdx, searchableColumns)
+export function getFilterPlaceholder(filterOperators, filter, searchableColumns)
 {
-	var operator = getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)[filter.conditions[conditionIdx].operator]
+	const operator = getFilterOperators(filterOperators, filter, searchableColumns)[filter.operator]
 	if (operator === undefined || operator === null)
 		return ''
-	return operator.Placeholder
+	return operator.placeholder
 }
 
 /**
  * Select default operator for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {number} conditionIdx : index
+ * @param {array} searchableColumns
  */
-export function setFilterDefaultOperator(filterOperators, filter, conditionIdx, searchableColumns)
+export function setFilterDefaultOperator(filterOperators, filter, searchableColumns)
 {
-	const column = getFilterColumnFromName(filter, conditionIdx, searchableColumns)
+	const column = getColumnFromTableColumnName(searchableColumns, filter.field)
 	if (_isEmpty(column))
 		return
 
-	filter.conditions[conditionIdx].operator = searchFilterData.searchBarOperator(column.searchFieldType, '')
-	setFilterDefaultValues(filterOperators, filter, conditionIdx, searchableColumns)
+	filter.operator = searchFilterData.searchBarOperator(column.searchFieldType, '')
+	setFilterDefaultValues(filterOperators, filter, searchableColumns)
 }
 
 /**
  * Set default values for condition by index
  * @param {Object} filterOperators
  * @param {Object} filter
- * @param {number} conditionIdx : index
+ * @param {array} searchableColumns
  */
-export function setFilterDefaultValues(filterOperators, filter, conditionIdx, searchableColumns)
+export function setFilterDefaultValues(filterOperators, filter, searchableColumns)
 {
-	const operators = getFilterOperators(filterOperators, filter, conditionIdx, searchableColumns)
+	const operators = getFilterOperators(filterOperators, filter, searchableColumns)
 	if (_isEmpty(operators) || operators.length < 1)
 		return
 
-	const operator = operators[filter.conditions[conditionIdx].operator]
-	const valueCount = getFilterValueCount(filterOperators, filter, conditionIdx, searchableColumns)
+	const operator = operators[filter.operator]
+	const valueCount = getFilterValueCount(filterOperators, filter, searchableColumns)
 
-	filter.conditions[conditionIdx].values = []
+	filter.values = []
 	for (let valueIdx = 0; valueIdx < valueCount; valueIdx++)
 	{
 		if (operator.defaultValue !== undefined)
 		{
 			const operatorDefaultValue = deepUnwrap(operator.defaultValue)
-			filter.conditions[conditionIdx].values[valueIdx] = cloneDeep(operatorDefaultValue)
+			filter.values[valueIdx] = cloneDeep(operatorDefaultValue)
 		}
 		else
 		{
-			const column = getColumnFromTableColumnName(searchableColumns, filter.conditions[conditionIdx].field)
-			filter.conditions[conditionIdx].values[valueIdx] = searchFilterData.defaultValue(column)
+			const column = getColumnFromTableColumnName(searchableColumns, filter.field)
+			filter.values[valueIdx] = searchFilterData.defaultValue(column)
 		}
 	}
 }
@@ -2385,140 +2131,63 @@ export function setFilterDefaultValues(filterOperators, filter, conditionIdx, se
 /**
  * Set value of condition by index
  * @param {object} filter
- * @param {number} conditionIdx : index
  * @param {number} valueIdx : index
  * @param {object} value : value
  */
-export function setFilterConditionValue(filter, conditionIdx, valueIdx, value)
+export function setFilterConditionValue(filter, valueIdx, value)
 {
-	filter.conditions[conditionIdx].values[valueIdx] = value
-}
-
-/**
- * Transform filters into format for server-side
- * @param {object} filterCollection : Search filter array / hashtable
- * @param {array} searchableColumns : columns
- */
-export function filtersToServerFormat(filterCollection, searchableColumns)
-{
-	// Iterate filter collection
-	for (const fcIdx in filterCollection)
-	{
-		const filter = filterCollection[fcIdx]
-
-		// Iterate filter conditions
-		for (let conIdx in filter.conditions)
-		{
-			const filterCondition = filter.conditions[conIdx]
-			const column = getFilterColumnFromName(filter, conIdx, searchableColumns)
-
-			// If condition's first value is an array, replace condition's Values array with first value array
-			if (column?.searchFieldType === 'enum')
-			{
-				if (filterCondition.operator === 'IN' && Array.isArray(filterCondition.values[0]))
-					filterCondition.values = filterCondition.values[0]
-				else
-				{
-					// Fix for enums searched with search bar (would show up as 'X is ""' without this)
-					if (filterCondition.values.length === 1 && typeof filterCondition.values[0] === 'string')
-						filterCondition.values = filterCondition.values.map((value) => value)
-					else
-						filterCondition.values = filterCondition.values.map((value) => value?.value)
-				}
-			}
-
-			// Make all values strings
-			filterCondition.values = filterCondition.values.map((value) => value?.toString())
-		}
-	}
-}
-
-/**
- * Transform filters into format for client-side
- * @param {object} filterCollection : Search filter array / hashtable
- * @param {array} searchableColumns : columns
- */
-export function filtersToClientFormat(filterCollection, searchableColumns)
-{
-	// Iterate filter collection
-	for (let fcIdx in filterCollection)
-	{
-		const filter = filterCollection[fcIdx]
-
-		// Iterate filter conditions
-		for (let conIdx in filter.conditions)
-		{
-			const filterCondition = filter.conditions[conIdx]
-			const column = getFilterColumnFromName(filter, conIdx, searchableColumns)
-
-			// If condition's operator is IN, replace first value with the condition's Values array
-			if (column?.searchFieldType === 'enum')
-			{
-				if (filterCondition.operator === 'IN' && !Array.isArray(filterCondition.values[0]))
-					filterCondition.values = [filterCondition.values]
-				else
-				{
-					for (let valIdx in filterCondition.values)
-					{
-						const value = filterCondition.values[valIdx]
-						const enumValue = _find(column.array, (elem) => unref(elem.value) === value)
-
-						if (enumValue !== undefined && enumValue !== null)
-							filterCondition.values[valIdx] = enumValue
-					}
-				}
-			}
-		}
-	}
+	filter.values[valueIdx] = value
 }
 
 /**
  * Validate filter and return errors
- * @param {object} filter : Search filter
- * @param {object} columns : Table columns
+ * @param {object} filter - Search filter
+ * @param {object} columns - Table columns
+ * @param {number} valueCount - The expected value count
  * @returns {array} states
  */
-export function filterValidate(filter, columns)
+export function filterValidate(filter, columns, valueCount)
 {
-	let conditionStates = [],
-		valueStates = [],
-		conditionState = '',
-		valueState = ''
-
-	for (let idx in filter.conditions)
-	{
-		let condition = filter.conditions[idx]
-		let column = columns.find((col) => `${col.area}.${col.field}` === condition.field)
-		conditionState = 'VALID'
+	const column = columns.find((col) => `${col.area}.${col.field}` === filter.field),
+		conditionStates = [],
 		valueStates = []
 
-		for (let valueIdx in condition.values)
+	if (!column)
+		return conditionStates
+
+	let conditionState = filter.operator.length > 0 ? 'VALID' : 'INVALID'
+
+	for (const value of filter.values)
+	{
+		const strValue = value?.toString() ?? ''
+		let valueState = 'VALID'
+
+		if (_isEmpty(strValue) ||
+			// Enumerated fields with no checkbox selected
+			(filter.operator === 'IN' && filter.values[0]?.length === 0))
 		{
-			let value = condition.values[valueIdx]
-			let strValue = value?.toString() ?? ''
-			valueState = 'VALID'
-
-			if (_isEmpty(strValue) ||
-				/* Enumerated fields with no checkbox selected */
-				(condition.operator === 'IN' && condition.values[0]?.length === 0))
-			{
-				valueState = 'EMPTY'
-				conditionState = 'INVALID'
-			}
-
-			valueStates.push(valueState)
+			valueState = 'INVALID'
+			conditionState = 'INVALID'
 		}
 
-		conditionStates.push({
-			Table: column.area,
-			Field: column.field,
-			Name: column.name,
-			Label: column.label,
-			Type: column.dataType,
-			State: conditionState,
-			ValueStates: valueStates
-		})
+		valueStates.push(valueState)
 	}
+
+	if (valueStates.length < valueCount)
+	{
+		valueStates.push('INVALID')
+		conditionState = 'INVALID'
+	}
+
+	conditionStates.push({
+		table: column.area,
+		field: column.field,
+		name: column.name,
+		label: column.label,
+		type: column.dataType,
+		state: conditionState,
+		valueStates
+	})
 
 	return conditionStates
 }
@@ -2534,11 +2203,8 @@ export function getSearchableColumnOptions(columns)
 {
 	const options = []
 
-	for (const idx in columns)
-	{
-		const column = columns[idx]
-		options.push({key: columnFullName(column), value: column.label})
-	}
+	for (const column of columns)
+		options.push({ key: columnFullName(column), value: column.label })
 
 	return options
 }
@@ -2546,20 +2212,19 @@ export function getSearchableColumnOptions(columns)
 /**
  * Get filter operators as options for dropdown
  * @param filter {Object}
- * @param conditionIdx {Array}
  * @param operators {Number}
  * @param columns {Array}
  * @returns Array
  */
-export function getFilterOperatorOptions(filter, conditionIdx, operators, columns)
+export function getFilterOperatorOptions(filter, operators, columns)
 {
 	const options = []
-	const columnOperators = getFilterOperators(operators, filter, conditionIdx, columns)
+	const columnOperators = getFilterOperators(operators, filter, columns)
 
-	for (const idx in columnOperators)
+	for (const id in columnOperators)
 	{
-		const operator = columnOperators[idx]
-		options.push({key: operator.key, value: unref(operator.Title), icon: operator.icon})
+		const operator = columnOperators[id]
+		options.push({ key: operator.key, value: unref(operator.title), icon: operator.icon })
 	}
 
 	return options
@@ -2800,26 +2465,6 @@ export function getTableColumnControlIdPrefix(tableControlId, columnName)
 }
 
 /**
- * Get the ID of a table column dropdown
- * @param tableControlId {String} Table control ID (Not the table name in the DB)
- * @param columnName {String} Column name
- */
-export function getTableColumnDropdownId(tableControlId, columnName)
-{
-	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_drop'
-}
-
-/**
- * Get the ID of a table column dropdown toggle button
- * @param tableControlId {String} Table control ID (Not the table name in the DB)
- * @param columnName {String} Column name
- */
-export function getTableColumnDropdownToggleId(tableControlId, columnName)
-{
-	return getTableColumnDropdownId(tableControlId, columnName) + '_toggle'
-}
-
-/**
  * Get the ID of a table column sort ascending button
  * @param tableControlId {String} Table control ID (Not the table name in the DB)
  * @param columnName {String} Column name
@@ -2840,33 +2485,13 @@ export function getTableColumnDropdownSortDescId(tableControlId, columnName)
 }
 
 /**
- * Get the ID of a table column dropdown save button
- * @param tableControlId {String} Table control ID (Not the table name in the DB)
- * @param columnName {String} Column name
- */
-export function getTableColumnDropdownSaveId(tableControlId, columnName)
-{
-	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_filter_save'
-}
-
-/**
- * Get the ID of a table column dropdown remove button
- * @param tableControlId {String} Table control ID (Not the table name in the DB)
- * @param columnName {String} Column name
- */
-export function getTableColumnDropdownRemoveId(tableControlId, columnName)
-{
-	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_filter_remove'
-}
-
-/**
  * Get the ID of a table column dropdown push-to-advanced-filters button
  * @param tableControlId {String} Table control ID (Not the table name in the DB)
  * @param columnName {String} Column name
  */
 export function getTableColumnDropdownToAdvancedId(tableControlId, columnName)
 {
-	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_filter_to_adv'
+	return getTableColumnControlIdPrefix(tableControlId, columnName) + '_column_filter'
 }
 
 /**
@@ -2882,11 +2507,11 @@ export default {
 	hydrateTableData,
 	getTableConfiguration,
 	applyTableConfiguration,
-	convertTableConfigurationToDB,
+	resetTableSorting,
 	updateConfigOptions,
 	hydrateTreeTableData,
 	hydrateTimelineData,
-	hydrateFullCalendarData,
+	hydrateCalendarData,
 	getRowsFlatArray,
 	searchTreeRow,
 	getDefaultSearchColumn,
@@ -2907,7 +2532,6 @@ export default {
 	getColumnFromTableAndColumnNames,
 	getColumnFromTableColumnName,
 	getTableColumnFromName,
-	getTableColumnSort,
 	reCalcCellOrder,
 	cellOnChange,
 	textDisplayCell,
@@ -2942,21 +2566,14 @@ export default {
 	isVisibleColumn,
 	getSearchableColumns,
 	getSortableColumns,
+	columnIsFiltered,
+	getHiddenFilterColumns,
+	removeFirstFilterCondition,
 	searchFilter,
-	searchFilterCondition,
-	searchFilterAppendCondition,
-	searchFilterAddCondition,
-	searchFilterSetCondition,
-	searchFilterRemoveCondition,
 	getFilterName,
-	getFilterColumnFromName,
 	getColumnTotalizers,
 	getSelectedRows,
 	getColumnTotalValueDisplay,
-	isValidFilterCondition,
-	isValidFilter,
-	getValidFilterConditionRelativeIndex,
-	getValidFilterConditionCount,
 	getFilterOperators,
 	getFilterValueCount,
 	getFilterInputComponent,
@@ -2964,8 +2581,6 @@ export default {
 	setFilterDefaultOperator,
 	setFilterDefaultValues,
 	setFilterConditionValue,
-	filtersToServerFormat,
-	filtersToClientFormat,
 	filterValidate,
 	getSearchableColumnOptions,
 	getFilterOperatorOptions,
@@ -2987,12 +2602,8 @@ export default {
 	tableHasPermission,
 	actionIsAllowed,
 	getTableColumnControlIdPrefix,
-	getTableColumnDropdownId,
-	getTableColumnDropdownToggleId,
 	getTableColumnDropdownSortAscId,
 	getTableColumnDropdownSortDescId,
-	getTableColumnDropdownSaveId,
-	getTableColumnDropdownRemoveId,
 	getTableColumnDropdownToAdvancedId,
 	getTableSelectorDropdownToggleId
 }

@@ -3,6 +3,7 @@ import CardsControl from './cardsControl.js'
 import CarouselControl from './carouselControl.js'
 import ChartControl from './chartControl.js'
 import CollapsiblerowslistControl from './collapsiblerowslistControl.js'
+import ColorpickerControl from './colorpickerControl.js'
 import MapControl from './mapControl.js'
 
 /**
@@ -26,6 +27,8 @@ export default function getCustomControl(controlType, context, viewModeOrder)
 			return new ChartControl(context, viewModeOrder)
 		case 'collapsiblerowslist':
 			return new CollapsiblerowslistControl(context, viewModeOrder)
+		case 'colorpicker':
+			return new ColorpickerControl(context, viewModeOrder)
 		case 'map':
 			return new MapControl(context, viewModeOrder)
 	}

@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -61,6 +61,7 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "NAME31974";
 
 			Qfield.Dupmsg = "";
+            Qfield.NotDup = true;
 //Actualiza as seguintes réplicas:
 			Qfield.ReplicaDestinationList = new List<ReplicaDestination>();
 			Qfield.ReplicaDestinationList.Add( new ReplicaDestination("GQT", "gqtpwcom", "codpsw", "name"));
@@ -666,16 +667,17 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
+		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioApsw search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioApsw search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioApsw area = new CSGenioApsw(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields))
+            if (sp.getRecord(area, key, fields, forUpdate))
                 return area;
 			return null;
         }
@@ -735,30 +737,14 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX PSW]/
 
      
-
-                       
-        public string[] getModules()
-        {
-        
-             string[] modulos=new string[8];
-            modulos[0]="STY";
-            modulos[1]="GQT";
-            modulos[2]="PTN";
-            modulos[3]="TBS";
-            modulos[4]="WMS";
-            modulos[5]="REG";
-            modulos[6]="IMO";
-            modulos[7]="TRN";
-            return modulos;
-        }
-
-        /// <summary>
+                               /// <summary>
         /// Set decrypted value to encrypted field
         /// </summary>
         /// <param name="fieldName">Field name</param>

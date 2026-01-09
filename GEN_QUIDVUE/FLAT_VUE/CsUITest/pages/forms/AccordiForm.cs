@@ -10,7 +10,7 @@ public class AccordiForm : Form
 	/// <summary>
 	/// COMPANY
 	/// </summary>
-	public IWebElement PseudNovogr02 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR02-container");
 
 	/// <summary>
 	/// Company:
@@ -32,7 +32,7 @@ public class AccordiForm : Form
 	/// <summary>
 	/// PHOTO
 	/// </summary>
-	public IWebElement PseudNovogr06 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr06 => new CollapsibleZoneControl(driver, ContainerLocator, "#ACCORDI_PSEUDNOVOGR06-container");
 
 	/// <summary>
 	/// Photo

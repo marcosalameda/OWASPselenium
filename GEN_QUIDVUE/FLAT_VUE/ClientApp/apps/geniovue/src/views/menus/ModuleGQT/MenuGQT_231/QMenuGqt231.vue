@@ -69,7 +69,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed } from 'vue'
 
 	import { loadResources } from '@/plugins/i18n.js'
@@ -88,7 +88,7 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import qEnums from '@quidgest/clientapp/constants/enums'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_231ViewModel.js'
 
@@ -255,8 +255,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -373,22 +372,20 @@
 							{
 								id: 'filter_GQT_Menu_231_ACTIVO',
 								isMultiple: false,
-								filters: [
+								items: [
 									{
 										id: 'filter_GQT_Menu_231_ACTIVO_1',
-										key: '1',
 										value: computed(() => this.Resources.ASSETS12081),
-										selected: true
+										key: '1'
 									},
 									{
 										id: 'filter_GQT_Menu_231_ACTIVO_2',
-										key: '2',
 										value: computed(() => this.Resources.INACTIVE23138),
-										selected: false
+										key: '2'
 									},
 								],
-								value: '1',
-								defaultValue: '1'
+								selected: '1',
+								default: '1'
 							},
 						],
 						globalEvents: ['changed-TPEQU', 'changed-ROOM1', 'changed-DECOM', 'changed-PESS1', 'changed-EQUIP', 'changed-CMPNY', 'changed-WAREH', 'changed-ITEM'],
@@ -451,8 +448,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,

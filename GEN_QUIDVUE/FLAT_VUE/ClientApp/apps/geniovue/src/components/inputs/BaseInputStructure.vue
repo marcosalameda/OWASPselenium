@@ -1,6 +1,5 @@
 ﻿<template>
 	<div
-		v-if="isVisible"
 		:id="controlId"
 		ref="mainWrapper"
 		v-bind="wrapperAttrs"
@@ -9,7 +8,6 @@
 		:data-loading="loading">
 		<div
 			v-if="hasLabelContainer"
-			style="align-items: center"
 			:class="[classObject.labelContainerFlex, ...classes]">
 			<slot
 				v-if="labelPosition !== labelAlignment.left"
@@ -43,7 +41,8 @@
 
 			<a
 				v-if="reportingModeOn"
-				href="javascript:void(0)"
+				href="#"
+				role="button"
 				class="q-icon--reporting report-mode"
 				@click.stop.prevent="addCavField">
 				<q-icon icon="stats" />
@@ -51,7 +50,8 @@
 
 			<a
 				v-if="displaySuggestions"
-				href="javascript:void(0)"
+				href="#"
+				role="button"
 				class="suggest suggest-mode"
 				@click.stop.prevent="openSuggestionMode">
 				<q-icon icon="new-suggestion" />
@@ -168,14 +168,6 @@
 			},
 
 			/**
-			 * Whether or not the control is currently visible.
-			 */
-			isVisible: {
-				type: Boolean,
-				default: true
-			},
-
-			/**
 			 * The name of the array if this control is part of an array structure.
 			 */
 			arrayName: {
@@ -275,8 +267,7 @@
 				},
 
 				wrapperAttrs: {
-					class: ctx.attrs.class ?? '',
-					'data-control-type': ctx.attrs['data-control-type']
+					class: ctx.attrs.class ?? ''
 				},
 
 				labelAttrs: ctx.attrs.labelAttrs ?? ctx.attrs['label-attrs'] ?? {},
@@ -332,7 +323,7 @@
 			},
 
 			displayTooltip() {
-				return this.popoverText && !_isEmpty(this.label)
+				return this.tooltipText && !_isEmpty(this.label)
 			},
 
 			displaySuggestions() {
@@ -446,6 +437,14 @@
 			reportingModeOn()
 			{
 				this.draggable(false)
+			},
+
+			$attrs: {
+				handler(attrs)
+				{
+					this.wrapperAttrs.class = attrs.class ?? ''
+				},
+				deep: true
 			}
 		}
 	}

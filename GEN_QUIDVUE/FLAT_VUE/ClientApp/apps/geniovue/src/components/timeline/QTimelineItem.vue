@@ -25,7 +25,7 @@
 			</span>
 		</div>
 		<div :class="tlItem.TipoTimeLine === 'S' ? 'c-simple_timeline__item-text' : 'c-timeline__item-text'">
-			<!--Iterate all row fields (not image kind)--> 
+			<!--Iterate all row fields (not image kind)-->
 			<span
 				v-for="col in tlItem.Columns"
 				:key="col.order"
@@ -39,7 +39,7 @@
 					<br />
 				</template>
 			</span>
-			<!--Images columns in row--> 
+			<!--Images columns in row-->
 			<div v-if="tlItem.ImagesColumns.length > 0">
 				<div
 					class="mt-1 mb-1"
@@ -55,7 +55,8 @@
 				v-if="tlItem.Url"
 				data-testid="popup-btn"
 				class="q-button q-button--primary q-button--size-small mt-1"
-				href="javascript:void(0)"
+				role="button"
+				href="#"
 				:style="headerStyle"
 				@click.stop.prevent="$emit('form-popup', tlItem)">
 				<q-icon
@@ -166,7 +167,7 @@
 			 */
 			formatedDated()
 			{
-				let newDate = new Date(this.tlItem.Data)
+				const newDate = new Date(this.tlItem.Data)
 				return genericFunctions.dateDisplay(newDate, this.dateTimeFormat)
 			}
 		}

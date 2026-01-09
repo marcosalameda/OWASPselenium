@@ -57,9 +57,9 @@
 			 */
 			messagesList()
 			{
-				var list = []
+				const list = []
 
-				for (let i in this.messages)
+				for (const i in this.messages)
 				{
 					if (Array.isArray(this.messages[i]))
 						this.messages[i].forEach((e) => list.push({ id: i, text: e }))

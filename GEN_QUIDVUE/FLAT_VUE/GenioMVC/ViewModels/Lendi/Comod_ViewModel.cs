@@ -130,6 +130,8 @@ namespace GenioMVC.ViewModels.Lendi
 		[ValidateSetAccess]
 		public bool ValReturned { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -420,6 +422,17 @@ namespace GenioMVC.ViewModels.Lendi
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -556,7 +569,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 			if (comod___pess1name____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TablePess1Name, "sTablePess1Name", "dTablePess1Name", qs, "pess1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -606,7 +619,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 				TablePess1Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePess1Name.Query = query;
-				TablePess1Name.Elements = listing.RowsForViewModel<GenioMVC.Models.Pess1>((r) => new GenioMVC.Models.Pess1(m_userContext, r, true, _fieldsToSerialize_COMOD___PESS1NAME____));
+				TablePess1Name.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pess1(m_userContext, r, true, _fieldsToSerialize_COMOD___PESS1NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -746,7 +759,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 			if (comod___pess2name____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TablePess2Name, "sTablePess2Name", "dTablePess2Name", qs, "pess2");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -796,7 +809,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 				TablePess2Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePess2Name.Query = query;
-				TablePess2Name.Elements = listing.RowsForViewModel<GenioMVC.Models.Pess2>((r) => new GenioMVC.Models.Pess2(m_userContext, r, true, _fieldsToSerialize_COMOD___PESS2NAME____));
+				TablePess2Name.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pess2(m_userContext, r, true, _fieldsToSerialize_COMOD___PESS2NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -943,7 +956,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 			if (comod___equipregistnrDoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableEquipRegistnr, "sTableEquipRegistnr", "dTableEquipRegistnr", qs, "equip");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -993,7 +1006,7 @@ namespace GenioMVC.ViewModels.Lendi
 
 				TableEquipRegistnr.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableEquipRegistnr.Query = query;
-				TableEquipRegistnr.Elements = listing.RowsForViewModel<GenioMVC.Models.Equip>((r) => new GenioMVC.Models.Equip(m_userContext, r, true, _fieldsToSerialize_COMOD___EQUIPREGISTNR));
+				TableEquipRegistnr.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Equip(m_userContext, r, true, _fieldsToSerialize_COMOD___EQUIPREGISTNR));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

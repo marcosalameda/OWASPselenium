@@ -1,14 +1,21 @@
 ﻿<template>
-	<tinymce
-		:id="controlId"
-		ref="editor"
-		v-model.lazy="curValue"
-		:key="domKey"
-		:api-key="apiKey"
-		:data-size="size"
-		:init="ctrlOptions"
-		:tinymce-script-src="tinymceScriptSrc"
-		:disabled="disabled || readonly" />
+	<span
+		@focusin="onFocusin"
+		@focusout="onFocusout">
+		<tinymce
+			:id="controlId"
+			ref="editor"
+			v-model.lazy="curValue"
+			:key="domKey"
+			:class="classes"
+			:api-key="apiKey"
+			:data-size="size"
+			:init="ctrlOptions"
+			:tinymce-script-src="tinymceScriptSrc"
+			:disabled="disabled || readonly"
+			@focus="onFocusin"
+			@blur="onFocusout" />
+	</span>
 </template>
 
 <script>
@@ -22,7 +29,8 @@
 
 		emits: [
 			'update:modelValue',
-			'ctrl-initialized'
+			'ctrl-initialized',
+			'ctrl-focused'
 		],
 
 		components: {
@@ -227,7 +235,7 @@
 			{
 				if (window.tinymce)
 				{
-					let editorCtrl = window.tinymce.get(this.id)
+					const editorCtrl = window.tinymce.get(this.id)
 					if (editorCtrl)
 					{
 						editorCtrl.remove()
@@ -281,6 +289,60 @@
 					default:
 						return 'en'
 				}
+			},
+
+			/**
+			 * Get whether an external element (popup) of the editor is focused
+			 */
+			getExternalElementIsFocused()
+			{
+				// Elements that contain editor's popup and dropdown elements
+				const externalContainerElements = document.querySelectorAll('.tox.tox-silver-sink.tox-tinymce-aux')
+
+				// When opening a popup or dropdown in the editor, the focus first goes to document.body
+				// and adds a special class and/or attribute and then the focus goes to the actual element
+				// in the container with the editor's external elements
+				if(
+					document.activeElement === document.body &&
+					(
+						document.body.classList.contains('tox-dialog__disable-scroll') ||
+						document.body.getAttribute('data-scroll-locked') === "1"
+					)
+				)
+					return true
+
+				// Check if focus went to one of the editor's external elements
+				externalContainerElements.forEach((element) => {
+					if(element.contains(document.activeElement))
+						return true
+				})
+
+				return false
+			},
+
+			/**
+			 * Determine if the control has focus and emit the value
+			 * @param controlHasFocus Whether an element in the main control or an element in the control's external container has focus
+			 */
+			emitControlFocus(controlHasFocus)
+			{
+				this.$emit('ctrl-focused', controlHasFocus)
+			},
+
+			/**
+			 * Called when focusing on an element within the container element around the editor
+			 */
+			onFocusin()
+			{
+				this.emitControlFocus(true)
+			},
+
+			/**
+			 * Called when focusing away from an element within the container element around the editor
+			 */
+			onFocusout()
+			{
+				this.emitControlFocus(this.getExternalElementIsFocused())
 			}
 		},
 

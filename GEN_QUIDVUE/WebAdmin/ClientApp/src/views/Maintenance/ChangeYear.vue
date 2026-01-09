@@ -88,6 +88,10 @@
 										:label="Resources.DIRETORIA_DE_FILESTR39886" />
 								</base-input-structure>
 							</q-control-wrapper>
+							<q-control-wrapper class="control-row-group">
+								<text-input v-model="Model.Timeout"
+											:label="'Timeout'" />								
+							</q-control-wrapper>
 
 						<row class="footer-btn">
 							<q-button

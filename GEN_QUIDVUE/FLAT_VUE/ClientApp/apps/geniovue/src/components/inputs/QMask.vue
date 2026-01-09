@@ -13,7 +13,8 @@
 		:aria-label="label"
 		:aria-labelledby="labelId"
 		:placeholder="placeholder"
-		:data-testid="dataTestid" />
+		:data-testid="dataTestid"
+		@change="$emit('change', $event)" />
 </template>
 
 <script>
@@ -27,7 +28,10 @@
 	export default {
 		name: 'QMask',
 
-		emits: ['update:modelValue'],
+		emits: [
+			'change',
+			'update:modelValue'
+		],
 
 		inheritAttrs: false,
 
@@ -187,19 +191,19 @@
 			 */
 			getTokens()
 			{
-				let defaultConfig = {
-						mask: '',
-						tokens: {
-							0: { pattern: /[0-9]/ },
-							X: { pattern: /[0-9a-zA-Z]/ },
-							S: { pattern: /[a-zA-Z]/ },
-							A: { pattern: /[a-zA-Z]/, uppercase: true },
-							a: { pattern: /[a-zA-Z]/, lowercase: true },
-							'!': { escape: true },
-							'*': { repeat: true }
-						}
-					},
-					customConfig = {}
+				const defaultConfig = {
+					mask: '',
+					tokens: {
+						0: { pattern: /[0-9]/ },
+						X: { pattern: /[0-9a-zA-Z]/ },
+						S: { pattern: /[a-zA-Z]/ },
+						A: { pattern: /[a-zA-Z]/, uppercase: true },
+						a: { pattern: /[a-zA-Z]/, lowercase: true },
+						'!': { escape: true },
+						'*': { repeat: true }
+					}
+				}
+				let customConfig = {}
 
 				switch (this.maskType)
 				{

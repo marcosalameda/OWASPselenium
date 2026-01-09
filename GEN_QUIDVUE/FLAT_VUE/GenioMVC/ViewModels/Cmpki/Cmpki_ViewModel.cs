@@ -71,6 +71,8 @@ namespace GenioMVC.ViewModels.Cmpki
 		/// </summary>
 		public string ValUrl { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -345,6 +347,17 @@ namespace GenioMVC.ViewModels.Cmpki
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -478,7 +491,7 @@ namespace GenioMVC.ViewModels.Cmpki
 
 			if (cmpki___tpequtipoequiDoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableTpequTipoequi, "sTableTpequTipoequi", "dTableTpequTipoequi", qs, "tpequ");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -528,7 +541,7 @@ namespace GenioMVC.ViewModels.Cmpki
 
 				TableTpequTipoequi.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableTpequTipoequi.Query = query;
-				TableTpequTipoequi.Elements = listing.RowsForViewModel<GenioMVC.Models.Tpequ>((r) => new GenioMVC.Models.Tpequ(m_userContext, r, true, _fieldsToSerialize_CMPKI___TPEQUTIPOEQUI));
+				TableTpequTipoequi.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Tpequ(m_userContext, r, true, _fieldsToSerialize_CMPKI___TPEQUTIPOEQUI));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -668,7 +681,7 @@ namespace GenioMVC.ViewModels.Cmpki
 
 			if (cmpki___tpeq1tipoequiDoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableTpeq1Tipoequi, "sTableTpeq1Tipoequi", "dTableTpeq1Tipoequi", qs, "tpeq1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -718,7 +731,7 @@ namespace GenioMVC.ViewModels.Cmpki
 
 				TableTpeq1Tipoequi.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableTpeq1Tipoequi.Query = query;
-				TableTpeq1Tipoequi.Elements = listing.RowsForViewModel<GenioMVC.Models.Tpeq1>((r) => new GenioMVC.Models.Tpeq1(m_userContext, r, true, _fieldsToSerialize_CMPKI___TPEQ1TIPOEQUI));
+				TableTpeq1Tipoequi.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Tpeq1(m_userContext, r, true, _fieldsToSerialize_CMPKI___TPEQ1TIPOEQUI));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

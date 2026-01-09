@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW FAQS]/
 
 		[HttpPost]
-		public ActionResult Faqs_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Faqs_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Faqs_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Faqs_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Faqs_Show_GET",
 				AreaName = "faqs",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET FAQS]/
 		[HttpPost]
-		public ActionResult Faqs_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Faqs_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Faqs_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Faqs_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Faqs_New_GET",
 				AreaName = "faqs",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Faqs_New([FromBody]Faqs_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Faqs_New",
 				ViewName = "Faqs",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET FAQS]/
 		[HttpPost]
-		public ActionResult Faqs_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Faqs_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Faqs_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Faqs_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Faqs_Edit_GET",
 				AreaName = "faqs",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Faqs_Edit([FromBody]Faqs_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Faqs_Edit",
 				ViewName = "Faqs",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET FAQS]/
 		[HttpPost]
-		public ActionResult Faqs_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Faqs_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Faqs_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Faqs_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Faqs_Delete_GET",
 				AreaName = "faqs",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Faqs/Faqs_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST FAQS]/
 		[HttpPost]
-		public ActionResult Faqs_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Faqs_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Faqs_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Faqs_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Faqs_Delete",
 				ViewName = "Faqs",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET FAQS]/
 
 		[HttpPost]
-		public ActionResult Faqs_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Faqs_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Faqs_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Faqs_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Faqs_Duplicate_GET",
 				AreaName = "faqs",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Faqs_Duplicate([FromBody]Faqs_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Faqs_Duplicate",
 				ViewName = "Faqs",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Faqs(UserContext.Current);
+					GenioMVC.Models.Faqs model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("faqs");
 
 // USE /[MANUAL GQT BEFORE_CANCEL FAQS]/

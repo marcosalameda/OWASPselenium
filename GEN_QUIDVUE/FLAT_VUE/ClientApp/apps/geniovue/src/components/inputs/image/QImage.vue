@@ -432,14 +432,16 @@
 			handleOpenEdit()
 			{
 				const modalId = `image-edit-${this.controlId}`
-				const modalProps = {
-					id: modalId,
+				const dialogProps = {
 					props: {
-						headerTitle: this.texts.editImage,
+						title: this.texts.editImage
+					},
+					modalProps: {
+						id: modalId,
 						dismissAction: this.closeEdit
 					}
 				}
-				this.$emit('show-popup', modalProps)
+				this.$emit('show-popup', dialogProps)
 
 				this.openPreview()
 				this.showEditModal = true

@@ -48,6 +48,7 @@ public abstract class Form : PageObject
 
     // UI elements for the form actions
     private IWebElement SaveBtn => Container.FindElement(By.CssSelector("#bottom-save-btn"));
+    private IWebElement ApplyBtn => Container.FindElement(By.CssSelector("#bottom-apply-btn"));
     private IWebElement CancelBtn => Container.FindElement(By.CssSelector("#bottom-cancel-btn"));
     private IWebElement BackBtn => Container.FindElement(By.CssSelector("#bottom-back-btn"));
     private IWebElement ConfirmBtn => Container.FindElement(By.CssSelector("#bottom-confirm-btn"));
@@ -89,6 +90,15 @@ public abstract class Form : PageObject
     {
         WaitForLoading();
         SaveBtn.Click();
+    }
+
+    /// <summary>
+    /// Applies the form changes.
+    /// </summary>
+    public void Apply()
+    {
+        WaitForLoading();
+        ApplyBtn.Click();
     }
 
     /// <summary>

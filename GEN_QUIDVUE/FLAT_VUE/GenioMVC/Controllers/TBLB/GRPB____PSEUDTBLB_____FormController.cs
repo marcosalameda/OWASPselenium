@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW GRPB____PSEUDTBLB____]/
 
 		[HttpPost]
-		public ActionResult Grpb____pseudtblb_____Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Grpb____pseudtblb_____Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Grpb____pseudtblb_____ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Grpb____pseudtblb_____ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____Show_GET",
 				AreaName = "tblb",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET GRPB____PSEUDTBLB____]/
 		[HttpPost]
-		public ActionResult Grpb____pseudtblb_____New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Grpb____pseudtblb_____New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Grpb____pseudtblb_____ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Grpb____pseudtblb_____ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____New_GET",
 				AreaName = "tblb",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Grpb____pseudtblb_____New([FromBody]Grpb____pseudtblb_____ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____New",
 				ViewName = "Grpb____pseudtblb____",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET GRPB____PSEUDTBLB____]/
 		[HttpPost]
-		public ActionResult Grpb____pseudtblb_____Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Grpb____pseudtblb_____Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Grpb____pseudtblb_____ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Grpb____pseudtblb_____ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____Edit_GET",
 				AreaName = "tblb",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Grpb____pseudtblb_____Edit([FromBody]Grpb____pseudtblb_____ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____Edit",
 				ViewName = "Grpb____pseudtblb____",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET GRPB____PSEUDTBLB____]/
 		[HttpPost]
-		public ActionResult Grpb____pseudtblb_____Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Grpb____pseudtblb_____Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Grpb____pseudtblb_____ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Grpb____pseudtblb_____ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____Delete_GET",
 				AreaName = "tblb",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Tblb/Grpb____pseudtblb_____Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST GRPB____PSEUDTBLB____]/
 		[HttpPost]
-		public ActionResult Grpb____pseudtblb_____Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Grpb____pseudtblb_____Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Grpb____pseudtblb_____ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Grpb____pseudtblb_____ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____Delete",
 				ViewName = "Grpb____pseudtblb____",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET GRPB____PSEUDTBLB____]/
 
 		[HttpPost]
-		public ActionResult Grpb____pseudtblb_____Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Grpb____pseudtblb_____Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Grpb____pseudtblb_____ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Grpb____pseudtblb_____ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____Duplicate_GET",
 				AreaName = "tblb",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Grpb____pseudtblb_____Duplicate([FromBody]Grpb____pseudtblb_____ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Grpb____pseudtblb_____Duplicate",
 				ViewName = "Grpb____pseudtblb____",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Tblb(UserContext.Current);
+					GenioMVC.Models.Tblb model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("tblb");
 
 // USE /[MANUAL GQT BEFORE_CANCEL GRPB____PSEUDTBLB____]/

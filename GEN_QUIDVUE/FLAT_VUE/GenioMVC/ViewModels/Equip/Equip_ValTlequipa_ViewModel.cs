@@ -1,11 +1,11 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text.Json.Serialization;
 
 using CSGenio.business;
 using CSGenio.framework;
@@ -18,6 +18,7 @@ namespace GenioMVC.ViewModels.Equip
 {
 	public class Equip_ValTlequipa_ViewModel : ViewModelBase
 	{
+		[JsonPropertyName("table")]
 		public TablePartial<Models.TimelineItem> Menu { get; set; }
 
 		/// <summary>
@@ -32,7 +33,8 @@ namespace GenioMVC.ViewModels.Equip
 		[JsonIgnore]
 		public Models.ModelBase ParentCtx { get; set; }
 
-		public string Uuid { get => "Equip_ValTlequipa"; }
+		[JsonPropertyName("uuid")]
+		public string Uuid => "Equip_ValTlequipa";
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Equip_ValTlequipa_ViewModel" /> class.
@@ -64,14 +66,14 @@ namespace GenioMVC.ViewModels.Equip
 
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 
 			tableConfig.RowsPerPage = numberListItems;
 
 			Load(tableConfig, requestValues, ajaxRequest, isToExport, ref Qlisting, ref conditions);
 		}
 
-		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
 			List<Models.TimelineItem> listing = null;
 			CriteriaSet conditions = null;
@@ -81,7 +83,7 @@ namespace GenioMVC.ViewModels.Equip
 		public static Expression<Func<CSGenioAvisit, string>> backgroundColorconditionVISITAS = p => "RGB(0,255,0)";
 		Func<CSGenioAvisit, string> backgroundColorVISITAS = backgroundColorconditionVISITAS.Compile();
 
-		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
+		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref List<Models.TimelineItem> Qlisting, ref CriteriaSet conditions)
 		{
 			if (ajaxRequest)
 				this.Navigation.SetValue("requestValues" + "Equip_ValTlequipa", requestValues);
@@ -170,17 +172,15 @@ namespace GenioMVC.ViewModels.Equip
 				if (Qfield.FullName.Equals("visit.title"))
 				{
 					var fieldType = FieldType.TEXT;
-					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Título", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
+					Models.TimelineColumn column = new() { Titulo = "Título", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 1, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-
 				}
 
 				if (Qfield.FullName.Equals("visit.observat"))
 				{
 					var fieldType = FieldType.TEXT;
-					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Observações", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 2, fieldType = fieldType.ToString() };
+					Models.TimelineColumn column = new() { Titulo = "Observações", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 2, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-
 				}
 			}
 
@@ -240,33 +240,29 @@ namespace GenioMVC.ViewModels.Equip
 				if (Qfield.FullName.Equals("repar.nrrepara"))
 				{
 					var fieldType = FieldType.NUMERIC;
-					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "N.º reparação na Empresa", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
+					Models.TimelineColumn column = new() { Titulo = "N.º reparação na Empresa", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 3, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-
 				}
 
 				if (Qfield.FullName.Equals("repar.descript"))
 				{
 					var fieldType = FieldType.MEMO;
-					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Descrição da reparação", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 4, fieldType = fieldType.ToString() };
+					Models.TimelineColumn column = new() { Titulo = "Descrição da reparação", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 4, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-
 				}
 
 				if (Qfield.FullName.Equals("pesso.name"))
 				{
 					var fieldType = FieldType.TEXT;
-					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Nome", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 5, fieldType = fieldType.ToString() };
+					Models.TimelineColumn column = new() { Titulo = "Nome", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 5, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-
 				}
 
 				if (Qfield.FullName.Equals("speci.especial"))
 				{
 					var fieldType = FieldType.TEXT;
-					Models.TimelineColumn column = new Models.TimelineColumn { Titulo = "Especialidade", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 6, fieldType = fieldType.ToString() };
+					Models.TimelineColumn column = new() { Titulo = "Especialidade", Valor = Conversion.internal2String(Qfield.Value, fieldType), Icone = "", Order = 6, fieldType = fieldType.ToString() };
 					model.Columns.Add(column);
-
 				}
 			}
 

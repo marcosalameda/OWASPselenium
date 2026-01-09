@@ -1,5 +1,5 @@
 ﻿
-
+ 
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -121,14 +121,15 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
-			info.ChildTable = new ChildRelation[7];
+			info.ChildTable = new ChildRelation[8];
 			info.ChildTable[0]= new ChildRelation("regio", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
 			info.ChildTable[1]= new ChildRelation("airpt", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[3]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
-			info.ChildTable[4]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
-			info.ChildTable[5]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
-			info.ChildTable[6]= new ChildRelation("facil", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("search", new String[] {"codpais"}, DeleteProc.NA);
+			info.ChildTable[3]= new ChildRelation("cmpny", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[4]= new ChildRelation("indoc", new String[] {"codcntry"}, DeleteProc.NA);
+			info.ChildTable[5]= new ChildRelation("propr", new String[] {"codcntry","codpais1"}, DeleteProc.NA);
+			info.ChildTable[6]= new ChildRelation("pesso", new String[] {"codpaise","codcntry"}, DeleteProc.NA);
+			info.ChildTable[7]= new ChildRelation("facil", new String[] {"codcntry"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
@@ -359,16 +360,17 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
+		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAcntry search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioAcntry search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAcntry area = new CSGenioAcntry(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields))
+            if (sp.getRecord(area, key, fields, forUpdate))
                 return area;
 			return null;
         }
@@ -428,13 +430,13 @@ namespace CSGenio.business
 
 
 
- 
+
+
 
 
 		// USE /[MANUAL GQT TABAUX CNTRY]/
 
      
-
         
 
 	}

@@ -5,10 +5,10 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DefineConstants>DEBUG;TRACE;NOMVC;MAL;NOGER;</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;NOMVC;MAL;AI;NOGER;</DefineConstants>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DefineConstants>TRACE;NOMVC;MAL;NOGER;</DefineConstants>
+    <DefineConstants>TRACE;NOMVC;MAL;AI;NOGER;</DefineConstants>
   </PropertyGroup>
   
   <!--<PropertyGroup>
@@ -27,6 +27,7 @@
     <PackageReference Include="QRCoder">
       <Version>1.4.1</Version>
     </PackageReference>
+    <PackageReference Include="Fido2" Version="4.0.0" />
 <!-- USE /[MANUAL GQT REFEREN]/ -->
   </ItemGroup>
   <ItemGroup>

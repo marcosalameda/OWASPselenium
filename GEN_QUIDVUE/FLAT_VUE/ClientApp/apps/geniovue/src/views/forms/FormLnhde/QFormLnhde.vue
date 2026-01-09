@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="LNHDE"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.LNHDE___PEDIDNRPEDIDO.isVisible || controls.LNHDE___LNHPDLINE____.isVisible || controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible || controls.LNHDE___LNHDEQUANTDEC.isVisible">
-					<q-control-wrapper
-						v-show="controls.LNHDE___PEDIDNRPEDIDO.isVisible || controls.LNHDE___LNHPDLINE____.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.LNHDE___PEDIDNRPEDIDO.isVisible || controls.LNHDE___LNHPDLINE____.isVisible || controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible || controls.LNHDE___LNHDEQUANTDEC.isVisible">
+					<q-col
+						v-if="controls.LNHDE___PEDIDNRPEDIDO.isVisible || controls.LNHDE___LNHPDLINE____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LNHDE___PEDIDNRPEDIDO.isVisible"
 							class="i-text"
 							v-bind="controls.LNHDE___PEDIDNRPEDIDO"
 							v-on="controls.LNHDE___PEDIDNRPEDIDO.handlers"
@@ -112,6 +121,7 @@
 								v-on="controls.LNHDE___PEDIDNRPEDIDO.handlers" />
 						</base-input-structure>
 						<base-input-structure
+							v-if="controls.LNHDE___LNHPDLINE____.isVisible"
 							class="i-text"
 							v-bind="controls.LNHDE___LNHPDLINE____"
 							v-on="controls.LNHDE___LNHPDLINE____.handlers"
@@ -127,11 +137,12 @@
 								v-bind="controls.LNHDE___LNHPDLINE____.seeMoreParams"
 								v-on="controls.LNHDE___LNHPDLINE____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible || controls.LNHDE___LNHDEQUANTDEC.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LNHDE___LNHDEORDEM___.isVisible || controls.LNHDE___TPEQ1TIPOEQUI.isVisible || controls.LNHDE___LNHDEQUANTIDA.isVisible || controls.LNHDE___LNHDEQUANTDEC.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LNHDE___LNHDEORDEM___.isVisible"
 							class="i-text"
 							v-bind="controls.LNHDE___LNHDEORDEM___"
 							v-on="controls.LNHDE___LNHDEORDEM___.handlers"
@@ -144,6 +155,7 @@
 								@update:model-value="model.ValOrdem.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
+							v-if="controls.LNHDE___TPEQ1TIPOEQUI.isVisible"
 							class="i-text"
 							v-bind="controls.LNHDE___TPEQ1TIPOEQUI"
 							v-on="controls.LNHDE___TPEQ1TIPOEQUI.handlers"
@@ -160,6 +172,7 @@
 								v-on="controls.LNHDE___TPEQ1TIPOEQUI.handlers" />
 						</base-input-structure>
 						<base-input-structure
+							v-if="controls.LNHDE___LNHDEQUANTIDA.isVisible"
 							class="i-text"
 							v-bind="controls.LNHDE___LNHDEQUANTIDA"
 							v-on="controls.LNHDE___LNHDEQUANTIDA.handlers"
@@ -172,6 +185,7 @@
 								@update:model-value="model.ValQuantida.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
+							v-if="controls.LNHDE___LNHDEQUANTDEC.isVisible"
 							class="i-text"
 							v-bind="controls.LNHDE___LNHDEQUANTDEC"
 							v-on="controls.LNHDE___LNHDEQUANTDEC.handlers"
@@ -183,13 +197,14 @@
 								v-bind="controls.LNHDE___LNHDEQUANTDEC.props"
 								@update:model-value="model.ValQuantdec.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.LNHDE___LNHDECODE____.isVisible">
-					<q-control-wrapper
-						v-show="controls.LNHDE___LNHDECODE____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.LNHDE___LNHDECODE____.isVisible">
+					<q-col
+						v-if="controls.LNHDE___LNHDECODE____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LNHDE___LNHDECODE____.isVisible"
 							class="i-text"
 							v-bind="controls.LNHDE___LNHDECODE____"
 							v-on="controls.LNHDE___LNHDECODE____.handlers"
@@ -201,13 +216,14 @@
 								@blur="onBlur(controls.LNHDE___LNHDECODE____, model.ValCode.value)"
 								@change="model.ValCode.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.LNHDE___LNHDEDESCRIPT.isVisible">
-					<q-control-wrapper
-						v-show="controls.LNHDE___LNHDEDESCRIPT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.LNHDE___LNHDEDESCRIPT.isVisible">
+					<q-col
+						v-if="controls.LNHDE___LNHDEDESCRIPT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LNHDE___LNHDEDESCRIPT.isVisible"
 							class="i-textarea"
 							v-bind="controls.LNHDE___LNHDEDESCRIPT"
 							v-on="controls.LNHDE___LNHDEDESCRIPT.handlers"
@@ -219,13 +235,14 @@
 								v-bind="controls.LNHDE___LNHDEDESCRIPT.props"
 								v-on="controls.LNHDE___LNHDEDESCRIPT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.LNHDE___LNHDEURL_____.isVisible">
-					<q-control-wrapper
-						v-show="controls.LNHDE___LNHDEURL_____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.LNHDE___LNHDEURL_____.isVisible">
+					<q-col
+						v-if="controls.LNHDE___LNHDEURL_____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LNHDE___LNHDEURL_____.isVisible"
 							class="i-text"
 							v-bind="controls.LNHDE___LNHDEURL_____"
 							v-on="controls.LNHDE___LNHDEURL_____.handlers"
@@ -237,24 +254,27 @@
 								@blur="onBlur(controls.LNHDE___LNHDEURL_____, model.ValUrl.value)"
 								@change="model.ValUrl.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.LNHDE___PSEUDLNPROPS_.isVisible">
-					<q-control-wrapper
-						v-show="controls.LNHDE___PSEUDLNPROPS_.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.LNHDE___PSEUDLNPROPS_.isVisible">
+					<q-col
+						v-if="controls.LNHDE___PSEUDLNPROPS_.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.LNHDE___PSEUDLNPROPS_.isVisible"
+							v-if="controls.LNHDE___PSEUDLNPROPS_.isVisible"
 							v-bind="controls.LNHDE___PSEUDLNPROPS_"
-							v-on="controls.LNHDE___PSEUDLNPROPS_.handlers" />
+							v-on="controls.LNHDE___PSEUDLNPROPS_.handlers">
 						<q-table-extra-extension
+							v-if="controls.LNHDE___PSEUDLNPROPS_.isVisible"
 							:list-ctrl="controls.LNHDE___PSEUDLNPROPS_"
 							:filter-operators="controls.LNHDE___PSEUDLNPROPS_.filterOperators"
 							v-on="controls.LNHDE___PSEUDLNPROPS_.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE LNHDE___PSEUDLNPROPS_]/ -->
+						</q-table>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -263,7 +283,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -272,6 +292,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -283,12 +304,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -308,7 +329,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormLnhdeViewModel.js'
 
@@ -388,7 +409,8 @@
 					primaryKey: 'ValCodlnhde',
 					designation: computed(() => this.Resources.DISAGGREGATION_LINE06730),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -496,7 +518,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -746,7 +772,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 10,
-						labelId: 'label_LNHDE___LNHDECODE____',
 						controlLimits: [
 						],
 					}, this),
@@ -774,7 +799,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 250,
-						labelId: 'label_LNHDE___LNHDEURL_____',
 						controlLimits: [
 						],
 					}, this),
@@ -813,8 +837,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -1079,11 +1102,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1093,7 +1114,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1103,7 +1124,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1123,19 +1144,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1156,7 +1191,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1176,19 +1211,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1207,11 +1256,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1221,7 +1268,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1229,8 +1276,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1238,7 +1283,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1246,8 +1291,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1255,7 +1298,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1263,11 +1306,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1277,7 +1318,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1287,7 +1328,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1348,6 +1389,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LNHDE]/
 // eslint-disable-next-line

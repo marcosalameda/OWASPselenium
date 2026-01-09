@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_1211]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_1211ViewModel.js'
 
@@ -275,8 +276,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -377,6 +377,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_12111',
 								name: 'form-COMOD',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -386,7 +387,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'COMOD',
+									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'COMOD'
 								}
 							},
 							formsDefinition: {
@@ -407,28 +408,25 @@
 							{
 								id: 'filter_GQT_Menu_1211_DEVOLUCAO',
 								isMultiple: false,
-								filters: [
+								items: [
 									{
 										id: 'filter_GQT_Menu_1211_DEVOLUCAO_1',
-										key: '1',
 										value: computed(() => this.Resources.FOR_RETURNING61907),
-										selected: true
+										key: '1'
 									},
 									{
 										id: 'filter_GQT_Menu_1211_DEVOLUCAO_2',
-										key: '2',
 										value: computed(() => this.Resources.RETURNED01606),
-										selected: false
+										key: '2'
 									},
 									{
 										id: 'filter_GQT_Menu_1211_DEVOLUCAO_3',
-										key: '3',
 										value: computed(() => this.Resources.ALL38603),
-										selected: false
+										key: '3'
 									},
 								],
-								value: '1',
-								defaultValue: '1'
+								selected: '1',
+								default: '1'
 							},
 						],
 						globalEvents: ['changed-LENDI', 'changed-EQUIP', 'changed-PESS2', 'changed-PESS1'],
@@ -438,7 +436,8 @@
 						/** Menu limits */
 						controlLimits: [
 							/** HM */
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

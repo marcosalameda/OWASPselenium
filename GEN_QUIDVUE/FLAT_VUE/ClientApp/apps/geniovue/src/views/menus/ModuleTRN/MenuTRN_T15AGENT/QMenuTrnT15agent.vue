@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TRN_Menu_T15AGENT]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuTRN_T15AGENTViewModel.js'
 
@@ -206,8 +207,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -308,6 +308,7 @@
 							rowClickAction: {
 								id: 'RCA_TRN_T15PROPERTY',
 								name: 'menu-TRN_T15PROPERTY',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -316,7 +317,7 @@
 											fnValueSelector: (row) => row.ValCodagent
 										},
 									],
-									action: vm.openMenuAction, type: 'menu', menuName: 'TRN_T15PROPERTY',
+									action: vm.openMenuAction, type: 'menu', menuName: 'TRN_T15PROPERTY'
 								}
 							},
 							formsDefinition: {
@@ -336,6 +337,7 @@
 						uuid: '720f7285-9aa3-4645-9fe2-7282bb2d0de1',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

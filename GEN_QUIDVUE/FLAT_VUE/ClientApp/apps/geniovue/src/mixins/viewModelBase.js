@@ -85,6 +85,12 @@ export default class ViewModelBase
 			enumerable: false,
 			writable: true
 		})
+
+		Object.defineProperty(this, 'canSaveWithWarnings', {
+			value: false,
+			enumerable: false,
+			writable: true
+		})
 	}
 
 	/**
@@ -134,7 +140,9 @@ export default class ViewModelBase
 	 */
 	get serverObjModel()
 	{
-		const viewModel = {}
+		const viewModel = {
+			canSaveWithWarnings: this.canSaveWithWarnings
+		}
 
 		for (let modelField in this)
 		{
@@ -337,6 +345,16 @@ export default class ViewModelBase
 			field.setServerWarningMessages(warnings, path)
 		else
 			this.serverWarningMessages.push(...warnings)
+	}
+
+	/**
+	 * Allows saving even when warnings are present.
+	 *
+	 * @param {boolean} enabled - If true, saving is permitted despite warnings.
+	 * @returns {void}
+	 */
+	allowSavingWithWarnings(enabled) {
+		this.canSaveWithWarnings = enabled ?? false
 	}
 
 	/**

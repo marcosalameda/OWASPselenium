@@ -132,7 +132,7 @@ export default {
 			if (menuEntry.RouteName)
 				href = this.linkToRouteName(menuEntry.RouteName, menuEntry.IsForm ? { mode: menuEntry.Mode } : {})
 
-			return href ?? 'javascript:void(0)'
+			return href ?? '#'
 		}
 	}
 }

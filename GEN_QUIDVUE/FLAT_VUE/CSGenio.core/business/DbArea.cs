@@ -571,7 +571,13 @@ namespace CSGenio.business
             else if (isChanged) //Check if changed value already exists, or if from manual entry value cannot be trusted
             {
                 if (Qfield.DefaultValue.existsSequentialValue(this, QPrimaryKey, Qfield.PrefNDup, nDupPrefValue, formCampoPrefNDup, sequentialFieldValue, Qfield.FieldFormat, sp))
-                    needsToBeCalculated = true;
+                {
+                    // Fields with an active Ordering option will be reordered when the value already exists in the database. (method: ReorderOrderingFields)
+                    if(!Qfield.HasOrdering || Qfield.FieldFormat != FieldFormatting.FLOAT)
+                    {
+                        needsToBeCalculated = true;
+                    }
+                }
             }
             //-------------------------
 
@@ -643,6 +649,40 @@ namespace CSGenio.business
         }
 
         /// <summary>
+        /// Fills the internal formulas of the specified field
+        /// </summary>
+        /// <param name="sp">A persistent support with an open connection</param>
+        /// <param name="field">The field</param>
+        /// <param name="fdc">The DB context</param>
+        /// <param name="oldvalues">The old values</param>
+        public void fillInternalOperations(PersistentSupport sp, Field field, FormulaDbContext fdc, Area oldvalues)
+        {
+            if (field.Formula == null)
+                return;
+
+            if (field.Formula is ReplicaFormula)
+            {
+                preencherReplica(sp, field, fdc);
+                return;
+            }
+            if (field.Formula is QueryTableFormula)
+            {
+                preencherConsultaTabela(sp, field);
+                return;
+            }
+            if (field.Formula is InternalOperationFormula)
+            {
+                preencherOperacaoInterna(sp, field, fdc, oldvalues);
+                return;
+            }
+            if (field.Formula is EndPeriodFormula)
+            {
+                preencherFimPeriodo(sp, field);
+                return;
+            }
+        }
+
+        /// <summary>
         /// Preenche todas as formulas internas, ou seja, formulas que só alteram a ficha que
         /// está a ser actualizada. O cálculo é feito pela sequencia em que os fields foram
         /// registados de forma a dar hipótese de respeitar dependencias entre eles.
@@ -652,7 +692,6 @@ namespace CSGenio.business
         /// <param name="fdc">O contexto de fichas posicionadas existente ou null para alocar um apenas localmente</param>
         public void fillInternalOperations(PersistentSupport sp, Area oldvalues, FormulaDbContext fdc = null)
         {
-            //FormulaDbContext fdc = new FormulaDbContext(this);
             if (fdc is null)
             {
                 fdc = new FormulaDbContext(this);
@@ -661,7 +700,6 @@ namespace CSGenio.business
 
             foreach (Field Qfield in Information.DBFieldsList)
             {
-
                 //RS 18.05.2017 updates onde a UserRecord está a false deitam fora todos os calculos de numeros sequenciais, to não estragar o calculo da ficha principal
                 // pela gravação das fichas abaixo que potencialmente podem ter SR ou outras formulas de propagação.
                 // Assim sendo, não vale a pena tentar calcular um number que vai ser deitado fora.
@@ -688,31 +726,182 @@ namespace CSGenio.business
                         insertNameValueField(Qfield.FullName, null);
                 }
 
-                if (Qfield.Formula == null)
-                    continue;
-
-                if (Qfield.Formula is ReplicaFormula)
-                {
-                    preencherReplica(sp, Qfield, fdc);
-                    continue;
-                }
-                if (Qfield.Formula is QueryTableFormula)
-                {
-                    preencherConsultaTabela(sp, Qfield);
-                    continue;
-                }
-                if (Qfield.Formula is InternalOperationFormula)
-                {
-                    preencherOperacaoInterna(sp, Qfield, fdc, oldvalues);
-                    continue;
-                }
-                if (Qfield.Formula is EndPeriodFormula)
-                {
-                    preencherFimPeriodo(sp, Qfield);
-                    continue;
-                }
+                fillInternalOperations(sp, Qfield, fdc, oldvalues);
             }
 		}
+
+        /// <summary>
+        /// Determines whether an ordering value already exists for another record in the same scope.
+        /// If a non-duplicating prefix field is provided, the check is constrained to that group.
+        /// The current record (identified by <paramref name="primaryKeyValue"/>) is excluded.
+        /// </summary>
+        /// <param name="area">Area</param>
+        /// <param name="sp">The current <see cref="PersistentSupport"/> context.</param>
+        /// <param name="primaryKeyValue">Primary key of the current record.</param>
+        /// <param name="orderingField">Name of the ordering field.</param>
+        /// <param name="orderingValue">Ordering value to check.</param>
+        /// <param name="prefixField">Optional prefix field to constrain the scope.</param>
+        /// <param name="prefixValue">Optional prefix value to constrain the scope.</param>
+        /// <returns>
+        /// <c>true</c> if another record with a different primary key already has the same ordering value
+        /// within the applicable scope; otherwise <c>false</c>.
+        /// </returns>
+        public bool ExistsOrderingValue(IArea area, PersistentSupport sp, object primaryKeyValue, string orderingField, object orderingValue, string prefixField = null, object prefixValue = null)
+        {
+            // ── Guard clauses ─────────────────────────────────────────────────────────────-
+            if (area == null) throw new ArgumentNullException(nameof(area));
+            if (sp == null) throw new ArgumentNullException(nameof(sp));
+            if (string.IsNullOrWhiteSpace(orderingField))
+                throw new ArgumentException("Ordering field name must be provided.", nameof(orderingField));
+
+            try
+            {
+                CriteriaSet where = CriteriaSet.And()
+                    .Equal(area.TableName, orderingField, orderingValue)
+                    .NotEqual(area.TableName, area.PrimaryKeyName, primaryKeyValue);
+
+                // Apply prefix scoping whenever a prefix field is supplied.
+                if (!string.IsNullOrEmpty(prefixField))
+                {
+                    var prefixFieldObj = area.DBFields[prefixField];
+                    object prefixRealValue = prefixFieldObj.isKey() && prefixFieldObj.isEmptyValue(prefixValue) ? null : QueryUtils.ToValidDbValue(prefixValue, prefixFieldObj);
+                    // For key fields, an empty prefix means 'no value', so we normalise it to null
+                    // to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
+                    // prefix to a database-safe value (e.g. Guid) before applying the equality filter.
+                    where.Equal(area.TableName, prefixField, prefixRealValue);
+                }
+
+                SelectQuery qs = new SelectQuery()
+                    .Select(area.TableName, area.PrimaryKeyName)
+                    .From(area.QSystem, area.TableName, area.TableName)
+                    .Where(where);
+
+                object value = sp.ExecuteScalar(qs);
+
+                return value is not null and not DBNull;
+            }
+            catch (Exception ex)
+            {
+                var userMessage = (ex as GenioException)?.UserMessage;
+                throw new BusinessException(
+                    userMessage, 
+                    nameof(ExistsOrderingValue),
+                    $"Error checking ordering duplication - [area]={area}; [pk]={primaryKeyValue}; " +
+                    $"[field]={orderingField}; [value]={orderingValue}; " +
+                    $"[prefixField]={prefixField}; [prefixValue]={prefixValue}; " +
+                    $"[sp] {sp}; Exception message: {ex.Message}",
+                    ex);
+            }
+        }
+
+        /// <summary>
+        /// Applies sequence re-ordering for all fields marked with the “Order” option.
+        /// If a non-duplication (scoping) prefix exist, re-ordering is constrained to that group. 
+        /// When the prefix changes, the previous group is re-ordered to close any gap.
+        /// Notes:
+        /// - Ordering is 1-based (positions must be >= 1).
+        /// - Re-ordering occurs only on collision; oversize or invalid requests are ignored.
+        /// - Decimal values are truncated; ordering is effectively integer-only.
+        /// - Pseudo-new records (Zzstate == 1) are ignored.
+        /// - An empty prefix represents its own distinct “empty” group and is also re-sequenced.
+        /// - If there is no previous values (oldValues == null), the old group is not re-sequenced.
+        ///
+        /// TODO: To achieve optimization and reduce query repetition, this method should become part of «fillInternalOperations» 
+        /// and be merged with the default calculations. When sequential numbering is active, 
+        /// it is automatically excluded if the number already exists, a reorder is performed; otherwise, the default value prevails.
+        /// </summary>
+        /// <param name="sp">The current <see cref="PersistentSupport"/> context.</param>
+        /// <param name="oldValues">
+        /// Previous persisted values for this record (when available). 
+        /// When <c>null</c>, the incoming order is still treated as a change for collision resolution,
+        /// but the previous prefix is unknown so no “old scope” clean-up is attempted.
+        /// </param>
+        private void ReorderOrderingFields(PersistentSupport sp, Area oldValues)
+        {
+            // Pseudo-new rows are not processed here. They are typically inserted prior to
+            // opening the UI, and may temporarily carry negative order values.
+            if (Zzstate == 1) // TODO: check if missing «&& UserRecord == true» ??
+                return;
+
+            // Only numeric “ordering” fields are relevant.
+            var orderingFields = Information.DBFieldsList
+                .Where(field => field.HasOrdering && field.FieldFormat == FieldFormatting.FLOAT);
+
+            foreach (Field field in orderingFields)
+            {
+                // Fetch raw decimals; returnValueField guarantees decimal (0m when empty).
+                decimal currentRaw = (decimal)returnValueField(field.FullName);
+                decimal previousRaw = (decimal)(oldValues?.returnValueField(field.FullName) ?? field.GetValorEmpty());
+
+                // Decimal order values are not supported;
+                // Convert to integer positions by truncation (no rounding surprises)
+                int previousPosition = (int)decimal.Truncate(previousRaw);
+                int requestedPosition = (int)decimal.Truncate(currentRaw);
+
+                // Validate the requested (new) position. Order is 1-based; values below 1 are invalid.
+                if (requestedPosition < 1)
+                    continue; // Nothing to reorder.
+
+                // If there are no previous values (oldValues == null)
+                bool hasPreviousValues = oldValues != null;
+
+                // Treat as “changed” only when a previous value exists and differs.
+                bool valueChanged = hasPreviousValues && !requestedPosition.Equals(previousPosition);
+
+                // Determine the non-duplicate prefix scope, if any, and whether it changed.
+                object currentPrefix = null;
+                object oldPrefix = null;
+                bool prefixChanged = false;
+                FieldFormatting prefixFieldFormat = FieldFormatting.CARACTERES;
+
+                if (!string.IsNullOrEmpty(field.PrefNDup))
+                {
+                    // Read current and previous prefix values and field format
+                    prefixFieldFormat = returnFormattingDBField(field.PrefNDup);
+                    currentPrefix = returnValueField(Alias + "." + field.PrefNDup);
+                    oldPrefix = oldValues?.returnValueField(Alias + "." + field.PrefNDup) ?? Field.GetValorEmpty(prefixFieldFormat);
+
+                    bool currentEmpty = Field.isEmptyValue(currentPrefix, prefixFieldFormat);
+                    bool oldEmpty = Field.isEmptyValue(oldPrefix, prefixFieldFormat);
+
+                    // Compare only if at least one side is non-empty.
+                    if (!currentEmpty || !oldEmpty)
+                    {
+                        // Compare with case-insensitivity for strings; otherwise, value equality.
+                        // There was a case where the non-duplication prefix, which came from a FK field by an arithmetic formula, had a different case.
+                        bool different = prefixFieldFormat == FieldFormatting.CARACTERES
+                            ? !string.Equals(currentPrefix as string, oldPrefix as string, StringComparison.InvariantCultureIgnoreCase)
+                            : !Equals(currentPrefix, oldPrefix);
+
+                        // Changed if non-empty -> empty, or non-empty -> different value (case-insensitive for strings).
+                        prefixChanged = (currentEmpty && !oldEmpty) || (!currentEmpty && different);
+                    }
+                }
+
+                // Check whether another record already occupies the requested position within the scope.
+                // When true, a shift of the existing sequence is required.
+                bool valueAlreadyExists = ExistsOrderingValue(this, sp, QPrimaryKey, field.Name, requestedPosition, field.PrefNDup, currentPrefix);
+
+                // Re-order only when the value changed AND there is a collision to resolve.
+                // If there is no collision (e.g., oversize -> append), do not shift the sequence.
+                // For system inserts (UserRecord == false) with no previous state, treat as change too.
+                if (valueAlreadyExists && (valueChanged || (!UserRecord && !hasPreviousValues)))
+                {
+                    ReorderByField(field, sp, previousPosition, requestedPosition);
+                }
+
+                // If the non-duplicate prefix changed, close any gap left behind in the old scope.
+                if (prefixChanged && hasPreviousValues)
+                {
+                    var prefixField = DBFields[field.PrefNDup];
+                    object prefixRealValue = prefixField.isKey() && prefixField.isEmptyValue(oldPrefix) ? null : QueryUtils.ToValidDbValue(oldPrefix, prefixField);
+                    // For key fields, an empty prefix means 'no value', so we normalise it to null
+                    // to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
+                    // prefix to a database-safe value (e.g. Guid) before applying the equality filter.
+                    sp.ReorderSequence(this, field, CriteriaSet.And().Equal(field.PrefNDup, prefixRealValue));
+                }
+            }
+        }
 
 		/// <summary>
         /// Verifica se a condição to não recalcular está activa.
@@ -764,7 +953,7 @@ namespace CSGenio.business
 
             object ct = null; //result
             Field dateInfo = DBFields[formula.FilledDateFields];
-            object dateValue = returnValueField(dateInfo.FullName);            
+            object dateValue = returnValueField(dateInfo.FullName);
             //se o valor do campo e null
             if (!dateInfo.isEmptyValue(dateValue))
             {
@@ -783,8 +972,8 @@ namespace CSGenio.business
                             object group2Value = returnValueField(group2Info.FullName);
                             if (!group2Info.isEmptyValue(group2Value))//se não existe valor, nao ha nada para mudar
                             {
-                                ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat, 
-                                    group1Value, group1Info.FieldType.GetFormatting(), 
+                                ct = formula.getGroupedCTValue(dateValue, dateInfo.FieldFormat,
+                                    group1Value, group1Info.FieldType.GetFormatting(),
                                     group2Value, group2Info.FieldType.GetFormatting(),
                                     sp);
                             }
@@ -973,9 +1162,9 @@ namespace CSGenio.business
                 foreach (string Qfield in arg.ConsultedFields)
                     valoresCalculados.Add(DBFields[Qfield].GetValorEmpty());
 
-            //nao actualizar se todos os valores de destino forem iguais aos valores calculados            
+            //nao actualizar se todos os valores de destino forem iguais aos valores calculados
             var readArea = context.ReadRecord(arg.AliasRUV, relationValue as string, sp);
-            bool needsUpdate = false;            
+            bool needsUpdate = false;
             for(int i = 0; i < arg.ConsultedFields.Length; i++)
                 if(!valoresCalculados[i].Equals(readArea.returnValueField(readArea.Alias + "." + arg.LVRFields[i])))
                 {
@@ -1007,7 +1196,7 @@ namespace CSGenio.business
                 Field Qfield = DBFields[campoFp];
                 EndPeriodFormula formula = (EndPeriodFormula)Qfield.Formula;
 
-                formula.DeterminePropagation(sp, deleted ? null : this, oldvalues, (string alias, string pk, Area newrow, Area oldrow) 
+                formula.DeterminePropagation(sp, deleted ? null : this, oldvalues, (string alias, string pk, Area newrow, Area oldrow)
                     => auxActualizaFimPeriodo(context, sp, Qfield, formula, pk));
             }
         }
@@ -1053,15 +1242,12 @@ namespace CSGenio.business
 
         private void AuxUpdateSr(FormulaDbContext context, PersistentSupport sp, RelatedSumArgument argSR, string areaTarget, string valorRel, decimal diff)
         {
+            //SR requires the oldvalues freshly read, so it can apply the correct increment
+            var readRow = context.ReadRecord(areaTarget, valorRel, sp);
             Area other = context.UpdateRecord(areaTarget, valorRel);
             var srFieldName = other.Alias + "." + argSR.SRField;
+            other.insertNameValueField(srFieldName, readRow.returnValueField(srFieldName));
 
-            //if the field is not already set in the target record we need to fetch it from the database values
-            if (!other.Fields.ContainsKey(argSR.SRField))
-            {
-                var dboutra = context.ReadRecord(areaTarget, valorRel, sp);
-                other.insertNameValueField(srFieldName, dboutra.returnValueField(srFieldName));
-            }
             decimal valorSR = Convert.ToDecimal(other.returnValueField(srFieldName));
             if (argSR.Signal == '+')
                 valorSR += diff;
@@ -1151,26 +1337,30 @@ namespace CSGenio.business
                     Field campoReplica = DBFields[Information.FieldsParametersReplicas[i]];
                     object valorReplica = returnValueField(Alias + "." + campoReplica.Name);
                     object oldReplica = oldValues.returnValueField(Alias + "." + campoReplica.Name);
-                    //só propaga se o Qvalue mudou
-                    if (!valorReplica.Equals(oldReplica))
+                    //If the calculated value is the same, skip update
+                    if (valorReplica.Equals(oldReplica))
                     {
-                        foreach (ReplicaDestination target in campoReplica.ReplicaDestinationList)
+                        continue;
+                    }
+                    
+                    foreach (ReplicaDestination target in campoReplica.ReplicaDestinationList)
+                    {
+                        UpdateQuery uq = null;
+                        updates.TryGetValue(target.ReplicaDestinationTable+"_"+target.ForeignKey, out uq);
+                        if (uq == null)
                         {
-                            UpdateQuery uq = null;
-                            updates.TryGetValue(target.ReplicaDestinationTable+"_"+target.ForeignKey, out uq);
-                            if (uq == null)
-                            {
-                                // MH (25/09/2017) - Alterado to utilizar "destino.TabelaDestinoReplica" em vez do "Alias"  no Where do UpdateQuery.
-                                // Alias referencia a table atual e não a table que vamos change. Ex: Alias: "factura" e TargetTable: "linhas da fatura".
-                                uq = new UpdateQuery().Update(target.ReplicaDestinationSystem, target.ReplicaDestinationTable)
-                                    .Where(CriteriaSet.And().Equal(target.ReplicaDestinationTable, target.ForeignKey, QPrimaryKey));
-                                updates.Add(target.ReplicaDestinationTable+"_"+target.ForeignKey, uq);
-                            }
-
-                            uq.Set(target.ReplicaTargetFields, ((campoReplica.FieldType == FieldType.KEY_GUID || campoReplica.FieldType == FieldType.KEY_GUID || campoReplica.FieldType == FieldType.KEY_GUID) && String.Equals(valorReplica, "")) ?
-                                    null :
-                                    valorReplica);
+                            // MH (25/09/2017) - Alterado to utilizar "destino.TabelaDestinoReplica" em vez do "Alias"  no Where do UpdateQuery.
+                            // Alias referencia a table atual e não a table que vamos change. Ex: Alias: "factura" e TargetTable: "linhas da fatura".
+                            uq = new UpdateQuery().Update(target.ReplicaDestinationSystem, target.ReplicaDestinationTable)
+                                .Where(CriteriaSet.And().Equal(target.ReplicaDestinationTable, target.ForeignKey, QPrimaryKey));
+                            updates.Add(target.ReplicaDestinationTable + "_" + target.ForeignKey, uq);
                         }
+
+                        //Empty key replicas should be set to null
+                        if (campoReplica.isKey() && campoReplica.isEmptyValue(valorReplica))
+                            valorReplica = null;
+
+                        uq.Set(target.ReplicaTargetFields, valorReplica);
                     }
                 }
 
@@ -1437,12 +1627,12 @@ namespace CSGenio.business
         /// Método to eliminate um registo
         /// </summary>
         /// <param name="sp">Persistent support</param>
-        /// <param name="sp">The root record that originated the deletion. Pass self otherwise</param>
+        /// <param name="rootRecord">The root record that originated the deletion. Pass self otherwise</param>
         private void delete(PersistentSupport sp, Area rootRecord)
         {
-            //ler os Qvalues da ficha antiga
-            Area oldvalues = Area.createArea(this.Alias, user, module);
-            sp.getRecord(oldvalues, QPrimaryKey);
+            //obter os valores actuais da base de dados
+            sp.getBookmark(this);
+            Area oldvalues = Area.createFromBookmark(this);
             //durante o apagar os Qvalues novos são sempre iguais aos antigos
             CloneFrom(oldvalues);
 
@@ -1538,7 +1728,7 @@ namespace CSGenio.business
                     //get all the row that need deleting/clearing
                     HashSet<string> pks = new HashSet<string>();
                     SelectQuery query = null;
-                    
+
                     foreach (var field in child.RelatedFields)
                     {
                         SelectQuery subquery = new SelectQuery()
@@ -1703,7 +1893,8 @@ namespace CSGenio.business
                     {
                         try
                         {
-                            bool condResult = condition.ExecuteCondition(this, sp, ConditionToFunctionType(type));
+							var fdc = new FormulaDbContext(this);
+                            bool condResult = condition.ExecuteCondition(this, sp, ConditionToFunctionType(type), fdc);
                             if (!condResult)
                             {
                                 var status = StatusMessage.Error(condition.GetMessage(user));
@@ -1961,18 +2152,10 @@ namespace CSGenio.business
 				}
 
                 //ler os Qvalues da ficha antiga
-                Area oldvalues = Area.createArea(this.Alias, user, module);
-                sp.getRecord(oldvalues, codIntValue, true);
-
                 //garantir que todos os fields estão preenchidos, se o interface não forneceu um Qvalue então usamos o antigo
                 //isto permite ás rotinas seguintes não ter de sistematicamente tentar fazer queries à BD
-                foreach (string key in oldvalues.Fields.Keys)
-				{
-                    if (!Fields.ContainsKey(key))
-					{
-                        Fields[key] = new RequestedField(oldvalues.Fields[key]);
-					}
-				}
+                sp.getBookmark(this);
+                Area oldvalues = Area.createFromBookmark(this);
 
                 //Acontece nos pedidos GET1 com em dbedits com fields dependentes
                 removeFieldsOtherAreas(); //TODO: Não devia ser possivel a área chegar a este estado
@@ -2001,6 +2184,8 @@ namespace CSGenio.business
                 fdc.AddInternalOperations();
                 fdc.AddPropagations();
 				fillInternalOperations(sp, oldvalues, fdc);
+
+                ReorderOrderingFields(sp, oldvalues);
 
                 // validar o registo
                 // (RS 2011.06.30) Quando não é o user a gravar a ficha não devemos validar as outras fichas porque podem ainda estar incompletas
@@ -2232,28 +2417,19 @@ namespace CSGenio.business
         /// Actualiza um registo existente com os dados actuais com validação das regras de business escolhidas no Genio.
         /// </summary>
         /// <param name="sp">O suporte de persistence</param>
-        public override void apply(PersistentSupport sp, bool isGoingBack = false)
+        public override void apply(PersistentSupport sp)
         {
             //ler os Qvalues da ficha antiga
             if (string.IsNullOrEmpty(QPrimaryKey))
             {
                 throw new BusinessException(null, "DbArea.apply", "ChavePrimaria is null.");
             }
-            Area oldvalues = Area.createArea(this.Alias, user, module);
-            sp.getRecord(oldvalues, QPrimaryKey);
 
-            if (!isGoingBack)
-            {
-                //garantir que todos os fields estão preenchidos, se o interface não forneceu um Qvalue então usamos o antigo
-                //isto permite ás rotinas seguintes não ter de sistematicamente tentar fazer queries à BD
-                foreach (string key in oldvalues.Fields.Keys)
-                {
-                    if (!Fields.ContainsKey(key))
-                    {
-                        Fields[key] = new RequestedField(oldvalues.Fields[key]);
-                    }
-                }
-            }
+            //ler os Qvalues da ficha antiga
+            //garantir que todos os fields estão preenchidos, se o interface não forneceu um Qvalue então usamos o antigo
+            //isto permite ás rotinas seguintes não ter de sistematicamente tentar fazer queries à BD
+            sp.getBookmark(this);
+            Area oldvalues = Area.createFromBookmark(this);
 
             //Acontece nos pedidos GET1 com em dbedits com fields dependentes
             removeFieldsOtherAreas(); //TODO: Não devia ser possivel a área chegar a este estado
@@ -2266,6 +2442,8 @@ namespace CSGenio.business
             fdc.AddInternalOperations();
             fdc.AddPropagations();
             fillInternalOperations(sp, oldvalues, fdc);
+
+            ReorderOrderingFields(sp, oldvalues);
 
             var validationResults = Validation.validateFieldsChange(this, sp, User, true);
             if (Zzstate != 0)
@@ -2319,7 +2497,7 @@ namespace CSGenio.business
 			{
 				throw new BusinessException(Translations.Get("O Sistema encontra-se em manutenção! Pedimos desculpa pelo incómodo.", user.Language), "DbArea.change", "In maintenance mode.");
 			}
-			
+
             StatusMessage Qresult = StatusMessage.GetAggregator();
 
             try
@@ -2343,7 +2521,10 @@ namespace CSGenio.business
                 createEmptyFields();
 
                 Zzstate = 1;
-                if(!sp.DatabaseSidePk)
+                //We only calculate a new primary key if are in application side pk's mode, and the pk has not been set yet.
+                //In some cases, batch algorithms need to preallocate pk's so they can pre-fill fk's to the correct values
+                // so, we need to support reaching this point with a Pk already set in the Area record.
+                if(!sp.DatabaseSidePk && string.IsNullOrEmpty(QPrimaryKey))
                     QPrimaryKey = sp.codIntInsertion(this, false);
 
                 if (UserRecord)
@@ -2397,6 +2578,8 @@ namespace CSGenio.business
                 fdc.AddInternalOperations();
                 fdc.AddPropagations();
                 fillInternalOperations(sp, oldvalues, fdc);
+
+                ReorderOrderingFields(sp, oldvalues);
 
                 // validar o registo
                 // (RS 2011.06.30) Quando não é o user a gravar a ficha não devemos validar as outras fichas porque podem ainda estar incompletas
@@ -2555,6 +2738,9 @@ namespace CSGenio.business
                         || campoBD.FieldType == FieldType.ENCRYPTED)
                         camposToZero.Add(campoBD.Alias + "." + campoBD.Name);
                 }
+
+                //all bookmarks must be reset, so duplication works like an insert
+                campoPedido.OldValue = null;
             }
 
             for (int i = 0; i < camposToZero.Count; i++)
@@ -2576,6 +2762,10 @@ namespace CSGenio.business
 
             foreach (var fieldGroup in fieldGroups)
             {
+                //If the fields are not from the same area, the model will not be retrieved.
+                if (fieldGroup.Key != this.Alias)
+                    continue;
+					
                 // Initialize the DbArea for the current table
                 DbArea fieldArea = (DbArea)Area.createArea(fieldGroup.Key, User, User.CurrentModule);
 
@@ -2589,7 +2779,7 @@ namespace CSGenio.business
             }
         }
 
-        private List<FieldRef> loadFieldsToUpdate(DbArea area)
+        private List<FieldRef> loadFieldsToUpdate(AreaInfo area)
         {
             /*
             * In this method we only need to reload the values of the Formula
@@ -2663,27 +2853,58 @@ namespace CSGenio.business
                     var filhasParaDuplicar = areasDuplicadas[relacao.TargetTable];
                     string condArea = relacao.AliasTargetTab.ToUpper();
                     foreach (var filha in filhasParaDuplicar)
-                    {                        
-                        DbArea areaChild = (DbArea)Area.createArea(relacao.AliasSourceTab, User, User.CurrentModule);
+                    {
+                        AreaInfo childInfo = Area.GetInfoArea(relacao.AliasSourceTab);
 
                         // Load fields to update on the parent table
-                        modelFieldsToUpdate.AddRange(loadFieldsToUpdate(areaChild));
+                        modelFieldsToUpdate.AddRange(loadFieldsToUpdate(childInfo));
 
                         //RMR(2022-11-11) - If it has more child record to duplicate after, it cannot enforce conditions
-                        bool needsValidation = cascata.Any(x => x.TargetTable == relacao.SourceTable);
-                        var sourceRecords = LoadAndSortRecords(sp, areaChild, relacao, filha.Key);
-                        if (!sourceRecords.Any())
-                            continue;
+                        bool needsValidation = !cascata.Any(x => x.TargetTable == relacao.SourceTable);
+                        var sourceRecords = LoadAndSortRecords(sp, childInfo, relacao, filha.Key);
 
-                        foreach (var dup in sourceRecords)
+                        //filter all the records that actually can be duplicated
+                        var dbRecords = sourceRecords.Where(r =>
+                            !fichasDuplicadas.ContainsKey(r.QPrimaryKey)
+                            && r.ValidateDupConditions(sp, condArea))
+                            .ToList();
+
+                        foreach (var dup in dbRecords)
                         {
-                            if (!fichasDuplicadas.ContainsKey(dup.QPrimaryKey))
+                            dup.NeedsValidation = needsValidation;
+                            dup.UserRecord = this.UserRecord;
+                        }
+
+                        //self referencing tables need to know all the pks before processing each duplication.
+                        //this allows for the self references of early records to be mapped to later records.
+                        bool hasSelfRelations = childInfo.ParentTables.Values.Any(parent => parent.TargetTable == childInfo.TableName);
+                        if (hasSelfRelations)
+                        {
+                            var prealloc_pks = sp.generatePrimaryKey(
+                                childInfo.TableName,
+                                childInfo.PrimaryKeyName,
+                                childInfo.DBFields[childInfo.PrimaryKeyName].FieldSize,
+                                childInfo.KeyType,
+                                dbRecords.Count());
+
+                            for (var i = 0; i < prealloc_pks.Count; i++)
                             {
-                                areaChild = (DbArea) dup;
-                                areaChild.NeedsValidation = needsValidation;
-                                if (areaChild.ValidateDupConditions(sp, condArea)) //Validate Duplicate Conditions
-                                    if (areaChild.duplicarFilha(sp, dup.QPrimaryKey, areasDuplicadas)) //Duplicate Record
-                                        fichasDuplicadas.Add(dup.QPrimaryKey, areaChild.QPrimaryKey);
+                                fichasDuplicadas.Add(dbRecords[i].QPrimaryKey, prealloc_pks[i]);
+                                dbRecords[i].QPrimaryKey = prealloc_pks[i];
+                            }
+
+                            foreach (var dup in dbRecords)
+                                dup.duplicarFilha(sp, areasDuplicadas);
+                        }
+                        //other tables can follow a normal sequence and allocate pk's on demand
+                        else
+                        {
+                            foreach (var dup in dbRecords)
+                            {
+                                var src_pk = dup.QPrimaryKey;
+                                dup.QPrimaryKey = "";
+                                dup.duplicarFilha(sp, areasDuplicadas);
+                                fichasDuplicadas.Add(src_pk, dup.QPrimaryKey);
                             }
                         }
                     }
@@ -2698,11 +2919,11 @@ namespace CSGenio.business
         /// If the table references itself, applies special ordering to handle dependency correctly.
         /// </summary>
         /// <param name="sp">Persistent support</param>
-        /// <param name="area">The child DbArea instance (representing the table to query).</param>
+        /// <param name="area">The child DbArea schema</param>
         /// <param name="relation">Relation metadata between parent and child tables.</param>
         /// <param name="parentKeyValue">The parent key to search</param>
         /// <returns>List of DbArea instances ready for duplication.</returns>
-        private List<Area> LoadAndSortRecords(PersistentSupport sp, DbArea area, Relation relation, string parentKeyValue)
+        private List<DbArea> LoadAndSortRecords(PersistentSupport sp, AreaInfo area, Relation relation, string parentKeyValue)
         {
             Log.Debug($"Loading children {relation.AliasSourceTab} of table {relation.AliasTargetTab}");
 
@@ -2710,16 +2931,22 @@ namespace CSGenio.business
                     Equal(relation.AliasSourceTab, relation.SourceRelField, parentKeyValue);
             var records = searchList(area.Alias, sp, user, criteria);
 
-            // If the table references itself, ensure that the referenced records come before the others
-            foreach (var selfRelation in area.ParentTables.Values.Where(parent => parent.TargetTable == area.TableName))
-            {                   
-                //Fields with no foreign key to self come first
-                records = records
-                    .OrderByDescending(r => string.IsNullOrEmpty(r.returnValueField(selfRelation.SourceRelField).ToString()))
-                    .ToList();
+            var res = records
+                .Select(r => r as DbArea)
+                .Where(r => r is not null && r.Zzstate == 0);
+
+            if (!string.IsNullOrEmpty(area.MainOrderField))
+            {
+                var otype = area.DBFields[area.MainOrderField].FieldType.GetFormatting();
+                if (otype == FieldFormatting.FLOAT || otype == FieldFormatting.INTEIRO)
+                    res = res.OrderBy(x => Convert.ToDecimal(x.returnValueField(area.MainOrderField)));
+                else if (otype == FieldFormatting.DATA || otype == FieldFormatting.DATAHORA || otype == FieldFormatting.DATASEGUNDO)
+                    res = res.OrderBy(x => Convert.ToDateTime(x.returnValueField(area.MainOrderField)));
+                else
+                    res = res.OrderBy(x => x.returnValueField(area.MainOrderField).ToString());
             }
-            
-            return records;
+
+            return res.ToList();
         }
 
 		private List<Relation> CalcularCascataDuplicacao()
@@ -2749,77 +2976,47 @@ namespace CSGenio.business
 		}
 
         /// <summary>
-        /// Função que permite duplicate uma table filha
+        /// Field calculations specific to duplicating a child record
         /// </summary>
-        /// <param name="area">Name da área filha a ser duplicada</param>
-        /// <param name="valorCodInt">Qvalue do código interno da área filha a ser duplicada</param>
-        /// <param name="campoMae">Name da key primária da table mãe</param>
-        /// <param name="valorCampoMae">Qvalue da key primária da table mãe</param>
-        /// <returns>true se a filha foi duplicada, false caso contrário</returns>
-        private bool duplicarFilha(PersistentSupport sp, string codIntValue, Dictionary<string, Dictionary<string, string>> areasDuplicadas)
+        /// <param name="sp">Persistent support</param>
+        /// <param name="areasMapping">Mappings of previously duplicated pks and their new corresponding pk</param>
+        private void duplicarFilha(PersistentSupport sp, Dictionary<string, Dictionary<string, string>> areasMapping)
         {
-            //TODO: falta o suporte to a duplicação em cascata
-            sp.getRecord(this, codIntValue);
-
-            // Last updated by [CJP] at [2016.06.01]
-            // Não deve duplicate os registos filhos com ZZSTATE != 0
-            if (Zzstate != 0)
-                return false;
-
-            //Como é uma duplicação em cascata temos de considerar que é como se fosse o proprio user a introduce as fichas abaixo.
-            //RMR(2022-11-11) - Removed force to true because this is decided in the "tambemDuplica" function, in case it has child to duplicate with conditions
-            //UserRecord = true;
-
-            //actualizar chaves estrangeiras dos Qvalues antigos to os novos
+            //update the foreign keys to the new pk's they should point to
             foreach (var r in this.ParentTables)
             {
                 var acima = r.Value.TargetTable;
-                if (areasDuplicadas.ContainsKey(acima))
+                if (areasMapping.ContainsKey(acima))
                 {
                     string nomeCe = Alias + "." + r.Value.SourceRelField;
                     string valorCeAntigo = this.returnValueField(nomeCe).ToString();
 
-                    areasDuplicadas[acima].TryGetValue(valorCeAntigo, out string valorCeNovo);
-                    if (valorCeNovo != null)
+                    if(areasMapping[acima].TryGetValue(valorCeAntigo, out string valorCeNovo))
                         this.insertNameValueField(nomeCe, valorCeNovo);
                 }
             }
 
-            //zerar os fields declarados com zeroAduplicar
+            //empty the fields declared in the model with zeroDup
             zeroDuplicar();
-            if(!sp.DatabaseSidePk)
-                QPrimaryKey = sp.codIntInsertion(this, false);
 
-            //1 - preencher carimbo
-            fillStampInsert();
+            //insert operation already tries to create the pk. There is no point in doing it here.
 
             //No need to fill the sequencial fields with negative values
             //Since we always want to keep the value when duplicating,
             //Even if the value is empty or invalid, it will be handled next
 
-            //4 - fill defaults on empty fields
-            fillValuesDefault(sp, FunctionType.DUP);
-
-            //5 - operações internas que dependem de números sequenciais
-            fillInternalOperations(sp, null);
-
             //Duplicate docums
             sp.duplicateFilesDB(this);
 
-            // Executes the encryption formulas associated with the fields before saving the value to the database
-            ExecuteFieldValueEncryption(sp);
-            
-            //RS 24.04.2017 Passa a efectuar todas as regras de business durante a duplicação.
+            //process all the business rules of an insertion
             insert(sp);
 
             //with database side pk's the docums Chave field will not have been filled so we need to do it after the insert
             //This is not the best way to update the field "chave" from Docums table.
             //May be, we should not use this field because it creates a bidirectionl relationship with other tables.
-            //There is one place where the field "chave" is used, but it could be unused if we refactory the content of document ticket. 
+            //There is one place where the field "chave" is used, but it could be unused if we refactory the content of document ticket.
             if (sp.DatabaseSidePk)
                 sp.AfterDuplicateFilesDB(this);
-
-            return true;
         }
 
         public virtual bool checkoutDocums(PersistentSupport sp, string docField, out string newcodDocums)
@@ -3293,7 +3490,7 @@ namespace CSGenio.business
                     continue;
 
                 //if we are inside a queue processor don't resend publications that are involved in service loops
-                if (sp.QueueMode && pub.NoReexport) 
+                if (sp.QueueMode && pub.NoReexport)
                     continue;
 
                 //check if this table is part of this publication
@@ -3421,7 +3618,7 @@ namespace CSGenio.business
             {
                 formula = new InternalOperationFormula(
                     formula.ByAreaArguments.Select(a => new ByAreaArguments(
-                        a.FieldNames, 
+                        a.FieldNames,
                         a.FieldsPosition,
                         a.AliasName == mt.Table ? area.Alias : a.AliasName, //switch the base area
                         a.KeyName
@@ -3554,19 +3751,19 @@ namespace CSGenio.business
                         if (!string.IsNullOrEmpty(key))
                         {
                             List<string> cp_list = new List<string>();
-                    
+
                             SelectQuery sqTables1N = new SelectQuery()
                                 .From(mq_area_1N.TableName)
                                 .Where(CriteriaSet.And()
                                     .Equal(mq_area_1N.TableName, area_1N.Field, key)
                                     .Equal(mq_area_1N.TableName, "zzstate", 0));
-                    
+
                             foreach (Field Qfield in mq_area_1N.DBFields.Values.Where(x => x.MQueue)) // Create dinamicamente query com todos os fields necessarios
                             {
                                 cp_list.Add(Qfield.Name);
                                 sqTables1N.Select(mq_area_1N.TableName, Qfield.Name);
                             }
-                    
+
                             DataMatrix list_mq_area_1N = sp.Execute(sqTables1N);
                             for (int i = 0; i < list_mq_area_1N.NumRows; i++)
                             {
@@ -3686,6 +3883,140 @@ namespace CSGenio.business
 
 
             return DBConversion.ToInteger(sp.ExecuteScalar(query)) > 0;
+        }
+
+        /// <summary>
+        /// Generic primitive to re-sequence an ordering field within a partition.
+        /// Adjusts neighbouring rows inside the subset (non duplication prefix, if have)
+        /// to move the current record from <paramref name="currentPosition"/> 
+        /// to <paramref name="newPosition"/>, ensuring a contiguous 1-based sequence is preserved.
+        /// Notes:
+        /// - Oversize requests (newPosition > maxOrder) do not shift the sequence.
+        /// - Positions are 1-based; invalid (<= 0) are ignored.
+        /// - The moved row is temporarily set to 0 to avoid unique/index conflicts during neighbour shifts.
+        /// - The moved row itself can optionally be updated to <paramref name="newPosition"/>
+        ///   if <paramref name="placeMovedRow"/> is true. In typical flows this is not needed,
+        ///   because a subsequent Save/Update will persist the new value anyway, avoiding a redundant UPDATE.
+        /// </summary>
+        /// <param name="orderingField">The ordering field.</param>
+        /// <param name="sp">The current <see cref="PersistentSupport"/> context.</param>
+        /// <param name="currentPosition">
+        /// Current 1-based position of the row in the partition. May be ≤ 0 when the row has no valid
+        /// persisted position (e.g., insert-like flows with temporary values).
+        /// </param>
+        /// <param name="newPosition">Target 1-based position in the partition.</param>
+        /// <param name="placeMovedRow">
+        /// If true, this method explicitly updates the moved row to <paramref name="newPosition"/>.
+        /// If false, only neighbouring rows are re-sequenced, leaving the caller (or subsequent Save/Update)
+        /// to persist the new order. Use false for efficiency when a Save will immediately follow.
+        /// </param>
+        public void ReorderByField(
+            Field orderingField, PersistentSupport sp,
+            int currentPosition, int newPosition, bool placeMovedRow = false)
+        {
+            if (orderingField.Alias != Alias)
+                throw new ArgumentException("Ordering field must belongs to this area.", nameof(orderingField));
+
+            CriteriaSet condition = CriteriaSet.And();
+            ColumnReference orderingFieldColumn = new(Alias, orderingField.Name);
+
+            // 1) Determine the highest order inside the partition (respecting condition).
+            int maxOrder;
+
+            if (!string.IsNullOrEmpty(orderingField.PrefNDup))
+            {
+                var currentPrefix = returnValueField(Alias + "." + orderingField.PrefNDup);
+                var prefixField = DBFields[orderingField.PrefNDup];
+                object prefixRealValue = prefixField.isKey() && prefixField.isEmptyValue(currentPrefix) ? null : QueryUtils.ToValidDbValue(currentPrefix, prefixField);
+                // For key fields, an empty prefix means 'no value', so we normalise it to null
+                // to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
+                // prefix to a database-safe value (e.g. Guid) before applying the equality filter.
+                condition = CriteriaSet.And()
+                    .Equal(Alias, orderingField.PrefNDup, prefixRealValue);
+            }
+
+            try
+            {
+                maxOrder = sp.GetMaxFieldValue(this, orderingField, condition);
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return;
+            }
+
+            // 2) Guard clauses.
+            // Oversize requests do not shift the sequence (leave as-is).
+            if (newPosition > maxOrder)
+                return;
+
+            // No-op when already at target or invalid target (ordering is 1-based).
+            if (newPosition == currentPosition || newPosition < 1)
+                return;
+
+            // 3) Temporarily set moved row to 0 to avoid collisions while neighbours are shifted.
+            if (currentPosition > 0 && currentPosition <= maxOrder)
+            {
+                UpdateQuery up_temp = new UpdateQuery()
+                            .Update(TableName)
+                            .Set(orderingField.Name, 0)
+                            .Where(CriteriaSet.And().Equal(TableName, PrimaryKeyName, QPrimaryKey));
+                sp.Execute(up_temp);
+            }
+
+            // 4) Compute affected range and start position for resequencing.
+            int posLow;
+            int posHigh;
+            int startPos;
+
+            if(currentPosition <= 0)
+            {
+                // Insert-style move: there was no previous valid position.
+                // Shift (newPosition .. maxOrder) down by +1 to open a slot at newPosition.
+                posLow = newPosition;
+                posHigh = maxOrder;
+                startPos = newPosition + 1;
+            }
+            //If new position is greater than previous position
+            else if (newPosition > currentPosition)
+            {
+                // Moving down: shift (currentPosition+1 .. newPosition) up by -1.
+                posLow = currentPosition + 1;
+                posHigh = newPosition;
+                startPos = posLow - 1;
+            }
+            //If new position is less than previous position
+            else
+            {
+                // Moving up: shift (newPosition .. currentPosition-1) down by +1.
+                posLow = newPosition;
+                posHigh = currentPosition - 1;
+                startPos = posLow + 1;
+            }
+
+            CriteriaSet range_condition = CriteriaSet.And();
+            range_condition.SubSet(condition);
+            range_condition.GreaterOrEqual(orderingFieldColumn, posLow);
+            range_condition.LesserOrEqual(orderingFieldColumn, posHigh);
+
+            // 5) Resequence neighbours in the [posLow..posHigh] range within the partition.
+            sp.ReorderSequence(this, orderingField, range_condition, startPos);
+
+            // 6) Optionally place the moved row at its target position.
+            //    Not always necessary: in most cases a subsequent Save/Update operation 
+            //    will persist the new field value anyway. Skipping this avoids an extra 
+            //    UPDATE on the same column, making the operation lighter.
+            if (placeMovedRow)
+            {
+                var upFinal = new UpdateQuery()
+                    .Update(TableName)
+                    .Set(orderingField.Name, newPosition)
+                    .Where(CriteriaSet.And().Equal(TableName, PrimaryKeyName, QPrimaryKey));
+                sp.Execute(upFinal);
+            }
+
+            // 7) Invoke optional callback.
+            orderingField.OnReorder?.Invoke(this, sp, currentPosition, condition);
         }
 	}
 

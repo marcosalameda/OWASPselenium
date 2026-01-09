@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW IMGMAGN]/
 
 		[HttpPost]
-		public ActionResult Imgmagn_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Imgmagn_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Imgmagn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Imgmagn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Imgmagn_Show_GET",
 				AreaName = "wpess",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET IMGMAGN]/
 		[HttpPost]
-		public ActionResult Imgmagn_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Imgmagn_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Imgmagn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Imgmagn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Imgmagn_New_GET",
 				AreaName = "wpess",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Imgmagn_New([FromBody]Imgmagn_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Imgmagn_New",
 				ViewName = "Imgmagn",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET IMGMAGN]/
 		[HttpPost]
-		public ActionResult Imgmagn_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Imgmagn_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Imgmagn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Imgmagn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Imgmagn_Edit_GET",
 				AreaName = "wpess",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Imgmagn_Edit([FromBody]Imgmagn_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Imgmagn_Edit",
 				ViewName = "Imgmagn",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET IMGMAGN]/
 		[HttpPost]
-		public ActionResult Imgmagn_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Imgmagn_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Imgmagn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Imgmagn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Imgmagn_Delete_GET",
 				AreaName = "wpess",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Wpess/Imgmagn_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST IMGMAGN]/
 		[HttpPost]
-		public ActionResult Imgmagn_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Imgmagn_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Imgmagn_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Imgmagn_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Imgmagn_Delete",
 				ViewName = "Imgmagn",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET IMGMAGN]/
 
 		[HttpPost]
-		public ActionResult Imgmagn_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Imgmagn_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Imgmagn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Imgmagn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Imgmagn_Duplicate_GET",
 				AreaName = "wpess",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Imgmagn_Duplicate([FromBody]Imgmagn_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Imgmagn_Duplicate",
 				ViewName = "Imgmagn",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Wpess(UserContext.Current);
+					GenioMVC.Models.Wpess model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("wpess");
 
 // USE /[MANUAL GQT BEFORE_CANCEL IMGMAGN]/

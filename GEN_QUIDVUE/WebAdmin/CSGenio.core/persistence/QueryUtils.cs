@@ -58,7 +58,7 @@ namespace CSGenio.persistence
         /// <returns>The modified SelectQuery. Its the same object it was passed in, just for chaining purposes.</returns>
         public static SelectQuery SelectDatabaseFields(this SelectQuery qs, IArea area, string[] fields = null)
         {
-            if (fields != null && fields.Length > 0)
+            if (fields != null)
             {
                 foreach (string field in fields)
                 {
@@ -104,7 +104,7 @@ namespace CSGenio.persistence
         /// <returns>The modified SelectQuery. Its the same object it was passed in, just for chaining purposes.</returns>
         public static SelectQuery SelectDatabaseFields(this SelectQuery qs, IArea area, FieldRef[] fields)
         {
-            if (fields != null && fields.Length > 0)
+            if (fields != null)
             {
                 foreach (var field in fields)
                 {
@@ -276,23 +276,26 @@ namespace CSGenio.persistence
 
             foreach (var campoPedido in area.Fields.Values)
             {
+                //only save fields that belong to this area
                 if (!area.DBFields.TryGetValue(campoPedido.Name, out var campoBD))
                     continue;
+                //we don't need to update the primary key
+                if (campoPedido.Name.Equals(area.PrimaryKeyName))
+                    continue;
+                //virtual vields do not support updates
+				if (campoBD.IsVirtual)
+                    continue;
+                //skip empty binary fields
+                if ((campoBD.FieldType.Equals(FieldType.IMAGE) || campoBD.FieldType.Equals(FieldType.PATH)
+                    || campoBD.FieldType.Equals(FieldType.MEMO_COMP_RTF))
+                    && (campoBD.isEmptyValue(campoPedido.Value) || campoPedido.Value.ToString().StartsWith("*")))
+                    continue;
 
-                if (!campoPedido.Name.Equals(area.PrimaryKeyName))
-                {
-                    //virtual vields do not support updates
-					if (campoBD.IsVirtual)
-                        continue;
+                //skip non-dirty fields (the value stayed the same from the last know db read)
+                if (!campoPedido.IsDirty())
+                    continue;
 
-                    //skip empty binary fields
-                    if ((campoBD.FieldType.Equals(FieldType.IMAGE) || campoBD.FieldType.Equals(FieldType.PATH)
-                        || campoBD.FieldType.Equals(FieldType.MEMO_COMP_RTF))
-                        && (campoPedido.Value.ToString().Length == 0 || campoPedido.Value.ToString().StartsWith("*")))
-                        continue;
-
-                    query.Set(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
-                }
+                query.Set(campoPedido.Name, ToValidDbValue(campoPedido.Value, campoBD));
             }
         }
 

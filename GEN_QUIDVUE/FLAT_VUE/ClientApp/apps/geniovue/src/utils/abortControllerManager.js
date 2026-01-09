@@ -6,9 +6,9 @@
  */
 export class AbortControllerManager {
 	constructor() {
-		/** 
-		 * @private 
-		 * @type {Map<string, AbortController>} 
+		/**
+		 * @private
+		 * @type {Map<string, AbortController>}
 		 */
 		this.controllers = new Map()
 	}

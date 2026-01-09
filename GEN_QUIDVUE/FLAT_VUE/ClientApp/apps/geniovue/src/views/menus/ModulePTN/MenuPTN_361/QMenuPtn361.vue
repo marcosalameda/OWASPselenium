@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_361]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_361ViewModel.js'
 
@@ -229,8 +230,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -338,7 +338,7 @@
 											},
 										],
 										isRoute: true,
-										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'DESPE',
+										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'DESPE'
 									}
 								},
 							],
@@ -347,6 +347,7 @@
 							rowClickAction: {
 								id: 'RCA_PTN_36111',
 								name: 'form-DESPE',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -372,10 +373,17 @@
 								sortOrder: 'asc'
 							}
 						},
+						actionIDs: [
+							'PTN_3611',
+						],
 						globalEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: '3612ebc8-c028-4cd6-b6af-3c0409fb81ba',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
+					}, this),
+					PTN_3611: new controlClass.ButtonControl({
+						id: 'PTN_3611',
 					}, this),
 				}
 			}

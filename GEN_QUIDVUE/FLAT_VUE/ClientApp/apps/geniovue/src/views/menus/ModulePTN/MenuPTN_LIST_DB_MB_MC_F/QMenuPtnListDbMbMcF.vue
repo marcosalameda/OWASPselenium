@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MB_MC_F]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_MB_MC_FViewModel.js'
 
@@ -203,8 +204,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -226,7 +226,7 @@
 												fnValueSelector: (row) => row.ValCoditem
 											},
 										],
-										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_3811,
+										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_3811
 									}
 								},
 							],
@@ -243,7 +243,7 @@
 										],
 										isControlled: true,
 										isRoute: true,
-										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGVAL',
+										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGVAL'
 									}
 								},
 								{
@@ -258,13 +258,14 @@
 										],
 										isControlled: true,
 										isRoute: true,
-										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGINV',
+										action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ARTIGINV'
 									}
 								},
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_38111',
 								name: 'PTN_MenuMC_3811',
+								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -292,10 +293,17 @@
 								sortOrder: 'asc'
 							}
 						},
+						actionIDs: [
+							'PTN_3811',
+						],
 						globalEvents: ['changed-WAREH', 'changed-GITEM', 'changed-ITEM'],
 						uuid: 'eb2c0e6f-2e0c-46f4-b7e3-9e1ea73e4037',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
+					}, this),
+					PTN_3811: new controlClass.ButtonControl({
+						id: 'PTN_3811',
 					}, this),
 				}
 			}

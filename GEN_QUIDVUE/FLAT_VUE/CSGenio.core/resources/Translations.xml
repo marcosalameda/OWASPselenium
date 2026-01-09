@@ -293,7 +293,7 @@
     <PTPT>Titulo no kpi</PTPT>
     <ENUS>Titulo no kpi</ENUS>
   </msg>
-  <msg id="2ªClasse" code="_2ACLASSE01747">
+  <msg id="2ªClasse" code="_2ACLASSE04789">
     <PTPT>2ªClasse</PTPT>
     <ENUS>2ªClasse</ENUS>
   </msg>
@@ -609,6 +609,9 @@ cdmSchemas:&#91;&quot;/core/applicationCommon/Address.cdm.json/Address/hasAttrib
     <ENUS>ACCORDION</ENUS>
     <PTPT>ACCORDION</PTPT>
   </msg>
+  <msg id="INTERACTION" code="INTERACTION17045">
+    <PTPT>INTERACTION</PTPT>
+  </msg>
   <msg id="Date time" code="DATE_TIME59103">
     <PTPT>Date time</PTPT>
     <ENUS>Date time</ENUS>
@@ -707,7 +710,7 @@ cdmSchemas:&#91;&quot;/core/applicationCommon/Address.cdm.json/Address/hasAttrib
     <PTPT>Property type</PTPT>
     <ENUS>Property type</ENUS>
   </msg>
-  <msg id="100%" code="_100_17544">
+  <msg id="100%" code="_100_61612">
     <ENUS>100%</ENUS>
     <PTPT>100%</PTPT>
   </msg>
@@ -887,7 +890,7 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Billing</ENUS>
     <PTPT>Billing</PTPT>
   </msg>
-  <msg id="1ª Viagem (Enumeração Lógica" code="_1A_VIAGEM__ENUMERAC07656">
+  <msg id="1ª Viagem (Enumeração Lógica" code="_1A_VIAGEM__ENUMERACA14864">
     <PTPT>1ª Viagem (Enumeração Lógica</PTPT>
     <ENUS>1ª Viagem (Enumeração Lógica</ENUS>
   </msg>
@@ -907,7 +910,7 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <PTPT>Comforter</PTPT>
     <ENUS>Comforter</ENUS>
   </msg>
-  <msg id="1. c-groupbox--title-background" code="_1__C_GROUPBOX__TITL45813">
+  <msg id="1. c-groupbox--title-background" code="_1__C_GROUPBOX__TITLE24249">
     <ENUS>1. c-groupbox--title-background</ENUS>
     <PTPT>1. c-groupbox--title-background</PTPT>
   </msg>
@@ -983,6 +986,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Ministry</ENUS>
     <PTPT>Ministry</PTPT>
   </msg>
+  <msg id="Demo 1" code="DEMO_107013">
+    <PTPT>Demo 1</PTPT>
+  </msg>
   <msg id="Scorecoard Type" code="SCORECOARD_TYPE28313">
     <ENUS>Scorecoard Type</ENUS>
     <PTPT>Scorecoard Type</PTPT>
@@ -1049,7 +1055,7 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Row order groups level 1</ENUS>
     <PTPT>Row order groups level 1</PTPT>
   </msg>
-  <msg id="1117" code="_111737822">
+  <msg id="1117" code="_111750451">
     <ENUS>Help in the year field</ENUS>
     <PTPT>Help in the year field</PTPT>
   </msg>
@@ -1073,7 +1079,7 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <PTPT>Object Type</PTPT>
     <ENUS>Object Type</ENUS>
   </msg>
-  <msg id="1115_VERBOSE" code="_1115_VERBOSE27480">
+  <msg id="1115_VERBOSE" code="_1115_VERBOSE01763">
     <PTPT>Help in the text field verbose</PTPT>
     <ENUS>Help in the text field verbose</ENUS>
   </msg>
@@ -1149,6 +1155,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <PTPT>Integration Formula</PTPT>
     <ENUS>Integration Formula</ENUS>
   </msg>
+  <msg id="Component Behaviour" code="COMPONENT_BEHAVIOUR62822">
+    <PTPT>Component Behaviour</PTPT>
+  </msg>
   <msg id="Real Percentage" code="REAL_PERCENTAGE29369">
     <PTPT>Real Percentage</PTPT>
     <ENUS>Real Percentage</ENUS>
@@ -1197,7 +1206,7 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Inactive</ENUS>
     <PTPT>Inactive</PTPT>
   </msg>
-  <msg id="1122" code="_112243720">
+  <msg id="1122" code="_112250974">
     <PTPT>Help in the Menu</PTPT>
     <ENUS>Help in the Menu</ENUS>
   </msg>
@@ -1241,7 +1250,7 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Created in</ENUS>
     <PTPT>Criado em</PTPT>
   </msg>
-  <msg id="1115" code="_111536184">
+  <msg id="1115" code="_111515945">
     <ENUS>Help in the text field</ENUS>
     <PTPT>Help in the text field</PTPT>
   </msg>
@@ -1394,6 +1403,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Passport Number" code="PASSPORT_NUMBER36034">
     <PTPT>Passport Number</PTPT>
   </msg>
+  <msg id="Action" code="ACTION41832">
+    <PTPT>Action</PTPT>
+  </msg>
   <msg id="Perc. Alerta" code="PERC__ALERTA54048">
     <PTPT>Perc. Alerta</PTPT>
     <ENUS>Perc. Alerta</ENUS>
@@ -1449,6 +1461,10 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Económica" code="ECONOMICA05942">
     <ENUS>Económica</ENUS>
     <PTPT>Económica</PTPT>
+  </msg>
+  <msg id="Create Mock Person" code="CREATE_MOCK_PERSON54221">
+    <PTPT>Create Mock Person</PTPT>
+    <ENUS>Create Mock Person</ENUS>
   </msg>
   <msg id="  316" code="__31620801">
     <PTPT>Integra c/ Documental?</PTPT>
@@ -1592,6 +1608,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Geographic coordinate" code="GEOGRAPHIC_COORDINAT21394">
     <ENUS>Geographic coordinate</ENUS>
     <PTPT>Geographic coordinate</PTPT>
+  </msg>
+  <msg id="Real Estate" code="REAL_ESTATE07188">
+    <PTPT>Real Estate</PTPT>
   </msg>
   <msg id=" 1100_VERBOSE" code="_1100_VERBOSE38633">
     <ENUS>District is sometimes known as county, but in some regions &apos;county&apos; is used in place of city (municipality), so county name should be conveyed in city instead.</ENUS>
@@ -1780,6 +1799,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <PTPT>User Authorization</PTPT>
     <ENUS>User Authorization</ENUS>
   </msg>
+  <msg id="Concelho (Pop residente)" code="CONCELHO__POP_RESIDE33410">
+    <PTPT>Concelho (Pop residente)</PTPT>
+  </msg>
   <msg id="Attached:" code="ATTACHED_64932">
     <PTPT>Attached:</PTPT>
     <ENUS>Attached:</ENUS>
@@ -1839,6 +1861,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Number of employees" code="NUMBER_OF_EMPLOYEES52067">
     <ENUS>Number of employees</ENUS>
     <PTPT>Number of employees</PTPT>
+  </msg>
+  <msg id="Component type" code="COMPONENT_TYPE41163">
+    <PTPT>Component type</PTPT>
   </msg>
   <msg id="Manufacturers" code="MANUFACTURERS25464">
     <ENUS>Manufacturers</ENUS>
@@ -1968,100 +1993,8 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <PTPT>Letter color</PTPT>
     <ENUS>Letter color</ENUS>
   </msg>
-  <msg id="&gt;&gt;LOCATION" code="__LOCATION45198">
-    <PTPT>&gt;&gt;LOCATION</PTPT>
-    <ENUS>&gt;&gt;LOCATION</ENUS>
-  </msg>
-  <msg id="Address Number" code="ADDRESS_NUMBER36138">
-    <PTPT>Address Number</PTPT>
-    <ENUS>Address Number</ENUS>
-  </msg>
-  <msg id="Prospecção" code="PROSPECCAO46919">
-    <PTPT>Prospecção</PTPT>
-    <ENUS>Prospecção</ENUS>
-  </msg>
-  <msg id="Create a website alert" code="CREATE_A_WEBSITE_ALE02013">
-    <ENUS>Create a website alert</ENUS>
-    <PTPT>Create a website alert</PTPT>
-  </msg>
-  <msg id="Instant entrance" code="INSTANT_ENTRANCE27379">
-    <PTPT>Instant entrance</PTPT>
-    <ENUS>Instant entrance</ENUS>
-  </msg>
-  <msg id="Finished" code="FINISHED26993">
-    <ENUS>Finished</ENUS>
-    <PTPT>Finished</PTPT>
-  </msg>
-  <msg id="There must be at least one employee working in this warehouse" code="THERE_MUST_BE_AT_LEA43628">
-    <PTPT>There must be at least one employee working in this warehouse</PTPT>
-    <ENUS>There must be at least one employee working in this warehouse</ENUS>
-  </msg>
-  <msg id="Project Description" code="PROJECT_DESCRIPTION32232">
-    <PTPT>Project Description</PTPT>
-    <ENUS>Project Description</ENUS>
-  </msg>
-  <msg id="Text Fields" code="TEXT_FIELDS40102">
-    <ENUS>Text Fields</ENUS>
-    <PTPT>Text Fields</PTPT>
-  </msg>
-  <msg id="Reflection QUAR" code="REFLECTION_QUAR32243">
-    <ENUS>Reflection QUAR</ENUS>
-    <PTPT>Reflection QUAR</PTPT>
-  </msg>
-  <msg id="  441" code="__44162319">
-    <ENUS>Metodo de recolha de dados</ENUS>
-    <PTPT>Metodo de recolha de dados</PTPT>
-  </msg>
-  <msg id="ING" code="ING19160">
-    <ENUS>ING</ENUS>
-    <PTPT>ING</PTPT>
-  </msg>
-  <msg id="Project Bonus Days" code="PROJECT_BONUS_DAYS62505">
-    <PTPT>Project Bonus Days</PTPT>
-    <ENUS>Project Bonus Days</ENUS>
-  </msg>
-  <msg id="Tables" code="TABLES38578">
-    <PTPT>Tables</PTPT>
-  </msg>
-  <msg id="  424" code="__42433617">
-    <PTPT>Moeda</PTPT>
-    <ENUS>Moeda</ENUS>
-  </msg>
-  <msg id="Nationality" code="NATIONALITY34787">
-    <PTPT>Nationality</PTPT>
-    <ENUS>Nationality</ENUS>
-  </msg>
-  <msg id="1ªClasse" code="_1ACLASSE14213">
-    <ENUS>1ªClasse</ENUS>
-    <PTPT>1ªClasse</PTPT>
-  </msg>
-  <msg id="VIEW" code="VIEW37934">
-    <PTPT>VIEW</PTPT>
-    <ENUS>VIEW</ENUS>
-  </msg>
-  <msg id="  108" code="__10826890">
-    <ENUS>Short name of the Objective so that it is clearly identified in all tables and reports.</ENUS>
-    <PTPT>Denominação breve do Objectivo de modo a que o mesmo seja claramente identificado em todos os quadros e relatórios.</PTPT>
-  </msg>
-  <msg id="Output:" code="OUTPUT_10769">
-    <ENUS>Output:</ENUS>
-    <PTPT>Output:</PTPT>
-  </msg>
-  <msg id="Return" code="RETURN32222">
-    <PTPT>Return</PTPT>
-    <ENUS>Return</ENUS>
-  </msg>
-  <msg id="Action button - Edit" code="ACTION_BUTTON___EDIT46455">
-    <PTPT>Botão de ação - Editar</PTPT>
-    <ENUS>Action button - Edit</ENUS>
-  </msg>
-  <msg id="Dependency" code="DEPENDENCY54251">
-    <PTPT>Dependency</PTPT>
-    <ENUS>Dependency</ENUS>
-  </msg>
-  <msg id="&apos;Person&apos;" code="_PERSON_09109">
-    <PTPT>&apos;Person&apos;</PTPT>
-    <ENUS>&apos;Person&apos;</ENUS>
+  <msg id="Entidade &lt;br /&gt;&lt;small&gt;(Submodelo de gestão)&lt;/small&gt;" code="ENTIDADE__BR____SMAL46237">
+    <PTPT>Entidade &lt;br /&gt;&lt;small&gt;(Submodelo de gestão)&lt;/small&gt;</PTPT>
   </msg>
   <msg id="Controllers" code="CONTROLLERS03404">
     <PTPT>Controllers</PTPT>
@@ -2098,6 +2031,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Patients" code="PATIENTS51091">
     <PTPT>Patients</PTPT>
     <ENUS>Patients</ENUS>
+  </msg>
+  <msg id="Warning on save grid item" code="WARNING_ON_SAVE_GRID08779">
+    <PTPT>Warning on save grid item</PTPT>
   </msg>
   <msg id=" 1130" code="_113039446">
     <PTPT>Percentagem do valor objectivo a que corresponde o valor de alerta.</PTPT>
@@ -2253,6 +2189,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Ref</ENUS>
     <PTPT>Ref</PTPT>
   </msg>
+  <msg id="Lending: Returned" code="LENDING__RETURNED20063">
+    <PTPT>Lending: Returned</PTPT>
+  </msg>
   <msg id=" 1104_VERBOSE" code="_1104_VERBOSE48492">
     <ENUS>Allows addresses to be placed in historical context.</ENUS>
     <PTPT>Allows addresses to be placed in historical context.</PTPT>
@@ -2288,7 +2227,7 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <PTPT>Host</PTPT>
     <ENUS>Host</ENUS>
   </msg>
-  <msg id="5 anos" code="_5_ANOS28378">
+  <msg id="5 anos" code="_5_ANOS50688">
     <PTPT>5 anos</PTPT>
     <ENUS>5 anos</ENUS>
   </msg>
@@ -2330,6 +2269,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="T3 and others" code="T3_AND_OTHERS19907">
     <ENUS>T3 and others</ENUS>
     <PTPT>T3 e outros</PTPT>
+  </msg>
+  <msg id="ERSAR" code="ERSAR32613">
+    <PTPT>ERSAR</PTPT>
   </msg>
   <msg id="Armazém" code="ARMAZEM40145">
     <PTPT>Armazém</PTPT>
@@ -2398,6 +2340,10 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Programa</ENUS>
     <PTPT>Programa</PTPT>
   </msg>
+  <msg id="VIEW" code="VIEW37934">
+    <ENUS>VIEW</ENUS>
+    <PTPT>VIEW</PTPT>
+  </msg>
   <msg id="Alert?" code="ALERT_55243">
     <ENUS>Alert?</ENUS>
     <PTPT>Alert?</PTPT>
@@ -2442,7 +2388,7 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Bom Sup.</ENUS>
     <PTPT>Bom Sup.</PTPT>
   </msg>
-  <msg id="1122_VERBOSE" code="_1122_VERBOSE40655">
+  <msg id="1122_VERBOSE" code="_1122_VERBOSE19123">
     <ENUS>Help in the Menu verbose</ENUS>
     <PTPT>Help in the Menu verbose</PTPT>
   </msg>
@@ -2556,6 +2502,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Despesa" code="DESPESA07561">
     <ENUS>Despesa</ENUS>
     <PTPT>Despesa</PTPT>
+  </msg>
+  <msg id="Behaviour" code="BEHAVIOUR57826">
+    <PTPT>Behaviour</PTPT>
   </msg>
   <msg id="Limite mau" code="LIMITE_MAU45713">
     <ENUS>Limite mau</ENUS>
@@ -2742,6 +2691,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <PTPT>Campo para o QUAR que distingue o tipo de funcionários Avaliados</PTPT>
     <ENUS>Campo para o QUAR que distingue o tipo de funcionários Avaliados</ENUS>
   </msg>
+  <msg id="Asset category" code="ASSET_CATEGORY65154">
+    <PTPT>Asset category</PTPT>
+  </msg>
   <msg id="  135" code="__13531245">
     <PTPT>Ponderação para o SIADAP - QUAR.</PTPT>
     <ENUS>Ponderação para o SIADAP - QUAR.</ENUS>
@@ -2825,6 +2777,9 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="É obrigatório preencher a descrição: Regra do form sem apply" code="E_OBRIGATORIO_PREENC03702">
     <ENUS>É obrigatório preencher a descrição: Regra do form sem apply</ENUS>
     <PTPT>É obrigatório preencher a descrição: Regra do form sem apply</PTPT>
+  </msg>
+  <msg id="Component class" code="COMPONENT_CLASS57908">
+    <PTPT>Component class</PTPT>
   </msg>
   <msg id="Grid Fotos" code="GRID_FOTOS65115">
     <PTPT>Grid Fotos</PTPT>
@@ -2936,7 +2891,7 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <PTPT>Other</PTPT>
     <ENUS>Other</ENUS>
   </msg>
-  <msg id="1121" code="_112147217">
+  <msg id="1121" code="_112149635">
     <ENUS>Help in the list of Menu</ENUS>
     <PTPT>Help in the list of Menu</PTPT>
   </msg>
@@ -3102,6 +3057,12 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
     <ENUS>Indicator(Model)</ENUS>
     <PTPT>Indicator(Model)</PTPT>
   </msg>
+  <msg id="Pop residente" code="POP_RESIDENTE46287">
+    <PTPT>Pop residente</PTPT>
+  </msg>
+  <msg id="Relational structure" code="RELATIONAL_STRUCTURE39801">
+    <PTPT>Relational structure</PTPT>
+  </msg>
   <msg id="Total executed" code="TOTAL_EXECUTED32845">
     <ENUS>Total executed</ENUS>
     <PTPT>Total executed</PTPT>
@@ -3129,69 +3090,6 @@ The high value includes any matching date/time. i.e. 2012-02-03T10:00:00 is in a
   <msg id="Yard" code="YARD38498">
     <ENUS>Yard</ENUS>
     <PTPT>Yard</PTPT>
-  </msg>
-  <msg id="Acessos a Organização" code="ACESSOS_A_ORGANIZACA45840">
-    <PTPT>Acessos a Organização</PTPT>
-    <ENUS>Acessos a Organização</ENUS>
-  </msg>
-  <msg id="Reception" code="RECEPTION01757">
-    <PTPT>Reception</PTPT>
-    <ENUS>Reception</ENUS>
-  </msg>
-  <msg id="Quantity of hours:" code="QUANTITY_OF_HOURS_61426">
-    <PTPT>Quantity of hours:</PTPT>
-    <ENUS>Quantity of hours:</ENUS>
-  </msg>
-  <msg id="  246" code="__24613144">
-    <PTPT>Neste espaço deverão ser apresentados relatórios e justificações.</PTPT>
-    <ENUS>Neste espaço deverão ser apresentados relatórios e justificações.</ENUS>
-  </msg>
-  <msg id="If present, Start SHALL have a lower value than End" code="IF_PRESENT__START_SH55168">
-    <ENUS>If present, Start SHALL have a lower value than End</ENUS>
-    <PTPT>If present, Start SHALL have a lower value than End</PTPT>
-  </msg>
-  <msg id="Objectives (Instance)" code="OBJECTIVES__INSTANCE05157">
-    <ENUS>Objectives (Instance)</ENUS>
-    <PTPT>Objectives (Instance)</PTPT>
-  </msg>
-  <msg id="  198" code="__19838774">
-    <ENUS>Conjunto de dígitos ou letras utilizados para individualizar organizações.</ENUS>
-    <PTPT>Conjunto de dígitos ou letras utilizados para individualizar organizações.</PTPT>
-  </msg>
-  <msg id="Initial value date" code="INITIAL_VALUE_DATE48223">
-    <ENUS>Initial value date</ENUS>
-    <PTPT>Initial value date</PTPT>
-  </msg>
-  <msg id="Warning" code="WARNING52043">
-    <ENUS>Warning</ENUS>
-    <PTPT>Warning</PTPT>
-  </msg>
-  <msg id="Data Conclusão" code="DATA_CONCLUSAO12828">
-    <PTPT>Data Conclusão</PTPT>
-    <ENUS>Data Conclusion</ENUS>
-  </msg>
-  <msg id="   91" code="___9111776">
-    <ENUS>This default value represents the &apos;zero&apos; point from which the degree of achievement is calculated in terms of percentage of the target. It should be left at &apos;zero&apos; in this situation.</ENUS>
-    <PTPT>Este valor por omissão, representa o ponto &apos;zero&apos; a partir do qual se calcula o grau de concretização em termos de percentual sobre a meta. Deverá ser deixado com o valor &apos;zero&apos; na presente situação.</PTPT>
-  </msg>
-  <msg id="Asset type" code="ASSET_TYPE02033">
-    <ENUS>Asset type</ENUS>
-    <PTPT>Asset type</PTPT>
-  </msg>
-  <msg id="XX-00-XX" code="XX_00_XX10122">
-    <PTPT>XX-00-XX</PTPT>
-    <ENUS>XX-00-XX</ENUS>
-  </msg>
-  <msg id="Repair" code="REPAIR34508">
-    <ENUS>Repair</ENUS>
-    <PTPT>Repair</PTPT>
-  </msg>
-  <msg id="Unidade orgânica" code="UNIDADE_ORGANICA38383">
-    <PTPT>Unidade orgânica</PTPT>
-    <ENUS>Unidade orgânica</ENUS>
-  </msg>
-  <msg id="Static Text " code="STATIC_TEXT_17624">
-    <PTPT>Static Text </PTPT>
   </msg>
   <msg id="Active" code="ACTIVE03270">
     <ENUS>Active</ENUS>
@@ -3455,7 +3353,7 @@ No Aplica: El indicador no es aplicable al país.</PTPT>
 No Disponible: No se dispone de información para reportar el indicador.
 No Aplica: El indicador no es aplicable al país.</ENUS>
   </msg>
-  <msg id="1116" code="_111636045">
+  <msg id="1116" code="_111650304">
     <ENUS>Help in the Multiline field</ENUS>
     <PTPT>Help in the Multiline field</PTPT>
   </msg>
@@ -3465,6 +3363,9 @@ No Aplica: El indicador no es aplicable al país.</ENUS>
   <msg id="URL" code="URL05719">
     <ENUS>URL</ENUS>
     <PTPT>URL</PTPT>
+  </msg>
+  <msg id="COMPONENT TYPE" code="COMPONENT_TYPE58053">
+    <PTPT>COMPONENT TYPE</PTPT>
   </msg>
   <msg id="Utilização de dados administrativos" code="UTILIZACAO_DE_DADOS_26961">
     <ENUS>Utilização de dados administrativos</ENUS>
@@ -3566,6 +3467,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <PTPT>Side to which the connecting line arrives</PTPT>
     <ENUS>Side to which the connecting line arrives</ENUS>
   </msg>
+  <msg id="Error on save property list item" code="ERROR_ON_SAVE_PROPER33708">
+    <PTPT>Error on save property list item</PTPT>
+  </msg>
   <msg id="Identifier types" code="IDENTIFIER_TYPES53348">
     <ENUS>Identifier types</ENUS>
     <PTPT>Identifier types</PTPT>
@@ -3639,6 +3543,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
   <msg id="Perspective" code="PERSPECTIVE53427">
     <ENUS>Perspective</ENUS>
     <PTPT>Perspective</PTPT>
+  </msg>
+  <msg id="Icon associated with the tag" code="ICON_ASSOCIATED_WITH17177">
+    <PTPT>Icon associated with the tag</PTPT>
   </msg>
   <msg id="Numeric Fields" code="NUMERIC_FIELDS45771">
     <PTPT>Numeric Fields</PTPT>
@@ -3810,6 +3717,10 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <ENUS>Manual to collect</ENUS>
     <PTPT>Manual to collect</PTPT>
   </msg>
+  <msg id="Repair" code="REPAIR34508">
+    <PTPT>Repair</PTPT>
+    <ENUS>Repair</ENUS>
+  </msg>
   <msg id="Ponto de Destino (ME)" code="PONTO_DE_DESTINO__ME22345">
     <ENUS>Ponto de Destino (ME)</ENUS>
     <PTPT>Ponto de Destino (ME)</PTPT>
@@ -3854,6 +3765,10 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <PTPT>Eliminar vários registos</PTPT>
     <ENUS>Delete Multiple records</ENUS>
   </msg>
+  <msg id="Acessos a Organização" code="ACESSOS_A_ORGANIZACA45840">
+    <ENUS>Acessos a Organização</ENUS>
+    <PTPT>Acessos a Organização</PTPT>
+  </msg>
   <msg id="External" code="EXTERNAL13375">
     <PTPT>External</PTPT>
     <ENUS>External</ENUS>
@@ -3873,9 +3788,16 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <ENUS>Data última notificação</ENUS>
     <PTPT>Data última notificação</PTPT>
   </msg>
+  <msg id="Return" code="RETURN32222">
+    <ENUS>Return</ENUS>
+    <PTPT>Return</PTPT>
+  </msg>
   <msg id="Visitas de inspeção" code="VISITAS_DE_INSPECAO03014">
     <PTPT>Visitas de inspeção</PTPT>
     <ENUS>Visitas de inspeção</ENUS>
+  </msg>
+  <msg id="Component description" code="COMPONENT_DESCRIPTIO08871">
+    <PTPT>Component description</PTPT>
   </msg>
   <msg id="Specific path with conditions with trigger -&gt; DB + MB + MC + TR" code="SPECIFIC_PATH_WITH_C56194">
     <PTPT>Specific path with conditions with trigger -&gt; DB + MB + MC + TR</PTPT>
@@ -4265,6 +4187,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <ENUS>Input Group</ENUS>
     <PTPT>Input Group</PTPT>
   </msg>
+  <msg id="[COMPC-&gt;COMPCLAS] Components" code="_COMPC__COMPCLAS__CO25893">
+    <PTPT>&#91;COMPC-&gt;COMPCLAS&#93; Components</PTPT>
+  </msg>
   <msg id="  401" code="__40117537">
     <PTPT>Respeita intervalo de tempo?</PTPT>
     <ENUS>Respeita intervalo de tempo?</ENUS>
@@ -4367,12 +4292,18 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <ENUS>GLN Extension Component</ENUS>
     <PTPT>GLN Extension Component</PTPT>
   </msg>
+  <msg id="Desativação de equipamento" code="DESATIVACAO_DE_EQUIP16900">
+    <PTPT>Desativação de equipamento</PTPT>
+  </msg>
   <msg id=" 1144" code="_114429549">
     <PTPT>Help in numeric enumeration field</PTPT>
   </msg>
   <msg id="Data Fecho" code="DATA_FECHO61581">
     <ENUS>Data Fecho</ENUS>
     <PTPT>Data Fecho</PTPT>
+  </msg>
+  <msg id="Data Grid" code="DATA_GRID17400">
+    <PTPT>Data Grid</PTPT>
   </msg>
   <msg id="Two" code="TWO16230">
     <PTPT>Two</PTPT>
@@ -4464,7 +4395,7 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <PTPT>Passwords</PTPT>
     <ENUS>Passwords</ENUS>
   </msg>
-  <msg id="1st trip (Logical Enumeration)" code="_1ST_TRIP__LOGICAL_E36923">
+  <msg id="1st trip (Logical Enumeration)" code="_1ST_TRIP__LOGICAL_EN19524">
     <ENUS>1st trip (Logical Enumeration)</ENUS>
     <PTPT>1st trip (Logical Enumeration)</PTPT>
   </msg>
@@ -4545,6 +4476,10 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <ENUS>Sucesso</ENUS>
     <PTPT>Sucesso</PTPT>
   </msg>
+  <msg id="Operação" code="OPERACAO29482">
+    <PTPT>Operação</PTPT>
+    <ENUS>Operation</ENUS>
+  </msg>
   <msg id="Respons. Indicador" code="RESPONS__INDICADOR07689">
     <PTPT>Respons. Indicador</PTPT>
     <ENUS>Respons. Indicador</ENUS>
@@ -4567,6 +4502,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
   <msg id="N:N Fields" code="N_N_FIELDS57309">
     <PTPT>N:N Fields</PTPT>
     <ENUS>N:N Fields</ENUS>
+  </msg>
+  <msg id="Asset categories" code="ASSET_CATEGORIES64344">
+    <PTPT>Asset categories</PTPT>
   </msg>
   <msg id="Produtividade" code="PRODUTIVIDADE55481">
     <PTPT>Produtividade</PTPT>
@@ -4643,6 +4581,9 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <PTPT>Indicador</PTPT>
     <ENUS>Indicador</ENUS>
   </msg>
+  <msg id="COMPONENT CLASS" code="COMPONENT_CLASS55392">
+    <PTPT>COMPONENT CLASS</PTPT>
+  </msg>
   <msg id="Descricao" code="DESCRICAO51618">
     <ENUS>Descricao</ENUS>
     <PTPT>Descricao</PTPT>
@@ -4699,7 +4640,7 @@ Nivel 3: No existen metodologías o estándares establecidos internacionalmente 
     <PTPT>Container depot</PTPT>
     <ENUS>Container depot</ENUS>
   </msg>
-  <msg id="1119" code="_111938548">
+  <msg id="1119" code="_111916541">
     <ENUS>Help in the date field</ENUS>
     <PTPT>Help in the date field</PTPT>
   </msg>
@@ -4782,6 +4723,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Utilizador Acesso SMTP" code="UTILIZADOR_ACESSO_SM08837">
     <PTPT>Utilizador Acesso SMTP</PTPT>
     <ENUS>Utilizador Acesso SMTP</ENUS>
+  </msg>
+  <msg id="Component subform" code="COMPONENT_SUBFORM44390">
+    <PTPT>Component subform</PTPT>
   </msg>
   <msg id="Number:" code="NUMBER_64178">
     <ENUS>Number:</ENUS>
@@ -5003,7 +4947,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Visits:</PTPT>
     <ENUS>Visits:</ENUS>
   </msg>
-  <msg id="1121_VERBOSE" code="_1121_VERBOSE27066">
+  <msg id="1121_VERBOSE" code="_1121_VERBOSE17496">
     <ENUS>Help in the list of Menu Verbose</ENUS>
     <PTPT>Help in the list of Menu Verbose</PTPT>
   </msg>
@@ -5022,6 +4966,10 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Type of segment" code="TYPE_OF_SEGMENT40282">
     <PTPT>Type of segment</PTPT>
     <ENUS>Type of segment</ENUS>
+  </msg>
+  <msg id="Prospecção" code="PROSPECCAO46919">
+    <ENUS>Prospecção</ENUS>
+    <PTPT>Prospecção</PTPT>
   </msg>
   <msg id="[ASSET-&gt;ASSETNUM] - [ASSET-&gt;NAME]" code="_ASSET__ASSETNUM____37227">
     <ENUS>&#91;ASSET-&gt;ASSETNUM&#93; - &#91;ASSET-&gt;NAME&#93;</ENUS>
@@ -5107,6 +5055,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Indicador tipo Data</ENUS>
     <PTPT>Indicador tipo Data</PTPT>
   </msg>
+  <msg id="Tag name" code="TAG_NAME52385">
+    <PTPT>Tag name</PTPT>
+  </msg>
   <msg id="Capacidade de passeiros no avião" code="CAPACIDADE_DE_PASSEI42438">
     <ENUS>Capacidade de passeiros no avião</ENUS>
     <PTPT>Capacidade de passeiros no avião</PTPT>
@@ -5123,6 +5074,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Organism code</PTPT>
     <ENUS>Organism code</ENUS>
   </msg>
+  <msg id="Component behaviour" code="COMPONENT_BEHAVIOUR55785">
+    <PTPT>Component behaviour</PTPT>
+  </msg>
   <msg id="Idioms" code="IDIOMS32719">
     <PTPT>Idioms</PTPT>
     <ENUS>Idioms</ENUS>
@@ -5134,7 +5088,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Horizontal Wizard</ENUS>
     <PTPT>Horizontal Wizard</PTPT>
   </msg>
-  <msg id="1118_VERBOSE" code="_1118_VERBOSE37983">
+  <msg id="1118_VERBOSE" code="_1118_VERBOSE48580">
     <PTPT>Help in the time field v</PTPT>
     <ENUS>Help in the time field v</ENUS>
   </msg>
@@ -5232,6 +5186,10 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="   37" code="___3763273">
     <ENUS>This help is for a field of type Creation: Instant</ENUS>
     <PTPT>This help is for a field of type Creation: Instant</PTPT>
+  </msg>
+  <msg id="XX-00-XX" code="XX_00_XX10122">
+    <ENUS>XX-00-XX</ENUS>
+    <PTPT>XX-00-XX</PTPT>
   </msg>
   <msg id="Attached" code="ATTACHED26247">
     <ENUS>Attached</ENUS>
@@ -5361,6 +5319,10 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Current account</PTPT>
     <ENUS>Current account</ENUS>
   </msg>
+  <msg id="Asset type" code="ASSET_TYPE02033">
+    <PTPT>Asset type</PTPT>
+    <ENUS>Asset type</ENUS>
+  </msg>
   <msg id="Objective type" code="OBJECTIVE_TYPE64584">
     <PTPT>Objective type</PTPT>
     <ENUS>Objective type</ENUS>
@@ -5368,6 +5330,282 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="N.º da lide" code="N_O_DA_LIDE50722">
     <ENUS>N.º da lide</ENUS>
     <PTPT>N.º da lide</PTPT>
+  </msg>
+  <msg id="&gt;&gt;LOCATION" code="__LOCATION45198">
+    <PTPT>&gt;&gt;LOCATION</PTPT>
+    <ENUS>&gt;&gt;LOCATION</ENUS>
+  </msg>
+  <msg id="Address Number" code="ADDRESS_NUMBER36138">
+    <PTPT>Address Number</PTPT>
+    <ENUS>Address Number</ENUS>
+  </msg>
+  <msg id="Create a website alert" code="CREATE_A_WEBSITE_ALE02013">
+    <ENUS>Create a website alert</ENUS>
+    <PTPT>Create a website alert</PTPT>
+  </msg>
+  <msg id="Instant entrance" code="INSTANT_ENTRANCE27379">
+    <PTPT>Instant entrance</PTPT>
+    <ENUS>Instant entrance</ENUS>
+  </msg>
+  <msg id="Finished" code="FINISHED26993">
+    <ENUS>Finished</ENUS>
+    <PTPT>Finished</PTPT>
+  </msg>
+  <msg id="There must be at least one employee working in this warehouse" code="THERE_MUST_BE_AT_LEA43628">
+    <PTPT>There must be at least one employee working in this warehouse</PTPT>
+    <ENUS>There must be at least one employee working in this warehouse</ENUS>
+  </msg>
+  <msg id="Project Description" code="PROJECT_DESCRIPTION32232">
+    <PTPT>Project Description</PTPT>
+    <ENUS>Project Description</ENUS>
+  </msg>
+  <msg id="Text Fields" code="TEXT_FIELDS40102">
+    <ENUS>Text Fields</ENUS>
+    <PTPT>Text Fields</PTPT>
+  </msg>
+  <msg id="Submodelo de gestão" code="SUBMODELO_DE_GESTAO34607">
+    <PTPT>Submodelo de gestão</PTPT>
+  </msg>
+  <msg id="Reflection QUAR" code="REFLECTION_QUAR32243">
+    <ENUS>Reflection QUAR</ENUS>
+    <PTPT>Reflection QUAR</PTPT>
+  </msg>
+  <msg id="  441" code="__44162319">
+    <ENUS>Metodo de recolha de dados</ENUS>
+    <PTPT>Metodo de recolha de dados</PTPT>
+  </msg>
+  <msg id="ING" code="ING19160">
+    <ENUS>ING</ENUS>
+    <PTPT>ING</PTPT>
+  </msg>
+  <msg id="Project Bonus Days" code="PROJECT_BONUS_DAYS62505">
+    <PTPT>Project Bonus Days</PTPT>
+    <ENUS>Project Bonus Days</ENUS>
+  </msg>
+  <msg id="Tables" code="TABLES38578">
+    <PTPT>Tables</PTPT>
+  </msg>
+  <msg id="  424" code="__42433617">
+    <PTPT>Moeda</PTPT>
+    <ENUS>Moeda</ENUS>
+  </msg>
+  <msg id="Nationality" code="NATIONALITY34787">
+    <PTPT>Nationality</PTPT>
+    <ENUS>Nationality</ENUS>
+  </msg>
+  <msg id="1ªClasse" code="_1ACLASSE52698">
+    <ENUS>1ªClasse</ENUS>
+    <PTPT>1ªClasse</PTPT>
+  </msg>
+  <msg id="Error on save grid item" code="ERROR_ON_SAVE_GRID_I43635">
+    <PTPT>Error on save grid item</PTPT>
+  </msg>
+  <msg id="  108" code="__10826890">
+    <ENUS>Short name of the Objective so that it is clearly identified in all tables and reports.</ENUS>
+    <PTPT>Denominação breve do Objectivo de modo a que o mesmo seja claramente identificado em todos os quadros e relatórios.</PTPT>
+  </msg>
+  <msg id="Output:" code="OUTPUT_10769">
+    <ENUS>Output:</ENUS>
+    <PTPT>Output:</PTPT>
+  </msg>
+  <msg id="Action button - Edit" code="ACTION_BUTTON___EDIT46455">
+    <PTPT>Botão de ação - Editar</PTPT>
+    <ENUS>Action button - Edit</ENUS>
+  </msg>
+  <msg id="Dependency" code="DEPENDENCY54251">
+    <PTPT>Dependency</PTPT>
+    <ENUS>Dependency</ENUS>
+  </msg>
+  <msg id="&apos;Person&apos;" code="_PERSON_09109">
+    <PTPT>&apos;Person&apos;</PTPT>
+    <ENUS>&apos;Person&apos;</ENUS>
+  </msg>
+  <msg id="Reception" code="RECEPTION01757">
+    <PTPT>Reception</PTPT>
+    <ENUS>Reception</ENUS>
+  </msg>
+  <msg id="Quantity of hours:" code="QUANTITY_OF_HOURS_61426">
+    <PTPT>Quantity of hours:</PTPT>
+    <ENUS>Quantity of hours:</ENUS>
+  </msg>
+  <msg id="  246" code="__24613144">
+    <PTPT>Neste espaço deverão ser apresentados relatórios e justificações.</PTPT>
+    <ENUS>Neste espaço deverão ser apresentados relatórios e justificações.</ENUS>
+  </msg>
+  <msg id="If present, Start SHALL have a lower value than End" code="IF_PRESENT__START_SH55168">
+    <ENUS>If present, Start SHALL have a lower value than End</ENUS>
+    <PTPT>If present, Start SHALL have a lower value than End</PTPT>
+  </msg>
+  <msg id="Objectives (Instance)" code="OBJECTIVES__INSTANCE05157">
+    <ENUS>Objectives (Instance)</ENUS>
+    <PTPT>Objectives (Instance)</PTPT>
+  </msg>
+  <msg id="  198" code="__19838774">
+    <ENUS>Conjunto de dígitos ou letras utilizados para individualizar organizações.</ENUS>
+    <PTPT>Conjunto de dígitos ou letras utilizados para individualizar organizações.</PTPT>
+  </msg>
+  <msg id="Initial value date" code="INITIAL_VALUE_DATE48223">
+    <ENUS>Initial value date</ENUS>
+    <PTPT>Initial value date</PTPT>
+  </msg>
+  <msg id="Warning" code="WARNING52043">
+    <ENUS>Warning</ENUS>
+    <PTPT>Warning</PTPT>
+  </msg>
+  <msg id="Data Conclusão" code="DATA_CONCLUSAO12828">
+    <PTPT>Data Conclusão</PTPT>
+    <ENUS>Data Conclusion</ENUS>
+  </msg>
+  <msg id="   91" code="___9111776">
+    <ENUS>This default value represents the &apos;zero&apos; point from which the degree of achievement is calculated in terms of percentage of the target. It should be left at &apos;zero&apos; in this situation.</ENUS>
+    <PTPT>Este valor por omissão, representa o ponto &apos;zero&apos; a partir do qual se calcula o grau de concretização em termos de percentual sobre a meta. Deverá ser deixado com o valor &apos;zero&apos; na presente situação.</PTPT>
+  </msg>
+  <msg id="[COMPO-&gt;COMPTYPE]" code="_COMPO__COMPTYPE_37230">
+    <PTPT>&#91;COMPO-&gt;COMPTYPE&#93;</PTPT>
+  </msg>
+  <msg id="Unidade orgânica" code="UNIDADE_ORGANICA38383">
+    <PTPT>Unidade orgânica</PTPT>
+    <ENUS>Unidade orgânica</ENUS>
+  </msg>
+  <msg id="Static Text " code="STATIC_TEXT_17624">
+    <PTPT>Static Text </PTPT>
+  </msg>
+  <msg id="Fields with table conditions" code="FIELDS_WITH_TABLE_CO37994">
+    <PTPT>Campos com condições na tabela</PTPT>
+    <ENUS>Fields with table conditions</ENUS>
+  </msg>
+  <msg id="Manual name" code="MANUAL_NAME60077">
+    <ENUS>Manual name</ENUS>
+    <PTPT>Manual name</PTPT>
+  </msg>
+  <msg id="All Lendings" code="ALL_LENDINGS09931">
+    <PTPT>All Lendings</PTPT>
+    <ENUS>All Lendings</ENUS>
+  </msg>
+  <msg id="Price-by-hour" code="PRICE_BY_HOUR01060">
+    <PTPT>Price-by-hour</PTPT>
+    <ENUS>Price-by-hour</ENUS>
+  </msg>
+  <msg id="Follow-up" code="FOLLOW_UP22119">
+    <ENUS>Follow-up</ENUS>
+    <PTPT>Follow-up</PTPT>
+  </msg>
+  <msg id="Add ANEXD" code="ADD_ANEXD17106">
+    <ENUS>Add ANEXD</ENUS>
+    <PTPT>Add ANEXD</PTPT>
+  </msg>
+  <msg id="Campo com condições server-side" code="CAMPO_COM_CONDICOES_22485">
+    <ENUS>Field with server-side conditions</ENUS>
+    <PTPT>Campo com condições server-side</PTPT>
+  </msg>
+  <msg id="Parado" code="PARADO62293">
+    <PTPT>Parado</PTPT>
+    <ENUS>Parado</ENUS>
+  </msg>
+  <msg id="Save and Return" code="SAVE_AND_RETURN63386">
+    <PTPT>Save and Return</PTPT>
+    <ENUS>Save and Return</ENUS>
+  </msg>
+  <msg id="Closing the sale" code="CLOSING_THE_SALE18336">
+    <PTPT>Closing the sale</PTPT>
+    <ENUS>Closing the sale</ENUS>
+  </msg>
+  <msg id="Data Input" code="DATA_INPUT23684">
+    <PTPT>Data Input</PTPT>
+  </msg>
+  <msg id="Scorecard Frequency" code="SCORECARD_FREQUENCY32144">
+    <PTPT>Scorecard Frequency</PTPT>
+    <ENUS>Scorecard Frequency</ENUS>
+  </msg>
+  <msg id="Equipment - 1 month until today" code="EQUIPMENT___1_MONTH_48623">
+    <PTPT>Equipamento - 1 mês até hoje</PTPT>
+    <ENUS>Equipment - 1 month until today</ENUS>
+  </msg>
+  <msg id="Options" code="OPTIONS14459">
+    <PTPT>Options</PTPT>
+  </msg>
+  <msg id="Gerar automaticamente" code="GERAR_AUTOMATICAMENT15171">
+    <PTPT>Gerar automaticamente</PTPT>
+    <ENUS>Gerar automaticamente</ENUS>
+  </msg>
+  <msg id="Operação AA" code="OPERACAO_AA07938">
+    <PTPT>Operação AA</PTPT>
+  </msg>
+  <msg id=" 1114_VERBOSE" code="_1114_VERBOSE42095">
+    <ENUS>Help in the zone verbose</ENUS>
+    <PTPT>Help in the zone verbose</PTPT>
+  </msg>
+  <msg id="Y position" code="Y_POSITION09776">
+    <PTPT>Y position</PTPT>
+    <ENUS>Y position</ENUS>
+  </msg>
+  <msg id="Photos:" code="PHOTOS_42586">
+    <ENUS>Photos:</ENUS>
+    <PTPT>Photos:</PTPT>
+  </msg>
+  <msg id="Mínimo" code="MINIMO33485">
+    <ENUS>Mínimo</ENUS>
+    <PTPT>Mínimo</PTPT>
+  </msg>
+  <msg id="Description" code="DESCRIPTION07383">
+    <ENUS>Description</ENUS>
+    <PTPT>Description</PTPT>
+  </msg>
+  <msg id="Warehouse employees" code="WAREHOUSE_EMPLOYEES19716">
+    <ENUS>Warehouse employees</ENUS>
+    <PTPT>Warehouse employees</PTPT>
+  </msg>
+  <msg id="X Position" code="X_POSITION52184">
+    <PTPT>X Position</PTPT>
+    <ENUS>X Position</ENUS>
+  </msg>
+  <msg id="Origin X" code="ORIGIN_X64065">
+    <ENUS>Origin X</ENUS>
+    <PTPT>Origin X</PTPT>
+  </msg>
+  <msg id="Asset identification" code="ASSET_IDENTIFICATION53152">
+    <PTPT>Asset identification</PTPT>
+    <ENUS>Asset identification</ENUS>
+  </msg>
+  <msg id="Indicator Responsible" code="INDICATOR_RESPONSIBL35030">
+    <ENUS>Indicator Responsible</ENUS>
+    <PTPT>Indicator Responsible</PTPT>
+  </msg>
+  <msg id="Training Exercise 19" code="TRAINING_EXERCISE_1947850">
+    <PTPT>Exercício de formação 19</PTPT>
+    <ENUS>Training Exercise 19</ENUS>
+  </msg>
+  <msg id="Qualificação" code="QUALIFICACAO07026">
+    <ENUS>Qualificação</ENUS>
+    <PTPT>Qualificação</PTPT>
+  </msg>
+  <msg id="None" code="NONE51124">
+    <ENUS>None</ENUS>
+    <PTPT>None</PTPT>
+  </msg>
+  <msg id="Approval Date" code="APPROVAL_DATE21560">
+    <PTPT>Approval Date</PTPT>
+    <ENUS>Approval Date</ENUS>
+  </msg>
+  <msg id="Game" code="GAME57681">
+    <PTPT>Game</PTPT>
+    <ENUS>Game</ENUS>
+  </msg>
+  <msg id="&gt;AFFINITY GENRE" code="_AFFINITY_GENRE64973">
+    <ENUS>&gt;AFFINITY GENRE</ENUS>
+    <PTPT>&gt;AFFINITY GENRE</PTPT>
+  </msg>
+  <msg id="Frequency" code="FREQUENCY35635">
+    <ENUS>Frequency</ENUS>
+    <PTPT>Frequency</PTPT>
+  </msg>
+  <msg id="Símbolo" code="SIMBOLO25209">
+    <PTPT>Símbolo</PTPT>
+    <ENUS>Símbolo</ENUS>
+  </msg>
+  <msg id="Dadatarians" code="DADATARIANS56438">
+    <PTPT>Dadatarians</PTPT>
+    <ENUS>Dadatarians</ENUS>
   </msg>
   <msg id="Icon anchor (x-axis)" code="ICON_ANCHOR__X_AXIS_18664">
     <PTPT>Icon anchor (x-axis)</PTPT>
@@ -5420,6 +5658,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Order in group (Float field)" code="ORDER_IN_GROUP__FLOA51083">
     <PTPT>Order in group (Float field)</PTPT>
     <ENUS>Order in group (Float field)</ENUS>
+  </msg>
+  <msg id="Asset tags" code="ASSET_TAGS23725">
+    <PTPT>Asset tags</PTPT>
   </msg>
   <msg id="Editor recursos" code="EDITOR_RECURSOS23553">
     <PTPT>Editor recursos</PTPT>
@@ -5567,6 +5808,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Login attempts</ENUS>
     <PTPT>Login attempts</PTPT>
   </msg>
+  <msg id="Class icon" code="CLASS_ICON19969">
+    <PTPT>Class icon</PTPT>
+  </msg>
   <msg id="Order number" code="ORDER_NUMBER21543">
     <ENUS>Order number</ENUS>
     <PTPT>Order number</PTPT>
@@ -5656,10 +5900,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
 &lt;p&gt;&lt;img src=&quot;Content/img/f-login__background.png&quot;&gt;&lt;/p&gt;
 &lt;/body&gt;
 &lt;/html&gt;</PTPT>
-  </msg>
-  <msg id="Origin X" code="ORIGIN_X64065">
-    <PTPT>Origin X</PTPT>
-    <ENUS>Origin X</ENUS>
   </msg>
   <msg id="&gt;&gt;DISPATCH" code="__DISPATCH53890">
     <ENUS>&gt;&gt;DISPATCH</ENUS>
@@ -5757,6 +5997,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Word</ENUS>
     <PTPT>Word</PTPT>
   </msg>
+  <msg id="Accessibility" code="ACCESSIBILITY21548">
+    <PTPT>Accessibility</PTPT>
+  </msg>
   <msg id="Beginning of the year" code="BEGINNING_OF_THE_YEA06960">
     <PTPT>Beginning of the year</PTPT>
     <ENUS>Beginning of the year</ENUS>
@@ -5792,7 +6035,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>ActivoBank</ENUS>
     <PTPT>ActivoBank</PTPT>
   </msg>
-  <msg id="1123" code="_112342843">
+  <msg id="1123" code="_112349293">
     <ENUS>Help in table list</ENUS>
     <PTPT>Help in table list</PTPT>
   </msg>
@@ -5807,6 +6050,10 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Warehouse" code="WAREHOUSE51864">
     <PTPT>Warehouse</PTPT>
     <ENUS>Warehouse</ENUS>
+  </msg>
+  <msg id="Tags" code="TAGS54909">
+    <PTPT>Tags</PTPT>
+    <ENUS>Tags</ENUS>
   </msg>
   <msg id="E-mail sent?" code="E_MAIL_SENT_60490">
     <PTPT>E-mail sent?</PTPT>
@@ -5824,7 +6071,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Facility</ENUS>
     <PTPT>Facility</PTPT>
   </msg>
-  <msg id="35" code="_3534512">
+  <msg id="35" code="_3554693">
     <PTPT>35</PTPT>
     <ENUS>35</ENUS>
   </msg>
@@ -6044,9 +6291,15 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Team</PTPT>
     <ENUS>Team</ENUS>
   </msg>
+  <msg id="Filtering" code="FILTERING18019">
+    <PTPT>Filtering</PTPT>
+  </msg>
   <msg id="Global article" code="GLOBAL_ARTICLE63861">
     <ENUS>Global article</ENUS>
     <PTPT>Global article</PTPT>
+  </msg>
+  <msg id="Components Class" code="COMPONENTS_CLASS59339">
+    <PTPT>Components Class</PTPT>
   </msg>
   <msg id="   33" code="___3360901">
     <ENUS>This help is for a field of type DATETIME</ENUS>
@@ -6071,9 +6324,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Coin" code="COIN00085">
     <PTPT>Coin</PTPT>
     <ENUS>Coin</ENUS>
-  </msg>
-  <msg id="None TestText" code="NONE_TESTTEXT37319">
-    <PTPT>None TestText</PTPT>
   </msg>
   <msg id="Grouping of Equipment Types" code="GROUPING_OF_EQUIPMEN34190">
     <PTPT>Grouping of Equipment Types</PTPT>
@@ -6173,6 +6423,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Internal</ENUS>
     <PTPT>Internal</PTPT>
   </msg>
+  <msg id="Behavior" code="BEHAVIOR47966">
+    <PTPT>Behavior</PTPT>
+  </msg>
   <msg id="Cards" code="CARDS04291">
     <ENUS>Cards</ENUS>
     <PTPT>Cards</PTPT>
@@ -6193,10 +6446,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Campo com condições client-side</PTPT>
     <ENUS>Field with client-side conditions</ENUS>
   </msg>
-  <msg id="Mínimo" code="MINIMO33485">
-    <PTPT>Mínimo</PTPT>
-    <ENUS>Mínimo</ENUS>
-  </msg>
   <msg id="STMP User Access" code="STMP_USER_ACCESS42993">
     <PTPT>STMP User Access</PTPT>
     <ENUS>STMP User Access</ENUS>
@@ -6216,6 +6465,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id=" 1103_VERBOSE" code="_1103_VERBOSE48229">
     <ENUS>ISO 3166 3 letter codes can be used in place of a human readable country name.</ENUS>
     <PTPT>ISO 3166 3 letter codes can be used in place of a human readable country name.</PTPT>
+  </msg>
+  <msg id="Rest" code="REST58206">
+    <PTPT>Rest</PTPT>
   </msg>
   <msg id="Header" code="HEADER35023">
     <ENUS>Header</ENUS>
@@ -6249,7 +6501,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Allow feature removal</ENUS>
     <PTPT>Permitir a remoção de caraterísticas</PTPT>
   </msg>
-  <msg id="1º Classe" code="_1O_CLASSE38057">
+  <msg id="1º Classe" code="_1O_CLASSE18418">
     <ENUS>1º Classe</ENUS>
     <PTPT>1º Classe</PTPT>
   </msg>
@@ -6257,7 +6509,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Fax</ENUS>
     <PTPT>Fax</PTPT>
   </msg>
-  <msg id="1120_VERBOSE" code="_1120_VERBOSE06198">
+  <msg id="1120_VERBOSE" code="_1120_VERBOSE38514">
     <PTPT>Help in the field verbose</PTPT>
     <ENUS>Help in the field verbose</ENUS>
   </msg>
@@ -6277,6 +6529,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Technical  area</ENUS>
     <PTPT>Technical  area</PTPT>
   </msg>
+  <msg id="Variants" code="VARIANTS59281">
+    <PTPT>Variants</PTPT>
+  </msg>
   <msg id="  197" code="__19747339">
     <ENUS>Escolher que tipo de Scorecard se vai utilizar:  avaliação da organização ou monitorização da mesma.</ENUS>
     <PTPT>Escolher que tipo de Scorecard se vai utilizar:  avaliação da organização ou monitorização da mesma.</PTPT>
@@ -6289,81 +6544,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Unknown</ENUS>
     <PTPT>Unknown</PTPT>
   </msg>
-  <msg id="FAQS" code="FAQS53959">
-    <ENUS>FAQS</ENUS>
-    <PTPT>FAQS</PTPT>
-  </msg>
-  <msg id="Tipos de Unidade Org." code="TIPOS_DE_UNIDADE_ORG29246">
-    <PTPT>Tipos de Unidade Org.</PTPT>
-    <ENUS>Tipos de Unidade Org.</ENUS>
-  </msg>
-  <msg id="A condição de escrita da tabela não está a ser cumprida" code="A_CONDICAO_DE_ESCRIT21929">
-    <ENUS>A condição de escrita da tabela não está a ser cumprida</ENUS>
-    <PTPT>A condição de escrita da tabela não está a ser cumprida</PTPT>
-  </msg>
-  <msg id="Ponto de Origem" code="PONTO_DE_ORIGEM28983">
-    <ENUS>Ponto de Origem</ENUS>
-    <PTPT>Ponto de Origem</PTPT>
-  </msg>
-  <msg id="Basics" code="BASICS45095">
-    <PTPT>Basics</PTPT>
-    <ENUS>Basics</ENUS>
-  </msg>
-  <msg id="Legenda" code="LEGENDA60498">
-    <ENUS>Legenda</ENUS>
-    <PTPT>Legenda</PTPT>
-  </msg>
-  <msg id="Alphabetic 3:" code="ALPHABETIC_3_29295">
-    <ENUS>Alphabetic 3:</ENUS>
-    <PTPT>Alphabetic 3:</PTPT>
-  </msg>
-  <msg id="Category types" code="CATEGORY_TYPES54620">
-    <ENUS>Category types</ENUS>
-    <PTPT>Category types</PTPT>
-  </msg>
-  <msg id="Obrigatório" code="OBRIGATORIO46267">
-    <ENUS>Obrigatório</ENUS>
-    <PTPT>Obrigatório</PTPT>
-  </msg>
-  <msg id="Homework done" code="HOMEWORK_DONE45166">
-    <ENUS>Homework done</ENUS>
-    <PTPT>Homework done</PTPT>
-  </msg>
-  <msg id="xxxx-xxx" code="XXXX_XXX51420">
-    <PTPT>xxxx-xxx</PTPT>
-    <ENUS>xxxx-xxx</ENUS>
-  </msg>
-  <msg id="Sub category" code="SUB_CATEGORY06342">
-    <PTPT>Sub category</PTPT>
-    <ENUS>Sub category</ENUS>
-  </msg>
-  <msg id="Expiration date" code="EXPIRATION_DATE34293">
-    <PTPT>Expiration date</PTPT>
-    <ENUS>Expiration date</ENUS>
-  </msg>
-  <msg id="List with columns from the Below table" code="LIST_WITH_COLUMNS_FR36713">
-    <ENUS>List with columns from the Below table</ENUS>
-    <PTPT>Lista com colunas da tabela abaixo</PTPT>
-  </msg>
-  <msg id="Total Activities" code="TOTAL_ACTIVITIES31614">
-    <ENUS>Total Activities</ENUS>
-    <PTPT>Total Activities</PTPT>
-  </msg>
-  <msg id="Alternative Email" code="ALTERNATIVE_EMAIL17444">
-    <ENUS>Alternative Email</ENUS>
-    <PTPT>Alternative Email</PTPT>
-  </msg>
-  <msg id="Recipient key &apos;Comodatário&apos;" code="RECIPIENT_KEY__COMOD31618">
-    <ENUS>Recipient key &apos;Comodatário&apos;</ENUS>
-    <PTPT>Recipient key &apos;Comodatário&apos;</PTPT>
-  </msg>
-  <msg id="Logo" code="LOGO62483">
-    <ENUS>Logo</ENUS>
-    <PTPT>Logo</PTPT>
-  </msg>
-  <msg id="  388" code="__38812468">
-    <ENUS>Documentos do ciclo de gestão</ENUS>
-    <PTPT>Documentos do ciclo de gestão</PTPT>
+  <msg id="Search" code="SEARCH25743">
+    <PTPT>Search</PTPT>
   </msg>
   <msg id="Output documents" code="OUTPUT_DOCUMENTS44871">
     <PTPT>Output documents</PTPT>
@@ -6451,7 +6633,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Attachment</PTPT>
     <ENUS>Attachment</ENUS>
   </msg>
-  <msg id="0% Perc." code="_0__PERC_32208">
+  <msg id="0% Perc." code="_0__PERC_36376">
     <PTPT>0% Perc.</PTPT>
     <ENUS>0% Perc.</ENUS>
   </msg>
@@ -6554,10 +6736,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Manuals</ENUS>
     <PTPT>Manuals</PTPT>
   </msg>
-  <msg id="Indicator Responsible" code="INDICATOR_RESPONSIBL35030">
-    <PTPT>Indicator Responsible</PTPT>
-    <ENUS>Indicator Responsible</ENUS>
-  </msg>
   <msg id="Em execução" code="EM_EXECUCAO53706">
     <ENUS>Em execução</ENUS>
     <PTPT>Em execução</PTPT>
@@ -6582,9 +6760,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Somatório Pts Activ</ENUS>
     <PTPT>Somatório Pts Activ</PTPT>
   </msg>
-  <msg id="All Lendings" code="ALL_LENDINGS09931">
-    <ENUS>All Lendings</ENUS>
-    <PTPT>All Lendings</PTPT>
+  <msg id="[COMPC-&gt;COMPCLAS]" code="_COMPC__COMPCLAS_49611">
+    <PTPT>&#91;COMPC-&gt;COMPCLAS&#93;</PTPT>
   </msg>
   <msg id="  199" code="__19937089">
     <PTPT>Inserção do  código postal.</PTPT>
@@ -6620,6 +6797,10 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="    4" code="____409508">
     <PTPT>Coisa não fungível, que se há-de restituir findo o prazo estipulado.</PTPT>
     <ENUS>Non-fungible thing, which must be returned after the stipulated period.</ENUS>
+  </msg>
+  <msg id="Mock Person Creation" code="MOCK_PERSON_CREATION57826">
+    <ENUS>Mock Person Creation</ENUS>
+    <PTPT>Mock Person Creation</PTPT>
   </msg>
   <msg id="Operational objectives" code="OPERATIONAL_OBJECTIV52684">
     <ENUS>Operational objectives</ENUS>
@@ -6657,7 +6838,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Valor de alerta, abaixo do qual é emitido um alerta ao responsáveis.</ENUS>
     <PTPT>Valor de alerta, abaixo do qual é emitido um alerta ao responsáveis.</PTPT>
   </msg>
-  <msg id="1ªViagem" code="_1AVIAGEM10982">
+  <msg id="1ªViagem" code="_1AVIAGEM08604">
     <ENUS>1ªViagem</ENUS>
     <PTPT>1ªViagem</PTPT>
   </msg>
@@ -6720,6 +6901,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Periodicidade de Scorecards</ENUS>
     <PTPT>Periodicidade de Scorecards</PTPT>
   </msg>
+  <msg id="Release version" code="RELEASE_VERSION03981">
+    <PTPT>Release version</PTPT>
+  </msg>
   <msg id="Asset parameter" code="ASSET_PARAMETER22072">
     <PTPT>Asset parameter</PTPT>
     <ENUS>Asset parameter</ENUS>
@@ -6752,7 +6936,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Registar</ENUS>
     <PTPT>Registar</PTPT>
   </msg>
-  <msg id="1st trip (Loginal Enumeratoin)" code="_1ST_TRIP__LOGINAL_E12996">
+  <msg id="1st trip (Loginal Enumeratoin)" code="_1ST_TRIP__LOGINAL_EN32578">
     <PTPT>1st trip (Loginal Enumeratoin)</PTPT>
     <ENUS>1st trip (Loginal Enumeratoin)</ENUS>
   </msg>
@@ -6851,6 +7035,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Show Closed Maps</ENUS>
     <PTPT>Show Closed Maps</PTPT>
   </msg>
+  <msg id="Lender: Gender" code="LENDER__GENDER58296">
+    <PTPT>Lender: Gender</PTPT>
+  </msg>
   <msg id="Valor mínimo" code="VALOR_MINIMO13976">
     <PTPT>Valor mínimo</PTPT>
     <ENUS>Valor mínimo</ENUS>
@@ -6891,10 +7078,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>bought</ENUS>
     <PTPT>bought</PTPT>
   </msg>
-  <msg id="Game" code="GAME57681">
-    <ENUS>Game</ENUS>
-    <PTPT>Game</PTPT>
-  </msg>
   <msg id="Employee Number" code="EMPLOYEE_NUMBER05861">
     <PTPT>Employee Number</PTPT>
     <ENUS>Employee Number</ENUS>
@@ -6931,10 +7114,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Altura</PTPT>
     <ENUS>Altura</ENUS>
   </msg>
-  <msg id=" 1114_VERBOSE" code="_1114_VERBOSE42095">
-    <PTPT>Help in the zone verbose</PTPT>
-    <ENUS>Help in the zone verbose</ENUS>
-  </msg>
   <msg id="Passenger capacity on the plane" code="PASSENGER_CAPACITY_O45867">
     <ENUS>Passenger capacity on the plane</ENUS>
     <PTPT>Passenger capacity on the plane</PTPT>
@@ -6943,9 +7122,8 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Projectos</PTPT>
     <ENUS>Projectos</ENUS>
   </msg>
-  <msg id="Manual name" code="MANUAL_NAME60077">
-    <PTPT>Manual name</PTPT>
-    <ENUS>Manual name</ENUS>
+  <msg id="examples" code="EXAMPLES50382">
+    <PTPT>examples</PTPT>
   </msg>
   <msg id="Notifications" code="NOTIFICATIONS08466">
     <PTPT>Notifications</PTPT>
@@ -6955,7 +7133,7 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>A temporary address. The period can provide more detailed information.</PTPT>
     <ENUS>A temporary address. The period can provide more detailed information.</ENUS>
   </msg>
-  <msg id="1120" code="_112047598">
+  <msg id="1120" code="_112049780">
     <ENUS>Help in the field</ENUS>
     <PTPT>Help in the field</PTPT>
   </msg>
@@ -7010,10 +7188,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Complete Date of Creation" code="COMPLETE_DATE_OF_CRE57046">
     <PTPT>Complete Date of Creation</PTPT>
     <ENUS>Complete Date of Creation</ENUS>
-  </msg>
-  <msg id="Equipment - 1 month until today" code="EQUIPMENT___1_MONTH_48623">
-    <ENUS>Equipment - 1 month until today</ENUS>
-    <PTPT>Equipamento - 1 mês até hoje</PTPT>
   </msg>
   <msg id="  320" code="__32021092">
     <ENUS>Documento</ENUS>
@@ -7085,6 +7259,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Accordions" code="ACCORDIONS05516">
     <PTPT>Accordions</PTPT>
     <ENUS>Accordions</ENUS>
+  </msg>
+  <msg id="Variant Description" code="VARIANT_DESCRIPTION11900">
+    <PTPT>Variant Description</PTPT>
   </msg>
   <msg id="Y de Origem" code="Y_DE_ORIGEM46845">
     <ENUS>Y de Origem</ENUS>
@@ -7301,6 +7478,9 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Mensage ID</ENUS>
     <PTPT>Mensage ID</PTPT>
   </msg>
+  <msg id="Operações" code="OPERACOES07850">
+    <PTPT>Operações</PTPT>
+  </msg>
   <msg id="   68" code="___6851889">
     <ENUS>Expected date of completion of the Initiative / Project.</ENUS>
     <PTPT>Data prevista de conclusão da Iniciativa / Projecto.</PTPT>
@@ -7328,42 +7508,6 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <PTPT>Zip code</PTPT>
     <ENUS>Zip code</ENUS>
   </msg>
-  <msg id="Fields with table conditions" code="FIELDS_WITH_TABLE_CO37994">
-    <PTPT>Campos com condições na tabela</PTPT>
-    <ENUS>Fields with table conditions</ENUS>
-  </msg>
-  <msg id="Price-by-hour" code="PRICE_BY_HOUR01060">
-    <PTPT>Price-by-hour</PTPT>
-    <ENUS>Price-by-hour</ENUS>
-  </msg>
-  <msg id="Follow-up" code="FOLLOW_UP22119">
-    <ENUS>Follow-up</ENUS>
-    <PTPT>Follow-up</PTPT>
-  </msg>
-  <msg id="Add ANEXD" code="ADD_ANEXD17106">
-    <ENUS>Add ANEXD</ENUS>
-    <PTPT>Add ANEXD</PTPT>
-  </msg>
-  <msg id="Campo com condições server-side" code="CAMPO_COM_CONDICOES_22485">
-    <ENUS>Field with server-side conditions</ENUS>
-    <PTPT>Campo com condições server-side</PTPT>
-  </msg>
-  <msg id="Parado" code="PARADO62293">
-    <PTPT>Parado</PTPT>
-    <ENUS>Parado</ENUS>
-  </msg>
-  <msg id="Save and Return" code="SAVE_AND_RETURN63386">
-    <PTPT>Save and Return</PTPT>
-    <ENUS>Save and Return</ENUS>
-  </msg>
-  <msg id="Closing the sale" code="CLOSING_THE_SALE18336">
-    <PTPT>Closing the sale</PTPT>
-    <ENUS>Closing the sale</ENUS>
-  </msg>
-  <msg id="Scorecard Frequency" code="SCORECARD_FREQUENCY32144">
-    <PTPT>Scorecard Frequency</PTPT>
-    <ENUS>Scorecard Frequency</ENUS>
-  </msg>
   <msg id="Equipment familiy" code="EQUIPMENT_FAMILIY58959">
     <ENUS>Equipment familiy</ENUS>
     <PTPT>Equipment familiy</PTPT>
@@ -7375,6 +7519,10 @@ So, we have our 260 chars for the whole path, including the file name, the exten
   <msg id="Parameters" code="PARAMETERS28294">
     <ENUS>Parameters</ENUS>
     <PTPT>Parameters</PTPT>
+  </msg>
+  <msg id="List with columns from the Below table" code="LIST_WITH_COLUMNS_FR36713">
+    <PTPT>Lista com colunas da tabela abaixo</PTPT>
+    <ENUS>List with columns from the Below table</ENUS>
   </msg>
   <msg id="  179" code="__17959155">
     <ENUS>If the data is entered on a pre-established date (single date) you must tick the box.</ENUS>
@@ -7479,15 +7627,11 @@ So, we have our 260 chars for the whole path, including the file name, the exten
     <ENUS>Changed by</ENUS>
     <PTPT>Alterado por</PTPT>
   </msg>
-  <msg id="Y position" code="Y_POSITION09776">
-    <ENUS>Y position</ENUS>
-    <PTPT>Y position</PTPT>
-  </msg>
   <msg id="IDENTIFICATION" code="IDENTIFICATION40793">
     <PTPT>IDENTIFICATION</PTPT>
     <ENUS>IDENTIFICATION</ENUS>
   </msg>
-  <msg id="1234-5678-90123456789-01" code="_1234_5678_90123456761043">
+  <msg id="1234-5678-90123456789-01" code="_1234_5678_901234567844057">
     <ENUS>1234-5678-90123456789-01</ENUS>
     <PTPT>1234-5678-90123456789-01</PTPT>
   </msg>
@@ -7566,6 +7710,9 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
   <msg id="Bad points" code="BAD_POINTS44459">
     <PTPT>Bad points</PTPT>
     <ENUS>Bad points</ENUS>
+  </msg>
+  <msg id="Storybook" code="STORYBOOK40103">
+    <PTPT>Storybook</PTPT>
   </msg>
   <msg id="Mapa Pai?" code="MAPA_PAI_62316">
     <PTPT>Mapa Pai?</PTPT>
@@ -7813,6 +7960,10 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
     <ENUS>Async process attachments</ENUS>
     <PTPT>Async process attachments</PTPT>
   </msg>
+  <msg id="AI Agents" code="AI_AGENTS01181">
+    <ENUS>AI Agents</ENUS>
+    <PTPT>AI Agents</PTPT>
+  </msg>
   <msg id="Indicator icon" code="INDICATOR_ICON40009">
     <PTPT>Indicator icon</PTPT>
     <ENUS>Indicator icon</ENUS>
@@ -7856,10 +8007,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
   <msg id="Styles" code="STYLES28487">
     <ENUS>Styles</ENUS>
     <PTPT>Styles</PTPT>
-  </msg>
-  <msg id="Photos:" code="PHOTOS_42586">
-    <PTPT>Photos:</PTPT>
-    <ENUS>Photos:</ENUS>
   </msg>
   <msg id="Form" code="FORM54242">
     <ENUS>Form</ENUS>
@@ -7917,13 +8064,16 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
     <ENUS>OU type</ENUS>
     <PTPT>OU type</PTPT>
   </msg>
-  <msg id="1117_VERBOSE" code="_1117_VERBOSE04450">
+  <msg id="1117_VERBOSE" code="_1117_VERBOSE35583">
     <PTPT>Help in the year field  verb</PTPT>
     <ENUS>Help in the year field  verb</ENUS>
   </msg>
   <msg id="Indicator Category" code="INDICATOR_CATEGORY23927">
     <ENUS>Indicator Category</ENUS>
     <PTPT>Indicator Category</PTPT>
+  </msg>
+  <msg id="Pop abrangida" code="POP_ABRANGIDA36477">
+    <PTPT>Pop abrangida</PTPT>
   </msg>
   <msg id="Hour" code="HOUR15646">
     <PTPT>Hour</PTPT>
@@ -8034,10 +8184,6 @@ Proceso:  Centran su medición en el desarrollo de las actividades, las cuales e
     <PTPT>Logbook</PTPT>
     <ENUS>Logbook</ENUS>
   </msg>
-  <msg id="Dadatarians" code="DADATARIANS56438">
-    <ENUS>Dadatarians</ENUS>
-    <PTPT>Dadatarians</PTPT>
-  </msg>
   <msg id="Airport Name" code="AIRPORT_NAME31893">
     <PTPT>Airport Name</PTPT>
   </msg>
@@ -8136,6 +8282,10 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <ENUS>Calculations exclusively with working days?</ENUS>
     <PTPT>Calculations exclusively with working days?</PTPT>
   </msg>
+  <msg id="Alternative Email" code="ALTERNATIVE_EMAIL17444">
+    <PTPT>Alternative Email</PTPT>
+    <ENUS>Alternative Email</ENUS>
+  </msg>
   <msg id="  322" code="__32228994">
     <PTPT>Data de aprovação do QUAR</PTPT>
     <ENUS>Data de aprovação do QUAR</ENUS>
@@ -8172,6 +8322,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <PTPT>Separadores</PTPT>
     <ENUS>Separadores</ENUS>
   </msg>
+  <msg id="AR &lt;br/&gt;&lt;small&gt;Operações (Pop abrangida)&lt;/small&gt;" code="AR__BR___SMALL_OPERA31274">
+    <PTPT>AR &lt;br/&gt;&lt;small&gt;Operações (Pop abrangida)&lt;/small&gt;</PTPT>
+  </msg>
   <msg id="Total value" code="TOTAL_VALUE30570">
     <PTPT>Total value</PTPT>
     <ENUS>Total value</ENUS>
@@ -8194,6 +8347,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   <msg id="Add Points Activities" code="ADD_POINTS_ACTIVITIE57884">
     <PTPT>Add Points Activities</PTPT>
     <ENUS>Add Points Activities</ENUS>
+  </msg>
+  <msg id="Class view" code="CLASS_VIEW23166">
+    <PTPT>Class view</PTPT>
   </msg>
   <msg id="Warehouse Management System" code="WAREHOUSE_MANAGEMENT10443">
     <PTPT>Warehouse Management System</PTPT>
@@ -8247,6 +8403,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   </msg>
   <msg id="Menu 3" code="MENU_330138">
     <PTPT>Menu 3</PTPT>
+  </msg>
+  <msg id="Componentes Class" code="COMPONENTES_CLASS21159">
+    <PTPT>Componentes Class</PTPT>
   </msg>
   <msg id="+34" code="_3417988">
     <ENUS>+34</ENUS>
@@ -8311,6 +8470,10 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <PTPT>Nº Horas Esperadas</PTPT>
     <ENUS>Nº Horas Esperadas</ENUS>
   </msg>
+  <msg id="Ponto de Origem" code="PONTO_DE_ORIGEM28983">
+    <PTPT>Ponto de Origem</PTPT>
+    <ENUS>Ponto de Origem</ENUS>
+  </msg>
   <msg id="Notification Messages" code="NOTIFICATION_MESSAGE60981">
     <ENUS>Notification Messages</ENUS>
     <PTPT>Notification Messages</PTPT>
@@ -8370,6 +8533,10 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   <msg id="Activity Responsible" code="ACTIVITY_RESPONSIBLE38884">
     <ENUS>Activity Responsible</ENUS>
     <PTPT>Activity Responsible</PTPT>
+  </msg>
+  <msg id="Total Activities" code="TOTAL_ACTIVITIES31614">
+    <PTPT>Total Activities</PTPT>
+    <ENUS>Total Activities</ENUS>
   </msg>
   <msg id="Email 2" code="EMAIL_211233">
     <PTPT>Email 2</PTPT>
@@ -8434,6 +8601,10 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <PTPT>Sem dados?</PTPT>
     <ENUS>Sem dados?</ENUS>
   </msg>
+  <msg id="Obrigatório" code="OBRIGATORIO46267">
+    <PTPT>Obrigatório</PTPT>
+    <ENUS>Obrigatório</ENUS>
+  </msg>
   <msg id="Sum Linked Bonuses" code="SUM_LINKED_BONUSES22855">
     <PTPT>Sum Linked Bonuses</PTPT>
     <ENUS>Sum Linked Bonuses</ENUS>
@@ -8478,9 +8649,13 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <PTPT>UI Components</PTPT>
     <ENUS>UI Components</ENUS>
   </msg>
-  <msg id="1116_VERBOSE" code="_1116_VERBOSE64950">
+  <msg id="1116_VERBOSE" code="_1116_VERBOSE45457">
     <ENUS>Help in the Multiline field verbose</ENUS>
     <PTPT>Help in the Multiline field verbose</PTPT>
+  </msg>
+  <msg id="FAQS" code="FAQS53959">
+    <PTPT>FAQS</PTPT>
+    <ENUS>FAQS</ENUS>
   </msg>
   <msg id="Diário" code="DIARIO16236">
     <PTPT>Diário</PTPT>
@@ -8547,6 +8722,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   <msg id="Outline weight" code="OUTLINE_WEIGHT25236">
     <PTPT>Outline weight</PTPT>
     <ENUS>Outline weight</ENUS>
+  </msg>
+  <msg id="AR Operações (Pop abrangida)" code="AR_OPERACOES__POP_AB41622">
+    <PTPT>AR Operações (Pop abrangida)</PTPT>
   </msg>
   <msg id="Does not erase" code="DOES_NOT_ERASE39880">
     <ENUS>Does not erase</ENUS>
@@ -8619,6 +8797,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <PTPT>Type of segments</PTPT>
     <ENUS>Type of segments</ENUS>
   </msg>
+  <msg id="DESCRIPTION" code="DESCRIPTION07438">
+    <PTPT>DESCRIPTION</PTPT>
+  </msg>
   <msg id="Owner default style" code="OWNER_DEFAULT_STYLE03732">
     <PTPT>Owner default style</PTPT>
   </msg>
@@ -8646,12 +8827,18 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <PTPT>conditional (Boolean) (smallint) (storage: 2 byte)</PTPT>
     <ENUS>conditional (Boolean) (smallint) (storage: 2 byte)</ENUS>
   </msg>
+  <msg id="MVC" code="MVC48022">
+    <PTPT>MVC</PTPT>
+  </msg>
   <msg id="Right" code="RIGHT33051">
     <ENUS>Right</ENUS>
     <PTPT>Right</PTPT>
   </msg>
   <msg id="Multiple formats" code="MULTIPLE_FORMATS58755">
     <PTPT>Multiple formats</PTPT>
+  </msg>
+  <msg id="Furniture" code="FURNITURE42200">
+    <PTPT>Furniture</PTPT>
   </msg>
   <msg id="Starting time with inclusive boundary" code="STARTING_TIME_WITH_I44217">
     <PTPT>Starting time with inclusive boundary</PTPT>
@@ -8660,6 +8847,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   <msg id="Tipo de condição" code="TIPO_DE_CONDICAO09986">
     <PTPT>Tipo de condição</PTPT>
     <ENUS>Tipo de condição</ENUS>
+  </msg>
+  <msg id="Concelho" code="CONCELHO13174">
+    <PTPT>Concelho</PTPT>
   </msg>
   <msg id="Optional records" code="OPTIONAL_RECORDS50081">
     <ENUS>Optional records</ENUS>
@@ -8682,6 +8872,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   <msg id="Has login?" code="HAS_LOGIN_58044">
     <ENUS>Has login?</ENUS>
     <PTPT>Has login?</PTPT>
+  </msg>
+  <msg id="Concelho &lt;br/&gt;&lt;small&gt;(Pop residente)&lt;/small&gt;" code="CONCELHO__BR___SMALL54684">
+    <PTPT>Concelho &lt;br/&gt;&lt;small&gt;(Pop residente)&lt;/small&gt;</PTPT>
   </msg>
   <msg id="Potential points" code="POTENTIAL_POINTS10046">
     <ENUS>Potential points</ENUS>
@@ -8707,7 +8900,7 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <ENUS>Delete Optional records</ENUS>
     <PTPT>Eliminar registos facultativos</PTPT>
   </msg>
-  <msg id="2. c-groupbox--minor" code="_2__C_GROUPBOX__MINO12365">
+  <msg id="2. c-groupbox--minor" code="_2__C_GROUPBOX__MINOR27639">
     <PTPT>2. c-groupbox--minor</PTPT>
     <ENUS>2. c-groupbox--minor</ENUS>
   </msg>
@@ -8727,6 +8920,9 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
     <PTPT>Traduções</PTPT>
     <ENUS>Traduções</ENUS>
   </msg>
+  <msg id="RU Operações (Pop abrangida)" code="RU_OPERACOES__POP_AB38271">
+    <PTPT>RU Operações (Pop abrangida)</PTPT>
+  </msg>
   <msg id="Ponto de Destino" code="PONTO_DE_DESTINO54750">
     <PTPT>Ponto de Destino</PTPT>
     <ENUS>Ponto de Destino</ENUS>
@@ -8738,10 +8934,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   <msg id="Floor number" code="FLOOR_NUMBER26169">
     <PTPT>Número do andar</PTPT>
     <ENUS>Floor number</ENUS>
-  </msg>
-  <msg id="Warehouse employees" code="WAREHOUSE_EMPLOYEES19716">
-    <PTPT>Warehouse employees</PTPT>
-    <ENUS>Warehouse employees</ENUS>
   </msg>
   <msg id="Displacement and relationship to the destination side of the connecting line" code="DISPLACEMENT_AND_REL64077">
     <ENUS>Displacement and relationship to the destination side of the connecting line</ENUS>
@@ -8813,6 +9005,12 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   <msg id="Designação de Perspetiva" code="DESIGNACAO_DE_PERSPE58231">
     <PTPT>Designação de Perspetiva</PTPT>
     <ENUS>Designation of Perspective</ENUS>
+  </msg>
+  <msg id="User Interface" code="USER_INTERFACE32384">
+    <PTPT>User Interface</PTPT>
+  </msg>
+  <msg id="RELEASE" code="RELEASE04894">
+    <PTPT>RELEASE</PTPT>
   </msg>
   <msg id="Row Ordering" code="ROW_ORDERING37275">
     <PTPT>Row Ordering</PTPT>
@@ -8895,50 +9093,6 @@ https://dicionario.priberam.org/comodat%C3%A1rio &#91;consultado em 17-12-2018&#
   <msg id="Receipt number" code="RECEIPT_NUMBER31380">
     <PTPT>Receipt number</PTPT>
     <ENUS>Receipt number</ENUS>
-  </msg>
-  <msg id="Gerar automaticamente" code="GERAR_AUTOMATICAMENT15171">
-    <PTPT>Gerar automaticamente</PTPT>
-    <ENUS>Gerar automaticamente</ENUS>
-  </msg>
-  <msg id="Description" code="DESCRIPTION07383">
-    <ENUS>Description</ENUS>
-    <PTPT>Description</PTPT>
-  </msg>
-  <msg id="X Position" code="X_POSITION52184">
-    <PTPT>X Position</PTPT>
-    <ENUS>X Position</ENUS>
-  </msg>
-  <msg id="Asset identification" code="ASSET_IDENTIFICATION53152">
-    <PTPT>Asset identification</PTPT>
-    <ENUS>Asset identification</ENUS>
-  </msg>
-  <msg id="Training Exercise 19" code="TRAINING_EXERCISE_1947850">
-    <PTPT>Exercício de formação 19</PTPT>
-    <ENUS>Training Exercise 19</ENUS>
-  </msg>
-  <msg id="Qualificação" code="QUALIFICACAO07026">
-    <ENUS>Qualificação</ENUS>
-    <PTPT>Qualificação</PTPT>
-  </msg>
-  <msg id="None" code="NONE51124">
-    <ENUS>None</ENUS>
-    <PTPT>None</PTPT>
-  </msg>
-  <msg id="Approval Date" code="APPROVAL_DATE21560">
-    <PTPT>Approval Date</PTPT>
-    <ENUS>Approval Date</ENUS>
-  </msg>
-  <msg id="&gt;AFFINITY GENRE" code="_AFFINITY_GENRE64973">
-    <ENUS>&gt;AFFINITY GENRE</ENUS>
-    <PTPT>&gt;AFFINITY GENRE</PTPT>
-  </msg>
-  <msg id="Frequency" code="FREQUENCY35635">
-    <ENUS>Frequency</ENUS>
-    <PTPT>Frequency</PTPT>
-  </msg>
-  <msg id="Símbolo" code="SIMBOLO25209">
-    <PTPT>Símbolo</PTPT>
-    <ENUS>Símbolo</ENUS>
   </msg>
   <msg id="Has diferente segments?" code="HAS_DIFERENTE_SEGMEN40697">
     <PTPT>Has diferente segments?</PTPT>
@@ -9032,7 +9186,7 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <PTPT>System</PTPT>
     <ENUS>System</ENUS>
   </msg>
-  <msg id="1118" code="_111838179">
+  <msg id="1118" code="_111816434">
     <PTPT>Help in the time field</PTPT>
     <ENUS>Help in the time field</ENUS>
   </msg>
@@ -9095,7 +9249,7 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <PTPT>Ministry Logo</PTPT>
     <ENUS>Ministry Logo</ENUS>
   </msg>
-  <msg id="123456789" code="_12345678953785">
+  <msg id="123456789" code="_12345678902714">
     <ENUS>123456789</ENUS>
     <PTPT>123456789</PTPT>
   </msg>
@@ -9126,6 +9280,9 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <ENUS>Dependent on</ENUS>
     <PTPT>Dependent on</PTPT>
   </msg>
+  <msg id="Asset tag lists" code="ASSET_TAG_LISTS52836">
+    <PTPT>Asset tag lists</PTPT>
+  </msg>
   <msg id="Box (Strategic Map)" code="BOX__STRATEGIC_MAP_60771">
     <ENUS>Box (Strategic Map)</ENUS>
     <PTPT>Box (Strategic Map)</PTPT>
@@ -9153,6 +9310,9 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <PTPT>Text Field</PTPT>
     <ENUS>Text Field</ENUS>
   </msg>
+  <msg id="Accesibilty Compliance &amp; Best Practices" code="ACCESIBILTY_COMPLIAN11604">
+    <PTPT>Accesibilty Compliance &amp; Best Practices</PTPT>
+  </msg>
   <msg id="Notification Email Signatures" code="NOTIFICATION_EMAIL_S37352">
     <PTPT>Notification Email Signatures</PTPT>
     <ENUS>Notification Email Signatures</ENUS>
@@ -9177,7 +9337,7 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <ENUS>&gt;&gt;RECEIPT</ENUS>
     <PTPT>&gt;&gt;RECEIPT</PTPT>
   </msg>
-  <msg id="3. c-groupbox--minor-border-top" code="_3__C_GROUPBOX__MINO47300">
+  <msg id="3. c-groupbox--minor-border-top" code="_3__C_GROUPBOX__MINOR44843">
     <PTPT>3. c-groupbox--minor-border-top</PTPT>
     <ENUS>3. c-groupbox--minor-border-top</ENUS>
   </msg>
@@ -9319,7 +9479,7 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <ENUS>Async process attachment</ENUS>
     <PTPT>Async process attachment</PTPT>
   </msg>
-  <msg id="40" code="_4033029">
+  <msg id="40" code="_4000330">
     <PTPT>40</PTPT>
     <ENUS>40</ENUS>
   </msg>
@@ -9345,9 +9505,13 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <ENUS>Observation</ENUS>
     <PTPT>Observation</PTPT>
   </msg>
-  <msg id="1119_VERBOSE" code="_1119_VERBOSE52944">
+  <msg id="1119_VERBOSE" code="_1119_VERBOSE20366">
     <ENUS>Help in the date field verbose</ENUS>
     <PTPT>Help in the date field verbose</PTPT>
+  </msg>
+  <msg id="Expiration date" code="EXPIRATION_DATE34293">
+    <ENUS>Expiration date</ENUS>
+    <PTPT>Expiration date</PTPT>
   </msg>
   <msg id="Tipo de Dado" code="TIPO_DE_DADO28228">
     <PTPT>Tipo de Dado</PTPT>
@@ -9357,7 +9521,7 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <PTPT>&gt;LANGUAGE</PTPT>
     <ENUS>&gt;LANGUAGE</ENUS>
   </msg>
-  <msg id="12345678912" code="_1234567891237929">
+  <msg id="12345678912" code="_1234567891202679">
     <ENUS>12345678912</ENUS>
     <PTPT>12345678912</PTPT>
   </msg>
@@ -9407,6 +9571,9 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <ENUS>Campo Auxiliar Cont NA</ENUS>
     <PTPT>Campo Auxiliar Cont NA</PTPT>
   </msg>
+  <msg id="Pré-visualização" code="PRE_VISUALIZACAO15030">
+    <PTPT>Pré-visualização</PTPT>
+  </msg>
   <msg id="Indicadores Suficientes" code="INDICADORES_SUFICIEN49060">
     <ENUS>Indicadores Suficientes</ENUS>
     <PTPT>Indicadores Suficientes</PTPT>
@@ -9434,7 +9601,10 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <PTPT>Evaluation Type</PTPT>
     <ENUS>Evaluation Type</ENUS>
   </msg>
-  <msg id="2ª Classe" code="_2A_CLASSE35193">
+  <msg id="VARIANTS/OPTIONS" code="VARIANTS_OPTIONS16637">
+    <PTPT>VARIANTS/OPTIONS</PTPT>
+  </msg>
+  <msg id="2ª Classe" code="_2A_CLASSE50409">
     <ENUS>2ª Classe</ENUS>
     <PTPT>2ª Classe</PTPT>
   </msg>
@@ -9546,6 +9716,9 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <ENUS>NºFuncionário</ENUS>
     <PTPT>NºFuncionário</PTPT>
   </msg>
+  <msg id="When not to use" code="WHEN_NOT_TO_USE63828">
+    <PTPT>When not to use</PTPT>
+  </msg>
   <msg id="Received" code="RECEIVED19242">
     <ENUS>Received</ENUS>
     <PTPT>Received</PTPT>
@@ -9565,6 +9738,10 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
   <msg id="Sexo da pessoa" code="SEXO_DA_PESSOA59108">
     <ENUS>Sexo da pessoa</ENUS>
     <PTPT>Sexo da pessoa</PTPT>
+  </msg>
+  <msg id="Sub category" code="SUB_CATEGORY06342">
+    <ENUS>Sub category</ENUS>
+    <PTPT>Sub category</PTPT>
   </msg>
   <msg id="Image" code="IMAGE65174">
     <PTPT>Image</PTPT>
@@ -9656,6 +9833,9 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
     <PTPT>Dia de recolha dos dados. Insira o dia em que os dados devem ser carregados, conforme a periocidade de recolha definida e o Tipo a definir. Exemplo: para uma periodicidade mensal, o dia 10 e o Tipo “Período seguinte” significa que os dados devem ser carregados até ao dia 10 do mês seguinte.</PTPT>
     <ENUS>Dia de recolha dos dados. Insira o dia em que os dados devem ser carregados, conforme a periocidade de recolha definida e o Tipo a definir. Exemplo: para uma periodicidade mensal, o dia 10 e o Tipo “Período seguinte” significa que os dados devem ser carregados até ao dia 10 do mês seguinte.</ENUS>
   </msg>
+  <msg id="Release" code="RELEASE62976">
+    <PTPT>Release</PTPT>
+  </msg>
   <msg id="Number of expected hours" code="NUMBER_OF_EXPECTED_H57082">
     <ENUS>Number of expected hours</ENUS>
     <PTPT>Number of expected hours</PTPT>
@@ -9667,6 +9847,9 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
   <msg id="Last - First =" code="LAST___FIRST__42481">
     <ENUS>Last - First =</ENUS>
     <PTPT>Last - First =</PTPT>
+  </msg>
+  <msg id="BEHAVIOR" code="BEHAVIOR41854">
+    <PTPT>BEHAVIOR</PTPT>
   </msg>
   <msg id="ADMINISTRATOR" code="ADMINISTRATOR54799">
     <PTPT>ADMINISTRATOR</PTPT>
@@ -9730,6 +9913,10 @@ https://dicionario.priberam.org/comodante &#91;consultado em 17-12-2018&#93;.</P
   <msg id="  121" code="__12157955">
     <ENUS>Created by</ENUS>
     <PTPT>Criado por</PTPT>
+  </msg>
+  <msg id="xxxx-xxx" code="XXXX_XXX51420">
+    <ENUS>xxxx-xxx</ENUS>
+    <PTPT>xxxx-xxx</PTPT>
   </msg>
   <msg id="    5" code="____510167">
     <ENUS>Notification to lessees to return equipment</ENUS>
@@ -9821,6 +10008,10 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
     <ENUS>Town/City</ENUS>
     <PTPT>Town/City</PTPT>
   </msg>
+  <msg id="Logo" code="LOGO62483">
+    <PTPT>Logo</PTPT>
+    <ENUS>Logo</ENUS>
+  </msg>
   <msg id="Items in use" code="ITEMS_IN_USE00587">
     <PTPT>Items in use</PTPT>
     <ENUS>Items in use</ENUS>
@@ -9840,9 +10031,15 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
     <ENUS>Lista de campos</ENUS>
     <PTPT>Lista de campos</PTPT>
   </msg>
+  <msg id="Variants/Options" code="VARIANTS_OPTIONS40793">
+    <PTPT>Variants/Options</PTPT>
+  </msg>
   <msg id="Seller" code="SELLER36870">
     <PTPT>Seller</PTPT>
     <ENUS>Seller</ENUS>
+  </msg>
+  <msg id="Component behavior" code="COMPONENT_BEHAVIOR49688">
+    <PTPT>Component behavior</PTPT>
   </msg>
   <msg id="Dispatch status" code="DISPATCH_STATUS62739">
     <PTPT>Dispatch status</PTPT>
@@ -9851,6 +10048,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
   <msg id="Day" code="DAY27593">
     <PTPT>Day</PTPT>
     <ENUS>Day</ENUS>
+  </msg>
+  <msg id="AA &lt;br /&gt;&lt;small&gt;Operações (Pop abrangida)&lt;/small&gt;" code="AA__BR____SMALL_OPER01734">
+    <PTPT>AA &lt;br /&gt;&lt;small&gt;Operações (Pop abrangida)&lt;/small&gt;</PTPT>
   </msg>
   <msg id="Bought" code="BOUGHT32044">
     <ENUS>Bought</ENUS>
@@ -9899,6 +10099,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
     <PTPT>Cidade</PTPT>
     <ENUS>City</ENUS>
   </msg>
+  <msg id="Background color for category" code="BACKGROUND_COLOR_FOR59228">
+    <PTPT>Background color for category</PTPT>
+  </msg>
   <msg id="Data de nascimento" code="DATA_DE_NASCIMENTO13938">
     <PTPT>Data de nascimento</PTPT>
   </msg>
@@ -9938,6 +10141,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
     <PTPT>This help is for a field of type Creation: Date</PTPT>
     <ENUS>This help is for a field of type Creation: Date</ENUS>
   </msg>
+  <msg id="Container" code="CONTAINER62757">
+    <PTPT>Container</PTPT>
+  </msg>
   <msg id="To routine" code="TO_ROUTINE31339">
     <ENUS>To routine</ENUS>
     <PTPT>To routine</PTPT>
@@ -9957,6 +10163,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
   <msg id="Date seconds" code="DATE_SECONDS65191">
     <ENUS>Date seconds</ENUS>
     <PTPT>Date seconds</PTPT>
+  </msg>
+  <msg id="Equipment: Bought" code="EQUIPMENT__BOUGHT19410">
+    <PTPT>Equipment: Bought</PTPT>
   </msg>
   <msg id="To translate" code="TO_TRANSLATE20058">
     <ENUS>To translate</ENUS>
@@ -10022,6 +10231,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
     <ENUS>HTML format?</ENUS>
     <PTPT>HTML format?</PTPT>
   </msg>
+  <msg id="Sobreposição AR" code="SOBREPOSICAO_AR58360">
+    <PTPT>Sobreposição AR</PTPT>
+  </msg>
   <msg id="   75" code="___7534129">
     <PTPT>Deve aqui ser total e completamente descrita a Iniciativa / Projecto, incluindo os potenciais riscos e ou factores potenciadores da boa concretização e conclusão da mesma.</PTPT>
     <ENUS>This should be a full and complete description of the initiative/project, including the potential risks and/or factors that will help to ensure its successful completion.</ENUS>
@@ -10076,6 +10288,9 @@ Nacional: Se refiere a la propuesta nacional que proviene de las instituciones r
   <msg id="Lending:" code="LENDING_48355">
     <ENUS>Lending:</ENUS>
     <PTPT>Lending:</PTPT>
+  </msg>
+  <msg id="Equip: Loan frequency" code="EQUIP__LOAN_FREQUENC34059">
+    <PTPT>Equip: Loan frequency</PTPT>
   </msg>
   <msg id="Thumbnail" code="THUMBNAIL30025">
     <ENUS>Thumbnail</ENUS>
@@ -10141,6 +10356,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <PTPT>Hora de partida</PTPT>
     <ENUS>Hora de partida</ENUS>
   </msg>
+  <msg id="Background color of the tag" code="BACKGROUND_COLOR_OF_16140">
+    <PTPT>Background color of the tag</PTPT>
+  </msg>
   <msg id="Início do Ano" code="INICIO_DO_ANO45675">
     <ENUS>Início do Ano</ENUS>
     <PTPT>Início do Ano</PTPT>
@@ -10160,6 +10378,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Shadow width" code="SHADOW_WIDTH01769">
     <ENUS>Shadow width</ENUS>
     <PTPT>Shadow width</PTPT>
+  </msg>
+  <msg id="Asset tag list" code="ASSET_TAG_LIST06304">
+    <PTPT>Asset tag list</PTPT>
   </msg>
   <msg id="Notification ID" code="NOTIFICATION_ID25507">
     <PTPT>Notification ID</PTPT>
@@ -10206,6 +10427,10 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Specific path with conditions -&gt; DB + MB + MC + F" code="SPECIFIC_PATH_WITH_C42725">
     <ENUS>Specific path with conditions -&gt; DB + MB + MC + F</ENUS>
+  </msg>
+  <msg id="Preview" code="PREVIEW45357">
+    <PTPT>Preview</PTPT>
+    <ENUS>Preview</ENUS>
   </msg>
   <msg id="Legend" code="LEGEND16814">
     <ENUS>Legend</ENUS>
@@ -10310,6 +10535,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <ENUS>Trabalho de casa efectuado</ENUS>
     <PTPT>Trabalho de casa efectuado</PTPT>
   </msg>
+  <msg id="Component Class" code="COMPONENT_CLASS59977">
+    <PTPT>Component Class</PTPT>
+  </msg>
   <msg id="Building type" code="BUILDING_TYPE57152">
     <PTPT>Tipo de edifício</PTPT>
     <ENUS>Building type</ENUS>
@@ -10406,7 +10634,7 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <ENUS>Activity:</ENUS>
     <PTPT>Activity:</PTPT>
   </msg>
-  <msg id="1123_VERBOSE" code="_1123_VERBOSE41412">
+  <msg id="1123_VERBOSE" code="_1123_VERBOSE41150">
     <ENUS>Help in table list verbose</ENUS>
     <PTPT>Ajuda na lista de tabelas verbosa</PTPT>
   </msg>
@@ -10458,7 +10686,7 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <PTPT>Radio</PTPT>
     <ENUS>Radio</ENUS>
   </msg>
-  <msg id="0%" code="_0_14276">
+  <msg id="0%" code="_0_24019">
     <ENUS>0%</ENUS>
     <PTPT>0%</PTPT>
   </msg>
@@ -10500,6 +10728,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <PTPT>Accordion</PTPT>
     <ENUS>Accordion</ENUS>
   </msg>
+  <msg id="Equipment: Loan frequency" code="EQUIPMENT__LOAN_FREQ19079">
+    <PTPT>Equipment: Loan frequency</PTPT>
+  </msg>
   <msg id="Presentation made" code="PRESENTATION_MADE15117">
     <ENUS>Presentation made</ENUS>
     <PTPT>Presentation made</PTPT>
@@ -10536,9 +10767,15 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <ENUS>Regions of a country</ENUS>
     <PTPT>Regions of a country</PTPT>
   </msg>
+  <msg id="Lending Explorer" code="LENDING_EXPLORER16388">
+    <PTPT>Lending Explorer</PTPT>
+  </msg>
   <msg id="Apresentação" code="APRESENTACAO15975">
     <ENUS>Apresentação</ENUS>
     <PTPT>Apresentação</PTPT>
+  </msg>
+  <msg id="Warning on save property list item" code="WARNING_ON_SAVE_PROP06426">
+    <PTPT>Warning on save property list item</PTPT>
   </msg>
   <msg id="Wharehouse api" code="WHAREHOUSE_API10412">
     <PTPT>Wharehouse api</PTPT>
@@ -10593,6 +10830,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Trigger -&gt; DB + MB + TR" code="TRIGGER____DB___MB__39172">
     <PTPT>Trigger -&gt; DB + MB + TR</PTPT>
   </msg>
+  <msg id="Media" code="MEDIA07084">
+    <PTPT>Media</PTPT>
+  </msg>
   <msg id="Card-img-Background" code="CARD_IMG_BACKGROUND11430">
     <PTPT>Card-img-Background</PTPT>
     <ENUS>Card-img-Background</ENUS>
@@ -10627,6 +10867,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="small integer (storage: 2 byte)" code="SMALL_INTEGER__STORA54196">
     <ENUS>small integer (storage: 2 byte)</ENUS>
     <PTPT>small integer (storage: 2 byte)</PTPT>
+  </msg>
+  <msg id="VARIANT" code="VARIANT06375">
+    <PTPT>VARIANT</PTPT>
   </msg>
   <msg id="Drive" code="DRIVE03517">
     <PTPT>Drive</PTPT>
@@ -10722,6 +10965,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <PTPT>Mechanical</PTPT>
     <ENUS>Mechanical</ENUS>
   </msg>
+  <msg id="Data Display" code="DATA_DISPLAY32113">
+    <PTPT>Data Display</PTPT>
+  </msg>
   <msg id="Antecedência" code="ANTECEDENCIA11137">
     <ENUS>Antecedência</ENUS>
     <PTPT>Antecedência</PTPT>
@@ -10781,6 +11027,10 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <PTPT>Login Name</PTPT>
     <ENUS>Login Name</ENUS>
   </msg>
+  <msg id="Alphabetic 3:" code="ALPHABETIC_3_29295">
+    <PTPT>Alphabetic 3:</PTPT>
+    <ENUS>Alphabetic 3:</ENUS>
+  </msg>
   <msg id="Trimestral" code="TRIMESTRAL58756">
     <PTPT>Trimestral</PTPT>
     <ENUS>Trimestral</ENUS>
@@ -10801,6 +11051,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <PTPT>Utilizador responsável pelo indicador.</PTPT>
     <ENUS>Utilizador responsável pelo indicador.</ENUS>
   </msg>
+  <msg id="Sobreposição AA" code="SOBREPOSICAO_AA55921">
+    <PTPT>Sobreposição AA</PTPT>
+  </msg>
   <msg id="Room" code="ROOM50867">
     <PTPT>Room</PTPT>
     <ENUS>Room</ENUS>
@@ -10819,6 +11072,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="Legacy" code="LEGACY36133">
     <PTPT>Legacy</PTPT>
+  </msg>
+  <msg id="AA Operações (Pop abrangida)" code="AA_OPERACOES__POP_AB04862">
+    <PTPT>AA Operações (Pop abrangida)</PTPT>
   </msg>
   <msg id="Training Exercise 17" code="TRAINING_EXERCISE_1742948">
     <ENUS>Training Exercise 17</ENUS>
@@ -10847,6 +11103,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="objectTypeCode_display" code="OBJECTTYPECODE_DISPL38583">
     <PTPT>objectTypeCode_display</PTPT>
     <ENUS>objectTypeCode_display</ENUS>
+  </msg>
+  <msg id="In Repair" code="IN_REPAIR33602">
+    <PTPT>In Repair</PTPT>
   </msg>
   <msg id="Upper case" code="UPPER_CASE31324">
     <ENUS>Upper case</ENUS>
@@ -10887,6 +11146,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="For returning" code="FOR_RETURNING61907">
     <PTPT>For returning</PTPT>
     <ENUS>For returning</ENUS>
+  </msg>
+  <msg id="Component usage" code="COMPONENT_USAGE46037">
+    <PTPT>Component usage</PTPT>
   </msg>
   <msg id="Date Prop" code="DATE_PROP52803">
     <PTPT>Date Prop</PTPT>
@@ -10983,9 +11245,16 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <ENUS>Weight</ENUS>
     <PTPT>Weight</PTPT>
   </msg>
+  <msg id="Lenders" code="LENDERS26611">
+    <PTPT>Lenders</PTPT>
+  </msg>
   <msg id="boolean (tinyint) (storage 1 byte)" code="BOOLEAN__TINYINT___S57956">
     <PTPT>boolean (tinyint) (storage 1 byte)</PTPT>
     <ENUS>boolean (tinyint) (storage 1 byte)</ENUS>
+  </msg>
+  <msg id="A condição de escrita da tabela não está a ser cumprida" code="A_CONDICAO_DE_ESCRIT21929">
+    <PTPT>A condição de escrita da tabela não está a ser cumprida</PTPT>
+    <ENUS>A condição de escrita da tabela não está a ser cumprida</ENUS>
   </msg>
   <msg id="Articles" code="ARTICLES59822">
     <ENUS>Articles</ENUS>
@@ -10994,6 +11263,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Articles [WAREH-&gt;WAREHDES]" code="ARTICLES__WAREH__WAR35760">
     <ENUS>Articles &#91;WAREH-&gt;WAREHDES&#93;</ENUS>
     <PTPT>Articles &#91;WAREH-&gt;WAREHDES&#93;</PTPT>
+  </msg>
+  <msg id="When to use" code="WHEN_TO_USE63699">
+    <PTPT>When to use</PTPT>
   </msg>
   <msg id="Configuração de homepage" code="CONFIGURACAO_DE_HOME06050">
     <ENUS>Configuração de homepage</ENUS>
@@ -11025,6 +11297,12 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Regions" code="REGIONS31874">
     <PTPT>Regions</PTPT>
     <ENUS>Regions</ENUS>
+  </msg>
+  <msg id="Sistema contabilístico" code="SISTEMA_CONTABILISTI21743">
+    <PTPT>Sistema contabilístico</PTPT>
+  </msg>
+  <msg id="SNC" code="SNC09928">
+    <PTPT>SNC</PTPT>
   </msg>
   <msg id="Rate" code="RATE50728">
     <ENUS>Rate</ENUS>
@@ -11078,6 +11356,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <PTPT>Goal type</PTPT>
     <ENUS>Goal type</ENUS>
   </msg>
+  <msg id="Type view" code="TYPE_VIEW20360">
+    <PTPT>Type view</PTPT>
+  </msg>
   <msg id="Codigo" code="CODIGO30770">
     <PTPT>Codigo</PTPT>
   </msg>
@@ -11105,6 +11386,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <ENUS>Period Start</ENUS>
     <PTPT>Period Start</PTPT>
   </msg>
+  <msg id="Variant" code="VARIANT13333">
+    <PTPT>Variant</PTPT>
+  </msg>
   <msg id="Multiple Select List -&gt; DM" code="MULTIPLE_SELECT_LIST24097">
     <PTPT>Multiple Select List -&gt; DM</PTPT>
   </msg>
@@ -11115,6 +11399,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Non qualified" code="NON_QUALIFIED19103">
     <PTPT>Non qualified</PTPT>
     <ENUS>Non qualified</ENUS>
+  </msg>
+  <msg id="Usage" code="USAGE21575">
+    <PTPT>Usage</PTPT>
   </msg>
   <msg id="Phone number" code="PHONE_NUMBER20774">
     <ENUS>Phone number</ENUS>
@@ -11153,9 +11440,15 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <ENUS>Business intelligence</ENUS>
     <PTPT>Business intelligence</PTPT>
   </msg>
+  <msg id="Entidade (Submodelo de gestão)" code="ENTIDADE__SUBMODELO_01463">
+    <PTPT>Entidade (Submodelo de gestão)</PTPT>
+  </msg>
   <msg id="Y de Destino" code="Y_DE_DESTINO21846">
     <ENUS>Y de Destino</ENUS>
     <PTPT>Y de Destino</PTPT>
+  </msg>
+  <msg id="Detailed description" code="DETAILED_DESCRIPTION36560">
+    <PTPT>Detailed description</PTPT>
   </msg>
   <msg id="Fecho da venda" code="FECHO_DA_VENDA48081">
     <PTPT>Fecho da venda</PTPT>
@@ -11244,6 +11537,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Help in the Multiline field" code="HELP_IN_THE_MULTILIN61004">
     <ENUS>Help in the Multiline field</ENUS>
   </msg>
+  <msg id="Asset tag" code="ASSET_TAG59305">
+    <PTPT>Asset tag</PTPT>
+  </msg>
   <msg id="Modules" code="MODULES33542">
     <PTPT>Modules</PTPT>
     <ENUS>Modules</ENUS>
@@ -11251,6 +11547,12 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Recalendarização" code="RECALENDARIZACAO07403">
     <ENUS>Recalendarização</ENUS>
     <PTPT>Recalendarização</PTPT>
+  </msg>
+  <msg id="Interaction" code="INTERACTION46097">
+    <PTPT>Interaction</PTPT>
+  </msg>
+  <msg id="Equip: Bought" code="EQUIP__BOUGHT47638">
+    <PTPT>Equip: Bought</PTPT>
   </msg>
   <msg id="Location Extension Component" code="LOCATION_EXTENSION_C10932">
     <ENUS>Location Extension Component</ENUS>
@@ -11344,6 +11646,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <ENUS>Contact genres</ENUS>
     <PTPT>Contact genres</PTPT>
   </msg>
+  <msg id="Accessibilty Compliance &amp; Best Practices" code="ACCESSIBILTY_COMPLIA06353">
+    <PTPT>Accessibilty Compliance &amp; Best Practices</PTPT>
+  </msg>
   <msg id="Minimum Map Color" code="MINIMUM_MAP_COLOR51094">
     <PTPT>Minimum Map Color</PTPT>
     <ENUS>Minimum Map Color</ENUS>
@@ -11373,6 +11678,10 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   </msg>
   <msg id="&gt; PERSON" code="__PERSON25810">
     <PTPT>&gt; PERSON</PTPT>
+  </msg>
+  <msg id="Homework done" code="HOMEWORK_DONE45166">
+    <PTPT>Homework done</PTPT>
+    <ENUS>Homework done</ENUS>
   </msg>
   <msg id="Types  (Text)" code="TYPES___TEXT_11871">
     <ENUS>Types  (Text)</ENUS>
@@ -11432,6 +11741,9 @@ The end value includes any matching date/time. For example, the period 2011-05-2
     <PTPT>É obrigatório preencher a descrição: Regra do form com apply</PTPT>
     <ENUS>É obrigatório preencher a descrição: Regra do form com apply</ENUS>
   </msg>
+  <msg id="Components icon" code="COMPONENTS_ICON53573">
+    <PTPT>Components icon</PTPT>
+  </msg>
   <msg id="Foreign Key 2" code="FOREIGN_KEY_255115">
     <ENUS>Foreign Key 2</ENUS>
     <PTPT>Foreign Key 2</PTPT>
@@ -11439,6 +11751,10 @@ The end value includes any matching date/time. For example, the period 2011-05-2
   <msg id="Visit" code="VISIT42885">
     <PTPT>Visit</PTPT>
     <ENUS>Visit</ENUS>
+  </msg>
+  <msg id="  388" code="__38812468">
+    <PTPT>Documentos do ciclo de gestão</PTPT>
+    <ENUS>Documentos do ciclo de gestão</ENUS>
   </msg>
   <msg id="Lendings of [EQUIP-&gt;REGISTNR] - [TPEQU-&gt;TIPOEQUI]" code="LENDINGS_OF__EQUIP__22198">
     <PTPT>Lendings of &#91;EQUIP-&gt;REGISTNR&#93; - &#91;TPEQU-&gt;TIPOEQUI&#93;</PTPT>
@@ -11471,28 +11787,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Async process arguments" code="ASYNC_PROCESS_ARGUME13794">
     <PTPT>Async process arguments</PTPT>
     <ENUS>Async process arguments</ENUS>
-  </msg>
-  <msg id="Previous Year" code="PREVIOUS_YEAR22440">
-    <ENUS>Previous Year</ENUS>
-    <PTPT>Previous Year</PTPT>
-  </msg>
-  <msg id="Manual routine -&gt; DM + MB + R" code="MANUAL_ROUTINE____DM59547">
-    <PTPT>Manual routine -&gt; DM + MB + R</PTPT>
-  </msg>
-  <msg id="Estado do processo" code="ESTADO_DO_PROCESSO07540">
-    <PTPT>Estado do processo</PTPT>
-    <ENUS>Estado do processo</ENUS>
-  </msg>
-  <msg id="Ground Size" code="GROUND_SIZE62055">
-    <PTPT>Tamanho do terreno</PTPT>
-    <ENUS>Ground Size</ENUS>
-  </msg>
-  <msg id="Maximum Perc." code="MAXIMUM_PERC_21724">
-    <PTPT>Maximum Perc.</PTPT>
-    <ENUS>Maximum Perc.</ENUS>
-  </msg>
-  <msg id="Last Name" code="LAST_NAME49666">
-    <PTPT>Last Name</PTPT>
   </msg>
   <msg id="Departure Time" code="DEPARTURE_TIME34884">
     <PTPT>Departure Time</PTPT>
@@ -11528,6 +11822,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="September" code="SEPTEMBER29714">
     <PTPT>September</PTPT>
     <ENUS>September</ENUS>
+  </msg>
+  <msg id="Operação RU" code="OPERACAO_RU18117">
+    <PTPT>Operação RU</PTPT>
   </msg>
   <msg id="Enumeration Prop" code="ENUMERATION_PROP24972">
     <PTPT>Enumeration Prop</PTPT>
@@ -11574,6 +11871,13 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   </msg>
   <msg id="Alert 3" code="ALERT_324982">
     <PTPT>Alert 3</PTPT>
+  </msg>
+  <msg id="Estado do processo" code="ESTADO_DO_PROCESSO07540">
+    <ENUS>Estado do processo</ENUS>
+    <PTPT>Estado do processo</PTPT>
+  </msg>
+  <msg id="Urgent" code="URGENT40554">
+    <PTPT>Urgent</PTPT>
   </msg>
   <msg id="c-groupbox--title-background" code="C_GROUPBOX__TITLE_BA24563">
     <ENUS>c-groupbox--title-background</ENUS>
@@ -11629,6 +11933,13 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>T2</PTPT>
     <ENUS>T2</ENUS>
   </msg>
+  <msg id="Important" code="IMPORTANT21753">
+    <PTPT>Important</PTPT>
+  </msg>
+  <msg id="Recipient key &apos;Comodatário&apos;" code="RECIPIENT_KEY__COMOD31618">
+    <PTPT>Recipient key &apos;Comodatário&apos;</PTPT>
+    <ENUS>Recipient key &apos;Comodatário&apos;</ENUS>
+  </msg>
   <msg id="Date of Birth" code="DATE_OF_BIRTH36542">
     <PTPT>Date of Birth</PTPT>
   </msg>
@@ -11640,8 +11951,15 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <ENUS>Shows the number of the address, to indicate whether the address is the primary, secondary, or other address for the customer.</ENUS>
     <PTPT>Shows the number of the address, to indicate whether the address is the primary, secondary, or other address for the customer.</PTPT>
   </msg>
+  <msg id="ID Entidade" code="ID_ENTIDADE52030">
+    <PTPT>ID Entidade</PTPT>
+  </msg>
   <msg id="More -&gt; c-groupbox--minor-border-top" code="MORE____C_GROUPBOX__37337">
     <PTPT>More -&gt; c-groupbox--minor-border-top</PTPT>
+  </msg>
+  <msg id="Maximum Perc." code="MAXIMUM_PERC_21724">
+    <ENUS>Maximum Perc.</ENUS>
+    <PTPT>Maximum Perc.</PTPT>
   </msg>
   <msg id="Catalog" code="CATALOG23832">
     <ENUS>Catalog</ENUS>
@@ -11653,6 +11971,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Goal value" code="GOAL_VALUE17209">
     <PTPT>Goal value</PTPT>
     <ENUS>Goal value</ENUS>
+  </msg>
+  <msg id="Basics" code="BASICS45095">
+    <ENUS>Basics</ENUS>
+    <PTPT>Basics</PTPT>
   </msg>
   <msg id="Qualificação efectuada" code="QUALIFICACAO_EFECTUA30983">
     <PTPT>Qualificação efectuada</PTPT>
@@ -11683,6 +12005,13 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Main table" code="MAIN_TABLE05017">
     <PTPT>Main table</PTPT>
   </msg>
+  <msg id="Class Description" code="CLASS_DESCRIPTION30131">
+    <PTPT>Class Description</PTPT>
+  </msg>
+  <msg id="Tipos de Unidade Org." code="TIPOS_DE_UNIDADE_ORG29246">
+    <ENUS>Tipos de Unidade Org.</ENUS>
+    <PTPT>Tipos de Unidade Org.</PTPT>
+  </msg>
   <msg id="Valor (Ano N-2)" code="VALOR__ANO_N_2_48120">
     <ENUS>Valor (Ano N-2)</ENUS>
     <PTPT>Valor (Ano N-2)</PTPT>
@@ -11702,6 +12031,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Falhou a validação do form sem apply" code="FALHOU_A_VALIDACAO_D60313">
     <ENUS>Falhou a validação do form sem apply</ENUS>
     <PTPT>Falhou a validação do form sem apply</PTPT>
+  </msg>
+  <msg id="Category types" code="CATEGORY_TYPES54620">
+    <PTPT>Category types</PTPT>
+    <ENUS>Category types</ENUS>
   </msg>
   <msg id="Obs" code="OBS42026">
     <PTPT>Obs</PTPT>
@@ -11725,6 +12058,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <ENUS>Numeric Enumeration</ENUS>
     <PTPT>Numeric Enumeration</PTPT>
   </msg>
+  <msg id="Ground Size" code="GROUND_SIZE62055">
+    <ENUS>Ground Size</ENUS>
+    <PTPT>Tamanho do terreno</PTPT>
+  </msg>
   <msg id="Facilities:" code="FACILITIES_23844">
     <ENUS>Facilities:</ENUS>
     <PTPT>Facilities:</PTPT>
@@ -11732,6 +12069,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Alert" code="ALERT38887">
     <PTPT>Alert</PTPT>
     <ENUS>Alert</ENUS>
+  </msg>
+  <msg id="Legenda" code="LEGENDA60498">
+    <PTPT>Legenda</PTPT>
+    <ENUS>Legenda</ENUS>
   </msg>
   <msg id="Aggregate indicator" code="AGGREGATE_INDICATOR00524">
     <PTPT>Aggregate indicator</PTPT>
@@ -11752,9 +12093,15 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Descrição sumária da Perspectiva.</PTPT>
     <ENUS>Summary description of the Perspective.</ENUS>
   </msg>
+  <msg id="Fases do Processo Produtivo" code="FASES_DO_PROCESSO_PR40429">
+    <PTPT>Fases do Processo Produtivo</PTPT>
+  </msg>
   <msg id="Grid Foto" code="GRID_FOTO05588">
     <PTPT>Grid Foto</PTPT>
     <ENUS>Grid Foto</ENUS>
+  </msg>
+  <msg id="Explore lendings" code="EXPLORE_LENDINGS62734">
+    <PTPT>Explore lendings</PTPT>
   </msg>
   <msg id="Informações principais" code="INFORMACOES_PRINCIPA43450">
     <PTPT>Informações principais</PTPT>
@@ -11777,6 +12124,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <ENUS>MAIN CONTACT</ENUS>
     <PTPT>MAIN CONTACT</PTPT>
   </msg>
+  <msg id="Previous Year" code="PREVIOUS_YEAR22440">
+    <PTPT>Previous Year</PTPT>
+    <ENUS>Previous Year</ENUS>
+  </msg>
   <msg id="  203" code="__20337157">
     <PTPT>Colocação do número de fax.</PTPT>
     <ENUS>Colocação do número de fax.</ENUS>
@@ -11796,9 +12147,15 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Low</PTPT>
     <ENUS>Low</ENUS>
   </msg>
+  <msg id="Interactive" code="INTERACTIVE04535">
+    <PTPT>Interactive</PTPT>
+  </msg>
   <msg id="Is prepared" code="IS_PREPARED16113">
     <PTPT>Is prepared</PTPT>
     <ENUS>Is prepared</ENUS>
+  </msg>
+  <msg id="VUE" code="VUE05393">
+    <PTPT>VUE</PTPT>
   </msg>
   <msg id="Report -&gt; DB + L" code="REPORT____DB___L44238">
     <PTPT>Report -&gt; DB + L</PTPT>
@@ -11837,8 +12194,29 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="WCF" code="WCF53361">
     <PTPT>WCF</PTPT>
   </msg>
+  <msg id="Sobreposição RU" code="SOBREPOSICAO_RU06294">
+    <PTPT>Sobreposição RU</PTPT>
+  </msg>
+  <msg id="RU &lt;br /&gt;&lt;small&gt;Operações (Pop abrangida)&lt;/small&gt;" code="RU__BR____SMALL_OPER49774">
+    <PTPT>RU &lt;br /&gt;&lt;small&gt;Operações (Pop abrangida)&lt;/small&gt;</PTPT>
+  </msg>
   <msg id="Passenger" code="PASSENGER40365">
     <PTPT>Passenger</PTPT>
+  </msg>
+  <msg id="Manual routine -&gt; DM + MB + R" code="MANUAL_ROUTINE____DM59547">
+    <PTPT>Manual routine -&gt; DM + MB + R</PTPT>
+  </msg>
+  <msg id="Operação AR" code="OPERACAO_AR11207">
+    <PTPT>Operação AR</PTPT>
+  </msg>
+  <msg id="Searchs" code="SEARCHS61948">
+    <PTPT>Searchs</PTPT>
+  </msg>
+  <msg id="Conselho" code="CONSELHO10765">
+    <PTPT>Conselho</PTPT>
+  </msg>
+  <msg id="Last Name" code="LAST_NAME49666">
+    <PTPT>Last Name</PTPT>
   </msg>
   <msg id="a:" code="A_47238">
     <PTPT>a:</PTPT>
@@ -12260,6 +12638,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Esta versão do documento não foi ainda gravada.</PTPT>
     <ENUS>This document version is not yet saved.</ENUS>
   </msg>
+  <msg id="Ocorreu um erro ao tentar gravar o(s) seu(s) documento(s)." code="OCORREU_UM_ERRO_AO_T51884">
+    <PTPT>Ocorreu um erro ao tentar gravar o(s) seu(s) documento(s).</PTPT>
+    <ENUS>An error occurred while trying to save your document(s).</ENUS>
+  </msg>
   <msg id="Submeter" code="SUBMETER21206">
     <PTPT>Submeter</PTPT>
     <ENUS>Submit</ENUS>
@@ -12636,7 +13018,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Escolha de diretoria</PTPT>
     <ENUS>Directory selection</ENUS>
   </msg>
-  <msg id="1. Consulta Avançada" code="_1__CONSULTA_AVANCAD17944">
+  <msg id="1. Consulta Avançada" code="_1__CONSULTA_AVANCADA06084">
     <PTPT>1. Consulta Avançada</PTPT>
     <ENUS>1. Advanced Query</ENUS>
   </msg>
@@ -12644,7 +13026,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Escolha a tabela que deseja consultar.</PTPT>
     <ENUS>Choose the table you wish to consult.</ENUS>
   </msg>
-  <msg id="2. Colunas" code="_2__COLUNAS22163">
+  <msg id="2. Colunas" code="_2__COLUNAS04536">
     <PTPT>2. Colunas</PTPT>
     <ENUS>2. Columns</ENUS>
   </msg>
@@ -12668,7 +13050,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Formula...</PTPT>
     <ENUS>Formula...</ENUS>
   </msg>
-  <msg id="3. Ordem" code="_3__ORDEM55890">
+  <msg id="3. Ordem" code="_3__ORDEM06481">
     <PTPT>3. Ordem</PTPT>
     <ENUS>3. Order</ENUS>
   </msg>
@@ -12684,7 +13066,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Ordem:</PTPT>
     <ENUS>Order:</ENUS>
   </msg>
-  <msg id="4. Condições" code="_4__CONDICOES01395">
+  <msg id="4. Condições" code="_4__CONDICOES50834">
     <PTPT>4. Condições</PTPT>
     <ENUS>4. Conditions</ENUS>
   </msg>
@@ -12959,10 +13341,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Código Queue" code="CODIGO_QUEUE61601">
     <PTPT>Código Queue</PTPT>
     <ENUS>Queue Key</ENUS>
-  </msg>
-  <msg id="Operação" code="OPERACAO29482">
-    <PTPT>Operação</PTPT>
-    <ENUS>Operation</ENUS>
   </msg>
   <msg id="Código Interno" code="CODIGO_INTERNO25154">
     <PTPT>Código Interno</PTPT>
@@ -13412,7 +13790,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>R. Viriato, 7</PTPT>
     <ENUS>R. Viriato, 7</ENUS>
   </msg>
-  <msg id="1050-233 LISBOA" code="_1050_233_LISBOA19575">
+  <msg id="1050-233 LISBOA" code="_1050_233_LISBOA64242">
     <PTPT>1050-233 LISBOA</PTPT>
     <ENUS>1050-233 LISBOA</ENUS>
   </msg>
@@ -13819,6 +14197,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Entrada incorreta! Tente outra vez..." code="ENTRADA_INCORRETA__T45717">
     <PTPT>Entrada incorreta! Tente outra vez...</PTPT>
     <ENUS>Incorrect entry! Try again...</ENUS>
+  </msg>
+  <msg id="Estado de autenticação inválido ou expirado! Tente outra vez..." code="ESTADO_DE_AUTENTICAC50027">
+    <PTPT>Estado de autenticação inválido ou expirado! Tente outra vez...</PTPT>
+    <ENUS>Invalid authentication state! Try again...</ENUS>
   </msg>
   <msg id="O ano do sistema é anterior a %d!" code="O_ANO_DO_SISTEMA_E_A33552">
     <PTPT>O ano do sistema é anterior a %d!</PTPT>
@@ -15720,6 +16102,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Configurar colunas</PTPT>
     <ENUS>Configure columns</ENUS>
   </msg>
+  <msg id="Estado do filtro" code="ESTADO_DO_FILTRO26413">
+    <PTPT>Estado do filtro</PTPT>
+    <ENUS>Filter status</ENUS>
+  </msg>
   <msg id="Configurar filtros" code="CONFIGURAR_FILTROS27188">
     <PTPT>Configurar filtros</PTPT>
     <ENUS>Configure filters</ENUS>
@@ -16188,7 +16574,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Colocar os sistemas em manutenção (i.e. MANUT=TRUE no INI global)</PTPT>
     <ENUS>Place maintenance systems (i.and. MAINT=TRUE global ini)</ENUS>
   </msg>
-  <msg id="213 870 652 / (fax) 213 870 697 " code="_213_870_652____FAX_15167">
+  <msg id="213 870 652 / (fax) 213 870 697 " code="_213_870_652____FAX__32054">
     <PTPT>213 870 652 / (fax) 213 870 697 </PTPT>
     <ENUS>213 870 652 / (fax) 213 870 697</ENUS>
   </msg>
@@ -17436,6 +17822,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Gerar</PTPT>
     <ENUS>Generate</ENUS>
   </msg>
+  <msg id="Regenerar" code="REGENERAR39860">
+    <PTPT>Regenerar</PTPT>
+    <ENUS>Regenerate</ENUS>
+  </msg>
   <msg id="Nivel de acesso" code="NIVEL_DE_ACESSO22619">
     <PTPT>Nivel de acesso</PTPT>
     <ENUS>Level Access</ENUS>
@@ -17648,9 +18038,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Filtros</PTPT>
     <ENUS>Filters</ENUS>
   </msg>
-  <msg id="Filtro inativo" code="FILTRO_INATIVO54001">
-    <PTPT>Filtro inativo</PTPT>
-    <ENUS>Inactive filter</ENUS>
+  <msg id="Ocultou colunas com filtros, todos os filtros associados às mesmas serão removidos. Deseja continuar?" code="OCULTOU_COLUNAS_COM_53191">
+    <PTPT>Ocultou colunas com filtros, todos os filtros associados às mesmas serão removidos. Deseja continuar?</PTPT>
+    <ENUS>You have hidden columns with filters, all associated filters will be removed. Do you want to continue?</ENUS>
   </msg>
   <msg id="Resultados de pesquisa:" code="RESULTADOS_DE_PESQUI20786">
     <PTPT>Resultados de pesquisa:</PTPT>
@@ -18624,6 +19014,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Ações coletivas</PTPT>
     <ENUS>Group actions</ENUS>
   </msg>
+  <msg id="Todos registos selecionados" code="TODOS_REGISTOS_SELEC49231">
+    <PTPT>Todos registos selecionados</PTPT>
+    <ENUS>All records selected</ENUS>
+  </msg>
   <msg id="registo(s) selecionado(s)" code="REGISTO_S__SELECIONA64172">
     <PTPT>registo(s) selecionado(s)</PTPT>
     <ENUS>selected record(s)</ENUS>
@@ -18723,6 +19117,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Ou" code="OU11765">
     <PTPT>Ou</PTPT>
     <ENUS>Or</ENUS>
+  </msg>
+  <msg id="E" code="E12427">
+    <PTPT>E</PTPT>
+    <ENUS>And</ENUS>
   </msg>
   <msg id="Repetição da Password Nova:" code="REPETICAO_DA_PASSWOR01181">
     <PTPT>Repetição da Password Nova:</PTPT>
@@ -19059,6 +19457,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="A exportar..." code="A_EXPORTAR___20494">
     <PTPT>A exportar...</PTPT>
     <ENUS>Exporting...</ENUS>
+  </msg>
+  <msg id="A importar..." code="A_IMPORTAR___42816">
+    <PTPT>A importar...</PTPT>
+    <ENUS>Importing...</ENUS>
   </msg>
   <msg id="Relatório do Sistema" code="RELATORIO_DO_SISTEMA49744">
     <PTPT>Relatório do Sistema</PTPT>
@@ -20404,6 +20806,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Diaporama</PTPT>
     <ENUS>Slideshow</ENUS>
   </msg>
+  <msg id="Ir para a diapositiva {0}" code="IR_PARA_A_DIAPOSITIV34370">
+    <PTPT>Ir para a diapositiva &#123;0&#125;</PTPT>
+    <ENUS>Go to slide &#123;0&#125;</ENUS>
+  </msg>
   <msg id="Grelha" code="GRELHA37797">
     <PTPT>Grelha</PTPT>
     <ENUS>Grid</ENUS>
@@ -20607,10 +21013,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Dados do registo" code="DADOS_DO_REGISTO10198">
     <PTPT>Dados do registo</PTPT>
     <ENUS>Record data</ENUS>
-  </msg>
-  <msg id="Tags" code="TAGS54909">
-    <PTPT>Tags</PTPT>
-    <ENUS>Tags</ENUS>
   </msg>
   <msg id="ID de notificação" code="ID_DE_NOTIFICACAO24601">
     <PTPT>ID de notificação</PTPT>
@@ -21024,8 +21426,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Línguagem</PTPT>
     <ENUS>Language</ENUS>
   </msg>
-  <msg id="Relatórios por Lingua" code="RELATORIOS_POR_LINGU35356">
-    <PTPT>Relatórios por Lingua</PTPT>
+  <msg id="Relatórios por Língua" code="RELATORIOS_POR_LINGU09488">
+    <PTPT>Relatórios por Língua</PTPT>
     <ENUS>Report by Language</ENUS>
   </msg>
   <msg id="Identificador de slot" code="IDENTIFICADOR_DE_SLO30549">
@@ -21256,10 +21658,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Eliminar condição</PTPT>
     <ENUS>Remove Condition</ENUS>
   </msg>
-  <msg id="Filtros avançados" code="FILTROS_AVANCADOS32501">
-    <PTPT>Filtros avançados</PTPT>
-    <ENUS>Advanced filters</ENUS>
-  </msg>
   <msg id="Aplicar filtro" code="APLICAR_FILTRO50221">
     <PTPT>Aplicar filtro</PTPT>
     <ENUS>Apply filter</ENUS>
@@ -21292,21 +21690,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Gravar filtro</PTPT>
     <ENUS>Save filter</ENUS>
   </msg>
-  <msg id="Remover filtro" code="REMOVER_FILTRO51662">
-    <PTPT>Remover filtro</PTPT>
-    <ENUS>Remove filter</ENUS>
-  </msg>
-  <msg id="Remover filtros" code="REMOVER_FILTROS62153">
-    <PTPT>Remover filtros</PTPT>
-    <ENUS>Remove filters</ENUS>
-  </msg>
-  <msg id="Activar filtro" code="ACTIVAR_FILTRO21924">
-    <PTPT>Activar filtro</PTPT>
-    <ENUS>Activate filter</ENUS>
-  </msg>
-  <msg id="Desactivar filtro" code="DESACTIVAR_FILTRO34573">
-    <PTPT>Desactivar filtro</PTPT>
-    <ENUS>Deactivate filter</ENUS>
+  <msg id="O valor que introduziu não é válido para a coluna &quot;{0}&quot;. Por favor, introduza um valor válido e tente novamente." code="O_VALOR_QUE_INTRODUZ29216">
+    <PTPT>O valor que introduziu não é válido para a coluna &quot;&#123;0&#125;&quot;. Por favor, introduza um valor válido e tente novamente.</PTPT>
+    <ENUS>The value you entered isn&apos;t valid for the &quot;&#123;0&#125;&quot; column. Please enter a valid value and try again.</ENUS>
   </msg>
   <msg id="contém" code="CONTEM47071">
     <PTPT>contém</PTPT>
@@ -21420,17 +21806,9 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Ordenar descendente</PTPT>
     <ENUS>Sort descending</ENUS>
   </msg>
-  <msg id="Mover para filtros avançados" code="MOVER_PARA_FILTROS_A24438">
-    <PTPT>Mover para filtros avançados</PTPT>
-    <ENUS>Move to advanced filters</ENUS>
-  </msg>
-  <msg id="Filtros globais" code="FILTROS_GLOBAIS30027">
-    <PTPT>Filtros globais</PTPT>
-    <ENUS>Global filters</ENUS>
-  </msg>
-  <msg id="Filtros ativos" code="FILTROS_ATIVOS07219">
-    <PTPT>Filtros ativos</PTPT>
-    <ENUS>Active filters</ENUS>
+  <msg id="Remover ordenação" code="REMOVER_ORDENACAO54707">
+    <PTPT>Remover ordenação</PTPT>
+    <ENUS>Remove sorting</ENUS>
   </msg>
   <msg id="Remover todos" code="REMOVER_TODOS43893">
     <PTPT>Remover todos</PTPT>
@@ -22176,15 +22554,15 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Utilizar uma password de tempo limitado (TOTP) obtida a partir de uma aplicação. Um nº de 6 dígitos fornecido pela aplicação deve ser introduzido durante o login.</PTPT>
     <ENUS>Use a Time-based one-time password (TOTP) provided by an application. A 6 digit number provided by the application must be entered during login.</ENUS>
   </msg>
-  <msg id="1. Install one of the following applications:" code="_1__INSTALL_ONE_OF_T16684">
+  <msg id="1. Install one of the following applications:" code="_1__INSTALL_ONE_OF_TH01951">
     <PTPT>1. Instale uma das seguintes aplicações:</PTPT>
     <ENUS>1. Install one of the following applications:</ENUS>
   </msg>
-  <msg id="2. Use the application to scan the QRCode or manually insert the code:" code="_2__USE_THE_APPLICAT04769">
+  <msg id="2. Use the application to scan the QRCode or manually insert the code:" code="_2__USE_THE_APPLICATI49933">
     <PTPT>2. Utilize a aplicação para ler o QRCode ou introduza a chave de configuração manualmente:</PTPT>
     <ENUS>2. Use the application to scan the QRCode or manually insert the code:</ENUS>
   </msg>
-  <msg id="3. Fill the 6 digit code obtained from the application" code="_3__FILL_THE_6_DIGIT12132">
+  <msg id="3. Fill the 6 digit code obtained from the application" code="_3__FILL_THE_6_DIGIT_41708">
     <PTPT>3. Coloque a chave de 6 dígitos devolvida pela aplicação</PTPT>
     <ENUS>3. Fill the 6 digit code obtained from the application</ENUS>
   </msg>
@@ -22251,10 +22629,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Gestor de Vistas" code="GESTOR_DE_VISTAS43375">
     <PTPT>Gestor de Vistas</PTPT>
     <ENUS>View manager</ENUS>
-  </msg>
-  <msg id="Limpar Redimensionamento" code="LIMPAR_REDIMENSIONAM00007">
-    <PTPT>Limpar Redimensionamento</PTPT>
-    <ENUS>Clear resize</ENUS>
   </msg>
   <msg id="Mover os registros selecionados para a tab" code="MOVER_OS_REGISTROS_S04579">
     <PTPT>Mover os registros selecionados para a tab</PTPT>
@@ -22455,6 +22829,10 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Essa vista já existe." code="ESSA_VISTA_JA_EXISTE52743">
     <PTPT>Essa vista já existe.</PTPT>
     <ENUS>This view already exists.</ENUS>
+  </msg>
+  <msg id="A vista com o nome &apos;{0}&apos; não existe." code="A_VISTA_COM_O_NOME__41907">
+    <PTPT>A vista com o nome &apos;&#123;0&#125;&apos; não existe.</PTPT>
+    <ENUS>The view with name &apos;&#123;0&#125;&apos; doesn&apos;t exist.</ENUS>
   </msg>
   <msg id="Deseja substituí-la por esta?" code="DESEJA_SUBSTITUI_LA_25718">
     <PTPT>Deseja substituí-la por esta?</PTPT>
@@ -22712,8 +23090,8 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Sistema de Dados Atual</PTPT>
     <ENUS>Current Data System</ENUS>
   </msg>
-  <msg id="Autenticação de  Base de Datos" code="AUTENTICACAO_DE__BAS42362">
-    <PTPT>Autenticação de  Base de Datos</PTPT>
+  <msg id="Autenticação na Base de Dados" code="AUTENTICACAO_NA_BASE39084">
+    <PTPT>Autenticação na Base de Dados</PTPT>
     <ENUS>Database authentication</ENUS>
   </msg>
   <msg id="Corretor de Mensagens" code="CORRETOR_DE_MENSAGEN22044">
@@ -22976,7 +23354,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Como funciona:</PTPT>
     <ENUS>How it works:</ENUS>
   </msg>
-  <msg id="1. Criação do DEK:" code="_1__CRIACAO_DO_DEK_21842">
+  <msg id="1. Criação do DEK:" code="_1__CRIACAO_DO_DEK_32052">
     <PTPT>1. Criação do DEK:</PTPT>
     <ENUS>1. DEK Creation:</ENUS>
   </msg>
@@ -22984,7 +23362,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Um DEK é criado dentro de um banco de dados específico e é usado apenas para TDE.</PTPT>
     <ENUS>A DEK is created within a specific database and is only used for TDE.</ENUS>
   </msg>
-  <msg id="2. Proteção do DEK:" code="_2__PROTECAO_DO_DEK_52374">
+  <msg id="2. Proteção do DEK:" code="_2__PROTECAO_DO_DEK_44233">
     <PTPT>2. Proteção do DEK:</PTPT>
     <ENUS>2. DEK Protection:</ENUS>
   </msg>
@@ -22992,7 +23370,7 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>O DEK é protegido por um certificado (comprado ou auto-assinado) armazenado no banco de dados mestre da instância do SQL Server.</PTPT>
     <ENUS>The DEK is protected by a certificate (purchased or self-signed) stored in the master database of the SQL Server instance.</ENUS>
   </msg>
-  <msg id="3. Criptografia/Descriptografia:" code="_3__CRIPTOGRAFIA_DES22705">
+  <msg id="3. Criptografia/Descriptografia:" code="_3__CRIPTOGRAFIA_DESC36757">
     <PTPT>3. Criptografia/Descriptografia:</PTPT>
     <ENUS>3. Encryption/Decryption:</ENUS>
   </msg>
@@ -23368,15 +23746,15 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <PTPT>Atribuir rapidamente um grupo de utilizadores a múltiplas funções</PTPT>
     <ENUS>Quick assign group of users to multiple roles</ENUS>
   </msg>
-  <msg id="1. Selecione utilizadores: Escolha os utilizadores que deseja atribuir." code="_1__SELECIONE_UTILIZ36383">
+  <msg id="1. Selecione utilizadores: Escolha os utilizadores que deseja atribuir." code="_1__SELECIONE_UTILIZA54069">
     <PTPT>1. Selecione utilizadores: Escolha os utilizadores que deseja atribuir.</PTPT>
     <ENUS>1. Select users: Choose the users you want to assign.</ENUS>
   </msg>
-  <msg id="2. Selecione funções: Selecione as funções que deseja atribuir." code="_2__SELECIONE_FUNCOE01301">
+  <msg id="2. Selecione funções: Selecione as funções que deseja atribuir." code="_2__SELECIONE_FUNCOES21542">
     <PTPT>2. Selecione funções: Selecione as funções que deseja atribuir.</PTPT>
     <ENUS>2. Select roles: Select the roles you&apos;d like to assign.</ENUS>
   </msg>
-  <msg id="3. Reveja e confirme: Pré-visualize as suas alterações e confirme-as para aplicar aos utilizadores selecionados." code="_3__REVEJA_E_CONFIRM63315">
+  <msg id="3. Reveja e confirme: Pré-visualize as suas alterações e confirme-as para aplicar aos utilizadores selecionados." code="_3__REVEJA_E_CONFIRME45679">
     <PTPT>3. Reveja e confirme: Pré-visualize as suas alterações e confirme-as para aplicar aos utilizadores selecionados.</PTPT>
     <ENUS>3. Review and confirm: Preview your changes and confirm them to apply to the selected users.</ENUS>
   </msg>
@@ -23480,10 +23858,6 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
     <ENUS>Editor &amp; Preview</ENUS>
     <PTPT>Editor e Pré-visualização</PTPT>
   </msg>
-  <msg id="Preview" code="PREVIEW45357">
-    <ENUS>Preview</ENUS>
-    <PTPT>Pré-visualização</PTPT>
-  </msg>
   <msg id="Full screen" code="FULL_SCREEN61499">
     <ENUS>Full screen</ENUS>
     <PTPT>Ecrã inteiro</PTPT>
@@ -23559,5 +23933,57 @@ https://dicionario.priberam.org/comodato &#91;accessed on 17-12-2018&#93;.</ENUS
   <msg id="Ativo" code="ATIVO30536">
     <PTPT>Ativo</PTPT>
     <ENUS>Enabled</ENUS>
+  </msg>
+  <msg id="A chamar o agente de IA" code="A_CHAMAR_O_AGENTE_DE11459">
+    <PTPT>A chamar o agente de IA</PTPT>
+    <ENUS>Calling AI agent</ENUS>
+  </msg>
+  <msg id="Centrar no mapa" code="CENTRAR_NO_MAPA05060">
+    <PTPT>Centrar no mapa</PTPT>
+    <ENUS>Center on the map</ENUS>
+  </msg>
+  <msg id="Voltar para" code="VOLTAR_PARA50593">
+    <ENUS>Back to</ENUS>
+    <PTPT>Voltar para</PTPT>
+  </msg>
+  <msg id="Erro ao atualizar a palavra-passe em" code="ERRO_AO_ATUALIZAR_A_25317">
+    <PTPT>Erro ao atualizar a palavra-passe em</PTPT>
+    <ENUS>Error updating the password in</ENUS>
+  </msg>
+  <msg id="Falha na autenticação. As credenciais estão incorretas." code="FALHA_NA_AUTENTICACA09267">
+    <PTPT>Falha na autenticação. As credenciais estão incorretas.</PTPT>
+    <ENUS>Authentication failed. The credentials are incorrect.</ENUS>
+  </msg>
+  <msg id="Limpar" code="LIMPAR62016">
+    <PTPT>Limpar</PTPT>
+    <ENUS>Clear</ENUS>
+  </msg>
+  <msg id="Insert below" code="INSERT_BELOW30358">
+    <ENUS>Insert below</ENUS>
+    <PTPT>Inserir abaixo</PTPT>
+  </msg>
+  <msg id="A exportação não pôde ser concluída: não há colunas que possam ser exportadas." code="A_EXPORTACAO_NAO_POD03671">
+    <PTPT>A exportação não pôde ser concluída: não há colunas que possam ser exportadas.</PTPT>
+    <ENUS>Export could not be completed: there are no columns that can be exported.</ENUS>
+  </msg>
+  <msg id="Modo de Segurança MCP" code="MODO_DE_SEGURANCA_MC18759">
+    <PTPT>Modo de Segurança MCP</PTPT>
+    <ENUS>MCP Security Mode</ENUS>
+  </msg>
+  <msg id="Define o modo de segurança para comunicação com o servidor MCP. JWT requer autenticação com token, None permite acesso sem autenticação." code="DEFINE_O_MODO_DE_SEG18180">
+    <PTPT>Define o modo de segurança para comunicação com o servidor MCP. JWT requer autenticação com token, None permite acesso sem autenticação.</PTPT>
+    <ENUS>Defines the security mode for MCP server communication. JWT requires token authentication, None allows access without authentication.</ENUS>
+  </msg>
+  <msg id="Chave de Encriptação JWT" code="CHAVE_DE_ENCRIPTACAO37781">
+    <PTPT>Chave de Encriptação JWT</PTPT>
+    <ENUS>JWT Encryption Key</ENUS>
+  </msg>
+  <msg id="Chave secreta utilizada para encriptar e validar tokens JWT. Obrigatória quando o modo de segurança é JWT." code="CHAVE_SECRETA_UTILIZ48448">
+    <PTPT>Chave secreta utilizada para encriptar e validar tokens JWT. Obrigatória quando o modo de segurança é JWT.</PTPT>
+    <ENUS>Secret key used to encrypt and validate JWT tokens. Required when security mode is JWT.</ENUS>
+  </msg>
+  <msg id="Opções de seleção" code="OPCOES_DE_SELECAO40249">
+    <PTPT>Opções de seleção</PTPT>
+    <ENUS>Select options</ENUS>
   </msg>
 </Messages>

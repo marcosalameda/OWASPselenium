@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="CAMPO"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.CAMPO___AERO_NAME____.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___AERO_NAME____.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.CAMPO___AERO_NAME____.isVisible">
+					<q-col
+						v-if="controls.CAMPO___AERO_NAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___AERO_NAME____.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___AERO_NAME____"
 							v-on="controls.CAMPO___AERO_NAME____.handlers"
@@ -111,13 +120,14 @@
 								v-bind="controls.CAMPO___AERO_NAME____.seeMoreParams"
 								v-on="controls.CAMPO___AERO_NAME____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_DESCRIP_.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_DESCRIP_.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_DESCRIP_.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_DESCRIP_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_DESCRIP_.isVisible"
 							class="i-textarea"
 							v-bind="controls.CAMPO___FLDS_DESCRIP_"
 							v-on="controls.CAMPO___FLDS_DESCRIP_.handlers"
@@ -129,13 +139,14 @@
 								v-bind="controls.CAMPO___FLDS_DESCRIP_.props"
 								v-on="controls.CAMPO___FLDS_DESCRIP_.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_NPASSAGE.isVisible || controls.CAMPO___FLDS_DURATION.isVisible || controls.CAMPO___FLDS_PRICE___.isVisible || controls.CAMPO___FLDS_PRECOBIL.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_NPASSAGE.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_NPASSAGE.isVisible || controls.CAMPO___FLDS_DURATION.isVisible || controls.CAMPO___FLDS_PRICE___.isVisible || controls.CAMPO___FLDS_PRECOBIL.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_NPASSAGE.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_NPASSAGE.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_NPASSAGE"
 							v-on="controls.CAMPO___FLDS_NPASSAGE.handlers"
@@ -147,11 +158,12 @@
 								v-bind="controls.CAMPO___FLDS_NPASSAGE.props"
 								@update:model-value="model.ValNpassage.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_DURATION.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.CAMPO___FLDS_DURATION.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_DURATION.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_DURATION"
 							v-on="controls.CAMPO___FLDS_DURATION.handlers"
@@ -163,11 +175,12 @@
 								v-bind="controls.CAMPO___FLDS_DURATION.props"
 								@update:model-value="model.ValDuration.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_PRICE___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.CAMPO___FLDS_PRICE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_PRICE___.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_PRICE___"
 							v-on="controls.CAMPO___FLDS_PRICE___.handlers"
@@ -179,11 +192,12 @@
 								v-bind="controls.CAMPO___FLDS_PRICE___.props"
 								@update:model-value="model.ValPrice.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_PRECOBIL.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.CAMPO___FLDS_PRECOBIL.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_PRECOBIL.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_PRECOBIL"
 							v-on="controls.CAMPO___FLDS_PRECOBIL.handlers"
@@ -195,13 +209,14 @@
 								v-bind="controls.CAMPO___FLDS_PRECOBIL.props"
 								@update:model-value="model.ValPrecobil.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_DATE____.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_DATE____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_DATE____.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_DATE____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_DATE____.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_DATE____"
 							v-on="controls.CAMPO___FLDS_DATE____.handlers"
@@ -215,13 +230,14 @@
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_DATETIME.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_DATETIME.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_DATETIME.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_DATETIME.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_DATETIME.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_DATETIME"
 							v-on="controls.CAMPO___FLDS_DATETIME.handlers"
@@ -235,13 +251,14 @@
 								@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
 								@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_DATESECO.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_DATESECO.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_DATESECO.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_DATESECO.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_DATESECO.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_DATESECO"
 							v-on="controls.CAMPO___FLDS_DATESECO.handlers"
@@ -255,13 +272,14 @@
 								@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
 								@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_TIME____.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_TIME____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_TIME____.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_TIME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_TIME____.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_TIME____"
 							v-on="controls.CAMPO___FLDS_TIME____.handlers"
@@ -275,13 +293,14 @@
 								@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
 								@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_YEAR____.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_YEAR____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_YEAR____.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_YEAR____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_YEAR____.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_YEAR____"
 							v-on="controls.CAMPO___FLDS_YEAR____.handlers"
@@ -293,13 +312,14 @@
 								v-bind="controls.CAMPO___FLDS_YEAR____.props"
 								@update:model-value="model.ValYear.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_PRIMVIAG.isVisible || controls.CAMPO___FLDS_CONDITIO.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_PRIMVIAG.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_PRIMVIAG.isVisible || controls.CAMPO___FLDS_CONDITIO.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_PRIMVIAG.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_PRIMVIAG.isVisible"
 							class="i-checkbox"
 							v-bind="controls.CAMPO___FLDS_PRIMVIAG"
 							v-on="controls.CAMPO___FLDS_PRIMVIAG.handlers"
@@ -307,17 +327,18 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.CAMPO___FLDS_PRIMVIAG.isVisible"
 									v-bind="controls.CAMPO___FLDS_PRIMVIAG.props"
 									v-on="controls.CAMPO___FLDS_PRIMVIAG.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_CONDITIO.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.CAMPO___FLDS_CONDITIO.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_CONDITIO.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_CONDITIO"
 							v-on="controls.CAMPO___FLDS_CONDITIO.handlers"
@@ -325,19 +346,20 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.CAMPO___FLDS_CONDITIO.isVisible"
 									v-bind="controls.CAMPO___FLDS_CONDITIO.props"
 									v-on="controls.CAMPO___FLDS_CONDITIO.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_CLASS___.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_CLASS___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_CLASS___.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_CLASS___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_CLASS___.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_CLASS___"
 							v-on="controls.CAMPO___FLDS_CLASS___.handlers"
@@ -349,13 +371,14 @@
 								v-bind="controls.CAMPO___FLDS_CLASS___.props"
 								@update:model-value="model.ValClass.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_CLASSNUM.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_CLASSNUM.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_CLASSNUM.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_CLASSNUM.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_CLASSNUM.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_CLASSNUM"
 							v-on="controls.CAMPO___FLDS_CLASSNUM.handlers"
@@ -367,31 +390,33 @@
 								v-bind="controls.CAMPO___FLDS_CLASSNUM.props"
 								@update:model-value="model.ValClassnum.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_LOGICENU.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_LOGICENU.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_LOGICENU.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_LOGICENU.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_LOGICENU.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_LOGICENU"
 							v-on="controls.CAMPO___FLDS_LOGICENU.handlers"
 							:loading="controls.CAMPO___FLDS_LOGICENU.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
-							<q-toggle-input
+							<q-switch
 								v-if="controls.CAMPO___FLDS_LOGICENU.isVisible"
 								v-bind="controls.CAMPO___FLDS_LOGICENU.props"
 								v-on="controls.CAMPO___FLDS_LOGICENU.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_LOGO____.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_LOGO____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_LOGO____.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_LOGO____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_LOGO____.isVisible"
 							class="q-image"
 							v-bind="controls.CAMPO___FLDS_LOGO____"
 							v-on="controls.CAMPO___FLDS_LOGO____.handlers"
@@ -403,13 +428,14 @@
 								v-bind="controls.CAMPO___FLDS_LOGO____.props"
 								v-on="controls.CAMPO___FLDS_LOGO____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_ATTACH__.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_ATTACH__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_ATTACH__.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_ATTACH__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_ATTACH__.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_ATTACH__"
 							v-on="controls.CAMPO___FLDS_ATTACH__.handlers"
@@ -421,13 +447,14 @@
 								v-bind="controls.CAMPO___FLDS_ATTACH__.props"
 								v-on="controls.CAMPO___FLDS_ATTACH__.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_CREATUSE.isVisible || controls.CAMPO___FLDS_CREATDAT.isVisible || controls.CAMPO___FLDS_CREATHOU.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_CREATUSE.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_CREATUSE.isVisible || controls.CAMPO___FLDS_CREATDAT.isVisible || controls.CAMPO___FLDS_CREATHOU.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_CREATUSE.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_CREATUSE.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_CREATUSE"
 							v-on="controls.CAMPO___FLDS_CREATUSE.handlers"
@@ -439,11 +466,12 @@
 								@blur="onBlur(controls.CAMPO___FLDS_CREATUSE, model.ValCreatuse.value)"
 								@change="model.ValCreatuse.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_CREATDAT.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.CAMPO___FLDS_CREATDAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_CREATDAT.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_CREATDAT"
 							v-on="controls.CAMPO___FLDS_CREATDAT.handlers"
@@ -457,11 +485,12 @@
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_CREATHOU.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.CAMPO___FLDS_CREATHOU.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_CREATHOU.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_CREATHOU"
 							v-on="controls.CAMPO___FLDS_CREATHOU.handlers"
@@ -475,13 +504,14 @@
 								@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
 								@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CAMPO___FLDS_CREATINS.isVisible">
-					<q-control-wrapper
-						v-show="controls.CAMPO___FLDS_CREATINS.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CAMPO___FLDS_CREATINS.isVisible">
+					<q-col
+						v-if="controls.CAMPO___FLDS_CREATINS.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CAMPO___FLDS_CREATINS.isVisible"
 							class="i-text"
 							v-bind="controls.CAMPO___FLDS_CREATINS"
 							v-on="controls.CAMPO___FLDS_CREATINS.handlers"
@@ -495,10 +525,10 @@
 								@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -507,7 +537,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -516,6 +546,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -527,12 +558,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -552,7 +583,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormCampoViewModel.js'
 
@@ -630,7 +661,8 @@
 					primaryKey: 'ValCodflds',
 					designation: computed(() => this.Resources.LISTA_DE_CAMPO62169),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -738,7 +770,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1008,7 +1044,7 @@
 						id: 'CAMPO___FLDS_PRIMVIAG',
 						name: 'PRIMVIAG',
 						size: 'small',
-						label: computed(() => this.Resources._1AVIAGEM10982),
+						label: computed(() => this.Resources._1AVIAGEM08604),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.right),
 						controlLimits: [
@@ -1038,7 +1074,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 2,
-						labelId: 'label_CAMPO___FLDS_CLASS___',
 						arrayName: 'CLASS',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -1068,7 +1103,7 @@
 						id: 'CAMPO___FLDS_LOGICENU',
 						name: 'LOGICENU',
 						size: 'medium',
-						label: computed(() => this.Resources._1ST_TRIP__LOGICAL_E36923),
+						label: computed(() => this.Resources._1ST_TRIP__LOGICAL_EN19524),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxIntegers: 1,
@@ -1119,7 +1154,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
-						labelId: 'label_CAMPO___FLDS_CREATUSE',
 						controlLimits: [
 						],
 					}, this),
@@ -1305,11 +1339,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1319,7 +1351,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1329,7 +1361,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1349,19 +1381,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1382,7 +1428,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1402,19 +1448,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1433,11 +1493,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1447,7 +1505,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1455,8 +1513,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1464,7 +1520,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1472,8 +1528,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1481,7 +1535,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1489,11 +1543,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1503,7 +1555,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1513,7 +1565,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1574,6 +1626,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CAMPO]/
 // eslint-disable-next-line

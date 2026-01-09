@@ -89,6 +89,8 @@ namespace GenioMVC.ViewModels.Feeca
 
 		private decimal? _auxFldsValNpassage { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -349,6 +351,17 @@ namespace GenioMVC.ViewModels.Feeca
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -487,7 +500,7 @@ namespace GenioMVC.ViewModels.Feeca
 
 			if (feeca___flds_descrip_DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableFldsDescrip, "sTableFldsDescrip", "dTableFldsDescrip", qs, "flds");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -536,7 +549,7 @@ namespace GenioMVC.ViewModels.Feeca
 
 				TableFldsDescrip.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableFldsDescrip.Query = query;
-				TableFldsDescrip.Elements = listing.RowsForViewModel<GenioMVC.Models.Flds>((r) => new GenioMVC.Models.Flds(m_userContext, r, true, _fieldsToSerialize_FEECA___FLDS_DESCRIP_));
+				TableFldsDescrip.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Flds(m_userContext, r, true, _fieldsToSerialize_FEECA___FLDS_DESCRIP_));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

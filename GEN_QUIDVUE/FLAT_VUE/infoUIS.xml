@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Projecto>
+	<Definicoes>
+		<Sistema>GQT</Sistema>
+		<Cliente>QUIDVUE</Cliente>
+		<Versao>4420</Versao>
+	</Definicoes>
+	<Modulos>
+		<Modulo ID="UIS">
+			<PROG>User Interface</PROG>
+			<PLATAFOR>VUE</PLATAFOR>
+		</Modulo>
+	</Modulos>
+</Projecto>

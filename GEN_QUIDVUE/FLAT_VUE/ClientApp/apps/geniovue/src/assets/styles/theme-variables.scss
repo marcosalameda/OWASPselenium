@@ -168,6 +168,7 @@ $dashboard-bg: $light !default;
 $group-border-top: 1px solid $input-border-color !default;
 $group-border-bottom: 1px solid $input-border-color !default;
 
-// FIXME: this needs to be here 
+// FIXME: this needs to be here
 // since $font-family-sans-serif is a customizable "theme" variable, for now
 $font-headings: $font-family-sans-serif !default;
+$headings-text-transform: uppercase !default;

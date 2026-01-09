@@ -19,6 +19,7 @@
 			<td
 				v-if="canShowColumn(column)"
 				:key="index"
+				:headers="headerCellIds[column.name]"
 				:class="cellClasses(column)"
 				:style="getCellStyles(column)"
 				:title="getCellTitle(column)">
@@ -62,17 +63,6 @@
 										icon="circle-arrow-down"
 										:key="row.Rownum" />
 								</q-button>
-								<q-button
-									v-if="addAction"
-									:aria-label="texts.rowAddNewAfter"
-									variant="text"
-									data-table-action-selected="false"
-									tabindex="-1"
-									@click="addRowAfter">
-									<q-icon
-										icon="add"
-										:key="row.Rownum" />
-								</q-button>
 							</q-button-group>
 						</div>
 					</slot>
@@ -89,9 +79,10 @@
 							:action-groups="rowActionGroups"
 							:readonly="readonly"
 							:texts="texts"
+							:base-id="rowId"
 							data-table-action-selected="false"
 							tabindex="-1"
-							@click:action="(emitAction) => emitRowAction(emitAction)"
+							@click:action="emitRowAction"
 						/>
 					</slot>
 				</template>
@@ -149,7 +140,8 @@
 						:name="getCellSlotName(column)"
 						:row="row"
 						:column="column"
-						:cell-value="getValueFromRow(row, column)">
+						:cell-value="getValueFromRow(row, column)"
+						:emitEvent="handleEmitEvent">
 						<!-- If column has tree expand / collapse action, add wrapper element, if not, use v-fragment which adds content but does not add wrapper element -->
 						<span
 							v-if="hasTreeAction(column)"
@@ -190,7 +182,6 @@
 									})
 								"
 								:background-color="getBackgroundColor(column)"
-								:raw-value="getValueFromRow(row, column)"
 								:table-name="tableName"
 								:row-index="rowIndex"
 								:column-name="column.name"
@@ -349,6 +340,14 @@
 			 * Tooltip text for cells within the row, typically based on the content or state of the cell.
 			 */
 			cellTitles: {
+				type: Object,
+				default: () => ({})
+			},
+
+			/**
+			 * IDs for header cells.
+			 */
+			headerCellIds: {
 				type: Object,
 				default: () => ({})
 			},
@@ -577,21 +576,16 @@
 			'getValueFromRow',
 			'getCellSlotName',
 			'canShowColumn',
-			'isSortableColumn',
 			'isActionsColumn',
 			'isExtendedActionsColumn',
 			'isChecklistColumn',
 			'isDragAndDropColumn',
 			'isTotalizerColumn',
-			'getRowClasses',
 			'getRowTitle',
-			'rowIsValid',
 			'hasExtendedAction',
 			'hasDataAction',
 			'getCellDataDisplay',
-			'getRowCellDataTitles',
-			'isRowSelected',
-			'rowWithoutChildren'
+			'isRowSelected'
 		],
 
 		mounted() {
@@ -617,7 +611,7 @@
 			},
 
 			rowClasses() {
-				let classes = ['c-table__row']
+				const classes = ['c-table__row']
 
 				//Row selected
 				if (this.rowSelected) classes.push('vbt-row-selected')
@@ -642,7 +636,7 @@
 						if (typeof value === 'boolean' && value) {
 							classes += key
 						} else if (typeof value === 'function') {
-							let truth = value(this.row)
+							const truth = value(this.row)
 							if (typeof truth === 'boolean' && truth) {
 								classes += ' '
 								classes += key
@@ -711,19 +705,35 @@
 			/**
 			 * Computes the list of actions and extra properties to use in the row actions
 			 */
-			rowActions(){
-				return [
+			rowActions() {
+				const mainRowActions = [
 					...this.customActions.map(act => ({
 						...act,
 						group: 'custom',
-						isVisible: this.row.actionVisibility?.[act.id] ?? act.isVisible
+						isVisible: this.row.actionVisibility?.[act.id] ?? act.isVisible,
+						disabled: this.row.actionDisability?.[act.id] ?? act.disabled
 					})),
 					...this.crudActions.map(act => ({
 						...act,
 						group: 'crud',
 						disabled: !genericFunctions.btnHasPermission(this.row.btnPermission, act.id)
 					}))
-				];
+				]
+
+				if(typeof this.addAction === 'object') {
+					const containsDragAndDrop = this.columns?.some((column) => this.isDragAndDropColumn(column)) ?? false
+
+					if(containsDragAndDrop) {
+						mainRowActions.unshift({
+							...this.addAction,
+							title: this.texts.insertBelow,
+							icon: { icon: 'add' },
+							group: 'dragAndDrop'
+						})
+					}
+				}
+
+				return mainRowActions;
 			},
 
 			/**
@@ -739,6 +749,7 @@
 					customClass: undefined
 				}
 				return [
+					{ id: 'dragAndDrop', ...commonSettings },
 					{ id: 'custom', ...commonSettings },
 					{ id: 'crud', ...commonSettings },
 				]
@@ -746,6 +757,11 @@
 		},
 
 		methods: {
+			handleEmitEvent(eventName, params)
+			{
+				this.$emit(eventName, ...params)
+			},
+
 			//CSS classes for cell
 			/**
 			 * Get CSS classes for column
@@ -753,10 +769,10 @@
 			 * @returns String
 			 */
 			cellClasses(column) {
-				let classes = []
+				const classes = []
 
 				//BEGIN: Text alignment class
-				let alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
+				const alignments = ['text-justify', 'text-right', 'text-left', 'text-center']
 
 				//Undefined data type, use rowTextAlignment
 				if (has(column, 'rowTextAlignment') && includes(alignments, column.rowTextAlignment)) {
@@ -777,7 +793,7 @@
 						if (typeof value === 'boolean' && value) {
 							classes.push(key)
 						} else if (typeof value === 'function') {
-							let truth = value(this.row, column, this.getValueFromRow(this.row, column.name))
+							const truth = value(this.row, column, this.getValueFromRow(this.row, column.name))
 							if (typeof truth === 'boolean' && truth) {
 								classes.push(key)
 							}
@@ -833,7 +849,7 @@
 			 * @returns
 			 */
 			rowClickAction() {
-				this.$emit('row-click', this.row)
+				this.$emit('row-click', this.row, this.rowId)
 			},
 
 			/**
@@ -845,17 +861,12 @@
 
 				switch(key)
 				{
-					case "Insert":
-						// Insert new record
-						this.$emit('row-action', { id: 'insert', rowKeyPath: this.rowKeyPath ?? [this.rowKey] })
-						event.preventDefault()
-						break
 					case "Delete":
 						// Prevent if not focused on the row element
 						if (event.target.tagName !== 'TR')
 							break
 						// Delete record
-						this.$emit('row-action', { id: 'delete', rowKeyPath: this.rowKeyPath ?? [this.rowKey] })
+						this.$emit('row-action', { id: 'delete', rowKeyPath: this.rowKeyPath ?? [this.rowKey], returnElement: this.rowId })
 						event.preventDefault()
 						break
 				}
@@ -873,7 +884,7 @@
 					case 'Enter':
 						// Trigger only from the row and cell elements.
 						if (event?.target.tagName === 'TR' || event?.target.tagName === 'TD')
-							this.$emit('row-click', this.row)
+							this.$emit('row-click', this.row, this.rowId)
 						break
 				}
 			},
@@ -966,10 +977,25 @@
 
 			/**
 			 * Emit row action
-			 * @param emitAction {Object}
-			 * @returns Boolean
+			 * @param {Object} actionEventData Event data
 			 */
-			emitRowAction(emitAction) {
+			emitRowAction(actionEventData) {
+				let emitAction = actionEventData
+
+				// Check if it is a Drag&Drop action
+				if(emitAction?.group === 'dragAndDrop' && emitAction.id === 'insert') {
+					// Add new row after this row
+					const addNewAction = cloneDeep(this.addAction)
+					if (!addNewAction) return
+
+					// Pre-fill order field with current + 1
+					const sortColumnName = `${this.sortOrderColumn.area}.${this.sortOrderColumn.field}`.toLowerCase()
+					addNewAction.params.prefillValues = {
+						[sortColumnName]: parseInt(listFunctions.getCellValue(this.row, this.sortOrderColumn)) + 1
+					}
+					emitAction = { action: addNewAction }
+				}
+
 				if (this.row.Value !== undefined && this.row.Value !== null)
 					emitAction.rowValue = this.row.Value
 
@@ -988,7 +1014,7 @@
 			 * @returns
 			 */
 			reorderRow(shift) {
-				var shiftValue = parseInt(shift)
+				const shiftValue = parseInt(shift)
 				//Update column value
 				this.$emit('row-reorder', { row: this.row, sortOrderColumn: this.sortOrderColumn, shiftValue })
 			},
@@ -999,7 +1025,7 @@
 			 * @returns
 			 */
 			reorderRowUpDown(e) {
-				var shiftValue = 0
+				let shiftValue = 0
 				//Key pressed: tab
 				//Must disable ordering keys right after keyup if it's the tab key
 				//in order to avoid reordering rows when using shift+tab to tab backwards through elements
@@ -1018,21 +1044,6 @@
 
 				//Update column value
 				this.reorderRow(shiftValue)
-			},
-
-			/**
-			 * Add new row after this row
-			 * @returns
-			 */
-			addRowAfter() {
-				var addNewAction = cloneDeep(this.addAction)
-				if (!addNewAction) return
-
-				const sortColumnName = `${this.sortOrderColumn.area.toLowerCase()}.${this.sortOrderColumn.field.toLowerCase()}`
-				addNewAction.params.prefillValues = {}
-				addNewAction.params.prefillValues[sortColumnName] =
-					parseInt(listFunctions.getCellValue(this.row, this.sortOrderColumn)) + 1
-				this.emitRowAction({ action: addNewAction })
 			},
 
 			onSelect(event)

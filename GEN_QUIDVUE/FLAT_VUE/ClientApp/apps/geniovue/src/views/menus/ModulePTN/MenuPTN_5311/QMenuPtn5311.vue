@@ -32,7 +32,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import _foreach from 'lodash-es/forEach'
 	import { computed } from 'vue'
 
@@ -51,7 +51,7 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import qEnums from '@quidgest/clientapp/constants/enums'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	const requiredTextResources = ['QMenuPTN_5311', 'hardcoded', 'messages']
 
@@ -108,8 +108,6 @@
 			// does NOT have access to `this` component instance,
 			// because it has not been created yet when this guard is called!
 
-			to.params.isPopup = 'true'
-
 			next((vm) => vm.updateMenuNavigation(to))
 		},
 
@@ -124,18 +122,19 @@
 
 		mounted()
 		{
+			const props = {
+				title: computed(() => this.Resources.REPORT_FORMAT51516),
+				dismissible: true,
+				focusWrap: true
+			}
+
 			const modalProps = {
 				isActive: true,
-				hideHeader: false,
-				hideFooter: true,
-				dismissWithEsc: true,
-				closeButtonEnable: true,
-				dismissAction: this.goBack,
-				headerTitle: computed(() => this.Resources.REPORT_FORMAT51516)
+				dismissAction: this.goBack
 			}
 
 			// Show modal after necessary resources are loaded (e.g., header title)
-			this.componentOnLoadProc.once(() => this.setModalProperties(modalProps), this)
+			this.componentOnLoadProc.once(() => this.setModalProperties(props, modalProps), this)
 		},
 
 		methods: {

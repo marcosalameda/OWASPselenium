@@ -2,10 +2,13 @@
 
 using CSGenio.core.di;
 using CSGenio.framework;
+using CSGenio.business;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-
+using System.IO;
+using System.Net.Http;
+using Newtonsoft.Json.Linq;
 namespace CSGenio.core.ai;
 
 /// <summary>
@@ -24,7 +27,7 @@ public abstract class AiAgent
     /// </summary>
     /// <param name="service">An implementation of IChatbotService to communicate with the chatbot.</param>
     /// <exception cref="ArgumentNullException">Thrown if the service is null.</exception>
-    public AiAgent(IChatbotService service)
+    protected AiAgent(IChatbotService service)
     {
         _service = service ?? throw new ArgumentNullException(nameof(service));
     }
@@ -49,23 +52,31 @@ public abstract class AiAgent
 
     public abstract string AGENT_ID { get; }
 
-    public class AgentRequestData
+    public List<DBFile> Files { get; set; }
+
+    /// <summary>
+    /// Sends a prompt to the chatbot and retrieves a response asynchronously.
+    /// </summary>
+    /// <param name="user">The user sending the request</param>
+    /// <returns>A task representing the asynchronous operation, returning an instance of OutData.</returns>
+    [Obsolete("Use GetResponseAsync with AgentContextData parameter instead.")]
+    public async Task<OutData> GetResponseAsync<OutData>(User user)
     {
-        public object jsonSchema { get; set; }
-        public string prompt { get; set; }
-        public string systemPrompt { get; set; }
-        public string project { get; set; }
+        var context = new AgentContextData
+        {
+            AgentId = AGENT_ID,
+            Username = user.Name
+        };
+        return await GetResponseAsync<OutData>(context);
     }
 
     /// <summary>
     /// Sends a prompt to the chatbot and retrieves a response asynchronously.
     /// </summary>
-    /// <param name="prompt">The input message sent to the chatbot.</param>
-    /// <param name="prompt">The user sending the request</param>
+    /// <param name="context">Context information of where the agent was executed</param>
     /// <returns>A task representing the asynchronous operation, returning an instance of OutData.</returns>
-    public async Task<OutData> GetResponseAsync<OutData>(User user)
+    public async Task<OutData> GetResponseAsync<OutData>(AgentContextData context)
     {
-
         try
         {
             var tags = new List<KeyValuePair<string, object>>() {
@@ -76,11 +87,11 @@ public abstract class AiAgent
             {
 
                 // Construct the request payload with necessary parameters
-                var requestData = BuildRequestData();
-                Log.Info($"User ${user.Name} called {AGENT_ID}"); 
+                AgentRequestData requestData = BuildRequestData(context);
+                Log.Info($"User ${context.Username} called {AGENT_ID}");
                 // Call the chatbot service asynchronously and return the result
                 return await _service.CallChatbotFunctionAsync<OutData>(requestData)
-                    .ConfigureAwait(false);            
+                    .ConfigureAwait(false);
             }
         }
         catch (Exception ex)
@@ -90,15 +101,27 @@ public abstract class AiAgent
         }
     }
 
-    public AgentRequestData BuildRequestData()
+    public AgentRequestData BuildRequestData(User user)
     {
-        return new AgentRequestData
+        var agentContextData = new AgentContextData
         {
-            jsonSchema = JsonSchema,
-            prompt = BuildUserPrompt(),
-            systemPrompt = BuildSystemPrompt(),
-            project = Configuration.Application.Name // Static app identifier
+            AgentId = AGENT_ID,
+            Username = user.Name
         };
+        return BuildRequestData(agentContextData);
+    }
+
+    public AgentRequestData BuildRequestData(AgentContextData contextData)
+    {
+        var requestData = new AgentRequestData(
+                JsonSchema,
+                BuildUserPrompt(),
+                BuildSystemPrompt(),
+                Configuration.Application.Name,
+                Files,
+                contextData
+            );
+        return requestData;
     }
 
     /// <summary>
@@ -106,20 +129,9 @@ public abstract class AiAgent
     /// </summary>
     /// <param name="requestData"> The request data </param>
     /// <returns></returns>
-    public object GetAgentPromptJobId(User user, string formKey)
+    public object GetAgentPromptJobId(AgentContextData contextData)
     {
-        var agentData = BuildRequestData();
-        var requestData = new 
-        {
-            agentData.jsonSchema,
-            agentData.prompt,
-            agentData.systemPrompt,
-            agentData.project,
-
-            username = user.Name,
-            agentId = AGENT_ID,
-            formId = formKey,
-        };
+        var requestData = BuildRequestData(contextData);
 
         var jobId = _service.CallChabotAgentPromptAsync<object>(requestData)
                         .GetAwaiter()
@@ -131,14 +143,30 @@ public abstract class AiAgent
     /// <summary>
     /// Sends a prompt to the chatbot and retrieves a response synchronously.
     /// </summary>
-    /// <param name="prompt">The input message sent to the chatbot.</param>
-    /// <param name="prompt">The user sending the request</param>
+    /// <param name="user">The user sending the request</param>
     /// <returns>An instance of OutData, parsed from the returned data</returns>
+    public OutData GetResponse<OutData>(AgentContextData context)
+    {
+        return GetResponseAsync<OutData>(context)
+            .GetAwaiter()
+            .GetResult();
+    }
+
+    /// <summary>
+    /// Sends a prompt to the chatbot and retrieves a response synchronously.
+    /// </summary>
+    /// <param name="user">The user sending the request</param>
+    /// <returns>An instance of OutData, parsed from the returned data</returns>
+    [Obsolete("Use GetResponse with AgentContextData parameter instead.")]
     public OutData GetResponse<OutData>(User user)
     {
-        return GetResponseAsync<OutData>(user)
+        var context = new AgentContextData
+        {
+            AgentId = AGENT_ID,
+            Username = user.Name
+        };
+        return GetResponseAsync<OutData>(context)
             .GetAwaiter()
             .GetResult();
     }
 }
-

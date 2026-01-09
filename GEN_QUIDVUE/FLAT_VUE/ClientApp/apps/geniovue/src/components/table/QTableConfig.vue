@@ -2,19 +2,6 @@
 	<!-- BEGIN: Config Popup -->
 	<teleport
 		v-if="showPopup"
-		:to="`#q-modal-${modalId}-header`"
-		:key="domKey">
-		<div>
-			<h4 
-				class="c-modal__header-title"
-				:id="`q-modal-${modalId}_title`">
-				{{ texts.tableConfig }}
-			</h4>
-		</div>
-	</teleport>
-
-	<teleport
-		v-if="showPopup"
 		:to="`#q-modal-${modalId}-body`"
 		:key="domKey">
 		<q-tab-container
@@ -27,8 +14,8 @@
 					v-for="tab in tabGroup.tabsList"
 					:key="tab.id">
 					<section v-show="tabGroup.selectedTab === tab.id">
-						<div :id="'q-modal-' + tab.id + '-header'"></div>
-						<div :id="'q-modal-' + tab.id + '-body'"></div>
+						<div :id="`q-modal-${tab.id}-header`"></div>
+						<div :id="`q-modal-${tab.id}-body`"></div>
 					</section>
 				</template>
 			</template>
@@ -42,11 +29,10 @@
 		<template
 			v-for="tab in tabGroup.tabsList"
 			:key="tab.id">
-			<section v-show="tabGroup.selectedTab === tab.id">
-				<div :id="'q-modal-' + tab.id + '-footer'"></div>
-			</section>
+			<div
+				v-show="tabGroup.selectedTab === tab.id"
+				:id="`q-modal-${tab.id}-footer`" />
 		</template>
-		<div class="actions float-right"></div>
 	</teleport>
 	<!-- END: Config Popup -->
 </template>
@@ -127,7 +113,7 @@
 							id: 'column-config',
 							componentId: 'columnConfig',
 							name: 'columns',
-							label: this.texts.configureColumns,
+							label: computed(() => this.texts.columns),
 							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'columnConfig'])?.active === false),
 							isVisible: computed(() => {
 								return (
@@ -140,11 +126,11 @@
 							id: 'advanced-filters',
 							componentId: 'advancedFilters',
 							name: 'filters',
-							label: this.texts.advancedFiltersText,
+							label: computed(() => this.texts.filtersText),
 							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'advancedFilters'])?.active === false),
 							isVisible: computed(() => {
 								return (
-									this.tableCtrl.config.allowAdvancedFilters &&
+									this.tableCtrl.config.allowColumnFilters &&
 									_find(this.tableCtrl.config.configOptionsUse, ['id', 'advancedFilters'])?.visible
 								)
 							})
@@ -153,7 +139,7 @@
 							id: 'view-save',
 							componentId: 'viewSave',
 							name: 'newView',
-							label: this.texts.saveViewText,
+							label: computed(() => this.texts.saveViewText),
 							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'viewSave'])?.active === false),
 							isVisible: computed(() => {
 								return (
@@ -165,7 +151,7 @@
 							id: 'views',
 							componentId: 'views',
 							name: 'views',
-							label: this.texts.viewManagerText,
+							label: computed(() => this.texts.viewManagerText),
 							isBlocked: computed(() => _find(this.tableCtrl.config.configOptionsUse, ['id', 'views'])?.active === false),
 							isVisible: computed(() => {
 								return this.tableCtrl.config.allowManageViews && _find(this.tableCtrl.config.configOptionsUse, ['id', 'views'])?.visible
@@ -179,7 +165,15 @@
 		methods: {
 			//Show popup
 			fnShowPopup() {
-				this.$emit('show-popup', { id: this.modalId, props: { returnElement: this.signal.returnElement } })
+				this.$emit('show-popup', {
+					props: {
+						title: this.texts.tableConfig
+					},
+					modalProps: {
+						id: this.modalId,
+						returnElement: this.signal.returnElement
+					}
+				})
 				this.$nextTick().then(() => {
 					this.showPopup = true
 					this.domKey++
@@ -188,20 +182,13 @@
 
 			//Hide popup
 			fnHidePopup() {
-				//This is needed to reset the extra properties used in the advanced filters tab
-				//If this is not done, these properties remain and can show up next time the user opens table configuration
-				this.$emit('signal-component', 'advancedFilters', { columnFilter: null, columnName: null, selectedFilterIdx: undefined }, true)
 				this.$emit('hide-popup', this.modalId)
 			},
 
-			getTab(tab, selectedTab) {
-				return _find(this[tab]['tabsList'], (x) => x.id === selectedTab)
-			},
-
 			setAllTabsShowContent(tabGroupId, show, mergeProps) {
-				for (let tabId in this[tabGroupId]['tabsList']) {
-					let tabObj = this[tabGroupId]['tabsList'][tabId]
-					this.$emit('signal-component', tabObj.componentId, { showInline: show, showHeader: false }, mergeProps)
+				for (const tabId in this[tabGroupId]['tabsList']) {
+					const tabObj = this[tabGroupId]['tabsList'][tabId]
+					this.$emit('signal-component', tabObj.componentId, { showInline: show }, mergeProps)
 				}
 			},
 

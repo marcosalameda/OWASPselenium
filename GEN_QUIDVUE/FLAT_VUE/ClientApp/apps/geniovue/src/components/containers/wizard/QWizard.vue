@@ -200,7 +200,7 @@
 			 */
 			wizardClasses()
 			{
-				var classes = []
+				const classes = []
 
 				if (this.hasSteps)
 				{

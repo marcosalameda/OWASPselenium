@@ -6,6 +6,21 @@ import { useUserDataStore } from '../../stores/userData'
 import { Base } from './base'
 import { Date } from './date'
 
+/**
+ * Factory function to get new instances of an empty document data.
+ * @returns A new empty document data value.
+ */
+function getEmptyValue() {
+	return {
+		documentId: null,
+		ticket: null,
+		fileData: null,
+		deleteType: -1,
+		submitMode: -1,
+		version: '1'
+	}
+}
+
 export class DocumentData extends Base {
 	constructor(options) {
 		super(
@@ -21,14 +36,8 @@ export class DocumentData extends Base {
 						versions: 1, // Deletes all versions except the last one.
 						all: 2 // Deletes the document and all it's versions.
 					}),
-					value: {
-						documentId: null,
-						ticket: null,
-						fileData: null,
-						deleteType: -1,
-						submitMode: -1,
-						version: '1'
-					}
+					value: getEmptyValue(),
+					originalValue: getEmptyValue()
 				},
 				options
 			)
@@ -40,23 +49,6 @@ export class DocumentData extends Base {
 	 */
 	get isDirty() {
 		return this.value.fileData !== null || this.value.deleteType !== -1
-	}
-
-	/**
-	 * @override
-	 */
-	hasSameValue() {
-		// FIXME: If the document is changed server-side while the user navigates to the support form,
-		//        when they return, the value saved in the client-side store will be restored
-		//        in favor of the newer version from the server-side.
-		return true
-	}
-
-	/**
-	 * @override
-	 */
-	updateValue(newValue) {
-		super.updateValue(_cloneDeep(newValue))
 	}
 
 	/**
@@ -98,6 +90,32 @@ export class DocumentData extends Base {
 	}
 
 	/**
+	 * @override
+	 */
+	hasSameValue() {
+		// FIXME: If the document is changed server-side while the user navigates to the support form,
+		//        when they return, the value saved in the client-side store will be restored
+		//        in favor of the newer version from the server-side.
+		return true
+	}
+
+	/**
+	 * @override
+	 */
+	updateValue(newValue) {
+		super.updateValue(_cloneDeep(newValue))
+	}
+
+	/**
+	 * @override
+	 */
+	clearValue() {
+		this.value.fileData = null
+		this.value.deleteType = -1
+		this.value.submitMode = -1
+	}
+
+	/**
 	 * Gets the properties of a document when it's empty.
 	 * @returns A new object with the properties of an empty document.
 	 */
@@ -124,15 +142,6 @@ export class DocumentData extends Base {
 	setup(id, ticket) {
 		this.value.documentId = id
 		this.value.ticket = ticket
-	}
-
-	/**
-	 * Resets the document properties.
-	 */
-	reset() {
-		this.value.fileData = null
-		this.value.deleteType = -1
-		this.value.submitMode = -1
 	}
 
 	/**

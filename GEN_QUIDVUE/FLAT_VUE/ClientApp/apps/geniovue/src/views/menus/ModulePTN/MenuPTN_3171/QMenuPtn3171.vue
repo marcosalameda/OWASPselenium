@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_3171]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_3171ViewModel.js'
 
@@ -154,7 +155,7 @@
 								dataLength: 6,
 								scrollData: 6,
 								showWhen: {
-									// eslint-disable-next-line no-unused-vars
+									// eslint-disable-next-line @typescript-eslint/no-unused-vars
 									fnFormula(params)
 									{
 										// Formula: 1==1
@@ -183,7 +184,7 @@
 								label: computed(() => this.Resources.IF_OUT_OF_DATE49042),
 								scrollData: 1,
 								showWhen: {
-									// eslint-disable-next-line no-unused-vars
+									// eslint-disable-next-line @typescript-eslint/no-unused-vars
 									fnFormula(params)
 									{
 										// Formula: 1==0
@@ -212,8 +213,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -241,6 +241,7 @@
 						uuid: '268f1687-b188-404a-b931-891cf50aad64',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

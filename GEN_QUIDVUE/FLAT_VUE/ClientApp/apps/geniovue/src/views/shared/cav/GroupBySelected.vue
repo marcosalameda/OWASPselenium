@@ -68,18 +68,11 @@
 								style="padding: 0.5rem 0 0.05rem 0.5rem">
 								<div class="col-12">
 									<q-control-wrapper class="control-join-group">
-										<base-input-structure
+										<q-checkbox
 											:id="group.internalKey"
-											class="i-checkbox"
-											label-position="left"
+											v-model="group.PageBreak"
 											:label="`${texts.group} ${idxGroup + 1} - ${texts.pageBreak}`"
-											:label-attrs="{ class: 'i-checkbox i-checkbox__label' }">
-											<template #label>
-												<q-checkbox-input
-													:id="group.internalKey"
-													v-model="group.PageBreak" />
-											</template>
-										</base-input-structure>
+											label-placement="left" />
 									</q-control-wrapper>
 								</div>
 							</div>
@@ -238,10 +231,10 @@
 
 			hydrateGroupField(fld)
 			{
-				let table = _find(this.tables, (t) => t.Id === fld.TableId),
+				const table = _find(this.tables, (t) => t.Id === fld.TableId),
 					field = _find(table.Fields, (f) => f.Id === fld.FieldId)
 
-				let extendedField = _assignIn(fld, {
+				const extendedField = _assignIn(fld, {
 					tableTitle: table.Description,
 					Title: field.Description
 				})
@@ -251,7 +244,7 @@
 
 			hydrateGroup(group)
 			{
-				let extendedGroup = {
+				const extendedGroup = {
 					internalKey: uuidv4(),
 					PageBreak: group.PageBreak || false,
 					Fields: []
@@ -277,11 +270,11 @@
 			 */
 			removeField(groupInternalKey, fieldId)
 			{
-				let idxOfGroup = _findIndex(this.groupings, (g) => g.internalKey === groupInternalKey)
+				const idxOfGroup = _findIndex(this.groupings, (g) => g.internalKey === groupInternalKey)
 
 				if (idxOfGroup !== -1)
 				{
-					let idxToRemove = _findIndex(this.groupings[idxOfGroup].Fields, (f) => f.FieldId === fieldId)
+					const idxToRemove = _findIndex(this.groupings[idxOfGroup].Fields, (f) => f.FieldId === fieldId)
 					if (idxToRemove !== -1)
 						this.groupings[idxOfGroup].Fields.splice(idxToRemove, 1)
 				}

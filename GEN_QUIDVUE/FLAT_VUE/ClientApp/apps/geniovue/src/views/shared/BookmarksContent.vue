@@ -143,7 +143,7 @@
 			 */
 			removeBtnAttrs()
 			{
-				let data = {
+				const data = {
 					variant: 'text',
 					size: 'small'
 				}
@@ -162,7 +162,7 @@
 			 */
 			addBtnAttrs()
 			{
-				let data = {
+				const data = {
 					variant: 'text',
 					size: 'small'
 				}

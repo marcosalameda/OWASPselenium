@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW DISST]/
 
 		[HttpPost]
-		public ActionResult Disst_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Disst_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Disst_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Disst_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Disst_Show_GET",
 				AreaName = "disst",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET DISST]/
 		[HttpPost]
-		public ActionResult Disst_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Disst_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Disst_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Disst_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Disst_New_GET",
 				AreaName = "disst",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Disst_New([FromBody]Disst_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Disst_New",
 				ViewName = "Disst",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET DISST]/
 		[HttpPost]
-		public ActionResult Disst_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Disst_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Disst_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Disst_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Disst_Edit_GET",
 				AreaName = "disst",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Disst_Edit([FromBody]Disst_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Disst_Edit",
 				ViewName = "Disst",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET DISST]/
 		[HttpPost]
-		public ActionResult Disst_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Disst_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Disst_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Disst_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Disst_Delete_GET",
 				AreaName = "disst",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Disst/Disst_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST DISST]/
 		[HttpPost]
-		public ActionResult Disst_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Disst_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Disst_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Disst_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Disst_Delete",
 				ViewName = "Disst",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET DISST]/
 
 		[HttpPost]
-		public ActionResult Disst_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Disst_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Disst_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Disst_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Disst_Duplicate_GET",
 				AreaName = "disst",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Disst_Duplicate([FromBody]Disst_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Disst_Duplicate",
 				ViewName = "Disst",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Disst(UserContext.Current);
+					GenioMVC.Models.Disst model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("disst");
 
 // USE /[MANUAL GQT BEFORE_CANCEL DISST]/

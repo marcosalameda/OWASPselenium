@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW SALAS]/
 
 		[HttpPost]
-		public ActionResult Salas_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Salas_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Salas_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Salas_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Salas_Show_GET",
 				AreaName = "rooms",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET SALAS]/
 		[HttpPost]
-		public ActionResult Salas_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Salas_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Salas_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Salas_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Salas_New_GET",
 				AreaName = "rooms",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Salas_New([FromBody]Salas_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Salas_New",
 				ViewName = "Salas",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET SALAS]/
 		[HttpPost]
-		public ActionResult Salas_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Salas_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Salas_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Salas_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Salas_Edit_GET",
 				AreaName = "rooms",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Salas_Edit([FromBody]Salas_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Salas_Edit",
 				ViewName = "Salas",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET SALAS]/
 		[HttpPost]
-		public ActionResult Salas_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Salas_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Salas_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Salas_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Salas_Delete_GET",
 				AreaName = "rooms",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Rooms/Salas_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST SALAS]/
 		[HttpPost]
-		public ActionResult Salas_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Salas_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Salas_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Salas_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Salas_Delete",
 				ViewName = "Salas",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET SALAS]/
 
 		[HttpPost]
-		public ActionResult Salas_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Salas_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Salas_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Salas_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Salas_Duplicate_GET",
 				AreaName = "rooms",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Salas_Duplicate([FromBody]Salas_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Salas_Duplicate",
 				ViewName = "Salas",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Rooms(UserContext.Current);
+					GenioMVC.Models.Rooms model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("rooms");
 
 // USE /[MANUAL GQT BEFORE_CANCEL SALAS]/

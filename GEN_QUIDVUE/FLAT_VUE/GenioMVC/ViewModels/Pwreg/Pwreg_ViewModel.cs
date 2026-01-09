@@ -51,6 +51,8 @@ namespace GenioMVC.ViewModels.Pwreg
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Regio> TableRegioRegiao { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -300,6 +302,17 @@ namespace GenioMVC.ViewModels.Pwreg
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -430,7 +443,7 @@ namespace GenioMVC.ViewModels.Pwreg
 
 			if (pwreg___psw__nome____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TablePswNome, "sTablePswNome", "dTablePswNome", qs, "psw");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -480,7 +493,7 @@ namespace GenioMVC.ViewModels.Pwreg
 
 				TablePswNome.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePswNome.Query = query;
-				TablePswNome.Elements = listing.RowsForViewModel<GenioMVC.Models.Psw>((r) => new GenioMVC.Models.Psw(m_userContext, r, true, _fieldsToSerialize_PWREG___PSW__NOME____));
+				TablePswNome.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Psw(m_userContext, r, true, _fieldsToSerialize_PWREG___PSW__NOME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -620,7 +633,7 @@ namespace GenioMVC.ViewModels.Pwreg
 
 			if (pwreg___regioregiao__DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableRegioRegiao, "sTableRegioRegiao", "dTableRegioRegiao", qs, "regio");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -670,7 +683,7 @@ namespace GenioMVC.ViewModels.Pwreg
 
 				TableRegioRegiao.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableRegioRegiao.Query = query;
-				TableRegioRegiao.Elements = listing.RowsForViewModel<GenioMVC.Models.Regio>((r) => new GenioMVC.Models.Regio(m_userContext, r, true, _fieldsToSerialize_PWREG___REGIOREGIAO__));
+				TableRegioRegiao.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Regio(m_userContext, r, true, _fieldsToSerialize_PWREG___REGIOREGIAO__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

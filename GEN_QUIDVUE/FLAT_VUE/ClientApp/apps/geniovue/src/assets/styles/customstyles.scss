@@ -1,6 +1,19 @@
 ﻿
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
-// USE /[MANUAL GQT CSS_STYLES]/
+//Platform: VUE | Type: CSS_STYLES | Module: GQT | Parameter:  | File:  | Order: 0
+//BEGIN_MANUALCODE_CODMANUA:772de48f-f853-44f1-a32c-1a12f04d4f64
+#PTN_Menu_3N41 {
+  td:has(.join-top-border) {
+    border-top: none;
+    border-bottom: none;
+  }
+
+  td:has(.only-top-border) {
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-bottom: none;
+  }
+}
+//END_MANUALCODE
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 

@@ -6,12 +6,14 @@
 			class="q-submenus-widget__links"
 			v-if="!isEmpty(widget.MenuEntry.Children)">
 			<a
-				href="javascript:void(0)"
+				tabindex="0"
+				role="button"
 				class="q-submenus-widget__link"
 				v-for="(child, index) in widget.MenuEntry.Children"
 				:key="index"
 				:data-key="index"
-				@click="onNavigateToMenu">
+				@click="onNavigateToMenu"
+				@keydown.enter="onNavigateToMenu">
 				<q-icon
 					class="q-submenus-widget__link-icon"
 					v-if="getMenuIcon(child)"

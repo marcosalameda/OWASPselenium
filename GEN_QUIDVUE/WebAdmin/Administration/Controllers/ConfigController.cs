@@ -15,6 +15,7 @@ using System.Data;
 using Quidgest.Persistence.GenericQuery;
 using CSGenio.core.messaging;
 using Administration.Models;
+using GenioServer.security;
 
 namespace Administration.Controllers
 {
@@ -227,7 +228,9 @@ namespace Administration.Controllers
                 // Event tracing feature
                 model.EventTracking = conf.EventTracking;
 
-                model.UrlAPIBackend = conf.ChatBotConfig?.apiURL;
+                model.UrlAPIBackend = conf.ChatBotConfig?.APIEndpoint;
+                model.MCPSecurityMode = conf.ChatBotConfig?.MCPSecurityMode ?? MCPSecurityMode.JWT;
+                model.JWTEncryptionKey = conf.ChatBotConfig?.JWTEncryptionKey;
             }
             catch (Exception e)
             {
@@ -337,7 +340,6 @@ namespace Administration.Controllers
             model.AuthenticationMode = security.AuthenticationMode;
             model.AllowMultiSessionPerUser = security.AllowMultiSessionPerUser;
             model.AllowAuthenticationRecovery = security.AllowAuthenticationRecovery;
-			model.Activate2FA = security.Activate2FA != GenioServer.security.Auth2FAModes.None; //change this when have multiple 2FA
 			model.Mandatory2FA = security.Mandatory2FA;
             model.ExpirationDateBool = security.ExpirationDateBool;
             model.ExpirationDate = security.ExpirationDate;
@@ -666,6 +668,21 @@ namespace Administration.Controllers
         }
 
         [HttpPost]
+        public IActionResult SetupProviders()
+        {
+            var appId = FromQuery("appId");
+            var conf = configManager.GetExistingConfig();
+            SecurityCfgEl security = conf.GetSecurity(appId);
+            foreach (var provider in security.RoleProviders)
+            {
+                var providerInstance = SecurityFactory.ParseRoleProvider(provider);
+                if(providerInstance.HasUserDirectory)
+                    providerInstance.SetupUserDirectory();
+            }
+            return Json(new { success = true });
+        }
+
+        [HttpPost]
         public IActionResult SaveUserCfg([FromBody]Models.UserCfg model)
         {
             var appId = FromQuery("appId");
@@ -979,8 +996,7 @@ namespace Administration.Controllers
                         security.AllowAuthenticationRecovery = model.AllowAuthenticationRecovery;
                         security.AllowMultiSessionPerUser = model.AllowMultiSessionPerUser;
                         security.AuthenticationMode = model.AuthenticationMode;
-                        security.Activate2FA = model.Activate2FA ? GenioServer.security.Auth2FAModes.TOTP : GenioServer.security.Auth2FAModes.None;
-                        security.Mandatory2FA = model.Activate2FA && model.Mandatory2FA;
+                        security.Mandatory2FA = model.Mandatory2FA;
                         security.SessionTimeOut = model.SessionTimeOut;
                     }
                     //this variables will be the same for all modules
@@ -1122,7 +1138,9 @@ namespace Administration.Controllers
                 conf.DateFormat.DateTimeSeconds = model.DateFormat.dateTimeSeconds;
                 conf.DateFormat.Time = model.DateFormat.time;
 
-                conf.ChatBotConfig.apiURL = model.UrlAPIBackend;
+                conf.ChatBotConfig.APIEndpoint = model.UrlAPIBackend;
+                conf.ChatBotConfig.MCPSecurityMode = model.MCPSecurityMode;
+                conf.ChatBotConfig.JWTEncryptionKeyDecode = model.JWTEncryptionKey;
 
                 conf.QAEnvironment = Convert.ToInt32(model.QAEnvironment);
 
@@ -1160,6 +1178,7 @@ namespace Administration.Controllers
                 if (model.DecimalSeparator.ToString() == model.GroupSeparator.ToString())
                     throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "ConfigController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
 
+                conf.FillMissingConfigs();
                 configManager.StoreConfig(conf);
 
 				// Reload Configuration static instance in server with the new Configuracoes.xml data
@@ -1199,6 +1218,10 @@ namespace Administration.Controllers
 
             if (String.IsNullOrEmpty(model.Val)) { return Json(new { emptyVal = true }); }
 
+            var valueContent = model.Val;
+            if (ExtraProperties.IsPasswordType(model.Key))
+                valueContent = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.Val));
+
             if (model.FormMode == "delete")
             {
                 initProp = ExtraProperties.HasDefaultValue(model.Key);
@@ -1207,12 +1230,12 @@ namespace Administration.Controllers
             }
             if (model.FormMode == "edit")
             {
-                conf.maisPropriedades[model.Key] = model.Val;
+                conf.maisPropriedades[model.Key] = valueContent;
             }
             if (model.FormMode == "new")
             {
                 if (conf.maisPropriedades.ContainsKey(model.Key)) { return Json(new { success = false }); }
-                conf.maisPropriedades.Add(model.Key, model.Val);
+                conf.maisPropriedades.Add(model.Key, valueContent);
             }
 
             configManager.StoreConfig(conf);

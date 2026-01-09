@@ -104,6 +104,7 @@
 		positionMarker: 'Position marker',
 		externalLayer: 'External layer',
 		printMap: 'Print map',
+		centerControlMap: 'Center on the map',
 		printLandscape: 'Landscape',
 		printPortrait: 'Portrait'
 	}
@@ -375,7 +376,7 @@
 				if (this.isSinglePoint || !this.listConfig)
 					return []
 
-				var actions = []
+				let actions = []
 
 				if (this.listConfig.customActions && this.listConfig.customActions.length > 0)
 					actions = actions.concat(this.listConfig.customActions)
@@ -457,7 +458,7 @@
 
 				const currentDesc = this.currentMarker.description
 
-				for (let description of descriptions ?? [])
+				for (const description of descriptions ?? [])
 					for (let i = 0; i < currentDesc.length; i++)
 						if (currentDesc[i].source?.id === description?.source?.id)
 							currentDesc[i] = description
@@ -487,16 +488,16 @@
 				this.markers = []
 				this.shapes = []
 
-				for (let mappedData of this.mappedValues)
+				for (const mappedData of this.mappedValues)
 				{
-					for (let geographicVal of mappedData.geographicData ?? [])
+					for (const geographicVal of mappedData.geographicData ?? [])
 					{
 						// If the value is empty, we ignore it.
 						if (!geographicVal?.value)
 							continue
 
 						let feature = {}
-						let descriptionTexts = []
+						const descriptionTexts = []
 
 						if (geographicVal.type === 'Geographic')
 							feature = { coords: { ...geographicVal.value } }
@@ -505,7 +506,7 @@
 
 						if (Array.isArray(mappedData.markerDescription))
 						{
-							for (let description of mappedData.markerDescription)
+							for (const description of mappedData.markerDescription)
 							{
 								if (description)
 								{
@@ -561,9 +562,9 @@
 				this.legendsData = []
 
 				if (this.styleVariables.allowLegend?.value) {
-					for (let mappedData of this.mappedValues) {
-						let description = mappedData.legendItemDescription?.value;
-						let color = mappedData.legendItemColor?.value;
+					for (const mappedData of this.mappedValues) {
+						const description = mappedData.legendItemDescription?.value;
+						const color = mappedData.legendItemColor?.value;
 
 						if (description !== undefined && color !== undefined && !this.legendsData.some(i => i.color === color && i.label === description)) {
 							this.legendsData.push({ color, label: description })
@@ -626,7 +627,7 @@
 
 				if (!refreshLayers)
 				{
-					for (let i in newVal)
+					for (const i in newVal)
 					{
 						if (newVal[i] !== oldVal[i])
 						{

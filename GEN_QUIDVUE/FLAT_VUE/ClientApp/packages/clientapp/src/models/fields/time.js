@@ -58,8 +58,7 @@ export class Time extends Base {
 	sanitizeValue(value) {
 		const sanitizedVal = super.sanitizeValue(value)
 
-		if (typeof sanitizedVal === 'object')
-			return sanitizedVal ? timeToString(sanitizedVal) : ''
+		if (typeof sanitizedVal === 'object') return sanitizedVal ? timeToString(sanitizedVal) : ''
 
 		return sanitizedVal
 	}

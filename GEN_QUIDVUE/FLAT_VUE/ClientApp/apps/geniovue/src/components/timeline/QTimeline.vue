@@ -115,13 +115,15 @@
 				type: Object,
 				required: true
 			},
+
 			/**
-			* the type of the timeline.
-			*/
+			 * The type of the timeline.
+			 */
 			tipoTimeline: {
 				type: String,
 				required: true
 			},
+
 			/**
 			 * The timeline configuration.
 			 */
@@ -225,11 +227,11 @@
 			 */
 			groupByYear(tlItems)
 			{
-				let yearGroups = {}
+				const yearGroups = {}
 
 				tlItems.forEach((row) => {
-					let newDate = new Date(row.Data)
-					let yearNotation = newDate.getFullYear()
+					const newDate = new Date(row.Data)
+					const yearNotation = newDate.getFullYear()
 
 					yearGroups[yearNotation] = [
 						...(yearGroups[yearNotation] || []),
@@ -245,13 +247,13 @@
 			 */
 			groupByMonth(tlItems)
 			{
-				let monthGroups = {}
+				const monthGroups = {}
 
 				tlItems.forEach((row) => {
 					if (row.Data)
 					{
-						let newDate = new Date(row.Data)
-						let monthGroupNotation = 1 + newDate.getMonth() + '/' + newDate.getFullYear()
+						const newDate = new Date(row.Data)
+						const monthGroupNotation = 1 + newDate.getMonth() + '/' + newDate.getFullYear()
 
 						monthGroups[monthGroupNotation] = [
 							...(monthGroups[monthGroupNotation] || []),
@@ -268,7 +270,7 @@
 			 */
 			groupByWeek(tlItems)
 			{
-				let weekGroups = {}
+				const weekGroups = {}
 
 				tlItems.forEach((row) => {
 					const newDate = new Date(row.Data)
@@ -290,11 +292,11 @@
 			 */
 			groupByDay(tlItems)
 			{
-				let dayGroups = {}
+				const dayGroups = {}
 
 				tlItems.forEach((row) => {
-					let newDate = new Date(row.Data)
-					let dayNotation =
+					const newDate = new Date(row.Data)
+					const dayNotation =
 						newDate.getUTCDate() +
 						'/' +
 						(1 + newDate.getMonth()) +
@@ -315,11 +317,11 @@
 			 */
 			groupIndividually(tlItems)
 			{
-				let groups = {}
+				const groups = {}
 
 				tlItems.forEach((row) => {
-					let newDate = new Date(row.Data)
-					let dayNotation =
+					const newDate = new Date(row.Data)
+					const dayNotation =
 						newDate.getUTCDate() +
 						'/' +
 						(1 + newDate.getMonth()) +

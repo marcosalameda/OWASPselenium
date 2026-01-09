@@ -410,12 +410,11 @@ namespace CSGenio.business
                 {
                     foreach (CSGenioAnotificationmessage.FinalMsg finalmsg in msg.FinalMsgs)
                     {
-                        EmailServer emailProperties = Configuration.EmailProperties.Find(x=>x.Codpmail== msg.ValCodpmail);
+                        EmailServer emailProperties = Configuration.EmailProperties.Find(x=>x.Codpmail.ToUpper() == msg.ValCodpmail.ToUpper());
                         CSGenioAnotificationemailsignature emailSignature = CSGenioAnotificationemailsignature.search(sp, msg.ValCodsigna, user);
 
-                        byte[] data = Convert.FromBase64String(emailProperties.Password);
-                        string decodedPass = Encoding.UTF8.GetString(data);
-
+                        byte[] data = String.IsNullOrEmpty(emailProperties.Password) ? null : Convert.FromBase64String(emailProperties.Password);
+                        string decodedPass = data is null ? "" : Encoding.UTF8.GetString(data);
 
                         CSmail mail = new CSmail()
                         {
@@ -468,40 +467,39 @@ namespace CSGenio.business
         /// Saves the final messages on database (table defined in Genio, can be overrided, but be sure to have all the fields and mappings correct)
         /// </summary>
         public void WriteMessagesToBD(PersistentSupport sp, User user)
-        {
-            String system = CSGenio.framework.Configuration.Program;
-            String dest_table = DatabaseFieldMapping.MessagesTable;
+		{
+			var destTable = DatabaseFieldMapping.MessagesTable.ToLowerInvariant();
+			var dataTable = QueryData.DbDataSet.Tables[0];
+			var areaFields = new HashSet<string>(DbArea.GetInfoArea(destTable).DBFields.Select(kv => kv.Key.ToLowerInvariant()), StringComparer.OrdinalIgnoreCase);
 
-            foreach (CSGenioAnotificationmessage msg in this.MessagesConfig)
-            {
-                if (msg.ValAtivo == 1 && msg.ValGravabd == 1)
-                {
-                    foreach (CSGenioAnotificationmessage.FinalMsg finalmsg in msg.FinalMsgs)
-                    {
-                        //gets the final row belonging to this configuration (same IDMSG) that has all the fields set according to SGBD:
-                        DataRow final_row = QueryData.DbDataSet.Tables[0].Select("IDMSG = '" + finalmsg.ID + "'").FirstOrDefault();
+			foreach (var msg in this.MessagesConfig.Where(m => m.ValAtivo == 1 && m.ValGravabd == 1))
+			{
+				foreach (var finalMsg in msg.FinalMsgs)
+				{
+					var finalRow = dataTable.AsEnumerable().FirstOrDefault(r => r.Field<string>("IDMSG") == finalMsg.ID);
 
-                        if (final_row == null)
-                            continue;
+					if (finalRow == null)
+						continue;
 
-						var area = CSGenio.business.Area.createArea(dest_table.ToLowerInvariant(), user, user.CurrentModule) as DbArea;
-                        List<KeyValuePair<string, CSGenio.framework.Field>> fields = DbArea.GetInfoArea(dest_table.ToLowerInvariant()).DBFields.ToList();
+					var area = CSGenio.business.Area.createArea(destTable, user, user.CurrentModule) as DbArea;
 
-                        foreach (FieldMap fieldmap in DatabaseFieldMapping.TableFieldMap)
-                        {
-                            string field = fieldmap.FieldnameApp.Replace("[", "").Replace("]", "");
-                            object fieldvalue = final_row[field];
-                            if (fields.Exists(x => x.Key.ToLower() == field.ToLower()))
-                            {
-                                area.insertNameValueField(field.ToLower(), fieldvalue);
-                            }
-                        }
+					foreach (FieldMap fieldmap in DatabaseFieldMapping.TableFieldMap)
+					{
+						string nameQuery = fieldmap.FieldnameQuery.Replace("[", "").Replace("]", "");
+						string BDfield = fieldmap.FieldnameApp.Replace("[", "").Replace("]", "").ToLowerInvariant();
 
-                        area.insert(sp);
-                    }
-                }
-            }
-        }
+						if (!finalRow.Table.Columns.Contains(nameQuery) || !areaFields.Contains(BDfield))
+							continue;
+
+						var value = finalRow[nameQuery] ?? DBNull.Value;
+						area.insertNameValueField(BDfield, value);
+
+					}
+
+					area.insert(sp);
+				}
+			}
+		}
     }
 
 	//------------------ DYNAMIC PART:

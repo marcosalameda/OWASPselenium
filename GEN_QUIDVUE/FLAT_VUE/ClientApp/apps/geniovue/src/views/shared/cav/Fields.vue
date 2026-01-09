@@ -169,7 +169,7 @@
 				 */
 				evt.clone.replaceWith(evt.item)
 
-				let cavFieldData = JSON.parse(evt.originalEvent.dataTransfer.getData('cav-field-info'))
+				const cavFieldData = JSON.parse(evt.originalEvent.dataTransfer.getData('cav-field-info'))
 				this.$emit('add-cav-field', cavFieldData)
 			},
 

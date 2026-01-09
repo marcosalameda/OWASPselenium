@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="LEAFLETD"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.LEAFLETDEQUIPREGISTNR.isVisible || controls.LEAFLETDTPEQUTIPOEQUI.isVisible">
-					<q-control-wrapper
-						v-show="controls.LEAFLETDEQUIPREGISTNR.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.LEAFLETDEQUIPREGISTNR.isVisible || controls.LEAFLETDTPEQUTIPOEQUI.isVisible">
+					<q-col
+						v-if="controls.LEAFLETDEQUIPREGISTNR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDEQUIPREGISTNR.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDEQUIPREGISTNR"
 							v-on="controls.LEAFLETDEQUIPREGISTNR.handlers"
@@ -111,11 +120,12 @@
 								v-bind="controls.LEAFLETDEQUIPREGISTNR.seeMoreParams"
 								v-on="controls.LEAFLETDEQUIPREGISTNR.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETDTPEQUTIPOEQUI.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETDTPEQUTIPOEQUI.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDTPEQUTIPOEQUI.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDTPEQUTIPOEQUI"
 							v-on="controls.LEAFLETDTPEQUTIPOEQUI.handlers"
@@ -127,13 +137,14 @@
 								@blur="onBlur(controls.LEAFLETDTPEQUTIPOEQUI, model.TpequValTipoequi.value)"
 								@change="model.TpequValTipoequi.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.LEAFLETDINSTADESIGNAT.isVisible || controls.LEAFLETDINSTADTINIAGE.isVisible || controls.LEAFLETDINSTADTFIMAGE.isVisible">
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTADESIGNAT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.LEAFLETDINSTADESIGNAT.isVisible || controls.LEAFLETDINSTADTINIAGE.isVisible || controls.LEAFLETDINSTADTFIMAGE.isVisible">
+					<q-col
+						v-if="controls.LEAFLETDINSTADESIGNAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTADESIGNAT.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDINSTADESIGNAT"
 							v-on="controls.LEAFLETDINSTADESIGNAT.handlers"
@@ -145,11 +156,12 @@
 								@blur="onBlur(controls.LEAFLETDINSTADESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTADTINIAGE.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETDINSTADTINIAGE.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTADTINIAGE.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDINSTADTINIAGE"
 							v-on="controls.LEAFLETDINSTADTINIAGE.handlers"
@@ -163,11 +175,12 @@
 								@reset-icon-click="model.ValDtiniage.fnUpdateValue(model.ValDtiniage.originalValue ?? new Date())"
 								@update:model-value="model.ValDtiniage.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTADTFIMAGE.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETDINSTADTFIMAGE.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTADTFIMAGE.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDINSTADTFIMAGE"
 							v-on="controls.LEAFLETDINSTADTFIMAGE.handlers"
@@ -181,13 +194,14 @@
 								@reset-icon-click="model.ValDtfimage.fnUpdateValue(model.ValDtfimage.originalValue ?? new Date())"
 								@update:model-value="model.ValDtfimage.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.LEAFLETDINSTADESCRIPT.isVisible">
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTADESCRIPT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.LEAFLETDINSTADESCRIPT.isVisible">
+					<q-col
+						v-if="controls.LEAFLETDINSTADESCRIPT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTADESCRIPT.isVisible"
 							class="i-textarea"
 							v-bind="controls.LEAFLETDINSTADESCRIPT"
 							v-on="controls.LEAFLETDINSTADESCRIPT.handlers"
@@ -199,13 +213,14 @@
 								v-bind="controls.LEAFLETDINSTADESCRIPT.props"
 								v-on="controls.LEAFLETDINSTADESCRIPT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.LEAFLETDINSTAALLDAY__.isVisible || controls.LEAFLETDINSTASINCE___.isVisible || controls.LEAFLETDINSTAUNTIL___.isVisible || controls.LEAFLETDINSTAHOURS___.isVisible">
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTAALLDAY__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.LEAFLETDINSTAALLDAY__.isVisible || controls.LEAFLETDINSTASINCE___.isVisible || controls.LEAFLETDINSTAUNTIL___.isVisible || controls.LEAFLETDINSTAHOURS___.isVisible">
+					<q-col
+						v-if="controls.LEAFLETDINSTAALLDAY__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTAALLDAY__.isVisible"
 							class="i-checkbox"
 							v-bind="controls.LEAFLETDINSTAALLDAY__"
 							v-on="controls.LEAFLETDINSTAALLDAY__.handlers"
@@ -213,17 +228,18 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.LEAFLETDINSTAALLDAY__.isVisible"
 									v-bind="controls.LEAFLETDINSTAALLDAY__.props"
 									v-on="controls.LEAFLETDINSTAALLDAY__.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTASINCE___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETDINSTASINCE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTASINCE___.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDINSTASINCE___"
 							v-on="controls.LEAFLETDINSTASINCE___.handlers"
@@ -237,11 +253,12 @@
 								@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 								@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTAUNTIL___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETDINSTAUNTIL___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTAUNTIL___.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDINSTAUNTIL___"
 							v-on="controls.LEAFLETDINSTAUNTIL___.handlers"
@@ -255,11 +272,12 @@
 								@reset-icon-click="model.ValUntil.fnUpdateValue(model.ValUntil.originalValue ?? new Date())"
 								@update:model-value="model.ValUntil.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTAHOURS___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETDINSTAHOURS___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTAHOURS___.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDINSTAHOURS___"
 							v-on="controls.LEAFLETDINSTAHOURS___.handlers"
@@ -271,13 +289,14 @@
 								v-bind="controls.LEAFLETDINSTAHOURS___.props"
 								@update:model-value="model.ValHours.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.LEAFLETDINSTAPRECOHOR.isVisible || controls.LEAFLETDINSTAVALUE___.isVisible || controls.LEAFLETDINSTACOORDGEO.isVisible">
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTAPRECOHOR.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.LEAFLETDINSTAPRECOHOR.isVisible || controls.LEAFLETDINSTAVALUE___.isVisible || controls.LEAFLETDINSTACOORDGEO.isVisible">
+					<q-col
+						v-if="controls.LEAFLETDINSTAPRECOHOR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTAPRECOHOR.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDINSTAPRECOHOR"
 							v-on="controls.LEAFLETDINSTAPRECOHOR.handlers"
@@ -289,11 +308,12 @@
 								v-bind="controls.LEAFLETDINSTAPRECOHOR.props"
 								@update:model-value="model.ValPrecohor.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTAVALUE___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETDINSTAVALUE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTAVALUE___.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDINSTAVALUE___"
 							v-on="controls.LEAFLETDINSTAVALUE___.handlers"
@@ -305,11 +325,12 @@
 								v-bind="controls.LEAFLETDINSTAVALUE___.props"
 								@update:model-value="model.ValValue.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETDINSTACOORDGEO.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETDINSTACOORDGEO.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETDINSTACOORDGEO.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETDINSTACOORDGEO"
 							v-on="controls.LEAFLETDINSTACOORDGEO.handlers"
@@ -321,10 +342,10 @@
 								@blur="onBlur(controls.LEAFLETDINSTACOORDGEO, model.ValCoordgeo.value)"
 								@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -333,7 +354,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -342,6 +363,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -353,12 +375,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -378,7 +400,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormLeafletdViewModel.js'
 
@@ -456,7 +478,8 @@
 					primaryKey: 'ValCodinsta',
 					designation: '',
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -564,7 +587,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -713,7 +740,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_LEAFLETDTPEQUTIPOEQUI',
 						controlLimits: [
 						],
 					}, this),
@@ -727,7 +753,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
-						labelId: 'label_LEAFLETDINSTADESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -991,11 +1016,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1005,7 +1028,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1015,7 +1038,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1035,19 +1058,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1068,7 +1105,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1088,19 +1125,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1119,11 +1170,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1133,7 +1182,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1141,8 +1190,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1150,7 +1197,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1158,8 +1205,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1167,7 +1212,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1175,11 +1220,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1189,7 +1232,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1199,7 +1242,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1260,6 +1303,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LEAFLETD]/
 // eslint-disable-next-line

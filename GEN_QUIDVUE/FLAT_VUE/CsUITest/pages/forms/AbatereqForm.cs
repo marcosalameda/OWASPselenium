@@ -25,7 +25,7 @@ public class AbatereqForm : Form
 	/// <summary>
 	/// Collapsible
 	/// </summary>
-	public IWebElement PseudCollapse => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudCollapse => new CollapsibleZoneControl(driver, ContainerLocator, "#ABATEREQPSEUDCOLLAPSE-container");
 
 	/// <summary>
 	/// Tab

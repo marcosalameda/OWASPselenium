@@ -59,7 +59,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "line";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -75,6 +74,7 @@ namespace CSGenio.business
             Qfield.NotDup = true;
             Qfield.PrefNDup = "codoutpt";
 			Qfield.DefaultValue = new DefaultValue(DefaultValue.getGreaterPlus1_int, "line");
+			Qfield.HasOrdering = true;
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -413,16 +413,17 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
+		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAoutpu search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioAoutpu search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAoutpu area = new CSGenioAoutpu(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields))
+            if (sp.getRecord(area, key, fields, forUpdate))
                 return area;
 			return null;
         }
@@ -490,8 +491,13 @@ namespace CSGenio.business
 
 			// ROW_REORDERING
 			CriteriaSet criteria = CriteriaSet.And();
-			criteria.Equal(CSGenioAoutpu.FldCodoutpt, ValCodoutpt);
-			sp.ReorderSequence(Area.AreaOUTPU, CSGenioAoutpu.FldLine, criteria);
+			// For key fields, an empty prefix means 'no value', so we normalise it to null
+			// to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
+			// prefix to a database-safe value (e.g. Guid) before applying the equality filter.
+			var prefixField = DBFields[FldCodoutpt.Field];
+			object prefixRealValue = prefixField.isEmptyValue(ValCodoutpt) ? null : QueryUtils.ToValidDbValue(ValCodoutpt, prefixField);
+			criteria.Equal(FldCodoutpt, prefixRealValue);
+			sp.ReorderSequence(this, DBFields[FldLine.Field], criteria);
 
             return msg;
 		}
@@ -502,92 +508,21 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX OUTPU]/
 
      
-
-  
-		/// <summary>
+  		/// <summary>
         /// Reorders the values of the ordering field along a subset so that the current record moves in that order to the specified position
         /// </summary>
         /// <param name="sp">The current PersistentSupport</param>
         /// <param name="position">The position to where the record will be moved</param>
-        /// <param name="condition">The subset to be reordered</param>
-        public void Reorder_Line(PersistentSupport sp, int position, CriteriaSet condition, List<Relation> relations = null, bool moveRow = true)
+        public void Reorder_Line(PersistentSupport sp, int position, bool moveRow = true)
         {
             int posactual = (int)ValLine;
             int posnova = position + 1;
             ValLine = posnova;
 
-			//Get highest value for ordering field
-			int maxOrder;
-
-            try
-			{
-				maxOrder = sp.GetMaxFieldValue(Area.AreaOUTPU, CSGenioAoutpu.FldLine, condition, relations);
-			}
-			catch(Exception ex)
-			{
-                Log.Error(ex.Message);
-                return;
-			}
-
-			//Row is not being moved
-			if (posnova > maxOrder)
-			{
-				return;
-			}
-			if (!moveRow)
-			{
-				posactual = maxOrder + 1;
-			}
-			//Row is not being moved
-			if(posnova == posactual || posnova < 1){
-				return;
-			}
-
-			if (moveRow) {
-				//Set moved record position to 0 temporarily
-				UpdateQuery up_temp = new UpdateQuery()
-							.Update(Area.AreaOUTPU)
-							.Set(CSGenioAoutpu.FldLine, 0)
-							.Where(CriteriaSet.And().Equal(CSGenioAoutpu.FldCodoutpu, QPrimaryKey));
-				sp.Execute(up_temp);
-			}
-
-			//Set new positions of records in the range from the previous position to the new position
-			int posLow;
-			int posHigh;
-            int difference;
-			//If new position is greater than previous position
-			if (posnova > posactual) {
-				posLow = posactual + 1;
-				posHigh = posnova;
-                difference = -1;
-			}
-			//If new position is less than previous position
-			else {
-				posLow = posnova;
-				posHigh = posactual - 1;
-                difference = 1;
-            }
-			CriteriaSet range_condition = CriteriaSet.And();
-            range_condition.SubSet(condition);
-            range_condition.GreaterOrEqual(CSGenioAoutpu.FldLine, posLow);
-            range_condition.LesserOrEqual(CSGenioAoutpu.FldLine, posHigh);
-
-			sp.ReorderSequence(Area.AreaOUTPU, CSGenioAoutpu.FldLine, range_condition, relations, posLow + difference);
-
-			if (moveRow) {
-				//Set moved record position to new position
-				UpdateQuery up = new UpdateQuery()
-							.Update(Area.AreaOUTPU)
-							.Set(CSGenioAoutpu.FldLine, posnova)
-							.Where(CriteriaSet.And().Equal(CSGenioAoutpu.FldCodoutpu, QPrimaryKey));
-				sp.Execute(up);
-			}
-
-			OnReorder_Line(sp, posactual, condition, relations);
+			ReorderByField(DBFields[FldLine.Field], sp, posactual, posnova, moveRow);
         }
 
-        private void OnReorder_Line(PersistentSupport sp, int oldpos, CriteriaSet condition, List<Relation> relations)
+        private void OnReorder_Line(PersistentSupport sp, int oldpos, CriteriaSet condition)
         {
 // USE /[MANUAL GQT ONREORDER OUTPU.LINE]/
         }

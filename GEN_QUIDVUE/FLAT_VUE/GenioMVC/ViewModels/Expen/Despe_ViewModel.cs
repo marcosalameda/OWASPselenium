@@ -78,6 +78,8 @@ namespace GenioMVC.ViewModels.Expen
 		[ValidateSetAccess]
 		public decimal? ValYearprev { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -364,6 +366,17 @@ namespace GenioMVC.ViewModels.Expen
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -496,7 +509,7 @@ namespace GenioMVC.ViewModels.Expen
 
 			if (despe___projeprojectoDoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableProjeProjecto, "sTableProjeProjecto", "dTableProjeProjecto", qs, "proje");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -546,7 +559,7 @@ namespace GenioMVC.ViewModels.Expen
 
 				TableProjeProjecto.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableProjeProjecto.Query = query;
-				TableProjeProjecto.Elements = listing.RowsForViewModel<GenioMVC.Models.Proje>((r) => new GenioMVC.Models.Proje(m_userContext, r, true, _fieldsToSerialize_DESPE___PROJEPROJECTO));
+				TableProjeProjecto.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Proje(m_userContext, r, true, _fieldsToSerialize_DESPE___PROJEPROJECTO));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -686,7 +699,7 @@ namespace GenioMVC.ViewModels.Expen
 
 			if (despe___year_year____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableYearYear, "sTableYearYear", "dTableYearYear", qs, "year");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -736,7 +749,7 @@ namespace GenioMVC.ViewModels.Expen
 
 				TableYearYear.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableYearYear.Query = query;
-				TableYearYear.Elements = listing.RowsForViewModel<GenioMVC.Models.Year>((r) => new GenioMVC.Models.Year(m_userContext, r, true, _fieldsToSerialize_DESPE___YEAR_YEAR____));
+				TableYearYear.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Year(m_userContext, r, true, _fieldsToSerialize_DESPE___YEAR_YEAR____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -889,7 +902,7 @@ namespace GenioMVC.ViewModels.Expen
 
 			if (despe___agregvalue___DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableAgregValue, "sTableAgregValue", "dTableAgregValue", qs, "agreg");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -939,7 +952,7 @@ namespace GenioMVC.ViewModels.Expen
 
 				TableAgregValue.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableAgregValue.Query = query;
-				TableAgregValue.Elements = listing.RowsForViewModel<GenioMVC.Models.Agreg>((r) => new GenioMVC.Models.Agreg(m_userContext, r, true, _fieldsToSerialize_DESPE___AGREGVALUE___));
+				TableAgregValue.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Agreg(m_userContext, r, true, _fieldsToSerialize_DESPE___AGREGVALUE___));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

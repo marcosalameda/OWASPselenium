@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,27 +94,25 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="INFIELDS"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.INFIELDSPSEUDNOVOGR02.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.INFIELDSPSEUDNOVOGR02.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.INFIELDSPSEUDNOVOGR02.isVisible">
+					<q-col v-if="controls.INFIELDSPSEUDNOVOGR02.isVisible">
 						<q-group-box-container
+							v-if="controls.INFIELDSPSEUDNOVOGR02.isVisible"
 							id="INFIELDSPSEUDNOVOGR02"
 							v-bind="controls.INFIELDSPSEUDNOVOGR02"
 							:is-visible="controls.INFIELDSPSEUDNOVOGR02.isVisible">
 							<!-- Start INFIELDSPSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.INFIELDSFLDS_TXTFIELD.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_TXTFIELD.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.INFIELDSFLDS_TXTFIELD.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_TXTFIELD.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_TXTFIELD.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_TXTFIELD"
 										v-on="controls.INFIELDSFLDS_TXTFIELD.handlers"
@@ -118,13 +124,14 @@
 											@blur="onBlur(controls.INFIELDSFLDS_TXTFIELD, model.ValTxtfield.value)"
 											@change="model.ValTxtfield.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_DESCRIP_.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_DESCRIP_.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_DESCRIP_.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_DESCRIP_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_DESCRIP_.isVisible"
 										class="i-textarea"
 										v-bind="controls.INFIELDSFLDS_DESCRIP_"
 										v-on="controls.INFIELDSFLDS_DESCRIP_.handlers"
@@ -136,28 +143,26 @@
 											v-bind="controls.INFIELDSFLDS_DESCRIP_.props"
 											v-on="controls.INFIELDSFLDS_DESCRIP_.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End INFIELDSPSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.INFIELDSPSEUDNOVOGR01.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.INFIELDSPSEUDNOVOGR01.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.INFIELDSPSEUDNOVOGR01.isVisible">
+					<q-col v-if="controls.INFIELDSPSEUDNOVOGR01.isVisible">
 						<q-group-box-container
+							v-if="controls.INFIELDSPSEUDNOVOGR01.isVisible"
 							id="INFIELDSPSEUDNOVOGR01"
 							v-bind="controls.INFIELDSPSEUDNOVOGR01"
 							:is-visible="controls.INFIELDSPSEUDNOVOGR01.isVisible">
 							<!-- Start INFIELDSPSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.INFIELDSFLDS_YEAR____.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_YEAR____.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.INFIELDSFLDS_YEAR____.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_YEAR____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_YEAR____.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_YEAR____"
 										v-on="controls.INFIELDSFLDS_YEAR____.handlers"
@@ -169,13 +174,14 @@
 											v-bind="controls.INFIELDSFLDS_YEAR____.props"
 											@update:model-value="model.ValYear.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_TIME____.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_TIME____.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_TIME____.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_TIME____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_TIME____.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_TIME____"
 										v-on="controls.INFIELDSFLDS_TIME____.handlers"
@@ -189,13 +195,14 @@
 											@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
 											@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_DATE____.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_DATE____.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_DATE____.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_DATE____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_DATE____.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_DATE____"
 										v-on="controls.INFIELDSFLDS_DATE____.handlers"
@@ -209,13 +216,14 @@
 											@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 											@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_DATETIME.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_DATETIME.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_DATETIME.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_DATETIME.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_DATETIME.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_DATETIME"
 										v-on="controls.INFIELDSFLDS_DATETIME.handlers"
@@ -229,13 +237,14 @@
 											@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
 											@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_DATESECO.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_DATESECO.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_DATESECO.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_DATESECO.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_DATESECO.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_DATESECO"
 										v-on="controls.INFIELDSFLDS_DATESECO.handlers"
@@ -249,28 +258,26 @@
 											@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
 											@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End INFIELDSPSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.INFIELDSPSEUDNOVOGR04.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.INFIELDSPSEUDNOVOGR04.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.INFIELDSPSEUDNOVOGR04.isVisible">
+					<q-col v-if="controls.INFIELDSPSEUDNOVOGR04.isVisible">
 						<q-group-box-container
+							v-if="controls.INFIELDSPSEUDNOVOGR04.isVisible"
 							id="INFIELDSPSEUDNOVOGR04"
 							v-bind="controls.INFIELDSPSEUDNOVOGR04"
 							:is-visible="controls.INFIELDSPSEUDNOVOGR04.isVisible">
 							<!-- Start INFIELDSPSEUDNOVOGR04 -->
-							<q-row-container v-show="controls.INFIELDSFLDS_SSNUMBER.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_SSNUMBER.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.INFIELDSFLDS_SSNUMBER.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_SSNUMBER.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_SSNUMBER.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_SSNUMBER"
 										v-on="controls.INFIELDSFLDS_SSNUMBER.handlers"
@@ -281,15 +288,16 @@
 											v-if="controls.INFIELDSFLDS_SSNUMBER.isVisible"
 											v-bind="controls.INFIELDSFLDS_SSNUMBER"
 											:model-value="model.ValSsnumber.value"
-											@update:model-value="model.ValSsnumber.fnUpdateValue" />
+											@change="model.ValSsnumber.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_ZIPFIELD.isVisible || controls.INFIELDSFLDS_VATNUMBR.isVisible || controls.INFIELDSFLDS_LICPLATE.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_ZIPFIELD.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_ZIPFIELD.isVisible || controls.INFIELDSFLDS_VATNUMBR.isVisible || controls.INFIELDSFLDS_LICPLATE.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_ZIPFIELD.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_ZIPFIELD.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_ZIPFIELD"
 										v-on="controls.INFIELDSFLDS_ZIPFIELD.handlers"
@@ -300,13 +308,14 @@
 											v-if="controls.INFIELDSFLDS_ZIPFIELD.isVisible"
 											v-bind="controls.INFIELDSFLDS_ZIPFIELD"
 											:model-value="model.ValZipfield.value"
-											@update:model-value="model.ValZipfield.fnUpdateValue" />
+											@change="model.ValZipfield.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_VATNUMBR.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.INFIELDSFLDS_VATNUMBR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_VATNUMBR.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_VATNUMBR"
 										v-on="controls.INFIELDSFLDS_VATNUMBR.handlers"
@@ -317,13 +326,14 @@
 											v-if="controls.INFIELDSFLDS_VATNUMBR.isVisible"
 											v-bind="controls.INFIELDSFLDS_VATNUMBR"
 											:model-value="model.ValVatnumbr.value"
-											@update:model-value="model.ValVatnumbr.fnUpdateValue" />
+											@change="model.ValVatnumbr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_LICPLATE.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.INFIELDSFLDS_LICPLATE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_LICPLATE.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_LICPLATE"
 										v-on="controls.INFIELDSFLDS_LICPLATE.handlers"
@@ -334,15 +344,16 @@
 											v-if="controls.INFIELDSFLDS_LICPLATE.isVisible"
 											v-bind="controls.INFIELDSFLDS_LICPLATE"
 											:model-value="model.ValLicplate.value"
-											@update:model-value="model.ValLicplate.fnUpdateValue" />
+											@change="model.ValLicplate.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_BANKNMBR.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_BANKNMBR.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_BANKNMBR.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_BANKNMBR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_BANKNMBR.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_BANKNMBR"
 										v-on="controls.INFIELDSFLDS_BANKNMBR.handlers"
@@ -353,15 +364,16 @@
 											v-if="controls.INFIELDSFLDS_BANKNMBR.isVisible"
 											v-bind="controls.INFIELDSFLDS_BANKNMBR"
 											:model-value="model.ValBanknmbr.value"
-											@update:model-value="model.ValBanknmbr.fnUpdateValue" />
+											@change="model.ValBanknmbr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_EMAILFLD.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_EMAILFLD.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_EMAILFLD.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_EMAILFLD.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_EMAILFLD.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_EMAILFLD"
 										v-on="controls.INFIELDSFLDS_EMAILFLD.handlers"
@@ -372,15 +384,16 @@
 											v-if="controls.INFIELDSFLDS_EMAILFLD.isVisible"
 											v-bind="controls.INFIELDSFLDS_EMAILFLD"
 											:model-value="model.ValEmailfld.value"
-											@update:model-value="model.ValEmailfld.fnUpdateValue" />
+											@change="model.ValEmailfld.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_IBANFIEL.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_IBANFIEL.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_IBANFIEL.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_IBANFIEL.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_IBANFIEL.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_IBANFIEL"
 										v-on="controls.INFIELDSFLDS_IBANFIEL.handlers"
@@ -391,15 +404,16 @@
 											v-if="controls.INFIELDSFLDS_IBANFIEL.isVisible"
 											v-bind="controls.INFIELDSFLDS_IBANFIEL"
 											:model-value="model.ValIbanfiel.value"
-											@update:model-value="model.ValIbanfiel.fnUpdateValue" />
+											@change="model.ValIbanfiel.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_UPPRTEXT.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_UPPRTEXT.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_UPPRTEXT.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_UPPRTEXT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_UPPRTEXT.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_UPPRTEXT"
 										v-on="controls.INFIELDSFLDS_UPPRTEXT.handlers"
@@ -410,30 +424,28 @@
 											v-if="controls.INFIELDSFLDS_UPPRTEXT.isVisible"
 											v-bind="controls.INFIELDSFLDS_UPPRTEXT"
 											:model-value="model.ValUpprtext.value"
-											@update:model-value="model.ValUpprtext.fnUpdateValue" />
+											@change="model.ValUpprtext.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End INFIELDSPSEUDNOVOGR04 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.INFIELDSPSEUDNOVOGR03.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.INFIELDSPSEUDNOVOGR03.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.INFIELDSPSEUDNOVOGR03.isVisible">
+					<q-col v-if="controls.INFIELDSPSEUDNOVOGR03.isVisible">
 						<q-group-box-container
+							v-if="controls.INFIELDSPSEUDNOVOGR03.isVisible"
 							id="INFIELDSPSEUDNOVOGR03"
 							v-bind="controls.INFIELDSPSEUDNOVOGR03"
 							:is-visible="controls.INFIELDSPSEUDNOVOGR03.isVisible">
 							<!-- Start INFIELDSPSEUDNOVOGR03 -->
-							<q-row-container v-show="controls.INFIELDSFLDS_NPASSAGE.isVisible || controls.INFIELDSFLDS_DURATION.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_NPASSAGE.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.INFIELDSFLDS_NPASSAGE.isVisible || controls.INFIELDSFLDS_DURATION.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_NPASSAGE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_NPASSAGE.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_NPASSAGE"
 										v-on="controls.INFIELDSFLDS_NPASSAGE.handlers"
@@ -445,11 +457,12 @@
 											v-bind="controls.INFIELDSFLDS_NPASSAGE.props"
 											@update:model-value="model.ValNpassage.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_DURATION.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.INFIELDSFLDS_DURATION.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_DURATION.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_DURATION"
 										v-on="controls.INFIELDSFLDS_DURATION.handlers"
@@ -461,13 +474,14 @@
 											v-bind="controls.INFIELDSFLDS_DURATION.props"
 											@update:model-value="model.ValDuration.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_PRECOBIL.isVisible || controls.INFIELDSFLDS_PRICE___.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_PRECOBIL.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_PRECOBIL.isVisible || controls.INFIELDSFLDS_PRICE___.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_PRECOBIL.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_PRECOBIL.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_PRECOBIL"
 										v-on="controls.INFIELDSFLDS_PRECOBIL.handlers"
@@ -479,11 +493,12 @@
 											v-bind="controls.INFIELDSFLDS_PRECOBIL.props"
 											@update:model-value="model.ValPrecobil.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_PRICE___.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.INFIELDSFLDS_PRICE___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_PRICE___.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_PRICE___"
 										v-on="controls.INFIELDSFLDS_PRICE___.handlers"
@@ -495,28 +510,26 @@
 											v-bind="controls.INFIELDSFLDS_PRICE___.props"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End INFIELDSPSEUDNOVOGR03 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.INFIELDSPSEUDNOVOGR05.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.INFIELDSPSEUDNOVOGR05.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.INFIELDSPSEUDNOVOGR05.isVisible">
+					<q-col v-if="controls.INFIELDSPSEUDNOVOGR05.isVisible">
 						<q-group-box-container
+							v-if="controls.INFIELDSPSEUDNOVOGR05.isVisible"
 							id="INFIELDSPSEUDNOVOGR05"
 							v-bind="controls.INFIELDSPSEUDNOVOGR05"
 							:is-visible="controls.INFIELDSPSEUDNOVOGR05.isVisible">
 							<!-- Start INFIELDSPSEUDNOVOGR05 -->
-							<q-row-container v-show="controls.INFIELDSFLDS_PASSFLD_.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_PASSFLD_.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.INFIELDSFLDS_PASSFLD_.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_PASSFLD_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_PASSFLD_.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_PASSFLD_"
 										v-on="controls.INFIELDSFLDS_PASSFLD_.handlers"
@@ -530,13 +543,14 @@
 											:label-text="controls.INFIELDSFLDS_PASSFLD_.label"
 											@update:model-value="model.ValPassfld.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_CLRPICKE.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_CLRPICKE.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_CLRPICKE.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_CLRPICKE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_CLRPICKE.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_CLRPICKE"
 										v-on="controls.INFIELDSFLDS_CLRPICKE.handlers"
@@ -548,28 +562,26 @@
 											@blur="onBlur(controls.INFIELDSFLDS_CLRPICKE, model.ValClrpicke.value)"
 											@change="model.ValClrpicke.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End INFIELDSPSEUDNOVOGR05 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.INFIELDSPSEUDNOVOGR06.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.INFIELDSPSEUDNOVOGR06.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.INFIELDSPSEUDNOVOGR06.isVisible">
+					<q-col v-if="controls.INFIELDSPSEUDNOVOGR06.isVisible">
 						<q-group-box-container
+							v-if="controls.INFIELDSPSEUDNOVOGR06.isVisible"
 							id="INFIELDSPSEUDNOVOGR06"
 							v-bind="controls.INFIELDSPSEUDNOVOGR06"
 							:is-visible="controls.INFIELDSPSEUDNOVOGR06.isVisible">
 							<!-- Start INFIELDSPSEUDNOVOGR06 -->
-							<q-row-container v-show="controls.INFIELDSFLDS_PRIMVIAG.isVisible || controls.INFIELDSFLDS_LOGICENU.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_PRIMVIAG.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.INFIELDSFLDS_PRIMVIAG.isVisible || controls.INFIELDSFLDS_LOGICENU.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_PRIMVIAG.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_PRIMVIAG.isVisible"
 										class="i-checkbox"
 										v-bind="controls.INFIELDSFLDS_PRIMVIAG"
 										v-on="controls.INFIELDSFLDS_PRIMVIAG.handlers"
@@ -577,35 +589,37 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.INFIELDSFLDS_PRIMVIAG.isVisible"
 												v-bind="controls.INFIELDSFLDS_PRIMVIAG.props"
 												v-on="controls.INFIELDSFLDS_PRIMVIAG.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_LOGICENU.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.INFIELDSFLDS_LOGICENU.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_LOGICENU.isVisible"
 										class="i-text"
 										v-bind="controls.INFIELDSFLDS_LOGICENU"
 										v-on="controls.INFIELDSFLDS_LOGICENU.handlers"
 										:loading="controls.INFIELDSFLDS_LOGICENU.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
-										<q-toggle-input
+										<q-switch
 											v-if="controls.INFIELDSFLDS_LOGICENU.isVisible"
 											v-bind="controls.INFIELDSFLDS_LOGICENU.props"
 											v-on="controls.INFIELDSFLDS_LOGICENU.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.INFIELDSFLDS_RADIOB__.isVisible">
-								<q-control-wrapper
-									v-show="controls.INFIELDSFLDS_RADIOB__.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.INFIELDSFLDS_RADIOB__.isVisible">
+								<q-col
+									v-if="controls.INFIELDSFLDS_RADIOB__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.INFIELDSFLDS_RADIOB__.isVisible"
 										class="i-radio-container"
 										v-bind="controls.INFIELDSFLDS_RADIOB__"
 										v-on="controls.INFIELDSFLDS_RADIOB__.handlers"
@@ -624,17 +638,18 @@
 												:value="radio.key" />
 										</q-radio-group>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End INFIELDSPSEUDNOVOGR06 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.INFIELDSFLDS_CREATUSE.isVisible || controls.INFIELDSFLDS_CREATDAT.isVisible || controls.INFIELDSFLDS_CREATINS.isVisible || controls.INFIELDSFLDS_CREATHOU.isVisible">
-					<q-control-wrapper
-						v-show="controls.INFIELDSFLDS_CREATUSE.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.INFIELDSFLDS_CREATUSE.isVisible || controls.INFIELDSFLDS_CREATDAT.isVisible || controls.INFIELDSFLDS_CREATINS.isVisible || controls.INFIELDSFLDS_CREATHOU.isVisible">
+					<q-col
+						v-if="controls.INFIELDSFLDS_CREATUSE.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.INFIELDSFLDS_CREATUSE.isVisible"
 							class="i-text"
 							v-bind="controls.INFIELDSFLDS_CREATUSE"
 							v-on="controls.INFIELDSFLDS_CREATUSE.handlers"
@@ -646,11 +661,12 @@
 								@blur="onBlur(controls.INFIELDSFLDS_CREATUSE, model.ValCreatuse.value)"
 								@change="model.ValCreatuse.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.INFIELDSFLDS_CREATDAT.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.INFIELDSFLDS_CREATDAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.INFIELDSFLDS_CREATDAT.isVisible"
 							class="i-text"
 							v-bind="controls.INFIELDSFLDS_CREATDAT"
 							v-on="controls.INFIELDSFLDS_CREATDAT.handlers"
@@ -664,11 +680,12 @@
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.INFIELDSFLDS_CREATINS.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.INFIELDSFLDS_CREATINS.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.INFIELDSFLDS_CREATINS.isVisible"
 							class="i-text"
 							v-bind="controls.INFIELDSFLDS_CREATINS"
 							v-on="controls.INFIELDSFLDS_CREATINS.handlers"
@@ -682,11 +699,12 @@
 								@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.INFIELDSFLDS_CREATHOU.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.INFIELDSFLDS_CREATHOU.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.INFIELDSFLDS_CREATHOU.isVisible"
 							class="i-text"
 							v-bind="controls.INFIELDSFLDS_CREATHOU"
 							v-on="controls.INFIELDSFLDS_CREATHOU.handlers"
@@ -700,10 +718,10 @@
 								@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
 								@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -712,7 +730,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -721,6 +739,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -732,12 +751,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -757,7 +776,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormInfieldsViewModel.js'
 
@@ -834,7 +853,8 @@
 					primaryKey: 'ValCodflds',
 					designation: computed(() => this.Resources.INPUT_FIELDS51344),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -942,7 +962,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1066,7 +1090,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR02',
 						maxLength: 50,
-						labelId: 'label_INFIELDSFLDS_TXTFIELD',
 						controlLimits: [
 						],
 					}, this),
@@ -1262,11 +1285,10 @@
 						name: 'SSNUMBER',
 						size: 'medium',
 						label: computed(() => this.Resources.SOCIAL_SECURITY_NO48150),
-						placeholder: computed(() => this.Resources._1234567891237929),
+						placeholder: computed(() => this.Resources._1234567891202679),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR04',
 						maxLength: 11,
-						labelId: 'label_INFIELDSFLDS_SSNUMBER',
 						controlLimits: [
 						],
 					}, this),
@@ -1281,7 +1303,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR04',
 						maxLength: 8,
-						labelId: 'label_INFIELDSFLDS_ZIPFIELD',
 						controlLimits: [
 						],
 					}, this),
@@ -1292,11 +1313,10 @@
 						name: 'VATNUMBR',
 						size: 'small',
 						label: computed(() => this.Resources.VAT_NUMBER24236),
-						placeholder: computed(() => this.Resources._12345678953785),
+						placeholder: computed(() => this.Resources._12345678902714),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR04',
 						maxLength: 9,
-						labelId: 'label_INFIELDSFLDS_VATNUMBR',
 						controlLimits: [
 						],
 					}, this),
@@ -1311,7 +1331,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR04',
 						maxLength: 8,
-						labelId: 'label_INFIELDSFLDS_LICPLATE',
 						controlLimits: [
 						],
 					}, this),
@@ -1322,11 +1341,10 @@
 						name: 'BANKNMBR',
 						size: 'large',
 						label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
-						placeholder: computed(() => this.Resources._1234_5678_90123456761043),
+						placeholder: computed(() => this.Resources._1234_5678_901234567844057),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR04',
 						maxLength: 24,
-						labelId: 'label_INFIELDSFLDS_BANKNMBR',
 						controlLimits: [
 						],
 					}, this),
@@ -1341,7 +1359,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR04',
 						maxLength: 50,
-						labelId: 'label_INFIELDSFLDS_EMAILFLD',
 						controlLimits: [
 						],
 					}, this),
@@ -1356,7 +1373,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR04',
 						maxLength: 34,
-						labelId: 'label_INFIELDSFLDS_IBANFIEL',
 						controlLimits: [
 						],
 					}, this),
@@ -1371,7 +1387,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR04',
 						maxLength: 50,
-						labelId: 'label_INFIELDSFLDS_UPPRTEXT',
 						controlLimits: [
 						],
 					}, this),
@@ -1422,7 +1437,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'INFIELDSPSEUDNOVOGR05',
 						maxLength: 50,
-						labelId: 'label_INFIELDSFLDS_CLRPICKE',
 						controlLimits: [
 						],
 					}, this),
@@ -1480,7 +1494,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
-						labelId: 'label_INFIELDSFLDS_CREATUSE',
 						controlLimits: [
 						],
 					}, this),
@@ -1523,7 +1536,7 @@
 						controlLimits: [
 						],
 					}, this),
-					INFIELDSFLDS_RADIOB__: new fieldControlClass.ArrayStringControl({
+					INFIELDSFLDS_RADIOB__: new fieldControlClass.RadioGroupControl({
 						modelField: 'ValRadiob',
 						valueChangeEvent: 'fieldChange:flds.radiob',
 						id: 'INFIELDSFLDS_RADIOB__',
@@ -1533,7 +1546,6 @@
 						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'INFIELDSPSEUDNOVOGR06',
 						maxLength: 5,
-						labelId: 'label_INFIELDSFLDS_RADIOB__',
 						arrayName: 'RADIOBTN',
 						columns: 2,
 						controlLimits: [
@@ -1698,11 +1710,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1712,7 +1722,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1722,7 +1732,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1742,19 +1752,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1775,7 +1799,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1795,19 +1819,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1826,11 +1864,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1840,7 +1876,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1848,8 +1884,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1857,7 +1891,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1865,8 +1899,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1874,7 +1906,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1882,11 +1914,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1896,7 +1926,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1906,7 +1936,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1967,6 +1997,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS INFIELDS]/
 // eslint-disable-next-line

@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW AERO]/
 
 		[HttpPost]
-		public ActionResult Aero_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Aero_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Aero_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Aero_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_Show_GET",
 				AreaName = "aero",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET AERO]/
 		[HttpPost]
-		public ActionResult Aero_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Aero_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Aero_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Aero_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_New_GET",
 				AreaName = "aero",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Aero_New([FromBody]Aero_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_New",
 				ViewName = "Aero",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET AERO]/
 		[HttpPost]
-		public ActionResult Aero_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Aero_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Aero_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Aero_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_Edit_GET",
 				AreaName = "aero",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Aero_Edit([FromBody]Aero_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_Edit",
 				ViewName = "Aero",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET AERO]/
 		[HttpPost]
-		public ActionResult Aero_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Aero_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Aero_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Aero_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_Delete_GET",
 				AreaName = "aero",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Aero/Aero_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST AERO]/
 		[HttpPost]
-		public ActionResult Aero_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Aero_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Aero_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Aero_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_Delete",
 				ViewName = "Aero",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET AERO]/
 
 		[HttpPost]
-		public ActionResult Aero_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Aero_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Aero_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Aero_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_Duplicate_GET",
 				AreaName = "aero",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Aero_Duplicate([FromBody]Aero_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Aero_Duplicate",
 				ViewName = "Aero",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Aero(UserContext.Current);
+					GenioMVC.Models.Aero model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("aero");
 
 // USE /[MANUAL GQT BEFORE_CANCEL AERO]/

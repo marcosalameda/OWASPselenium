@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW LISTACAM]/
 
 		[HttpPost]
-		public ActionResult Listacam_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Listacam_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Listacam_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Listacam_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_Show_GET",
 				AreaName = "flds",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET LISTACAM]/
 		[HttpPost]
-		public ActionResult Listacam_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Listacam_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Listacam_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Listacam_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_New_GET",
 				AreaName = "flds",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Listacam_New([FromBody]Listacam_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_New",
 				ViewName = "Listacam",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET LISTACAM]/
 		[HttpPost]
-		public ActionResult Listacam_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Listacam_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Listacam_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Listacam_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_Edit_GET",
 				AreaName = "flds",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Listacam_Edit([FromBody]Listacam_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_Edit",
 				ViewName = "Listacam",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET LISTACAM]/
 		[HttpPost]
-		public ActionResult Listacam_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Listacam_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Listacam_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Listacam_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_Delete_GET",
 				AreaName = "flds",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Flds/Listacam_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST LISTACAM]/
 		[HttpPost]
-		public ActionResult Listacam_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Listacam_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Listacam_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Listacam_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_Delete",
 				ViewName = "Listacam",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET LISTACAM]/
 
 		[HttpPost]
-		public ActionResult Listacam_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Listacam_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Listacam_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Listacam_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_Duplicate_GET",
 				AreaName = "flds",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Listacam_Duplicate([FromBody]Listacam_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Listacam_Duplicate",
 				ViewName = "Listacam",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Flds(UserContext.Current);
+					GenioMVC.Models.Flds model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("flds");
 
 // USE /[MANUAL GQT BEFORE_CANCEL LISTACAM]/

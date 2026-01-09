@@ -245,7 +245,21 @@ export class FormControl
 				continue
 
 			// We give an id to the list reload method, so the listener can be correctly removed later.
-			table.reloadList = (dirtyFields) => this.vueContext.reloadList(tableName, dirtyFields)
+			/**
+			 * Reloads the data of the specified list.
+			 * @param {array} dirtyFields A list of dirty fields
+			 * @param {string} typeSourceForm The type of source form that originates the change event
+			 * @returns {Promise}
+			 */
+			table.reloadList = (dirtyFields, typeSourceForm) =>
+			{
+				// Pop-up forms, after closing, perform navigation through the route, so it
+				// becomes unnecessary to update the list because the entire form will already be reloaded.
+				if(typeSourceForm === 'popup')
+					return Promise.resolve(true)
+
+				return this.vueContext.reloadList(tableName, dirtyFields)
+			}
 			this.vueContext.internalEvents.onMany(table.internalEvents, table.reloadList)
 			eventBus.onMany(table.globalEvents, table.reloadList)
 		}
@@ -270,16 +284,14 @@ export class FormControl
 	destroy()
 	{
 		// If there's a request pending, cancel it
-		if (this.currentController) {
-			this.currentController.abort()
-		}
+		this.currentController?.abort()
 		this.currentController = null
 
 		this.clearBtns()
 
 		this.removeListOnDBChangeEvent()
 
-		if (this.vueContext.model instanceof FormViewModelBase)
+		if (this.vueContext.model instanceof FormViewModelBase && this.vueContext.formInfo?.type !== 'virtual')
 			this.vueContext.model.destroy()
 
 		const controlsIds = Object.keys(this.vueContext.controls ?? {})

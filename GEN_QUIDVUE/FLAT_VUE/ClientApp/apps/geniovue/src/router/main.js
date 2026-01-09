@@ -207,6 +207,20 @@ export default function getMainRoutes()
 			}
 		},
 		{
+			path: '/:culture/:system/UIS/Home',
+			name: 'home-UIS',
+			meta: {
+				routeType: 'home',
+				module: 'UIS',
+				hasInitialPHE: false,
+				isHomePage: true
+			},
+			component: () => import('@/views/shared/Home.vue'),
+			props: {
+				isHomePage: true
+			}
+		},
+		{
 			path: '/Error',
 			name: 'genericError',
 			component: () => import('@/views/shared/errors/GenericError.vue'),

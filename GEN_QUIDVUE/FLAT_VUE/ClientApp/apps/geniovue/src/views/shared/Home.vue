@@ -21,7 +21,7 @@
 </template>
 
 <script>
-	// eslint-disable-next-line no-unused-vars
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
 	import { shallowRef, defineAsyncComponent } from 'vue'
 	import { mapState } from 'pinia'
 	import _assignIn from 'lodash-es/assignIn'
@@ -90,6 +90,9 @@
 				{
 					case 'HomepageGQT':
 						this.currentComponent = defineAsyncComponent(() => import('@/views/forms/FormHomeg/QFormHomeg.vue'))
+						break
+					case 'HomepageUIS':
+						this.currentComponent = defineAsyncComponent(() => import('@/views/menus/ModuleUIS/MenuUIS_111/QMenuUis111.vue'))
 						break
 					case 'HomepageSTY':
 						this.currentComponent = defineAsyncComponent(() => import('@/views/menus/ModuleSTY/MenuSTY_OVERVIEW/QMenuStyOverview.vue'))

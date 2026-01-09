@@ -1,4 +1,4 @@
-﻿// eslint-disable-next-line no-unused-vars
+﻿// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { updateQueryParams } from './routeUtils.js'
 
 export default function getMenusRoutes()
@@ -15,6 +15,7 @@ export default function getMenusRoutes()
 				baseArea: 'PWCOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -28,6 +29,7 @@ export default function getMenusRoutes()
 				baseArea: 'GENRE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValGender'],
+				isPopup: false
 			}
 		},
 		{
@@ -41,6 +43,7 @@ export default function getMenusRoutes()
 				baseArea: 'FEECA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValFeedback'],
+				isPopup: false
 			}
 		},
 		{
@@ -54,6 +57,7 @@ export default function getMenusRoutes()
 				baseArea: 'NOTIF',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNrcomoda'],
+				isPopup: false
 			}
 		},
 		{
@@ -67,6 +71,7 @@ export default function getMenusRoutes()
 				baseArea: 'DISST',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValStatus'],
+				isPopup: false
 			}
 		},
 		{
@@ -80,6 +85,7 @@ export default function getMenusRoutes()
 				baseArea: 'ASSET',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -93,6 +99,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -106,6 +113,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -119,6 +127,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -132,6 +141,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: true
 			}
 		},
 		{
@@ -146,7 +156,8 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				limitations: ['minLendiValStart', 'maxLendiValStart' /* SE */]
+				limitations: ['minLendiValStart', 'maxLendiValStart' /* SE */],
+				isPopup: false
 			}
 		},
 		{
@@ -160,6 +171,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: true
 			}
 		},
 		{
@@ -173,6 +185,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -187,7 +200,8 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
-				limitations: ['equip' /* DB */]
+				limitations: ['equip' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -201,6 +215,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -214,6 +229,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -227,6 +243,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -240,6 +257,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -253,6 +271,7 @@ export default function getMenusRoutes()
 				baseArea: 'LENDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLendinnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -266,6 +285,7 @@ export default function getMenusRoutes()
 				baseArea: 'CNTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -279,6 +299,7 @@ export default function getMenusRoutes()
 				baseArea: 'CNTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -292,6 +313,7 @@ export default function getMenusRoutes()
 				baseArea: 'CNTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -305,6 +327,7 @@ export default function getMenusRoutes()
 				baseArea: 'CNTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -318,6 +341,7 @@ export default function getMenusRoutes()
 				baseArea: 'REPAR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDtrepara'],
+				isPopup: false
 			}
 		},
 		{
@@ -331,6 +355,7 @@ export default function getMenusRoutes()
 				baseArea: 'C_ADD',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -344,6 +369,7 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
+				isPopup: false
 			}
 		},
 		{
@@ -357,6 +383,7 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
+				isPopup: false
 			}
 		},
 		{
@@ -370,6 +397,7 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
+				isPopup: false
 			}
 		},
 		{
@@ -383,6 +411,7 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
+				isPopup: false
 			}
 		},
 		{
@@ -396,6 +425,7 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
+				isPopup: false
 			}
 		},
 		{
@@ -409,6 +439,7 @@ export default function getMenusRoutes()
 				baseArea: 'SALE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdentifi'],
+				isPopup: false
 			}
 		},
 		{
@@ -422,6 +453,7 @@ export default function getMenusRoutes()
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
+				isPopup: false
 			}
 		},
 		{
@@ -435,6 +467,7 @@ export default function getMenusRoutes()
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
+				isPopup: false
 			}
 		},
 		{
@@ -448,6 +481,7 @@ export default function getMenusRoutes()
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
+				isPopup: false
 			}
 		},
 		{
@@ -461,6 +495,7 @@ export default function getMenusRoutes()
 				baseArea: 'DISPA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDispanr'],
+				isPopup: false
 			}
 		},
 		{
@@ -474,6 +509,7 @@ export default function getMenusRoutes()
 				baseArea: 'INPGR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIcongro'],
+				isPopup: false
 			}
 		},
 		{
@@ -487,6 +523,7 @@ export default function getMenusRoutes()
 				baseArea: 'RORDF',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
+				isPopup: false
 			}
 		},
 		{
@@ -500,6 +537,7 @@ export default function getMenusRoutes()
 				baseArea: 'SPECI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValEspecial'],
+				isPopup: false
 			}
 		},
 		{
@@ -513,6 +551,7 @@ export default function getMenusRoutes()
 				baseArea: 'CATEG',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCategoria', 'ValAbbreviation'],
+				isPopup: false
 			}
 		},
 		{
@@ -526,6 +565,7 @@ export default function getMenusRoutes()
 				baseArea: 'TPEQU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipoequi'],
+				isPopup: false
 			}
 		},
 		{
@@ -539,6 +579,7 @@ export default function getMenusRoutes()
 				baseArea: 'TPEQU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipoequi'],
+				isPopup: false
 			}
 		},
 		{
@@ -552,6 +593,7 @@ export default function getMenusRoutes()
 				baseArea: 'TPEQU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipoequi'],
+				isPopup: false
 			}
 		},
 		{
@@ -565,6 +607,7 @@ export default function getMenusRoutes()
 				baseArea: 'TPEQU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipoequi'],
+				isPopup: false
 			}
 		},
 		{
@@ -578,6 +621,7 @@ export default function getMenusRoutes()
 				baseArea: 'ADDRE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValAddressuse'],
+				isPopup: false
 			}
 		},
 		{
@@ -591,6 +635,7 @@ export default function getMenusRoutes()
 				baseArea: 'CFAQS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCategory'],
+				isPopup: false
 			}
 		},
 		{
@@ -604,6 +649,7 @@ export default function getMenusRoutes()
 				baseArea: 'CFAQS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCategory'],
+				isPopup: false
 			}
 		},
 		{
@@ -617,6 +663,7 @@ export default function getMenusRoutes()
 				baseArea: 'GITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -630,6 +677,7 @@ export default function getMenusRoutes()
 				baseArea: 'C_BRN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -643,6 +691,7 @@ export default function getMenusRoutes()
 				baseArea: 'DECOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDecomnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -656,6 +705,7 @@ export default function getMenusRoutes()
 				baseArea: 'DECOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDecomnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -669,6 +719,7 @@ export default function getMenusRoutes()
 				baseArea: 'DECOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDecomnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -682,6 +733,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROJE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValProjecto'],
+				isPopup: false
 			}
 		},
 		{
@@ -695,6 +747,7 @@ export default function getMenusRoutes()
 				baseArea: 'YEAR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValYear'],
+				isPopup: false
 			}
 		},
 		{
@@ -708,6 +761,7 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
+				isPopup: false
 			}
 		},
 		{
@@ -721,6 +775,7 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
+				isPopup: false
 			}
 		},
 		{
@@ -734,6 +789,7 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
+				isPopup: false
 			}
 		},
 		{
@@ -747,6 +803,7 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
+				isPopup: false
 			}
 		},
 		{
@@ -761,7 +818,8 @@ export default function getMenusRoutes()
 				baseArea: 'REGIO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegiao'],
-				limitations: ['cntry' /* DB */]
+				limitations: ['cntry' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -775,6 +833,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -788,6 +847,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -801,6 +861,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -814,6 +875,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -827,6 +889,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -840,6 +903,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -853,6 +917,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -866,6 +931,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -879,6 +945,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -892,6 +959,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGENT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -906,7 +974,8 @@ export default function getMenusRoutes()
 				baseArea: 'FAQS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValQuestion'],
-				limitations: ['cfaqs' /* DB */]
+				limitations: ['cfaqs' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -920,6 +989,7 @@ export default function getMenusRoutes()
 				baseArea: 'TPCON',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTipocont'],
+				isPopup: false
 			}
 		},
 		{
@@ -933,6 +1003,7 @@ export default function getMenusRoutes()
 				baseArea: 'CTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -946,6 +1017,7 @@ export default function getMenusRoutes()
 				baseArea: 'CTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -959,6 +1031,7 @@ export default function getMenusRoutes()
 				baseArea: 'CTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -972,6 +1045,7 @@ export default function getMenusRoutes()
 				baseArea: 'CTRY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCountry'],
+				isPopup: false
 			}
 		},
 		{
@@ -985,6 +1059,7 @@ export default function getMenusRoutes()
 				baseArea: 'FAMI1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValFamily'],
+				isPopup: false
 			}
 		},
 		{
@@ -998,6 +1073,7 @@ export default function getMenusRoutes()
 				baseArea: 'LANGU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValLangua'],
+				isPopup: false
 			}
 		},
 		{
@@ -1011,6 +1087,7 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1024,6 +1101,7 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1037,6 +1115,7 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1050,6 +1129,7 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1063,6 +1143,7 @@ export default function getMenusRoutes()
 				baseArea: 'WPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1076,6 +1157,7 @@ export default function getMenusRoutes()
 				baseArea: 'CATTP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTpcatego'],
+				isPopup: false
 			}
 		},
 		{
@@ -1089,6 +1171,7 @@ export default function getMenusRoutes()
 				baseArea: 'REGIS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1102,6 +1185,7 @@ export default function getMenusRoutes()
 				baseArea: 'FACTY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValType'],
+				isPopup: false
 			}
 		},
 		{
@@ -1115,6 +1199,49 @@ export default function getMenusRoutes()
 				baseArea: 'RORDI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
+				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3N51',
+			name: 'menu-PTN_3N51',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N51/QMenuPtn3n51.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3N51',
+				baseArea: 'SEARCH',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValHkey'],
+				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3N31',
+			name: 'menu-PTN_3N31',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N31/QMenuPtn3n31.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3N31',
+				baseArea: 'OPERACOES',
+				hasInitialPHE: false,
+				humanKeyFields: [],
+				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3N41',
+			name: 'menu-PTN_3N41',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N41/QMenuPtn3n41.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3N41',
+				baseArea: 'OPERACOES',
+				hasInitialPHE: false,
+				humanKeyFields: [],
+				isPopup: false
 			}
 		},
 		{
@@ -1128,6 +1255,7 @@ export default function getMenusRoutes()
 				baseArea: 'ENTIT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName', 'ValInitials'],
+				isPopup: false
 			}
 		},
 		{
@@ -1141,6 +1269,7 @@ export default function getMenusRoutes()
 				baseArea: 'ENTIT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName', 'ValInitials'],
+				isPopup: false
 			}
 		},
 		{
@@ -1154,6 +1283,7 @@ export default function getMenusRoutes()
 				baseArea: 'ENTIT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName', 'ValInitials'],
+				isPopup: false
 			}
 		},
 		{
@@ -1167,6 +1297,7 @@ export default function getMenusRoutes()
 				baseArea: 'ENTIT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName', 'ValInitials'],
+				isPopup: false
 			}
 		},
 		{
@@ -1180,6 +1311,7 @@ export default function getMenusRoutes()
 				baseArea: 'LCEXT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValGlnext'],
+				isPopup: false
 			}
 		},
 		{
@@ -1193,6 +1325,7 @@ export default function getMenusRoutes()
 				baseArea: 'DTTYP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValString'],
+				isPopup: false
 			}
 		},
 		{
@@ -1206,6 +1339,7 @@ export default function getMenusRoutes()
 				baseArea: 'TBLB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValText'],
+				isPopup: false
 			}
 		},
 		{
@@ -1219,6 +1353,7 @@ export default function getMenusRoutes()
 				baseArea: 'TBLB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValText'],
+				isPopup: false
 			}
 		},
 		{
@@ -1232,6 +1367,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -1245,6 +1381,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1258,6 +1395,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1271,6 +1409,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1284,6 +1423,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1297,6 +1437,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1310,6 +1451,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1323,6 +1465,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1336,6 +1479,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1349,6 +1493,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1362,6 +1507,7 @@ export default function getMenusRoutes()
 				baseArea: 'WAREH',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValWarehdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1375,6 +1521,7 @@ export default function getMenusRoutes()
 				baseArea: 'GLOB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValHome'],
+				isPopup: false
 			}
 		},
 		{
@@ -1388,6 +1535,7 @@ export default function getMenusRoutes()
 				baseArea: 'GLOB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValHome'],
+				isPopup: false
 			}
 		},
 		{
@@ -1401,6 +1549,7 @@ export default function getMenusRoutes()
 				baseArea: 'TBLK',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1414,6 +1563,7 @@ export default function getMenusRoutes()
 				baseArea: 'CMPNY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDesignat'],
+				isPopup: false
 			}
 		},
 		{
@@ -1427,6 +1577,7 @@ export default function getMenusRoutes()
 				baseArea: 'CMPNY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDesignat'],
+				isPopup: false
 			}
 		},
 		{
@@ -1440,6 +1591,7 @@ export default function getMenusRoutes()
 				baseArea: 'CMPNY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDesignat'],
+				isPopup: false
 			}
 		},
 		{
@@ -1453,6 +1605,7 @@ export default function getMenusRoutes()
 				baseArea: 'INDOC',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDocumenr'],
+				isPopup: false
 			}
 		},
 		{
@@ -1466,6 +1619,7 @@ export default function getMenusRoutes()
 				baseArea: 'LOCAT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValGln'],
+				isPopup: false
 			}
 		},
 		{
@@ -1480,7 +1634,8 @@ export default function getMenusRoutes()
 				baseArea: 'CMPKI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
-				limitations: ['tpequ' /* DB */]
+				limitations: ['tpequ' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -1494,6 +1649,7 @@ export default function getMenusRoutes()
 				baseArea: 'CMPKI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
+				isPopup: false
 			}
 		},
 		{
@@ -1507,6 +1663,7 @@ export default function getMenusRoutes()
 				baseArea: 'PRODU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValProduct'],
+				isPopup: false
 			}
 		},
 		{
@@ -1520,6 +1677,7 @@ export default function getMenusRoutes()
 				baseArea: 'PRODU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValProduct'],
+				isPopup: false
 			}
 		},
 		{
@@ -1533,6 +1691,7 @@ export default function getMenusRoutes()
 				baseArea: 'KINDE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDesignat'],
+				isPopup: false
 			}
 		},
 		{
@@ -1546,6 +1705,7 @@ export default function getMenusRoutes()
 				baseArea: 'RULES',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
+				isPopup: false
 			}
 		},
 		{
@@ -1559,6 +1719,7 @@ export default function getMenusRoutes()
 				baseArea: 'CATE1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCategoria', 'ValAbbreviation'],
+				isPopup: false
 			}
 		},
 		{
@@ -1572,6 +1733,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1586,7 +1748,8 @@ export default function getMenusRoutes()
 				baseArea: 'PROPR',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cntry' /* DB */]
+				limitations: ['cntry' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -1600,6 +1763,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1613,6 +1777,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1627,7 +1792,8 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cmpny' /* DB */]
+				limitations: ['cmpny' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -1642,7 +1808,8 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cmpny' /* DB */]
+				limitations: ['cmpny' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -1657,7 +1824,8 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cmpny' /* DB */]
+				limitations: ['cmpny' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -1671,6 +1839,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1684,6 +1853,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1698,7 +1868,8 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['cate1' /* DB */]
+				limitations: ['cate1' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -1712,6 +1883,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1725,6 +1897,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1738,6 +1911,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1751,6 +1925,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1764,6 +1939,7 @@ export default function getMenusRoutes()
 				baseArea: 'GRPB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1777,6 +1953,7 @@ export default function getMenusRoutes()
 				baseArea: 'GRPB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1790,6 +1967,21 @@ export default function getMenusRoutes()
 				baseArea: 'USERS',
 				hasInitialPHE: false,
 				humanKeyFields: [],
+				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_111',
+			name: 'menu-UIS_111',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_111/QMenuUis111.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '111',
+				baseArea: 'COMPC',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValCompclas'],
+				isPopup: false
 			}
 		},
 		{
@@ -1803,6 +1995,7 @@ export default function getMenusRoutes()
 				baseArea: 'UICOM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1816,6 +2009,7 @@ export default function getMenusRoutes()
 				baseArea: 'PERSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1829,6 +2023,7 @@ export default function getMenusRoutes()
 				baseArea: 'PERSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1843,7 +2038,8 @@ export default function getMenusRoutes()
 				baseArea: 'PERSO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
-				limitations: ['perso_gender' /* AC */]
+				limitations: ['perso_gender' /* AC */],
+				isPopup: false
 			}
 		},
 		{
@@ -1857,6 +2053,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROCN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1870,6 +2067,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROCN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1883,6 +2081,7 @@ export default function getMenusRoutes()
 				baseArea: 'HPESS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -1896,6 +2095,7 @@ export default function getMenusRoutes()
 				baseArea: 'MESSA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValIdnotif'],
+				isPopup: false
 			}
 		},
 		{
@@ -1909,6 +2109,7 @@ export default function getMenusRoutes()
 				baseArea: 'OUTPT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDocumenr'],
+				isPopup: false
 			}
 		},
 		{
@@ -1922,6 +2123,7 @@ export default function getMenusRoutes()
 				baseArea: 'OUTPT',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDocumenr'],
+				isPopup: false
 			}
 		},
 		{
@@ -1935,6 +2137,7 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1948,6 +2151,7 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1962,7 +2166,8 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
-				limitations: ['wareh' /* DB */]
+				limitations: ['wareh' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -1976,6 +2181,7 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -1989,6 +2195,7 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -2002,6 +2209,7 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -2015,6 +2223,7 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -2028,6 +2237,7 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -2041,6 +2251,7 @@ export default function getMenusRoutes()
 				baseArea: 'ITEM',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValItemdes'],
+				isPopup: false
 			}
 		},
 		{
@@ -2055,7 +2266,8 @@ export default function getMenusRoutes()
 				baseArea: 'ROIGF',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
-				limitations: ['rogl1' /* DB */]
+				limitations: ['rogl1' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -2069,6 +2281,7 @@ export default function getMenusRoutes()
 				baseArea: 'CONTA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValContacto'],
+				isPopup: false
 			}
 		},
 		{
@@ -2082,6 +2295,7 @@ export default function getMenusRoutes()
 				baseArea: 'INSTA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValSince'],
+				isPopup: false
 			}
 		},
 		{
@@ -2095,6 +2309,7 @@ export default function getMenusRoutes()
 				baseArea: 'INSTA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValSince'],
+				isPopup: false
 			}
 		},
 		{
@@ -2108,6 +2323,7 @@ export default function getMenusRoutes()
 				baseArea: 'INSTA',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValSince'],
+				isPopup: false
 			}
 		},
 		{
@@ -2121,6 +2337,7 @@ export default function getMenusRoutes()
 				baseArea: 'RECEI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNumber'],
+				isPopup: false
 			}
 		},
 		{
@@ -2134,6 +2351,7 @@ export default function getMenusRoutes()
 				baseArea: 'RECEI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNumber'],
+				isPopup: false
 			}
 		},
 		{
@@ -2147,6 +2365,7 @@ export default function getMenusRoutes()
 				baseArea: 'RECEI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNumber'],
+				isPopup: false
 			}
 		},
 		{
@@ -2160,6 +2379,7 @@ export default function getMenusRoutes()
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2173,6 +2393,7 @@ export default function getMenusRoutes()
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2186,6 +2407,7 @@ export default function getMenusRoutes()
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2199,6 +2421,7 @@ export default function getMenusRoutes()
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2212,6 +2435,7 @@ export default function getMenusRoutes()
 				baseArea: 'ROOMS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRoomnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2225,6 +2449,7 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
+				isPopup: false
 			}
 		},
 		{
@@ -2238,6 +2463,7 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
+				isPopup: false
 			}
 		},
 		{
@@ -2251,6 +2477,7 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
+				isPopup: false
 			}
 		},
 		{
@@ -2264,6 +2491,7 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
+				isPopup: false
 			}
 		},
 		{
@@ -2277,6 +2505,7 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
+				isPopup: false
 			}
 		},
 		{
@@ -2290,6 +2519,7 @@ export default function getMenusRoutes()
 				baseArea: 'EXPEN',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescript'],
+				isPopup: false
 			}
 		},
 		{
@@ -2304,7 +2534,8 @@ export default function getMenusRoutes()
 				baseArea: 'ROIGI',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValOrder'],
-				limitations: ['rogl1' /* DB */]
+				limitations: ['rogl1' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -2318,6 +2549,7 @@ export default function getMenusRoutes()
 				baseArea: 'ITEMC',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTpcateg'],
+				isPopup: false
 			}
 		},
 		{
@@ -2331,6 +2563,7 @@ export default function getMenusRoutes()
 				baseArea: 'TRSB',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2344,6 +2577,7 @@ export default function getMenusRoutes()
 				baseArea: 'PWREG',
 				hasInitialPHE: false,
 				humanKeyFields: [],
+				isPopup: false
 			}
 		},
 		{
@@ -2357,6 +2591,35 @@ export default function getMenusRoutes()
 				baseArea: 'PWREG',
 				hasInitialPHE: false,
 				humanKeyFields: [],
+				isPopup: true
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3N21',
+			name: 'menu-PTN_3N21',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N21/QMenuPtn3n21.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3N21',
+				baseArea: 'ENTIDADE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValEntidade'],
+				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3N4111',
+			name: 'menu-PTN_3N4111',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N4111/QMenuPtn3n4111.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3N4111',
+				baseArea: 'ENTIDADE',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValEntidade'],
+				isPopup: false
 			}
 		},
 		{
@@ -2370,6 +2633,7 @@ export default function getMenusRoutes()
 				baseArea: 'ANEXD',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -2383,6 +2647,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2396,6 +2661,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2409,6 +2675,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2422,6 +2689,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2435,6 +2703,7 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2448,6 +2717,21 @@ export default function getMenusRoutes()
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_711',
+			name: 'menu-PTN_711',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_711/QMenuPtn711.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '711',
+				baseArea: 'PESS1',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2461,7 +2745,8 @@ export default function getMenusRoutes()
 				order: '5311',
 				baseArea: 'PESS1',
 				hasInitialPHE: false,
-				limitations: ['pess1' /* DB */]
+				limitations: ['pess1' /* DB */],
+				isPopup: true
 			}
 		},
 		{
@@ -2475,6 +2760,7 @@ export default function getMenusRoutes()
 				baseArea: 'ROGL1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -2488,6 +2774,7 @@ export default function getMenusRoutes()
 				baseArea: 'ROGL1',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -2501,6 +2788,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2514,6 +2802,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2527,6 +2816,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2540,6 +2830,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2553,6 +2844,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2566,6 +2858,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2579,6 +2872,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2592,6 +2886,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2605,6 +2900,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2618,6 +2914,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2631,6 +2928,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2644,6 +2942,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2657,6 +2956,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2670,6 +2970,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2683,6 +2984,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2697,7 +2999,8 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				limitations: ['cmpny' /* DB */]
+				limitations: ['cmpny' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -2711,6 +3014,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2724,6 +3028,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2737,6 +3042,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2750,6 +3056,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2763,6 +3070,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: true
 			}
 		},
 		{
@@ -2777,7 +3085,8 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
-				limitations: ['minEquipValDtaquisi', 'maxEquipValDtaquisi' /* SE */]
+				limitations: ['minEquipValDtaquisi', 'maxEquipValDtaquisi' /* SE */],
+				isPopup: false
 			}
 		},
 		{
@@ -2791,6 +3100,7 @@ export default function getMenusRoutes()
 				baseArea: 'EQUIP',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValRegistnr'],
+				isPopup: false
 			}
 		},
 		{
@@ -2804,6 +3114,7 @@ export default function getMenusRoutes()
 				baseArea: 'CITY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCity'],
+				isPopup: false
 			}
 		},
 		{
@@ -2817,6 +3128,7 @@ export default function getMenusRoutes()
 				baseArea: 'CITY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCity'],
+				isPopup: false
 			}
 		},
 		{
@@ -2830,6 +3142,7 @@ export default function getMenusRoutes()
 				baseArea: 'CITY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCity'],
+				isPopup: false
 			}
 		},
 		{
@@ -2843,6 +3156,7 @@ export default function getMenusRoutes()
 				baseArea: 'CITY',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValCity'],
+				isPopup: false
 			}
 		},
 		{
@@ -2856,6 +3170,7 @@ export default function getMenusRoutes()
 				baseArea: 'PWORG',
 				hasInitialPHE: false,
 				humanKeyFields: [],
+				isPopup: false
 			}
 		},
 		{
@@ -2869,6 +3184,37 @@ export default function getMenusRoutes()
 				baseArea: 'TRADU',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValReferenc'],
+				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_1111',
+			name: 'menu-UIS_1111',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_1111/QMenuUis1111.vue'),
+			beforeEnter: [updateQueryParams],
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '1111',
+				baseArea: 'COMPO',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValComptype'],
+				limitations: ['compc' /* DB */],
+				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/UIS/menu/UIS_121',
+			name: 'menu-UIS_121',
+			component: () => import('@/views/menus/ModuleUIS/MenuUIS_121/QMenuUis121.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'UIS',
+				order: '121',
+				baseArea: 'COMPO',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValComptype'],
+				isPopup: false
 			}
 		},
 		{
@@ -2882,6 +3228,7 @@ export default function getMenusRoutes()
 				baseArea: 'PEDID',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValNrpedido'],
+				isPopup: false
 			}
 		},
 		{
@@ -2895,6 +3242,7 @@ export default function getMenusRoutes()
 				baseArea: 'FACIL',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2908,6 +3256,7 @@ export default function getMenusRoutes()
 				baseArea: 'FACIL',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2921,6 +3270,7 @@ export default function getMenusRoutes()
 				baseArea: 'AERO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
 			}
 		},
 		{
@@ -2934,6 +3284,21 @@ export default function getMenusRoutes()
 				baseArea: 'AERO',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValName'],
+				isPopup: false
+			}
+		},
+		{
+			path: '/:culture/:system/PTN/menu/PTN_3N11',
+			name: 'menu-PTN_3N11',
+			component: () => import('@/views/menus/ModulePTN/MenuPTN_3N11/QMenuPtn3n11.vue'),
+			meta: {
+				routeType: 'menu',
+				module: 'PTN',
+				order: '3N11',
+				baseArea: 'CONCELHO',
+				hasInitialPHE: false,
+				humanKeyFields: ['ValNome'],
+				isPopup: false
 			}
 		},
 		{
@@ -2947,6 +3312,7 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
+				isPopup: false
 			}
 		},
 		{
@@ -2960,6 +3326,7 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
+				isPopup: false
 			}
 		},
 		{
@@ -2973,6 +3340,7 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
+				isPopup: false
 			}
 		},
 		{
@@ -2986,6 +3354,7 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
+				isPopup: false
 			}
 		},
 		{
@@ -2999,6 +3368,7 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
+				isPopup: false
 			}
 		},
 		{
@@ -3012,6 +3382,7 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
+				isPopup: false
 			}
 		},
 		{
@@ -3025,6 +3396,7 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
+				isPopup: false
 			}
 		},
 		{
@@ -3038,6 +3410,7 @@ export default function getMenusRoutes()
 				baseArea: 'FLDS',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValDescrip'],
+				isPopup: false
 			}
 		},
 		{
@@ -3051,6 +3424,7 @@ export default function getMenusRoutes()
 				baseArea: 'AGREG',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValValue'],
+				isPopup: false
 			}
 		},
 		{
@@ -3064,6 +3438,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3077,6 +3452,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3090,6 +3466,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3103,6 +3480,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3116,6 +3494,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3129,6 +3508,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3142,6 +3522,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3155,6 +3536,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3168,6 +3550,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3181,6 +3564,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3195,7 +3579,8 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				limitations: ['agent' /* DB */]
+				limitations: ['agent' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -3210,7 +3595,8 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				limitations: ['agent' /* DB */]
+				limitations: ['agent' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -3224,6 +3610,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3238,7 +3625,8 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
-				limitations: ['agent' /* DB */]
+				limitations: ['agent' /* DB */],
+				isPopup: false
 			}
 		},
 		{
@@ -3252,6 +3640,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3265,6 +3654,7 @@ export default function getMenusRoutes()
 				baseArea: 'PROPE',
 				hasInitialPHE: false,
 				humanKeyFields: ['ValTitle'],
+				isPopup: false
 			}
 		},
 		{
@@ -3277,7 +3667,8 @@ export default function getMenusRoutes()
 				order: '431',
 				baseArea: 'Dashboard',
 				isDashboardPage: true,
-				hasInitialPHE: false
+				hasInitialPHE: false,
+				isPopup: false
 			}
 		},
 		{
@@ -3290,7 +3681,8 @@ export default function getMenusRoutes()
 				order: 'C1',
 				baseArea: 'Dashboard',
 				isDashboardPage: true,
-				hasInitialPHE: false
+				hasInitialPHE: false,
+				isPopup: false
 			}
 		},
 		{
@@ -3303,7 +3695,8 @@ export default function getMenusRoutes()
 				order: '3L1',
 				baseArea: 'Dashboard',
 				isDashboardPage: true,
-				hasInitialPHE: false
+				hasInitialPHE: false,
+				isPopup: false
 			}
 		},
 	]

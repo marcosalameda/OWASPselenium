@@ -3,10 +3,12 @@
 		:id="id"
 		:class="['q-table-list', 'q-grid-table-list', { 'q-grid-table-list--readonly': $props.readonly }]"
 		:data-loading="!loaded">
-		<div class="page-header row no-gutters justify-content-between">
+		<div
+			v-if="config.tableTitle"
+			class="page-header row no-gutters justify-content-between">
 			<div class="col">
 				<div class="c-action-bar">
-					<div class="table-title c-table__title">
+					<div class="c-table__title">
 						<h1>{{ config.tableTitle }}</h1>
 					</div>
 				</div>
@@ -58,11 +60,12 @@
 							v-for="model in viewModels"
 							:key="model.uniqueIdentifier">
 							<component
+								v-if="component"
 								:is="component"
 								history-branch-id="main"
 								is-nested
-								:nested-model="model"
 								:id="model.uniqueIdentifier"
+								:nested-model="model"
 								:mode="rowMode(model)"
 								:initial-state="getRowInitialState(model)"
 								:permissions="permissions"
@@ -72,6 +75,38 @@
 								@mark-for-deletion="markForDeletion(model)"
 								@toggle-errors="toggleErrors(model)"
 								@undo-deletion="undoDeletion(model)" />
+							<q-grid-table-row
+								v-else
+								:id="model.uniqueIdentifier"
+								:initial-state="getRowInitialState(model)"
+								:is-deleted-state="isRowDeletedState(model)"
+								:mode="rowMode(model)"
+								:nested-model="model"
+								:permissions="permissions"
+								:texts="texts"
+								@mark-for-deletion="markForDeletion(model)"
+								@toggle-errors="toggleErrors(model)"
+								@undo-deletion="undoDeletion(model)">
+								<template #[`actions.prepend`]>
+									<slot
+										name="actions.prepend"
+										:model="model" />
+								</template>
+								<template #[`actions.append`]>
+									<slot
+										name="actions.append"
+										:model="model" />
+								</template>
+								<q-grid-table-column
+									v-for="column in visibleColumns"
+									:key="column.order">
+									<slot
+										:name="`column.${column.name}`"
+										:model="model[column.name]"
+										:column="column"
+										:row="model" />
+								</q-grid-table-column>
+							</q-grid-table-row>
 
 							<tr v-if="expandedErrors.includes(model.uniqueIdentifier) && hasMessages(model)">
 								<td
@@ -105,8 +140,7 @@
 					</tbody>
 
 					<tfoot v-if="hasColumnTotalizers">
-						<tr
-							class="q-grid-table-list__column-totalizers">
+						<tr class="q-grid-table-list__column-totalizers">
 							<!-- Corresponding to checklist column -->
 							<td>
 								<span>
@@ -142,6 +176,8 @@
 </template>
 
 <script>
+	import { defineAsyncComponent } from 'vue'
+
 	import { getColumnTotalValueDisplay, isVisibleColumn } from '@/mixins/listFunctions'
 
 	export default {
@@ -150,6 +186,11 @@
 		emits: ['row-updated', 'mark-for-deletion', 'undo-deletion'],
 
 		inheritAttrs: false,
+
+		components: {
+			QGridTableColumn: defineAsyncComponent(() => import('@/components/inputs/GridBaseInputStructure.vue')),
+			QGridTableRow: defineAsyncComponent(() => import('./QGridTableRow.vue'))
+		},
 
 		props: {
 			/**
@@ -160,10 +201,7 @@
 			/**
 			 * Component name used as a slot to render each row of data within the table.
 			 */
-			component: {
-				type: String,
-				required: true
-			},
+			component: String,
 
 			/**
 			 * Name of the control or feature being used.
@@ -209,7 +247,10 @@
 			 */
 			permissions: {
 				type: Object,
-				default: () => ({})
+				default: () => ({
+					canDelete: true,
+					canInsert: true
+				})
 			},
 
 			/**

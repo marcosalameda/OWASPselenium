@@ -413,9 +413,8 @@ namespace CSGenio.business
                         EmailServer emailProperties = Configuration.EmailProperties.Find(x=>x.Codpmail.ToUpper() == msg.ValCodpmail.ToUpper());
                         CSGenioAnotificationemailsignature emailSignature = CSGenioAnotificationemailsignature.search(sp, msg.ValCodsigna, user);
 
-                        byte[] data = Convert.FromBase64String(emailProperties.Password);
-                        string decodedPass = Encoding.UTF8.GetString(data);
-
+                        byte[] data = String.IsNullOrEmpty(emailProperties.Password) ? null : Convert.FromBase64String(emailProperties.Password);
+                        string decodedPass = data is null ? "" : Encoding.UTF8.GetString(data);
 
                         CSmail mail = new CSmail()
                         {

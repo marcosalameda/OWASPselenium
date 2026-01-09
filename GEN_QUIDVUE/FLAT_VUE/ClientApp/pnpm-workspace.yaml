@@ -3,10 +3,10 @@ packages:
   - 'packages/*'
 
 catalog:
-  '@quidgest/ui': 0.16.12
+  '@quidgest/ui': 0.16.53
   '@vitejs/plugin-vue': 5.2.1
   '@vue/test-utils': 2.4.6
-  axios: 1.7.9
+  axios: 1.11.0
   pinia: 3.0.2
   vue: 3.5.17
   vue-router: 4.0.11

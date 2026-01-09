@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW GENCO]/
 
 		[HttpPost]
-		public ActionResult Genco_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Genco_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Genco_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Genco_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Genco_Show_GET",
 				AreaName = "genre",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET GENCO]/
 		[HttpPost]
-		public ActionResult Genco_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Genco_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Genco_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Genco_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Genco_New_GET",
 				AreaName = "genre",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Genco_New([FromBody]Genco_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Genco_New",
 				ViewName = "Genco",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET GENCO]/
 		[HttpPost]
-		public ActionResult Genco_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Genco_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Genco_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Genco_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Genco_Edit_GET",
 				AreaName = "genre",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Genco_Edit([FromBody]Genco_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Genco_Edit",
 				ViewName = "Genco",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET GENCO]/
 		[HttpPost]
-		public ActionResult Genco_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Genco_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Genco_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Genco_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Genco_Delete_GET",
 				AreaName = "genre",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Genre/Genco_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST GENCO]/
 		[HttpPost]
-		public ActionResult Genco_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Genco_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Genco_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Genco_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Genco_Delete",
 				ViewName = "Genco",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET GENCO]/
 
 		[HttpPost]
-		public ActionResult Genco_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Genco_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Genco_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Genco_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Genco_Duplicate_GET",
 				AreaName = "genre",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Genco_Duplicate([FromBody]Genco_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Genco_Duplicate",
 				ViewName = "Genco",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Genre(UserContext.Current);
+					GenioMVC.Models.Genre model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("genre");
 
 // USE /[MANUAL GQT BEFORE_CANCEL GENCO]/

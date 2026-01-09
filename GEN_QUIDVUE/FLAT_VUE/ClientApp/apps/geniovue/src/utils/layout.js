@@ -12,7 +12,13 @@ export function removeModal(modalId) {
 	const removedModal = genericDataStore.removeModal(modalId)
 
 	// Focus on the element / control that opened the popup
-	focusElement(removedModal?.returnElement)
+	// Using setTimeout with 0 to wait until the call stack is clear
+	// so the focus doesn't happen before the modal is fully removed
+	// because the focus trap can still be active 
+	// which prevents focusing on the return element
+	setTimeout(() => {
+		focusElement(removedModal?.returnElement)
+	}, 0)
 }
 
 /**

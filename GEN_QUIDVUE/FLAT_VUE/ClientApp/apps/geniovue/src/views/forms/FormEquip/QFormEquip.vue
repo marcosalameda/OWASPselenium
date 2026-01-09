@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,27 +94,25 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="EQUIP"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.EQUIP___PSEUDNOVOGR02.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EQUIP___PSEUDNOVOGR02.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible">
 						<q-group-collapsible
+							v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible"
 							id="EQUIP___PSEUDNOVOGR02"
 							v-bind="controls.EQUIP___PSEUDNOVOGR02"
 							v-on="controls.EQUIP___PSEUDNOVOGR02.handlers">
 							<!-- Start EQUIP___PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.EQUIP___CMPNYDESIGNAT.isVisible || controls.EQUIP___PESS1NAME____.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___CMPNYDESIGNAT.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible || controls.EQUIP___PESS1NAME____.isVisible">
+								<q-col
+									v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___CMPNYDESIGNAT"
 										v-on="controls.EQUIP___CMPNYDESIGNAT.handlers"
@@ -122,11 +128,12 @@
 											v-bind="controls.EQUIP___CMPNYDESIGNAT.seeMoreParams"
 											v-on="controls.EQUIP___CMPNYDESIGNAT.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___PESS1NAME____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___PESS1NAME____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___PESS1NAME____.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___PESS1NAME____"
 										v-on="controls.EQUIP___PESS1NAME____.handlers"
@@ -142,29 +149,27 @@
 											v-bind="controls.EQUIP___PESS1NAME____.seeMoreParams"
 											v-on="controls.EQUIP___PESS1NAME____.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR02 -->
 						</q-group-collapsible>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EQUIP___PSEUDNOVOGR01.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EQUIP___PSEUDNOVOGR01.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EQUIP___PSEUDNOVOGR01.isVisible">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
+							v-if="controls.EQUIP___PSEUDNOVOGR01.isVisible"
 							id="EQUIP___PSEUDNOVOGR01"
 							class="c-groupbox--title-background"
 							v-bind="controls.EQUIP___PSEUDNOVOGR01"
 							:is-visible="controls.EQUIP___PSEUDNOVOGR01.isVisible">
 							<!-- Start EQUIP___PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.EQUIP___EQUIPSEQUENNR.isVisible || controls.EQUIP___EQUIPREGISTNR.isVisible || controls.EQUIP___TPEQUTIPOEQUI.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPSEQUENNR.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible || controls.EQUIP___EQUIPREGISTNR.isVisible || controls.EQUIP___TPEQUTIPOEQUI.isVisible">
+								<q-col
+									v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPSEQUENNR"
 										v-on="controls.EQUIP___EQUIPSEQUENNR.handlers"
@@ -176,11 +181,12 @@
 											v-bind="controls.EQUIP___EQUIPSEQUENNR.props"
 											@update:model-value="model.ValSequennr.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPREGISTNR.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPREGISTNR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPREGISTNR.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPREGISTNR"
 										v-on="controls.EQUIP___EQUIPREGISTNR.handlers"
@@ -192,11 +198,12 @@
 											@blur="onBlur(controls.EQUIP___EQUIPREGISTNR, model.ValRegistnr.value)"
 											@change="model.ValRegistnr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___TPEQUTIPOEQUI.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___TPEQUTIPOEQUI.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___TPEQUTIPOEQUI.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___TPEQUTIPOEQUI"
 										v-on="controls.EQUIP___TPEQUTIPOEQUI.handlers"
@@ -212,13 +219,14 @@
 											v-bind="controls.EQUIP___TPEQUTIPOEQUI.seeMoreParams"
 											v-on="controls.EQUIP___TPEQUTIPOEQUI.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.EQUIP___EQUIPSITEFABR.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPSITEFABR.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.EQUIP___EQUIPSITEFABR.isVisible">
+								<q-col
+									v-if="controls.EQUIP___EQUIPSITEFABR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPSITEFABR.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPSITEFABR"
 										v-on="controls.EQUIP___EQUIPSITEFABR.handlers"
@@ -230,13 +238,14 @@
 											@blur="onBlur(controls.EQUIP___EQUIPSITEFABR, model.ValSitefabr.value)"
 											@change="model.ValSitefabr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.EQUIP___WAREHWAREHDES.isVisible || controls.EQUIP___ITEM_ITEMDES_.isVisible || controls.EQUIP___EQUIPDESIGNAT.isVisible || controls.EQUIP___EQUIPFREQUENC.isVisible || controls.EQUIP___EQUIPVALORTOT.isVisible || controls.EQUIP___EQUIPDTAQUISI.isVisible || controls.EQUIP___EQUIPDTDECO__.isVisible || controls.EQUIP___EQUIPBOUGHT__.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___WAREHWAREHDES.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.EQUIP___WAREHWAREHDES.isVisible || controls.EQUIP___ITEM_ITEMDES_.isVisible || controls.EQUIP___EQUIPDESIGNAT.isVisible || controls.EQUIP___EQUIPFREQUENC.isVisible || controls.EQUIP___EQUIPVALORTOT.isVisible || controls.EQUIP___EQUIPDTAQUISI.isVisible || controls.EQUIP___EQUIPDTDECO__.isVisible || controls.EQUIP___EQUIPBOUGHT__.isVisible">
+								<q-col
+									v-if="controls.EQUIP___WAREHWAREHDES.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___WAREHWAREHDES.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___WAREHWAREHDES"
 										v-on="controls.EQUIP___WAREHWAREHDES.handlers"
@@ -252,11 +261,12 @@
 											v-bind="controls.EQUIP___WAREHWAREHDES.seeMoreParams"
 											v-on="controls.EQUIP___WAREHWAREHDES.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___ITEM_ITEMDES_.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___ITEM_ITEMDES_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___ITEM_ITEMDES_.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___ITEM_ITEMDES_"
 										v-on="controls.EQUIP___ITEM_ITEMDES_.handlers"
@@ -272,11 +282,12 @@
 											v-bind="controls.EQUIP___ITEM_ITEMDES_.seeMoreParams"
 											v-on="controls.EQUIP___ITEM_ITEMDES_.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPDESIGNAT.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPDESIGNAT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPDESIGNAT.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPDESIGNAT"
 										v-on="controls.EQUIP___EQUIPDESIGNAT.handlers"
@@ -288,11 +299,12 @@
 											@blur="onBlur(controls.EQUIP___EQUIPDESIGNAT, model.ValDesignat.value)"
 											@change="model.ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPFREQUENC.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPFREQUENC.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPFREQUENC.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPFREQUENC"
 										v-on="controls.EQUIP___EQUIPFREQUENC.handlers"
@@ -305,11 +317,12 @@
 											:model-value="model.ValFrequenc.value"
 											@update:model-value="model.ValFrequenc.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPVALORTOT.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPVALORTOT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPVALORTOT.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPVALORTOT"
 										v-on="controls.EQUIP___EQUIPVALORTOT.handlers"
@@ -321,11 +334,12 @@
 											v-bind="controls.EQUIP___EQUIPVALORTOT.props"
 											@update:model-value="model.ValValortot.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPDTAQUISI.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPDTAQUISI.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPDTAQUISI.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPDTAQUISI"
 										v-on="controls.EQUIP___EQUIPDTAQUISI.handlers"
@@ -339,11 +353,12 @@
 											@reset-icon-click="model.ValDtaquisi.fnUpdateValue(model.ValDtaquisi.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaquisi.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPDTDECO__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPDTDECO__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPDTDECO__.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPDTDECO__"
 										v-on="controls.EQUIP___EQUIPDTDECO__.handlers"
@@ -357,11 +372,12 @@
 											@reset-icon-click="model.ValDtdeco.fnUpdateValue(model.ValDtdeco.originalValue ?? new Date())"
 											@update:model-value="model.ValDtdeco.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPBOUGHT__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPBOUGHT__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPBOUGHT__.isVisible"
 										class="i-checkbox"
 										v-bind="controls.EQUIP___EQUIPBOUGHT__"
 										v-on="controls.EQUIP___EQUIPBOUGHT__.handlers"
@@ -369,34 +385,32 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.EQUIP___EQUIPBOUGHT__.isVisible"
 												v-bind="controls.EQUIP___EQUIPBOUGHT__.props"
 												v-on="controls.EQUIP___EQUIPBOUGHT__.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EQUIP___PSEUDNOVOGR09.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EQUIP___PSEUDNOVOGR09.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EQUIP___PSEUDNOVOGR09.isVisible">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR09.isVisible">
 						<q-group-box-container
+							v-if="controls.EQUIP___PSEUDNOVOGR09.isVisible"
 							id="EQUIP___PSEUDNOVOGR09"
 							v-bind="controls.EQUIP___PSEUDNOVOGR09"
 							:is-visible="controls.EQUIP___PSEUDNOVOGR09.isVisible">
 							<!-- Start EQUIP___PSEUDNOVOGR09 -->
-							<q-row-container v-show="controls.EQUIP___ROOM1ROOMNR__.isVisible || controls.EQUIP___ROOM1DESIGNAT.isVisible || controls.EQUIP___EQUIPDTREFERE.isVisible || controls.EQUIP___EQUIPFIRST___.isVisible || controls.EQUIP___EQUIPBEFORE__.isVisible || controls.EQUIP___EQUIPFOLLOWIN.isVisible || controls.EQUIP___EQUIPLAST____.isVisible || controls.EQUIP___EQUIPQTDMOVIM.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___ROOM1ROOMNR__.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EQUIP___ROOM1ROOMNR__.isVisible || controls.EQUIP___ROOM1DESIGNAT.isVisible || controls.EQUIP___EQUIPDTREFERE.isVisible || controls.EQUIP___EQUIPFIRST___.isVisible || controls.EQUIP___EQUIPBEFORE__.isVisible || controls.EQUIP___EQUIPFOLLOWIN.isVisible || controls.EQUIP___EQUIPLAST____.isVisible || controls.EQUIP___EQUIPQTDMOVIM.isVisible">
+								<q-col
+									v-if="controls.EQUIP___ROOM1ROOMNR__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___ROOM1ROOMNR__.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___ROOM1ROOMNR__"
 										v-on="controls.EQUIP___ROOM1ROOMNR__.handlers"
@@ -408,11 +422,12 @@
 											v-bind="controls.EQUIP___ROOM1ROOMNR__.props"
 											v-on="controls.EQUIP___ROOM1ROOMNR__.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___ROOM1DESIGNAT.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___ROOM1DESIGNAT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___ROOM1DESIGNAT.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___ROOM1DESIGNAT"
 										v-on="controls.EQUIP___ROOM1DESIGNAT.handlers"
@@ -424,11 +439,12 @@
 											@blur="onBlur(controls.EQUIP___ROOM1DESIGNAT, model.Room1ValDesignat.value)"
 											@change="model.Room1ValDesignat.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPDTREFERE.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPDTREFERE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPDTREFERE.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPDTREFERE"
 										v-on="controls.EQUIP___EQUIPDTREFERE.handlers"
@@ -442,11 +458,12 @@
 											@reset-icon-click="model.ValDtrefere.fnUpdateValue(model.ValDtrefere.originalValue ?? new Date())"
 											@update:model-value="model.ValDtrefere.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPFIRST___.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPFIRST___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPFIRST___.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPFIRST___"
 										v-on="controls.EQUIP___EQUIPFIRST___.handlers"
@@ -458,11 +475,12 @@
 											@blur="onBlur(controls.EQUIP___EQUIPFIRST___, model.ValFirst.value)"
 											@change="model.ValFirst.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPBEFORE__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPBEFORE__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPBEFORE__.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPBEFORE__"
 										v-on="controls.EQUIP___EQUIPBEFORE__.handlers"
@@ -474,11 +492,12 @@
 											@blur="onBlur(controls.EQUIP___EQUIPBEFORE__, model.ValBefore.value)"
 											@change="model.ValBefore.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPFOLLOWIN.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPFOLLOWIN.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPFOLLOWIN.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPFOLLOWIN"
 										v-on="controls.EQUIP___EQUIPFOLLOWIN.handlers"
@@ -490,11 +509,12 @@
 											@blur="onBlur(controls.EQUIP___EQUIPFOLLOWIN, model.ValFollowin.value)"
 											@change="model.ValFollowin.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPLAST____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPLAST____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPLAST____.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPLAST____"
 										v-on="controls.EQUIP___EQUIPLAST____.handlers"
@@ -506,11 +526,12 @@
 											@blur="onBlur(controls.EQUIP___EQUIPLAST____, model.ValLast.value)"
 											@change="model.ValLast.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPQTDMOVIM.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPQTDMOVIM.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPQTDMOVIM.isVisible"
 										class="i-text"
 										v-bind="controls.EQUIP___EQUIPQTDMOVIM"
 										v-on="controls.EQUIP___EQUIPQTDMOVIM.handlers"
@@ -522,13 +543,14 @@
 											v-bind="controls.EQUIP___EQUIPQTDMOVIM.props"
 											@update:model-value="model.ValQtdmovim.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.EQUIP___EQUIPMOVIMENT.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPMOVIMENT.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.EQUIP___EQUIPMOVIMENT.isVisible">
+								<q-col
+									v-if="controls.EQUIP___EQUIPMOVIMENT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPMOVIMENT.isVisible"
 										class="i-static-text"
 										v-bind="controls.EQUIP___EQUIPMOVIMENT"
 										v-on="controls.EQUIP___EQUIPMOVIMENT.handlers"
@@ -542,36 +564,37 @@
 											:text="model.ValMoviment.value"
 											supports-html />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container
-								v-show="controls.EQUIP___PSEUDNOVOGR10.isVisible"
-								is-large>
-								<q-control-wrapper
-									v-show="controls.EQUIP___PSEUDNOVOGR10.isVisible"
-									class="row-line-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.EQUIP___PSEUDNOVOGR10.isVisible">
+								<q-col v-if="controls.EQUIP___PSEUDNOVOGR10.isVisible">
 									<q-group-collapsible
+										v-if="controls.EQUIP___PSEUDNOVOGR10.isVisible"
 										id="EQUIP___PSEUDNOVOGR10"
 										v-bind="controls.EQUIP___PSEUDNOVOGR10"
 										v-on="controls.EQUIP___PSEUDNOVOGR10.handlers">
 										<!-- Start EQUIP___PSEUDNOVOGR10 -->
-										<q-row-container v-show="controls.EQUIP___PSEUDMOVIMEVV.isVisible || controls.EQUIP___PSEUDROOMSMVE.isVisible">
-											<q-control-wrapper
-												v-show="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible || controls.EQUIP___PSEUDROOMSMVE.isVisible">
+											<q-col
+												v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
+												cols="auto">
 												<q-table
-													v-show="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
+													v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
 													v-bind="controls.EQUIP___PSEUDMOVIMEVV"
-													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers" />
+													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers">
 												<q-table-extra-extension
+													v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
 													:list-ctrl="controls.EQUIP___PSEUDMOVIMEVV"
 													:filter-operators="controls.EQUIP___PSEUDMOVIMEVV.filterOperators"
 													v-on="controls.EQUIP___PSEUDMOVIMEVV.handlers" />
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.EQUIP___PSEUDROOMSMVE.isVisible"
-												class="control-join-group">
+													<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDMOVIMEVV]/ -->
+												</q-table>
+											</q-col>
+											<q-col
+												v-if="controls.EQUIP___PSEUDROOMSMVE.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.EQUIP___PSEUDROOMSMVE.isVisible"
 													class="i-text"
 													v-bind="controls.EQUIP___PSEUDROOMSMVE"
 													v-on="controls.EQUIP___PSEUDROOMSMVE.handlers"
@@ -591,46 +614,47 @@
 														@remove-label="controls.EQUIP___PSEUDMOVIMEVV.onUnselectRow($event); model.List_Movimevv_SelectedIds.updateValue(controls.EQUIP___PSEUDMOVIMEVV.rowsSelectedKeys)"
 														@on-enter="controls.EQUIP___PSEUDMOVIMEVV.onSelectRow($event); model.List_Movimevv_SelectedIds.updateValue(controls.EQUIP___PSEUDMOVIMEVV.rowsSelectedKeys)" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.EQUIP___PSEUDMOVIMELS.isVisible">
-											<q-control-wrapper
-												v-show="controls.EQUIP___PSEUDMOVIMELS.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.EQUIP___PSEUDMOVIMELS.isVisible">
+											<q-col
+												v-if="controls.EQUIP___PSEUDMOVIMELS.isVisible"
+												cols="auto">
 												<q-table
-													v-show="controls.EQUIP___PSEUDMOVIMELS.isVisible"
+													v-if="controls.EQUIP___PSEUDMOVIMELS.isVisible"
 													v-bind="controls.EQUIP___PSEUDMOVIMELS"
-													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers" />
+													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers">
 												<q-table-extra-extension
+													v-if="controls.EQUIP___PSEUDMOVIMELS.isVisible"
 													:list-ctrl="controls.EQUIP___PSEUDMOVIMELS"
 													:filter-operators="controls.EQUIP___PSEUDMOVIMELS.filterOperators"
 													v-on="controls.EQUIP___PSEUDMOVIMELS.handlers" />
-											</q-control-wrapper>
-										</q-row-container>
+													<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDMOVIMELS]/ -->
+												</q-table>
+											</q-col>
+										</q-row>
 										<!-- End EQUIP___PSEUDNOVOGR10 -->
 									</q-group-collapsible>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR09 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EQUIP___PSEUDNOVOGR06.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EQUIP___PSEUDNOVOGR06.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EQUIP___PSEUDNOVOGR06.isVisible">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR06.isVisible">
 						<q-group-collapsible
+							v-if="controls.EQUIP___PSEUDNOVOGR06.isVisible"
 							id="EQUIP___PSEUDNOVOGR06"
 							v-bind="controls.EQUIP___PSEUDNOVOGR06"
 							v-on="controls.EQUIP___PSEUDNOVOGR06.handlers">
 							<!-- Start EQUIP___PSEUDNOVOGR06 -->
-							<q-row-container v-show="controls.EQUIP___EQUIPPHOTOGRA.isVisible || controls.EQUIP___EQUIPLASTPHO_.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPPHOTOGRA.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EQUIP___EQUIPPHOTOGRA.isVisible || controls.EQUIP___EQUIPLASTPHO_.isVisible">
+								<q-col
+									v-if="controls.EQUIP___EQUIPPHOTOGRA.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPPHOTOGRA.isVisible"
 										class="q-image"
 										v-bind="controls.EQUIP___EQUIPPHOTOGRA"
 										v-on="controls.EQUIP___EQUIPPHOTOGRA.handlers"
@@ -642,11 +666,12 @@
 											v-bind="controls.EQUIP___EQUIPPHOTOGRA.props"
 											v-on="controls.EQUIP___EQUIPPHOTOGRA.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.EQUIP___EQUIPLASTPHO_.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.EQUIP___EQUIPLASTPHO_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EQUIP___EQUIPLASTPHO_.isVisible"
 										class="q-image"
 										v-bind="controls.EQUIP___EQUIPLASTPHO_"
 										v-on="controls.EQUIP___EQUIPLASTPHO_.handlers"
@@ -658,88 +683,96 @@
 											v-bind="controls.EQUIP___EQUIPLASTPHO_.props"
 											v-on="controls.EQUIP___EQUIPLASTPHO_.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR06 -->
 						</q-group-collapsible>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EQUIP___PSEUDNOVOGR05.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EQUIP___PSEUDNOVOGR05.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible">
 						<q-accordion
 							v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible"
 							id="EQUIP___PSEUDNOVOGR05"
-							v-model="controls.EQUIP___PSEUDNOVOGR05.openChild"
-							v-bind="controls.EQUIP___PSEUDNOVOGR05">
+							v-model="controls.EQUIP___PSEUDNOVOGR05.openChild">
 							<!-- Start EQUIP___PSEUDNOVOGR05 -->
 							<q-accordion-item
+								v-if="controls.EQUIP___PSEUDNOVOGR03.isVisible"
 								id="EQUIP___PSEUDNOVOGR03-container"
 								value="EQUIP___PSEUDNOVOGR03"
 								:title="controls.EQUIP___PSEUDNOVOGR03.label">
 								<!-- Start EQUIP___PSEUDNOVOGR03 -->
-								<q-row-container v-show="controls.EQUIP___PSEUDINSTALAG.isVisible">
-									<q-control-wrapper
-										v-show="controls.EQUIP___PSEUDINSTALAG.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.EQUIP___PSEUDINSTALAG.isVisible">
+									<q-col
+										v-if="controls.EQUIP___PSEUDINSTALAG.isVisible"
+										cols="auto">
 										<q-table
-											v-show="controls.EQUIP___PSEUDINSTALAG.isVisible"
+											v-if="controls.EQUIP___PSEUDINSTALAG.isVisible"
 											v-bind="controls.EQUIP___PSEUDINSTALAG"
-											v-on="controls.EQUIP___PSEUDINSTALAG.handlers" />
+											v-on="controls.EQUIP___PSEUDINSTALAG.handlers">
 										<q-table-extra-extension
+											v-if="controls.EQUIP___PSEUDINSTALAG.isVisible"
 											:list-ctrl="controls.EQUIP___PSEUDINSTALAG"
 											:filter-operators="controls.EQUIP___PSEUDINSTALAG.filterOperators"
 											v-on="controls.EQUIP___PSEUDINSTALAG.handlers" />
-									</q-control-wrapper>
-								</q-row-container>
+											<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDINSTALAG]/ -->
+										</q-table>
+									</q-col>
+								</q-row>
 								<!-- End EQUIP___PSEUDNOVOGR03 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.EQUIP___PSEUDNOVOGR04.isVisible"
 								id="EQUIP___PSEUDNOVOGR04-container"
 								value="EQUIP___PSEUDNOVOGR04"
 								:title="controls.EQUIP___PSEUDNOVOGR04.label">
 								<!-- Start EQUIP___PSEUDNOVOGR04 -->
-								<q-row-container v-show="controls.EQUIP___PSEUDINSTALAC.isVisible">
-									<q-control-wrapper
-										v-show="controls.EQUIP___PSEUDINSTALAC.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.EQUIP___PSEUDINSTALAC.isVisible">
+									<q-col
+										v-if="controls.EQUIP___PSEUDINSTALAC.isVisible"
+										cols="auto">
 										<q-table
-											v-show="controls.EQUIP___PSEUDINSTALAC.isVisible"
+											v-if="controls.EQUIP___PSEUDINSTALAC.isVisible"
 											v-bind="controls.EQUIP___PSEUDINSTALAC"
-											v-on="controls.EQUIP___PSEUDINSTALAC.handlers" />
+											v-on="controls.EQUIP___PSEUDINSTALAC.handlers">
 										<q-table-extra-extension
+											v-if="controls.EQUIP___PSEUDINSTALAC.isVisible"
 											:list-ctrl="controls.EQUIP___PSEUDINSTALAC"
 											:filter-operators="controls.EQUIP___PSEUDINSTALAC.filterOperators"
 											v-on="controls.EQUIP___PSEUDINSTALAC.handlers" />
-									</q-control-wrapper>
-								</q-row-container>
+											<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDINSTALAC]/ -->
+										</q-table>
+									</q-col>
+								</q-row>
 								<!-- End EQUIP___PSEUDNOVOGR04 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.EQUIP___PSEUDNOVOGR11.isVisible"
 								id="EQUIP___PSEUDNOVOGR11-container"
 								value="EQUIP___PSEUDNOVOGR11"
 								:title="controls.EQUIP___PSEUDNOVOGR11.label">
 								<!-- Start EQUIP___PSEUDNOVOGR11 -->
-								<q-row-container v-show="controls.EQUIP___PSEUDREPARACO.isVisible || controls.EQUIP___DECOMDECOMNR_.isVisible || controls.EQUIP___EQUIPIFABATIF.isVisible">
-									<q-control-wrapper
-										v-show="controls.EQUIP___PSEUDREPARACO.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.EQUIP___PSEUDREPARACO.isVisible || controls.EQUIP___DECOMDECOMNR_.isVisible || controls.EQUIP___EQUIPIFABATIF.isVisible">
+									<q-col
+										v-if="controls.EQUIP___PSEUDREPARACO.isVisible"
+										cols="auto">
 										<q-table
-											v-show="controls.EQUIP___PSEUDREPARACO.isVisible"
+											v-if="controls.EQUIP___PSEUDREPARACO.isVisible"
 											v-bind="controls.EQUIP___PSEUDREPARACO"
-											v-on="controls.EQUIP___PSEUDREPARACO.handlers" />
+											v-on="controls.EQUIP___PSEUDREPARACO.handlers">
 										<q-table-extra-extension
+											v-if="controls.EQUIP___PSEUDREPARACO.isVisible"
 											:list-ctrl="controls.EQUIP___PSEUDREPARACO"
 											:filter-operators="controls.EQUIP___PSEUDREPARACO.filterOperators"
 											v-on="controls.EQUIP___PSEUDREPARACO.handlers" />
-									</q-control-wrapper>
-									<q-control-wrapper
-										v-show="controls.EQUIP___DECOMDECOMNR_.isVisible"
-										class="control-join-group">
+											<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDREPARACO]/ -->
+										</q-table>
+									</q-col>
+									<q-col
+										v-if="controls.EQUIP___DECOMDECOMNR_.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.EQUIP___DECOMDECOMNR_.isVisible"
 											class="i-text"
 											v-bind="controls.EQUIP___DECOMDECOMNR_"
 											v-on="controls.EQUIP___DECOMDECOMNR_.handlers"
@@ -755,11 +788,12 @@
 												v-bind="controls.EQUIP___DECOMDECOMNR_.seeMoreParams"
 												v-on="controls.EQUIP___DECOMDECOMNR_.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-									<q-control-wrapper
-										v-show="controls.EQUIP___EQUIPIFABATIF.isVisible"
-										class="control-join-group">
+									</q-col>
+									<q-col
+										v-if="controls.EQUIP___EQUIPIFABATIF.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.EQUIP___EQUIPIFABATIF.isVisible"
 											class="i-checkbox"
 											v-bind="controls.EQUIP___EQUIPIFABATIF"
 											v-on="controls.EQUIP___EQUIPIFABATIF.handlers"
@@ -767,117 +801,122 @@
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<template #label>
-												<q-checkbox-input
+												<q-checkbox
 													v-if="controls.EQUIP___EQUIPIFABATIF.isVisible"
 													v-bind="controls.EQUIP___EQUIPIFABATIF.props"
 													v-on="controls.EQUIP___EQUIPIFABATIF.handlers" />
 											</template>
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End EQUIP___PSEUDNOVOGR11 -->
 							</q-accordion-item>
 							<!-- End EQUIP___PSEUDNOVOGR05 -->
 						</q-accordion>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.EQUIP___PSEUDNOVOGR08.isVisible">
-					<q-control-wrapper
-						v-show="controls.EQUIP___PSEUDNOVOGR08.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EQUIP___PSEUDNOVOGR08.isVisible">
+					<q-col
+						v-if="controls.EQUIP___PSEUDNOVOGR08.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.EQUIP___PSEUDNOVOGR08.isVisible"
 							id="EQUIP___PSEUDNOVOGR08"
 							v-bind="controls.EQUIP___PSEUDNOVOGR08"
 							:is-visible="controls.EQUIP___PSEUDNOVOGR08.isVisible">
 							<!-- Start EQUIP___PSEUDNOVOGR08 -->
-							<q-row-container v-show="controls.EQUIP___PSEUDFOTOEQUI.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___PSEUDFOTOEQUI.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EQUIP___PSEUDFOTOEQUI.isVisible">
+								<q-col
+									v-if="controls.EQUIP___PSEUDFOTOEQUI.isVisible"
+									cols="auto">
 									<q-table
-										v-show="controls.EQUIP___PSEUDFOTOEQUI.isVisible"
+										v-if="controls.EQUIP___PSEUDFOTOEQUI.isVisible"
 										v-bind="controls.EQUIP___PSEUDFOTOEQUI"
-										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers" />
+										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers">
 									<q-table-extra-extension
+										v-if="controls.EQUIP___PSEUDFOTOEQUI.isVisible"
 										:list-ctrl="controls.EQUIP___PSEUDFOTOEQUI"
 										:filter-operators="controls.EQUIP___PSEUDFOTOEQUI.filterOperators"
 										v-on="controls.EQUIP___PSEUDFOTOEQUI.handlers" />
-								</q-control-wrapper>
-							</q-row-container>
+										<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDFOTOEQUI]/ -->
+									</q-table>
+								</q-col>
+							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR08 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EQUIP___PSEUDNOVOGR07.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EQUIP___PSEUDNOVOGR07.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EQUIP___PSEUDNOVOGR07.isVisible">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR07.isVisible">
 						<q-group-box-container
+							v-if="controls.EQUIP___PSEUDNOVOGR07.isVisible"
 							id="EQUIP___PSEUDNOVOGR07"
 							v-bind="controls.EQUIP___PSEUDNOVOGR07"
 							:is-visible="controls.EQUIP___PSEUDNOVOGR07.isVisible">
 							<!-- Start EQUIP___PSEUDNOVOGR07 -->
-							<q-row-container v-show="controls.EQUIP___PSEUDVISEQUIP.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___PSEUDVISEQUIP.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EQUIP___PSEUDVISEQUIP.isVisible">
+								<q-col
+									v-if="controls.EQUIP___PSEUDVISEQUIP.isVisible"
+									cols="auto">
 									<q-table
-										v-show="controls.EQUIP___PSEUDVISEQUIP.isVisible"
+										v-if="controls.EQUIP___PSEUDVISEQUIP.isVisible"
 										v-bind="controls.EQUIP___PSEUDVISEQUIP"
-										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers" />
+										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers">
 									<q-table-extra-extension
+										v-if="controls.EQUIP___PSEUDVISEQUIP.isVisible"
 										:list-ctrl="controls.EQUIP___PSEUDVISEQUIP"
 										:filter-operators="controls.EQUIP___PSEUDVISEQUIP.filterOperators"
 										v-on="controls.EQUIP___PSEUDVISEQUIP.handlers" />
-								</q-control-wrapper>
-							</q-row-container>
+										<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDVISEQUIP]/ -->
+									</q-table>
+								</q-col>
+							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR07 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.EQUIP___PSEUDNOVOGR12.isVisible">
-					<q-control-wrapper
-						v-show="controls.EQUIP___PSEUDNOVOGR12.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EQUIP___PSEUDNOVOGR12.isVisible">
+					<q-col
+						v-if="controls.EQUIP___PSEUDNOVOGR12.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.EQUIP___PSEUDNOVOGR12.isVisible"
 							id="EQUIP___PSEUDNOVOGR12"
 							v-bind="controls.EQUIP___PSEUDNOVOGR12"
 							:is-visible="controls.EQUIP___PSEUDNOVOGR12.isVisible">
 							<!-- Start EQUIP___PSEUDNOVOGR12 -->
-							<q-row-container v-show="controls.EQUIP___PSEUDANEXOS__.isVisible">
-								<q-control-wrapper
-									v-show="controls.EQUIP___PSEUDANEXOS__.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EQUIP___PSEUDANEXOS__.isVisible">
+								<q-col
+									v-if="controls.EQUIP___PSEUDANEXOS__.isVisible"
+									cols="auto">
 									<q-table
-										v-show="controls.EQUIP___PSEUDANEXOS__.isVisible"
+										v-if="controls.EQUIP___PSEUDANEXOS__.isVisible"
 										v-bind="controls.EQUIP___PSEUDANEXOS__"
-										v-on="controls.EQUIP___PSEUDANEXOS__.handlers" />
+										v-on="controls.EQUIP___PSEUDANEXOS__.handlers">
 									<q-table-extra-extension
+										v-if="controls.EQUIP___PSEUDANEXOS__.isVisible"
 										:list-ctrl="controls.EQUIP___PSEUDANEXOS__"
 										:filter-operators="controls.EQUIP___PSEUDANEXOS__.filterOperators"
 										v-on="controls.EQUIP___PSEUDANEXOS__.handlers" />
-								</q-control-wrapper>
-							</q-row-container>
+										<!-- USE /[MANUAL GQT CUSTOM_TABLE EQUIP___PSEUDANEXOS__]/ -->
+									</q-table>
+								</q-col>
+							</q-row>
 							<!-- End EQUIP___PSEUDNOVOGR12 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EQUIP___PSEUDTLEQUIPA.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EQUIP___PSEUDTLEQUIPA.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EQUIP___PSEUDTLEQUIPA.isVisible">
+					<q-col v-if="controls.EQUIP___PSEUDTLEQUIPA.isVisible">
 						<q-timeline
+							v-if="controls.EQUIP___PSEUDTLEQUIPA.isVisible"
 							id="EQUIP___PSEUDTLEQUIPA"
 							v-bind="controls.EQUIP___PSEUDTLEQUIPA"
 							@show-popup="timelineOpenForm" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -886,7 +925,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -895,6 +934,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -906,12 +946,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -931,7 +971,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormEquipViewModel.js'
 
@@ -1014,7 +1054,8 @@
 					primaryKey: 'ValCodequip',
 					designation: computed(() => genericFunctions.formatString(this.Resources._EQUIP__REGISTNR____25672, vm.model.ValRegistnr.displayValue, vm.model.ValDesignat.displayValue, vm.model.TableTpequTipoequi.displayValue)),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -1122,7 +1163,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1352,7 +1397,6 @@
 						container: 'EQUIP___PSEUDNOVOGR01',
 						isFormulaBlocked: true,
 						maxLength: 6,
-						labelId: 'label_EQUIP___EQUIPREGISTNR',
 						controlLimits: [
 						],
 					}, this),
@@ -1398,7 +1442,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						maxLength: 256,
-						labelId: 'label_EQUIP___EQUIPSITEFABR',
 						controlLimits: [
 						],
 					}, this),
@@ -1477,7 +1520,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EQUIP___PSEUDNOVOGR01',
 						maxLength: 85,
-						labelId: 'label_EQUIP___EQUIPDESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -1620,7 +1662,6 @@
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 50,
-						labelId: 'label_EQUIP___ROOM1DESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -1650,7 +1691,6 @@
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 10,
-						labelId: 'label_EQUIP___EQUIPFIRST___',
 						controlLimits: [
 						],
 					}, this),
@@ -1666,7 +1706,6 @@
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 10,
-						labelId: 'label_EQUIP___EQUIPBEFORE__',
 						controlLimits: [
 						],
 					}, this),
@@ -1682,7 +1721,6 @@
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 10,
-						labelId: 'label_EQUIP___EQUIPFOLLOWIN',
 						controlLimits: [
 						],
 					}, this),
@@ -1698,7 +1736,6 @@
 						container: 'EQUIP___PSEUDNOVOGR09',
 						isFormulaBlocked: true,
 						maxLength: 10,
-						labelId: 'label_EQUIP___EQUIPLAST____',
 						controlLimits: [
 						],
 					}, this),
@@ -1908,8 +1945,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -2195,8 +2231,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -2434,8 +2469,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -2611,6 +2645,10 @@
 										rawValue: true,
 										isMapped: false
 									},
+									allowCenterControl: {
+										rawValue: true,
+										isMapped: false
+									},
 									backgroundOverlay: {
 										rawValue: 'OpenStreetMap',
 										isMapped: false
@@ -2746,8 +2784,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -2876,28 +2913,25 @@
 							{
 								id: 'filter_ValReparaco_STARTED',
 								isMultiple: true,
-								filters: [
+								items: [
 									{
 										id: 'filter_ValReparaco_STARTED_1',
-										key: '1',
 										value: computed(() => this.Resources.SPECIALTY09304),
-										selected: false
+										key: '1'
 									},
 									{
 										id: 'filter_ValReparaco_STARTED_2',
-										key: '2',
 										value: computed(() => this.Resources.DESCRIPTION07383),
-										selected: false
+										key: '2'
 									},
 									{
 										id: 'filter_ValReparaco_STARTED_3',
-										key: '3',
 										value: computed(() => this.Resources.SPENT_ON_HOURS19285),
-										selected: false
+										key: '3'
 									},
 								],
-								value: '',
-								defaultValue: ''
+								selected: undefined,
+								default: undefined
 							},
 						],
 						globalEvents: ['changed-EQUIP', 'changed-PESSO', 'changed-REPAR', 'changed-CATE1', 'changed-SPECI', 'changed-CMPNY'],
@@ -3017,8 +3051,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -3255,8 +3288,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -3661,8 +3693,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -3781,7 +3812,7 @@
 								},
 							},
 							insertCondition: {
-								// eslint-disable-next-line no-unused-vars
+								// eslint-disable-next-line @typescript-eslint/no-unused-vars
 								fnFormula(params)
 								{
 									return netAPI.postData(
@@ -4030,11 +4061,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -4044,7 +4073,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -4054,7 +4083,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -4074,19 +4103,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -4107,7 +4150,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -4127,19 +4170,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -4158,11 +4215,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -4172,7 +4227,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -4180,8 +4235,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -4189,7 +4242,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -4197,8 +4250,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -4206,7 +4257,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -4214,11 +4265,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -4228,7 +4277,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -4238,7 +4287,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -4299,6 +4348,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EQUIP]/
 // eslint-disable-next-line

@@ -195,7 +195,7 @@
 
 			this.$eventHub.on('new-extended-record', this.emitModelUpdate)
 
-			let eventData = {
+			const eventData = {
 				supportFormId: this.id,
 				rowKey: this.modelValue ?? undefined,
 				formMode: this.formProps.mode

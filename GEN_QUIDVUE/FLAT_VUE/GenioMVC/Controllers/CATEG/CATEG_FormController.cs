@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW CATEG]/
 
 		[HttpPost]
-		public ActionResult Categ_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Categ_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Categ_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Categ_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Categ_Show_GET",
 				AreaName = "categ",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET CATEG]/
 		[HttpPost]
-		public ActionResult Categ_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Categ_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Categ_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Categ_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Categ_New_GET",
 				AreaName = "categ",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Categ_New([FromBody]Categ_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Categ_New",
 				ViewName = "Categ",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET CATEG]/
 		[HttpPost]
-		public ActionResult Categ_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Categ_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Categ_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Categ_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Categ_Edit_GET",
 				AreaName = "categ",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Categ_Edit([FromBody]Categ_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Categ_Edit",
 				ViewName = "Categ",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET CATEG]/
 		[HttpPost]
-		public ActionResult Categ_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Categ_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Categ_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Categ_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Categ_Delete_GET",
 				AreaName = "categ",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Categ/Categ_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST CATEG]/
 		[HttpPost]
-		public ActionResult Categ_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Categ_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Categ_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Categ_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Categ_Delete",
 				ViewName = "Categ",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET CATEG]/
 
 		[HttpPost]
-		public ActionResult Categ_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Categ_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Categ_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Categ_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Categ_Duplicate_GET",
 				AreaName = "categ",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Categ_Duplicate([FromBody]Categ_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Categ_Duplicate",
 				ViewName = "Categ",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Categ(UserContext.Current);
+					GenioMVC.Models.Categ model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("categ");
 
 // USE /[MANUAL GQT BEFORE_CANCEL CATEG]/

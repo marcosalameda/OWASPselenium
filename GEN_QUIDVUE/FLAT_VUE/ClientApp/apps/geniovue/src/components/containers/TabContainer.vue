@@ -1,7 +1,5 @@
 ﻿<template>
-	<div
-		v-show="isVisible"
-		:class="[$attrs.class, 'tab-group-container']">
+	<div :class="[$attrs.class, 'tab-group-container']">
 		<div
 			v-show="tabsList.length > 0"
 			role="tablist"
@@ -128,14 +126,6 @@
 			},
 
 			/**
-			 * Visible property to hide and show tabs.
-			 */
-			isVisible: {
-				type: Boolean,
-				default: true
-			},
-
-			/**
 			 * Localization and customization of textual content.
 			 */
 			texts: {
@@ -242,7 +232,7 @@
 					this.$emit('tab-changed', tab.id)
 
 				// Get reference to the tab's button component and focus on it
-				let buttonRef = this.getTabComponentRef(tab)
+				const buttonRef = this.getTabComponentRef(tab)
 				if (typeof buttonRef?.$el.focus !== 'function')
 					return
 				buttonRef.$el.focus()
@@ -282,7 +272,7 @@
 			 */
 			selectTabIndex(idx)
 			{
-				let tab = this.selectableTabs[idx]
+				const tab = this.selectableTabs[idx]
 				this.changeActiveTab(tab)
 			}
 		}

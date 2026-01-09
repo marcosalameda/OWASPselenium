@@ -245,7 +245,7 @@
 			 */
 			resetCaptcha()
 			{
-				let apiURL = this.netAPI.apiActionURL('Account', 'GetCaptcha'),
+				const apiURL = this.netAPI.apiActionURL('Account', 'GetCaptcha'),
 					uId = uuidv4()
 				this.captchaImageUrl = `${apiURL}?captchaId=registerCaptcha&t=${uId}`
 				this.userEnteredCaptchaCode = ''

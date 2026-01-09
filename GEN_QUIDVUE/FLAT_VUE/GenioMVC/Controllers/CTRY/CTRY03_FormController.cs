@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW CTRY03]/
 
 		[HttpPost]
-		public ActionResult Ctry03_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Ctry03_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Ctry03_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Ctry03_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ctry03_Show_GET",
 				AreaName = "ctry",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET CTRY03]/
 		[HttpPost]
-		public ActionResult Ctry03_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Ctry03_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Ctry03_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Ctry03_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ctry03_New_GET",
 				AreaName = "ctry",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Ctry03_New([FromBody]Ctry03_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ctry03_New",
 				ViewName = "Ctry03",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET CTRY03]/
 		[HttpPost]
-		public ActionResult Ctry03_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Ctry03_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Ctry03_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Ctry03_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ctry03_Edit_GET",
 				AreaName = "ctry",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Ctry03_Edit([FromBody]Ctry03_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ctry03_Edit",
 				ViewName = "Ctry03",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET CTRY03]/
 		[HttpPost]
-		public ActionResult Ctry03_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Ctry03_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Ctry03_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Ctry03_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ctry03_Delete_GET",
 				AreaName = "ctry",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Ctry/Ctry03_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST CTRY03]/
 		[HttpPost]
-		public ActionResult Ctry03_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Ctry03_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Ctry03_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Ctry03_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ctry03_Delete",
 				ViewName = "Ctry03",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET CTRY03]/
 
 		[HttpPost]
-		public ActionResult Ctry03_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Ctry03_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Ctry03_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Ctry03_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ctry03_Duplicate_GET",
 				AreaName = "ctry",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Ctry03_Duplicate([FromBody]Ctry03_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ctry03_Duplicate",
 				ViewName = "Ctry03",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Ctry(UserContext.Current);
+					GenioMVC.Models.Ctry model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("ctry");
 
 // USE /[MANUAL GQT BEFORE_CANCEL CTRY03]/

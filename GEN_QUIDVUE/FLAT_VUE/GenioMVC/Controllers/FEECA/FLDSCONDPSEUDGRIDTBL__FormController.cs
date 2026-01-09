@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW FLDSCONDPSEUDGRIDTBL_]/
 
 		[HttpPost]
-		public ActionResult Fldscondpseudgridtbl__Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Fldscondpseudgridtbl__Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Fldscondpseudgridtbl__ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Fldscondpseudgridtbl__ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__Show_GET",
 				AreaName = "feeca",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET FLDSCONDPSEUDGRIDTBL_]/
 		[HttpPost]
-		public ActionResult Fldscondpseudgridtbl__New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Fldscondpseudgridtbl__New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Fldscondpseudgridtbl__ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Fldscondpseudgridtbl__ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__New_GET",
 				AreaName = "feeca",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Fldscondpseudgridtbl__New([FromBody]Fldscondpseudgridtbl__ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__New",
 				ViewName = "Fldscondpseudgridtbl_",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET FLDSCONDPSEUDGRIDTBL_]/
 		[HttpPost]
-		public ActionResult Fldscondpseudgridtbl__Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Fldscondpseudgridtbl__Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Fldscondpseudgridtbl__ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Fldscondpseudgridtbl__ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__Edit_GET",
 				AreaName = "feeca",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Fldscondpseudgridtbl__Edit([FromBody]Fldscondpseudgridtbl__ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__Edit",
 				ViewName = "Fldscondpseudgridtbl_",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET FLDSCONDPSEUDGRIDTBL_]/
 		[HttpPost]
-		public ActionResult Fldscondpseudgridtbl__Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Fldscondpseudgridtbl__Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Fldscondpseudgridtbl__ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Fldscondpseudgridtbl__ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__Delete_GET",
 				AreaName = "feeca",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Feeca/Fldscondpseudgridtbl__Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST FLDSCONDPSEUDGRIDTBL_]/
 		[HttpPost]
-		public ActionResult Fldscondpseudgridtbl__Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Fldscondpseudgridtbl__Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Fldscondpseudgridtbl__ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Fldscondpseudgridtbl__ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__Delete",
 				ViewName = "Fldscondpseudgridtbl_",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET FLDSCONDPSEUDGRIDTBL_]/
 
 		[HttpPost]
-		public ActionResult Fldscondpseudgridtbl__Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Fldscondpseudgridtbl__Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Fldscondpseudgridtbl__ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Fldscondpseudgridtbl__ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__Duplicate_GET",
 				AreaName = "feeca",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Fldscondpseudgridtbl__Duplicate([FromBody]Fldscondpseudgridtbl__ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fldscondpseudgridtbl__Duplicate",
 				ViewName = "Fldscondpseudgridtbl_",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Feeca(UserContext.Current);
+					GenioMVC.Models.Feeca model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("feeca");
 
 // USE /[MANUAL GQT BEFORE_CANCEL FLDSCONDPSEUDGRIDTBL_]/

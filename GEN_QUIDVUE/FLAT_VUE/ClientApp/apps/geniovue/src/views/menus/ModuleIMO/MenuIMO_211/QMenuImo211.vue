@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE IMO_Menu_211]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuIMO_211ViewModel.js'
 
@@ -214,8 +215,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -316,6 +316,7 @@
 							rowClickAction: {
 								id: 'RCA_IMO_2111',
 								name: 'form-PAIS',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -325,7 +326,7 @@
 										},
 									],
 									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'PAIS',
+									action: vm.openFormAction, type: 'form', mode: 'EDIT', formName: 'PAIS'
 								}
 							},
 							formsDefinition: {
@@ -347,34 +348,32 @@
 							{
 								id: 'filter_IMO_Menu_211_ACTIVO',
 								isMultiple: false,
-								filters: [
+								items: [
 									{
 										id: 'filter_IMO_Menu_211_ACTIVO_1',
-										key: '1',
 										value: computed(() => this.Resources.ASSETS12081),
-										selected: true
+										key: '1'
 									},
 									{
 										id: 'filter_IMO_Menu_211_ACTIVO_2',
-										key: '2',
 										value: computed(() => this.Resources.INACTIVE23138),
-										selected: false
+										key: '2'
 									},
 									{
 										id: 'filter_IMO_Menu_211_ACTIVO_3',
-										key: '3',
 										value: computed(() => this.Resources.ALL38603),
-										selected: false
+										key: '3'
 									},
 								],
-								value: '1',
-								defaultValue: '1'
+								selected: '1',
+								default: '1'
 							},
 						],
 						globalEvents: ['changed-CNTRY'],
 						uuid: 'a1f95b79-43d9-4afa-90b0-1c6f2d9334b1',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

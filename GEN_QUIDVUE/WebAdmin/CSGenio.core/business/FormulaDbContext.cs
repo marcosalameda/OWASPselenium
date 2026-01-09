@@ -97,8 +97,18 @@ namespace CSGenio.business
             if (!rowContext.TryGetValue(pk, out var result))
             {
                 var user = areaBase.User;
-                result = Area.createArea(area, user, user.CurrentModule);
-                result.QPrimaryKey = pk;
+                //if there is an already positioned read row with bookmarks reuse those values
+                var readContext = GetReadTable(area);
+                if (readContext.TryGetValue(pk, out var read) && read.IsBookmarkLocked)
+                {
+                    result = Area.createFromBookmark(read);
+                }
+                //otherwise allocate a new empty area with no assumptions to force a fresh bookmark
+                else
+                {
+                    result = Area.createArea(area, user, user.CurrentModule);
+                    result.QPrimaryKey = pk;
+                }
                 result.UserRecord = false;
                 rowContext.Add(pk, result);
             }
@@ -213,6 +223,13 @@ namespace CSGenio.business
             AddLG();
         }
 
+        public void AddWholeRow(HashSet<string> fields, string area)
+        {
+            var info = Area.GetInfoArea(area);
+            foreach (Field fieldInfo in info.DBFields.Values)
+                fields.Add(fieldInfo.Name);
+        }
+
         private void AddUV()
         {
             if (areaBase.LastValueArgs == null)
@@ -231,7 +248,10 @@ namespace CSGenio.business
             foreach (var arg in areaBase.RelatedSumArgs)
             {
                 var fields = GetMetaFields(arg.AliasSR);
-                fields.Add(arg.SRField);
+                //A SR will need to update the target row, so we might as well pre-prosition it completely
+                //This allows getBookmark to save a query as long as we update lock it.
+                //fields.Add(arg.SRField);
+                AddWholeRow(fields, arg.AliasSR);
                 //these areas need to be marked for update
                 //SR are diferencial so they are very sensitive to concurrent updates
                 //making sure their reads are done with UPDLOCK is the only way

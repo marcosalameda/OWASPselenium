@@ -137,6 +137,12 @@ export default {
 			Vate: '01/01/0001'
 		});
 		this.modules.push({
+			Codiprog: 'UIS',
+			Prog: 'User Interface',
+			Platafor: 'VUE',
+			Vate: '01/01/0001'
+		});
+		this.modules.push({
 			Codiprog: 'GQT',
 			Prog: 'Genio Quality Tests',
 			Platafor: 'VUE',
@@ -157,6 +163,12 @@ export default {
 		this.modules.push({
 			Codiprog: 'TBS',
 			Prog: 'Base tables',
+			Platafor: 'VUE',
+			Vate: '01/01/0001'
+		});
+		this.modules.push({
+			Codiprog: 'UIS',
+			Prog: 'User Interface',
 			Platafor: 'VUE',
 			Vate: '01/01/0001'
 		});
@@ -188,6 +200,12 @@ export default {
 			Codiprog: 'PTN',
 			Prog: 'Patterns',
 			Platafor: 'VUE',
+			Vate: '01/01/0001'
+		});
+		this.modules.push({
+			Codiprog: 'XRS',
+			Prog: 'Wharehouse api',
+			Platafor: 'REST',
 			Vate: '01/01/0001'
 		});
 		// Ler dados

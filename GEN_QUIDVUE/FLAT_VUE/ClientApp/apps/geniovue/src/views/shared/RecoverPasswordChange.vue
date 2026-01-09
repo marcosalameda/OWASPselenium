@@ -148,7 +148,6 @@
 						name: 'NewPassword',
 						label: computed(() => this.Resources[hardcodedTexts.newPassword]),
 						maxLength: 50,
-						labelId: 'label_NewPassword',
 						labelAttrs: null
 					}, this),
 					ConfirmPassword: new fieldControlClass.StringControl({
@@ -158,7 +157,6 @@
 						name: 'ConfirmPassword',
 						label: computed(() => this.Resources[hardcodedTexts.confirmPassword]),
 						maxLength: 50,
-						labelId: 'label_ConfirmPassword',
 						labelAttrs: null
 					}, this)
 				},
@@ -229,7 +227,7 @@
 				if (_isEmpty(modelValue))
 					return
 
-				for (let fld in this.model)
+				for (const fld in this.model)
 					this.model[fld].updateValue(modelValue[fld])
 			},
 

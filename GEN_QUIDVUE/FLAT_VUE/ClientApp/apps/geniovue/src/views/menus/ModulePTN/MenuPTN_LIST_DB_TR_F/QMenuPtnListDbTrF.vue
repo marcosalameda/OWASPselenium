@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_TR_F]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_TR_FViewModel.js'
 
@@ -229,8 +230,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -331,6 +331,7 @@
 							rowClickAction: {
 								id: 'RCA_PTN_TRIGGER_MENU2',
 								name: 'PTN_MenuR_TRIGGER_MENU2',
+								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -338,7 +339,7 @@
 											fnValueSelector: (row) => row.ValCoddespe
 										},
 									],
-									action: vm.PTN_MenuTR_TRIGGER_MENU2, type: 'trigger',
+									action: vm.PTN_MenuTR_TRIGGER_MENU2, type: 'trigger'
 								}
 							},
 							formsDefinition: {
@@ -358,6 +359,7 @@
 						uuid: 'a393a10a-95b6-4384-8269-4b89e5ab094a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -400,16 +402,14 @@
 			 * Event triggered by a click on the trigger button TRIGGER_MENU2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_TRIGGER_MENU2(listConf, actionCfg, row)
 			{
 				const id = row.rowKey
 
 				// Parallel trigger execution.
 				await Promise.all([
-					Promise.resolve((async () => {
-						await this.PTN_MenuTR_TRIGGER_MENU2_TRIGMENU2_1(id)
-					})()),
+					this.PTN_MenuTR_TRIGGER_MENU2_TRIGMENU2_1(id),
 				])
 			},
 
@@ -417,7 +417,7 @@
 			 * Client-side component of action #1 (FLDUPDT) of trigger TRIGMENU2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_TRIGGER_MENU2_TRIGMENU2_1(id)
 			{
 				try
@@ -468,7 +468,7 @@
 			 * Client-side component of action #2 (PREFRESH) of trigger TRIGMENU2.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_TRIGGER_MENU2_TRIGMENU2_2(id)
 			{
 				await this.loadList()

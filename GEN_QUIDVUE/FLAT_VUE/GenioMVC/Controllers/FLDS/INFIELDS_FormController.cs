@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW INFIELDS]/
 
 		[HttpPost]
-		public ActionResult Infields_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Infields_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Infields_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Infields_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Infields_Show_GET",
 				AreaName = "flds",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET INFIELDS]/
 		[HttpPost]
-		public ActionResult Infields_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Infields_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Infields_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Infields_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Infields_New_GET",
 				AreaName = "flds",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Infields_New([FromBody]Infields_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Infields_New",
 				ViewName = "Infields",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET INFIELDS]/
 		[HttpPost]
-		public ActionResult Infields_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Infields_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Infields_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Infields_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Infields_Edit_GET",
 				AreaName = "flds",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Infields_Edit([FromBody]Infields_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Infields_Edit",
 				ViewName = "Infields",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET INFIELDS]/
 		[HttpPost]
-		public ActionResult Infields_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Infields_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Infields_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Infields_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Infields_Delete_GET",
 				AreaName = "flds",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Flds/Infields_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST INFIELDS]/
 		[HttpPost]
-		public ActionResult Infields_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Infields_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Infields_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Infields_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Infields_Delete",
 				ViewName = "Infields",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET INFIELDS]/
 
 		[HttpPost]
-		public ActionResult Infields_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Infields_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Infields_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Infields_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Infields_Duplicate_GET",
 				AreaName = "flds",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Infields_Duplicate([FromBody]Infields_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Infields_Duplicate",
 				ViewName = "Infields",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Flds(UserContext.Current);
+					GenioMVC.Models.Flds model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("flds");
 
 // USE /[MANUAL GQT BEFORE_CANCEL INFIELDS]/

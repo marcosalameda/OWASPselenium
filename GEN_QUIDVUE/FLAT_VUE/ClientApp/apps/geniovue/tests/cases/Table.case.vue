@@ -7,7 +7,7 @@
 				:columns="tableTest.columns"
 				:config="tableTest.config"
 				:total-rows="tableTest.totalRows"
-				:advanced-filters="tableTest.advancedFilters"
+				:filters="tableTest.filters"
 				:group-filters="tableTest.groupFilters"
 				:active-filters="tableTest.activeFilters"
 				:header-level="1"
@@ -22,8 +22,6 @@
 				@show-popup="showPopupAction(tableTest, $event)"
 				@hide-popup="hidePopupAction(tableTest, $event)"
 				@show-column-config="tableTest.config.columnConfigIsVisible = true"
-				@show-advanced-filters="setAdvancedFiltersPopup(tableTest, [true, -1])"
-				@add-advanced-filter="(...args) => addAdvancedFilter(tableTest, ...args)"
 				@on-save-column-config="saveColumnConfig"
 				@on-reset-column-config="resetColumnConfig"
 				@check-row="checkRow(tableTest.rowsChecked, $event)"
@@ -34,7 +32,6 @@
 				v-bind="tableTest.config"
 				modal-id="column-config"
 				:columns="tableTest.columns"
-				:server-mode="tableTest.config.serverMode"
 				:is-visible="tableTest.config.columnConfigIsVisible"
 				:has-text-wrap="tableTest.config.hasTextWrap"
 				:texts="tableTest.texts"
@@ -44,22 +41,14 @@
 				@reset-column-config="resetColumnConfig"
 				@toggle-text-wrap="tableTest.config.hasTextWrap = !tableTest.config.hasTextWrap" />
 			<q-table-advanced-filters
-				v-if="tableTest.config.allowAdvancedFilters"
 				modal-id="advanced-filters"
 				:columns="tableTest.columns"
-				:filters="tableTest.advancedFilters"
+				:filters="tableTest.filters"
 				:search-filter-data="tableTest.config.searchFilterData"
 				:texts="tableTest.texts"
-				:has-advanced-filters-active="tableTest.config.hasAdvancedFiltersActive"
-				:server-mode="tableTest.config.serverMode"
 				:signal-open="tableTest.config.signalOpenAdvancedFilters"
 				@show-popup="showPopupAction(tableTest, $event)"
-				@hide-popup="hidePopupAction(tableTest, $event)"
-				@add-advanced-filter="(...args) => addAdvancedFilter(tableTest, ...args)"
-				@edit-advanced-filters="(...args) => editAdvancedFilters(tableTest, ...args)"
-				@set-advanced-filter-state="(...args) => setAdvancedFilterState(tableTest, ...args)"
-				@set-advanced-filter-states="(...args) => setAdvancedFilterStates(tableTest, ...args)"
-				@remove-advanced-filter="(...args) => removeAdvancedFilter(tableTest, ...args)" />
+				@hide-popup="hidePopupAction(tableTest, $event)" />
 		</div>
 
 		<div>
@@ -67,7 +56,7 @@
 				:name="tableTest.config.name"
 				:rows="tableTest.rows"
 				:columns="tableTest.columns"
-				:config="{ ...tableTest.config, ...{ tableTitle: 'BASIC TYPES (READ-ONLY)' } }"
+				:config="{ ...tableTest.config, tableTitle: 'BASIC TYPES (READ-ONLY)' }"
 				:total-rows="tableTest.totalRows"
 				:group-filters="tableTest.groupFilters"
 				:active-filters="tableTest.activeFilters"
@@ -92,9 +81,9 @@
 				:name="tableTest.config.name"
 				:rows="tableTest.rows"
 				:columns="tableTest.columns"
-				:config="{ ...tableTest.config, ...{ tableTitle: 'BASIC TYPES (LIMITS)', showLimitsInfo: true } }"
+				:config="{ ...tableTest.config, tableTitle: 'BASIC TYPES (LIMITS)', showLimitsInfo: true }"
 				:total-rows="tableTest.totalRows"
-				:advanced-filters="tableTest.advancedFilters"
+				:filters="tableTest.filters"
 				:group-filters="tableTest.groupFilters"
 				:active-filters="tableTest.activeFilters"
 				:header-level="1"
@@ -110,8 +99,6 @@
 				@show-popup="showPopupAction(tableTest, $event)"
 				@hide-popup="hidePopupAction(tableTest, $event)"
 				@show-column-config="tableTest.config.columnConfigIsVisible = true"
-				@show-advanced-filters="setAdvancedFiltersPopup(tableTest, [true, -1])"
-				@add-advanced-filter="(...args) => addAdvancedFilter(tableTest, ...args)"
 				@on-save-column-config="saveColumnConfig"
 				@on-reset-column-config="resetColumnConfig"
 				@check-row="checkRow(tableTest.rowsChecked, $event)"
@@ -125,9 +112,9 @@
 				:name="tableTest.config.name"
 				:rows="tableTest.rows"
 				:columns="tableTest.columns.map(obj => ({ ...obj, scrollData: 5 }))"
-				:config="{ ...tableTest.config, ...{ tableTitle: 'BASIC TYPES (SCROLL)' } }"
+				:config="{ ...tableTest.config, tableTitle: 'BASIC TYPES (SCROLL)' }"
 				:total-rows="tableTest.totalRows"
-				:advanced-filters="tableTest.advancedFilters"
+				:filters="tableTest.filters"
 				:group-filters="tableTest.groupFilters"
 				:active-filters="tableTest.activeFilters"
 				:header-level="1"
@@ -143,8 +130,6 @@
 				@show-popup="showPopupAction(tableTest, $event)"
 				@hide-popup="hidePopupAction(tableTest, $event)"
 				@show-column-config="tableTest.config.columnConfigIsVisible = true"
-				@show-advanced-filters="setAdvancedFiltersPopup(tableTest, [true, -1])"
-				@add-advanced-filter="(...args) => addAdvancedFilter(tableTest, ...args)"
 				@on-save-column-config="saveColumnConfig"
 				@on-reset-column-config="resetColumnConfig"
 				@check-row="checkRow(tableTest.rowsChecked, $event)"
@@ -212,9 +197,9 @@
 				:name="tableTestOther.config.name"
 				:rows="tableTestOther.rows"
 				:columns="tableTestOther.columns"
-				:config="{ ...tableTestOther.config, ...{ tableTitle: 'OTHER TYPES' } }"
+				:config="{ ...tableTestOther.config, tableTitle: 'OTHER TYPES' }"
 				:total-rows="tableTestOther.totalRows"
-				:advanced-filters="tableTestOther.advancedFilters"
+				:filters="tableTestOther.filters"
 				:group-filters="tableTestOther.groupFilters"
 				:active-filters="tableTestOther.activeFilters"
 				:header-level="1"
@@ -230,8 +215,6 @@
 				@show-popup="showPopupAction(tableTestOther, $event)"
 				@hide-popup="hidePopupAction(tableTestOther, $event)"
 				@show-column-config="tableTestOther.config.columnConfigIsVisible = true"
-				@show-advanced-filters="setAdvancedFiltersPopup(tableTestOther, [true, -1])"
-				@add-advanced-filter="(...args) => addAdvancedFilter(tableTestOther, ...args)"
 				@on-save-column-config="saveColumnConfig"
 				@on-reset-column-config="resetColumnConfig"
 				@check-row="checkRow(tableTestOther.rowsChecked, $event)"
@@ -245,9 +228,9 @@
 				:name="tableTestOther.config.name"
 				:rows="tableTestOther.rows"
 				:columns="tableTestOther.columns.map(obj => ({ ...obj, scrollData: 5 }))"
-				:config="{ ...tableTestOther.config, ...{ tableTitle: 'OTHER TYPES (SCROLL)' } }"
+				:config="{ ...tableTestOther.config, tableTitle: 'OTHER TYPES (SCROLL)' }"
 				:total-rows="tableTestOther.totalRows"
-				:advanced-filters="tableTestOther.advancedFilters"
+				:filters="tableTestOther.filters"
 				:group-filters="tableTestOther.groupFilters"
 				:active-filters="tableTestOther.activeFilters"
 				:header-level="1"
@@ -263,8 +246,6 @@
 				@show-popup="showPopupAction(tableTestOther, $event)"
 				@hide-popup="hidePopupAction(tableTestOther, $event)"
 				@show-column-config="tableTestOther.config.columnConfigIsVisible = true"
-				@show-advanced-filters="setAdvancedFiltersPopup(tableTestOther, [true, -1])"
-				@add-advanced-filter="(...args) => addAdvancedFilter(tableTestOther, ...args)"
 				@on-save-column-config="saveColumnConfig"
 				@on-reset-column-config="resetColumnConfig"
 				@check-row="checkRow(tableTestOther.rowsChecked, $event)"
@@ -550,11 +531,7 @@
 				:searchable-columns="searchableColumns01"
 				:placeholder="searchbar01.globalSearch.placeholder"
 				:classes="searchbar01.globalSearch.classes"
-				:case-sensitive="searchbar01.globalSearch.caseSensitive"
-				:search-on-press-enter="searchbar01.globalSearch.searchOnPressEnter"
-				:search-debounce-rate="searchbar01.globalSearch.searchDebounceRate"
 				:show-refresh-button="searchbar01.globalSearch.showRefreshButton"
-				:show-reset-button="searchbar01.globalSearch.showResetButton"
 				:texts="tableTest.texts" />
 		</div>
 
@@ -576,33 +553,26 @@
 				:texts="tableTest.texts"
 				:options="importOptions01"
 				:template-options="importTemplateOptions01"
-				:data-import-response="tableTest.config.dataImportResponse"
-				:server-mode="tableTest.config.serverMode" />
+				:data-import-response="tableTest.config.dataImportResponse" />
 		</div>
 
 		<div>
-			<h2>Static Filters</h2>
+			<h2>Group Filters</h2>
 		</div>
 
 		<div>
 			<h3>Single Select Filters</h3>
-			<q-table-static-filters
-				:menu-name="tableTest.config.name"
-				:group-filters="groupFiltersSingle01" />
+			<q-table-static-filters :group-filters="groupFiltersSingle01" />
 		</div>
 
 		<div>
 			<h3>Multiple Select Filters</h3>
-			<q-table-static-filters
-				:menu-name="tableTest.config.name"
-				:group-filters="groupFiltersMultiple01" />
+			<q-table-static-filters :group-filters="groupFiltersMultiple01" />
 		</div>
 
 		<div>
 			<h3>Active Filter</h3>
-			<q-table-static-filters
-				:menu-name="tableTest.config.name"
-				:active-filters="activeFilters01" />
+			<q-table-static-filters :active-filters="activeFilters01" />
 		</div>
 
 		<div>
@@ -746,16 +716,6 @@
 		</div>
 
 		<div>
-			<h3>Column dropdown</h3>
-			<q-table-column-filters
-				allow-column-filters
-				:column="columns01[1]"
-				:searchable-columns="searchableColumns01"
-				:filter="columnFilter01"
-				:texts="tableTest.texts" />
-		</div>
-
-		<div>
 			<h2>Active Filters</h2>
 		</div>
 
@@ -764,9 +724,7 @@
 			<q-table-active-filters
 				has-filters-active
 				:searchable-columns="searchableColumns01"
-				:advanced-filters="filterArray01"
-				:column-filters="filterHash01"
-				:search-bar-filters="filterHash02"
+				:filters="filterArray01"
 				:texts="tableTest.texts" />
 		</div>
 	</div>

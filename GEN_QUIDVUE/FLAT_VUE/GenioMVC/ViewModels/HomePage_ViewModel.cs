@@ -54,10 +54,23 @@ namespace GenioMVC.ViewModels.Home
 			},
 			new HomePageDefinition()
 			{
+				Identifier = "HomepageUIS",
+				Public = false,
+				Module = "UIS",
+				Order = 3,
+				Menu = "111",
+				Menu_Id = "111",
+				MenuRoleId = " 1",
+				Controller = "Home",
+				Form = "",
+				Role = CSGenio.framework.Role.ADMINISTRATION
+			},
+			new HomePageDefinition()
+			{
 				Identifier = "HomepageSTY",
 				Public = true,
 				Module = "STY",
-				Order = 1,
+				Order = 2,
 				Menu = "11",
 				Menu_Id = "OVERVIEW",
 				MenuRoleId = " 1",

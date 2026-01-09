@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_131]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_131ViewModel.js'
 
@@ -122,7 +123,7 @@
 					isMenuList: true,
 					designation: computed(() => this.Resources.CONDITIONS63260),
 					acronym: 'PTN_131',
-					name: 'REGRA',
+					name: 'RULES',
 					route: 'menu-PTN_131',
 					order: '131',
 					controller: 'RULES',
@@ -190,8 +191,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -290,18 +290,17 @@
 							MCActions: [
 							],
 							rowClickAction: {
-								id: 'RCA_PTN_1311',
-								name: 'form-REGRA',
+								id: 'RCA_EDIT_REGRA',
+								name: 'EDIT_REGRA',
+								title: '',
+								isInReadOnly: true,
 								params: {
 									isRoute: true,
-									limits: [
-										{
-											identifier: 'id',
-											fnValueSelector: (row) => row.ValCodregra
-										},
-									],
-									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'REGRA',
+									action: vm.openFormAction,
+									type: 'form',
+									formName: 'REGRA',
+									mode: 'EDIT',
+									isControlled: true
 								}
 							},
 							formsDefinition: {
@@ -311,7 +310,7 @@
 								},
 							},
 							insertCondition: {
-								// eslint-disable-next-line no-unused-vars
+								// eslint-disable-next-line @typescript-eslint/no-unused-vars
 								fnFormula(params)
 								{
 									// Formula: [RULES->TIPOCOND]!="I"  || [RULES->LOCAL]!="T"
@@ -333,6 +332,7 @@
 						uuid: '9b87f9f8-b7d7-4ffb-8bd2-a17a81c9ef71',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

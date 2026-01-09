@@ -1,27 +1,21 @@
 ﻿<template>
 	<!-- BEGIN: Column Config Popup -->
 	<teleport
-		:to="`#q-modal-${modalId}-header`"
-		:key="domKey"
-		v-if="(showPopup || showInline) && showHeader">
-		<div>
-			<h4 class="c-modal__header-title">{{ texts.configureColumns }}</h4>
-		</div>
-	</teleport>
-
-	<teleport
 		:to="`#q-modal-${modalId}-body`"
 		:key="domKey"
 		v-if="(showPopup || showInline) && showBody">
-		<div class="d-flex">
-			<span class="mr-3">{{ texts.lineBreak }}</span>
-
-			<q-toggle-input
-				:model-value="hasTextWrap"
-				:true-label="hasTextWrap ? texts.yesLabel : texts.noLabel"
-				:aria-label="texts.lineBreak"
-				@update:model-value="toggleTextWrap" />
-		</div>
+		<q-row>
+			<q-col>
+				<q-switch
+					:model-value="hasTextWrap"
+					size="small"
+					show-state-labels
+					:label="texts.lineBreak"
+					:true-label="texts.yesLabel"
+					:false-label="texts.noLabel"
+					@update:model-value="toggleTextWrap" />
+			</q-col>
+		</q-row>
 
 		<q-table
 			:rows="tableConf.rows"
@@ -71,7 +65,7 @@
 				data-modal-form="true"
 				:label="texts.applyText"
 				:title="texts.applyText"
-				@click="applyColumnConfig()">
+				@click="confirmConfigApply()">
 				<q-icon icon="apply" />
 			</q-button>
 
@@ -89,9 +83,11 @@
 </template>
 
 <script>
+	import { computed } from 'vue'
 	import _find from 'lodash-es/find'
 
 	import { inputSize } from '@quidgest/clientapp/constants/enums'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 	import listFunctions from '@/mixins/listFunctions.js'
 
 	import QTable from './QTable.vue'
@@ -103,11 +99,8 @@
 			'show-popup',
 			'hide-popup',
 			'set-property',
-			'update-config',
 			'apply-column-config',
 			'reset-column-config',
-			'reset-column-sizes',
-			'reset-column-ordering',
 			'toggle-text-wrap'
 		],
 
@@ -151,11 +144,11 @@
 			},
 
 			/**
-			 * Determines if the processing and changes to column configurations should depend on server-side functionality.
+			 * The list of filters applied to the table.
 			 */
-			serverMode: {
-				type: Boolean,
-				default: false
+			filters: {
+				type: Array,
+				default: () => []
 			},
 
 			/**
@@ -189,7 +182,6 @@
 			return {
 				showPopup: false,
 				showInline: false,
-				showHeader: true,
 				showBody: true,
 				showFooter: true,
 				domKey: 0,
@@ -197,16 +189,16 @@
 					rows: [],
 					columnsCfgCols: [
 						{
-							label: this.texts.orderText,
+							label: computed(() => this.texts.orderText),
 							name: 'order',
 							dataDisplay: listFunctions.numericDisplayCell,
 							dataOnChange: listFunctions.reCalcCellOrder,
-							isOrderingColumn: true,
+							sortOrder: 1,
 							columnClasses: 'c-table__cell-numeric row-numeric thead-order',
 							columnHeaderClasses: 'c-table__head-numeric thead-order',
 							component: 'q-edit-numeric',
 							componentOptions: {
-								label: this.texts.orderText,
+								label: computed(() => this.texts.orderText),
 								maxDigits: 3,
 								isDecimal: false,
 								readonly: false,
@@ -214,12 +206,12 @@
 							}
 						},
 						{
-							label: this.texts.nameOfColumnText,
+							label: computed(() => this.texts.nameOfColumnText),
 							name: 'name',
 							dataDisplay: listFunctions.textDisplayCell
 						},
 						{
-							label: this.texts.defaultKeywordSearchText,
+							label: computed(() => this.texts.defaultKeywordSearchText),
 							name: 'defaultSearch',
 							optionGroupName: 'defaultSearch',
 							dataDisplay: listFunctions.radioDisplayCell,
@@ -227,7 +219,7 @@
 							checkedValue: ''
 						},
 						{
-							label: this.texts.visibleText,
+							label: computed(() => this.texts.visibleText),
 							name: 'visibility',
 							dataDisplay: listFunctions.booleanDisplayCell,
 							component: 'q-edit-boolean',
@@ -301,19 +293,17 @@
 			 * @returns Array
 			 */
 			getColumnsCfgRows() {
-				var rows = []
+				const rows = []
 
 				//Iterate columns
-				var thisIdx = 1
-				var column = {}
-				var colOrder = 1
-				for (let idx in this.columns) {
-					column = this.columns[idx]
+				let thisIdx = 1
+				let colOrder = 1
 
+				for (const column of this.columns) {
 					// Columns with a false show-when condition shouldn't be displayed here - visibility is determined by the condition, not the user
 					if (!column.visibilityEval) continue
 
-					let columnCfg = {
+					const columnCfg = {
 						Rownum: 0,
 						Fields: {}
 					}
@@ -327,11 +317,10 @@
 					//Column order
 					columnCfg.Fields.order = colOrder++
 
-					//Column as default search option
+					//Column has default search option
 					columnCfg.Fields.defaultSearch = false
-					if (listFunctions.isSearchableColumn(column)) {
+					if (listFunctions.isSearchableColumn(column))
 						columnCfg.Fields.defaultSearch = true
-					}
 
 					//Column visibility
 					columnCfg.Fields.visibility = listFunctions.isVisibleColumn(column) ? 1 : 0
@@ -353,68 +342,56 @@
 			},
 
 			/**
+			 * Checks if any of the filtered columns was hidden, and, if so, asks the user to confirm the change.
+			 */
+			confirmConfigApply()
+			{
+				if (listFunctions.getHiddenFilterColumns(this.columns, this.tableConf.rows, this.filters).length > 0)
+				{
+					const buttons = {
+						confirm: {
+							label: this.texts.yesLabel,
+							action: this.applyColumnConfig
+						},
+						cancel: {
+							label: this.texts.noLabel
+						}
+					}
+					genericFunctions.displayMessage(this.texts.hideColumnConfirm, 'question', null, buttons)
+				}
+				else
+					this.applyColumnConfig()
+			},
+
+			/**
 			 * Apply the column configuration
 			 */
 			applyColumnConfig() {
-				//Emit data to script which calls apply function
-				this.$emit('apply-column-config', { columnOrder: this.tableConf.rows, defaultSearchColumn: this.defaultSearchColumnNameCfg })
-
-				//Hide popup
+				// Emit data to script which calls apply function
+				this.$emit('apply-column-config', { columnRows: this.tableConf.rows, defaultSearchColumn: this.defaultSearchColumnNameCfg })
 				this.fnHidePopup()
-
-				this.$emit('update-config')
 			},
 
 			/**
 			 * Reset the column configuration
 			 */
 			resetColumnConfig() {
-				this.resetColumnSizes()
-
 				//Update internal rows
 				//Needed for resetting if changes have not been applied
 				this.tableConf.rows = this.getColumnsCfgRows()
 				this.tableConf.config.perPage = this.tableConf.rows.length
 
-				//Emit data to script which calls reset function
 				this.$emit('reset-column-config')
 
-				//Emit data to script which calls reset function
-				this.$emit('reset-column-sizes')
-
-				//Reset column ordering to default
-				this.$emit('reset-column-ordering')
-
 				//Hide popup
 				this.fnHidePopup()
-
-				//Clear column size object in table configuration object
-				this.$emit('set-property', ['config', 'columnSizes'], {})
-
-				this.$emit('update-config')
-			},
-
-			/**
-			 * Reset the column sizes
-			 */
-			resetColumnSizes() {
-				//Emit data to script which calls reset function
-				this.$emit('reset-column-sizes')
-
-				//Hide popup
-				this.fnHidePopup()
-
-				//Clear column size object in table configuration object
-				this.$emit('set-property', ['config', 'columnSizes'], {})
-
-				this.$emit('update-config')
 			},
 
 			/**
 			 * Set the default search column
 			 */
 			setDefaultSearchColumnName() {
-				var defaultSearchColumn = this.tableConf.columnsCfgCols.find((x) => x.name === 'defaultSearch')
+				const defaultSearchColumn = this.tableConf.columnsCfgCols.find((x) => x.name === 'defaultSearch')
 				defaultSearchColumn.checkedValue = this.defaultSearchColumnName
 				this.defaultSearchColumnNameCfg = this.defaultSearchColumnName
 			},
@@ -441,8 +418,8 @@
 			},
 
 			onTableListRowReorder(eObj) {
-				var row = listFunctions.getRowByKeyPath(this.tableConf.rows, eObj?.rowKey),
-					orderingColumn = _find(this.tableConf.columnsCfgCols, (col) => col.isOrderingColumn === true)
+				const row = listFunctions.getRowByKeyPath(this.tableConf.rows, eObj?.rowKey),
+					orderingColumn = _find(this.tableConf.columnsCfgCols, (col) => col.sortOrder > 0)
 
 				listFunctions.setTableCellValue(this.tableConf, row, orderingColumn, eObj.index + 1)
 				listFunctions.reCalcCellOrder(this.tableConf, row, orderingColumn)
@@ -452,7 +429,7 @@
 		watch: {
 			signal: {
 				handler(newValue) {
-					for (let key in newValue) {
+					for (const key in newValue) {
 						switch (key) {
 							case 'show':
 								if (newValue.show) {
@@ -460,7 +437,7 @@
 								}
 								break
 							default:
-								if (['showInline', 'showHeader', 'showBody', 'showFooter'].includes(key)) {
+								if (['showInline', 'showBody', 'showFooter'].includes(key)) {
 									this[key] = newValue[key]
 								}
 								break

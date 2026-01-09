@@ -50,6 +50,7 @@ function simpleFetch(controller, action, system = '') {
 function setAppConfig(data) {
 	window.QGlobal = data
 	store.dispatch('setYears', data.Years)
+	store.dispatch('setDefaultYear', data.defaultSystem)
 	store.dispatch('changeYear', data.defaultSystem)
 	store.dispatch('changeMultiYearStatus', data.Years.length > 1)
 }

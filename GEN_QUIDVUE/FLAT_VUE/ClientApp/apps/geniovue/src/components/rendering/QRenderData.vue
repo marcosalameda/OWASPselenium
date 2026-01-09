@@ -240,18 +240,14 @@
 			{
 				const value = this.getCellValue(item)
 				return {
-					...{
-						...this.$props,
-						value
-					},
+					...this.$props,
+					value,
 					...this.$attrs,
-					... {
-						/**
-						 * For cases where the specific data type component has its own application in the background,
-						 * in multi-value the badge is the one that will have a color instead of the rendering value component.
-						 */
-						backgroundColor: this.multipleValues ? null : this.backgroundColor
-					}
+					/**
+					 * For cases where the specific data type component has its own application in the background,
+					 * in multi-value the badge is the one that will have a color instead of the rendering value component.
+					 */
+					backgroundColor: this.multipleValues ? null : this.backgroundColor
 				}
 			}
 		}

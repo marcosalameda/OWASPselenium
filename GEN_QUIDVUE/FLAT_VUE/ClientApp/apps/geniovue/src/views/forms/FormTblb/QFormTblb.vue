@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="TBLB"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.TBLB____TBLB_TEXT____.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_TEXT____.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.TBLB____TBLB_TEXT____.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_TEXT____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_TEXT____.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_TEXT____"
 							v-on="controls.TBLB____TBLB_TEXT____.handlers"
@@ -107,13 +116,14 @@
 								@blur="onBlur(controls.TBLB____TBLB_TEXT____, model.ValText.value)"
 								@change="model.ValText.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_TEXTML__.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_TEXTML__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_TEXTML__.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_TEXTML__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_TEXTML__.isVisible"
 							class="i-textarea"
 							v-bind="controls.TBLB____TBLB_TEXTML__"
 							v-on="controls.TBLB____TBLB_TEXTML__.handlers"
@@ -125,13 +135,14 @@
 								v-bind="controls.TBLB____TBLB_TEXTML__.props"
 								v-on="controls.TBLB____TBLB_TEXTML__.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_NUMINT__.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_NUMINT__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_NUMINT__.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_NUMINT__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_NUMINT__.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_NUMINT__"
 							v-on="controls.TBLB____TBLB_NUMINT__.handlers"
@@ -143,13 +154,14 @@
 								v-bind="controls.TBLB____TBLB_NUMINT__.props"
 								@update:model-value="model.ValNumint.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_NUMDEC__.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_NUMDEC__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_NUMDEC__.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_NUMDEC__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_NUMDEC__.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_NUMDEC__"
 							v-on="controls.TBLB____TBLB_NUMDEC__.handlers"
@@ -161,13 +173,14 @@
 								v-bind="controls.TBLB____TBLB_NUMDEC__.props"
 								@update:model-value="model.ValNumdec.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_CURINT__.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_CURINT__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_CURINT__.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_CURINT__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_CURINT__.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_CURINT__"
 							v-on="controls.TBLB____TBLB_CURINT__.handlers"
@@ -179,13 +192,14 @@
 								v-bind="controls.TBLB____TBLB_CURINT__.props"
 								@update:model-value="model.ValCurint.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_CURDEC__.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_CURDEC__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_CURDEC__.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_CURDEC__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_CURDEC__.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_CURDEC__"
 							v-on="controls.TBLB____TBLB_CURDEC__.handlers"
@@ -197,13 +211,14 @@
 								v-bind="controls.TBLB____TBLB_CURDEC__.props"
 								@update:model-value="model.ValCurdec.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_BOOL____.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_BOOL____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_BOOL____.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_BOOL____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_BOOL____.isVisible"
 							class="i-checkbox"
 							v-bind="controls.TBLB____TBLB_BOOL____"
 							v-on="controls.TBLB____TBLB_BOOL____.handlers"
@@ -211,19 +226,20 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.TBLB____TBLB_BOOL____.isVisible"
 									v-bind="controls.TBLB____TBLB_BOOL____.props"
 									v-on="controls.TBLB____TBLB_BOOL____.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_DATE____.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_DATE____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_DATE____.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_DATE____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_DATE____.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_DATE____"
 							v-on="controls.TBLB____TBLB_DATE____.handlers"
@@ -237,13 +253,14 @@
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_DATETM__.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_DATETM__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_DATETM__.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_DATETM__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_DATETM__.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_DATETM__"
 							v-on="controls.TBLB____TBLB_DATETM__.handlers"
@@ -257,13 +274,14 @@
 								@reset-icon-click="model.ValDatetm.fnUpdateValue(model.ValDatetm.originalValue ?? new Date())"
 								@update:model-value="model.ValDatetm.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_DATETS__.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_DATETS__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_DATETS__.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_DATETS__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_DATETS__.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_DATETS__"
 							v-on="controls.TBLB____TBLB_DATETS__.handlers"
@@ -277,13 +295,14 @@
 								@reset-icon-click="model.ValDatets.fnUpdateValue(model.ValDatets.originalValue ?? new Date())"
 								@update:model-value="model.ValDatets.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_TIMEHM__.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_TIMEHM__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_TIMEHM__.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_TIMEHM__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_TIMEHM__.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_TIMEHM__"
 							v-on="controls.TBLB____TBLB_TIMEHM__.handlers"
@@ -297,13 +316,14 @@
 								@reset-icon-click="model.ValTimehm.fnUpdateValue(model.ValTimehm.originalValue ?? new Date())"
 								@update:model-value="model.ValTimehm.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_ENUMT___.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_ENUMT___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_ENUMT___.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_ENUMT___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_ENUMT___.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_ENUMT___"
 							v-on="controls.TBLB____TBLB_ENUMT___.handlers"
@@ -315,13 +335,14 @@
 								v-bind="controls.TBLB____TBLB_ENUMT___.props"
 								@update:model-value="model.ValEnumt.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.TBLB____TBLB_ENUMN___.isVisible">
-					<q-control-wrapper
-						v-show="controls.TBLB____TBLB_ENUMN___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.TBLB____TBLB_ENUMN___.isVisible">
+					<q-col
+						v-if="controls.TBLB____TBLB_ENUMN___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.TBLB____TBLB_ENUMN___.isVisible"
 							class="i-text"
 							v-bind="controls.TBLB____TBLB_ENUMN___"
 							v-on="controls.TBLB____TBLB_ENUMN___.handlers"
@@ -333,10 +354,10 @@
 								v-bind="controls.TBLB____TBLB_ENUMN___.props"
 								@update:model-value="model.ValEnumn.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -345,7 +366,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -354,6 +375,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -365,12 +387,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -390,7 +412,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormTblbViewModel.js'
 
@@ -467,7 +489,8 @@
 					primaryKey: 'ValCodtblb',
 					designation: computed(() => this.Resources.TABLE__BASIC_TYPES_42027),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -575,7 +598,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -685,7 +712,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_TBLB____TBLB_TEXT____',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -834,7 +860,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
-						labelId: 'label_TBLB____TBLB_ENUMT___',
 						arrayName: 'typet',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -973,11 +998,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -987,7 +1010,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -997,7 +1020,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1017,19 +1040,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1050,7 +1087,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1070,19 +1107,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1101,11 +1152,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1115,7 +1164,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1123,8 +1172,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1132,7 +1179,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1140,8 +1187,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1149,7 +1194,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1157,11 +1202,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1171,7 +1214,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1181,7 +1224,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1242,6 +1285,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TBLB]/
 // eslint-disable-next-line

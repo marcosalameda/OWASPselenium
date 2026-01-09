@@ -10,20 +10,6 @@ using Quidgest.Persistence;
 
 namespace GenioMVC.ViewModels
 {
-	public class SearchParams
-	{
-		public IDictionary<string, IDictionary<string, string>> Filters { get; set; }
-
-		public string Query { get; set; }
-
-		public string SimilarQueries { get; set; }
-
-		public SearchParams()
-		{
-			Filters = new Dictionary<string, IDictionary<string, string>>();
-		}
-	}
-
 	public class TablePartial<A>
 	{
 		/// <summary>
@@ -35,8 +21,10 @@ namespace GenioMVC.ViewModels
 		[JsonIgnore]
 		public string TableName { get; set; }
 
+		[JsonPropertyName("pagination")]
 		public TablePagination Pagination { get; set; }
 
+		[JsonPropertyName("totalizers")]
 		public List<Totalizer> Totalizers { get; set; }
 
 		[JsonIgnore]
@@ -51,12 +39,14 @@ namespace GenioMVC.ViewModels
 		[JsonIgnore]
 		public bool TableFilters { get; set; }
 
+		[JsonPropertyName("elements")]
 		public virtual IEnumerable<A> Elements { get; set; }
 
 		// Slot report list
 		[JsonIgnore]
 		public Dictionary<string, List<object>> Slots { get; set; }
 
+		[JsonPropertyName("hasMore")]
 		public bool HasMore => Pagination.HasMore;
 
 		public TablePartial()
@@ -113,39 +103,29 @@ namespace GenioMVC.ViewModels
 		}
 	}
 
-	public class TableSort
+	public class TableSort(string column, string direction)
 	{
-		public string Column { get; set; }
+		public string Column { get; set; } = column;
 
-		public string Direction { get; set; }
-
-		public TableSort(string column, string direction)
-		{
-			Column = column;
-			Direction = direction;
-		}
+		public string Direction { get; set; } = direction;
 	}
 
-	public class TablePagination
+	public class TablePagination(int pageNumber, int numberOfItems, bool hasMore, bool hasTotal, int totalRows)
 	{
-		public bool HasTotal { get; set; }
+		[JsonPropertyName("hasTotal")]
+		public bool HasTotal { get; set; } = hasTotal;
 
-		public int TotalRows { get; set; }
+		[JsonPropertyName("totalRows")]
+		public int TotalRows { get; set; } = totalRows;
 
-		public bool HasMore { get; set; }
+		[JsonPropertyName("hasMore")]
+		public bool HasMore { get; set; } = hasMore;
 
-		public int PageNumber { get; set; }
+		[JsonPropertyName("pageNumber")]
+		public int PageNumber { get; set; } = pageNumber;
 
-		public int NumberOfItems { get; set; }
-
-		public TablePagination(int pageNumber, int numberOfItems, bool hasMore, bool hasTotal, int totalRows)
-		{
-			PageNumber = pageNumber;
-			NumberOfItems = numberOfItems;
-			HasMore = hasMore;
-			HasTotal = hasTotal;
-			TotalRows = totalRows;
-		}
+		[JsonPropertyName("numberOfItems")]
+		public int NumberOfItems { get; set; } = numberOfItems;
 	}
 
 	public class TableFiltering
@@ -281,6 +261,12 @@ namespace GenioMVC.ViewModels
 		[JsonPropertyName("newRecordTemplate")]
 		public T NewRecordTemplate { get; set; }
 
+		/// <summary>
+		/// Indicates whether saving is permitted despite warnings being present.
+		/// </summary>
+		[JsonIgnore]
+		public bool CanSaveWithWarnings { get; set; } = false;
+
 		public T CreateModelBase()
 		{
 			return Activator.CreateInstance(typeof(T), m_userContext, false) as T ?? throw new InvalidOperationException("Failed to create ModelBase of type " + typeof(T));
@@ -293,6 +279,24 @@ namespace GenioMVC.ViewModels
 		[Obsolete("For deserialization only")]
 		public GridTableList() { }
 
+		public GridTableList(UserContext userContext)
+		{
+			m_userContext = userContext;
+			NewRecordTemplate = CreateModelBase();
+
+			// Make the template row have data already calculated
+			// Temporary history level for the Grid record can be initialized correctly
+			m_userContext.CurrentNavigation.History.Push(new HistoryLevel(new NavigationLocation(), FormMode.New, m_userContext.CurrentNavigation.History.Count));
+			NewRecordTemplate.NewLoad();
+			m_userContext.CurrentNavigation.History.TryPop(out HistoryLevel _);
+
+			Elements = [];
+
+			EditedElements = [];
+			NewElements = [];
+			RemovedElements = [];
+		}
+
 		public void Init(UserContext userContext)
 		{
 			m_userContext = userContext;
@@ -300,21 +304,6 @@ namespace GenioMVC.ViewModels
 				e.Init(userContext);
 			foreach (var e in EditedElements)
 				e.Init(userContext);
-		}
-
-		public GridTableList(UserContext userContext)
-		{
-			m_userContext = userContext;
-			NewRecordTemplate = CreateModelBase();
-
-			// Make the template row have data already calculated
-			NewRecordTemplate.NewLoad();
-
-			Elements = [];
-
-			EditedElements = [];
-			NewElements = [];
-			RemovedElements = [];
 		}
 
 		/// <summary>
@@ -400,6 +389,7 @@ namespace GenioMVC.ViewModels
 			{
 				try
 				{
+					model.AllowSavingWithWarnings(CanSaveWithWarnings);
 					model.Save();
 				}
 				catch (FieldValidationException fvExc)
@@ -420,6 +410,7 @@ namespace GenioMVC.ViewModels
 				{
 					// Add the primary key
 					model.New();
+					model.AllowSavingWithWarnings(CanSaveWithWarnings);
 					model.Save();
 				}
 				catch (FieldValidationException fvExc)
@@ -436,10 +427,32 @@ namespace GenioMVC.ViewModels
 			if (result.Status != Status.OK)
 				throw new FieldValidationException(result, "Grid table list - Save");
 		}
+
+		/// <summary>
+		/// Configures whether saving is allowed even when warnings are present.
+		/// </summary>
+		/// <param name="enabled">
+		/// If set to <c>true</c>, the save operation will be permitted despite active warnings.
+		/// If <c>false</c>, warnings will prevent saving.
+		/// </param>
+		/// <remarks>
+		/// Use this method when the operation should proceed with non-critical issues
+		/// that do not require user intervention or correction.
+		/// </remarks>
+		public void AllowSavingWithWarnings(bool enabled)
+		{
+			CanSaveWithWarnings = enabled;
+		}
 	}
 
 	public abstract class PropertyList<T>: TablePartial<T> where T : ModelBase
 	{
+		/// <summary>
+		/// Indicates whether saving is permitted despite warnings being present.
+		/// </summary>
+		[JsonIgnore]
+		public bool CanSaveWithWarnings { get; set; } = false;
+
 		public List<T> propertyListRows;
 
 		public PropertyList() { }
@@ -470,6 +483,22 @@ namespace GenioMVC.ViewModels
 		public abstract CrudViewModelValidationResult Validate();
 
 		public abstract void MapFromModels();
+
+		/// <summary>
+		/// Configures whether saving is allowed even when warnings are present.
+		/// </summary>
+		/// <param name="enabled">
+		/// If set to <c>true</c>, the save operation will be permitted despite active warnings.
+		/// If <c>false</c>, warnings will prevent saving.
+		/// </param>
+		/// <remarks>
+		/// Use this method when the operation should proceed with non-critical issues
+		/// that do not require user intervention or correction.
+		/// </remarks>
+		public void AllowSavingWithWarnings(bool enabled)
+		{
+			CanSaveWithWarnings = enabled;
+		}
 	}
 
 	public class PropertyListProperty
@@ -513,6 +542,7 @@ namespace GenioMVC.ViewModels
 	{
 		[JsonPropertyName("fieldId")]
 		public string FieldId { get; set; }
+
 		[JsonPropertyName("ticket")]
 		public string Ticket { get; set; }
 	}
@@ -520,20 +550,25 @@ namespace GenioMVC.ViewModels
 	public class RequestDocumValidateTickets
 	{
 		public List<RequestDocumFieldTicket> Tickets { get; set; }
+
 		public bool IsApply { get; set; }
 	}
 
 	public class RequestDocumGetModel
 	{
 		public string? Ticket { get; set; }
+
 		public DocumentViewTypeMode ViewType { get; set; } = DocumentViewTypeMode.Print;
 	}
 
 	public class RequestDocumChangeModel : RequestDocumGetModel
 	{
 		public VersionDeleteAction DeleteType { get; set; } = VersionDeleteAction.All;
+
 		public bool Delete { get; set; }
+
 		public bool Editing { get; set; }
+
 		public string CurrentVersion { get; set; }
 	}
 
@@ -545,7 +580,9 @@ namespace GenioMVC.ViewModels
 	public class RequestDocumsCreateModel
 	{
 		public string Ticket { get; set; }
+
 		public VersionSubmitAction Mode { get; set; } = VersionSubmitAction.Insert;
+
 		public string Version { get; set; } = "1";
 	}
 }

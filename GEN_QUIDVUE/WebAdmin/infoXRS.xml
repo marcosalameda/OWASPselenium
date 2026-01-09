@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Projecto>
+	<Definicoes>
+		<Sistema>GQT</Sistema>
+		<Cliente>QUIDVUE</Cliente>
+		<Versao>4420</Versao>
+	</Definicoes>
+	<Modulos>
+		<Modulo ID="XRS">
+			<PROG>Wharehouse api</PROG>
+			<PLATAFOR>REST</PLATAFOR>
+		</Modulo>
+	</Modulos>
+</Projecto>

@@ -5,8 +5,8 @@
 				v-if="userIsLoggedIn && $app.appAlerts.length > 0"
 				id="sidebar-collapse"
 				class="nav-link n-menu__aside-link"
-				href="javascript:void(0)"
 				role="button"
+				href="#"
 				aria-haspopup="true"
 				aria-expanded="true"
 				:aria-label="texts.options"
@@ -80,7 +80,7 @@
 								data-placement="top"
 								class="c-sidebar__list-link"
 								:title="getMenuText(menu.Title)"
-								:link="getMenuRoute(menu, true)"
+								:link="getMenuRoute(menu)"
 								:tabindex="$attrs.tabindex">
 								<i
 									v-if="menu.Font"
@@ -135,7 +135,8 @@
 								class="c-sidebar__list-item"
 								v-if="hasUserSettings">
 								<a
-									href="javascript:void(0)"
+									role="button"
+									href="#"
 									data-toggle="tooltip"
 									class="c-sidebar__list-link"
 									data-placement="top"
@@ -151,7 +152,8 @@
 
 							<li class="c-sidebar__list-item">
 								<a
-									href="javascript:void(0)"
+									role="button"
+									href="#"
 									data-toggle="tooltip"
 									data-placement="top"
 									class="c-sidebar__list-link"
@@ -314,14 +316,12 @@
 			/**
 			 * Build the route for avatar custom menu list.
 			 */
-			getMenuRoute(menu, isPHE)
+			getMenuRoute(menu)
 			{
 				if (typeof menu !== 'object')
 					menu = {}
-				if (typeof isPHE !== 'boolean')
-					isPHE = false
 
-				var routeName = 'home'
+				let routeName = 'home'
 				if (!this.isEmpty(menu.Action))
 					routeName = menu.Action
 
@@ -339,9 +339,6 @@
 					routeParams.params.id = menu.RecordID
 					routeParams.params.mode = 'SHOW'
 				}
-
-				if (isPHE)
-					routeParams.params.isPopup = true
 
 				return routeParams
 			},

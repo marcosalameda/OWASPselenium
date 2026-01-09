@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,37 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="PESS1"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.PESS1___CMPNYDESIGNAT.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESS1___CMPNYDESIGNAT.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.PESS1___PSEUDFIELD001.isVisible">
+					<q-col
+						v-if="controls.PESS1___PSEUDFIELD001.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___PSEUDFIELD001.isVisible"
+							class="i-button"
+							v-bind="controls.PESS1___PSEUDFIELD001"
+							v-on="controls.PESS1___PSEUDFIELD001.handlers"
+							:loading="controls.PESS1___PSEUDFIELD001.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-button
+								v-if="controls.PESS1___PSEUDFIELD001.isVisible"
+								v-bind="controls.PESS1___PSEUDFIELD001.props"
+								@click="controls.PESS1___PSEUDFIELD001.action($event)">
+							</q-button>
+						</base-input-structure>
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESS1___CMPNYDESIGNAT.isVisible">
+					<q-col
+						v-if="controls.PESS1___CMPNYDESIGNAT.isVisible"
+						cols="auto">
+						<base-input-structure
+							v-if="controls.PESS1___CMPNYDESIGNAT.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___CMPNYDESIGNAT"
 							v-on="controls.PESS1___CMPNYDESIGNAT.handlers"
@@ -111,13 +140,14 @@
 								v-bind="controls.PESS1___CMPNYDESIGNAT.seeMoreParams"
 								v-on="controls.PESS1___CMPNYDESIGNAT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PESS1___STAKEDESIGNAT.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESS1___STAKEDESIGNAT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESS1___STAKEDESIGNAT.isVisible">
+					<q-col
+						v-if="controls.PESS1___STAKEDESIGNAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___STAKEDESIGNAT.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___STAKEDESIGNAT"
 							v-on="controls.PESS1___STAKEDESIGNAT.handlers"
@@ -133,13 +163,14 @@
 								v-bind="controls.PESS1___STAKEDESIGNAT.seeMoreParams"
 								v-on="controls.PESS1___STAKEDESIGNAT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PESS1___PESS1NAME____.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESS1___PESS1NAME____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESS1___PESS1NAME____.isVisible">
+					<q-col
+						v-if="controls.PESS1___PESS1NAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___PESS1NAME____.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___PESS1NAME____"
 							v-on="controls.PESS1___PESS1NAME____.handlers"
@@ -151,13 +182,14 @@
 								@blur="onBlur(controls.PESS1___PESS1NAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PESS1___PESS1GENDER__.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESS1___PESS1GENDER__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESS1___PESS1GENDER__.isVisible">
+					<q-col
+						v-if="controls.PESS1___PESS1GENDER__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___PESS1GENDER__.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___PESS1GENDER__"
 							v-on="controls.PESS1___PESS1GENDER__.handlers"
@@ -169,13 +201,14 @@
 								v-bind="controls.PESS1___PESS1GENDER__.props"
 								@update:model-value="model.ValGender.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PESS1___PESS1DTNASCIM.isVisible || controls.PESS1___PESS1IDFUNCIO.isVisible || controls.PESS1___PESS1TELEPHON.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESS1___PESS1DTNASCIM.isVisible || controls.PESS1___PESS1IDFUNCIO.isVisible || controls.PESS1___PESS1TELEPHON.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESS1___PESS1DTNASCIM.isVisible || controls.PESS1___PESS1IDFUNCIO.isVisible || controls.PESS1___PESS1TELEPHON.isVisible">
+					<q-col
+						v-if="controls.PESS1___PESS1DTNASCIM.isVisible || controls.PESS1___PESS1IDFUNCIO.isVisible || controls.PESS1___PESS1TELEPHON.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___PESS1DTNASCIM.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___PESS1DTNASCIM"
 							v-on="controls.PESS1___PESS1DTNASCIM.handlers"
@@ -190,6 +223,7 @@
 								@update:model-value="model.ValDtnascim.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 						<base-input-structure
+							v-if="controls.PESS1___PESS1IDFUNCIO.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___PESS1IDFUNCIO"
 							v-on="controls.PESS1___PESS1IDFUNCIO.handlers"
@@ -202,6 +236,7 @@
 								@update:model-value="model.ValIdfuncio.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
+							v-if="controls.PESS1___PESS1TELEPHON.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___PESS1TELEPHON"
 							v-on="controls.PESS1___PESS1TELEPHON.handlers"
@@ -213,13 +248,14 @@
 								@blur="onBlur(controls.PESS1___PESS1TELEPHON, model.ValTelephon.value)"
 								@change="model.ValTelephon.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PESS1___PESS1EMAIL___.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESS1___PESS1EMAIL___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESS1___PESS1EMAIL___.isVisible">
+					<q-col
+						v-if="controls.PESS1___PESS1EMAIL___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___PESS1EMAIL___.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___PESS1EMAIL___"
 							v-on="controls.PESS1___PESS1EMAIL___.handlers"
@@ -231,13 +267,14 @@
 								@blur="onBlur(controls.PESS1___PESS1EMAIL___, model.ValEmail.value)"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PESS1___PESS1EMAIL2__.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESS1___PESS1EMAIL2__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESS1___PESS1EMAIL2__.isVisible">
+					<q-col
+						v-if="controls.PESS1___PESS1EMAIL2__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___PESS1EMAIL2__.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___PESS1EMAIL2__"
 							v-on="controls.PESS1___PESS1EMAIL2__.handlers"
@@ -249,13 +286,14 @@
 								@blur="onBlur(controls.PESS1___PESS1EMAIL2__, model.ValEmail2.value)"
 								@change="model.ValEmail2.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PESS1___PESS1PHOTOGRA.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESS1___PESS1PHOTOGRA.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESS1___PESS1PHOTOGRA.isVisible">
+					<q-col
+						v-if="controls.PESS1___PESS1PHOTOGRA.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___PESS1PHOTOGRA.isVisible"
 							class="q-image"
 							v-bind="controls.PESS1___PESS1PHOTOGRA"
 							v-on="controls.PESS1___PESS1PHOTOGRA.handlers"
@@ -267,13 +305,14 @@
 								v-bind="controls.PESS1___PESS1PHOTOGRA.props"
 								v-on="controls.PESS1___PESS1PHOTOGRA.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PESS1___PESS1DTULTCAT.isVisible || controls.PESS1___PESS1EXTERNA_.isVisible || controls.PESS1___PESS1INTERNA_.isVisible || controls.PESS1___PESS1IDADE___.isVisible">
-					<q-control-wrapper
-						v-show="controls.PESS1___PESS1DTULTCAT.isVisible || controls.PESS1___PESS1EXTERNA_.isVisible || controls.PESS1___PESS1INTERNA_.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PESS1___PESS1DTULTCAT.isVisible || controls.PESS1___PESS1EXTERNA_.isVisible || controls.PESS1___PESS1INTERNA_.isVisible || controls.PESS1___PESS1IDADE___.isVisible">
+					<q-col
+						v-if="controls.PESS1___PESS1DTULTCAT.isVisible || controls.PESS1___PESS1EXTERNA_.isVisible || controls.PESS1___PESS1INTERNA_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___PESS1DTULTCAT.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___PESS1DTULTCAT"
 							v-on="controls.PESS1___PESS1DTULTCAT.handlers"
@@ -288,6 +327,7 @@
 								@update:model-value="model.ValDtultcat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
 						<base-input-structure
+							v-if="controls.PESS1___PESS1EXTERNA_.isVisible"
 							class="i-checkbox"
 							v-bind="controls.PESS1___PESS1EXTERNA_"
 							v-on="controls.PESS1___PESS1EXTERNA_.handlers"
@@ -295,13 +335,14 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.PESS1___PESS1EXTERNA_.isVisible"
 									v-bind="controls.PESS1___PESS1EXTERNA_.props"
 									v-on="controls.PESS1___PESS1EXTERNA_.handlers" />
 							</template>
 						</base-input-structure>
 						<base-input-structure
+							v-if="controls.PESS1___PESS1INTERNA_.isVisible"
 							class="i-checkbox"
 							v-bind="controls.PESS1___PESS1INTERNA_"
 							v-on="controls.PESS1___PESS1INTERNA_.handlers"
@@ -309,17 +350,18 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.PESS1___PESS1INTERNA_.isVisible"
 									v-bind="controls.PESS1___PESS1INTERNA_.props"
 									v-on="controls.PESS1___PESS1INTERNA_.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.PESS1___PESS1IDADE___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.PESS1___PESS1IDADE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PESS1___PESS1IDADE___.isVisible"
 							class="i-text"
 							v-bind="controls.PESS1___PESS1IDADE___"
 							v-on="controls.PESS1___PESS1IDADE___.handlers"
@@ -331,10 +373,10 @@
 								v-bind="controls.PESS1___PESS1IDADE___.props"
 								@update:model-value="model.ValIdade.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -343,7 +385,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -352,6 +394,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -363,12 +406,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -388,7 +431,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormPess1ViewModel.js'
 
@@ -465,9 +508,12 @@
 					route: 'form-PESS1',
 					area: 'PESS1',
 					primaryKey: 'ValCodpesso',
-					designation: computed(() => this.Resources.COMODANTE63029),
+					designation: computed(() => this.Resources.PERSON10446),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [
+						'MockPersonCreator',
+					],
 				},
 
 				formButtons: {
@@ -575,7 +621,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -675,6 +725,27 @@
 				},
 
 				controls: {
+					PESS1___PSEUDFIELD001: new fieldControlClass.ButtonControl({
+						id: 'PESS1___PSEUDFIELD001',
+						name: 'FIELD001',
+						hasLabel: false,
+						label: computed(() => this.Resources.CREATE_MOCK_PERSON54221),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						// eslint-disable-next-line
+						action: (event) => {
+							const btnAction = () => {
+								vm.PESS1_MockPersonCreator_CB()
+							}
+							const options = {
+								form: 'PESS1',
+								callback: btnAction
+							}
+							vm.$eventHub.emit('form-apply', options)
+						},
+						controlLimits: [
+						],
+					}, this),
 					PESS1___CMPNYDESIGNAT: new fieldControlClass.LookupControl({
 						modelField: 'TableCmpnyDesignat',
 						valueChangeEvent: 'fieldChange:cmpny.designat',
@@ -710,7 +781,7 @@
 						valueChangeEvent: 'fieldChange:stake.designat',
 						id: 'PESS1___STAKEDESIGNAT',
 						name: 'DESIGNAT',
-						size: 'xxlarge',
+						size: 'mini',
 						label: computed(() => this.Resources.INTERESTED34576),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -743,8 +814,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
-						labelId: 'label_PESS1___PESS1NAME____',
-						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -758,7 +827,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
-						labelId: 'label_PESS1___PESS1GENDER__',
 						arrayName: 'Genero',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -790,7 +858,6 @@
 						maxIntegers: 6,
 						maxDecimals: 0,
 						isSequencial: true,
-						mustBeFilled: true,
 						controlLimits: [
 						],
 					}, this),
@@ -804,7 +871,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
-						labelId: 'label_PESS1___PESS1TELEPHON',
 						controlLimits: [
 						],
 					}, this),
@@ -818,7 +884,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 254,
-						labelId: 'label_PESS1___PESS1EMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -832,7 +897,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 254,
-						labelId: 'label_PESS1___PESS1EMAIL2__',
 						controlLimits: [
 						],
 					}, this),
@@ -846,7 +910,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						height: 50,
-						width: 100,
+						width: 30,
 						dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR17299, vm.Resources.PHOTO51874)),
 						controlLimits: [
 						],
@@ -872,7 +936,7 @@
 						size: 'small',
 						label: computed(() => this.Resources.EXTERNAL13375),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.right),
+						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
 						controlLimits: [
 						],
 					}, this),
@@ -884,7 +948,7 @@
 						size: 'mini',
 						label: computed(() => this.Resources.INTERN65375),
 						placeholder: '',
-						labelPosition: computed(() => this.labelAlignment.right),
+						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
 						controlLimits: [
 						],
 					}, this),
@@ -1031,11 +1095,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1045,7 +1107,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1055,7 +1117,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1075,19 +1137,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1108,7 +1184,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1128,19 +1204,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1159,11 +1249,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1173,7 +1261,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1181,8 +1269,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1190,7 +1276,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1198,8 +1284,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1207,7 +1291,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1215,11 +1299,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1229,7 +1311,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1239,7 +1321,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1299,6 +1381,116 @@
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
 				this.afterControlUpdate(controlField, fieldValue)
+			},
+			/**
+			* Call agent MockPersonCreator
+			*/
+			async PESS1_MockPersonCreator_CB()
+			{
+				const handleError = (error) => {
+					genericFunctions.displayMessage(this.Resources.NAO_FOI_POSSIVEL_CON55944, 'error');
+					this.$eventTracker.addError({
+						origin: 'Agent PESS1_MockPersonCreator_CB',
+						message: error?.toString()
+					});
+				}
+
+				try {
+					const agentData = await this.get_PESS1_MockPersonCreator_CB_data();
+
+					this.setCurrentAgent({
+						...agentData
+					})
+					this.$eventHub.emit('open-sidebar-on-tab', 'chatbot-tab')
+				} catch (e) {
+					handleError(e);
+				}
+			},
+
+			async get_PESS1_MockPersonCreator_CB_data(userPrompt)
+			{
+				//Call server and wait for response
+				const data = await netAPI.postData(
+					"PESS1",
+					"PESS1_MockPersonCreator_CB",
+					{
+						...this.model.serverObjModel,
+						ChatBotUserPrompt: userPrompt || '',
+					},
+					undefined,
+					undefined,
+					undefined,
+					this.navigationId)
+
+				if(data?.success === true)
+				{
+					const agentId = data.data?.agentId
+					const agentData = {
+						...data.data,
+						formId: this.$route.params.id,
+					}
+
+					if(this.currentAgent?.id === agentId)
+					{
+						this.setCurrentAgent(agentData);
+					}
+					else {
+						this.setCurrentAgent({
+							id: agentId,
+							...agentData,
+						});
+					}
+				}
+				else throw new Error("Unexpected agent response");
+			},
+
+			async setAgentData(agentData)
+			{
+				let data;
+				switch (agentData.agentId) {
+					case 'MockPersonCreator':
+						data = await this.get_PESS1_MockPersonCreator_CB_data(agentData.userPrompt);
+						break;
+				}
+
+				if (!data) return;
+
+				this.setCurrentAgent({
+					...data,
+				})
+			},
+
+			applyAgentFields(fields)
+			{
+				if (!fields || !Array.isArray(fields)) return;
+				const highlightClass = 'highlight-field'
+
+				fields.forEach((field) => {
+					switch (field.id) {
+						case 'Employee_Number':
+							this.model.ValIdfuncio.value = field.text;
+							this.controls.PESS1___PESS1IDFUNCIO.addControlClass(highlightClass);
+							break;
+						case 'Telephone':
+							this.model.ValTelephon.value = field.text;
+							this.controls.PESS1___PESS1TELEPHON.addControlClass(highlightClass);
+							break;
+						case 'Name':
+							this.model.ValName.value = field.text;
+							this.controls.PESS1___PESS1NAME____.addControlClass(highlightClass);
+							break;
+						case 'Email':
+							this.model.ValEmail.value = field.text;
+							this.controls.PESS1___PESS1EMAIL___.addControlClass(highlightClass);
+							break;
+						default:
+							this.$eventTracker.addError({
+								origin: 'applyAgentFields',
+								message: `Unknown field name: ${field.name}`
+							});
+							break;
+					}
+				})
 			},
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PESS1]/

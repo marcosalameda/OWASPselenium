@@ -51,6 +51,8 @@ namespace GenioMVC.ViewModels.Esppe
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Speci> TableSpeciEspecial { get; set; }
 
+
+
 		#region Navigations
 		#endregion
 
@@ -300,6 +302,17 @@ namespace GenioMVC.ViewModels.Esppe
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -430,7 +443,7 @@ namespace GenioMVC.ViewModels.Esppe
 
 			if (esppe___pessoname____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TablePessoName, "sTablePessoName", "dTablePessoName", qs, "pesso");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -480,7 +493,7 @@ namespace GenioMVC.ViewModels.Esppe
 
 				TablePessoName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePessoName.Query = query;
-				TablePessoName.Elements = listing.RowsForViewModel<GenioMVC.Models.Pesso>((r) => new GenioMVC.Models.Pesso(m_userContext, r, true, _fieldsToSerialize_ESPPE___PESSONAME____));
+				TablePessoName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Pesso(m_userContext, r, true, _fieldsToSerialize_ESPPE___PESSONAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -620,7 +633,7 @@ namespace GenioMVC.ViewModels.Esppe
 
 			if (esppe___speciespecialDoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableSpeciEspecial, "sTableSpeciEspecial", "dTableSpeciEspecial", qs, "speci");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -670,7 +683,7 @@ namespace GenioMVC.ViewModels.Esppe
 
 				TableSpeciEspecial.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableSpeciEspecial.Query = query;
-				TableSpeciEspecial.Elements = listing.RowsForViewModel<GenioMVC.Models.Speci>((r) => new GenioMVC.Models.Speci(m_userContext, r, true, _fieldsToSerialize_ESPPE___SPECIESPECIAL));
+				TableSpeciEspecial.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Speci(m_userContext, r, true, _fieldsToSerialize_ESPPE___SPECIESPECIAL));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

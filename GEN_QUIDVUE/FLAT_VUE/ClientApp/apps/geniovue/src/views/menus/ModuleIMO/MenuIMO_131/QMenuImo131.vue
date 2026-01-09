@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE IMO_Menu_131]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuIMO_131ViewModel.js'
 
@@ -214,8 +215,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -316,6 +316,7 @@
 							rowClickAction: {
 								id: 'RCA_IMO_1311',
 								name: 'menu-IMO_1311',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -324,7 +325,7 @@
 											fnValueSelector: (row) => row.ValCodcntry
 										},
 									],
-									action: vm.openMenuAction, type: 'menu', menuName: 'IMO_1311',
+									action: vm.openMenuAction, type: 'menu', menuName: 'IMO_1311'
 								}
 							},
 							formsDefinition: {
@@ -346,6 +347,7 @@
 						uuid: '2e0383bf-f54f-41d7-b7e7-76c78c1dc049',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

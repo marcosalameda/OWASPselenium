@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW VENDAW08]/
 
 		[HttpPost]
-		public ActionResult Vendaw08_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Vendaw08_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Vendaw08_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Vendaw08_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_Show_GET",
 				AreaName = "sale",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET VENDAW08]/
 		[HttpPost]
-		public ActionResult Vendaw08_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Vendaw08_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Vendaw08_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Vendaw08_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_New_GET",
 				AreaName = "sale",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Vendaw08_New([FromBody]Vendaw08_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_New",
 				ViewName = "Vendaw08",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET VENDAW08]/
 		[HttpPost]
-		public ActionResult Vendaw08_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Vendaw08_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Vendaw08_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Vendaw08_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_Edit_GET",
 				AreaName = "sale",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Vendaw08_Edit([FromBody]Vendaw08_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_Edit",
 				ViewName = "Vendaw08",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET VENDAW08]/
 		[HttpPost]
-		public ActionResult Vendaw08_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Vendaw08_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Vendaw08_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Vendaw08_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_Delete_GET",
 				AreaName = "sale",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Sale/Vendaw08_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST VENDAW08]/
 		[HttpPost]
-		public ActionResult Vendaw08_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Vendaw08_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Vendaw08_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Vendaw08_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_Delete",
 				ViewName = "Vendaw08",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET VENDAW08]/
 
 		[HttpPost]
-		public ActionResult Vendaw08_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Vendaw08_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Vendaw08_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Vendaw08_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_Duplicate_GET",
 				AreaName = "sale",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Vendaw08_Duplicate([FromBody]Vendaw08_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Vendaw08_Duplicate",
 				ViewName = "Vendaw08",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Sale(UserContext.Current);
+					GenioMVC.Models.Sale model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("sale");
 
 // USE /[MANUAL GQT BEFORE_CANCEL VENDAW08]/

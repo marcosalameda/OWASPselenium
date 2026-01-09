@@ -5,7 +5,7 @@ namespace quidgest.uitests.controls;
 
 public abstract class DropdownControl : InputControl
 {
-    protected IWebElement _display => m_control.FindElement(By.CssSelector("[role=combobox]"));    
+    protected IWebElement _display => m_control.FindElement(By.CssSelector(".q-field__control"));
     protected IWebElement _debounceElement => m_control.FindElement(ByData.Testid("debounce-container"));
     //dropdown is opened in a completely different global html location
     protected IWebElement _dropdown => driver.FindElement(ByData.Testid("combobox-dropdown"));
@@ -17,7 +17,7 @@ public abstract class DropdownControl : InputControl
         WaitForLoad();
     }
 
-    public DropdownControl(IWebDriver driver, By containerLocator, string controlId) 
+    public DropdownControl(IWebDriver driver, By containerLocator, string controlId)
         : base(driver, containerLocator, By.Id(controlId))
     {
         WaitForLoad();
@@ -25,7 +25,9 @@ public abstract class DropdownControl : InputControl
 
     protected void WaitForLoad()
     {
-        wait.Until(c => m_control.GetAttribute("data-loading") == "false");
+        wait.Until(c =>
+            m_control.GetAttribute("data-loading") == null ||
+            m_control.GetAttribute("data-loading") == "false");
     }
 
     protected void WaitForDebounce()
@@ -39,7 +41,7 @@ public abstract class DropdownControl : InputControl
         WaitForLoad();
         return _display.GetAttribute("value");
     }
-        
+
     public string GetText()
     {
         WaitForLoad();

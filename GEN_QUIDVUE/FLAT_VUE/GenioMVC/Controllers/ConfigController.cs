@@ -16,6 +16,25 @@ namespace GenioMVC.Controllers
 			enableOtlpTracing = telemetryConfig?.EnableTracing ?? false;
 		}
 
+		private object getVersionInfo()
+		{
+			return new
+			{
+				buildVersion = VersionInfo.Build,
+				dbIdxVersion = VersionInfo.DatabaseIndex,
+				dbVersion = VersionInfo.DatabaseSchema.ToString(),
+				genioVersion = VersionInfo.GenioVersion.Replace('.', ','),
+				trackChangesVersion = VersionInfo.Release,
+				assemblyVersion = VersionInfo.GenAssemblyVersion,
+				generationDate = new
+				{
+					year = VersionInfo.GenerationDate.Year,
+					month = VersionInfo.GenerationDate.Month,
+					day = VersionInfo.GenerationDate.Day
+				}
+			};
+		}
+
 		private object getConfig()
 		{
 			// User
@@ -101,7 +120,8 @@ namespace GenioMVC.Controllers
 				hasPasswordRecovery,
 				hasUsernameAuth,
 				eventTracking = Configuration.EventTracking,
-				enableTracing = enableOtlpTracing
+				enableTracing = enableOtlpTracing,
+				versionInfo = getVersionInfo()
 			};
 			return conf;
 		}
@@ -126,6 +146,16 @@ namespace GenioMVC.Controllers
 			*/
 
 			return JsonOK();
+		}
+
+		/// <summary>
+		/// Returns system version information from the server
+		/// </summary>
+		[HttpGet]
+		[AllowAnonymous]
+		public JsonResult GetVersionInfo()
+		{
+			return JsonOK(getVersionInfo());
 		}
 	}
 }

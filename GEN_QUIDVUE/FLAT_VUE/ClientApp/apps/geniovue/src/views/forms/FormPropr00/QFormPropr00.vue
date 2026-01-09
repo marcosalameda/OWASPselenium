@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,37 +94,36 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="PROPR00"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.PROPR00_PSEUDNOVOGR04.isVisible">
-					<q-control-wrapper
-						v-show="controls.PROPR00_PSEUDNOVOGR04.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.PROPR00_PSEUDNOVOGR04.isVisible">
+					<q-col
+						v-if="controls.PROPR00_PSEUDNOVOGR04.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.PROPR00_PSEUDNOVOGR04.isVisible"
 							id="PROPR00_PSEUDNOVOGR04"
 							v-bind="controls.PROPR00_PSEUDNOVOGR04"
 							:is-visible="controls.PROPR00_PSEUDNOVOGR04.isVisible">
 							<!-- Start PROPR00_PSEUDNOVOGR04 -->
-							<q-row-container
-								v-show="controls.PROPR00_PSEUDNOVOGR02.isVisible"
-								is-large>
-								<q-control-wrapper
-									v-show="controls.PROPR00_PSEUDNOVOGR02.isVisible"
-									class="row-line-group">
+							<q-row v-if="controls.PROPR00_PSEUDNOVOGR02.isVisible">
+								<q-col v-if="controls.PROPR00_PSEUDNOVOGR02.isVisible">
 									<q-group-box-container
+										v-if="controls.PROPR00_PSEUDNOVOGR02.isVisible"
 										id="PROPR00_PSEUDNOVOGR02"
 										v-bind="controls.PROPR00_PSEUDNOVOGR02"
 										no-border
 										:is-visible="controls.PROPR00_PSEUDNOVOGR02.isVisible">
 										<!-- Start PROPR00_PSEUDNOVOGR02 -->
-										<q-row-container v-show="controls.PROPR00_PROPRNAME____.isVisible || controls.PROPR00_PROPRPRECOEST.isVisible || controls.PROPR00_TPPROTPPROPRI.isVisible || controls.PROPR00_PROPRMOBILADA.isVisible">
-											<q-control-wrapper
-												v-show="controls.PROPR00_PROPRNAME____.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PROPR00_PROPRNAME____.isVisible || controls.PROPR00_PROPRPRECOEST.isVisible || controls.PROPR00_TPPROTPPROPRI.isVisible || controls.PROPR00_PROPRMOBILADA.isVisible">
+											<q-col
+												v-if="controls.PROPR00_PROPRNAME____.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR00_PROPRNAME____.isVisible"
 													class="i-text"
 													v-bind="controls.PROPR00_PROPRNAME____"
 													v-on="controls.PROPR00_PROPRNAME____.handlers"
@@ -128,11 +135,12 @@
 														@blur="onBlur(controls.PROPR00_PROPRNAME____, model.ValName.value)"
 														@change="model.ValName.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PROPR00_PROPRPRECOEST.isVisible || controls.PROPR00_TPPROTPPROPRI.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PROPR00_PROPRPRECOEST.isVisible || controls.PROPR00_TPPROTPPROPRI.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR00_PROPRPRECOEST.isVisible"
 													class="i-text"
 													v-bind="controls.PROPR00_PROPRPRECOEST"
 													v-on="controls.PROPR00_PROPRPRECOEST.handlers"
@@ -145,6 +153,7 @@
 														@update:model-value="model.ValPrecoest.fnUpdateValue" />
 												</base-input-structure>
 												<base-input-structure
+													v-if="controls.PROPR00_TPPROTPPROPRI.isVisible"
 													class="i-text"
 													v-bind="controls.PROPR00_TPPROTPPROPRI"
 													v-on="controls.PROPR00_TPPROTPPROPRI.handlers"
@@ -160,11 +169,12 @@
 														v-bind="controls.PROPR00_TPPROTPPROPRI.seeMoreParams"
 														v-on="controls.PROPR00_TPPROTPPROPRI.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PROPR00_PROPRMOBILADA.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PROPR00_PROPRMOBILADA.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR00_PROPRMOBILADA.isVisible"
 													class="i-checkbox"
 													v-bind="controls.PROPR00_PROPRMOBILADA"
 													v-on="controls.PROPR00_PROPRMOBILADA.handlers"
@@ -172,23 +182,24 @@
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
 													<template #label>
-														<q-checkbox-input
+														<q-checkbox
 															v-if="controls.PROPR00_PROPRMOBILADA.isVisible"
 															v-bind="controls.PROPR00_PROPRMOBILADA.props"
 															v-on="controls.PROPR00_PROPRMOBILADA.handlers" />
 													</template>
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End PROPR00_PSEUDNOVOGR02 -->
 									</q-group-box-container>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PROPR00_PESSONAME____.isVisible">
-								<q-control-wrapper
-									v-show="controls.PROPR00_PESSONAME____.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PROPR00_PESSONAME____.isVisible">
+								<q-col
+									v-if="controls.PROPR00_PESSONAME____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PROPR00_PESSONAME____.isVisible"
 										class="i-text"
 										v-bind="controls.PROPR00_PESSONAME____"
 										v-on="controls.PROPR00_PESSONAME____.handlers"
@@ -204,25 +215,23 @@
 											v-bind="controls.PROPR00_PESSONAME____.seeMoreParams"
 											v-on="controls.PROPR00_PESSONAME____.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container
-								v-show="controls.PROPR00_PSEUDNOVOGR01.isVisible"
-								is-large>
-								<q-control-wrapper
-									v-show="controls.PROPR00_PSEUDNOVOGR01.isVisible"
-									class="row-line-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PROPR00_PSEUDNOVOGR01.isVisible">
+								<q-col v-if="controls.PROPR00_PSEUDNOVOGR01.isVisible">
 									<q-group-box-container
+										v-if="controls.PROPR00_PSEUDNOVOGR01.isVisible"
 										id="PROPR00_PSEUDNOVOGR01"
 										v-bind="controls.PROPR00_PSEUDNOVOGR01"
 										no-border
 										:is-visible="controls.PROPR00_PSEUDNOVOGR01.isVisible">
 										<!-- Start PROPR00_PSEUDNOVOGR01 -->
-										<q-row-container v-show="controls.PROPR00_PROPRPHOTOGRA.isVisible">
-											<q-control-wrapper
-												v-show="controls.PROPR00_PROPRPHOTOGRA.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PROPR00_PROPRPHOTOGRA.isVisible">
+											<q-col
+												v-if="controls.PROPR00_PROPRPHOTOGRA.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR00_PROPRPHOTOGRA.isVisible"
 													class="q-image"
 													v-bind="controls.PROPR00_PROPRPHOTOGRA"
 													v-on="controls.PROPR00_PROPRPHOTOGRA.handlers"
@@ -234,21 +243,22 @@
 														v-bind="controls.PROPR00_PROPRPHOTOGRA.props"
 														v-on="controls.PROPR00_PROPRPHOTOGRA.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End PROPR00_PSEUDNOVOGR01 -->
 									</q-group-box-container>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PROPR00_PSEUDNOVOGR04 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PROPR00_PSEUDPROPR02_.isVisible || controls.PROPR00_PSEUDPROPR01_.isVisible || controls.PROPR00_PSEUDPROPR03_.isVisible">
-					<q-control-wrapper
-						v-show="controls.PROPR00_PSEUDPROPR02_.isVisible || controls.PROPR00_PSEUDPROPR01_.isVisible || controls.PROPR00_PSEUDPROPR03_.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PROPR00_PSEUDPROPR02_.isVisible || controls.PROPR00_PSEUDPROPR01_.isVisible || controls.PROPR00_PSEUDPROPR03_.isVisible">
+					<q-col
+						v-if="controls.PROPR00_PSEUDPROPR02_.isVisible || controls.PROPR00_PSEUDPROPR01_.isVisible || controls.PROPR00_PSEUDPROPR03_.isVisible"
+						cols="auto">
 						<q-tab-container
+							v-if="controls.formTabs.isVisible"
 							id="q-tabs-PROPR00"
 							v-bind="controls.formTabs.props"
 							@tab-changed="controls.formTabs.selectTab($event)">
@@ -260,11 +270,12 @@
 										id="PROPR00_PSEUDPROPR02_"
 										role="tabpanel"
 										aria-labelledby="tab-container-PROPR00_PSEUDPROPR02_">
-										<q-row-container v-show="controls.PROPR02_PROPRQTD_WC__.isVisible || controls.PROPR02_PROPRQTDQUART.isVisible || controls.PROPR02_PROPRM2______.isVisible">
-											<q-control-wrapper
-												v-show="controls.PROPR02_PROPRQTD_WC__.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PROPR02_PROPRQTD_WC__.isVisible || controls.PROPR02_PROPRQTDQUART.isVisible || controls.PROPR02_PROPRM2______.isVisible">
+											<q-col
+												v-if="controls.PROPR02_PROPRQTD_WC__.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR02_PROPRQTD_WC__.isVisible"
 													class="i-text"
 													v-bind="controls.PROPR02_PROPRQTD_WC__"
 													v-on="controls.PROPR02_PROPRQTD_WC__.handlers"
@@ -276,11 +287,12 @@
 														v-bind="controls.PROPR02_PROPRQTD_WC__.props"
 														@update:model-value="model.ValQtd_wc.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PROPR02_PROPRQTDQUART.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PROPR02_PROPRQTDQUART.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR02_PROPRQTDQUART.isVisible"
 													class="i-text"
 													v-bind="controls.PROPR02_PROPRQTDQUART"
 													v-on="controls.PROPR02_PROPRQTDQUART.handlers"
@@ -292,11 +304,12 @@
 														v-bind="controls.PROPR02_PROPRQTDQUART.props"
 														@update:model-value="model.ValQtdquart.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PROPR02_PROPRM2______.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PROPR02_PROPRM2______.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR02_PROPRM2______.isVisible"
 													class="i-text"
 													v-bind="controls.PROPR02_PROPRM2______"
 													v-on="controls.PROPR02_PROPRM2______.handlers"
@@ -308,13 +321,14 @@
 														v-bind="controls.PROPR02_PROPRM2______.props"
 														@update:model-value="model.ValM2.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PROPR02_PROPRDTDISPON.isVisible">
-											<q-control-wrapper
-												v-show="controls.PROPR02_PROPRDTDISPON.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PROPR02_PROPRDTDISPON.isVisible">
+											<q-col
+												v-if="controls.PROPR02_PROPRDTDISPON.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR02_PROPRDTDISPON.isVisible"
 													class="i-text"
 													v-bind="controls.PROPR02_PROPRDTDISPON"
 													v-on="controls.PROPR02_PROPRDTDISPON.handlers"
@@ -328,8 +342,8 @@
 														@reset-icon-click="model.ValDtdispon.fnUpdateValue(model.ValDtdispon.originalValue ?? new Date())"
 														@update:model-value="model.ValDtdispon.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 								<section
@@ -339,22 +353,20 @@
 										id="PROPR00_PSEUDPROPR01_"
 										role="tabpanel"
 										aria-labelledby="tab-container-PROPR00_PSEUDPROPR01_">
-										<q-row-container
-											v-show="controls.PROPR01_PSEUDNOVOGR01.isVisible"
-											is-large>
-											<q-control-wrapper
-												v-show="controls.PROPR01_PSEUDNOVOGR01.isVisible"
-												class="row-line-group">
+										<q-row v-if="controls.PROPR01_PSEUDNOVOGR01.isVisible">
+											<q-col v-if="controls.PROPR01_PSEUDNOVOGR01.isVisible">
 												<q-group-box-container
+													v-if="controls.PROPR01_PSEUDNOVOGR01.isVisible"
 													id="PROPR01_PSEUDNOVOGR01"
 													v-bind="controls.PROPR01_PSEUDNOVOGR01"
 													:is-visible="controls.PROPR01_PSEUDNOVOGR01.isVisible">
 													<!-- Start PROPR01_PSEUDNOVOGR01 -->
-													<q-row-container v-show="controls.PROPR01_PROPRENDERECO.isVisible || controls.PROPR01_PROPRLOCALIDA.isVisible">
-														<q-control-wrapper
-															v-show="controls.PROPR01_PROPRENDERECO.isVisible"
-															class="control-join-group">
+													<q-row v-if="controls.PROPR01_PROPRENDERECO.isVisible || controls.PROPR01_PROPRLOCALIDA.isVisible">
+														<q-col
+															v-if="controls.PROPR01_PROPRENDERECO.isVisible"
+															cols="auto">
 															<base-input-structure
+																v-if="controls.PROPR01_PROPRENDERECO.isVisible"
 																class="i-textarea"
 																v-bind="controls.PROPR01_PROPRENDERECO"
 																v-on="controls.PROPR01_PROPRENDERECO.handlers"
@@ -366,11 +378,12 @@
 																	v-bind="controls.PROPR01_PROPRENDERECO.props"
 																	v-on="controls.PROPR01_PROPRENDERECO.handlers" />
 															</base-input-structure>
-														</q-control-wrapper>
-														<q-control-wrapper
-															v-show="controls.PROPR01_PROPRLOCALIDA.isVisible"
-															class="control-join-group">
+														</q-col>
+														<q-col
+															v-if="controls.PROPR01_PROPRLOCALIDA.isVisible"
+															cols="auto">
 															<base-input-structure
+																v-if="controls.PROPR01_PROPRLOCALIDA.isVisible"
 																class="i-text"
 																v-bind="controls.PROPR01_PROPRLOCALIDA"
 																v-on="controls.PROPR01_PROPRLOCALIDA.handlers"
@@ -382,13 +395,14 @@
 																	@blur="onBlur(controls.PROPR01_PROPRLOCALIDA, model.ValLocalida.value)"
 																	@change="model.ValLocalida.fnUpdateValueOnChange" />
 															</base-input-structure>
-														</q-control-wrapper>
-													</q-row-container>
-													<q-row-container v-show="controls.PROPR01_PROPRPOSTALCO.isVisible || controls.PROPR01_PROPRPOSTALLO.isVisible">
-														<q-control-wrapper
-															v-show="controls.PROPR01_PROPRPOSTALCO.isVisible || controls.PROPR01_PROPRPOSTALLO.isVisible"
-															class="control-join-group">
+														</q-col>
+													</q-row>
+													<q-row v-if="controls.PROPR01_PROPRPOSTALCO.isVisible || controls.PROPR01_PROPRPOSTALLO.isVisible">
+														<q-col
+															v-if="controls.PROPR01_PROPRPOSTALCO.isVisible || controls.PROPR01_PROPRPOSTALLO.isVisible"
+															cols="auto">
 															<base-input-structure
+																v-if="controls.PROPR01_PROPRPOSTALCO.isVisible"
 																class="i-text"
 																v-bind="controls.PROPR01_PROPRPOSTALCO"
 																v-on="controls.PROPR01_PROPRPOSTALCO.handlers"
@@ -401,6 +415,7 @@
 																	@change="model.ValPostalco.fnUpdateValueOnChange" />
 															</base-input-structure>
 															<base-input-structure
+																v-if="controls.PROPR01_PROPRPOSTALLO.isVisible"
 																class="i-text"
 																v-bind="controls.PROPR01_PROPRPOSTALLO"
 																v-on="controls.PROPR01_PROPRPOSTALLO.handlers"
@@ -412,13 +427,14 @@
 																	@blur="onBlur(controls.PROPR01_PROPRPOSTALLO, model.ValPostallo.value)"
 																	@change="model.ValPostallo.fnUpdateValueOnChange" />
 															</base-input-structure>
-														</q-control-wrapper>
-													</q-row-container>
-													<q-row-container v-show="controls.PROPR01_CNTRYCOUNTRY_.isVisible || controls.PROPR01_REGIOREGIAO__.isVisible">
-														<q-control-wrapper
-															v-show="controls.PROPR01_CNTRYCOUNTRY_.isVisible"
-															class="control-join-group">
+														</q-col>
+													</q-row>
+													<q-row v-if="controls.PROPR01_CNTRYCOUNTRY_.isVisible || controls.PROPR01_REGIOREGIAO__.isVisible">
+														<q-col
+															v-if="controls.PROPR01_CNTRYCOUNTRY_.isVisible"
+															cols="auto">
 															<base-input-structure
+																v-if="controls.PROPR01_CNTRYCOUNTRY_.isVisible"
 																class="i-text"
 																v-bind="controls.PROPR01_CNTRYCOUNTRY_"
 																v-on="controls.PROPR01_CNTRYCOUNTRY_.handlers"
@@ -434,11 +450,12 @@
 																	v-bind="controls.PROPR01_CNTRYCOUNTRY_.seeMoreParams"
 																	v-on="controls.PROPR01_CNTRYCOUNTRY_.handlers" />
 															</base-input-structure>
-														</q-control-wrapper>
-														<q-control-wrapper
-															v-show="controls.PROPR01_REGIOREGIAO__.isVisible"
-															class="control-join-group">
+														</q-col>
+														<q-col
+															v-if="controls.PROPR01_REGIOREGIAO__.isVisible"
+															cols="auto">
 															<base-input-structure
+																v-if="controls.PROPR01_REGIOREGIAO__.isVisible"
 																class="i-text"
 																v-bind="controls.PROPR01_REGIOREGIAO__"
 																v-on="controls.PROPR01_REGIOREGIAO__.handlers"
@@ -454,17 +471,18 @@
 																	v-bind="controls.PROPR01_REGIOREGIAO__.seeMoreParams"
 																	v-on="controls.PROPR01_REGIOREGIAO__.handlers" />
 															</base-input-structure>
-														</q-control-wrapper>
-													</q-row-container>
+														</q-col>
+													</q-row>
 													<!-- End PROPR01_PSEUDNOVOGR01 -->
 												</q-group-box-container>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PROPR01_PROPRCOORDGEO.isVisible">
-											<q-control-wrapper
-												v-show="controls.PROPR01_PROPRCOORDGEO.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PROPR01_PROPRCOORDGEO.isVisible">
+											<q-col
+												v-if="controls.PROPR01_PROPRCOORDGEO.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR01_PROPRCOORDGEO.isVisible"
 													class="i-text"
 													v-bind="controls.PROPR01_PROPRCOORDGEO"
 													v-on="controls.PROPR01_PROPRCOORDGEO.handlers"
@@ -476,8 +494,8 @@
 														@blur="onBlur(controls.PROPR01_PROPRCOORDGEO, model.ValCoordgeo.value)"
 														@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 								<section
@@ -487,11 +505,12 @@
 										id="PROPR00_PSEUDPROPR03_"
 										role="tabpanel"
 										aria-labelledby="tab-container-PROPR00_PSEUDPROPR03_">
-										<q-row-container v-show="controls.PROPR03_PROPRDESCRIPT.isVisible">
-											<q-control-wrapper
-												v-show="controls.PROPR03_PROPRDESCRIPT.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PROPR03_PROPRDESCRIPT.isVisible">
+											<q-col
+												v-if="controls.PROPR03_PROPRDESCRIPT.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPR03_PROPRDESCRIPT.isVisible"
 													class="i-text"
 													v-bind="controls.PROPR03_PROPRDESCRIPT"
 													v-on="controls.PROPR03_PROPRDESCRIPT.handlers"
@@ -503,16 +522,16 @@
 														v-bind="controls.PROPR03_PROPRDESCRIPT.props"
 														v-on="controls.PROPR03_PROPRDESCRIPT.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 							</template>
 						</q-tab-container>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -521,7 +540,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -530,6 +549,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -541,12 +561,12 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import { computed, defineAsyncComponent, readonly } from 'vue'
 	import { useRoute } from 'vue-router'
 
@@ -566,7 +586,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import FormViewModel from './QFormPropr00ViewModel.js'
 
@@ -647,7 +667,8 @@
 					primaryKey: 'ValCodpropr',
 					designation: computed(() => genericFunctions.formatString(this.Resources._PROPR__NAME_39336, vm.model.ValName.displayValue)),
 					identifier: '', // Unique identifier received by route (when it's nested).
-					mode: ''
+					mode: '',
+					availableAgents: [],
 				},
 
 				formButtons: {
@@ -755,7 +776,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -893,7 +918,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPR00_PSEUDNOVOGR02',
 						maxLength: 85,
-						labelId: 'label_PROPR00_PROPRNAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -1151,7 +1175,6 @@
 						container: 'PROPR01_PSEUDNOVOGR01',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						maxLength: 50,
-						labelId: 'label_PROPR01_PROPRLOCALIDA',
 						controlLimits: [
 						],
 					}, this),
@@ -1167,7 +1190,6 @@
 						container: 'PROPR01_PSEUDNOVOGR01',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						maxLength: 20,
-						labelId: 'label_PROPR01_PROPRPOSTALCO',
 						controlLimits: [
 						],
 					}, this),
@@ -1183,7 +1205,6 @@
 						container: 'PROPR01_PSEUDNOVOGR01',
 						tab: 'PROPR00_PSEUDPROPR01_',
 						maxLength: 50,
-						labelId: 'label_PROPR01_PROPRPOSTALLO',
 						controlLimits: [
 						],
 					}, this),
@@ -1286,6 +1307,7 @@
 						],
 					}, this),
 					formTabs: new fieldControlClass.TabsControl({
+						id: 'formTabs',
 						tabControlsIds: readonly([
 							'PROPR00_PSEUDPROPR02_',
 							'PROPR00_PSEUDPROPR01_',
@@ -1448,11 +1470,9 @@
 			 */
 			async beforeLoad()
 			{
-				let loadForm = true
-
 				// Execute the "Before init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-load-form')
@@ -1462,7 +1482,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return loadForm
+				return true
 			},
 
 			/**
@@ -1472,7 +1492,7 @@
 			{
 				// Execute the "After init" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterInit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-load-form')
@@ -1492,19 +1512,33 @@
 
 				// Execute the "Before apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1525,7 +1559,7 @@
 			{
 				// Execute the "After apply" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterApply)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-apply-form')
@@ -1545,19 +1579,33 @@
 
 				// Execute the "Before save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1576,11 +1624,9 @@
 			 */
 			async afterSave()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "After save" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterSave)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-save-form')
@@ -1590,7 +1636,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1598,8 +1644,6 @@
 			 */
 			async beforeDel()
 			{
-				let deleteForm = true // Set to 'false' to cancel form delete.
-
 				this.emitEvent('before-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1607,7 +1651,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return deleteForm
+				return true
 			},
 
 			/**
@@ -1615,8 +1659,6 @@
 			 */
 			async afterDel()
 			{
-				let redirectPage = true // Set to 'false' to cancel page redirect.
-
 				this.emitEvent('after-delete-form')
 
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
@@ -1624,7 +1666,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return redirectPage
+				return true
 			},
 
 			/**
@@ -1632,11 +1674,9 @@
 			 */
 			async beforeExit()
 			{
-				let leaveForm = true // Set to 'false' to cancel page redirect.
-
 				// Execute the "Before exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.beforeExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('before-exit-form')
@@ -1646,7 +1686,7 @@
 // eslint-disable-next-line
 /* eslint-enable indent, vue/html-indent, vue/script-indent */
 
-				return leaveForm
+				return true
 			},
 
 			/**
@@ -1656,7 +1696,7 @@
 			{
 				// Execute the "After exit" triggers.
 				const triggers = this.getTriggers(qEnums.triggerEvents.afterExit)
-				for (let trigger of triggers)
+				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
 				this.emitEvent('after-exit-form')
@@ -1717,6 +1757,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROPR00]/
 // eslint-disable-next-line
@@ -1724,18 +1765,6 @@
 		},
 
 		watch: {
-			// Watchers for changes in the state of tabs.
-			'controls.formTabs.selectedTab'(newVal)
-			{
-				const data = {
-					navigationId: this.navigationId,
-					key: this.storeKey,
-					formInfo: this.formInfo,
-					fieldId: 'formTabs',
-					containerState: newVal
-				}
-				this.storeContainerState(data)
-			},
 		}
 	}
 </script>

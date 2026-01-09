@@ -54,29 +54,19 @@ namespace CSGenio.business
 			info.BatchSync = 100;
 			info.SyncType = SyncType.Central;
 					
-			info.RegisterFieldDB(new Field(info.Alias, "codtblcfg", FieldType.KEY_GUID));
-			info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.KEY_GUID));
-			info.RegisterFieldDB(new Field(info.Alias, "uuid", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "codtblcfg", FieldType.KEY_GUID));
+            info.RegisterFieldDB(new Field(info.Alias, "codpsw", FieldType.KEY_GUID));
+            info.RegisterFieldDB(new Field(info.Alias, "uuid", FieldType.TEXT));
             info.RegisterFieldDB(new Field(info.Alias, "name", FieldType.TEXT));
-			List<ByAreaArguments> argumentsListByArea = new List<ByAreaArguments>();
-			argumentsListByArea.Add(new ByAreaArguments(new string[] {"uuid","name"}, new int[] {0,1}, "tblcfg", "codtblcfg"));
-			info.RegisterFieldDB(new Field(info.Alias, "configid", FieldType.TEXT){
-				Formula = new InternalOperationFormula(argumentsListByArea, 3, delegate(object[] args, User user, string module, PersistentSupport sp) {
-					return ((string)args[0])+((string)args[1])+((string)args[2]);
-				}),
-				NotDup = true,
-				PrefNDup = "codpsw"
-			});
-			info.RegisterFieldDB(new Field(info.Alias, "config", FieldType.TEXT));
-			info.RegisterFieldDB(new Field(info.Alias, "usrsetv", FieldType.INTEGER));
+            info.RegisterFieldDB(new Field(info.Alias, "config", FieldType.TEXT));
+            info.RegisterFieldDB(new Field(info.Alias, "usrsetv", FieldType.INTEGER));
             info.RegisterFieldDB(new Field(info.Alias, "date", FieldType.DATETIMESECONDS));
+            info.RegisterFieldDB(new Field(info.Alias, "isdefault", FieldType.LOGIC));
             info.RegisterFieldDB(new Field(info.Alias, "zzstate", FieldType.INTEGER));
 
             // Carimbos automáticos na BD
             //------------------------------
-   			info.StampFieldsIns = new string[] {
-             "date"
-			};
+            info.StampFieldsIns = ["date"];
 
 			// Relações Filhas
 			//------------------------------
@@ -123,106 +113,104 @@ namespace CSGenio.business
         public string FormMode { get; set; }
         public string ResultMsg { get; set; }
 
-        ////////////////////////////////////////////////////////////////////////////BD fields CONVERTED TO Areainfo style
-        /// <summary>Campo : "PK da tabela tblcfg" Tipo: "+" Formula:  ""</summary>
-        public static FieldRef FldCodtblcfg { get { return m_fldCodtblcfg; } }
-        private static FieldRef m_fldCodtblcfg = new FieldRef("tblcfg", "codtblcfg");
+        /// <summary>Campo: "PK da tabela tblcfg" Tipo: "+"</summary>
+        public static FieldRef FldCodtblcfg => m_fldCodtblcfg;
+        private static readonly FieldRef m_fldCodtblcfg = new("tblcfg", "codtblcfg");
 
-        /// <summary>Campo : "PK da tabela tblcfg" Tipo: "+" Formula:  ""</summary>
+        /// <summary>Campo: "PK da tabela tblcfg" Tipo: "+"</summary>
         public string ValCodtblcfg
         {
             get { return (string)returnValueField(FldCodtblcfg); }
             set { insertNameValueField(FldCodtblcfg, value); }
         }
 
-        /// <summary>Campo : "PK da tabela psw" Tipo: "+" Formula:  ""</summary>
-        public static FieldRef FldCodpsw { get { return m_fldCodpsw; } }
-        private static FieldRef m_fldCodpsw = new FieldRef("tblcfg", "codpsw");
+        /// <summary>Campo: "PK da tabela psw" Tipo: "+"</summary>
+        public static FieldRef FldCodpsw => m_fldCodpsw;
+        private static readonly FieldRef m_fldCodpsw = new("tblcfg", "codpsw");
 
-        /// <summary>Campo : "PK da tabela psw" Tipo: "+" Formula:  ""</summary>
+        /// <summary>Campo: "PK da tabela psw" Tipo: "+"</summary>
         public string ValCodpsw
         {
             get { return (string)returnValueField(FldCodpsw); }
             set { insertNameValueField(FldCodpsw, value); }
         }
 
-        /// <summary>Campo : "uuid" Tipo: "C" Formula:  ""</summary>
-        public static FieldRef FldUuid { get { return m_fldUuid; } }
-        private static FieldRef m_fldUuid = new FieldRef("tblcfg", "uuid");
+        /// <summary>Campo: "uuid" Tipo: "C"</summary>
+        public static FieldRef FldUuid => m_fldUuid;
+        private static readonly FieldRef m_fldUuid = new("tblcfg", "uuid");
 
-        /// <summary>Campo : "uuid" Tipo: "C" Formula:  ""</summary>
+        /// <summary>Campo: "uuid" Tipo: "C"</summary>
         public string ValUuid
         {
             get { return (string)returnValueField(FldUuid); }
             set { insertNameValueField(FldUuid, value); }
         }
 
-        /// <summary>Campo : "Nome da lista" Tipo: "C" Formula:  ""</summary>
-        public static FieldRef FldName { get { return m_fldName; } }
-        private static FieldRef m_fldName = new FieldRef("tblcfg", "name");
+        /// <summary>Campo: "Nome da lista" Tipo: "C"</summary>
+        public static FieldRef FldName => m_fldName;
+        private static readonly FieldRef m_fldName = new("tblcfg", "name");
 
-        /// <summary>Campo : "Nome da lista" Tipo: "C" Formula:  ""</summary>
+        /// <summary>Campo: "Nome da lista" Tipo: "C"</summary>
         public string ValName
         {
             get { return (string)returnValueField(FldName); }
             set { insertNameValueField(FldName, value); }
         }
-		
-		/// <summary>Campo : "configid" Tipo: "C" Formula:  ""</summary>
-        public static FieldRef FldConfigid { get { return m_fldConfigid; } }
-        private static FieldRef m_fldConfigid = new FieldRef("tblcfg", "configid");
 
-        /// <summary>Campo : "configid" Tipo: "C" Formula:  ""</summary>
-        public string ValConfigid
-        {
-            get { return (string)returnValueField(FldConfigid); }
-            set { insertNameValueField(FldConfigid, value); }
-        }
-		
-		/// <summary>Campo : "Config" Tipo: "C" Formula:  ""</summary>
-        public static FieldRef FldConfig { get { return m_fldConfig; } }
-        private static FieldRef m_fldConfig = new FieldRef("tblcfg", "config");
+        /// <summary>Campo: "Config" Tipo: "C"</summary>
+        public static FieldRef FldConfig => m_fldConfig;
+        private static readonly FieldRef m_fldConfig = new("tblcfg", "config");
 
-        /// <summary>Campo : "Config" Tipo: "C" Formula:  ""</summary>
+        /// <summary>Campo: "Config" Tipo: "C"</summary>
         public string ValConfig
         {
             get { return (string)returnValueField(FldConfig); }
             set { insertNameValueField(FldConfig, value); }
         }
-		
-		/// <summary>Campo : "User settings version" Tipo: "INT" Formula:  ""</summary>
-        public static FieldRef FldUsrsetv { get { return m_fldUsrsetv; } }
-        private static FieldRef m_fldUsrsetv = new FieldRef("tblcfg", "usrsetv");
 
-        /// <summary>Campo : "User settings version" Tipo: "INT"</summary>
+        /// <summary>Campo: "User settings version" Tipo: "N"</summary>
+        public static FieldRef FldUsrsetv => m_fldUsrsetv;
+        private static readonly FieldRef m_fldUsrsetv = new("tblcfg", "usrsetv");
+
+        /// <summary>Campo: "User settings version" Tipo: "N"</summary>
         public int ValUsrsetv
         {
             get { return (int)returnValueField(FldUsrsetv); }
             set { insertNameValueField(FldUsrsetv, value); }
         }
 
-        /// <summary>Campo : "Criação: Date" Tipo: "OD" Formula:  ""</summary>
-        public static FieldRef FldDate { get { return m_fldDate; } }
-        private static FieldRef m_fldDate = new FieldRef("tblcfg", "date");
+        /// <summary>Campo: "Criação: Date" Tipo: "OD"</summary>
+        public static FieldRef FldDate => m_fldDate;
+        private static readonly FieldRef m_fldDate = new("tblcfg", "date");
 
-        /// <summary>Campo : "Criação: Date" Tipo: "OD" Formula:  ""</summary>
+        /// <summary>Campo: "Criação: Date" Tipo: "OD"</summary>
         public DateTime ValDate
         {
             get { return (DateTime)returnValueField(FldDate); }
             set { insertNameValueField(FldDate, value); }
         }
 
-        /// <summary>Campo : "ZZSTATE" Tipo: "INT" Formula:  ""</summary>
-        public static FieldRef FldZzstate { get { return m_fldZzstate; } }
-        private static FieldRef m_fldZzstate = new FieldRef("tblcfg", "zzstate");
+        /// <summary>Campo: "ISDEFAULT" Tipo: "L"</summary>
+        public static FieldRef FldIsdefault => m_fldIsdefault;
+        private static readonly FieldRef m_fldIsdefault = new("tblcfg", "isdefault");
 
-        /// <summary>Campo : "ZZSTATE" Tipo: "INT"</summary>
+        /// <summary>Campo: "ISDEFAULT" Tipo: "L"</summary>
+        public int ValIsdefault
+        {
+            get { return (int)returnValueField(FldIsdefault); }
+            set { insertNameValueField(FldIsdefault, value); }
+        }
+
+        /// <summary>Campo: "ZZSTATE" Tipo: "N"</summary>
+        public static FieldRef FldZzstate => m_fldZzstate;
+        private static readonly FieldRef m_fldZzstate = new("tblcfg", "zzstate");
+
+        /// <summary>Campo: "ZZSTATE" Tipo: "N"</summary>
         public int ValZzstate
         {
             get { return (int)returnValueField(FldZzstate); }
             set { insertNameValueField(FldZzstate, value); }
         }
-
 
         /// <summary>
         /// Obtains a partially populated area with the record corresponding to a primary key
@@ -233,11 +221,11 @@ namespace CSGenio.business
         /// <param name="fields">The fields to be filled in the area</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-		public static CSGenioAtblcfg search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioAtblcfg search(PersistentSupport sp, string key, User user, string[] fields = null)
         {
             if (string.IsNullOrEmpty(key)) //para proteger chamadas "cegas"
                 return null;
-            CSGenioAtblcfg area = new CSGenioAtblcfg(user, user.CurrentModule);
+            CSGenioAtblcfg area = new(user, user.CurrentModule);
             if (sp.getRecord(area, key, fields))
                 return area;
             return null;
@@ -254,7 +242,7 @@ namespace CSGenio.business
         {
             return searchList(sp, User, where, null);
         }
-   
+
         /// <summary>
         /// Procura todos os registos desta area que obedecem a uma condição
         /// </summary>
@@ -268,7 +256,7 @@ namespace CSGenio.business
         {
             return sp.searchListWhere<CSGenioAtblcfg>(where, User, campos);
         }
-		
+
         /// <summary>
         /// Procura todos os registos desta area que obedecem a uma condição
         /// </summary>
@@ -280,11 +268,11 @@ namespace CSGenio.business
         /// <param name="noLock">NOLOCK</param>
         /// <returns>Uma lista de registos da areas com todos os campos preenchidos</returns>
         /// <remarks>Não devem ser utilizadas operações de persistence sobre um registo parcialmente posicionado</remarks>
-		public static void searchListAdvancedWhere(PersistentSupport sp, User User, CriteriaSet where, ListingMVC<CSGenioAtblcfg> listing)
+        public static void searchListAdvancedWhere(PersistentSupport sp, User User, CriteriaSet where, ListingMVC<CSGenioAtblcfg> listing)
         {
             sp.searchListAdvancedWhere<CSGenioAtblcfg>(where, listing);
         }
-		
+
         /// <summary>
         /// Procura todos os registos desta area que obedecem a uma condição
         /// </summary>
@@ -311,7 +299,7 @@ namespace CSGenio.business
         /// <param name="distinct">Obter distinct de campos</param>
         /// <returns>Uma lista de registos da areas com todos os campos preenchidos</returns>
         /// <remarks>Não devem ser utilizadas operações de persistence sobre um registo parcialmente posicionado</remarks>
-		public static List<CSGenioAtblcfg> searchList(PersistentSupport sp, User User, CriteriaSet where, bool distinct, bool noLock = false)
+        public static List<CSGenioAtblcfg> searchList(PersistentSupport sp, User User, CriteriaSet where, bool distinct, bool noLock = false)
         {
             return searchList(sp, User, where, null, distinct, noLock);
         }

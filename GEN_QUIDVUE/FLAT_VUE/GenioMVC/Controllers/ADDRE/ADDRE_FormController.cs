@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW ADDRE]/
 
 		[HttpPost]
-		public ActionResult Addre_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Addre_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Addre_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Addre_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Addre_Show_GET",
 				AreaName = "addre",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET ADDRE]/
 		[HttpPost]
-		public ActionResult Addre_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Addre_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Addre_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Addre_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Addre_New_GET",
 				AreaName = "addre",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Addre_New([FromBody]Addre_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Addre_New",
 				ViewName = "Addre",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET ADDRE]/
 		[HttpPost]
-		public ActionResult Addre_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Addre_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Addre_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Addre_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Addre_Edit_GET",
 				AreaName = "addre",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Addre_Edit([FromBody]Addre_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Addre_Edit",
 				ViewName = "Addre",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET ADDRE]/
 		[HttpPost]
-		public ActionResult Addre_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Addre_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Addre_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Addre_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Addre_Delete_GET",
 				AreaName = "addre",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Addre/Addre_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST ADDRE]/
 		[HttpPost]
-		public ActionResult Addre_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Addre_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Addre_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Addre_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Addre_Delete",
 				ViewName = "Addre",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET ADDRE]/
 
 		[HttpPost]
-		public ActionResult Addre_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Addre_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Addre_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Addre_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Addre_Duplicate_GET",
 				AreaName = "addre",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Addre_Duplicate([FromBody]Addre_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Addre_Duplicate",
 				ViewName = "Addre",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Addre(UserContext.Current);
+					GenioMVC.Models.Addre model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("addre");
 
 // USE /[MANUAL GQT BEFORE_CANCEL ADDRE]/

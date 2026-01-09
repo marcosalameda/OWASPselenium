@@ -3,11 +3,11 @@
 	<Definicoes>
 		<Sistema>GQT</Sistema>
 		<Cliente>QUIDVUE</Cliente>
-		<Versao>4107</Versao>
+		<Versao>4420</Versao>
 	</Definicoes>
 	<Modulos>
 		<Modulo ID="Reindex">
-			<PROG>Templates ReindexaÃ§Ã£o</PROG>
+			<PROG>Templates Reindexação</PROG>
 			<PLATAFOR>REINDEX</PLATAFOR>
 		</Modulo>
 	</Modulos>

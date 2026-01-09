@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MB_MC_T]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuPTN_LIST_DB_MB_MC_TViewModel.js'
 
@@ -229,8 +230,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -337,7 +337,7 @@
 												fnValueSelector: (row) => row.ValCoddespe
 											},
 										],
-										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_BUTTONTRIGGERTEST2,
+										action: vm.openRoutineAction, type: 'routine', actionRoutine: this.PTN_MenuMC_BUTTONTRIGGERTEST2
 									}
 								},
 							],
@@ -352,7 +352,7 @@
 												fnValueSelector: (row) => row.ValCoddespe
 											},
 										],
-										action: vm.PTN_MenuTR_3C1111, type: 'trigger',
+										action: vm.PTN_MenuTR_3C1111, type: 'trigger'
 									}
 								},
 								{
@@ -365,13 +365,14 @@
 												fnValueSelector: (row) => row.ValCoddespe
 											},
 										],
-										action: vm.PTN_MenuTR_3C1121, type: 'trigger',
+										action: vm.PTN_MenuTR_3C1121, type: 'trigger'
 									}
 								},
 							],
 							rowClickAction: {
 								id: 'RCA_PTN_3C111',
 								name: 'PTN_MenuMC_BUTTONTRIGGERTEST2',
+								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -395,10 +396,17 @@
 								sortOrder: 'asc'
 							}
 						},
+						actionIDs: [
+							'PTN_BUTTONTRIGGERTEST2',
+						],
 						globalEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: 'eba2dc82-74d0-42e8-8065-49dba77ea064',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
+					}, this),
+					PTN_BUTTONTRIGGERTEST2: new controlClass.ButtonControl({
+						id: 'PTN_BUTTONTRIGGERTEST2',
 					}, this),
 				}
 			}
@@ -464,16 +472,14 @@
 			 * Event triggered by a click on the trigger button 3C1111.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3C1111(listConf, actionCfg, row)
 			{
 				const id = row.rowKey
 
 				// Parallel trigger execution.
 				await Promise.all([
-					Promise.resolve((async () => {
-						await this.PTN_MenuTR_3C1111_EMPTYDESCRIPTION_1(id)
-					})()),
+					this.PTN_MenuTR_3C1111_EMPTYDESCRIPTION_1(id),
 				])
 			},
 
@@ -481,7 +487,7 @@
 			 * Client-side component of action #1 (FLDUPDT) of trigger EMPTYDESCRIPTION.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3C1111_EMPTYDESCRIPTION_1(id)
 			{
 				try
@@ -532,7 +538,7 @@
 			 * Client-side component of action #2 (PREFRESH) of trigger EMPTYDESCRIPTION.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3C1111_EMPTYDESCRIPTION_2(id)
 			{
 				await this.loadList()
@@ -543,16 +549,14 @@
 			 * Event triggered by a click on the trigger button 3C1121.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3C1121(listConf, actionCfg, row)
 			{
 				const id = row.rowKey
 
 				// Parallel trigger execution.
 				await Promise.all([
-					Promise.resolve((async () => {
-						await this.PTN_MenuTR_3C1121_FILLDESCRIPTION_1(id)
-					})()),
+					this.PTN_MenuTR_3C1121_FILLDESCRIPTION_1(id),
 				])
 			},
 
@@ -560,7 +564,7 @@
 			 * Client-side component of action #1 (FLDUPDT) of trigger FILLDESCRIPTION.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3C1121_FILLDESCRIPTION_1(id)
 			{
 				try
@@ -611,7 +615,7 @@
 			 * Client-side component of action #2 (PREFRESH) of trigger FILLDESCRIPTION.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_3C1121_FILLDESCRIPTION_2(id)
 			{
 				await this.loadList()

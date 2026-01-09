@@ -1,60 +1,41 @@
 ﻿<template>
 	<teleport
-		v-if="(showPopup || showInline) && showHeader"
-		:to="`#q-modal-${modalId}-header`"
-		:key="domKey">
-		<h2
-			class="c-modal__header-title"
-			:id="`q-modal-${modalId}_title`">
-			{{ texts.saveViewText }}
-		</h2>
-	</teleport>
-
-	<teleport
 		v-if="(showPopup || showInline) && showBody"
 		:to="`#q-modal-${modalId}-body`"
 		:key="domKey">
-		<q-control-wrapper class="control-join-group view-save-form">
-			<base-input-structure
-				id="save-view-name"
-				class="i-text"
-				is-required
-				:label="texts.viewNameText"
-				:label-attrs="{ class: 'i-text__label' }">
+		<q-row align="end">
+			<q-col cols="auto">
 				<q-text-field
-					id="save-view-name"
 					v-model="saveViewName"
+					required
 					size="large"
 					:max-length="50"
-					:class="{ 'error': message }" />
-
-				<div
-					v-if="message"
-					class="btn-popover error">
-					<q-icon icon="exclamation-sign" />
-					{{ message }}
-				</div>
-			</base-input-structure>
-
-			<base-input-structure
-				id="save-view-is-selected"
-				class="i-checkbox"
-				label-position="right"
-				:label="texts.setDefaultViewText"
-				:label-attrs="{ class: 'i-checkbox__label' }">
-				<template #label>
-					<q-checkbox-input
-						id="save-view-is-selected"
-						v-model="saveViewIsSelected" />
-				</template>
-				<div
-					v-if="message"
-					class="btn-popover invisible">
-					<q-icon icon="exclamation-sign" />
-					{{ message }}
-				</div>
-			</base-input-structure>
-		</q-control-wrapper>
+					:label="texts.viewNameText"
+					:invalid="!!message">
+					<template
+						#extras
+						v-if="message">
+						<div class="btn-popover error">
+							<q-icon icon="exclamation-sign" />
+							{{ message }}
+						</div>
+					</template>
+				</q-text-field>
+			</q-col>
+			<q-col>
+				<q-checkbox
+					v-model="saveViewIsSelected"
+					:label="texts.setDefaultViewText">
+					<template
+						#extras
+						v-if="message">
+						<div class="btn-popover invisible">
+							{{ message }}
+						</div>
+					</template>
+				</q-checkbox>
+			</q-col>
+		</q-row>
 	</teleport>
 
 	<teleport
@@ -83,18 +64,10 @@
 <script>
 	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
-	import QControlWrapper from '@/components/ControlWrapper.vue'
-	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'
-
 	export default {
 		name: 'QTableViewSave',
 
 		emits: ['show-popup', 'hide-popup', 'set-property', 'save-view', 'rename-view', 'copy-view'],
-
-		components: {
-			QControlWrapper,
-			BaseInputStructure
-		},
 
 		inheritAttrs: false,
 
@@ -124,14 +97,6 @@
 			},
 
 			/**
-			 * Indicates if the operation should be handled through server-side logic.
-			 */
-			serverMode: {
-				type: Boolean,
-				default: false
-			},
-
-			/**
 			 * A list of existing configuration or view names, used to check for duplicates when saving.
 			 */
 			configNames: {
@@ -146,7 +111,6 @@
 			return {
 				showPopup: false,
 				showInline: false,
-				showHeader: true,
 				showBody: true,
 				showFooter: true,
 				domKey: 0,
@@ -177,7 +141,7 @@
 				if (this.signal.mode === 'DUPLICATE' && this.signal.copyFromName !== undefined && this.signal.copyFromName !== null) {
 					this.$emit('copy-view', {
 						name: this.saveViewName,
-						isSelected: this.saveViewIsSelected,
+						isSelected: this.saveViewIsSelected ? 1 : 0,
 						copyFromName: this.signal.copyFromName
 					})
 					this.fnHidePopup()
@@ -185,7 +149,7 @@
 				else if (this.signal.mode === 'RENAME' && this.signal.renameFromName !== undefined && this.signal.renameFromName !== null) {
 					this.$emit('rename-view', {
 						name: this.saveViewName,
-						isSelected: this.saveViewIsSelected,
+						isSelected: this.saveViewIsSelected ? 1 : 0,
 						renameFromName: this.signal.renameFromName
 					})
 					this.fnHidePopup()
@@ -193,12 +157,10 @@
 				else {
 					this.$emit('save-view', {
 						name: this.saveViewName,
-						isSelected: this.saveViewIsSelected
+						isSelected: this.saveViewIsSelected ? 1 : 0
 					})
 					this.fnHidePopup()
 				}
-
-				this.$emit('set-property', ['confirmChanges'], false)
 			},
 
 			/**
@@ -225,8 +187,8 @@
 
 				// Check if view with this name already exists.
 				let viewExists = false
-				for (let idx in this.configNames) {
-					let configName = this.configNames[idx]
+				for (const idx in this.configNames) {
+					const configName = this.configNames[idx]
 					if (this.saveViewName === configName) {
 						viewExists = true
 						break
@@ -247,7 +209,7 @@
 		watch: {
 			signal: {
 				handler(newValue) {
-					for (let key in newValue) {
+					for (const key in newValue) {
 						switch (key) {
 							case 'show':
 								if (newValue.show) {
@@ -255,7 +217,7 @@
 								}
 								break
 							default:
-								if (['showInline', 'showHeader', 'showBody', 'showFooter'].includes(key)) {
+								if (['showInline', 'showBody', 'showFooter'].includes(key)) {
 									this[key] = newValue[key]
 								}
 								break

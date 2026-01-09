@@ -93,7 +93,7 @@
 
 		created()
 		{
-			let eMsgParams = this.$route.params.errorMessage
+			const eMsgParams = this.$route.params.errorMessage
 
 			if (typeof eMsgParams === 'string')
 				this.errorMessage = eMsgParams

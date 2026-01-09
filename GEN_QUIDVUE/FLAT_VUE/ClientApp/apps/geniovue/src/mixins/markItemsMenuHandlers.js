@@ -172,8 +172,8 @@ export default {
 				return
 
 			const params = {
-				SelectedIds: this.selectedItemsKeys,
-				DestinationId: this.selectedItemKey
+				selectedIds: this.selectedItemsKeys,
+				destinationId: this.selectedItemKey
 			}
 
 			// Add all selected.
@@ -181,7 +181,7 @@ export default {
 			if (allSelected.findIndex((e) => e === this.controls.firstTable.id) !== -1)
 				params.AllSelected = true
 
-			params.TableConfiguration = listFunctions.getTableConfiguration(this.controls.firstTable)
+			params.tableConfiguration = listFunctions.getTableConfiguration(this.controls.firstTable)
 
 			postData(
 				this.controls.firstTable.controller,

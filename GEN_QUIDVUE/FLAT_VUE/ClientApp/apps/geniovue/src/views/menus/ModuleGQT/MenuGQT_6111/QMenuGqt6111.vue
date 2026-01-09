@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_6111]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuGQT_6111ViewModel.js'
 
@@ -235,8 +236,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -344,7 +344,7 @@
 											},
 										],
 										isRoute: true,
-										action: vm.openMenuAction, type: 'menu', menuName: 'GQT_611111',
+										action: vm.openMenuAction, type: 'menu', menuName: 'GQT_611111'
 									}
 								},
 								{
@@ -360,7 +360,7 @@
 											},
 										],
 										isRoute: true,
-										action: vm.openMenuAction, type: 'menu', menuName: 'GQT_6111211',
+										action: vm.openMenuAction, type: 'menu', menuName: 'GQT_6111211'
 									}
 								},
 								{
@@ -376,7 +376,7 @@
 											},
 										],
 										isRoute: true,
-										action: vm.openMenuAction, type: 'menu', menuName: 'GQT_6111311',
+										action: vm.openMenuAction, type: 'menu', menuName: 'GQT_6111311'
 									}
 								},
 							],
@@ -385,6 +385,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_611111',
 								name: 'menu-GQT_611111',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -410,10 +411,25 @@
 								sortOrder: 'asc'
 							}
 						},
+						actionIDs: [
+							'GQT_61111',
+							'GQT_61112',
+							'GQT_61113',
+						],
 						globalEvents: ['changed-CMPNY', 'changed-CNTRY'],
 						uuid: 'a276a8c7-3344-4461-b524-47a2f8c9ef0a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
+					}, this),
+					GQT_61111: new controlClass.ButtonControl({
+						id: 'GQT_61111',
+					}, this),
+					GQT_61112: new controlClass.ButtonControl({
+						id: 'GQT_61112',
+					}, this),
+					GQT_61113: new controlClass.ButtonControl({
+						id: 'GQT_61113',
 					}, this),
 				}
 			}

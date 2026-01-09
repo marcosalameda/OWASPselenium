@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_3591]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -49,7 +50,7 @@
 </template>
 
 <script>
-	/* eslint-disable no-unused-vars */
+	/* eslint-disable @typescript-eslint/no-unused-vars */
 	import asyncProcM from '@quidgest/clientapp/composables/async'
 	import qEnums from '@quidgest/clientapp/constants/enums'
 	import netAPI from '@quidgest/clientapp/network'
@@ -69,7 +70,7 @@
 	import qApi from '@/api/genio/quidgestFunctions.js'
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
-	/* eslint-enable no-unused-vars */
+	/* eslint-enable @typescript-eslint/no-unused-vars */
 
 	import MenuViewModel from './QMenuSTY_3591ViewModel.js'
 
@@ -189,8 +190,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -206,6 +206,7 @@
 							rowClickAction: {
 								id: 'RCA_STY_35911',
 								name: 'menu-STY_35911',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -214,7 +215,7 @@
 											fnValueSelector: (row) => row.ValCodcfaqs
 										},
 									],
-									action: vm.openMenuAction, type: 'menu', menuName: 'STY_35911',
+									action: vm.openMenuAction, type: 'menu', menuName: 'STY_35911'
 								}
 							},
 							formsDefinition: {
@@ -293,6 +294,10 @@
 										rawValue: 'grid',
 										isMapped: false
 									},
+									gridMode: {
+										rawValue: 'fixed',
+										isMapped: false
+									},
 									containerAlignment: {
 										rawValue: 'left',
 										isMapped: false
@@ -319,6 +324,7 @@
 							},
 						],
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

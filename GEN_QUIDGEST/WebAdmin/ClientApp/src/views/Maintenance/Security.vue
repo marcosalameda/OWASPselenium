@@ -36,11 +36,11 @@
 							<span style="white-space: pre-line">
 								{{ Resources.E_UMA_CHAVE_USADA_PE64608 }}<br>
 								<b>{{ Resources.COMO_FUNCIONA_41713 }}</b><br><br>
-								<b>{{ Resources._1__CRIACAO_DO_DEK_21842 }}</b>
+								<b>{{ Resources._1__CRIACAO_DO_DEK_32052 }}</b>
 								{{ Resources.UM_DEK_E_CRIADO_DENT62777 }}<br>
-								<b>{{ Resources._2__PROTECAO_DO_DEK_52374 }}</b>
+								<b>{{ Resources._2__PROTECAO_DO_DEK_44233 }}</b>
 								{{ Resources.O_DEK_E_PROTEGIDO_PO18921 }}<br>
-								<b>{{ Resources._3__CRIPTOGRAFIA_DES22705 }}</b>
+								<b>{{ Resources._3__CRIPTOGRAFIA_DESC36757 }}</b>
 								{{ Resources.AO_ABRIR_O_BANCO_DE_49156 }}<br><br>
 								<b>{{ Resources.IMPORTANTE_LEMBRAR_30050 }}</b><br><br>
 								{{ Resources.__O_DEK_NAO_PODE_SER11689 }}<br>

@@ -59,7 +59,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "line";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -492,7 +491,12 @@ namespace CSGenio.business
 
 			// ROW_REORDERING
 			CriteriaSet criteria = CriteriaSet.And();
-			criteria.Equal(CSGenioAoutpu.FldCodoutpt, ValCodoutpt);
+			// For key fields, an empty prefix means 'no value', so we normalise it to null
+			// to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
+			// prefix to a database-safe value (e.g. Guid) before applying the equality filter.
+			var prefixField = DBFields[FldCodoutpt.Field];
+			object prefixRealValue = prefixField.isEmptyValue(ValCodoutpt) ? null : QueryUtils.ToValidDbValue(ValCodoutpt, prefixField);
+			criteria.Equal(FldCodoutpt, prefixRealValue);
 			sp.ReorderSequence(this, DBFields[FldLine.Field], criteria);
 
             return msg;

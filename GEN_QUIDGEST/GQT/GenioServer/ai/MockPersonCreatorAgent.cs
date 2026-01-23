@@ -81,11 +81,14 @@ namespace GenioServer.ai
                 $"- Never use real personal data, everything must be fictional.\n";
         }
 
-        public override void Execute(DbArea area, PersistentSupport sp, User user)
+        public override void Execute(DbArea area, PersistentSupport sp, User user, AgentContextData context = null)
         {
             LoadRecords(area, sp, user);
 
-            MockPersonCreatorResponse response = base.GetResponse<MockPersonCreatorResponse>(user);
+            if(context == null)
+                context = BuildAgentContext(user, area.QPrimaryKey);
+
+            MockPersonCreatorResponse response = base.GetResponse<MockPersonCreatorResponse>(context);
             if (response == null)
                 throw new FrameworkException("Answer from AI service was empty", "MockPersonCreatorAgent.Execute", "Answer from AI service was empty");
             

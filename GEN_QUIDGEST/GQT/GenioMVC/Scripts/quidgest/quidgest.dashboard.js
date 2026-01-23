@@ -148,7 +148,7 @@ class QDashboard
 	 */
 	GetWidgetById(widgetId)
 	{
-		return this.Widgets.find((w) => w.id === widgetId)
+		return this.Widgets.find((w) => w.id + "-" + w.rowkey === widgetId)
 	}
 
 	/**
@@ -226,7 +226,7 @@ class QDashboard
 
 		widget.visible = true
 		let props = {
-			id: widget.id,
+			id: widget.id + '-' + widget.rowkey,
 			w: widget.Width,
 			h: widget.Height,
 			content: gridstackItemContent.innerHTML,
@@ -242,7 +242,7 @@ class QDashboard
 		}
 
 		this.Grid.addWidget(props)
-		widget.Element = $("[gs-id='" + widget.id + "']")
+		widget.Element = $("[gs-id='" + widget.id + '-' + widget.rowkey + "']")
 
 		// Get the widget content
 		widget.Render()
@@ -715,7 +715,7 @@ class QWidgetPanel
 		}
 
 		const item = document.createElement("li")
-		item.id = "widget-info-" + widget.id
+		item.id = "widget-info-" + widget.id + "-" + widget.rowkey
 		item.setAttribute("role", "option")
 		item.classList.add("widget-panel-item", "widget-info")
 		item.setAttribute("draggable", "true")
@@ -730,7 +730,7 @@ class QWidgetPanel
 		$(parent).append(item)
 
 		const vm = this
-		const widgetInfo = document.getElementById("widget-info-" + widget.id)
+		const widgetInfo = document.getElementById("widget-info-" + widget.id + "-" + widget.rowkey)
 		widgetInfo.addEventListener("dragstart", (ev) =>
 		{
 			vm.Dashboard.Drag(ev)
@@ -818,7 +818,7 @@ class QWidgetPanel
 			parent = $("#widgets-panel > ul")
 		}
 
-		const widgetInfo = $(parent).find("#widget-info-" + widget.id)
+		const widgetInfo = $(parent).find("#widget-info-" + widget.id + '-' + widget.rowkey)
 		widgetInfo.remove()
 
 		if (widget.Group)
@@ -827,7 +827,7 @@ class QWidgetPanel
 		// If item was selected, remove from the list
 		if (this.Selected)
 		{
-			const index = this.Selected.indexOf(widget.id)
+			const index = this.Selected.indexOf(widget.id + '-' + widget.rowkey)
 			if (index > -1)
 				this.Selected.splice(index, 1)
 
@@ -882,7 +882,7 @@ class QWidget
 		deleteBtn.on("click", (event) =>
 		{
 			event.preventDefault()
-			vm.Dashboard.RemoveWidget(vm.id)
+			vm.Dashboard.RemoveWidget(vm.id + '-' + vm.rowkey)
 			vm.Dashboard.SetDirty()
 		})
 
@@ -927,7 +927,7 @@ class QWidget
 			contentType: "application/json",
 		}).done(function (data)
 		{
-			const widgetEl = $("[gs-id='" + vm.id + "']")
+			const widgetEl = $("[gs-id='" + vm.id + '-' + vm.rowkey + "']")
 			const content = widgetEl.find(".widget-content")
 			content.html(data)
 
@@ -1179,8 +1179,8 @@ class QCustomWidget extends QWidget
 		this.RenderWidgetEndpoint =
 			this.Dashboard.UrlActions.RenderWidget + this.id
 
-		if (props.rowkey)
-			this.RenderParams = { fk: props.rowkey }
+		if (this.rowkey)
+			this.RenderParams = { fk: this.rowkey }
 		else
 			this.RenderParams = { fk: this.id }
 	}

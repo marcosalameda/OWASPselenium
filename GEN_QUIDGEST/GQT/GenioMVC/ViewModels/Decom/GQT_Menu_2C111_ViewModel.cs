@@ -215,7 +215,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAdecom.FldCoddeco, CSGenioAdecom.Fld
 
 			// Limitation by Zzstate
 			if (!Navigation.checkFormMode("DECOM", FormMode.New)) // TODO: Check in Duplicate mode
-				crs = extendWithZzstateCondition(crs, CSGenioAdecom.FldZzstate, null);
+				crs = extendWithZzstateCondition(crs, CSGenioAdecom.FldZzstate, CSGenioAdecom.FldCreatope);
 
 			if (tableReload)
 			{

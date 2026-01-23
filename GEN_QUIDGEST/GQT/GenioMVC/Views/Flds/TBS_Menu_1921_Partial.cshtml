@@ -33,7 +33,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1921_FLDS_YEAR]/
 		column.Expression(p => p.ValYear).Title(@Resources.ANO_DE_CRIACAO_DO_AE38604).Field("ValYear").Size(4);
 // USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1921_FLDS_PRIMVIAG]/
-		column.Expression(p => p.ValPrimviag).Title(@Resources._1AVIAGEM10982).Field("ValPrimviag").Size(1);
+		column.Expression(p => p.ValPrimviag).Title(@Resources._1AVIAGEM08604).Field("ValPrimviag").Size(1);
 // USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1921_FLDS_CONDITIO]/
 		column.Expression(p => p.ValConditio).Title(@Resources.JA_VIAJOU_ANTES_22497).Field("ValConditio").Size(1);
 // USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1921_FLDS_CLASS]/
@@ -41,7 +41,7 @@
 // USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1921_FLDS_CLASSNUM]/
 		column.Expression(p => p.ArrayValclassnum).Title(@Resources.CLASSE__ENUMERACAO_N29443).Field("ValClassnum", "ArrayClassnum").Size(1);
 // USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1921_FLDS_LOGICENU]/
-		column.Expression(p => p.ArrayVallogicenu).Title(@Resources._1A_VIAGEM__ENUMERAC07656).Field("ValLogicenu", "ArrayPrimviag").Size(1);
+		column.Expression(p => p.ArrayVallogicenu).Title(@Resources._1A_VIAGEM__ENUMERACA14864).Field("ValLogicenu", "ArrayPrimviag").Size(1);
 // USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1921_FLDS_LOGO]/
 		column.Expression(p => Html.ImageMagnifierZoom(p.ValLogo, new {alt=@Resources.LOGO62483,}, Url.Action("ImageHandlerGet", "Home", new { ticket = Helpers.GetFileTicket(UserContext.Current.User, "Flds", "ValLogo", "", p.ValCodflds, null) }))).Title(@Resources.LOGO62483).Field("ValLogo").Size(3);
 // USE /[MANUAL GQT CUSTOM_COLUMN TBS_MENU_1921_FLDS_ATTACH]/

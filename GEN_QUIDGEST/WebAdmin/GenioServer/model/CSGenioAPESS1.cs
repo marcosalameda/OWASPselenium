@@ -59,7 +59,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "_COMPANY02087";
 
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "idfuncio";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -

@@ -62,4 +62,7 @@
 	active: 'ATIVO30536',
 	type: 'TIPO55111',
 	executeMaintenanceTasks: 'EXECUTAR_TAREFAS_DE_40767',
+	generate: 'GERAR53663',
+	regenerate: 'REGENERAR39860',
+	create: 'CRIAR24836'
 }

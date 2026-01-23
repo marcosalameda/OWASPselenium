@@ -200,7 +200,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAglob.FldCodglob, CSGenioAglob.FldZz
 
 			// Limitation by Zzstate
 			if (!Navigation.checkFormMode("GLOB", FormMode.New)) // TODO: Check in Duplicate mode
-				crs = extendWithZzstateCondition(crs, CSGenioAglob.FldZzstate, null);
+				crs = extendWithZzstateCondition(crs, CSGenioAglob.FldZzstate, CSGenioAglob.FldCreatope);
 
 			if (tableReload)
 			{

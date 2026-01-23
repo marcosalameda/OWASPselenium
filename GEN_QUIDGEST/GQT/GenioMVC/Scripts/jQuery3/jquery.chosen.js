@@ -409,16 +409,20 @@ Copyright (c) 2011 by Harvest
 			if (this.is_rtl) {
 				container_classes.push("chzn-rtl");
 			}
-			this.f_width = this.form_field_jq.outerWidth();
+			//
+			var isInTableList = this.form_field_jq.parent().is('th');
+			var unit = isInTableList ? "%" : "px";
+			this.f_width = isInTableList ? 100 : this.form_field_jq.outerWidth();
 			container_props = {
 				id: this.container_id,
 				"class": container_classes.join(' '),
-				"tabindex": "0",
-				style: 'width: ' + this.f_width + 'px;',
+				"tabindex":"0",
+				style: 'width: ' + this.f_width + unit,
 				/*Added for accessibility*/
 				title: this.form_field.title,
 				role: 'combobox',
 				"aria-labelledby": "LABEL_" + this.form_field_jq.data("identifier")
+				//
 			};
 			container_div = $("<div />", container_props);
 			if (this.is_multiple) {

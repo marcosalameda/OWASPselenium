@@ -204,7 +204,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAhpess.FldCodhpess, CSGenioAhpess.Fl
 
 			// Limitation by Zzstate
 			if (!Navigation.checkFormMode("HPESS", FormMode.New)) // TODO: Check in Duplicate mode
-				crs = extendWithZzstateCondition(crs, CSGenioAhpess.FldZzstate, null);
+				crs = extendWithZzstateCondition(crs, CSGenioAhpess.FldZzstate, CSGenioAhpess.FldAuthor);
 
 			if (tableReload)
 			{

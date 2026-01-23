@@ -228,7 +228,9 @@ namespace Administration.Controllers
                 // Event tracing feature
                 model.EventTracking = conf.EventTracking;
 
-                model.UrlAPIBackend = conf.ChatBotConfig?.apiURL;
+                model.UrlAPIBackend = conf.ChatBotConfig?.APIEndpoint;
+                model.MCPSecurityMode = conf.ChatBotConfig?.MCPSecurityMode ?? MCPSecurityMode.JWT;
+                model.JWTEncryptionKey = conf.ChatBotConfig?.JWTEncryptionKey;
             }
             catch (Exception e)
             {
@@ -1136,7 +1138,9 @@ namespace Administration.Controllers
                 conf.DateFormat.DateTimeSeconds = model.DateFormat.dateTimeSeconds;
                 conf.DateFormat.Time = model.DateFormat.time;
 
-                conf.ChatBotConfig.apiURL = model.UrlAPIBackend;
+                conf.ChatBotConfig.APIEndpoint = model.UrlAPIBackend;
+                conf.ChatBotConfig.MCPSecurityMode = model.MCPSecurityMode;
+                conf.ChatBotConfig.JWTEncryptionKeyDecode = model.JWTEncryptionKey;
 
                 conf.QAEnvironment = Convert.ToInt32(model.QAEnvironment);
 
@@ -1174,6 +1178,7 @@ namespace Administration.Controllers
                 if (model.DecimalSeparator.ToString() == model.GroupSeparator.ToString())
                     throw new BusinessException(Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860, "ConfigController.reindex", Resources.Resources.ALGUNS_CAMPOS_ESTAO_27860);
 
+                conf.FillMissingConfigs();
                 configManager.StoreConfig(conf);
 
 				// Reload Configuration static instance in server with the new Configuracoes.xml data

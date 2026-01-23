@@ -47,8 +47,8 @@ namespace CSGenio.business
 		{
 			return new Dictionary<decimal, ArrayElement>()
 			{
-				{ E_35_1, new ArrayElement() { ResourceId = "_3534512", HelpId = "", Group = "" } },
-				{ E_40_2, new ArrayElement() { ResourceId = "_4033029", HelpId = "", Group = "" } },
+				{ E_35_1, new ArrayElement() { ResourceId = "_3554693", HelpId = "", Group = "" } },
+				{ E_40_2, new ArrayElement() { ResourceId = "_4000330", HelpId = "", Group = "" } },
 			};
 		}
 

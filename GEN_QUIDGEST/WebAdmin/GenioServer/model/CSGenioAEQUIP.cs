@@ -59,7 +59,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "_COMPANY02087";
 
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "sequennr";
 //Actualiza as seguintes réplicas:
 			Qfield.ReplicaDestinationList = new List<ReplicaDestination>();
 			Qfield.ReplicaDestinationList.Add( new ReplicaDestination("GQT", "gqtrepar", "codequip", "codempre"));
@@ -388,8 +387,8 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(12);
 			info.Pathways.Add("decom","decom");
 			info.Pathways.Add("wareh","wareh");
-			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("room1","room1");
+			info.Pathways.Add("tpequ","tpequ");
 			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("pess1","pess1");

@@ -129,6 +129,8 @@ public class QuidgestRoleProvider : BaseRoleProvider
 
         if (user.Years.Count == 0)
             throw new FrameworkException("Login não foi encontrado.", "QuidgestRoleProvider.Authorize", "Não foi possivel encontrar a chave correspondente ao login " + identity.Name);
+		
+		user.Year = user.Years[0]; //set to the first year found, otherwise it might be set to a year without roles, and fails authorization later
 
         return user;
     }

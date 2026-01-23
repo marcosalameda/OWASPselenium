@@ -66,6 +66,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaTPEQU = new AreaRef("GQT", "gqttpequ", "tpequ");
         public static AreaRef AreaADDRE { get { return m_AreaADDRE; } }
         private static AreaRef m_AreaADDRE = new AreaRef("GQP", "gqpaddress", "addre");
+        public static AreaRef AreaEDITS { get { return m_AreaEDITS; } }
+        private static AreaRef m_AreaEDITS = new AreaRef("GQT", "gqtedits", "edits");
         public static AreaRef AreaLNHPD { get { return m_AreaLNHPD; } }
         private static AreaRef m_AreaLNHPD = new AreaRef("GQT", "gqtlnhpd", "lnhpd");
         public static AreaRef AreaCFAQS { get { return m_AreaCFAQS; } }
@@ -130,6 +132,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaFACTY = new AreaRef("GQT", "gqtfacilitytype", "facty");
         public static AreaRef AreaAIRPL { get { return m_AreaAIRPL; } }
         private static AreaRef m_AreaAIRPL = new AreaRef("GQT", "gqtairpl", "airpl");
+        public static AreaRef AreaDELTA { get { return m_AreaDELTA; } }
+        private static AreaRef m_AreaDELTA = new AreaRef("GQT", "gqtdelta", "delta");
         public static AreaRef AreaRORDI { get { return m_AreaRORDI; } }
         private static AreaRef m_AreaRORDI = new AreaRef("GQT", "gqtrordi", "rordi");
         public static AreaRef AreaDILIN { get { return m_AreaDILIN; } }
@@ -224,6 +228,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaUSERS = new AreaRef("GQT", "gqtusers", "users");
         public static AreaRef AreaPAIS1 { get { return m_AreaPAIS1; } }
         private static AreaRef m_AreaPAIS1 = new AreaRef("GQT", "gqtcntry", "pais1");
+        public static AreaRef AreaCOMPC { get { return m_AreaCOMPC; } }
+        private static AreaRef m_AreaCOMPC = new AreaRef("GQT", "gqtcompc", "compc");
         public static AreaRef AreaS_NES { get { return m_AreaS_NES; } }
         private static AreaRef m_AreaS_NES = new AreaRef("GQT", "notificationemailsignature", "s_nes");
         public static AreaRef AreaUICOM { get { return m_AreaUICOM; } }
@@ -328,6 +334,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaGRID = new AreaRef("GQT", "gqtgrid", "grid");
         public static AreaRef AreaTRADU { get { return m_AreaTRADU; } }
         private static AreaRef m_AreaTRADU = new AreaRef("GQT", "gqttradu", "tradu");
+        public static AreaRef AreaCOMPO { get { return m_AreaCOMPO; } }
+        private static AreaRef m_AreaCOMPO = new AreaRef("GQT", "gqtcompo", "compo");
         public static AreaRef AreaPEDID { get { return m_AreaPEDID; } }
         private static AreaRef m_AreaPEDID = new AreaRef("GQT", "gqtpedid", "pedid");
         public static AreaRef AreaFACIL { get { return m_AreaFACIL; } }
@@ -408,6 +416,7 @@ namespace CSGenio.business
             "categ",
             "tpequ",
             "addre",
+            "edits",
             "lnhpd",
             "cfaqs",
             "gitem",
@@ -440,6 +449,7 @@ namespace CSGenio.business
             "regis",
             "facty",
             "airpl",
+            "delta",
             "rordi",
             "dilin",
             "organ",
@@ -487,6 +497,7 @@ namespace CSGenio.business
             "grpb",
             "users",
             "pais1",
+            "compc",
             "s_nes",
             "uicom",
             "cate2",
@@ -539,6 +550,7 @@ namespace CSGenio.business
             "cate3",
             "grid",
             "tradu",
+            "compo",
             "pedid",
             "facil",
             "aero",

@@ -347,6 +347,8 @@
     <Compile Include="Controllers\Tpequ\*.cs" />
     <Compile Include="ViewModels\Addre\*_ViewModel.cs" />
     <Compile Include="Controllers\Addre\*.cs" />
+    <Compile Include="ViewModels\Edits\*_ViewModel.cs" />
+    <Compile Include="Controllers\Edits\*.cs" />
     <Compile Include="ViewModels\Lnhpd\*_ViewModel.cs" />
     <Compile Include="Controllers\Lnhpd\*.cs" />
     <Compile Include="ViewModels\Cfaqs\*_ViewModel.cs" />
@@ -411,6 +413,8 @@
     <Compile Include="Controllers\Facty\*.cs" />
     <Compile Include="ViewModels\Airpl\*_ViewModel.cs" />
     <Compile Include="Controllers\Airpl\*.cs" />
+    <Compile Include="ViewModels\Delta\*_ViewModel.cs" />
+    <Compile Include="Controllers\Delta\*.cs" />
     <Compile Include="ViewModels\Rordi\*_ViewModel.cs" />
     <Compile Include="Controllers\Rordi\*.cs" />
     <Compile Include="ViewModels\Dilin\*_ViewModel.cs" />
@@ -505,6 +509,8 @@
     <Compile Include="Controllers\Users\*.cs" />
     <Compile Include="ViewModels\Pais1\*_ViewModel.cs" />
     <Compile Include="Controllers\Pais1\*.cs" />
+    <Compile Include="ViewModels\Compc\*_ViewModel.cs" />
+    <Compile Include="Controllers\Compc\*.cs" />
     <Compile Include="ViewModels\S_nes\*_ViewModel.cs" />
     <Compile Include="Controllers\S_nes\*.cs" />
     <Compile Include="ViewModels\Uicom\*_ViewModel.cs" />
@@ -609,6 +615,8 @@
     <Compile Include="Controllers\Grid\*.cs" />
     <Compile Include="ViewModels\Tradu\*_ViewModel.cs" />
     <Compile Include="Controllers\Tradu\*.cs" />
+    <Compile Include="ViewModels\Compo\*_ViewModel.cs" />
+    <Compile Include="Controllers\Compo\*.cs" />
     <Compile Include="ViewModels\Pedid\*_ViewModel.cs" />
     <Compile Include="Controllers\Pedid\*.cs" />
     <Compile Include="ViewModels\Facil\*_ViewModel.cs" />

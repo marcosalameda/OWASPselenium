@@ -9,9 +9,9 @@
                 </div>
                 <div class="q-help__info-banner-body">
                     <span>
-                        {{ Resources._1__SELECIONE_UTILIZ36383 }}<br>
-                        {{ Resources._2__SELECIONE_FUNCOE01301 }}<br>
-                        {{ Resources._3__REVEJA_E_CONFIRM63315 }}<br>
+                        {{ Resources._1__SELECIONE_UTILIZA54069 }}<br>
+                        {{ Resources._2__SELECIONE_FUNCOES21542 }}<br>
+                        {{ Resources._3__REVEJA_E_CONFIRME45679 }}<br>
                     </span>
                 </div>
             </div>

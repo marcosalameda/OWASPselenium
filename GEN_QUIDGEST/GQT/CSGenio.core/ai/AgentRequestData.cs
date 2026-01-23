@@ -1,5 +1,6 @@
 using CSGenio.business;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CSGenio.core.ai;
 
@@ -24,24 +25,32 @@ public class AgentRequestData
     }
 
     /// <summary>
-    /// Flattens the request and context data into a single anonymous object,
-    /// preparing it for serialization and transmission to the chatbot backend
+    /// Flattens the request and context data into a dictionary,
+    /// preparing it for serialization and transmission to the chatbot backend.
+    /// Excludes Files as they should be handled separately
+    /// Null values are excluded from the result.
     /// </summary>
-    public object FlattenData()
+    public Dictionary<string, object> FlattenData()
     {
-        return new
+        var dict = new Dictionary<string, object>
         {
-            JsonSchema,
-            Prompt,
-            SystemPrompt,
-            Project,
-            Files,
-            AgentContextData.Username,
-            AgentContextData.AgentId,
-            AgentContextData.FormId,
-            AgentContextData.UserPrompt,
+            ["JsonSchema"] = JsonSchema,
+            ["Prompt"] = Prompt,
+            ["SystemPrompt"] = SystemPrompt,
+            ["Project"] = Project,
+            ["Username"] = AgentContextData?.Username,
+            ["AgentId"] = AgentContextData?.AgentId,
+            ["FormId"] = AgentContextData?.FormId,
+            ["UserPrompt"] = AgentContextData?.UserPrompt,
+            ["CurrentRecordId"] = AgentContextData?.CurrentRecordId,
+            ["Module"] = AgentContextData?.Module,
+            ["Subsystem"] = AgentContextData?.Subsystem
         };
 
+        // Remove nulls
+        return dict
+            .Where(kvp => kvp.Value is not null)
+            .ToDictionary(kvp => kvp.Key, kvp => kvp.Value!);
     }
 }
 
@@ -50,5 +59,8 @@ public class AgentContextData
     public string Username { get; set; }
     public string AgentId { get; set; }
     public string FormId { get; set; }
+    public string CurrentRecordId { get; set; }
     public string UserPrompt { get; set; }
+    public string Module { get; set; }
+    public string Subsystem { get; set; }
 }

@@ -100,7 +100,7 @@ namespace GenioMVC.ViewModels.Flds
 		public decimal? ValYear { get; set; }
 
 		/// <summary>Campo : "1ªViagem" Tipo:"L"</summary>
-		[Display(Name = "_1AVIAGEM10982", ResourceType = typeof(Resources.Resources))]
+		[Display(Name = "_1AVIAGEM08604", ResourceType = typeof(Resources.Resources))]
 		public bool ValPrimviag { get; set; }
 
 		/// <summary>Campo : "Have you traveled before?" Tipo:"IF"</summary>
@@ -125,7 +125,7 @@ namespace GenioMVC.ViewModels.Flds
 		public SelectList List_ValClassnum { get; set; }
 
 		/// <summary>Campo : "1st trip (Logical Enumeration)" Tipo:"AL"</summary>
-		[Display(Name = "_1ST_TRIP__LOGICAL_E36923", ResourceType = typeof(Resources.Resources))]
+		[Display(Name = "_1ST_TRIP__LOGICAL_EN19524", ResourceType = typeof(Resources.Resources))]
 		[DataArray("Primviag", GenioMVC.Helpers.ArrayType.Logical)]
 		public int ValLogicenu { get; set; }
 		[JsonIgnore]

@@ -60,7 +60,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "__DISPATCH53890";
 
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "linenumb";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -174,8 +173,8 @@ namespace CSGenio.business
 			info.Pathways.Add("perso","dispa");
 			info.Pathways.Add("disst","dispa");
 			info.Pathways.Add("entit","dispa");
-			info.Pathways.Add("faci1","dispa");
 			info.Pathways.Add("faci2","dispa");
+			info.Pathways.Add("faci1","dispa");
 			info.Pathways.Add("locat","produ");
 			info.Pathways.Add("lcext","produ");
 			info.Pathways.Add("facil","produ");

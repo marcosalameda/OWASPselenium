@@ -142,11 +142,11 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
                 new Exports.QColumn(CSGenioAflds.FldDateseco, FieldType.DATETIMESECONDS, Resources.Resources.DATA_DE_PARTIDA__SEG38575, 19, 0, true),
                 new Exports.QColumn(CSGenioAflds.FldTime, FieldType.TIME_HOURS, Resources.Resources.HORA_DE_PARTIDA00929, 5, 0, true),
                 new Exports.QColumn(CSGenioAflds.FldYear, FieldType.NUMERIC, Resources.Resources.ANO_DE_CRIACAO_DO_AE38604, 4, 0, true),
-                new Exports.QColumn(CSGenioAflds.FldPrimviag, FieldType.LOGIC, Resources.Resources._1AVIAGEM10982, 1, 0, true),
+                new Exports.QColumn(CSGenioAflds.FldPrimviag, FieldType.LOGIC, Resources.Resources._1AVIAGEM08604, 1, 0, true),
                 new Exports.QColumn(CSGenioAflds.FldConditio, FieldType.NUMERIC, Resources.Resources.JA_VIAJOU_ANTES_22497, 1, 0, true),
                 new Exports.QColumn(CSGenioAflds.FldClass, FieldType.ARRAY_TEXT, Resources.Resources.CLASS__ENUMERACAO_DE17340, 2, 0, true, "CLASS"),
                 new Exports.QColumn(CSGenioAflds.FldClassnum, FieldType.ARRAY_NUMERIC, Resources.Resources.CLASSE__ENUMERACAO_N29443, 1, 0, true, "CLASSNUM"),
-                new Exports.QColumn(CSGenioAflds.FldLogicenu, FieldType.ARRAY_LOGIC, Resources.Resources._1A_VIAGEM__ENUMERAC07656, 1, 0, true, "PRIMVIAG"),
+                new Exports.QColumn(CSGenioAflds.FldLogicenu, FieldType.ARRAY_LOGIC, Resources.Resources._1A_VIAGEM__ENUMERACA14864, 1, 0, true, "PRIMVIAG"),
                 !ajaxRequest ? new Exports.QColumn(CSGenioAflds.FldLogo, FieldType.IMAGE, Resources.Resources.LOGO62483, 3, 1, true):null,
                 new Exports.QColumn(CSGenioAflds.FldAttach, FieldType.DOCUMENT, Resources.Resources.ANEXOS65235, 30, 0, true),
                 new Exports.QColumn(CSGenioAflds.FldCreatuse, FieldType.TEXT, Resources.Resources.CRIADO_POR17895, 20, 0, true),
@@ -225,7 +225,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAflds.FldCodflds, CSGenioAflds.FldZz
 
 			// Limitation by Zzstate
 			if (!Navigation.checkFormMode("FLDS", FormMode.New)) // TODO: Check in Duplicate mode
-				crs = extendWithZzstateCondition(crs, CSGenioAflds.FldZzstate, null);
+				crs = extendWithZzstateCondition(crs, CSGenioAflds.FldZzstate, CSGenioAflds.FldCreatuse);
 
 			if (tableReload)
 			{

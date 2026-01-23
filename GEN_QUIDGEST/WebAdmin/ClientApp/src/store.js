@@ -6,7 +6,8 @@ const store = createStore({
 		currentYear: '',
 		multiYearStatus: false, // True if the application has more than one data system, false otherwise
 		currentLanguage: '',
-		availableYears: []
+		availableYears: [],
+		defaultYear: ''
 	},
 	mutations: {
 		SET_APP(state, newValue) {
@@ -16,7 +17,10 @@ const store = createStore({
 			state.currentYear = newValue
 		},
 		SET_YEARS(state, years) {
-			state.years = years.map((y) => ({ Text: y, Value: y }))
+			state.availableYears = years.map((y) => ({ Text: y, Value: y }))
+		},
+		SET_DEFAULT_YEAR(state, year) {
+			state.defaultYear = year
 		},
 		SET_MULTIYEARSTATUS(state, newValue) {
 			state.multiYearStatus = newValue
@@ -40,6 +44,9 @@ const store = createStore({
 		},
 		setYears(context, years) {
 			context.commit('SET_YEARS', years)
+		},
+		setDefaultYear(context, year) {
+			context.commit('SET_DEFAULT_YEAR', year)
 		}
 	},
 	getters: {
@@ -47,7 +54,8 @@ const store = createStore({
 		Year: (state) => state.currentYear,
 		MultiYearStatus: (state) => state.multiYearStatus,
 		Language: (state) => state.currentLanguage,
-		Years: (state) => state.availableYears
+		Years: (state) => state.availableYears,
+		DefaultYear: (state) => state.defaultYear
 	}
 })
 

@@ -941,6 +941,16 @@ function jQuery_hideShowDiv(target, otherDisplay) {
 function changeFilters(complexFilters, hiddenValue) {
 	changeFiltersAnchors(hiddenValue);
 	jQuery_hideShowDiv(complexFilters, "table-row");
+	
+	//Sets sizes to 100% for hidden chosen controls in advanced search box
+	setTimeout(() => {
+		$(complexFilters)
+			.find('.chzn-container')
+			.css('width', '100%')
+			.find('.chzn-drop')
+			.css('width', '100%');
+	}, 0);
+	
 	//Change + sign to - in advanced search box, and vice versa
 	var id = complexFilters.replace("complex_filter", "extra");
 	toggleSearchIcon(id);

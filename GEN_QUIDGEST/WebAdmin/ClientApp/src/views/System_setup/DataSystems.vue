@@ -132,6 +132,8 @@
 
 	import { texts } from '@/resources/hardcodedTexts.ts';
 
+	import { mapGetters } from 'vuex'
+
 	export default {
 		name: 'datasystems',
 
@@ -297,6 +299,7 @@
 		},
 
 		computed: {
+			...mapGetters(['Years']),
 			/**
 			 * Items to display for default data system selection.
 			 */
@@ -471,19 +474,8 @@
 					QUtils.log("CreateDataSystem - Response", data);
 
 					// Update database years
+					// Note: Updating the list of years triggers an update of the years' information.
 					this.updateDataSystemList()
-
-					// Append new year to existent data systems
-					this.dataSystems.push(
-						{
-							Year: data.system,
-							DbName: newDsInfo.schema,
-							DbType: newDsInfo.type,
-							DbServer: newDsInfo.server,
-							DbVersion: 0,
-							Configured: false
-						}
-					)
 				});
 
 				// Clear information from previously created data system
@@ -514,6 +506,7 @@
 						message += ` ${this.resources.currentDataSystemDefault}`
 					}
 
+					// Note: Updating the list of years triggers an update of the years' information.
 					this.updateDataSystemList()
 
 					const dialogIcon = {
@@ -628,6 +621,9 @@
 		},
 
 		watch: {
+			Years() {
+				this.fetchDataSystemsInfo()
+			},
 			/**
 			 * Adapts the table pagination based on the number of data systems to present
 			 */

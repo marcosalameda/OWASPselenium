@@ -93,7 +93,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "";
 
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "role";
 			argumentsListByArea = new List<ByAreaArguments>();
 			argumentsListByArea.Add(new ByAreaArguments(new string[] {"codpsw","modulo"}, new int[] {0,1}, "s_ua", "codua"));
 			Qfield.Formula = new InternalOperationFormula(argumentsListByArea, 2, delegate(object[] args, User user, string module, PersistentSupport sp) {

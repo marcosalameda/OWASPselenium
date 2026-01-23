@@ -213,7 +213,7 @@ FieldRef[] fields = new FieldRef[] { CSGenioAnotif.FldCodnotif, CSGenioAnotif.Fl
 
 			// Limitation by Zzstate
 			if (!Navigation.checkFormMode("NOTIF", FormMode.New)) // TODO: Check in Duplicate mode
-				crs = extendWithZzstateCondition(crs, CSGenioAnotif.FldZzstate, null);
+				crs = extendWithZzstateCondition(crs, CSGenioAnotif.FldZzstate, CSGenioAnotif.FldCreatope);
 
 			if (tableReload)
 			{

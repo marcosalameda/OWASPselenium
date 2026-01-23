@@ -631,6 +631,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             result.Add(new KeyValuePair<string, string>("W_GnReUse", "0"));
             result.Add(new KeyValuePair<string, string>("W_GnLogBD", schemaLog));
 
+            result.Add(new KeyValuePair<string, string>("W_GnUser", param.Username));
             result.Add(new KeyValuePair<string, string>("W_GnPSW", param.Password));
             result.Add(new KeyValuePair<string, string>("W_PathFS", param.DirFilestream));
             result.Add(new KeyValuePair<string, string>("W_AppAno", param.Year));

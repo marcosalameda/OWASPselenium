@@ -43,6 +43,7 @@ namespace CSGenio.framework
 
         //----------------------------------------------
         // System Identification and Versioning
+        // Note: Version-related constants are defined in VersionInfo.cs.vm
         //----------------------------------------------
 
         /// <summary>
@@ -53,7 +54,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 4331;
+        public static int Version { get; } = VersionInfo.Version;
 
         /// <summary>
         /// System id
@@ -88,37 +89,37 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 4331;
+        public const int VersionDbGen = VersionInfo.DatabaseSchema;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 2005;
+        public const int VersionIdxDbGen = VersionInfo.DatabaseIndex;
 
         /// <summary>
         /// Version of the latest upgrade index version
         /// </summary>
-        public const int VersionUpgrIndxGen = 2;
+        public const int VersionUpgrIndxGen = VersionInfo.ChangeRoutines;
 
 		/// <summary>
 		/// Version of the latest user settings format
 		/// </summary>
-		public const int UserSettingsVersion = 2;
+		public const int UserSettingsVersion = VersionInfo.UserSettings;
 
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "374.49";
+        public const string GenioVersion = VersionInfo.GenioVersion;
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2968;
+        public static readonly int BuildVersionGen = VersionInfo.Build;
 
         /// <summary>
         /// Solution release version
         /// </summary>
-        public const string VersionTrackChangesGen = "0";
+        public static readonly string VersionTrackChangesGen = VersionInfo.Release;
 
         /// <summary>
         /// Agregate versioning information string
@@ -127,7 +128,7 @@ namespace CSGenio.framework
         {
             get
             {
-                return string.Format("{0}.{1}.{2}.{3}", GenioVersion.Replace('.',','), VersionDbGen, VersionTrackChangesGen.Replace('.',','), BuildVersionGen);
+                return VersionInfo.GenAssemblyVersion;
             }
         }
 
@@ -136,10 +137,10 @@ namespace CSGenio.framework
         /// </summary>
         public static bool Files2Disk { get; private set; } =  true;
 
-        //----------------------------------------------
-        // ChatBot
-        //----------------------------------------------
-        public static string APIEndpoint { get; private set; }
+        /// <summary>
+        /// AI Configuration properties
+        /// </summary>
+        public static ChatBotCfg AiConfig { get; private set; } = null; 
 
         //----------------------------------------------
         // System services
@@ -424,8 +425,7 @@ namespace CSGenio.framework
             var path = readXML.GetPath(Configuration.Application.Id);
             PP_Email = readXML.email_pp;
             PP_Name = readXML.nome_pp;
-            if (readXML.ChatBotConfig != null)
-                APIEndpoint = readXML.ChatBotConfig.apiURL;
+            AiConfig = readXML.ChatBotConfig;
             Log = path.pathApp;
             GoogleMapsKey = readXML.googlemapsKey;
             QAEnvironment = Convert.ToInt16(readXML.qaEnvironment);

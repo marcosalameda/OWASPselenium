@@ -149,6 +149,17 @@
 				<Script>ReconstrucaoCodInt.sql</Script>
 			</Scripts>
 		</Function>
+		<Function Id="CREATEDBLOG" Name="Create Audit Database" Help="" Connection="Admin" Selected="false" Selectable="true">
+			<Scripts>
+				<Script>CreateLogDatabase.sql</Script>
+			</Scripts>
+		</Function>
+		<Function Id="CREATESCHEMALOG" Name="Create Audit Database Schema" Help="" Connection="Log" Selected="false" Selectable="true">
+			<Scripts>
+				<Script>FuncoesAuxCheckTable.sql</Script>
+				<Script>ChecktableLog.sql</Script>
+			</Scripts>
+		</Function>
 		<Function Id="CREATEDEFAULTUSER" Name="Create default user" Help="" Connection="Normal" Selected="false" Selectable="true">
 			<Scripts>
 				<Script>DatabaseSeed.sql</Script>
@@ -241,6 +252,8 @@
 				<ReIndexItem>CREATELOGVIEWS</ReIndexItem>
 				<ReIndexItem>DISABLECT</ReIndexItem>
 				<ReIndexItem>ENABLECT</ReIndexItem>
+				<ReIndexItem>ENABLECC</ReIndexItem>
+				<ReIndexItem>DISABLECC</ReIndexItem>
 			</GroupItems>
 		</ReIndexGroup>
 		<ReIndexGroup Name="Extra Options">

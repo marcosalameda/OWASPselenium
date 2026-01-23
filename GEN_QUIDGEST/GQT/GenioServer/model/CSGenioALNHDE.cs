@@ -68,7 +68,6 @@ namespace CSGenio.business
 			Qfield.VisivelCav = CavVisibilityType.Nunca;
 
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "ordem";
 			Qfield.Formula = new ReplicaFormula("_replicRel_codlnhpd", "codpedid");
 			info.RegisterFieldDB(Qfield);
 

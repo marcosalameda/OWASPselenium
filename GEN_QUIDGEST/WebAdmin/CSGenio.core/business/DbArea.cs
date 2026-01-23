@@ -762,7 +762,14 @@ namespace CSGenio.business
 
                 // Apply prefix scoping whenever a prefix field is supplied.
                 if (!string.IsNullOrEmpty(prefixField))
-                    where.Equal(area.TableName, prefixField, prefixValue);
+                {
+                    var prefixFieldObj = area.DBFields[prefixField];
+                    object prefixRealValue = prefixFieldObj.isKey() && prefixFieldObj.isEmptyValue(prefixValue) ? null : QueryUtils.ToValidDbValue(prefixValue, prefixFieldObj);
+                    // For key fields, an empty prefix means 'no value', so we normalise it to null
+                    // to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
+                    // prefix to a database-safe value (e.g. Guid) before applying the equality filter.
+                    where.Equal(area.TableName, prefixField, prefixRealValue);
+                }
 
                 SelectQuery qs = new SelectQuery()
                     .Select(area.TableName, area.PrimaryKeyName)
@@ -886,7 +893,12 @@ namespace CSGenio.business
                 // If the non-duplicate prefix changed, close any gap left behind in the old scope.
                 if (prefixChanged && hasPreviousValues)
                 {
-                    sp.ReorderSequence(this, field, CriteriaSet.And().Equal(field.PrefNDup, oldPrefix));
+                    var prefixField = DBFields[field.PrefNDup];
+                    object prefixRealValue = prefixField.isKey() && prefixField.isEmptyValue(oldPrefix) ? null : QueryUtils.ToValidDbValue(oldPrefix, prefixField);
+                    // For key fields, an empty prefix means 'no value', so we normalise it to null
+                    // to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
+                    // prefix to a database-safe value (e.g. Guid) before applying the equality filter.
+                    sp.ReorderSequence(this, field, CriteriaSet.And().Equal(field.PrefNDup, prefixRealValue));
                 }
             }
         }
@@ -2726,6 +2738,9 @@ namespace CSGenio.business
                         || campoBD.FieldType == FieldType.ENCRYPTED)
                         camposToZero.Add(campoBD.Alias + "." + campoBD.Name);
                 }
+
+                //all bookmarks must be reset, so duplication works like an insert
+                campoPedido.OldValue = null;
             }
 
             for (int i = 0; i < camposToZero.Count; i++)
@@ -2747,6 +2762,10 @@ namespace CSGenio.business
 
             foreach (var fieldGroup in fieldGroups)
             {
+                //If the fields are not from the same area, the model will not be retrieved.
+                if (fieldGroup.Key != this.Alias)
+                    continue;
+					
                 // Initialize the DbArea for the current table
                 DbArea fieldArea = (DbArea)Area.createArea(fieldGroup.Key, User, User.CurrentModule);
 
@@ -3907,8 +3926,13 @@ namespace CSGenio.business
             if (!string.IsNullOrEmpty(orderingField.PrefNDup))
             {
                 var currentPrefix = returnValueField(Alias + "." + orderingField.PrefNDup);
+                var prefixField = DBFields[orderingField.PrefNDup];
+                object prefixRealValue = prefixField.isKey() && prefixField.isEmptyValue(currentPrefix) ? null : QueryUtils.ToValidDbValue(currentPrefix, prefixField);
+                // For key fields, an empty prefix means 'no value', so we normalise it to null
+                // to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
+                // prefix to a database-safe value (e.g. Guid) before applying the equality filter.
                 condition = CriteriaSet.And()
-                    .Equal(Alias, orderingField.PrefNDup, currentPrefix);
+                    .Equal(Alias, orderingField.PrefNDup, prefixRealValue);
             }
 
             try

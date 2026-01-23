@@ -216,7 +216,7 @@ namespace CSGenio.core
             }
             catch (Exception ex)
             {
-                throw new Exception("CSmail.Send - Error sending email.", ex);
+                throw new Exception("CSmail.Send - Error sending email. " + ex?.Message, ex);
             }
         }
 

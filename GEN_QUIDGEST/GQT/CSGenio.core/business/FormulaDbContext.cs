@@ -108,8 +108,8 @@ namespace CSGenio.business
                 {
                     result = Area.createArea(area, user, user.CurrentModule);
                     result.QPrimaryKey = pk;
-                    result.UserRecord = false;
                 }
+                result.UserRecord = false;
                 rowContext.Add(pk, result);
             }
             return result;

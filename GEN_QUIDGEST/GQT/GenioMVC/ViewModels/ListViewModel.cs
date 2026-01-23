@@ -11,29 +11,6 @@ using System.Linq;
 
 namespace GenioMVC.ViewModels
 {
-    public enum TableViewsManagementMode
-    {
-        /// <summary>
-        /// The user is not allowed to change the list in any way.
-        /// </summary>
-        None,
-
-        /// <summary>
-        /// The user is allowed to customize the table but the changes are not saved.
-        /// </summary>
-        NonPersistent,
-
-        /// <summary>
-        /// The user changes are automatically saved in a single user table configuration.
-        /// </summary>
-        PersistOne,
-
-        /// <summary>
-        /// The user can fully create and manage multiple table configurations.
-        /// </summary>
-        PersistMany
-    }
-
     public abstract class ListViewModel : ViewModelBase
     {
         private Models.Glob _globTable;

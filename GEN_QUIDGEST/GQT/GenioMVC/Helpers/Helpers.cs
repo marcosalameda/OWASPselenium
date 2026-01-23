@@ -3079,7 +3079,7 @@ namespace GenioMVC.Helpers
             filterBtn.Attributes.Add("data-modal-id", "ESAdvFilter-edit-modal");
             filterBtn.Attributes.Add("data-table", dataTable);
             filterBtn.Attributes.Add("data-modal-url", urlHelper.Action("AdvancedElasticsearchFilterView", dataTable));
-            filterBtn.Attributes.Add("title", Resources.Resources.FILTROS_AVANCADOS32501);
+            filterBtn.Attributes.Add("title", Resources.Resources.FILTROS01340);
 
             TagBuilder iconBtn = new TagBuilder("i");
             iconBtn.AddCssClass("glyphicons glyphicons-list e-icon");

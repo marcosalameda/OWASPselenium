@@ -295,7 +295,8 @@ namespace GenioServer.security
 		{
 			User adminUser = new User(user.Name, "", user.Year);
 			adminUser.CurrentModule = user.CurrentModule ?? "Public";
-			adminUser.AddModuleRole(adminUser.CurrentModule, CSGenio.framework.Role.ADMINISTRATION);
+			foreach(var module in Configuration.Modules)
+				adminUser.AddModuleRole(module, CSGenio.framework.Role.ADMINISTRATION);
 			return adminUser;
 		}
 

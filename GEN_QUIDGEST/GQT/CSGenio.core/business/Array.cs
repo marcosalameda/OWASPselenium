@@ -51,7 +51,9 @@ namespace CSGenio.business
 		/// <param name="cod">The element's code.</param>
 		public ArrayElement GetElementImpl(T cod)
 		{
-			if (_elements.ContainsKey(cod))
+			if(_elements == null)
+				_elements = LoadDictionary();
+            if (_elements.ContainsKey(cod))
 				return _elements[cod];
 			return null;
 		}

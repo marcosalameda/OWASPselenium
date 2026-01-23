@@ -136,7 +136,7 @@ namespace GenioMVC.Controllers
             vm.Navigation.SetValue("cmpny", fk);
 
             vm.setModes("v");
-            vm.Load(Request.Form, false, Request.IsAjaxRequest());
+            vm.MapFromModel(Models.Cmpny.Find(fk));
 
             return PartialView("Widgets/PTN_Menu_3L1_Widget_COLAB", vm);
         }
@@ -179,7 +179,7 @@ namespace GenioMVC.Controllers
             vm.Navigation.SetValue("equip", fk);
 
             vm.setModes("v");
-            vm.Load(Request.Form, false, Request.IsAjaxRequest());
+            vm.MapFromModel(Models.Equip.Find(fk));
 
             return PartialView("Widgets/PTN_Menu_3L1_Widget_WID_INFO_EQUIP", vm);
         }

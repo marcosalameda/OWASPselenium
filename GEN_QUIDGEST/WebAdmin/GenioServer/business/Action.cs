@@ -414,7 +414,17 @@ namespace CSGenio.business.Triggers
 		/// <inheritdoc/>
 		public override void Execute()
 		{
-			_agent.Execute(_context.Area, _context.PersistentSupport, _context.User);
+			CSGenio.core.ai.AgentContextData agentContext = new CSGenio.core.ai.AgentContextData()
+			{
+				Username = _context.User.Name,
+				AgentId = _agent.AGENT_ID,
+				Module = _context.User.CurrentModule,
+				Subsystem = _context.User.Year
+			};
+			if(!string.IsNullOrEmpty(_context.Area.QPrimaryKey))
+				agentContext.CurrentRecordId = _context.Area.QPrimaryKey;
+
+			_agent.Execute(_context.Area, _context.PersistentSupport, _context.User, agentContext);
 			_agent.PersistRecord(_context.PersistentSupport);
 		}
 	}

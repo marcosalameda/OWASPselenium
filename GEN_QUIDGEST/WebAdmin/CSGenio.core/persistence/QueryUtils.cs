@@ -288,7 +288,7 @@ namespace CSGenio.persistence
                 //skip empty binary fields
                 if ((campoBD.FieldType.Equals(FieldType.IMAGE) || campoBD.FieldType.Equals(FieldType.PATH)
                     || campoBD.FieldType.Equals(FieldType.MEMO_COMP_RTF))
-                    && (campoPedido.Value.ToString().Length == 0 || campoPedido.Value.ToString().StartsWith("*")))
+                    && (campoBD.isEmptyValue(campoPedido.Value) || campoPedido.Value.ToString().StartsWith("*")))
                     continue;
 
                 //skip non-dirty fields (the value stayed the same from the last know db read)

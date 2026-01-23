@@ -38,18 +38,18 @@ namespace GenioMVC.ViewModels.Decom
 		[Newtonsoft.Json.JsonIgnore]
 		public bool MsqActive { get; set; } = false;
 
-		/// <summary>Campo : "No decomission" Tipo:"N"</summary>
-		[Display(Name = "NO_DECOMISSION13045", ResourceType = typeof(Resources.Resources))]
-		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
-		[DisplayFormat( ApplyFormatInEditMode=true, DataFormatString="{0:N0}" )]
-		[NumericAttribute(0)]
-		public decimal? ValDecomnr { get; set; }
-
 		/// <summary>Campo : "Decomission" Tipo:"DT"</summary>
 		[Display(Name = "DECOMISSION14486", ResourceType = typeof(Resources.Resources))]
 		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
 		[DateAttribute("DT")]
 		public DateTime? ValDtdeco { get; set; }
+
+		/// <summary>Campo : "No bate" Tipo:"N"</summary>
+		[Display(Name = "NO_BATE21045", ResourceType = typeof(Resources.Resources))]
+		[Required(ErrorMessageResourceName = "O_CAMPO__0__E_OBRIGA36687", ErrorMessageResourceType = typeof(Resources.Resources))]
+		[DisplayFormat( ApplyFormatInEditMode=true, DataFormatString="{0:N0}" )]
+		[NumericAttribute(0)]
+		public decimal? ValDecomnr { get; set; }
 
 
 		#region Navigations
@@ -174,8 +174,8 @@ namespace GenioMVC.ViewModels.Decom
 			}
 			try
 			{
-				ValDecomnr = ViewModelConversion.ToNumeric(m.ValDecomnr);
 				ValDtdeco = ViewModelConversion.ToDateTime(m.ValDtdeco);
+				ValDecomnr = ViewModelConversion.ToNumeric(m.ValDecomnr);
 				ValCoddeco = ViewModelConversion.ToString(m.ValCoddeco);
 			}
 			catch (Exception)
@@ -194,8 +194,8 @@ namespace GenioMVC.ViewModels.Decom
 			}
 			try
 			{
-				m.ValDecomnr = ViewModelConversion.ToNumeric(ValDecomnr);
 				m.ValDtdeco = ViewModelConversion.ToDateTime(ValDtdeco);
+				m.ValDecomnr = ViewModelConversion.ToNumeric(ValDecomnr);
 				m.ValCoddeco = ViewModelConversion.ToString(ValCoddeco);
 			}
 			catch (Exception)

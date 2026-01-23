@@ -14,7 +14,8 @@ public static class ScheduleTaskFactory
         { "Reindex", new ReindexScheduledTask() },
         { "AsyncProcess", new AsyncProcessScheduledTask() },
         { "TransferLogs", new TransferLogsScheduledTask() },
-        { "Notifications", new NotificationsScheduledTask() }
+        { "Notifications", new NotificationsScheduledTask() },
+        { "AuditCapture", new AuditCaptureScheduledTask() }
     };
 
     public static IScheduledTask GetScheduleTask(string id)

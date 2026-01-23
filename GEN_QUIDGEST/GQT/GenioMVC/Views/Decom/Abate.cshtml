@@ -4,7 +4,7 @@
 
 @{
 	ViewBag.Form = "Abate";
-	ViewBag.Title = @Resources.EQUIPMENT_DECOMMISSI11875;
+	ViewBag.Title = @Resources.DESATIVACAO_DE_EQUIP16900;
     ViewBag.formmode = Model.GetFormMode;
 	ViewBag.ClassForFormLayout = "form-flow";
 }
@@ -39,16 +39,6 @@ else {
 				<div class="col-12">
 					<div class="control-row-group">
 						<div class="control-join-group">
-						<div class="i-text draggable " id="CONTAINER_LED_ABATE___DECOMDECOMNR_">
-								<div class="d-flex">
-								@Html.LabelFor(model => model.ValDecomnr, new { label_id="LED_ABATE___DECOMDECOMNR_", @class = " i-text__label", id="LABEL_LED_ABATE___DECOMDECOMNR_"}, true, true)
-								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
-								<a href="javascript:OpenSuggestion('LED_ABATE___DECOMDECOMNR_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
-								@Html.NumberFor(model => model.ValDecomnr, new {help_id = "LED_ABATE___DECOMDECOMNR_", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_ABATE___DECOMDECOMNR_", @pers_cs_area = "Decom", @pers_cs_field = "ValDecomnr", @db_field = "ValDecomnr", title = @Resources.NO_DECOMISSION13045, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
-								@Html.ValidationMessageFor(model => model.ValDecomnr)
-							</div>
-						</div>
-						<div class="control-join-group">
 						<div class="i-date-picker draggable " id="CONTAINER_LED_ABATE___DECOMDTDECO__">
 								<div class="d-inline-flex">
 								@Html.LabelFor(model => model.ValDtdeco, new { label_id="LED_ABATE___DECOMDTDECO__", @class = " i-text__label", id="LABEL_LED_ABATE___DECOMDTDECO__"}, true, true)
@@ -56,6 +46,22 @@ else {
 								<a href="javascript:OpenSuggestion('LED_ABATE___DECOMDTDECO__','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
 								@Html.DateFor(model => model.ValDtdeco, new {help_id = "LED_ABATE___DECOMDTDECO__", @class = "i-input-group__field b-icon-text input-large", data_refresh = "true", data_tipoform = "DF", data_identifier = "LED_ABATE___DECOMDTDECO__", @pers_cs_area = "Decom", @pers_cs_field = "ValDtdeco", @db_field = "ValDtdeco", title = @Resources.DECOMISSION14486 })
 								@Html.ValidationMessageFor(model => model.ValDtdeco)
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-12">
+					<div class="control-row-group">
+						<div class="control-join-group">
+						<div class="i-text draggable " id="CONTAINER_LED_ABATE___DECOMDECOMNR_">
+								<div class="d-flex">
+								@Html.LabelFor(model => model.ValDecomnr, new { label_id="LED_ABATE___DECOMDECOMNR_", @class = " i-text__label", id="LABEL_LED_ABATE___DECOMDECOMNR_"}, true, true)
+								<span class="glyphicons glyphicons-stats e-icon--reporting d-none report-mode"></span>
+								<a href="javascript:OpenSuggestion('LED_ABATE___DECOMDECOMNR_','')" class="suggest suggest--hidden"><span class="glyphicons glyphicons-edit"></span><span class="hidden-elem">@Resources.SUGESTOES44000</span></a></div>
+								@Html.NumberFor(model => model.ValDecomnr, new {help_id = "LED_ABATE___DECOMDECOMNR_", @class = "Number text-right i-text__field i-text input-medium", data_identifier = "LED_ABATE___DECOMDECOMNR_", @pers_cs_area = "Decom", @pers_cs_field = "ValDecomnr", @db_field = "ValDecomnr", title = @Resources.NO_BATE21045, data_number_integer = "10", data_number_decimals = "0", data_number_format = "9999999999" })
+								@Html.ValidationMessageFor(model => model.ValDecomnr)
 							</div>
 						</div>
 					</div>

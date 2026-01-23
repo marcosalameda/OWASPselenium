@@ -210,7 +210,8 @@ namespace CSGenio.business
 
             // Only validate if there was a relevant change of the record
             var prefndupInfo = String.IsNullOrEmpty(Qfield.PrefNDup) ? null : area.DBFields[Qfield.PrefNDup];
-            if (!area.Fields[Qfield.FullName].IsDirty()
+            if (!area.Fields[area.DBFields["zzstate"].FullName].IsDirty()
+                && !area.Fields[Qfield.FullName].IsDirty()
                 && (prefndupInfo is null || !area.Fields[prefndupInfo.FullName].IsDirty()))
                 return true;
 

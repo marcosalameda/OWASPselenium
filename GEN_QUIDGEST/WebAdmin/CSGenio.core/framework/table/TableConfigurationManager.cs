@@ -70,12 +70,12 @@ public static class TableConfigurationManager
 	/// This method performs a database search to find the configuration matching the specified
 	/// user, table UUID, and configuration name combination.
 	/// </remarks>
-	public static CSGenioAtblcfg GetConfig(User user, string uuid, string configName)
+	public static TableConfiguration GetConfig(User user, string uuid, string configName)
 	{
 		PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
 
 		// Get saved configuration
-		return CSGenioAtblcfg.searchList(
+		CSGenioAtblcfg configRecord = CSGenioAtblcfg.searchList(
 			sp,
 			user,
 			CriteriaSet.And()
@@ -84,6 +84,10 @@ public static class TableConfigurationManager
 				.Equal(CSGenioAtblcfg.FldName, configName)
 			)
 			.FirstOrDefault();
+
+		return configRecord == null
+			? null
+			: TableConfiguration.ParseTableConfigData(configRecord);
 	}
 
 	/// <summary>
@@ -100,7 +104,7 @@ public static class TableConfigurationManager
 	/// already exists. If marked as default, it will clear any existing default configurations.
 	/// The operation is performed within a transaction and includes cache invalidation.
 	/// </remarks>
-	public static void SaveConfig(User user, string uuid, string configName, int isDefault, string data)
+	public static void SaveConfig(User user, string uuid, string configName, int isDefault, ITableConfiguration data)
 	{
 		ValidateMaintenanceStatus(user, "SaveConfig");
 
@@ -138,7 +142,7 @@ public static class TableConfigurationManager
 			}
 
 			// Set configuration data
-			userTableConfig.ValConfig = data;
+			userTableConfig.ValConfig = data.SerializeAsJson();
 			userTableConfig.ValDate = DateTime.UtcNow;
 
 			// Set to current version

@@ -175,6 +175,10 @@ namespace Administration.Models
 
         public string UrlAPIBackend { get; set; }
 
+        public MCPSecurityMode MCPSecurityMode { get; set; }
+
+        public string JWTEncryptionKey { get; set; }
+
 		[Display(Name = "AMBIENTE_DE_QA_09940", ResourceType = typeof(Resources.Resources))]
         public bool QAEnvironment { get; set; }
 

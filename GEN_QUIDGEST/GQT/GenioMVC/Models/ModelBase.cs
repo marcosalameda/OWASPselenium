@@ -778,7 +778,10 @@ namespace GenioMVC.Models
 				foreach (ColumnSort sort in originalSorts)
 				{
 					// Check if this field is unique
-					ColumnReference sortColumnReference = (ColumnReference)sort.Expression;
+					ColumnReference sortColumnReference = sort.Expression as ColumnReference;
+					if (sortColumnReference == null)
+						continue;
+
 					Field field = CSGenio.business.Area.GetFieldInfo(new Quidgest.Persistence.FieldRef(sortColumnReference.TableAlias, sortColumnReference.ColumnName));
 					if (
 						// Field has unique property
@@ -797,16 +800,6 @@ namespace GenioMVC.Models
 						ColumnSort prefixColumnSort = new ColumnSort(prefixColumnRef, SortOrder.Ascending);
 						if(!sorts.Contains(prefixColumnSort))
 							sorts.Add(prefixColumnSort);
-					}
-
-					// If the field is a "prefix to be unique" field, add its corresponding unique field to the ordering
-					if (!string.IsNullOrEmpty(field.SufNDup))
-					{
-						ColumnReference suffixColumnRef = new ColumnReference(field.Alias, field.SufNDup);
-						ColumnSort suffixColumnSort = new ColumnSort(suffixColumnRef, SortOrder.Ascending);
-						if (!sorts.Contains(suffixColumnSort))
-							sorts.Add(suffixColumnSort);
-						hasUniqueField = true;
 					}
 				}
 

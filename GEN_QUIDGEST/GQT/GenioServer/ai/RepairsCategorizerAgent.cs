@@ -76,11 +76,14 @@ namespace GenioServer.ai
                 $"You can't return a letter not in this 4 categories.\n";
         }
 
-        public override void Execute(DbArea area, PersistentSupport sp, User user)
+        public override void Execute(DbArea area, PersistentSupport sp, User user, AgentContextData context = null)
         {
             LoadRecords(area, sp, user);
 
-            RepairsCategorizerResponse response = base.GetResponse<RepairsCategorizerResponse>(user);
+            if(context == null)
+                context = BuildAgentContext(user, area.QPrimaryKey);
+
+            RepairsCategorizerResponse response = base.GetResponse<RepairsCategorizerResponse>(context);
             if (response == null)
                 throw new FrameworkException("Answer from AI service was empty", "RepairsCategorizerAgent.Execute", "Answer from AI service was empty");
             

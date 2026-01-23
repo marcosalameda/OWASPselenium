@@ -212,7 +212,7 @@ public abstract class HealthChecker
 	protected bool ValidateChatbotAPI(IDictionary<string, HealthStatus> details)
 	{
 		bool chatbotApiOk = true;
-		string chatbotUrl = Configuration.APIEndpoint;
+		string chatbotUrl = Configuration.AiConfig.APIEndpoint;
 
 		if (!string.IsNullOrWhiteSpace(chatbotUrl))
 		{

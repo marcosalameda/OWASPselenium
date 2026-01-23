@@ -3,11 +3,11 @@
 	<Definicoes>
 		<Sistema>GQT</Sistema>
 		<Cliente>QUIDGEST</Cliente>
-		<Versao>4331</Versao>
+		<Versao>4446</Versao>
 	</Definicoes>
 	<Modulos>
 		<Modulo ID="Reindex">
-			<PROG>Templates ReindexaÃ§Ã£o</PROG>
+			<PROG>Templates Reindexação</PROG>
 			<PLATAFOR>REINDEX</PLATAFOR>
 		</Modulo>
 	</Modulos>

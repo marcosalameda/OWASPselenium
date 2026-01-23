@@ -8,6 +8,7 @@ using GenioServer.security;
 using System.Security;
 using GenioServer.framework;
 using CSGenio.config;
+using System.Security.Cryptography;
 
 namespace CSGenio
 {
@@ -271,6 +272,60 @@ namespace CSGenio
             {
                 Messaging = new MessagingXml();
             }
+
+            // Ensure ChatBotConfig has a JWT encryption key when JWT mode is enabled
+            if (ChatBotConfig != null && ChatBotConfig.MCPSecurityMode == MCPSecurityMode.JWT && string.IsNullOrEmpty(ChatBotConfig.JWTEncryptionKey))
+            {
+                ChatBotConfig.JWTEncryptionKey = GenerateRandomJwtKey();
+            }
+        }
+        
+        /// <summary>
+        /// Generates a cryptographically secure random JWT encryption key
+        /// </summary>
+        /// <returns>A base64-encoded 256-bit random key suitable for JWT signing</returns>
+        private static string GenerateRandomJwtKey()
+        {
+            byte[] keyBytes = new byte[32]; // 256 bits
+            using (var rng = RandomNumberGenerator.Create())
+            {
+                rng.GetBytes(keyBytes);
+            }
+            return Convert.ToBase64String(keyBytes);
+        }
+
+        /// <summary>
+        /// Encodes a secret value for secure storage
+        /// </summary>
+        /// <param name="value">The plain text value to encode</param>
+        /// <returns>Encoded string suitable for storage/returns>
+        public static string EncodeSecret(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return value;
+
+            return Convert.ToBase64String(Encoding.Unicode.GetBytes(value));
+        }
+
+        /// <summary>
+        /// Decodes a secret value from storage
+        /// </summary>
+        /// <param name="encodedValue">The encoded value from storage</param>
+        /// <returns>Decoded plain text string</returns>
+        public static string DecodeSecret(string encodedValue)
+        {
+            if (string.IsNullOrEmpty(encodedValue))
+                return encodedValue;
+
+            try
+            {
+                return Encoding.Unicode.GetString(Convert.FromBase64String(encodedValue));
+            }
+            catch (FormatException)
+            {
+                // The value is not valid
+                return null;
+            }
         }
 
         public void Init()
@@ -283,6 +338,7 @@ namespace CSGenio
             Elasticsearch.Colours = new List<CoreXml>();
             maisPropriedades = ExtraProperties.GetInitialValues();
             ConfigVersion = ConfigXMLMigration.CurConfigurationVerion.ToString();
+            ChatBotConfig = new ChatBotCfg();
             Messaging = new MessagingXml();
         }
 
@@ -326,12 +382,45 @@ namespace CSGenio
         }
     }
 
+    public enum MCPSecurityMode
+    {
+        JWT,
+        None
+    }
+
     [XmlRoot("ChatBotCfg")]
     public class ChatBotCfg
     {
         [CliProperty("ai-url", "Base URL for the AI service API endpoint. Should end in /api")]
         [XmlElement("apiURL")]
-        public string apiURL { get; set; }
+        public string APIEndpoint { get; set; }
+
+        [CliProperty("mcp-security-mode", "Security mode for MCP (JWT or None)")]
+        [XmlElement("MCPSecurityMode")]
+        public MCPSecurityMode MCPSecurityMode { get; set; } = MCPSecurityMode.JWT;
+
+        [XmlElement("JWTEncryptionKey")]
+        /// <summary>
+        /// Key used for JWT symmetric encription in MCP
+        /// </summary>
+        public string JWTEncryptionKey { get; set; }
+
+        /// <summary>
+        /// Gets or sets the decoded JWT encryption key
+        /// </summary>
+        [CliProperty("jwt-encryption-key", "JWT encryption key for MCP security")]
+        [XmlIgnore]
+        public string JWTEncryptionKeyDecode
+        {
+            get
+            {
+                return ConfigurationXML.DecodeSecret(JWTEncryptionKey);
+            }
+            set
+            {
+                JWTEncryptionKey = ConfigurationXML.EncodeSecret(value);
+            }
+        }
     }
 
     [XmlRoot("core")]
@@ -364,14 +453,10 @@ namespace CSGenio
                 encodedPassword = value;
                 if (!string.IsNullOrEmpty(encodedPassword))
                 {
-                    try
+                    var decodedPassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedPassword));
+                    if (decodedPassword != null)
                     {
-                        var decodedPassword = Encoding.UTF8.GetString(Convert.FromBase64String(encodedPassword));
                         PasswordSecured = StringHelper.GetSecureString(decodedPassword);
-                    }
-                    catch (FormatException)
-                    {
-                        // The value is not a valid base64 string
                     }
                 }
             }
@@ -409,12 +494,11 @@ namespace CSGenio
         {
             get
             {
-                if (Password == null) return null;
-                return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
+                return ConfigurationXML.DecodeSecret(Username);
             }
             set
             {
-                Username = Convert.ToBase64String(Encoding.Unicode.GetBytes(value ?? string.Empty));
+                Username = ConfigurationXML.EncodeSecret(value);
             }
         }
 
@@ -426,12 +510,11 @@ namespace CSGenio
         {
             get
             {
-                if (Password == null) return null;
-                return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
+                return ConfigurationXML.DecodeSecret(Password);
             }
             set
             {
-                Password = Convert.ToBase64String(Encoding.Unicode.GetBytes(value ?? string.Empty));
+                Password = ConfigurationXML.EncodeSecret(value);
             }
         }
 
@@ -466,13 +549,11 @@ namespace CSGenio
 
         public string PasswordDecode()
         {
-            if (Password == null) return null;
-            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
+            return ConfigurationXML.DecodeSecret(Password);
         }
         public string LoginDecode()
         {
-            if (Login == null) return null;
-            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Login));
+            return ConfigurationXML.DecodeSecret(Login);
         }
 
         public framework.DatabaseType GetDatabaseType()
@@ -1219,13 +1300,11 @@ namespace CSGenio
 
         public string PasswordDecode()
         {
-            if (Password == null) return null;
-            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Password));
+            return ConfigurationXML.DecodeSecret(Password);
         }
         public string UsernameDecode()
         {
-            if (Username == null) return null;
-            return System.Text.Encoding.Unicode.GetString(Convert.FromBase64String(Username));
+            return ConfigurationXML.DecodeSecret(Username);
         }
 
     }

@@ -69,7 +69,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  6;
 			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
-			Qfield.CavDesignation = "_0_14276";
+			Qfield.CavDesignation = "_0_24019";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -208,7 +208,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  6;
 			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
-			Qfield.CavDesignation = "_0_14276";
+			Qfield.CavDesignation = "_0_24019";
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea = new List<ByAreaArguments>();
@@ -316,7 +316,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  6;
 			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
-			Qfield.CavDesignation = "_0_14276";
+			Qfield.CavDesignation = "_0_24019";
 
 			Qfield.Dupmsg = "";
 			info.RegisterFieldDB(Qfield);
@@ -451,7 +451,7 @@ namespace CSGenio.business
 			Qfield.FieldSize =  6;
 			Qfield.IntegerDigits = 3;
 			Qfield.Decimals = 2;
-			Qfield.CavDesignation = "_100_17544";
+			Qfield.CavDesignation = "_100_61612";
 
 			Qfield.Dupmsg = "";
 			argumentsListByArea = new List<ByAreaArguments>();

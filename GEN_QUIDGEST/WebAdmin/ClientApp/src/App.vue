@@ -151,6 +151,9 @@ import '@/utils/globalUtils.js';
 import { reusableMixin } from '@/mixins/mainMixin';
 import { QUtils } from '@/utils/mainUtils';
 
+import store from './store'
+import { mapGetters } from 'vuex'
+
 export default {
 	name: 'app',
 	mixins: [reusableMixin],
@@ -165,12 +168,11 @@ export default {
 			langs: [
 				{ Value: 'en-US', Text: 'English' },
 			],
-			Years: [],
-			DefaultYear: '',
 			hideDataSystems: false
 		}
 	},
 	computed: {
+		...mapGetters(['Years', 'DefaultYear']),
 		Paths() {
 			var vm = this;
 			if ($.isEmptyObject(vm.currentApp) || $.isEmptyObject(vm.Model.Paths))
@@ -188,16 +190,14 @@ export default {
 	},
 	methods: {
 		setYears(years, defaultYear) {
-			var vm = this,
-				_years = years || [];
-			vm.Years = [];
-			$.each(_years, function (i, y) {
-				vm.Years.push({ Text: y, Value: y});
-			});
-			vm.DefaultYear = defaultYear;
-			if ($.isEmptyObject(vm.currentYear) || !$.isArray(vm.currentYear, _years)) { vm.currentYear = vm.DefaultYear; }
+			store.dispatch('setYears', Array.isArray(years) ? years : [])
+			store.dispatch('setDefaultYear', defaultYear)
 
-			vm.isMultiYearApp = vm.Years.length > 1
+			if ($.isEmptyObject(this.currentYear) || this.Years.findIndex(year => year.Value === this.currentYear) === -1) {
+				this.currentYear = this.DefaultYear;
+			}
+
+			this.isMultiYearApp = this.Years.length > 1
 		},
 		getYears() {
 			var vm = this;

@@ -59,7 +59,6 @@ namespace CSGenio.business
 			Qfield.CavDesignation = "TYPE_OF_EQUIPMENT18080";
 
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "order";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
@@ -481,7 +480,12 @@ namespace CSGenio.business
 
 			// ROW_REORDERING
 			CriteriaSet criteria = CriteriaSet.And();
-			criteria.Equal(CSGenioAcmpki.FldCodtpequ, ValCodtpequ);
+			// For key fields, an empty prefix means 'no value', so we normalise it to null
+			// to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
+			// prefix to a database-safe value (e.g. Guid) before applying the equality filter.
+			var prefixField = DBFields[FldCodtpequ.Field];
+			object prefixRealValue = prefixField.isEmptyValue(ValCodtpequ) ? null : QueryUtils.ToValidDbValue(ValCodtpequ, prefixField);
+			criteria.Equal(FldCodtpequ, prefixRealValue);
 			sp.ReorderSequence(this, DBFields[FldOrder.Field], criteria);
 
             return msg;

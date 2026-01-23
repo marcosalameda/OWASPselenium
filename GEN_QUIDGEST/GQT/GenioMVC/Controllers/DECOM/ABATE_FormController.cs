@@ -34,12 +34,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ABATE_SHOW = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ABATE_NEW = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ABATE_EDIT = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ABATE_DELETE = new NavigationLocation("EQUIPMENT_DECOMMISSI11875", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new NavigationLocation("DESATIVACAO_DE_EQUIP16900", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ABATE_SHOW = new NavigationLocation("DESATIVACAO_DE_EQUIP16900", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ABATE_NEW = new NavigationLocation("DESATIVACAO_DE_EQUIP16900", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ABATE_EDIT = new NavigationLocation("DESATIVACAO_DE_EQUIP16900", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new NavigationLocation("DESATIVACAO_DE_EQUIP16900", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ABATE_DELETE = new NavigationLocation("DESATIVACAO_DE_EQUIP16900", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
 
 		#endregion
 

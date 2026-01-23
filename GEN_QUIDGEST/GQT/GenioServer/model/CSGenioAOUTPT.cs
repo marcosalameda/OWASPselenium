@@ -60,7 +60,6 @@ namespace CSGenio.business
 
             Qfield.NotNull = true;
 			Qfield.Dupmsg = "";
-            Qfield.SufNDup = "documenr";
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -

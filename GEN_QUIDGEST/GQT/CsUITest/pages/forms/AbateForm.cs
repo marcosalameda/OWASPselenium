@@ -11,8 +11,8 @@ public class AbateForm: PageObject {
 
 	private IWebElement form => driver.FindElement(By.CssSelector("[data-form='Abate']"));
 
-	public BaseInputControl LED_ABATE___DECOMDECOMNR_ => new BaseInputControl(driver, "[data-identifier='LED_ABATE___DECOMDECOMNR_']");
 	public BaseInputControl LED_ABATE___DECOMDTDECO__ => new BaseInputControl(driver, "[data-identifier='LED_ABATE___DECOMDTDECO__']");
+	public BaseInputControl LED_ABATE___DECOMDECOMNR_ => new BaseInputControl(driver, "[data-identifier='LED_ABATE___DECOMDECOMNR_']");
 
 	private IWebElement saveBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='ok']"));
 	private IWebElement cancelBtn => form.FindElement(By.CssSelector(".form-actions [qbutton='cancel']"));

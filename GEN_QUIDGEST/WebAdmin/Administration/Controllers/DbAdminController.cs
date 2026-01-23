@@ -1466,7 +1466,7 @@ namespace Administration.Controllers
                     // 2) Execução dos scripts da Criação de BD Schema
                     if (model.CriarBD)
                     {
-                        var firstFaseRdx = new List<string>() { "CREATEDB", "CREATESP", "CREATESCHEMA", "CREATEHRDSCHEMA", "TBLREBUILD", "UPDATECFG", "UPDATESP", "ADDINDEX" };
+                        var firstFaseRdx = new List<string>() { "CREATEDB", "CREATESP", "CREATESCHEMA", "CREATEHRDSCHEMA", "UPDATEFUNCTIONS", "TBLREBUILD", "UPDATECFG", "UPDATESP", "ADDINDEX" };
                         reindexOrder.ReIndexItems.ForEach(rdxf => rdxf.Selected = firstFaseRdx.Contains(rdxf.Id));
                         reindexOrder.timeout = model.Timeout;
                         reindexOrder.CalculateOrder();
@@ -1477,6 +1477,10 @@ namespace Administration.Controllers
                             {
                                 ChangeYearProgressBar.Text = "";
                                 ChangeYearProgressBar.Percent = 20;
+                            }
+                            else if (status.State == RdxProgressStatus.ERROR)
+                            {
+                                throw new OperationCanceledException($"{status.Message} - ({status.ActualScript})");
                             }
                             else
                             {
@@ -1513,6 +1517,10 @@ namespace Administration.Controllers
                         {
                             ChangeYearProgressBar.Text = "";
                             ChangeYearProgressBar.Percent = 90;
+                        }
+                        else if (status.State == RdxProgressStatus.ERROR)
+                        {
+                            throw new OperationCanceledException($"{status.Message} - ({status.ActualScript})");
                         }
                         else
                         {

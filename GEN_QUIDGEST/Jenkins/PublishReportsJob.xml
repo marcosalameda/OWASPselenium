@@ -1,0 +1,48 @@
+﻿<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.36">
+  <actions/>
+  <description>Copies CR and RS files to client apps folder and Publishes rdl reports to ReportServer&#xd;
+&#xd;
+Parameters:&#xd;
+CLIENT_ID&#xd;
+BUILD_NUMBER&#xd;
+AREA_SIGLA (optional)&#xd;
+&#xd;
+Needed configurations:&#xd;
+CENTRALDB_SERVER defined in Jenkins globals&#xd;
+DEPLOY_PATH defined in Jenkins globals&#xd;
+ZIPEXE defined in Jenkins globals&#xd;
+RS_REPORTS_DIR and/or CR_REPORTS_DIR on environment properties file&#xd;
+</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>CLIENT_ID</name>
+          <description>Client ID (as in Genio definitions)</description>
+          <defaultValue>QUIDGEST</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>BUILD_NUMBER</name>
+          <description>Build number</description>
+          <defaultValue>0</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>AREA_SIGLA</name>
+          <description>Optional root folder on RS server to publish reports</description>
+          <defaultValue></defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.77">
+    <script>@Jenkinsfile</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

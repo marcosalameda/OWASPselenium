@@ -1,0 +1,326 @@
+﻿import java.text.SimpleDateFormat
+
+node 
+{  
+    properties(
+        [parameters([
+            string(description: 'Full client name', name: 'CLIENT'),
+            string(description: 'Client acronym', name: 'CLIENT_ID'),
+			booleanParam(description: 'Quality Tests Client', name: 'QUALITY_TESTS_CLIENT', defaultValue: false),
+			booleanParam(description: 'Place each app into a different zip file', name: 'SEPARATE_APPS', defaultValue: false)
+        ])]
+    ) 
+
+    //Set the build descriptions
+    currentBuild.displayName = "#" + currentBuild.number + ":"+ CLIENT_ID 
+	currentBuild.description = CLIENT 
+
+
+    def MAIN_WORKSPACE = Jenkins.instance.rawWorkspaceDir
+    def props = readProperties file: "$JENKINS_HOME/userContent/GQT.properties"
+    def PROJECT_WORKSPACE = MAIN_WORKSPACE + "/" + props['DATABASE']
+    def scriptFolder = props["GEN_PATH"] + "\\Templates\\JenkinsTemplates\\Scripts"
+    def destinationFolder = props["ARTIFACTS"] + "\\" + CLIENT_ID + "\\" + "GQT" + "\\BUILDS\\" + BUILD_NUMBER
+    def dateFormat = new SimpleDateFormat("yyyyMMddHHmm")
+    def buildDate = dateFormat.format(new Date())
+    def source = "Source_${buildDate}.zip"
+	def appsZip = "Apps_${buildDate}.zip"
+
+    def MVCTestFolder = ""
+	
+    //Function to run scripts
+    def runScript = { String scriptFile ->
+        def scriptPath = scriptFolder + "\\" + scriptFile
+        //Powershell commands don't work well in network paths. We change the working directory and move there within powershell
+        def workingDir = pwd()
+        dir(PROJECT_WORKSPACE) 
+        {
+            powershell "try { cd '$workingDir'; & " + scriptPath + ' } catch { echo $_.Exception.Message ; exit 1 }'
+        }
+    }
+
+    withEnv([
+        // Override MSBUILD with manwins if you want a different toolset for a specific platform
+		        "MSBUILD=${tool 'MSBuild'}\\MSBuild.exe", 
+        
+    ]) 
+	{
+		dir(PROJECT_WORKSPACE) 
+		{
+			stage ('Prepare')
+			{
+				
+				if(params.QUALITY_TESTS_CLIENT == false)
+				{
+					//echo "Update definitions to the latest version"
+					//build 'SVN_Update_GQT_'+CLIENT_ID
+				}
+
+				dir("GEN_${CLIENT_ID}")
+				{
+					echo "Deleting existing files"        
+					deleteDir()
+				}
+			}
+			stage('Gerar') 
+			{
+				
+				echo "Generating for client ${CLIENT}"
+				powershell('cd ' + props["GEN_PATH"] + '; .\\GenCmd.exe generate "' + PROJECT_WORKSPACE + '" GQT  --client "' + CLIENT + '" --verbosity INFO')           
+
+				def versionInfo = readJSON file: "$PROJECT_WORKSPACE\\GEN_${CLIENT_ID}\\MetaZIP\\versionInfo.json"
+				currentBuild.displayName = "#" + currentBuild.number + " [${versionInfo.svnVersion}]:" + CLIENT_ID
+
+				
+			}
+			stage('Zip Source')
+			{
+				echo "Creating source zip"
+
+				workingDir = "$PROJECT_WORKSPACE\\GEN_${CLIENT_ID}"
+				dir(workingDir)
+				{
+					
+				  
+					runScript("ZipSource.ps1 $source")
+
+					if(props["ARTIFACTS"])
+					{
+						powershell ("mkdir '$destinationFolder' -Force")
+						bat "xcopy ${source} $destinationFolder /y"
+					}
+					else				
+					{
+						archiveArtifacts(source)
+					}
+								  
+					
+				}
+			}
+			def buildInfo = readJSON file:"$workingDir\\METAZIP\\build.json"
+			stage ("Build") 
+			{      
+				try {                
+					for(build in buildInfo.builds)
+					{
+						stage (build.stage)
+						{
+							
+							
+							if(build.platform == "MVC")
+						    {
+						        def profile = "MVCProfile_NoMerge.pubxml";
+						    
+    						    if (props["MERGE_VIEWS"] && props["MERGE_VIEWS"].toUpperCase() == "TRUE")
+    						    {
+    						        profile = "MVCProfile.pubxml";
+    						    }
+    						    
+						        runScript("build${build.platform}.ps1 ${build.solution} ${profile}")
+						    }
+							else if(build.platform != "WIN")
+							{
+								runScript("build${build.platform}.ps1 ${build.solution}")
+							}
+							else 
+							{
+								def vs = 2008 //Override with desired Visual Studio suffix (2019 for example)
+																def winMsbuild = "${tool 'MSBuild 4.0'}\\devenv.com"
+								def winMsbuild_Vars = "${tool 'MSBuild 4.0 Tools'}\\vsvars32.bat"
+								for(module in build.modules) {
+									runScript(/buildWIN.ps1 "$winMsbuild" ${build.solution}${module}genio.sln $vs "$winMsbuild_Vars"/)
+								}
+							}
+							
+						}
+					}
+				}
+				finally {
+					step([$class: 'LogParserPublisher', failBuildOnError: true, parsingRulesPath: "${scriptFolder}\\parser.txt", unstableOnWarning: true, useProjectRule: false, showGraphs: true])
+					if ('FAILURE' == currentBuild.result) { error "Error(s) found during build" }
+				}
+			}
+			stage('Zip App')
+			{
+				
+				
+				echo "Zipping apps with SEPARATE_APPS=${SEPARATE_APPS}"
+				dir("$PROJECT_WORKSPACE\\GEN_${CLIENT_ID}")
+				{
+
+					echo "Rename unneeded config files"
+					powershell 'Get-ChildItem -Recurse -Include web.config -ErrorAction SilentlyContinue | Rename-Item -NewName { $_.Name.replace(".config",".config_NEW") }'
+					powershell 'Get-ChildItem -Recurse -Include Configuracoes.xml -ErrorAction SilentlyContinue | Rename-Item -NewName { $_.Name.replace(".xml",".xml_NEW") }'
+					powershell 'Get-ChildItem -Recurse -Include _app_offline.htm -ErrorAction SilentlyContinue | Rename-Item -NewName { $_.Name.replace(".htm",".htm_NEW") }'
+
+					def zipName = appsZip
+					def individualAppNames = []
+					
+					// Zip everything expect WebAdmin
+					for(build in buildInfo.builds)
+					{
+						if(build.appid != "ADMINCS")
+					    {
+							if (params.SEPARATE_APPS)
+							{
+								zipName = "${build.appid}_${buildDate}.zip"
+								individualAppNames.push(zipName)
+							}
+							
+						    runScript("ZipApp.ps1 ${build.appid} $zipName")
+					    }
+					}
+					
+					// Zip WebAdmin
+					if (params.SEPARATE_APPS)
+					{
+						zipName = "WebAdmin_${buildDate}.zip"
+						individualAppNames.push(zipName)
+					}
+					runScript("ZipApp.ps1 WebAdmin $zipName")
+					
+					// Move zipped files to destination folder
+					if(props["ARTIFACTS"])
+					{
+						if (params.SEPARATE_APPS)
+						{
+							for (appName in individualAppNames)
+							{
+								bat "xcopy ${appName} $destinationFolder /y"
+								powershell ("Copy-Item -Path 'MetaZIP\\build.json' -Destination '${destinationFolder}\\build.json'")
+							}
+						}
+						else
+						{
+							bat "xcopy ${appsZip} $destinationFolder /y"
+							powershell ("Copy-Item -Path 'MetaZIP\\build.json' -Destination '${destinationFolder}\\build.json'")
+						}
+						
+						if(props["RS_REPORTS_DIR"])
+						{
+							echo "Creating destination reports directory for client " + CLIENT_ID
+							powershell ("mkdir '${destinationFolder}\\REPORTS' -Force")
+							echo "Copy Generic RS Reports"
+							powershell "try{ robocopy '"+PROJECT_WORKSPACE + "\\" + props["RS_REPORTS_DIR"]+"' '${destinationFolder}\\REPORTS' *.rdl /NFL /NDL /NJH /NJS /nc /ns /np > output_RS.txt; exit 0} catch {exit 0}"
+							echo "Copy Client RS Reports"
+							powershell "try{ robocopy '"+PROJECT_WORKSPACE + "\\" + props["RS_REPORTS_DIR"]+"\\" + CLIENT_ID+"' '${destinationFolder}\\REPORTS' *.rdl /NFL /NDL /NJH /NJS /nc /ns /np > output_CLIENT_RS.txt; exit 0} catch {exit 0}"
+                
+						}
+						if(props["CR_REPORTS_DIR"])
+						{
+							echo "Copy Generic CR Reports"
+							powershell "try{ robocopy '"+PROJECT_WORKSPACE + "\\" + props["CR_REPORTS_DIR"]+"' '${destinationFolder}\\REPORTS' *.rpt /NFL /NDL /NJH /NJS /nc /ns /np > output_CR.txt; exit 0} catch {exit 0}"
+							echo "Copy Client CR Reports"
+							powershell "try{ robocopy '"+PROJECT_WORKSPACE + "\\" + props["CR_REPORTS_DIR"]+"\\" + CLIENT_ID+"' '${destinationFolder}\\REPORTS' *.rpt /NFL /NDL /NJH /NJS /nc /ns /np > output_CLIENT_CR.txt; exit 0} catch {exit 0}"
+                
+						}
+					}
+					else
+					{
+						if (params.SEPARATE_APPS)
+						{
+							for (appName in individualAppNames)
+							{
+								archiveArtifacts(appName)
+							}
+						}
+						else
+						{
+							archiveArtifacts(appsZip)
+						}
+					}
+					archiveArtifacts("MetaZIP\\versionInfo.json")
+				}           
+
+				
+
+				if (params.QUALITY_TESTS_CLIENT)
+				{			
+					echo 'Copy Client MVC Directory to be used in Quality Tests'
+					
+					for(build in buildInfo.builds)
+					{
+						if(build.platform == "MVC")
+						{
+							MVCTestFolder = "${MAIN_WORKSPACE}\\test_GQT_${CLIENT_ID}_$build.appid"
+							dir("$PROJECT_WORKSPACE")
+							{   
+							    powershell "robocopy GEN_${CLIENT_ID}\$build.appid $MVCTestFolder /r:0 /w:0 /mir /x /ndl /nfl /v /log+:copytest${CLIENT_ID}${build.appid}.txt; exit 0"
+								powershell "robocopy METAZIP\\build.json $MVCTestFolder\\build.json /r:0 /w:0 /mir /x /ndl /nfl /v /log+:copytestbuild_json${CLIENT_ID}${build.appid}.txt; exit 0"
+							}
+						}
+					}
+				}
+			}
+			stage ('Publish Apps job') 
+			{
+				build job: 'PublishApps_GQT', parameters: [[$class: 'StringParameterValue', name: 'CLIENT_ID', value: CLIENT_ID],[$class: 'StringParameterValue', name: 'APPS_ZIP_FILENAME', value: appsZip],[$class: 'BooleanParameterValue', name: 'SEPARATE_APPS', value: SEPARATE_APPS],[$class: 'StringParameterValue', name: 'BUILD_NUMBER', value: currentBuild.number.toString().trim()]]
+				
+				echo 'Client Directory Deletion'
+				//Everything was successful, we can clean the project folder
+				dir("$PROJECT_WORKSPACE\\GEN_${CLIENT_ID}")
+				{                
+					deleteDir()
+				}
+			}
+			stage ('Publish Reports job') 
+			{
+				build job: 'PublishReports_GQT', parameters: [[$class: 'StringParameterValue', name: 'CLIENT_ID', value: CLIENT_ID],[$class: 'StringParameterValue', name: 'BUILD_NUMBER', value: currentBuild.number.toString().trim()]]
+			}
+			if (params.QUALITY_TESTS_CLIENT)	
+			{
+				stage ('Functional Tests job') 
+				{
+					build job: 'FunctionalTests_GQT',  parameters:[[$class: 'StringParameterValue', name: 'TEST_FOLDER', value: MVCTestFolder + '\\JavaJUnitUITest'], [$class: 'StringParameterValue', name: 'PROPERTIESFILE_PATH', value: '$JENKINS_HOME/userContent/JUnit_GQT_' + CLIENT_ID + '.properties']]
+					echo 'Client Test Directory Deletion'
+					//Everything was successful, we can clean the test project folders
+					for(build in buildInfo.builds)
+					{
+						if(build.platform == "MVC")
+						{
+							MVCTestFolder = "${MAIN_WORKSPACE}\\test_GQT_${CLIENT_ID}_$build.appid"
+							dir(MVCTestFolder)
+							{                
+								deleteDir()
+							}					
+						}
+					}
+				}
+			}
+			else
+			{
+				echo "Skipping tests... Client is not defined as the Quality Tests"
+			}
+			
+			if (SUCCESSFUL_BUILDS_FOLDER)
+			{
+				deployPath = DEPLOY_PATH
+				if (props['ARTIFACTS'])
+				{
+					deployPath = props['ARTIFACTS']
+				}
+				
+				buildNumber = currentBuild.number.toString().trim()
+				deployPath += "\\" + CLIENT_ID + "\\" + "GQT\\BUILDS\${buildNumber}"
+				
+				echo "Deploy path: ${deployPath}"
+				echo "SUCCESSFUL_BUILDS_FOLDER: ${SUCCESSFUL_BUILDS_FOLDER}"
+				echo "Ambiente: GQT"
+				echo "CLIENT_ID: ${CLIENT_ID}"
+								
+				runScript("CreateSuccessfulBuildShortcut.ps1 $deployPath $SUCCESSFUL_BUILDS_FOLDER GQT $CLIENT_ID")
+			}
+		}
+		step([$class: 'LogParserPublisher', failBuildOnError: true, parsingRulesPath: "${scriptFolder}\\parser.txt", unstableOnWarning: true, useProjectRule: false, showGraphs: true])
+	}
+}
+
+String getCredentials(String custom) {
+    if(!custom){
+        return 'svn-fileserver';
+    }
+    else {
+        return custom;
+    }
+}
+

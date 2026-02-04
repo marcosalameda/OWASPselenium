@@ -1,0 +1,133 @@
+﻿
+node 
+	{
+        def props = readProperties file: "$JENKINS_HOME/userContent/GQT.properties"  
+		def scriptFolder = props["GEN_PATH"] + "\\Templates\\JenkinsTemplates\\Scripts"
+
+		//Workspace is now placed inside ${PROJECT} configuration directory (WORKSPACE is not kept while in using ws())
+		def WORKSPACE_ROOT = Jenkins.instance.rawWorkspaceDir 
+		def WORKSPACE_DB = WORKSPACE_ROOT + '/' + props['DATABASE']
+
+		//map DEPLOY_PATH as network drive 
+		def DEPLOY_PATH_ORIGINAL = DEPLOY_PATH
+		dir(WORKSPACE_ROOT) {
+            powershell ("try{net use Z: /delete; net use Z: " + DEPLOY_PATH +" 2>iisroot_drive.txt; exit 0} catch{ exit 0;}")
+		}
+		DEPLOY_PATH = "Z:\\"
+		
+		def REPORTS_PATH = DEPLOY_PATH + "\\" +CLIENT_ID + "\\" + "GQT\\BUILDS\${params.BUILD_NUMBER}\\REPORTS"
+		
+ 		try 
+		{
+			stage ('Publish Reporting Services')
+			{
+				currentBuild.displayName = "#" + currentBuild.number 
+				currentBuild.description = CLIENT_ID 
+		   
+		   		if(props["RS_REPORTS_DIR"] || props["CR_REPORTS_DIR"])
+				{
+					//Function to run scripts
+					def runScript = { String scriptFile ->
+						def scriptPath = scriptFolder + "\\" + scriptFile
+						//Powershell commands dont work well in network paths. We change the working directory and move there within powershell
+						def workingDir = pwd()
+						dir(WORKSPACE_ROOT) {
+							powershell "try { cd '$workingDir'; & " + scriptPath +' } catch { echo $_.Exception.ErrorMessage ; exit 1 }'
+						}
+					}
+
+					/*Variaveis definidas para poderem ser usadas em manwins. Adicionar se necessÃ¡rio*/
+					def MVCDeployDirectory = DEPLOY_PATH + "\\" + CLIENT_ID + "\\" + "GQT\\ASPNetMVC\\Content\\reports\\pt-PT"
+					def WINDeployDirectory = DEPLOY_PATH + "\\" + CLIENT_ID + "\\" + "GQT\\Win"
+					
+					def DBServer        = CENTRALDB_SERVER
+					def Catalog         = CLIENT_ID + "_GQT"
+			
+					def webServiceUrl   = "${REPORTSERVER}"					
+					def rootFolder = ""
+					if(AREA_SIGLA)
+					    rootFolder = AREA_SIGLA+"/"
+					def reportFolder    =  rootFolder + "REPORTS_${CLIENT_ID}_GQT"
+					def IsOverwriteReport = 1
+					def UsesSharedDataSource = 1
+					
+					currentBuild.displayName = "#" + currentBuild.number + ":"+ CLIENT_ID
+					currentBuild.description = "Report Server: " + webServiceUrl +"; Report Folder: " + reportFolder
+
+					def buildInfo;
+					
+					dir(DEPLOY_PATH + "\\" +CLIENT_ID + "\\"+"GQT\\BUILDS\${params.BUILD_NUMBER}")
+					{
+						buildInfo = readJSON file:"build.json"
+					}	
+					
+					echo "Copy RPT Reports"
+					for(build in buildInfo.builds)
+					{
+						if(build.platform == "MVC")
+						{
+							//powershell "try{ robocopy '"+REPORTS_PATH+"' '"+ MVCDeployDirectory +"' *.rpt; exit 0} catch { echo $_.Exception.ErrorMessage ; exit 1}"
+							def script = "robocopy '"+REPORTS_PATH+"' '"+ MVCDeployDirectory +"' *.rpt";
+							def lastExitCode = powershell script:script, returnStatus:true;
+					
+							// Robocopy errors start at exit code 8
+							if (lastExitCode >= 8) {
+								throw new Exception("Some files or directories could not be copied");
+							}
+							else { echo "All done: robocopy exit code was $lastExitCode" }
+						}
+						if(build.platform == "WIN")
+						{
+							//powershell "try{ robocopy '"+REPORTS_PATH+"' '"+ WINDeployDirectory +"' *.rpt; exit 0} catch { echo $_.Exception.ErrorMessage ; exit 1}"
+							def script = "robocopy '"+REPORTS_PATH+"' '"+ WINDeployDirectory +"' *.rpt";
+							def lastExitCode = powershell script:script, returnStatus:true;
+					
+							// Robocopy errors start at exit code 8
+							if (lastExitCode >= 8) {
+								throw new Exception("Some files or directories could not be copied");
+							}
+							else { echo "All done: robocopy exit code was $lastExitCode" }
+						}
+					}
+					
+					echo "Update definitions"
+					dir(REPORTS_PATH)
+					{
+						runScript("RsDeployer.ps1 "+ pwd() + " " + "GQT" + " " + DBServer + " " + Catalog + " " + webServiceUrl + " " + reportFolder + " " + IsOverwriteReport + " " + UsesSharedDataSource)
+					}
+					
+					echo "Place REPORTS folder inside app zip files"
+					dir(DEPLOY_PATH + "\\" +CLIENT_ID + "\\"+"GQT\\BUILDS\${params.BUILD_NUMBER}")
+					{
+						runScript("ZipReports.ps1 " + pwd())
+					}
+				}
+				else
+				{
+					echo "Reports directories (RS_REPORTS_DIR/CR_REPORTS_DIR) are not defined in properties configuration file... skipping reports publishing job."
+				}
+			}
+		} 
+		catch (e) 
+		{
+		    currentBuild.result = "FAILURE"
+			throw e
+		} 
+		finally 
+		{
+			
+			step([$class: 'LogParserPublisher', failBuildOnError: true, parsingRulesPath: "${scriptFolder}\\parser.txt", unstableOnWarning: true, useProjectRule: false, showGraphs: true])
+		}
+	}
+	
+String getCredentials(String custom) 
+{
+	if(!custom)
+	{
+		return 'svn-fileserver';
+	}
+	else 
+	{
+		return custom;
+	}
+}

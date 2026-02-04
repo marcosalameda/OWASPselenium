@@ -1,0 +1,75 @@
+﻿<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.36">
+  <actions>
+    <org.jenkinsci.plugins.workflow.multibranch.JobPropertyTrackerAction plugin="workflow-multibranch@2.21">
+      <jobPropertyDescriptors>
+        <string>hudson.model.ParametersDefinitionProperty</string>
+      </jobPropertyDescriptors>
+    </org.jenkinsci.plugins.workflow.multibranch.JobPropertyTrackerAction>
+  </actions>
+  <description>Publishes Apps on IIS&#xd;
+&#xd;
+Parameters:&#xd;
+CLIENT_ID&#xd;
+APPS_ZIP_FILENAME&#xd;
+BUILD_NUMBER&#xd;
+MIN_DAYS&#xd;
+MIN_BUILDS&#xd;
+SEPARATE_APPS&#xd;
+&#xd;
+Needed configurations:&#xd;
+IISSERVER defined in Jenkins globals&#xd;
+DEPLOY_PATH defined in Jenkins globals&#xd;
+ZIPEXE defined in Jenkins globals&#xd;
+REINDEX_CLIENT (exe client to be used to reindex DBs)&#xd;
+</description>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <org.jenkinsci.plugins.workflow.job.properties.DisableConcurrentBuildsJobProperty/>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>CLIENT_ID</name>
+          <description>Client ID (as in Genio definitions)</description>
+          <defaultValue>JENKINS</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>APPS_ZIP_FILENAME</name>
+          <description>Zip filename starting name with apps to be published</description>
+          <defaultValue>Apps_DATE</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>BUILD_NUMBER</name>
+          <description>Build Number (subfolder)</description>
+          <defaultValue>0</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+		<hudson.model.StringParameterDefinition>
+          <name>MIN_DAYS</name>
+          <description>Minimum number of days before a build can be deleted</description>
+          <defaultValue>5</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+		<hudson.model.StringParameterDefinition>
+          <name>MIN_BUILDS</name>
+          <description>Minimum number of builds to keep</description>
+          <defaultValue>10</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+		<hudson.model.BooleanParameterDefinition>
+          <name>SEPARATE_APPS</name>
+          <description>Place each app into a different zip file</description>
+          <defaultValue>false</defaultValue>
+        </hudson.model.BooleanParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.77">
+    <script>@Jenkinsfile</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

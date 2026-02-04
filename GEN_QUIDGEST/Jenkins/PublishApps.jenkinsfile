@@ -1,0 +1,191 @@
+﻿import java.text.SimpleDateFormat
+node {   
+	properties(
+		[parameters([
+			stringParam(description: 'Client ID (as in Genio definitions)', name: 'CLIENT_ID', defaultValue: 'JENKINS'),
+			stringParam(description: 'Zip filename starting name with apps to be published', name: 'APPS_ZIP_FILENAME', defaultValue: 'Apps_DATE'),
+			stringParam(description: 'Build Number (subfolder)', name: 'BUILD_NUMBER', defaultValue: '0'),
+			stringParam(description: 'Minimum number of days before a build can be deleted', name: 'MIN_DAYS', defaultValue: '5'),
+			stringParam(description: 'Minimum number of builds to keep', name: 'MIN_BUILDS', defaultValue: '10'),
+			booleanParam(description: 'Place each app into a different zip file', name: 'SEPARATE_APPS', defaultValue: false)
+		])]
+	) 
+
+	def props = readProperties file: "$JENKINS_HOME/userContent/GQT.properties"  
+	def scriptFolder = props["GEN_PATH"] + "\\Templates\\JenkinsTemplates\\Scripts"
+	//Workspace is now placed inside project configuration directory
+	def WORKSPACE_ROOT = Jenkins.instance.rawWorkspaceDir 
+	def WORKSPACE_DB = WORKSPACE_ROOT + '/' + props['DATABASE'] 
+	//map DEPLOY_PATH as network drive
+	
+	if (props['ARTIFACTS'])
+	{
+		DEPLOY_PATH = props['ARTIFACTS']
+	}
+	
+	def DEPLOY_PATH_ORIGINAL = DEPLOY_PATH
+	dir(WORKSPACE_ROOT) {
+		powershell ("try{net use Z: /delete; net use Z: " + DEPLOY_PATH +" 2>iisroot_drive.txt; exit 0} catch{ exit 0;}")
+	}
+	DEPLOY_PATH = "Z:\\"
+
+	def dateFormat = new SimpleDateFormat("yyyyMMddHHmm")
+	def date = new Date()
+	def CLIENT_ID       = "${params.CLIENT_ID}"
+	def CLIENTDIR = WORKSPACE_DB + "\\GEN_" + CLIENT_ID
+	
+	def appsZip_ORIGINAL = DEPLOY_PATH_ORIGINAL + "\\" +CLIENT_ID + "\\" + "GQT\\BUILDS\${params.BUILD_NUMBER}\${params.APPS_ZIP_FILENAME}" 
+	
+	def buildFolder = DEPLOY_PATH + "\\" + CLIENT_ID + "\\" + "GQT\\BUILDS\${params.BUILD_NUMBER}"
+	
+	def appsZip = "$buildFolder\${params.APPS_ZIP_FILENAME}" 
+	def buildInfo = readJSON file:"$buildFolder\\build.json"
+	
+	currentBuild.displayName = "#" + currentBuild.number 
+	currentBuild.description = CLIENT_ID + "; AppsZip: " + "${params.APPS_ZIP_FILENAME}; Build: " + BUILD_NUMBER
+	
+	def REINDEX_USING_BO     = 0  
+
+	//Function to run scripts
+	def runScript = { String scriptFile ->
+		def scriptPath = scriptFolder + "\\" + scriptFile
+		//Powershell commands dont work well in network paths. We change the working directory and move there within powershell
+		def workingDir = pwd()
+		dir(WORKSPACE_ROOT) {
+			powershell "try { cd '$workingDir'; & " + scriptPath +' } catch { echo $_.Exception.ErrorMessage ; exit 1 }'
+		}
+	}
+	try
+	{
+		JENKINSAUXFILES = JENKINSAUXFILES + "\\" + CLIENT_ID + "\\" +"GQT\\"
+		dir(DEPLOY_PATH+"\\" +CLIENT_ID + "\\" +"GQT")       
+		{                                
+			echo "Refreshing IIS Aplications"
+			echo "Setting sites offline"
+			powershell 'Get-ChildItem -Recurse -Include _app_offline.htm | Rename-Item -NewName { $_.Name.replace("_app_offline.htm","app_offline.htm") } -Force -ErrorAction Ignore'
+		}
+
+		//direct unzip was too slow, replaced to unzip locally to a subfolder and then copy via robocopy utility 
+		stage('Local unzip')
+		{
+			powershell ("mkdir '"+JENKINSAUXFILES+"' -Force")
+			powershell ("mkdir '"+JENKINSAUXFILES+"\\PUBLISH' -Force")
+
+			dir(JENKINSAUXFILES + "\\PUBLISH")
+			{
+				echo "deleting publish folder"
+				deleteDir()
+
+				echo "Unzipping apps with SEPARATE_APPS=${SEPARATE_APPS}"
+				if (params.SEPARATE_APPS)
+				{
+					for(build in buildInfo.builds)
+					{
+						def zipName
+						
+						if(build.appid != "ADMINCS")
+						{
+							zipName = appsZip.replace("Apps", build.appid)
+						}
+						else
+						{
+							zipName = appsZip.replace("Apps", "WebAdmin")
+						}
+						
+						powershell("& $ZIPEXE x " +"${zipName} -aoa -o'.\'")
+					}
+				}
+				else
+				{
+					powershell("& $ZIPEXE x " +"${appsZip} -aoa -o'.\'")
+				}
+				
+				echo "Removing unneeded config files"
+				powershell ' del *//**//web.config -Recurse -Force -ErrorAction Ignore'
+				powershell ' del *//**//Configuracoes.xml -Recurse -Force -ErrorAction Ignore'
+			}
+		}
+		
+		stage('Manage disk space')
+		{
+			dir(DEPLOY_PATH+"\\" +CLIENT_ID + "\\" + "GQT")       
+			{
+				echo "Deleting old publication files (bin, Content and Views)"
+				powershell ' del *\\bin\\* -exclude Configuracoes.xml -Recurse -Force -ErrorAction Ignore'
+				powershell ' del *\\Content\\* -Recurse -Force -ErrorAction Ignore'
+				powershell ' del *\\Views\\* -Recurse -Force -ErrorAction Ignore'
+			
+			}
+		}
+		
+		stage('Publish Apps') 
+		{
+			dir(DEPLOY_PATH+"\\" +CLIENT_ID + "\\" + "GQT")       
+			{                
+				//Copy publish folder contents
+				
+				//powershell("try{robocopy "+ JENKINSAUXFILES + "\\PUBLISH" + " .\\ /r:0 /w:0 /e /log+:"+ "." + "\\copyTestPublish.txt /x /ndl /nfl /v; exit 0}catch{exit 1;}")
+				def script = "robocopy "+ JENKINSAUXFILES + "\\PUBLISH" + " .\\ /r:0 /w:0 /e /log+:"+ "." + "\\copyTestPublish.txt /x /ndl /nfl /v";
+				def lastExitCode = powershell script:script, returnStatus:true;
+				
+				// Robocopy errors start at exit code 8
+				if (lastExitCode >= 8) {
+					currentBuild.result = "FAILURE";
+					throw new Exception("Some files or directories could not be copied");
+				}
+				else { echo "All done: robocopy exit code was $lastExitCode" }
+
+				dir(JENKINSAUXFILES + "\\PUBLISH")
+				{
+					echo "deleting publish folder"
+					deleteDir()
+				}
+
+			}
+		}
+		
+		stage ("Reindex via WebAdmin")
+		{
+			dir(DEPLOY_PATH+"\\" +CLIENT_ID+"\\" +"GQT")       
+			{
+				def rootFolder;
+				if (props['VIRTUAL_ROOT_DIRECTORY'])
+				{
+					rootFolder = props['VIRTUAL_ROOT_DIRECTORY'].replace('\\', '').minus(IISSERVER)
+				}
+				else
+				{
+					rootFolder = DEPLOY_PATH_ORIGINAL.replace('\\', '').minus(IISSERVER)
+					echo "props['VIRTUAL_ROOT_DIRECTORY'] is not defined, using physical root directory: $rootFolder"
+				}
+
+				echo "http://" + IISSERVER + "/" + rootFolder + "/" + CLIENT_ID + "/GQT/WebAdmin/WebAPI.asmx"
+				echo "Reindexing DB via webservice"
+				//falta colocar offline
+				if(fileExists("WebAdmin\\configuracoes.xml"))
+				{
+					powershell ("[xml]$ConfigFile = Get-Content WebAdmin\\configuracoes.xml; foreach ($year in $ConfigFile.ConfigurationXML.DataSystems.DataSystem.Name){& " + REINDEX_CLIENT + " http://"+IISSERVER+"/" + rootFolder + "/"+CLIENT_ID+"/GQT/WebAdmin/WebAPI.asmx UQBVAEkARABHAEUAUwBUAA== WgBQAEgAMgBMAEEAQgA= $year --timeout 3000}")
+				}
+				/* Parse errors */
+				step([$class: 'LogParserPublisher', failBuildOnError: true, parsingRulesPath: "${scriptFolder}\\parser.txt", unstableOnWarning: true, useProjectRule: false])
+				if ('FAILURE' == currentBuild.result) { error "Error(s) found during generation" }
+			}
+		}
+				
+		dir(DEPLOY_PATH + "\\" + CLIENT_ID + "\\" + "GQT")       
+		{
+			echo "Setting sites online"
+			powershell 'Get-ChildItem -Recurse -Include app_offline.htm | Rename-Item -NewName { $_.Name.replace("app_offline.htm","_app_offline.htm") } -Force -ErrorAction Ignore'
+		}				
+	
+		//show info abut zip 
+		currentBuild.description = currentBuild.description + ": " + appsZip_ORIGINAL
+	}
+	catch (e) {
+		throw e
+	} finally {
+		step([$class: 'LogParserPublisher', failBuildOnError: true, parsingRulesPath: "${scriptFolder}\\parser.txt", unstableOnWarning: true, useProjectRule: false])
+	}
+}	
+
+/********************************************/

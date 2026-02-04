@@ -1,0 +1,65 @@
+﻿<?xml version='1.1' encoding='UTF-8'?>
+<project>
+  <actions/>
+  <description>Automated user interface tests for MVC applications</description>
+  <displayName>FunctionalTests_GQT</displayName>
+  <keepDependencies>false</keepDependencies>
+  <properties>
+    <hudson.model.ParametersDefinitionProperty>
+      <parameterDefinitions>
+        <hudson.model.StringParameterDefinition>
+          <name>TEST_FOLDER</name>
+          <description>MVC Test folder</description>
+          <defaultValue>$WORKSPACE\test_GQT_QUIDGEST_ASPNetMVC\JavaJUnitUITest</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>PROPERTIESFILE_PATH</name>
+          <description>Path to JUnit project configuration file</description>
+          <defaultValue>$JENKINS_HOME/userContent/JUnit_GQT_QUIDGEST.properties</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+        <hudson.model.StringParameterDefinition>
+          <name>TESTRUN</name>
+          <description>Test to run  (LoginTest/NavTest/or any other test you want ro run)</description>
+          <defaultValue>LoginTest</defaultValue>
+          <trim>false</trim>
+        </hudson.model.StringParameterDefinition>
+      </parameterDefinitions>
+    </hudson.model.ParametersDefinitionProperty>
+  </properties>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <jdk>(System)</jdk>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <customWorkspace>$TEST_FOLDER</customWorkspace>
+  <builders>
+    <hudson.tasks.Maven>
+      <targets>clean test</targets>
+      <mavenName>(Default)</mavenName>
+      <pom>$TEST_FOLDER/pom.xml</pom>
+      <properties>properties.path=$PROPERTIESFILE_PATH
+webdriver.path=$WEBDRIVERS
+test=$TESTRUN</properties>
+      <usePrivateRepository>false</usePrivateRepository>
+      <settings class="jenkins.mvn.DefaultSettingsProvider"/>
+      <globalSettings class="jenkins.mvn.DefaultGlobalSettingsProvider"/>
+      <injectBuildVariables>false</injectBuildVariables>
+    </hudson.tasks.Maven>
+  </builders>
+  <publishers>
+    <hudson.tasks.junit.JUnitResultArchiver plugin="junit@1.28">
+      <testResults>**/**/target/surefire-reports/*.xml</testResults>
+      <keepLongStdio>false</keepLongStdio>
+      <healthScaleFactor>1.0</healthScaleFactor>
+      <allowEmptyResults>false</allowEmptyResults>
+    </hudson.tasks.junit.JUnitResultArchiver>
+  </publishers>
+  <buildWrappers>
+    <hudson.plugins.timestamper.TimestamperBuildWrapper plugin="timestamper@1.10"/>
+  </buildWrappers>
+</project>

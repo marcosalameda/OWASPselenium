@@ -40,12 +40,12 @@ namespace CSGenio.framework
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "376.54";
+        public const string GenioVersion = "376.60";
 
         /// <summary>
         /// Generated version. Is incremented each time there is a generation
         /// </summary>
-        public const int Generation = 2993;
+        public const int Generation = 2994;
 
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Date when the code was generated
         /// </summary>
-        public static readonly DateTime GenerationDate = new DateTime(2026, 1, 23);
+        public static readonly DateTime GenerationDate = new DateTime(2026, 2, 4);
 
     }
 }

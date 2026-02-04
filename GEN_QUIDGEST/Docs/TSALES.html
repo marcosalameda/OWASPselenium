@@ -1,0 +1,163 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Adobe Font -->
+    <link rel="stylesheet" href="https://use.typekit.net/fwu4cuk.css">
+
+    <!-- Font Awesome-->
+    <script src="https://kit.fontawesome.com/d5448672a1.js" crossorigin="anonymous"></script>
+
+     <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="quidgest.css" type="text/css" media="screen, projection" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <title>Technical Documentation GQT - Tables</title>
+</head>
+
+
+<body>
+    <header class="fixed-header">
+      <div class="navbar-header">
+        <div class="page-title">
+           <h1>Technical Documentation GQT</h1>
+
+        </div>
+      </div>
+    </header>
+    <div class="menu-bar">
+        <ul>
+    <li class="menu-item">
+        <a href="Index.html">Home</a>
+    </li>
+    <li class="menu-item">
+            <a href="Tables.html">Tables</a>
+    </li>
+    <li class="menu-item">
+        <a href="Areas.html">Areas</a>
+    </li>
+    <li class="menu-item">
+        <a href="Arrays.html">Arrays</a>
+    </li>
+    <li class="menu-item">
+        <a href="Forms.html">Forms</a>
+    </li>
+    <li class="menu-item">
+        <a href="Modules.html">Modules</a>
+    </li>
+    <li class="menu-item">
+        <a href="Reports.html">Reports</a>
+    </li>
+    <li class="menu-item">
+        <a href="LevelGroup.html">Levels</a>
+    </li>
+    <li class="menu-item">
+        <a href="RolesGroup.html">Roles</a>
+    </li>
+    <li class="menu-item">
+        <a href="Process.html">Processes</a>
+    </li>
+    <li class="menu-item">
+        <a href="DataClass.html">Data classification</a>
+    </li>
+    </ul>
+    </div>
+    <section class="body-main-body">
+        <div class="content-main-body">
+        <h2 id="top">Table SALES</h2>
+
+<div class="index">
+<ul>
+  <li><i class="fa fa-long-arrow-left" aria-hidden="true" style="font-size:18px"></i><a href="Tables.html">  Back<a></li>
+  <li>Area <a href="Asales.html">SALES</a></li>
+  <li><a href="#fields">Fields</a></li>
+</ul>
+</div>
+<br>
+<div class="frame">
+<h4>General Information</h4>
+<ul>
+<li>Group of sales.</li>
+<li>Each record represents  sale</li>
+</ul>
+<br>
+<hr>
+<br>
+<h4 id="areas">Areas<a class="top" href="#top"> <i class="fas fa-link"></i></a></h4>
+<p>
+  	This table doesn't have areas therefore it must be considered that it has an area and a domain with the same name.
+</p>
+<p>
+	<a href="Asales.html">SALES</a> Sales.
+</p>
+<br>
+<hr>
+<br>
+<h4 id="fields">Table's fields<a class="top" href="#top"> <i class="fas fa-link"></i></a></h4>
+	<ul>
+		<li>
+			<a name="CODSALES">Codsales</a>[CODSALES]  [Primary key | 8]		</li>
+		<li>
+			<a name="CODORGAN">Codorgan</a>[CODORGAN]  [Foreign key | 8]		</li>
+		<li>
+			<a name="NRLIDE">Nrlide</a>[NRLIDE] N.º da lide [Numeric | 10]		</li>
+		<li>
+			<a name="STARTDT">Startdt</a>[STARTDT] Beginning [DateTime | 16]		</li>
+		<li>
+			<a name="IDENTIFI">Identifi</a>[IDENTIFI] Identificação da oportunidade comercial [Text | 85]		</li>
+		<li>
+			<a name="POTCOMPR">Potcompr</a>[POTCOMPR] Potenciais compradores [Text | 50]		</li>
+		<li>
+			<a name="PROSPECC">Prospecc</a>[PROSPECC] Prospecção efectuada [Logical | 1]		</li>
+		<li>
+			<a name="INTERESS">Interess</a>[INTERESS] Interessado [Logical | 1]		</li>
+		<li>
+			<a name="SEMRFINA">Semrfina</a>[SEMRFINA] Sem recursos financeiros [Logical | 1]		</li>
+		<li>
+			<a name="SEMCAPAC">Semcapac</a>[SEMCAPAC] Sem capacidade de decisão [Logical | 1]		</li>
+		<li>
+			<a name="DTQUALIF">Dtqualif</a>[DTQUALIF] Qualificação [DateTime | 16]		</li>
+		<li>
+			<a name="QUALIFIC">Qualific</a>[QUALIFIC] Qualificação efectuada [Logical | 1]		</li>
+		<li>
+			<a name="PREABORD">Preabord</a>[PREABORD] Pré-abordagem [DateTime | 16]		</li>
+		<li>
+			<a name="HOMEWORK">Homework</a>[HOMEWORK] Trabalho de casa efectuado [Logical | 1]		</li>
+		<li>
+			<a name="DTABORDA">Dtaborda</a>[DTABORDA] Abordagem [DateTime | 16]		</li>
+		<li>
+			<a name="APPROACH">Approach</a>[APPROACH] Abordagem efectuada [Logical | 1]		</li>
+		<li>
+			<a name="APRESENT">Apresent</a>[APRESENT] Apresentação [Logical | 1]		</li>
+		<li>
+			<a name="DTAPRESE">Dtaprese</a>[DTAPRESE] Apresentação efectuada [DateTime | 16]		</li>
+		<li>
+			<a name="DTSUPERA">Dtsupera</a>[DTSUPERA] Superar objeções [DateTime | 16]		</li>
+		<li>
+			<a name="TENTFECH">Tentfech</a>[TENTFECH] Tentativas de fecho [DateTime | 16]		</li>
+		<li>
+			<a name="DTVENDA">Dtvenda</a>[DTVENDA] Fecho da venda [DateTime | 16]		</li>
+		<li>
+			<a name="DTACOMPA">Dtacompa</a>[DTACOMPA] Acompanhamento [DateTime | 16]		</li>
+		<li>
+			<a name="SHOWRCRD">Showrcrd</a>[SHOWRCRD] Show Record [Logical | 1]		</li>
+	</ul>
+</div>
+        </div>
+      </section>
+    <section class="footer">
+        <hr />
+        <a class="navbar-brand" href="index.html">
+            <img class="logo" src="logotipo_footer.png" alt="logo" />
+            <img class="logo" src="quidgest-certificacoes.png" alt="logo" />
+        </a>
+    </section>
+    <script type="text/javascript" src="quidgest.js"></script>
+</body>
+</html>

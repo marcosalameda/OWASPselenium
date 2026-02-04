@@ -1,0 +1,260 @@
+html,
+body {
+    min-width: 700px;
+    width: 100%;
+}
+
+body {
+    font-family: "Muli", sans-serif !important;
+    padding-top: 70px;
+}
+
+    body a {
+        color: #2d353e !important;
+        text-decoration: none !important;
+    }
+
+/* HEADER */
+
+header {
+    box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
+    background: #38424D;
+}
+
+.fixed-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+    height: 4.6rem;
+}
+
+.navbar-header {
+    padding: 1rem 6rem;
+}
+
+/* INDEX Page */
+
+.page-header {
+    height: 18rem;
+    width: 100%;
+    background-color: #38424D;
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+    box-shadow: 0 1px 4px 0 rgb(0 0 0 / 10%);
+}
+
+.container-title {
+    padding: 3rem 0;
+}
+
+    .container-title h1 {
+        color: #fff;
+        font-weight: bold;
+        margin: 0 !important;
+    }
+
+.grid {
+    padding-top: 4rem;
+}
+
+.btn-item {
+    padding: 1rem;
+    border: 1px solid #dee2e6 !important;
+    background-color: #f8f9fa !important;
+    width: 100%;
+}
+
+    .btn-item:hover {
+        box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
+    }
+    /* MAIN PAGE
+
+Header */
+
+
+    .page-title h1 {
+        color: #fff;
+        font-weight: bold;
+    }
+
+/* Menu */
+
+.menu-bar {
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index:1;
+}
+
+
+.menu-bar ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0 5.3rem;
+    overflow: hidden;
+    background-color: #1694ca;
+}
+
+.menu-bar li {
+    float: left;
+}
+
+    .menu-bar li a {
+        display: block;
+        color: white !important;
+        text-align: left;
+        padding: 1rem;
+        text-decoration: none;
+    }
+
+        .menu-bar li a:hover, .menu-item.selected a{
+            background-color: #fff;
+            color: #38424D !important;
+        }
+
+/* Body main content */
+
+.content-main-body {
+    padding: 3rem;
+    margin-top:6rem;
+}
+    .content-main-body h2 {
+        color: #38424D;
+        font-weight:bold;
+    }
+
+
+.table-list {
+    border: 1px solid #e5e5e5;
+    padding-top: 0.5rem;
+}
+
+    .table-list li {
+        padding: 0.5rem 0;
+    }
+
+        .table-list li:hover {
+            background-color: #e5e5e5;
+        }
+
+    .table-list table {
+        margin-top: 2rem;
+        caption-side: bottom;
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
+    }
+
+    .table-list tr {
+        height: 2rem;
+    }
+
+    .table-list th {
+        color: white;
+        background-color: #38424D;
+        box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
+        padding-left: 0.8rem;
+    }
+
+    .table-list td {
+        padding-left: 0.8rem;
+    }
+
+.table-list-container {
+    padding:2rem;
+}
+
+.index {
+    padding: 1rem;
+    background-color: #f7f7f7;
+}
+
+    .index ul {
+        list-style:none;
+        
+    }
+    .index li {
+        padding: 0 1rem;
+        float:left;
+    }
+
+    .index a {
+       color: #2d353e !important;
+       text-decoration: none !important;
+    }
+
+        .index a:hover {
+            text-decoration:underline white;
+        }
+        .frame {
+    border: 1px solid #e5e5e5;
+    padding: 3rem 4rem;
+}
+.frame ul {
+    padding:0.5rem 0;
+    margin: 0 !important;
+}
+    .frame li {
+        padding: 0.5rem 0;
+    }
+    .frame h5 {
+        font-style: italic;
+        padding-top: 0.7rem;
+    }
+
+    .frame table {
+        margin-top: 2rem;
+        caption-side: bottom;
+        border-collapse: collapse;
+        width: 100%;
+        box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
+    }
+    
+    .frame tr {
+        height: 2rem;
+    }
+    
+    .frame th {
+        color: white;
+        background-color: #38424D;
+        box-shadow: 0 1px 4px 0 rgb(0 0 0 / 20%);
+        padding-left: 0.8rem;
+    }
+
+    .frame td {
+        padding-left: 0.8rem;
+    }
+
+        /* Footer Section */
+.footer {
+    min-width: 10vh;
+    position: fixed;
+    bottom: 0;
+    width:100%;
+    background-color: white;
+}
+
+ul {
+    list-style:none;
+}
+
+.fas.fa-link {
+    color: #fff;
+    font-size: 18px;
+}
+
+.fas.fa-link:hover {
+    color: #e5e5e5;
+    font-size: 18px;
+}
+
+@media (min-width: 1199.98px) {
+    .content-main-body {
+        padding: 3rem;
+        margin-top: 3rem;
+        padding-bottom: 6rem;
+    }
+}
+

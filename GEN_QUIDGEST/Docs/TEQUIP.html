@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Adobe Font -->
+    <link rel="stylesheet" href="https://use.typekit.net/fwu4cuk.css">
+
+    <!-- Font Awesome-->
+    <script src="https://kit.fontawesome.com/d5448672a1.js" crossorigin="anonymous"></script>
+
+     <!-- JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="quidgest.css" type="text/css" media="screen, projection" />
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <title>Technical Documentation GQT - Tables</title>
+</head>
+
+
+<body>
+    <header class="fixed-header">
+      <div class="navbar-header">
+        <div class="page-title">
+           <h1>Technical Documentation GQT</h1>
+
+        </div>
+      </div>
+    </header>
+    <div class="menu-bar">
+        <ul>
+    <li class="menu-item">
+        <a href="Index.html">Home</a>
+    </li>
+    <li class="menu-item">
+            <a href="Tables.html">Tables</a>
+    </li>
+    <li class="menu-item">
+        <a href="Areas.html">Areas</a>
+    </li>
+    <li class="menu-item">
+        <a href="Arrays.html">Arrays</a>
+    </li>
+    <li class="menu-item">
+        <a href="Forms.html">Forms</a>
+    </li>
+    <li class="menu-item">
+        <a href="Modules.html">Modules</a>
+    </li>
+    <li class="menu-item">
+        <a href="Reports.html">Reports</a>
+    </li>
+    <li class="menu-item">
+        <a href="LevelGroup.html">Levels</a>
+    </li>
+    <li class="menu-item">
+        <a href="RolesGroup.html">Roles</a>
+    </li>
+    <li class="menu-item">
+        <a href="Process.html">Processes</a>
+    </li>
+    <li class="menu-item">
+        <a href="DataClass.html">Data classification</a>
+    </li>
+    </ul>
+    </div>
+    <section class="body-main-body">
+        <div class="content-main-body">
+        <h2 id="top">Table EQUIP</h2>
+
+<div class="index">
+<ul>
+  <li><i class="fa fa-long-arrow-left" aria-hidden="true" style="font-size:18px"></i><a href="Tables.html">  Back<a></li>
+  <li>Area <a href="Aequip.html">EQUIP</a></li>
+  <li><a href="#fields">Fields</a></li>
+</ul>
+</div>
+<br>
+<div class="frame">
+<h4>General Information</h4>
+<ul>
+<li>Group of equipment.</li>
+<li>Each record represents  equipment</li>
+</ul>
+<br>
+<hr>
+<br>
+<h4 id="areas">Areas<a class="top" href="#top"> <i class="fas fa-link"></i></a></h4>
+<p>
+  	This table doesn't have areas therefore it must be considered that it has an area and a domain with the same name.
+</p>
+<p>
+	<a href="Aequip.html">EQUIP</a> Equipment.
+</p>
+<br>
+<hr>
+<br>
+<h4 id="fields">Table's fields<a class="top" href="#top"> <i class="fas fa-link"></i></a></h4>
+	<ul>
+		<li>
+			<a name="CODEQUIP">Codequip</a>[CODEQUIP]  [Primary key | 8]<ul>
+	<li>Fields to be updated when this is updated (triggers):</li>
+	<li>
+		<a href="TEQUIP.html#FIRST">[EQUIP.FIRST]</a> updates the formula CT
+	</li>
+	<li>
+		<a href="TEQUIP.html#FOLLOWIN">[EQUIP.FOLLOWIN]</a> updates the formula CS
+	</li>
+	<li>
+		<a href="TEQUIP.html#LAST">[EQUIP.LAST]</a> updates the formula CS
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="CODEMPRE">Codempre</a>[CODEMPRE] >COMPANY [Foreign key | 8]<ul>
+	<li>Fields to be updated when this is updated (triggers):</li>
+	<li>
+		<a href="TREPAR.html#CODEMPRE">[REPAR.CODEMPRE]</a> updates the formula ++
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="CODPESS1">Codpess1</a>[CODPESS1] >COMOMODOR [Foreign key | 8]		</li>
+		<li>
+			<a name="SEQUENNR">Sequennr</a>[SEQUENNR] Sequential no. [Numeric | 6 d]<ul>
+	<li>Fields to be updated when this is updated (triggers):</li>
+	<li>
+		<a href="TEQUIP.html#REGISTNR">[EQUIP.REGISTNR]</a> updates the formula +
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="REGISTNR">Registnr</a>[REGISTNR] No. register [Text | 6]<ul>
+	<li>Sources of this field's (+) calculation:</li>
+	<li>
+		<a href="TEQUIP.html#SEQUENNR">[EQUIP.SEQUENNR]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="CODTPEQU">Codtpequ</a>[CODTPEQU] >TYPE OF EQUIPMENT [Foreign key | 8]		</li>
+		<li>
+			<a name="CODWAREH">Codwareh</a>[CODWAREH]  [Foreign key | 8]		</li>
+		<li>
+			<a name="CODITEM">Coditem</a>[CODITEM]  [Foreign key | 8]		</li>
+		<li>
+			<a name="DESIGNAT">Designat</a>[DESIGNAT] Designation [Text | 85]		</li>
+		<li>
+			<a name="DTAQUISI">Dtaquisi</a>[DTAQUISI] Acquisition [Date | 8]<ul>
+	<li>Fields to be updated when this is updated (triggers):</li>
+	<li>
+		<a href="TEQUIP.html#BOUGHT">[EQUIP.BOUGHT]</a> updates the formula +
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="CODDECO">Coddeco</a>[CODDECO]  [Foreign key | 8]<ul>
+	<li>Fields to be updated when this is updated (triggers):</li>
+	<li>
+		<a href="TEQUIP.html#DTDECO">[EQUIP.DTDECO]</a> updates the formula ++
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="DTDECO">Dtdeco</a>[DTDECO] Decomission [DateTime | 16]<ul>
+	<li>Sources of this field's (++) calculation:</li>
+	<li>
+		<a href="TDECOM.html#DTDECO">[DECOM.DTDECO]</a>
+	</li>
+	<li>
+		<a href="TEQUIP.html#CODDECO">[EQUIP.CODDECO]</a>
+	</li>
+</ul>
+<ul>
+	<li>Fields to be updated when this is updated (triggers):</li>
+	<li>
+		<a href="TEQUIP.html#IFABATIF">[EQUIP.IFABATIF]</a> updates the formula +
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="IFABATIF">Ifabatif</a>[IFABATIF] Downed equipment [Logical | 1]<ul>
+	<li>Sources of this field's (+) calculation:</li>
+	<li>
+		<a href="TEQUIP.html#DTDECO">[EQUIP.DTDECO]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="PHOTOGRA">Photogra</a>[PHOTOGRA] Photo [Image | 3]		</li>
+		<li>
+			<a name="VALORTOT">Valortot</a>[VALORTOT] Total value [Currency:dec | 12]<ul>
+	<li>Sources of this field's (SR) calculation:</li>
+	<li>
+		<a href="TINSTA.html#VALUE">[INSTA.VALUE]</a>
+	</li>
+	<li>
+		<a href="TINSTA.html#CODEQUIP">[INSTA.CODEQUIP]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="FREQUENC">Frequenc</a>[FREQUENC] Loan frequency [Enumeration:Numeric | 2| Enum:<A HREF="ArrayFreqempr.html">Loan frequency</A>]<ul>
+	<li>Fields to be updated when this is updated (triggers):</li>
+	<li>
+		<a href="TLENDI.html#WARNDT">[LENDI.WARNDT]</a> updates the formula +
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="BOUGHT">Bought</a>[BOUGHT] Bought [Logical | 1]<ul>
+	<li>Sources of this field's (+) calculation:</li>
+	<li>
+		<a href="TEQUIP.html#DTAQUISI">[EQUIP.DTAQUISI]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="CODROOMS">Codrooms</a>[CODROOMS]  [Foreign key | 8]<ul>
+	<li>Sources of this field's (U1) calculation:</li>
+	<li>
+		<a href="TMOVIM.html#CODEQUIP">[MOVIM.CODEQUIP]</a>
+	</li>
+	<li>
+		<a href="TMOVIM.html#DHMUDANC">[MOVIM.DHMUDANC]</a>
+	</li>
+	<li>
+		<a href="TMOVIM.html#CODROOMS">[MOVIM.CODROOMS]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="DTREFERE">Dtrefere</a>[DTREFERE] Reference [DateTime | 16]<ul>
+	<li>Fields to be updated when this is updated (triggers):</li>
+	<li>
+		<a href="TEQUIP.html#FIRST">[EQUIP.FIRST]</a> updates the formula CT
+	</li>
+	<li>
+		<a href="TEQUIP.html#BEFORE">[EQUIP.BEFORE]</a> updates the formula CT
+	</li>
+	<li>
+		<a href="TEQUIP.html#FOLLOWIN">[EQUIP.FOLLOWIN]</a> updates the formula CS
+	</li>
+	<li>
+		<a href="TEQUIP.html#LAST">[EQUIP.LAST]</a> updates the formula CS
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="FIRST">First</a>[FIRST] First [Text | 10]<ul>
+	<li>Sources of this field's (CT) calculation:</li>
+	<li>
+		<a href="TMOVIM.html#CODEQUIP">[MOVIM.CODEQUIP]</a>
+	</li>
+	<li>
+		<a href="TEQUIP.html#CODEQUIP">[EQUIP.CODEQUIP]</a>
+	</li>
+	<li>
+		<a href="TMOVIM.html#ROOMNR">[MOVIM.ROOMNR]</a>
+	</li>
+	<li>
+		<a href="TMOVIM.html#DHMUDANC">[MOVIM.DHMUDANC]</a>
+	</li>
+	<li>
+		<a href="TEQUIP.html#DTREFERE">[EQUIP.DTREFERE]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="BEFORE">Before</a>[BEFORE] Before [Text | 10]<ul>
+	<li>Sources of this field's (CT) calculation:</li>
+	<li>
+		<a href="TMOVIM.html#ROOMNR">[MOVIM.ROOMNR]</a>
+	</li>
+	<li>
+		<a href="TMOVIM.html#DHMUDANC">[MOVIM.DHMUDANC]</a>
+	</li>
+	<li>
+		<a href="TEQUIP.html#DTREFERE">[EQUIP.DTREFERE]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="FOLLOWIN">Followin</a>[FOLLOWIN] Following [Text | 10]<ul>
+	<li>Sources of this field's (CS) calculation:</li>
+	<li>
+		<a href="TMOVIM.html#CODEQUIP">[MOVIM.CODEQUIP]</a>
+	</li>
+	<li>
+		<a href="TEQUIP.html#CODEQUIP">[EQUIP.CODEQUIP]</a>
+	</li>
+	<li>
+		<a href="TMOVIM.html#ROOMNR">[MOVIM.ROOMNR]</a>
+	</li>
+	<li>
+		<a href="TMOVIM.html#DHMUDANC">[MOVIM.DHMUDANC]</a>
+	</li>
+	<li>
+		<a href="TEQUIP.html#DTREFERE">[EQUIP.DTREFERE]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="LAST">Last</a>[LAST] Last [Text | 10]<ul>
+	<li>Sources of this field's (CS) calculation:</li>
+	<li>
+		<a href="TMOVIM.html#CODEQUIP">[MOVIM.CODEQUIP]</a>
+	</li>
+	<li>
+		<a href="TEQUIP.html#CODEQUIP">[EQUIP.CODEQUIP]</a>
+	</li>
+	<li>
+		<a href="TMOVIM.html#ROOMNR">[MOVIM.ROOMNR]</a>
+	</li>
+	<li>
+		<a href="TMOVIM.html#DHMUDANC">[MOVIM.DHMUDANC]</a>
+	</li>
+	<li>
+		<a href="TEQUIP.html#DTREFERE">[EQUIP.DTREFERE]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="SITEFABR">Sitefabr</a>[SITEFABR] Manufacturer's website [Text | 256]		</li>
+		<li>
+			<a name="LASTPHO">Lastpho</a>[LASTPHO] Last photo attached [Image | 3]<ul>
+	<li>Sources of this field's (U1) calculation:</li>
+	<li>
+		<a href="TPHOTO.html#CODEQUIP">[PHOTO.CODEQUIP]</a>
+	</li>
+	<li>
+		<a href="TPHOTO.html#ANEXED">[PHOTO.ANEXED]</a>
+	</li>
+	<li>
+		<a href="TPHOTO.html#PHOTOGRA">[PHOTO.PHOTOGRA]</a>
+	</li>
+</ul>
+		</li>
+		<li>
+			<a name="MOVIMENT">Moviment</a>[MOVIMENT] Drives [Multiline text | 85]		</li>
+		<li>
+			<a name="QTDMOVIM">Qtdmovim</a>[QTDMOVIM] Qtd. movimentações [Numeric | 10]		</li>
+		<li>
+			<a name="SHOWRC">Showrc</a>[SHOWRC] Show record [Logical | 1]		</li>
+	</ul>
+</div>
+        </div>
+      </section>
+    <section class="footer">
+        <hr />
+        <a class="navbar-brand" href="index.html">
+            <img class="logo" src="logotipo_footer.png" alt="logo" />
+            <img class="logo" src="quidgest-certificacoes.png" alt="logo" />
+        </a>
+    </section>
+    <script type="text/javascript" src="quidgest.js"></script>
+</body>
+</html>

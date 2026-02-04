@@ -1,0 +1,210 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Form dependencies explorer</title>
+<head>
+	<link rel="stylesheet" href="reset.css" type="text/css" media="screen, projection" />
+	<link rel="stylesheet" href="typography.css">
+	<link rel="stylesheet" href="FormExplorer.css">
+	<script src="d3.min.js" charset="utf-8"></script>
+	<script src="dagre-d3.min.js"></script>
+	<script src="PathFinder.js"></script>
+	<script src="FormDependencies.js"></script>
+</head>
+<body>
+	<div class="main">
+		<h1>Form dependencies explorer</h1>
+		<div id="picker">
+				<table id="source-table">
+					<thead>
+						<tr>
+						  <th>Forms</th>
+						</tr>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+		</div>
+		<div id="graph">
+			<div id="graph-title">Diagram</div>
+			<svg width=1000 height=600><g/></svg>
+			<div id="modules"></div>
+		</div>
+		<div id="legend">
+			<div class="legend-row"><div class="legend-item legend-selected"></div>Selected</div>
+			<div class="legend-row"><div class="legend-item legend-dests"></div>Destination</div>
+			<div class="legend-row"><div class="legend-item legend-sources"></div>Source</div>
+			<div class="legend-row"><div class="legend-item legend-path"></div>Path</div>
+			<p><i>CTRL+Click to highlight the paths to a node</i></p>
+		<div>
+	<div>
+</body>
+
+<script id="js">
+//not going to expand nodes here, adding the modules to the diagram creates too much clutter
+//expandClasses(flare_imports);
+
+//setup picker table
+var t_details = d3.select("#source-table tbody")
+t_details.selectAll("tr").remove();
+var tr_details = t_details.selectAll("tr").data(flare_imports);
+tr_details.enter().append("tr")
+.append("td").text(function(z) { return z.name;})
+.on("mouseup", function(d,e) { nodeClickHandler(d.name); });
+
+//global variables
+var g;
+var filter_imports = flare_imports;
+var filter_modules = [];
+var selectdNode;
+
+//We start the diagram empty. In big projects the diagram will be to processor intensive and too cluttered to be usefull
+//RedrawGraph();
+
+
+
+function nodeClickHandler(d) {
+
+	//When the CTRL key is pressed the diagram highlights the participating nodes
+	if(d3.event.ctrlKey)
+	{
+		g.nodes().forEach(function(n) {
+			g.node(n).elem.classList.remove("span-node");
+		});
+		
+		if(d == selectdNode)
+			return;
+
+		var span;
+		if(g.node(d).class == "sources")
+			span = StartNodeSpan(filter_imports, selectdNode, d);
+		else
+			span = StartNodeSpan(filter_imports, d, selectdNode);
+		
+		span.forEach(function(n) {
+			if(n != selectdNode)
+				g.node(n).elem.classList.add("span-node");
+		});
+		
+		g.edges().forEach(function(e) {
+			if(span.indexOf(e.v)>-1 && span.indexOf(e.w)>-1)
+				g.edge(e.v, e.w).elem.classList.add("span-edge");
+			else
+				g.edge(e.v, e.w).elem.classList.remove("span-edge");
+		});
+		
+		return;
+	}
+
+	//Otherwise we navigate to the node we clicked on and present the new diagram
+	//alert("hi" + d.name)
+	filter_imports = expandNode(flare_imports, d);
+	filter_modules = filterModules(filter_imports);
+	selectdNode = d;
+	RedrawGraph();
+	window.scrollTo(0,0);
+}
+
+
+
+//returns all the links in the graph that are not originated in a form
+//so they can be presented outside the diagram
+function filterModules(nodes)
+{
+	var m = [];
+	
+	nodes.forEach(function(n) {
+		n.imports.forEach(function(i) {
+			if(i[1] != "Form")
+				m.push(i);
+		});
+	});
+	
+	return m;
+}
+
+
+//Updates the diagram in accord the the current global state
+function RedrawGraph(){
+	g = new dagreD3.graphlib.Graph().setGraph({});
+	
+	filter_imports.forEach( function(i) {
+		if(i.name == selectdNode)
+			i.class = "selected";
+		g.setNode(i.name, {label: i.name, class:i.class});	
+	});
+	
+	filter_imports.forEach( function(i) {
+		i.imports.forEach( function(src) {
+			if(g.node(src[0]))
+				g.setEdge(src[0], i.name, {label:"", lineInterpolate: 'basis' });
+		});
+	});
+	
+	/*
+	// Set some general styles
+	g.nodes().forEach(function(v) {
+		
+	  var node = g.node(v);
+	  if(v == selectdNode)
+		node.class = "selected";
+	});
+*/
+		
+	var svg = d3.select("svg"),
+    inner = svg.select("g");
+
+	// Set up zoom support
+	var zoom = d3.behavior.zoom().on("zoom", function() {
+		  inner.attr("transform", "translate(" + d3.event.translate + ")" +
+									  "scale(" + d3.event.scale + ")");
+		});
+	svg.call(zoom);
+
+	// Create the renderer
+	var render = new dagreD3.render();
+
+	// Run the renderer. This is what draws the final graph.
+	render(inner, g);
+
+	// Center the graph
+	var initialScale = 0.75;
+	zoom
+	  .translate([(svg.attr("width") - g.graph().width * initialScale) / 2, 20])
+	  .scale(initialScale)
+	  .event(svg);
+	svg.attr('height', g.graph().height * initialScale + 40);
+	
+	
+	svg.selectAll("g.node").on("click", nodeClickHandler);
+	
+	
+	//display non-form links present in the dependencies that have been cut out from the graph
+	var m_modules = d3.select("#modules");
+	m_modules.selectAll("*").remove();
+	
+	//console.log(m_modules.selectAll("*"));
+	
+	var groupedModules = d3.nest()
+		.key(function(d) { return d[1];})
+		.entries(filter_modules);
+	
+	//console.log(filter_modules);
+	//console.log(groupedModules);
+	
+	//m_modules.selectAll("div").remove();
+	var md_groups = m_modules.selectAll("div.linkgroup").data(groupedModules);	
+	md_groups.enter().append("div").attr("class","linkgroup").append("div").text(function(z) { return z.key;});
+	//md_groups.exit().remove();
+	
+	//md_groups.selectAll("div").remove();
+	var md_details = md_groups.selectAll("div.module").data(function(z) { return z.values;});
+	md_details.enter().append("div").attr("class", "module")
+		.text(function(z) { return z[0] + " " + z[2];});
+	//md_details.exit().remove();
+	
+	
+	if(selectdNode)
+		d3.select("#graph-title").text(selectdNode);
+}
+
+</script>

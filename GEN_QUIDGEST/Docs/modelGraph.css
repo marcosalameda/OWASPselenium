@@ -1,0 +1,93 @@
+
+svg {
+  border: 1px solid #DDDDDD;
+  overflow: hidden;
+}
+
+.node rect {
+  stroke: #333;
+  fill: #fff;
+  rx: 5px;
+  ry: 5px;
+}
+
+.selected rect{
+  fill: #BFFCC6;
+}
+.dests rect{
+  fill: #EEE;
+}
+.span-node rect{
+  fill: #FCC;
+}
+
+.edgePath path {
+  stroke: #333;
+  stroke-width: 1px;
+}
+
+.span-edge path {
+	stroke: #F33;
+}
+
+.secLink path {
+  stroke: #9cc2e2;
+}
+
+.node rect:hover {
+	stroke-width: 2px;
+	cursor: pointer;
+}
+
+.node text {
+	pointer-events: none;
+}
+
+
+.toolbar {
+	background-color: transparent;
+	top: 0;
+	height: 24px;
+	position: absolute;
+}
+
+.tool-button {
+	background-color: transparent;
+	width: 20px;
+	height: 20px;
+	margin: 2px;
+	display: inline-block;
+	float: right;
+}
+
+.fit-to-size {
+	background-image: url('fit_to_size.png');
+	background-repeat: no-repeat;
+    background-position: center;
+}
+
+.fit-normal {
+	background-image: url('view_1_1.png');
+	background-repeat: no-repeat;
+    background-position: center;
+}
+
+.primary-links {
+	background-image: url('graph_edge_directed.png');
+	background-repeat: no-repeat;
+    background-position: center;
+}
+.all-links {
+	background-image: url('graph_edge_all.png');
+	background-repeat: no-repeat;
+    background-position: center;
+}
+
+.tool-button:hover {
+	background-color: #DDD;
+	cursor: pointer;
+}
+
+#graph {
+	position: relative;
+}

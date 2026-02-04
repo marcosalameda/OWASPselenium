@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+	<link rel="stylesheet" type="text/css" href="FormDependencies.css">
+</head>
+<body>
+	<div id="graph">
+	</div>
+	<div id="details">
+		<table id="source-table">
+			<caption>Sources</caption>
+			<thead>
+				<tr>
+				  <th width=80px>Source</th>
+				  <th width=80px>Type</th>
+				  <th width=150px>Link</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+		<table id="dest-table">
+			<caption>Destinations</caption>
+			<thead>
+				<tr>
+				  <th width=80px>Call</th>
+				  <th width=230px>Link</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	</div>
+</body>
+
+<script src="d3.min.js"></script>
+<script src="FormDependencies.js"></script>
+<script>
+
+var diameter = 950,
+    radius = diameter / 2,
+    innerRadius = radius - 100;
+
+var cluster = d3.layout.cluster()
+    .size([360, innerRadius])
+    .sort(null)
+    .value(function(d) { return d.size; });
+
+var bundle = d3.layout.bundle();
+
+var line = d3.svg.line.radial()
+    .interpolate("bundle")
+    .tension(.85)
+    .radius(function(d) { return d.y; })
+    .angle(function(d) { return d.x / 180 * Math.PI; });
+
+var svg = d3.select("#graph").append("svg")
+    .attr("width", diameter)
+    .attr("height", diameter)
+  .append("g")
+    .attr("transform", "translate(" + radius + "," + radius + ")");
+
+var link = svg.append("g").selectAll(".link"),
+    node = svg.append("g").selectAll(".node");
+
+//d3.json("readme-flare-imports.json", function(error, classes) {
+//  if (error) throw error;
+
+   var classes = flare_imports;
+   expandClasses(classes);
+
+  var nodes = cluster.nodes(packageHierarchy(classes)),
+      links = packageImports(nodes);
+
+  link = link
+	  .data(bundle(links))
+    .enter().append("path")
+      .each(function(d) { d.source = d[0], d.target = d[d.length - 1]; })
+      .attr("class", "link")
+      .attr("d", line);
+
+  node = node
+      .data(nodes.filter(function(n) { return !n.children; }))
+    .enter().append("text")
+      .attr("class", "node")
+      .attr("dy", ".31em")
+      .attr("transform", function(d) { return "rotate(" + (d.x - 90) + ")translate(" + (d.y + 8) + ",0)" + (d.x < 180 ? "" : "rotate(180)"); })
+      .style("text-anchor", function(d) { return d.x < 180 ? "start" : "end"; })
+      .text(function(d) { return d.key; })
+      .on("mouseover", mouseovered)
+      .on("mouseout", mouseouted)	
+	  .on("mouseup", mouseup);
+//});
+
+
+function cross(a, b) {
+  return a[0] * b[1] - a[1] * b[0];
+}
+
+function dot(a, b) {
+  return a[0] * b[0] + a[1] * b[1];
+}
+
+function markerPosition() {
+	return [radius, 0];
+}
+
+function mouse(e) {
+	return [e.pageX - radius, e.pageY - radius];
+}
+
+
+var rotate = 0;
+
+function mouseup(d) {
+	var m0 = mouse(d3.event);
+	
+  if (m0) {
+    var m1 = markerPosition(),
+        dm = Math.atan2(cross(m0, m1), dot(m0, m1)) * 180 / Math.PI;
+
+    rotate += dm;
+    if (rotate > 360) rotate -= 360;
+    else if (rotate < 0) rotate += 360;
+    m0 = null;
+
+    //svg.style("-webkit-transform", null);
+
+    svg
+	.transition()
+	.attr("transform", "translate(" + radius + "," + radius + ")rotate(" + rotate + ")");
+	
+	svg
+	 .selectAll("text")
+		.style("text-anchor", function(d) { return (d.x + rotate) % 360 < 180 ? "start" : "end"; })
+		.attr("transform", function(d) { 
+			var nx = (d.x + rotate) % 360;
+			return "rotate(" + (d.x - 90) + ")translate(" + (d.y + 8) + ",0)" + (nx < 180 ? "" : "rotate(180)"); 
+			});
+  }
+  
+  node.classed("node--selected", function(n) { return n == d; });
+  
+  
+  //update sources table
+  var t_details = d3.select("#source-table tbody")
+  t_details.selectAll("tr").remove();
+  var tr_details = t_details.selectAll("tr").data(d.imports);
+  tr_details.enter().append("tr");
+  var td_details = tr_details.selectAll("td").data(function(z) { return z;});
+  td_details.enter().append("td").text(function(z) { return z;});
+  
+  
+  //update dests table
+  var import_dests = calculateDests(d);
+  //console.log(import_dests);
+  
+  var t2_details = d3.select("#dest-table tbody")
+  t2_details.selectAll("tr").remove();
+  var tr2_details = t2_details.selectAll("tr").data(import_dests);
+  tr2_details.enter().append("tr");  
+  var td2_details = tr2_details.selectAll("td").data(function(z) { return z;});
+  td2_details.enter().append("td").text(function(z) { return z;});
+  
+  //console.log(d);
+}
+
+function calculateDests(d)
+{
+	if(d.exports)
+		return d.exports;
+		
+	var dests= [];
+	links.forEach(function(l) {
+		if(l.target === d)
+			l.source.imports.forEach(function(i){
+				if(i[0] == d.name)
+					dests.push([l.source.name, i[2]]);
+			});
+	});
+	
+	d.exports = dests;
+	return dests;
+}
+
+function mouseovered(d) {
+  node
+      .each(function(n) { n.target = n.source = false; });
+
+  link
+      .classed("link--target", function(l) { if (l.target === d) return l.source.source = true; })
+      .classed("link--source", function(l) { if (l.source === d) return l.target.target = true; })
+    .filter(function(l) { return l.target === d || l.source === d; })
+      .each(function() { this.parentNode.appendChild(this); });
+
+  node
+      .classed("node--target", function(n) { return n.target; })
+      .classed("node--source", function(n) { return n.source; });
+}
+
+function mouseouted(d) {
+  link
+      .classed("link--target", false)
+      .classed("link--source", false);
+
+  node
+      .classed("node--target", false)
+      .classed("node--source", false);
+}
+
+d3.select(self.frameElement).style("height", diameter + "px");
+
+
+//looks for imports that are not in the nodes and creates an empty node as a placeholder
+function expandClasses(classes) {
+	var map = {};
+	
+	classes.forEach(function(c) {
+		map[c.name] = c;
+	});
+	
+	classes.forEach(function(c) {
+		c.imports.forEach(function(i){
+			var node = map[i[0]];
+			if(!node)
+			{
+				node = { name: i[0], imports: []};
+				map[i[0]] = node;
+				classes.push(node);
+			}
+		});
+	});
+}
+
+// Lazily construct the package hierarchy from class names.
+function packageHierarchy(classes) {
+  var map = {};
+
+  function find(name, data) {
+    var node = map[name], i;
+    if (!node) {
+      node = map[name] = data || {name: name, children: []};
+      if (name.length) {
+        node.parent = find(name.substring(0, i = name.lastIndexOf(".")));
+        node.parent.children.push(node);
+        node.key = name.substring(i + 1);
+      }
+    }
+    return node;
+  }
+
+  classes.forEach(function(d) {
+    find(d.name, d);
+  });
+
+  return map[""];
+}
+
+// Return a list of imports for the given array of nodes.
+function packageImports(nodes) {
+  var map = {},
+      imports = [];
+
+  // Compute a map from name to node.
+  nodes.forEach(function(d) {
+    map[d.name] = d;
+  });
+  
+  // For each import, construct a link from the source to target node.
+  nodes.forEach(function(d) {
+    if (d.imports) d.imports.forEach(function(i) {
+      imports.push({source: map[d.name], target: map[i[0]]});
+    });
+  });
+
+  return imports;
+}
+
+</script>
+</html>

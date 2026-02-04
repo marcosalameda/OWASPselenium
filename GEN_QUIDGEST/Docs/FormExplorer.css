@@ -1,0 +1,154 @@
+
+body {
+  width: 1280px;
+  margin: 0 auto;
+  color: #333;
+
+  background-color: #333;
+}
+
+svg {
+  border: 1px solid #BFFCC6;
+  overflow: hidden;
+}
+
+.node rect {
+  stroke: #333;
+  fill: #fff;
+  rx: 5px;
+  ry: 5px;
+}
+
+.selected rect{
+  fill: #BFFCC6;
+}
+.dests rect{
+  fill: #EEE;
+}
+.span-node rect{
+  fill: #FCC;
+}
+
+.edgePath path {
+  stroke: #333;
+  stroke-width: 1px;
+}
+
+.span-edge path {
+	stroke: #F33;
+}
+
+.node rect:hover {
+	stroke-width: 2px;
+	cursor: pointer;
+}
+
+.node text {
+	pointer-events: none;
+}
+
+.module {
+	color: #333;
+	
+	border: 1px solid #DDD;
+	margin: 5px;
+	padding: 2px;
+	border-radius: 3px;
+	display: inline-block;
+	user-select: none;
+}
+
+.module:hover {
+	border-color: #999;
+	background-color: #EEEEEE;
+}
+
+.linkgroup {
+	border: 1px solid #C4E5FF;	
+}
+
+.linkgroup div:first-child{
+	background-color: #C4E5FF;
+	color: #298DE6;
+	padding: 2px;
+}
+
+#graph-title{
+	border: 1px solid #BFFCC6;
+	border-bottom: none;
+	background-color: #BFFCC6;
+	color: #2D8A09;
+	padding: 2px;
+}
+
+
+#source-table td:hover {
+	background-color: #BFFCC6;
+	cursor: pointer;
+}
+
+#source-table th {
+	border-bottom: 1px solid #CCC;
+}
+
+#source-table {
+	width: 100%;
+}
+
+.main {
+	background-color: #FFF;
+	display: block;
+	padding-top: 10px;
+}
+
+#picker, #graph, #legend {
+	display: inline-block;
+	vertical-align: top;
+}
+
+#graph{
+  font-weight: 300;
+  font-size: 12px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serf;
+}
+
+#picker {
+	width:150px;
+	max-height:600px;
+	overflow-y: auto;
+	border-top: 1px solid #CCC;
+	border-bottom: 1px solid #CCC;
+}
+
+#legend {
+	max-width:100px;
+}
+
+
+#modules {
+	width:1000px;
+	margin-top: 15px;
+}
+
+.legend-item {
+	width:15px;
+	height:15px;
+	border: 1px solid black;
+	display: inline-block;
+	vertical-align: middle;
+	margin: 2px;
+	border-radius: 5px;
+}
+
+.legend-selected {
+	background-color: #BFFCC6;
+}
+.legend-dests {
+	background-color: #EEE;
+}
+.legend-sources {
+	background-color: #FFF;
+}
+.legend-path {
+	background-color: #FCC;
+}

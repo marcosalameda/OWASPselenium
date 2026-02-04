@@ -1,0 +1,79 @@
+
+.node {
+  font: 300 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+  fill: #bbb;
+}
+
+.node--selected {
+  fill: #000;
+}
+
+.node:hover {
+  fill: #000;
+}
+
+.link {
+  stroke: steelblue;
+  stroke-opacity: .4;
+  fill: none;
+  pointer-events: none;
+}
+
+.node:hover,
+.node--source,
+.node--target {
+  font-weight: 700;
+}
+
+.node--source {
+  fill: #2ca02c;
+}
+
+.node--target {
+  fill: #d62728;
+}
+
+.link--source,
+.link--target {
+  stroke-opacity: 1;
+  stroke-width: 2px;
+}
+
+.link--source {
+  stroke: #d62728;
+}
+
+.link--target {
+  stroke: #2ca02c;
+}
+
+#graph {
+	width: 960px;
+	height: 960px;
+	display: inline-block;
+}
+
+#details {
+	display: inline-block;
+	vertical-align: top;
+}
+
+table {
+	border-collapse: collapse;
+    border-spacing: 0;
+	border: 1px solid gray;
+	font: 300 11px "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+th, td {
+	border: 1px solid lightgray;
+}
+
+table th {
+	text-align: left;
+}
+
+#source-table,
+#dest-table {
+	margin-top: 10px;
+}

@@ -954,7 +954,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}GQT_Asset_FSM.png?v=3094`),
+							icon: computed(() => `${this.$app.resourcesPath}GQT_Asset_FSM.png?v=3095`),
 							type: 'img',
 						},
 						height: 226,

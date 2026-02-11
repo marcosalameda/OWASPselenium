@@ -121,6 +121,10 @@ namespace GenioMVC.ViewModels
 		{
 			return
 			[
+				new Exports.QColumn(CSGenioAcntry.FldCountry, FieldType.TEXT, Resources.Resources.COUNTRY64133, 30, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldCodcntry, FieldType.KEY_GUID, string.Empty, 8, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldAlfa2, FieldType.TEXT, Resources.Resources.ALPHABETIC_232435, 2, 0, true),
+				new Exports.QColumn(CSGenioAcntry.FldAlfa3, FieldType.TEXT, Resources.Resources.ALPHABETIC_316640, 3, 0, true),
 			];
 		}
 
@@ -171,6 +175,11 @@ namespace GenioMVC.ViewModels
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfigurations), tableConfig));
 
 
+			//Subfilters
+			CriteriaSet subfilters = CriteriaSet.And();
+
+
+			crs.SubSets.Add(subfilters);
 
 			// Form field filters
 			if (tableConfig.FieldFilters != null)
@@ -280,6 +289,8 @@ namespace GenioMVC.ViewModels
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+			allSortOrders.Add("CNTRY.COUNTRY", new OrderedDictionary());
+			allSortOrders["CNTRY.COUNTRY"].Add("CNTRY.COUNTRY", "A");
 
 
 			int numberListItems = tableConfig.RowsPerPage;
@@ -291,8 +302,14 @@ namespace GenioMVC.ViewModels
 
 			List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig, "cntry", allSortOrders);
 
+			if (sorts == null || sorts.Count == 0)
+			{
+				sorts = new List<ColumnSort>();
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAcntry.FldCountry), SortOrder.Ascending));
 
-			FieldRef[] fields = new FieldRef[] { CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldZzstate };
+			}
+
+			FieldRef[] fields = new FieldRef[] { CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldZzstate, CSGenioAcntry.FldCountry, CSGenioAcntry.FldFlag, CSGenioAcntry.FldAlfa2, CSGenioAcntry.FldAlfa3 };
 
 
 			// Totalizers
@@ -300,6 +317,12 @@ namespace GenioMVC.ViewModels
 
 			FieldRef firstVisibleColumn = null;
 
+			if (sorts.Count == 0)
+			{
+				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
+
+				firstVisibleColumn ??= new FieldRef("cntry", "country");
+			}
 			// Limitations
 			this.TableLimits ??= [];
 			// Comparer to check if limit is already present in TableLimits
@@ -437,6 +460,7 @@ namespace GenioMVC.ViewModels
 
 			model.InitRowData();
 
+			SetTicketToImageFields(model);
 			return model;
 		}
 
@@ -481,11 +505,22 @@ namespace GenioMVC.ViewModels
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Cntry", "Cntry.ValCodcntry", "Cntry.ValZzstate"
+			"Cntry", "Cntry.ValCodcntry", "Cntry.ValZzstate", "Cntry.ValCountry", "Cntry.ValFlag", "Cntry.ValAlfa2", "Cntry.ValAlfa3"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
+			new TableSearchColumn("ValCountry", CSGenioAcntry.FldCountry, typeof(string), defaultSearch : true),
+			new TableSearchColumn("ValCodcntry", CSGenioAcntry.FldCodcntry, typeof(string)),
+			new TableSearchColumn("ValAlfa2", CSGenioAcntry.FldAlfa2, typeof(string)),
+			new TableSearchColumn("ValAlfa3", CSGenioAcntry.FldAlfa3, typeof(string)),
 		];
+		protected void SetTicketToImageFields(Models.Cntry row)
+		{
+			if (row == null)
+				return;
+
+			row.ValFlagQTicket = Helpers.Helpers.GetFileTicket(m_userContext.User, CSGenio.business.Area.AreaCNTRY, CSGenioAcntry.FldFlag.Field, null, row.ValCodcntry);
+		}
 	}
 }

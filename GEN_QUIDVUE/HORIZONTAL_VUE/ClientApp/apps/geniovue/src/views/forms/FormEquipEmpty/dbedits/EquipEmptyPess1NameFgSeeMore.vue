@@ -213,6 +213,39 @@
 						hasDependencies: false,
 						isInCollapsible: false,
 						columnsOriginal: [
+							new listColumnTypes.ArrayColumn({
+								order: 1,
+								name: 'ValGender',
+								area: 'PESS1',
+								field: 'GENDER',
+								label: computed(() => this.Resources.GENRE63303),
+								dataLength: 1,
+								scrollData: 1,
+								export: 1,
+								array: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayGenero.type,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.NumericColumn({
+								order: 2,
+								name: 'ValIdade',
+								area: 'PESS1',
+								field: 'IDADE',
+								label: computed(() => this.Resources.AGE28663),
+								scrollData: 5,
+								maxDigits: 5,
+								decimalPlaces: 0,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 3,
+								name: 'ValName',
+								area: 'PESS1',
+								field: 'NAME',
+								label: computed(() => this.Resources.NAME31974),
+								dataLength: 85,
+								scrollData: 30,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
 							name: 'Equip_empty_ValName',
@@ -246,13 +279,14 @@
 							},
 							formsDefinition: {
 							},
-							defaultSearchColumnName: '',
-							defaultSearchColumnNameOriginal: '',
+							defaultSearchColumnName: 'ValName',
+							defaultSearchColumnNameOriginal: 'ValName',
 							defaultColumnSorting: {
-								columnName: '',
+								columnName: 'ValName',
 								sortOrder: 'asc'
 							}
 						},
+						globalEvents: ['changed-PESS1', 'changed-CATE2', 'changed-STAKE', 'changed-CMPNY'],
 						internalEvents: ['filterChange:cntry.codcntry', 'filterChange:cmpny.codempre', 'filterChange:pess1.codpesso'],
 						uuid: 'Equip_empty_Equip_empty_ValName',
 						allSelectedRows: 'false',

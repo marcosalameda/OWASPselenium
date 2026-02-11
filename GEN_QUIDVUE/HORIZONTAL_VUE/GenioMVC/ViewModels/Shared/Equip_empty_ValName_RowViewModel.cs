@@ -33,6 +33,24 @@ public class Equip_empty_ValName_RowViewModel : Models.Pess1
 	private void SetColumns()
 	{
 		Columns ??= [
+			new ListColumn()
+			{
+				Order = 1,
+				Area = "PESS1",
+				Field = "GENDER",
+			},
+			new ListColumn()
+			{
+				Order = 2,
+				Area = "PESS1",
+				Field = "IDADE",
+			},
+			new ListColumn()
+			{
+				Order = 3,
+				Area = "PESS1",
+				Field = "NAME",
+			},
 		];
 	}
 

@@ -195,7 +195,9 @@
 								</q-col>
 							</q-row>
 							<q-row v-if="controls.PROPR00_PESSONAME____.isVisible">
-								<q-col v-if="controls.PROPR00_PESSONAME____.isVisible">
+								<q-col
+									v-if="controls.PROPR00_PESSONAME____.isVisible"
+									cols="auto">
 									<base-input-structure
 										v-if="controls.PROPR00_PESSONAME____.isVisible"
 										class="i-text"
@@ -983,7 +985,7 @@
 						valueChangeEvent: 'fieldChange:pesso.name',
 						id: 'PROPR00_PESSONAME____',
 						name: 'NAME',
-						size: 'block',
+						size: 'large',
 						label: computed(() => this.Resources.SELLER36870),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),

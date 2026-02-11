@@ -581,6 +581,7 @@ namespace GenioMVC.ViewModels
 			CSGenioAcmpny.GetInformation().DBFields[CSGenioAcmpny.FldCodempre.Field],
 			CSGenioApess1.GetInformation().DBFields[CSGenioApess1.FldCodpesso.Field],
 			CSGenioAequip.GetInformation().DBFields[CSGenioAequip.FldShowrc.Field],
+			CSGenioAequip.GetInformation().DBFields[CSGenioAequip.FldIfabatif.Field],
 			CSGenioAequip.GetInformation().DBFields[CSGenioAequip.FldFrequenc.Field],
 			CSGenioAitem.GetInformation().DBFields[CSGenioAitem.FldItemdes.Field],
 			CSGenioAtpequ.GetInformation().DBFields[CSGenioAtpequ.FldTipoequi.Field],

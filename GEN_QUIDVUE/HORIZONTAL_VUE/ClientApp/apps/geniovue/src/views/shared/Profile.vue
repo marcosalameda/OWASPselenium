@@ -104,8 +104,11 @@
 					</q-row-container>
 
 					<q-row-container is-large>
-						<q-control-wrapper class="row-line-group">
+						<q-control-wrapper
+							id="container-ChangePassword"
+							class="row-line-group">
 							<q-button
+								id="ChangePassword"
 								variant="bold"
 								:label="texts.changePassword"
 								:title="texts.changePassword"

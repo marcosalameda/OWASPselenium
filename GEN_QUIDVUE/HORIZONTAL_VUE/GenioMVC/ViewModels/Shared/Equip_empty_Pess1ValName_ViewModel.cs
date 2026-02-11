@@ -87,6 +87,8 @@ namespace GenioMVC.ViewModels
 			return crs;
 		}
 
+		public string ValCodempre { get; set; }
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -121,6 +123,9 @@ namespace GenioMVC.ViewModels
 		{
 			return
 			[
+				new Exports.QColumn(CSGenioApess1.FldGender, FieldType.ARRAY_TEXT, Resources.Resources.GENRE63303, 1, 0, true, "Genero"),
+				new Exports.QColumn(CSGenioApess1.FldIdade, FieldType.NUMERIC, Resources.Resources.AGE28663, 5, 0, true),
+				new Exports.QColumn(CSGenioApess1.FldName, FieldType.TEXT, Resources.Resources.NAME31974, 30, 0, true),
 			];
 		}
 
@@ -161,6 +166,10 @@ namespace GenioMVC.ViewModels
 
 			crs ??= CriteriaSet.And();
 
+			// Limits Generation
+
+			// Area limit
+			tableReload &= AddCriteriaAreaLimit(crs, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", null, true, true);
 
 			Menu ??= new TablePartial<Equip_empty_ValName_RowViewModel>();
 			// Set table name (used in getting searchable column names)
@@ -171,6 +180,11 @@ namespace GenioMVC.ViewModels
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfigurations), tableConfig));
 
 
+			//Subfilters
+			CriteriaSet subfilters = CriteriaSet.And();
+
+
+			crs.SubSets.Add(subfilters);
 
 			// Form field filters
 			if (tableConfig.FieldFilters != null)
@@ -280,6 +294,8 @@ namespace GenioMVC.ViewModels
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+			allSortOrders.Add("PESS1.NAME", new OrderedDictionary());
+			allSortOrders["PESS1.NAME"].Add("PESS1.NAME", "A");
 
 
 			int numberListItems = tableConfig.RowsPerPage;
@@ -291,8 +307,14 @@ namespace GenioMVC.ViewModels
 
 			List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig, "pess1", allSortOrders);
 
+			if (sorts == null || sorts.Count == 0)
+			{
+				sorts = new List<ColumnSort>();
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioApess1.FldName), SortOrder.Ascending));
 
-			FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.FldZzstate };
+			}
+
+			FieldRef[] fields = new FieldRef[] { CSGenioApess1.FldCodpesso, CSGenioApess1.FldZzstate, CSGenioApess1.FldGender, CSGenioApess1.FldIdade, CSGenioApess1.FldName };
 
 
 			// Totalizers
@@ -300,6 +322,12 @@ namespace GenioMVC.ViewModels
 
 			FieldRef firstVisibleColumn = null;
 
+			if (sorts.Count == 0)
+			{
+				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
+
+				firstVisibleColumn ??= new FieldRef("pess1", "gender");
+			}
 			// Limitations
 			this.TableLimits ??= [];
 			// Comparer to check if limit is already present in TableLimits
@@ -315,6 +343,24 @@ namespace GenioMVC.ViewModels
 					this.TableLimits.AddRange(area_EPH_limits);
 			}
 
+			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+			// Limit origin: form 
+			//Limit type: "A"
+			//Current Area = "PESS1"
+			//1st Area Limit: "CMPNY"
+			//1st Area Field: "CODEMPRE"
+			//1st Area Value: ""
+			{
+				Limit limit = new Limit();
+				limit.TipoLimite = LimitType.A;
+				limit.NaoAplicaSeNulo = false;
+				CSGenioAcmpny model_limit_area = new CSGenioAcmpny(m_userContext.User);
+				string limit_field = "codempre", limit_field_value = "";
+				object this_limit_field = Navigation.GetValue("cmpny") == null ? this.ValCodempre : Navigation.GetValue("cmpny");
+				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+				if (!this.TableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+					this.TableLimits.Add(limit);
+			}
 
 			if (conditions == null)
 				conditions = CriteriaSet.And();
@@ -481,11 +527,14 @@ namespace GenioMVC.ViewModels
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Pess1", "Pess1.ValCodpesso", "Pess1.ValZzstate", "Pess1.ValCodcateg", "Pess1.ValCodempre", "Pess1.ValCodparte"
+			"Pess1", "Pess1.ValCodpesso", "Pess1.ValZzstate", "Pess1.ValGender", "Pess1.ValIdade", "Pess1.ValName", "Pess1.ValCodcateg", "Pess1.ValCodempre", "Pess1.ValCodparte"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
+			new TableSearchColumn("ValGender", CSGenioApess1.FldGender, typeof(string), array : "Genero"),
+			new TableSearchColumn("ValIdade", CSGenioApess1.FldIdade, typeof(decimal?)),
+			new TableSearchColumn("ValName", CSGenioApess1.FldName, typeof(string), defaultSearch : true),
 		];
 	}
 }

@@ -728,6 +728,7 @@
 		align-items: center;
 		gap: 0.3rem;
 		font-weight: 700;
+		text-transform: $headings-text-transform;
 	}
 
 	.column-header-text, .column-header-text:hover {

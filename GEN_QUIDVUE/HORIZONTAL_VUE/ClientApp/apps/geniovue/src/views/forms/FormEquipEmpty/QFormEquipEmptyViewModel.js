@@ -130,12 +130,14 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValShowrc.value, (newValue, oldValue) => this.onUpdate('equip.showrc', this.ValShowrc, newValue, oldValue)))
 
 		this.ValIfabatif = reactive(new modelFieldType.Boolean({
+			type: 'FormFilter',
 			id: 'ValIfabatif',
 			originId: 'ValIfabatif',
 			area: 'EQUIP',
 			field: 'IFABATIF',
-			isFixed: true,
 			description: computed(() => this.Resources.DOWNED_EQUIPMENT43331),
+			isGlobalFilterField: true,
+			ignoreFldSubmit: true,
 		}).cloneFrom(values?.ValIfabatif))
 		this.stopWatchers.push(watch(() => this.ValIfabatif.value, (newValue, oldValue) => this.onUpdate('equip.ifabatif', this.ValIfabatif, newValue, oldValue)))
 

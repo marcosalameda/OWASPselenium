@@ -33,6 +33,36 @@ public class Equip_empty_ValCountry_RowViewModel : Models.Cntry
 	private void SetColumns()
 	{
 		Columns ??= [
+			new ListColumn()
+			{
+				Order = 1,
+				Area = "CNTRY",
+				Field = "COUNTRY",
+			},
+			new ListColumn()
+			{
+				Order = 2,
+				Area = "CNTRY",
+				Field = "FLAG",
+			},
+			new ListColumn()
+			{
+				Order = 3,
+				Area = "CNTRY",
+				Field = "CODCNTRY",
+			},
+			new ListColumn()
+			{
+				Order = 4,
+				Area = "CNTRY",
+				Field = "ALFA2",
+			},
+			new ListColumn()
+			{
+				Order = 5,
+				Area = "CNTRY",
+				Field = "ALFA3",
+			},
 		];
 	}
 

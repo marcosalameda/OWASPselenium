@@ -1092,7 +1092,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'COMPTYPEPSEUDCOMPTAB_',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}Storybook-icon.png?v=3095`),
+							icon: computed(() => `${this.$app.resourcesPath}Storybook-icon.png?v=3096`),
 							type: 'img',
 							role: 'presentation',
 						},
@@ -1538,7 +1538,7 @@
 						container: 'C_USAGE_PSEUDNEWGRP01',
 						tab: 'COMPTYPEPSEUDC_USAGE_',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}Storybook-icon.png?v=3095`),
+							icon: computed(() => `${this.$app.resourcesPath}Storybook-icon.png?v=3096`),
 							type: 'img',
 							role: 'presentation',
 						},

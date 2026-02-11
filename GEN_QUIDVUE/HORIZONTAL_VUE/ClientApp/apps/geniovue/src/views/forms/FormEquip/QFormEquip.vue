@@ -100,9 +100,7 @@
 			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
 				<q-row v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible">
-					<q-col
-						v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible"
-						cols="12">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible">
 						<q-group-collapsible
 							v-if="controls.EQUIP___PSEUDNOVOGR02.isVisible"
 							id="EQUIP___PSEUDNOVOGR02"
@@ -112,11 +110,7 @@
 							<q-row v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible || controls.EQUIP___PESS1NAME____.isVisible">
 								<q-col
 									v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible"
-			sm="12"
-			md="3"
-			lg="4"
-			xl="5"
-									cols="5">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___CMPNYDESIGNAT.isVisible"
 										class="i-text"
@@ -137,11 +131,7 @@
 								</q-col>
 								<q-col
 									v-if="controls.EQUIP___PESS1NAME____.isVisible"
-			sm="12"
-			md="3"
-			lg="4"
-			xl="5"
-									cols="5">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___PESS1NAME____.isVisible"
 										class="i-text"
@@ -166,9 +156,7 @@
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.EQUIP___PSEUDNOVOGR01.isVisible">
-					<q-col
-						v-if="controls.EQUIP___PSEUDNOVOGR01.isVisible"
-						cols="12">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR01.isVisible"
 							id="EQUIP___PSEUDNOVOGR01"
@@ -179,7 +167,7 @@
 							<q-row v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible || controls.EQUIP___EQUIPREGISTNR.isVisible || controls.EQUIP___TPEQUTIPOEQUI.isVisible">
 								<q-col
 									v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible"
-									cols="2">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPSEQUENNR.isVisible"
 										class="i-text"
@@ -196,7 +184,7 @@
 								</q-col>
 								<q-col
 									v-if="controls.EQUIP___EQUIPREGISTNR.isVisible"
-									cols="2">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPREGISTNR.isVisible"
 										class="i-text"
@@ -213,7 +201,7 @@
 								</q-col>
 								<q-col
 									v-if="controls.EQUIP___TPEQUTIPOEQUI.isVisible"
-									cols="3">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___TPEQUTIPOEQUI.isVisible"
 										class="i-text"
@@ -236,7 +224,7 @@
 							<q-row v-if="controls.EQUIP___EQUIPSITEFABR.isVisible">
 								<q-col
 									v-if="controls.EQUIP___EQUIPSITEFABR.isVisible"
-									cols="5">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPSITEFABR.isVisible"
 										class="i-text"
@@ -255,7 +243,7 @@
 							<q-row v-if="controls.EQUIP___WAREHWAREHDES.isVisible || controls.EQUIP___ITEM_ITEMDES_.isVisible">
 								<q-col
 									v-if="controls.EQUIP___WAREHWAREHDES.isVisible"
-									cols="5">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___WAREHWAREHDES.isVisible"
 										class="i-text"
@@ -276,7 +264,7 @@
 								</q-col>
 								<q-col
 									v-if="controls.EQUIP___ITEM_ITEMDES_.isVisible"
-									cols="5">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___ITEM_ITEMDES_.isVisible"
 										class="i-text"
@@ -299,7 +287,7 @@
 							<q-row v-if="controls.EQUIP___EQUIPDESIGNAT.isVisible || controls.EQUIP___EQUIPFREQUENC.isVisible || controls.EQUIP___EQUIPVALORTOT.isVisible || controls.EQUIP___EQUIPDTAQUISI.isVisible || controls.EQUIP___EQUIPDTDECO__.isVisible || controls.EQUIP___EQUIPBOUGHT__.isVisible">
 								<q-col
 									v-if="controls.EQUIP___EQUIPDESIGNAT.isVisible"
-									cols="5">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPDESIGNAT.isVisible"
 										class="i-text"
@@ -316,7 +304,7 @@
 								</q-col>
 								<q-col
 									v-if="controls.EQUIP___EQUIPFREQUENC.isVisible"
-									cols="2">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPFREQUENC.isVisible"
 										class="i-text"
@@ -334,7 +322,7 @@
 								</q-col>
 								<q-col
 									v-if="controls.EQUIP___EQUIPVALORTOT.isVisible"
-									cols="3">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPVALORTOT.isVisible"
 										class="i-text"
@@ -351,7 +339,7 @@
 								</q-col>
 								<q-col
 									v-if="controls.EQUIP___EQUIPDTAQUISI.isVisible"
-									cols="2">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPDTAQUISI.isVisible"
 										class="i-text"
@@ -370,7 +358,7 @@
 								</q-col>
 								<q-col
 									v-if="controls.EQUIP___EQUIPDTDECO__.isVisible"
-									cols="2">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPDTDECO__.isVisible"
 										class="i-text"
@@ -389,7 +377,7 @@
 								</q-col>
 								<q-col
 									v-if="controls.EQUIP___EQUIPBOUGHT__.isVisible"
-									cols="1">
+									cols="auto">
 									<base-input-structure
 										v-if="controls.EQUIP___EQUIPBOUGHT__.isVisible"
 										class="i-checkbox"
@@ -412,9 +400,7 @@
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.EQUIP___PSEUDNOVOGR09.isVisible">
-					<q-col
-						v-if="controls.EQUIP___PSEUDNOVOGR09.isVisible"
-						cols="12">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR09.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR09.isVisible"
 							id="EQUIP___PSEUDNOVOGR09"
@@ -593,7 +579,7 @@
 										<q-row v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible || controls.EQUIP___PSEUDROOMSMVE.isVisible">
 											<q-col
 												v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
-												cols="4">
+												cols="auto">
 												<q-table
 													v-if="controls.EQUIP___PSEUDMOVIMEVV.isVisible"
 													v-bind="controls.EQUIP___PSEUDMOVIMEVV"
@@ -608,7 +594,7 @@
 											</q-col>
 											<q-col
 												v-if="controls.EQUIP___PSEUDROOMSMVE.isVisible"
-												cols="3">
+												cols="auto">
 												<base-input-structure
 													v-if="controls.EQUIP___PSEUDROOMSMVE.isVisible"
 													class="i-text"
@@ -635,7 +621,7 @@
 										<q-row v-if="controls.EQUIP___PSEUDMOVIMELS.isVisible">
 											<q-col
 												v-if="controls.EQUIP___PSEUDMOVIMELS.isVisible"
-												cols="7">
+												cols="auto">
 												<q-table
 													v-if="controls.EQUIP___PSEUDMOVIMELS.isVisible"
 													v-bind="controls.EQUIP___PSEUDMOVIMELS"
@@ -706,9 +692,7 @@
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible">
-					<q-col
-						v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible"
-						cols="12">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible">
 						<q-accordion
 							v-if="controls.EQUIP___PSEUDNOVOGR05.isVisible"
 							id="EQUIP___PSEUDNOVOGR05"
@@ -836,7 +820,7 @@
 				<q-row v-if="controls.EQUIP___PSEUDNOVOGR08.isVisible">
 					<q-col
 						v-if="controls.EQUIP___PSEUDNOVOGR08.isVisible"
-						cols="4">
+						cols="auto">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR08.isVisible"
 							id="EQUIP___PSEUDNOVOGR08"
@@ -863,9 +847,7 @@
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.EQUIP___PSEUDNOVOGR07.isVisible">
-					<q-col
-						v-if="controls.EQUIP___PSEUDNOVOGR07.isVisible"
-						cols="12">
+					<q-col v-if="controls.EQUIP___PSEUDNOVOGR07.isVisible">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR07.isVisible"
 							id="EQUIP___PSEUDNOVOGR07"
@@ -896,7 +878,7 @@
 				<q-row v-if="controls.EQUIP___PSEUDNOVOGR12.isVisible">
 					<q-col
 						v-if="controls.EQUIP___PSEUDNOVOGR12.isVisible"
-						cols="6">
+						cols="auto">
 						<q-group-box-container
 							v-if="controls.EQUIP___PSEUDNOVOGR12.isVisible"
 							id="EQUIP___PSEUDNOVOGR12"
@@ -925,9 +907,7 @@
 					</q-col>
 				</q-row>
 				<q-row v-if="controls.EQUIP___PSEUDTLEQUIPA.isVisible">
-					<q-col
-						v-if="controls.EQUIP___PSEUDTLEQUIPA.isVisible"
-						cols="12">
+					<q-col v-if="controls.EQUIP___PSEUDTLEQUIPA.isVisible">
 						<q-timeline
 							v-if="controls.EQUIP___PSEUDTLEQUIPA.isVisible"
 							id="EQUIP___PSEUDTLEQUIPA"
@@ -1306,7 +1286,7 @@
 						valueChangeEvent: 'fieldChange:cmpny.designat',
 						id: 'EQUIP___CMPNYDESIGNAT',
 						name: 'DESIGNAT',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.COMPANY_22615),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1337,7 +1317,7 @@
 						valueChangeEvent: 'fieldChange:pess1.name',
 						id: 'EQUIP___PESS1NAME____',
 						name: 'NAME',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.PERSON10446),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1395,7 +1375,7 @@
 						valueChangeEvent: 'fieldChange:equip.sequennr',
 						id: 'EQUIP___EQUIPSEQUENNR',
 						name: 'SEQUENNR',
-						size: 'block',
+						size: 'small',
 						label: computed(() => this.Resources.SEQUENTIAL_NO_04803),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1411,7 +1391,7 @@
 						valueChangeEvent: 'fieldChange:equip.registnr',
 						id: 'EQUIP___EQUIPREGISTNR',
 						name: 'REGISTNR',
-						size: 'block',
+						size: 'small',
 						label: computed(() => this.Resources.REGISTRATION_NO_06209),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1426,7 +1406,7 @@
 						valueChangeEvent: 'fieldChange:tpequ.tipoequi',
 						id: 'EQUIP___TPEQUTIPOEQUI',
 						name: 'TIPOEQUI',
-						size: 'block',
+						size: 'xlarge',
 						label: computed(() => this.Resources.TYPE_OF_EQUIPMENT64921),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1457,7 +1437,7 @@
 						valueChangeEvent: 'fieldChange:equip.sitefabr',
 						id: 'EQUIP___EQUIPSITEFABR',
 						name: 'SITEFABR',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.MANUFACTURER_S_WEBSI12156),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1471,7 +1451,7 @@
 						valueChangeEvent: 'fieldChange:wareh.warehdes',
 						id: 'EQUIP___WAREHWAREHDES',
 						name: 'WAREHDES',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.WAREHOUSE51864),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1500,7 +1480,7 @@
 						valueChangeEvent: 'fieldChange:item.itemdes',
 						id: 'EQUIP___ITEM_ITEMDES_',
 						name: 'ITEMDES',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.ITEM_31041),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1535,7 +1515,7 @@
 						valueChangeEvent: 'fieldChange:equip.designat',
 						id: 'EQUIP___EQUIPDESIGNAT',
 						name: 'DESIGNAT',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.DESIGNATION_35800),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1549,7 +1529,7 @@
 						valueChangeEvent: 'fieldChange:equip.frequenc',
 						id: 'EQUIP___EQUIPFREQUENC',
 						name: 'FREQUENC',
-						size: 'block',
+						size: 'small',
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
@@ -1571,7 +1551,7 @@
 						valueChangeEvent: 'fieldChange:equip.valortot',
 						id: 'EQUIP___EQUIPVALORTOT',
 						name: 'VALORTOT',
-						size: 'block',
+						size: 'medium',
 						label: computed(() => this.Resources.TOTAL_VALUE_07456),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1587,7 +1567,7 @@
 						valueChangeEvent: 'fieldChange:equip.dtaquisi',
 						id: 'EQUIP___EQUIPDTAQUISI',
 						name: 'DTAQUISI',
-						size: 'block',
+						size: 'small',
 						label: computed(() => this.Resources.ACQUISITION_53832),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1601,7 +1581,7 @@
 						valueChangeEvent: 'fieldChange:equip.dtdeco',
 						id: 'EQUIP___EQUIPDTDECO__',
 						name: 'DTDECO',
-						size: 'block',
+						size: 'small',
 						label: computed(() => this.Resources.DECOMISSION_04392),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1616,7 +1596,7 @@
 						valueChangeEvent: 'fieldChange:equip.bought',
 						id: 'EQUIP___EQUIPBOUGHT__',
 						name: 'BOUGHT',
-						size: 'block',
+						size: 'mini',
 						label: computed(() => this.Resources.BOUGHT35496),
 						placeholder: '',
 						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
@@ -1809,7 +1789,7 @@
 					EQUIP___PSEUDMOVIMEVV: new fieldControlClass.MultipleValuesControl({
 						id: 'EQUIP___PSEUDMOVIMEVV',
 						name: 'MOVIMEVV',
-						size: 'block',
+						size: '',
 						helpControl: {
 							shortHelp: {
 								type: 'Subtitle',
@@ -1897,7 +1877,7 @@
 					EQUIP___PSEUDROOMSMVE: new fieldControlClass.MultipleValuesExtensionControl({
 						id: 'EQUIP___PSEUDROOMSMVE',
 						name: 'ROOMSMVE',
-						size: 'block',
+						size: 'medium',
 						label: computed(() => this.Resources.MULTIPLE_VALUES_EXTE07457),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -1908,7 +1888,7 @@
 					EQUIP___PSEUDMOVIMELS: new fieldControlClass.TableListControl({
 						id: 'EQUIP___PSEUDMOVIMELS',
 						name: 'MOVIMELS',
-						size: 'block',
+						size: '',
 						label: computed(() => this.Resources.EQUIPMENT_MOVEMENT_H06876),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -3041,7 +3021,7 @@
 					EQUIP___PSEUDNOVOGR08: new fieldControlClass.GroupControl({
 						id: 'EQUIP___PSEUDNOVOGR08',
 						name: 'NOVOGR08',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.PHOTOS_42586),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
@@ -3683,7 +3663,7 @@
 					EQUIP___PSEUDNOVOGR12: new fieldControlClass.GroupControl({
 						id: 'EQUIP___PSEUDNOVOGR12',
 						name: 'NOVOGR12',
-						size: 'block',
+						size: 'xxlarge',
 						label: computed(() => this.Resources.DIGITAL_ATTACHMENTS64891),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),

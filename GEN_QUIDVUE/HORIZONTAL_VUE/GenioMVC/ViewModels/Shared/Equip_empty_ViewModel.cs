@@ -20,23 +20,6 @@ namespace GenioMVC.ViewModels
 {
 	public class Equip_empty_ViewModel(UserContext userContext, bool nestedForm = false) : EmptyFormViewModel(userContext, nestedForm)
 	{
-		/// <summary>
-		/// Title: "Downed equipment" | Type: "L"
-		/// </summary>
-		[ValidateSetAccess]
-		public bool ValIfabatif 
-		{
-			get
-			{
-				return funcValIfabatif != null ? funcValIfabatif() : _auxValIfabatif;
-			}
-			set { funcValIfabatif = () => value; }
-		}
-
-		[JsonIgnore]
-		public Func<bool> funcValIfabatif { get; set; }
-
-		private bool _auxValIfabatif { get; set; }
 		#region DatabaseFields used in title buttons
 
 
@@ -115,6 +98,7 @@ namespace GenioMVC.ViewModels
 				ColumnSort requestedSort = GetRequestSort(TableCntryCountry, "sTableCntryCountry", "dTableCntryCountry", qs, "cntry");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAcntry.FldCountry), SortOrder.Ascending));
 
 				if (!string.IsNullOrEmpty(qs["TableCntryCountry_tableFilters"]))
 					TableCntryCountry.TableFilters = bool.Parse(qs["TableCntryCountry_tableFilters"]);
@@ -132,12 +116,12 @@ namespace GenioMVC.ViewModels
 				int numberItems = Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = [CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldCountry, CSGenioAcntry.FldZzstate];
+				FieldRef[] fields = [CSGenioAcntry.FldCodcntry, CSGenioAcntry.FldCountry, CSGenioAcntry.FldFlag, CSGenioAcntry.FldAlfa2, CSGenioAcntry.FldAlfa3, CSGenioAcntry.FldZzstate];
 
 				// Limitation by Zzstate
 				mainCondition.Criterias.Add(new Criteria(new ColumnReference(CSGenioAcntry.FldZzstate), CriteriaOperator.Equal, 0));
 
-				FieldRef firstVisibleColumn = null;
+				FieldRef firstVisibleColumn = new FieldRef("cntry", "country");
 				ListingMVC<CSGenioAcntry> listing = Models.ModelBase.Where<CSGenioAcntry>(m_userContext, false, mainCondition, fields, offset, numberItems, sorts, "FILTER_EQUIP_EMPTY__CNTRY__COUNTRY_FG", true, false, firstVisibleColumn: firstVisibleColumn);
 
 				TableCntryCountry.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
@@ -226,7 +210,7 @@ namespace GenioMVC.ViewModels
 			}
 		}
 
-		private readonly string[] _fieldsToSerialize_EQUIP_EMPTY__CNTRY__COUNTRY_FG = ["Cntry", "Cntry.ValCodcntry", "Cntry.ValZzstate"];
+		private readonly string[] _fieldsToSerialize_EQUIP_EMPTY__CNTRY__COUNTRY_FG = ["Cntry", "Cntry.ValCodcntry", "Cntry.ValZzstate", "Cntry.ValCountry", "Cntry.ValFlag", "Cntry.ValAlfa2", "Cntry.ValAlfa3"];
 
 		/// <summary>
 		/// TableCmpnyDesignat -> (FG/lk)
@@ -249,12 +233,17 @@ namespace GenioMVC.ViewModels
 
 			bool loadData = true;
 			CriteriaSet mainCondition = CriteriaSet.And();
+			// Limits Generation
+
+			// Area limit
+			loadData &= AddCriteriaAreaLimit(mainCondition, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", null, false, true);
 			if (loadData)
 			{
 				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableCmpnyDesignat, "sTableCmpnyDesignat", "dTableCmpnyDesignat", qs, "cmpny");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAcmpny.FldAcronym), SortOrder.Ascending));
 
 				if (!string.IsNullOrEmpty(qs["TableCmpnyDesignat_tableFilters"]))
 					TableCmpnyDesignat.TableFilters = bool.Parse(qs["TableCmpnyDesignat_tableFilters"]);
@@ -272,12 +261,12 @@ namespace GenioMVC.ViewModels
 				int numberItems = Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = [CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldZzstate];
+				FieldRef[] fields = [CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldAcronym, CSGenioAcmpny.FldNif, CSGenioAcmpny.FldQtdpesso, CSGenioAcmpny.FldZzstate];
 
 				// Limitation by Zzstate
 				mainCondition.Criterias.Add(new Criteria(new ColumnReference(CSGenioAcmpny.FldZzstate), CriteriaOperator.Equal, 0));
 
-				FieldRef firstVisibleColumn = null;
+				FieldRef firstVisibleColumn = new FieldRef("cmpny", "acronym");
 				ListingMVC<CSGenioAcmpny> listing = Models.ModelBase.Where<CSGenioAcmpny>(m_userContext, false, mainCondition, fields, offset, numberItems, sorts, "FILTER_EQUIP_EMPTY__CMPNY__DESIGNAT_FG", true, false, firstVisibleColumn: firstVisibleColumn);
 
 				TableCmpnyDesignat.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
@@ -305,6 +294,10 @@ namespace GenioMVC.ViewModels
 			CriteriaSet mainCondition = CriteriaSet.And()
 				.Equal(CSGenioAcmpny.FldCodempre, PKey);
 			
+			// Limits Generation
+
+			// Area limit
+			loadData &= AddCriteriaAreaLimit(mainCondition, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", null, false, true);
 
 			// Return default values
 			if (!loadData)
@@ -366,7 +359,7 @@ namespace GenioMVC.ViewModels
 			}
 		}
 
-		private readonly string[] _fieldsToSerialize_EQUIP_EMPTY__CMPNY__DESIGNAT_FG = ["Cmpny", "Cmpny.ValCodempre", "Cmpny.ValZzstate"];
+		private readonly string[] _fieldsToSerialize_EQUIP_EMPTY__CMPNY__DESIGNAT_FG = ["Cmpny", "Cmpny.ValCodempre", "Cmpny.ValZzstate", "Cmpny.ValAcronym", "Cmpny.ValDesignat", "Cmpny.ValNif", "Cmpny.ValQtdpesso"];
 
 		/// <summary>
 		/// TablePess1Name -> (FG/lk)
@@ -389,12 +382,17 @@ namespace GenioMVC.ViewModels
 
 			bool loadData = true;
 			CriteriaSet mainCondition = CriteriaSet.And();
+			// Limits Generation
+
+			// Area limit
+			loadData &= AddCriteriaAreaLimit(mainCondition, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", null, true, true);
 			if (loadData)
 			{
 				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TablePess1Name, "sTablePess1Name", "dTablePess1Name", qs, "pess1");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioApess1.FldName), SortOrder.Ascending));
 
 				if (!string.IsNullOrEmpty(qs["TablePess1Name_tableFilters"]))
 					TablePess1Name.TableFilters = bool.Parse(qs["TablePess1Name_tableFilters"]);
@@ -412,12 +410,12 @@ namespace GenioMVC.ViewModels
 				int numberItems = Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = [CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldZzstate];
+				FieldRef[] fields = [CSGenioApess1.FldCodpesso, CSGenioApess1.FldName, CSGenioApess1.FldGender, CSGenioApess1.FldIdade, CSGenioApess1.FldZzstate];
 
 				// Limitation by Zzstate
 				mainCondition.Criterias.Add(new Criteria(new ColumnReference(CSGenioApess1.FldZzstate), CriteriaOperator.Equal, 0));
 
-				FieldRef firstVisibleColumn = null;
+				FieldRef firstVisibleColumn = new FieldRef("pess1", "gender");
 				ListingMVC<CSGenioApess1> listing = Models.ModelBase.Where<CSGenioApess1>(m_userContext, false, mainCondition, fields, offset, numberItems, sorts, "FILTER_EQUIP_EMPTY__PESS1__NAME_FG", true, false, firstVisibleColumn: firstVisibleColumn);
 
 				TablePess1Name.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
@@ -445,6 +443,10 @@ namespace GenioMVC.ViewModels
 			CriteriaSet mainCondition = CriteriaSet.And()
 				.Equal(CSGenioApess1.FldCodpesso, PKey);
 			
+			// Limits Generation
+
+			// Area limit
+			loadData &= AddCriteriaAreaLimit(mainCondition, CSGenio.business.CSGenioAcmpny.FldCodempre, "cmpny", null, true, true);
 
 			// Return default values
 			if (!loadData)
@@ -506,7 +508,7 @@ namespace GenioMVC.ViewModels
 			}
 		}
 
-		private readonly string[] _fieldsToSerialize_EQUIP_EMPTY__PESS1__NAME_FG = ["Pess1", "Pess1.ValCodpesso", "Pess1.ValZzstate"];
+		private readonly string[] _fieldsToSerialize_EQUIP_EMPTY__PESS1__NAME_FG = ["Pess1", "Pess1.ValCodpesso", "Pess1.ValZzstate", "Pess1.ValGender", "Pess1.ValIdade", "Pess1.ValName"];
 
 		protected override object GetViewModelValue(string identifier, object modelValue)
 		{

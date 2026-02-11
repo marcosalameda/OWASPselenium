@@ -87,6 +87,8 @@ namespace GenioMVC.ViewModels
 			return crs;
 		}
 
+		public string ValCodcntry { get; set; }
+
 		public override int GetCount(User user)
 		{
 			throw new NotImplementedException("This operation is not supported");
@@ -121,6 +123,10 @@ namespace GenioMVC.ViewModels
 		{
 			return
 			[
+				new Exports.QColumn(CSGenioAcmpny.FldAcronym, FieldType.TEXT, Resources.Resources.ACRONYM00872, 15, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldDesignat, FieldType.TEXT, Resources.Resources.DESIGNATION35876, 30, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldNif, FieldType.TEXT, Resources.Resources.TAX_IDENTIFICATION51190, 15, 0, true),
+				new Exports.QColumn(CSGenioAcmpny.FldQtdpesso, FieldType.NUMERIC, Resources.Resources.NUMBER_OF_PEOPLE08859, 10, 0, true),
 			];
 		}
 
@@ -161,6 +167,10 @@ namespace GenioMVC.ViewModels
 
 			crs ??= CriteriaSet.And();
 
+			// Limits Generation
+
+			// Area limit
+			tableReload &= AddCriteriaAreaLimit(crs, CSGenio.business.CSGenioAcntry.FldCodcntry, "cntry", null, false, true);
 
 			Menu ??= new TablePartial<Equip_empty_ValDesignat_RowViewModel>();
 			// Set table name (used in getting searchable column names)
@@ -171,6 +181,11 @@ namespace GenioMVC.ViewModels
 			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfigurations), tableConfig));
 
 
+			//Subfilters
+			CriteriaSet subfilters = CriteriaSet.And();
+
+
+			crs.SubSets.Add(subfilters);
 
 			// Form field filters
 			if (tableConfig.FieldFilters != null)
@@ -280,6 +295,8 @@ namespace GenioMVC.ViewModels
 
 			//FOR: MENU LIST SORTING
 			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+			allSortOrders.Add("CMPNY.ACRONYM", new OrderedDictionary());
+			allSortOrders["CMPNY.ACRONYM"].Add("CMPNY.ACRONYM", "A");
 
 
 			int numberListItems = tableConfig.RowsPerPage;
@@ -291,8 +308,14 @@ namespace GenioMVC.ViewModels
 
 			List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig, "cmpny", allSortOrders);
 
+			if (sorts == null || sorts.Count == 0)
+			{
+				sorts = new List<ColumnSort>();
+				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAcmpny.FldAcronym), SortOrder.Ascending));
 
-			FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldZzstate };
+			}
+
+			FieldRef[] fields = new FieldRef[] { CSGenioAcmpny.FldCodempre, CSGenioAcmpny.FldZzstate, CSGenioAcmpny.FldAcronym, CSGenioAcmpny.FldDesignat, CSGenioAcmpny.FldNif, CSGenioAcmpny.FldQtdpesso };
 
 
 			// Totalizers
@@ -300,6 +323,12 @@ namespace GenioMVC.ViewModels
 
 			FieldRef firstVisibleColumn = null;
 
+			if (sorts.Count == 0)
+			{
+				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
+
+				firstVisibleColumn ??= new FieldRef("cmpny", "acronym");
+			}
 			// Limitations
 			this.TableLimits ??= [];
 			// Comparer to check if limit is already present in TableLimits
@@ -315,6 +344,24 @@ namespace GenioMVC.ViewModels
 					this.TableLimits.AddRange(area_EPH_limits);
 			}
 
+			// Tooltips: Making a tooltip for each valid limitation: 1 Limit(s) detected.
+			// Limit origin: form 
+			//Limit type: "A"
+			//Current Area = "CMPNY"
+			//1st Area Limit: "CNTRY"
+			//1st Area Field: "CODCNTRY"
+			//1st Area Value: ""
+			{
+				Limit limit = new Limit();
+				limit.TipoLimite = LimitType.A;
+				limit.NaoAplicaSeNulo = true;
+				CSGenioAcntry model_limit_area = new CSGenioAcntry(m_userContext.User);
+				string limit_field = "codcntry", limit_field_value = "";
+				object this_limit_field = Navigation.GetValue("cntry") == null ? this.ValCodcntry : Navigation.GetValue("cntry");
+				Limit_Filler(ref limit, model_limit_area, limit_field, limit_field_value, this_limit_field, LimitAreaType.AreaLimita);
+				if (!this.TableLimits.Contains(limit, limitComparer)) //to avoid repetitions (i.e: DB and EPH applying same limit)
+					this.TableLimits.Add(limit);
+			}
 
 			if (conditions == null)
 				conditions = CriteriaSet.And();
@@ -481,11 +528,15 @@ namespace GenioMVC.ViewModels
 
 		private static readonly string[] _fieldsToSerialize =
 		[
-			"Cmpny", "Cmpny.ValCodempre", "Cmpny.ValZzstate", "Cmpny.ValCodcntry"
+			"Cmpny", "Cmpny.ValCodempre", "Cmpny.ValZzstate", "Cmpny.ValAcronym", "Cmpny.ValDesignat", "Cmpny.ValNif", "Cmpny.ValQtdpesso", "Cmpny.ValCodcntry"
 		];
 
 		private static readonly List<TableSearchColumn> _searchableColumns =
 		[
+			new TableSearchColumn("ValAcronym", CSGenioAcmpny.FldAcronym, typeof(string)),
+			new TableSearchColumn("ValDesignat", CSGenioAcmpny.FldDesignat, typeof(string), defaultSearch : true),
+			new TableSearchColumn("ValNif", CSGenioAcmpny.FldNif, typeof(string)),
+			new TableSearchColumn("ValQtdpesso", CSGenioAcmpny.FldQtdpesso, typeof(decimal?)),
 		];
 	}
 }

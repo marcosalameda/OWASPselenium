@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace quidgest.uitests.pages;
 
@@ -12,6 +13,9 @@ public class AppPage: PageObject
 	private By loginBtnLocator => By.Id("logon-menu-btn");
 	private IWebElement loginBtn => driver.FindElement(loginBtnLocator);
 	private By avatarLocator => By.Id("user-avatar");
+	public DropdownMenuControl UserMenu => new DropdownMenuControl(driver, containerLocator, "#user-avatar", ".user-settings__popover", "a");
+	private string alertSelector = ".c-alert--fixed__container .c-alert";
+	private List<IWebElement> alerts => driver.FindElements(By.CssSelector(alertSelector))?.ToList();
 	
 	/// <summary>
 	/// Right sidebar
@@ -49,6 +53,26 @@ public class AppPage: PageObject
 			return true;
 
 		return false;
+	}
+	
+	public void Logout()
+	{
+		// Logout is the option with index 2
+		UserMenu.SelectOption(2);
+		
+		wait.Until(c => loginBtn);
+	}
+
+	public void CloseAlerts()
+	{
+		if (alerts == null) return;
+
+		// Click the close button for each alert
+		foreach(var alert in alerts)
+		{
+			IWebElement closeButton = alert.FindElement(By.CssSelector(".c-alert__dismissible"));
+			closeButton?.Click();
+		}
 	}
 
     public bool ValidateMenuNavigation(string moduleId, string itemId)

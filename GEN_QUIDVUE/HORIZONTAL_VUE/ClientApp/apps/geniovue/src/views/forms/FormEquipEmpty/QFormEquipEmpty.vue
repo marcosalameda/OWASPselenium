@@ -156,7 +156,7 @@
 						</base-input-structure>
 					</q-col>
 				</q-row>
-				<q-row v-if="controls.EQUIP_EMPTY__EQUIP__SHOWRC_FG.isVisible || controls.EQUIP_EMPTY__EQUIP__FREQUENC_FG.isVisible || controls.EQUIP_EMPTY__ITEM__ITEMDES_FG.isVisible || controls.EQUIP_EMPTY__TPEQU__TIPOEQUI_FG.isVisible">
+				<q-row v-if="controls.EQUIP_EMPTY__EQUIP__SHOWRC_FG.isVisible || controls.EQUIP_EMPTY__EQUIP__IFABATIF_FG.isVisible || controls.EQUIP_EMPTY__EQUIP__FREQUENC_FG.isVisible || controls.EQUIP_EMPTY__ITEM__ITEMDES_FG.isVisible || controls.EQUIP_EMPTY__TPEQU__TIPOEQUI_FG.isVisible">
 					<q-col
 						v-if="controls.EQUIP_EMPTY__EQUIP__SHOWRC_FG.isVisible"
 						cols="auto">
@@ -172,6 +172,23 @@
 								v-if="controls.EQUIP_EMPTY__EQUIP__SHOWRC_FG.isVisible"
 								v-bind="controls.EQUIP_EMPTY__EQUIP__SHOWRC_FG.props"
 								v-on="controls.EQUIP_EMPTY__EQUIP__SHOWRC_FG.handlers" />
+						</base-input-structure>
+					</q-col>
+					<q-col
+						v-if="controls.EQUIP_EMPTY__EQUIP__IFABATIF_FG.isVisible"
+						cols="auto">
+						<base-input-structure
+							v-if="controls.EQUIP_EMPTY__EQUIP__IFABATIF_FG.isVisible"
+							class="i-text"
+							v-bind="controls.EQUIP_EMPTY__EQUIP__IFABATIF_FG"
+							v-on="controls.EQUIP_EMPTY__EQUIP__IFABATIF_FG.handlers"
+							:loading="controls.EQUIP_EMPTY__EQUIP__IFABATIF_FG.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-filter
+								v-if="controls.EQUIP_EMPTY__EQUIP__IFABATIF_FG.isVisible"
+								v-bind="controls.EQUIP_EMPTY__EQUIP__IFABATIF_FG.props"
+								v-on="controls.EQUIP_EMPTY__EQUIP__IFABATIF_FG.handlers" />
 						</base-input-structure>
 					</q-col>
 					<q-col
@@ -593,6 +610,12 @@
 							set 'cmpny.designat'(value) { vm.model?.TableCmpnyDesignat?.updateValue(value) }
 						}),
 						controlLimits: [
+							{
+								identifier: ['global-filter-cntry'],
+								dependencyEvents: ['filterChange:cntry.codcntry'],
+								dependencyField: '',
+								fnValueSelector: (model) => model?.CntryValCodcntryFilterKey?.value
+							},
 						],
 					}, this),
 					EQUIP_EMPTY__PESS1__NAME_FG: new fieldControlClass.LookupControl({
@@ -620,6 +643,12 @@
 							set 'pess1.name'(value) { vm.model?.TablePess1Name?.updateValue(value) }
 						}),
 						controlLimits: [
+							{
+								identifier: ['global-filter-cmpny'],
+								dependencyEvents: ['filterChange:cmpny.codempre'],
+								dependencyField: '',
+								fnValueSelector: (model) => model?.CmpnyValCodempreFilterKey?.value
+							},
 						],
 					}, this),
 					EQUIP_EMPTY__EQUIP__SHOWRC_FG: new fieldControlClass.FormFilterControl({
@@ -634,16 +663,15 @@
 						controlLimits: [
 						],
 					}, this),
-					EQUIP_EMPTY__EQUIP__IFABATIF: new fieldControlClass.BooleanControl({
+					EQUIP_EMPTY__EQUIP__IFABATIF_FG: new fieldControlClass.FormFilterControl({
 						modelField: 'ValIfabatif',
-						valueChangeEvent: 'fieldChange:equip.ifabatif',
-						id: 'EQUIP_EMPTY__EQUIP__IFABATIF',
+						id: 'EQUIP_EMPTY__EQUIP__IFABATIF_FG',
 						name: 'IFABATIF',
 						size: 'medium',
 						label: computed(() => this.Resources.DOWNED_EQUIPMENT43331),
 						placeholder: '',
-						labelPosition: computed(() => this.$app.layout.CheckboxLabelAlignment),
-						isFormulaBlocked: true,
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						filterViewMode: 'checkbox',
 						controlLimits: [
 						],
 					}, this),
@@ -1029,7 +1057,7 @@
 							}
 						},
 						globalEvents: ['changed-PESS1', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-EQUIP', 'changed-CMPNY', 'changed-ITEM', 'changed-DECOM'],
-						internalEvents: ['filterChange:cntry.codcntry', 'filterChange:cmpny.codempre', 'filterChange:pess1.codpesso', 'filterChange:equip.showrc', 'filterChange:equip.frequenc', 'filterChange:item.itemdes', 'filterChange:tpequ.tipoequi'],
+						internalEvents: ['filterChange:cntry.codcntry', 'filterChange:cmpny.codempre', 'filterChange:pess1.codpesso', 'filterChange:equip.showrc', 'filterChange:equip.ifabatif', 'filterChange:equip.frequenc', 'filterChange:item.itemdes', 'filterChange:tpequ.tipoequi'],
 						globalFilters: [
 							{
 								identifier: 'cntry.codcntry',
@@ -1046,6 +1074,10 @@
 							{
 								identifier: 'equip.showrc',
 								getValue: () => this.model?.ValShowrc?.value
+							},
+							{
+								identifier: 'equip.ifabatif',
+								getValue: () => this.model?.ValIfabatif?.value
 							},
 							{
 								identifier: 'equip.frequenc',

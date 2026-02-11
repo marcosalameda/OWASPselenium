@@ -33,6 +33,30 @@ public class Equip_empty_ValDesignat_RowViewModel : Models.Cmpny
 	private void SetColumns()
 	{
 		Columns ??= [
+			new ListColumn()
+			{
+				Order = 1,
+				Area = "CMPNY",
+				Field = "ACRONYM",
+			},
+			new ListColumn()
+			{
+				Order = 2,
+				Area = "CMPNY",
+				Field = "DESIGNAT",
+			},
+			new ListColumn()
+			{
+				Order = 3,
+				Area = "CMPNY",
+				Field = "NIF",
+			},
+			new ListColumn()
+			{
+				Order = 4,
+				Area = "CMPNY",
+				Field = "QTDPESSO",
+			},
 		];
 	}
 

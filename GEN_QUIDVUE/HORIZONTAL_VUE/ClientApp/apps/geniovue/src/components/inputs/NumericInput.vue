@@ -17,7 +17,7 @@
 			:readonly="readonly"
 			:disabled="disabled"
 			:required="isRequired"
-			:aria-labelledby="labelId"
+			:aria-labelledby="$attrs.ariaLabel ? null : labelId"
 			:size="inputSize"
 			:placeholder="inputPlaceholder"
 			@keydown="onKeydown"

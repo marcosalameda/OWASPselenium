@@ -30,7 +30,7 @@ public class Equip_emptyForm : Form
 	/// <summary>
 	/// Downed equipment
 	/// </summary>
-	public CheckboxInputControl EquipIfabatif => new CheckboxInputControl(driver, ContainerLocator, "#container-EQUIP_EMPTY__EQUIP__IFABATIF");
+    public CheckboxInputControl EquipIfabatif_FG => new CheckboxInputControl(driver, ContainerLocator, "#container-EQUIP_EMPTY__EQUIP__IFABATIF_FG");
 
 	/// <summary>
 	/// Loan frequency

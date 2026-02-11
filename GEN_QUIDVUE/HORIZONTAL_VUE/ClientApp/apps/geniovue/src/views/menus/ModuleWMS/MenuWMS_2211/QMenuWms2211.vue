@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_2211]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.DISPATCH_DATE54413),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -172,6 +175,7 @@
 								label: computed(() => this.Resources.CUSTOMER51658),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -188,8 +192,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -290,6 +293,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_22111',
 								name: 'form-DISPA',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -315,14 +319,15 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PERSO', 'changed-ENTIT', 'changed-DISST', 'changed-DISPA'],
+						globalEvents: ['changed-DISPA', 'changed-ENTIT', 'changed-DISST', 'changed-PERSO'],
 						uuid: 'cfbb1913-41cc-44c3-9c1e-563789f3471f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						/** Menu limits */
 						controlLimits: [
 							/** SC */
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

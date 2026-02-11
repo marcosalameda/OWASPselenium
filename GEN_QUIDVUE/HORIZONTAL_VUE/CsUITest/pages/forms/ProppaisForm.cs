@@ -25,7 +25,7 @@ public class ProppaisForm : Form
 	/// <summary>
 	/// Country code
 	/// </summary>
-	public IWebElement PseudNovogr01 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPPAISPSEUDNOVOGR01-container");
 
 	/// <summary>
 	/// Numeric

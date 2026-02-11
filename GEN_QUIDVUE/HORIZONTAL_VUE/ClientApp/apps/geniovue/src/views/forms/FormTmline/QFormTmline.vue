@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,25 +94,22 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="TMLINE"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.TMLINE__PSEUDTMDSAID_.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.TMLINE__PSEUDTMDSAID_.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.TMLINE__PSEUDTMDSAID_.isVisible">
+					<q-col v-if="controls.TMLINE__PSEUDTMDSAID_.isVisible">
 						<q-timeline
+							v-if="controls.TMLINE__PSEUDTMDSAID_.isVisible"
 							id="TMLINE__PSEUDTMDSAID_"
 							v-bind="controls.TMLINE__PSEUDTMDSAID_"
 							@show-popup="timelineOpenForm" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -113,7 +118,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -122,6 +127,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -133,7 +139,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -344,7 +350,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -590,16 +600,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -643,16 +667,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -804,6 +842,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS TMLINE]/
 // eslint-disable-next-line

@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_111]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -171,6 +174,7 @@
 								field: 'NOTE',
 								label: computed(() => this.Resources.NOTES05274),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 4,
@@ -180,6 +184,7 @@
 								label: computed(() => this.Resources.CRIADO_EM61283),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -189,6 +194,7 @@
 								label: computed(() => this.Resources.CRIADO_POR17895),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 6,
@@ -198,6 +204,7 @@
 								label: computed(() => this.Resources.ALTERADO_EM23573),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -207,6 +214,7 @@
 								label: computed(() => this.Resources.ALTERADO_POR39254),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -222,8 +230,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -324,6 +331,7 @@
 							rowClickAction: {
 								id: 'RCA_PTN_1111',
 								name: 'form-ABATEREQ',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -353,6 +361,7 @@
 						uuid: '08896786-8e39-461e-b166-e259f92211f7',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

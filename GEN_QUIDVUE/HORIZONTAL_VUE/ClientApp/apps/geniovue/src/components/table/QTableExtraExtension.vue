@@ -11,46 +11,34 @@
 		v-if="isListVisible"
 		modal-id="column-config"
 		v-bind="listCtrl.config"
-		v-on="tableColumnConfigHandlers"
 		:signal="listCtrl.subSignals.columnConfig"
 		:columns="listCtrl.columns"
+		:filters="listCtrl.filters"
 		:default-search-column-name="listCtrl.config.defaultSearchColumnName"
-		:texts="listCtrl.texts" />
+		:texts="listCtrl.texts"
+		v-on="tableColumnConfigHandlers" />
 
 	<q-table-advanced-filters
-		v-if="listCtrl.config.allowAdvancedFilters"
+		v-if="isListVisible"
 		modal-id="advanced-filters"
-		v-bind="listCtrl.config"
-		v-on="tableAdvancedFilters"
 		:signal="listCtrl.subSignals.advancedFilters"
 		:table-name="listCtrl.config.name"
 		:columns="listCtrl.columns"
-		:filters="listCtrl.advancedFilters"
-		mode="editAll"
+		:date-formats="listCtrl.config.dateFormats"
+		:active-filters="listCtrl.activeFilters"
+		:group-filters="listCtrl.groupFilters"
+		:filters="listCtrl.filters"
 		:texts="listCtrl.texts"
 		:locale="listCtrl.locale"
-		:filter-operators="filterOperators" />
-
-	<q-table-advanced-filters
-		v-if="listCtrl.config.allowAdvancedFilters"
-		modal-id="advanced-filters-new"
-		v-bind="listCtrl.config"
-		v-on="tableAdvancedFilters"
-		:signal="listCtrl.subSignals.advancedFiltersNew"
-		:table-name="listCtrl.config.name"
-		:columns="listCtrl.columns"
-		:filters="listCtrl.advancedFilters"
-		mode="new"
-		:texts="listCtrl.texts"
-		:locale="listCtrl.locale"
-		:filter-operators="filterOperators" />
+		:filter-operators="listCtrl.filterOperators"
+		v-on="tableAdvancedFilters" />
 
 	<q-table-view-save
 		modal-id="view-save"
 		v-bind="listCtrl.config"
 		v-on="tableViewSaveHandlers"
 		:signal="listCtrl.subSignals.viewSave"
-		:config-names="listCtrl.config.userTableConfigNames"
+		:config-names="listCtrl.config.tableConfigNames"
 		:texts="listCtrl.texts" />
 
 	<q-table-views
@@ -58,15 +46,13 @@
 		v-bind="listCtrl.config"
 		v-on="tableViewHandlers"
 		:signal="listCtrl.subSignals.views"
-		:config-names="listCtrl.config.userTableConfigNames"
-		:config-name-default="listCtrl.config.userTableConfigNameDefault"
+		:config-names="listCtrl.config.tableConfigNames"
+		:config-name-default="listCtrl.config.defaultTableConfigName"
 		:texts="listCtrl.texts" />
 </template>
 
 <script>
 	import { toValue } from 'vue'
-
-	import searchFilterDataModule from '@/api/genio/searchFilterData'
 
 	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
 
@@ -84,19 +70,13 @@
 			'show-popup',
 			'hide-popup',
 			'set-property',
-			'update-config',
 			'set-info-message',
-			'save-column-config',
 			'apply-column-config',
 			'reset-column-config',
-			'reset-column-sizes',
-			'reset-column-ordering',
 			'toggle-text-wrap',
-			'add-advanced-filter',
-			'edit-advanced-filters',
-			'set-advanced-filter-state',
-			'remove-advanced-filter',
-			'remove-column-filter',
+			'update:activeFilters',
+			'update:groupFilters',
+			'update:filters',
 			'save-view',
 			'rename-view',
 			'copy-view',
@@ -121,14 +101,6 @@
 			listCtrl: {
 				type: Object,
 				required: true
-			},
-
-			/**
-			 * A set of operator definitions used for creating and managing advanced filters in the table.
-			 */
-			filterOperators: {
-				type: Object,
-				default: () => new searchFilterDataModule.SearchFilterConditionOperators()
 			}
 		},
 
@@ -137,7 +109,7 @@
 		setup(props, ctx)
 		{
 			const emitEvent = ctx.emit
-			const _confUserTableConfigNames = toValue(props.listCtrl.config.userTableConfigNames)
+			const _confUserTableConfigName = toValue(props.listCtrl.config.userTableConfigName)
 			const alertProps = {
 				type: 'success',
 				message: `${props.listCtrl.texts.tableViewSaveSuccess}`,
@@ -153,8 +125,8 @@
 			const saveViewOpenView = function(callbackParams)
 			{
 				emitEvent('save-view', {
-					name: _confUserTableConfigNames,
-					isSelected: false
+					name: _confUserTableConfigName,
+					isSelected: -1
 				})
 				emitEventCallbackParams(callbackParams)
 			}
@@ -180,14 +152,13 @@
 								{
 									confirm: {
 										label: `${props.listCtrl.texts.saveText}`,
-										action: saveViewOpenView
+										action: () => { saveViewOpenView({ eventName: eventName, eventData: eventData }) }
 									},
 									cancel: {
 										label: `${props.listCtrl.texts.discard}`,
-										action: emitEventCallbackParams
+										action: () => { emitEventCallbackParams({ eventName: eventName, eventData: eventData }) }
 									}
-								},
-								{ callbackParams: { eventName: eventName, eventData: eventData } }
+								}
 							)
 						}
 						else
@@ -220,14 +191,13 @@
 							{
 								confirm: {
 									label: `${props.listCtrl.texts.deleteText}`,
-									action: emitEventCallbackParams
+									action: () => { emitEventCallbackParams({ eventName: eventName, eventData: eventData }) }
 								},
 								cancel: {
 									label: `${props.listCtrl.texts.cancelText}`,
 									action: null
 								}
-							},
-							{ callbackParams: { eventName: eventName, eventData: eventData } }
+							}
 						)
 						break
 					default:
@@ -235,7 +205,6 @@
 						break
 				}
 			}
-
 
 			return {
 				tableConfigHandlers: {
@@ -252,28 +221,19 @@
 						emitEvent('signal-component', 'config', { show: false })
 					},
 					setProperty: (...args) => emitEvent('set-property', ...args),
-					updateConfig: (...args) => emitEvent('update-config', ...args),
 					applyColumnConfig: (eventData) => emitEvent('apply-column-config', eventData),
 					resetColumnConfig: (eventData) => emitEvent('reset-column-config', eventData),
-					resetColumnSizes: (eventData) => emitEvent('reset-column-sizes', eventData),
-					resetColumnOrdering: (eventData) => emitEvent('reset-column-ordering', eventData),
 					toggleTextWrap: (eventData) => emitEvent('toggle-text-wrap', eventData)
 				},
 
 				tableAdvancedFilters: {
-					showPopup: (eventData) => emitEvent('show-popup', eventData),
-					hidePopup: (eventData) =>
-					{
+					hidePopup: (eventData) => {
 						emitEvent('hide-popup', eventData)
 						emitEvent('signal-component', 'config', { show: false })
 					},
-					updateConfig: (...args) => emitEvent('update-config', ...args),
-					addAdvancedFilter: (eventData) => emitEvent('add-advanced-filter', eventData),
-					editAdvancedFilters: (eventData) => emitEvent('edit-advanced-filters', eventData),
-					setAdvancedFilterState: (eventData) => emitEvent('set-advanced-filter-state', eventData),
-					removeAdvancedFilter: (eventData) => emitEvent('remove-advanced-filter', eventData),
-					removeAllAdvancedFilters: () => emitEvent('remove-all-advanced-filters'),
-					removeColumnFilter: (eventData) => emitEvent('remove-column-filter', eventData)
+					'update:filters': (eventData) => emitEvent('update:filters', eventData),
+					'update:active-filters': (eventData) => emitEvent('update:activeFilters', eventData),
+					'update:group-filters': (eventData) => emitEvent('update:groupFilters', eventData)
 				},
 
 				tableViewSaveHandlers: {

@@ -209,7 +209,10 @@ export default {
 			validationErrors: {},
 
 			// Allows anchor containers to be opened on first load.
-			anchorsTabOpened: false
+			anchorsTabOpened: false,
+
+			// When a PopUp form is opened, the forms behind it cannot appear to be loaded, especially because of E2E testing.
+			isActiveForm: true
 		}
 	},
 
@@ -231,6 +234,7 @@ export default {
 		const canLoad = await this.beforeLoad()
 		// Load form data.
 		if (canLoad)
+		{
 			this.loadFormData(true).catch((err) => {
 				this.$eventTracker.addError({
 					origin: 'created (formHandler)',
@@ -238,6 +242,7 @@ export default {
 					contextData: { error: err, formInfo: this.formInfo }
 				})
 			})
+		}
 	},
 
 	mounted()
@@ -260,9 +265,13 @@ export default {
 			}
 		}
 
+		if(this.isPopup)
+			this.$eventHub.emit('change-content-active-state', false)
+
 		// Setup of the various listeners for changes to the DB, which will update the respective list whenever changes occur.
 		this.formControl.initListOnDBChangeEvent()
 
+		this.$eventHub.on('change-content-active-state', this.changeFormActiveState)
 		this.$eventHub.on('modal-is-ready', this.setFormModalReady)
 		this.$eventHub.on('form-apply', this.formApplyCallback)
 		this.$eventHub.on('focus-control', this.focusControl)
@@ -272,9 +281,10 @@ export default {
 		if (modalEl !== null || this.isNested || this.formInfo.route !== this.$route.name)
 			this.formModalIsReady = true
 
-		if (systemInfo.isChatBotAvailable && this.formInfo.availableAgents.length > 0)
+		if (systemInfo.isChatBotAvailable && this.formInfo.availableAgents?.length > 0)
 		{
 			this.$eventHub.on('apply-agent-fields', this.applyAgentFields)
+			this.$eventHub.on('set-agent-data', this.setAgentData)
 			this.setFormAgents(this.formInfo.availableAgents)
 		}
 	},
@@ -287,22 +297,28 @@ export default {
 			contextData: { formInfo: this.formInfo }
 		})
 
+		this.changeFormActiveState(false)
 		this.showExternalApp = false
 		this.internalEvents?.removeAllListeners()
 		this.internalEvents = null
 		this.formControl?.destroy()
 		this.formControl = null
 
+		this.$eventHub.off('change-content-active-state', this.changeFormActiveState)
 		this.$eventHub.off('modal-is-ready', this.setFormModalReady)
 		this.$eventHub.off('form-apply', this.formApplyCallback)
 		this.$eventHub.off('focus-control', this.focusControl)
 
+		if(this.isPopup)
+			this.$eventHub.emit('change-content-active-state', true)
+
 		this.componentOnLoadProc?.destroy()
 		this.componentOnLoadProc = null
 
-		if (systemInfo.isChatBotAvailable && this.formInfo.availableAgents.length > 0)
+		if (systemInfo.isChatBotAvailable && this.formInfo.availableAgents?.length > 0)
 		{
 			this.$eventHub.off('apply-agent-fields', this.applyAgentFields)
+			this.$eventHub.off('set-agent-data', this.setAgentData)
 			this.setAvailableAgents([])
 			this.setCurrentAgent({ id: '' })
 		}
@@ -521,10 +537,10 @@ export default {
 			const formIdentifier = this.isNested ? '' : `q-modal-${this.isHomePage ? `home-${this.system.currentModule}` : this.formInfo.route}`
 
 			return {
-				main: formIdentifier,
-				header: formIdentifier ? `${formIdentifier}-header` : 'app',
-				body: formIdentifier ? `${formIdentifier}-body` : 'app',
-				footer: formIdentifier ? `${formIdentifier}-footer` : 'app'
+				main: formIdentifier && this.isPopup ? formIdentifier : 'app',
+				header: formIdentifier && this.isPopup ? `${formIdentifier}-header` : 'app',
+				body: formIdentifier && this.isPopup ? `${formIdentifier}-body` : 'app',
+				footer: formIdentifier && this.isPopup ? `${formIdentifier}-footer` : 'app'
 			}
 		},
 
@@ -812,13 +828,12 @@ export default {
 			{
 				const container = this.controls[i]
 
-				if (!(container instanceof fieldControlClass.GroupControl))
-					continue
-
-				container.setState(false)
+				if (container instanceof fieldControlClass.GroupControl)
+					container.setState(false)
+				else if (container instanceof fieldControlClass.TabsControl)
+					container.selectFirstTab()
 			}
 
-			this.controls.formTabs?.selectFirstTab()
 		},
 
 		/**
@@ -1088,7 +1103,7 @@ export default {
 			if (!prefillValues || typeof prefillValues !== 'object')
 				prefillValues = undefined
 
-			if (!Object.values(this.formModes).includes(mode))
+			if (typeof mode !== 'string' || !Object.values(this.formModes).includes(mode.toUpperCase()))
 				return false
 
 			for (let i in this.model)
@@ -1307,7 +1322,7 @@ export default {
 						}
 
 						// Emits an event saying the DB table was altered, so lists that show records from it know they need to refresh.
-						this.$eventHub.emit(`changed-${this.formArea}`, this.model.dirtyFieldNames)
+						this.$eventHub.emit(`changed-${this.formArea}`, this.model.dirtyFieldNames, this.formInfo.type)
 
 						// If the form fields were successfully saved, then they are no longer dirty.
 						this.setFormFieldsValid()
@@ -1339,10 +1354,21 @@ export default {
 
 		/**
 		 * Saves the current content of the form.
-		 * @param {boolean} repeatInsert Should be true if a new record is to be created after the current one, false otherwise
-		 * @returns True if the operation was successful, false otherwise.
+		 *
+		 * Executes the server-side saving process and handles any returned warnings or errors.
+		 * If warnings are present, a confirmation dialogue is displayed to the user to decide
+		 * whether to proceed with saving regardless.
+		 *
+		 * @param {boolean} repeatInsert - Indicates whether a new record should be created after saving the current one.
+		 * @param {boolean} canSaveWithWarnings - Allows saving to continue even if warnings are returned.
+		 * @returns {Promise<[boolean, boolean]>} A promise resolving to an array of two boolean values:
+		 *  - The first value represents whether the initial save attempt was successful (without requiring confirmation).
+		 *  - The second value represents whether the save was ultimately completed successfully after handling warnings.
+		 *    This may be `true` immediately if no warnings are present. If warnings exist, the user is prompted to confirm
+		 *    whether to continue; `true` means the user accepted saving with warnings, whilst `false` means the user cancelled
+		 *    or the save otherwise failed.
 		 */
-		async saveForm(repeatInsert)
+		async saveForm(repeatInsert, canSaveWithWarnings)
 		{
 			if (typeof repeatInsert !== 'boolean')
 				repeatInsert = false
@@ -1360,6 +1386,10 @@ export default {
 			if (!shouldSave)
 				return Promise.resolve(false)
 
+			let saveWithWarnResolve;
+			const saveWithWarnPromise = new Promise((resolve) => { saveWithWarnResolve = resolve })
+			this.model.allowSavingWithWarnings(canSaveWithWarnings)
+
 			const saveProc = new Promise((resolve) => {
 				netAPI.postFormData(
 					this.formArea,
@@ -1372,12 +1402,27 @@ export default {
 							? this.parseResponseErrors(response.data.Errors)
 							: {}
 
-						if (!response.data.Success)
+						// This could be an error message or a save failure due to some warnings that need to be confirmed.
+						if (!response.data.Success || data.Success === false)
 						{
-							this.displayErrorMessage(response.data)
-							resolve(false)
+							// If there are any warning messages, they will be displayed.
+							if (typeof data?.Warnings === 'object' && Array.isArray(data.Warnings) && !this.isEmpty(data.Warnings))
+							{
+								resolve(false)
+								const saveWithWarnResult = await this.showWarningsDialog(data, repeatInsert)
+								saveWithWarnResolve(saveWithWarnResult)
+							}
+							else
+							{
+								this.displayErrorMessage(response.data)
+								resolve(false)
+								saveWithWarnResolve(false)
+							}
+
 							return
 						}
+
+						saveWithWarnResolve(true)
 
 						if (this.formInfo.mode === this.formModes.new)
 						{
@@ -1391,21 +1436,12 @@ export default {
 						}
 
 						// Emits an event saying the DB table was altered, so lists that show records from it know they need to refresh.
-						this.$eventHub.emit(`changed-${this.formArea}`, this.model.dirtyFieldNames)
+						this.$eventHub.emit(`changed-${this.formArea}`, this.model.dirtyFieldNames, this.formInfo.type)
 
 						// If the form fields were successfully saved, then they are no longer dirty.
 						this.setFormFieldsValid()
 
 						this.clearInfoMessages()
-
-						// If there are any warning messages, they will be displayed.
-						if (typeof data.Warnings === 'object' && Array.isArray(data.Warnings) && !this.isEmpty(data.Warnings))
-						{
-							this.showWarningsDialog(data)
-
-							resolve(false)
-							return
-						}
 
 						const shouldContinue = await this.afterSave()
 						if (!shouldContinue)
@@ -1424,7 +1460,7 @@ export default {
 
 			this.addBusy(saveProc, this.Resources[hardcodedTexts.processing])
 
-			return saveProc
+			return Promise.all([saveProc, saveWithWarnPromise])
 		},
 
 		/**
@@ -1442,7 +1478,9 @@ export default {
 			}
 
 			this.setInfoMessage(successProps)
-			genericFunctions.scrollToTop()
+
+			if (!this.isNested)
+				genericFunctions.scrollToTop()
 
 			if (repeatInsert)
 			{
@@ -1483,18 +1521,29 @@ export default {
 		/**
 		 * Shows the warning messages dialog.
 		 * @param {object} data The server response data
+		 * @param {boolean} repeatInsert Should be true if a new record is to be created after the current one, false otherwise
 		 */
-		showWarningsDialog(data)
+		showWarningsDialog(data, repeatInsert)
 		{
-			const buttons = {
-				confirm: {
-					action: () => this.continueSaveForm(false, data),
-					label: this.Resources[hardcodedTexts.ok]
-				},
-			}
+			return new Promise((resolve) => {
+				const buttons = {
+					confirm: {
+						action: async () => {
+							const saveResult = await this.saveForm(repeatInsert, true)
+							const result = Array.isArray(saveResult) ? saveResult[0] : saveResult // 0: save result | 1: save with warning result
+							resolve(result)
+						},
+						label: this.Resources[hardcodedTexts.ok]
+					},
+					cancel: {
+						action: () => resolve(false),
+						label: this.Resources[hardcodedTexts.cancel]
+					}
+				}
 
-			const warnings = data.Warnings.map((warning) => `<div>${warning}</div>`).join('')
-			genericFunctions.displayMessage(warnings, 'warning', null, buttons)
+				const warnings = data.Warnings.map((warning) => `<div>${warning}</div>`).join('')
+				genericFunctions.displayMessage(warnings, 'warning', null, buttons)
+			})
 		},
 
 		/**
@@ -1529,7 +1578,7 @@ export default {
 
 						this.formControl.removeListOnDBChangeEvent()
 						// Emits an event saying the DB table was altered, so lists that show records from it know they need to refresh.
-						this.$eventHub.emit(`changed-${this.formArea}`)
+						this.$eventHub.emit(`changed-${this.formArea}`, null, this.formInfo.type)
 
 						const shouldContinue = await this.afterDel()
 
@@ -1939,7 +1988,8 @@ export default {
 				field: fieldObject
 			})
 
-			this.internalEvents.emit(`fieldChange:${fieldName}`, fieldObject)
+			const eventType = fieldObject?.isGlobalFilterField === true ? 'filterChange' : 'fieldChange'
+			this.internalEvents.emit(`${eventType}:${fieldName}`, fieldObject)
 
 			if (this.isNested)
 			{
@@ -2134,13 +2184,10 @@ export default {
 			}
 
 			if (this.isPopup)
-				this.setModalProperties({ isActive: true, formIdentifier: this.formInfo.identifier })
+				this.setModalProperties({}, { isActive: true, formIdentifier: this.formInfo.identifier, dismissAction: this.leaveForm })
 
 			if (!this.authData.isAllowed)
-			{
-				this.setModalProperties({ hideHeader: true })
 				return false
-			}
 
 			return true
 		},
@@ -2162,21 +2209,27 @@ export default {
 
 		/**
 		 * If the form is a popup, sets it's properties.
-		 * @param {object} props The modal properties
+		 * @param {object} props The dialog component properties
+		 * @param {object} modalProps The modal properties
 		 */
-		setModalProperties(props)
+		setModalProperties(props = {}, modalProps = {})
 		{
 			if (!this.isPopup)
 				return
-			if (typeof props !== 'object')
-				return
 
-			const modalProps = {
-				id: this.formInfo.route,
+			props = {
+				class: 'q-dialog-form',
+				dismissible: false,
+				size: this.formInfo.size ?? 'medium',
 				...props
 			}
 
-			this.setModal(modalProps)
+			modalProps = {
+				id: this.formInfo.route,
+				...modalProps
+			}
+
+			this.setModal(props, modalProps)
 		},
 
 		/**
@@ -2280,6 +2333,9 @@ export default {
 				const anchor = this.$route.params.anchor
 				if (!_isEmpty(anchor))
 					this.focusControl(anchor)
+
+				// Set focus wrap after form has loaded because it needs to have focusable elements to work.
+				this.setModalProperties({ focusWrap: true })
 			}
 
 			return 'Form data loaded successfully.'
@@ -2434,6 +2490,16 @@ export default {
 			})
 
 			this.setAvailableAgents(availableAgents)
+		},
+
+		/**
+		 * Changes the form's status.
+		 * When a PopUp form is opened, the forms behind it should be marked as inactive.
+		 * @param {Boolean} isActive Indicates whether the form is currently active.
+		 */
+		changeFormActiveState(isActive)
+		{
+			this.isActiveForm = isActive
 		}
 	},
 
@@ -2453,8 +2519,10 @@ export default {
 			if (to.params.previouslyRemovedRoute !== from.name)
 				this.$nextTick().then(() => this.setFormKeys())
 
+			let isDifferentMode = false;
 			if (to.params.mode && this.formInfo.mode !== to.params.mode)
 			{
+				isDifferentMode = true;
 				if (to.params.keepAlerts !== 'true')
 					this.clearInfoMessages()
 
@@ -2483,7 +2551,8 @@ export default {
 					sameFormDifferentMenu ||
 					sameFormDifferentRecord ||
 					!this.authData.isAllowed ||
-					to.name !== from.name
+					to.name !== from.name ||
+					isDifferentMode === true
 				)
 			)
 			{

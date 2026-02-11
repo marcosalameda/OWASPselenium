@@ -18,9 +18,16 @@
 
 .q-grid-table-list {
 	&:not(.q-grid-table-list--readonly) {
-		.q-field__control,
-		.i-textarea {
+		.q-field__control {
 			background-color: $background;
+		}
+	}
+	
+	&.q-table-list {
+		margin: unset;
+
+		.c-action-bar {
+			margin-bottom: 0.25rem;
 		}
 	}
 
@@ -226,8 +233,7 @@
 			td {
 				vertical-align: top;
 
-				.grid-table-row__state-icon,
-				.grid-table-row__action-btn {
+				.grid-table-row__state-icon {
 					display: flex;
 					align-items: center;
 					height: $input-height;

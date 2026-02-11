@@ -216,6 +216,7 @@
 								},
 							},
 						},
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this)
 				},
 			}

@@ -10,4 +10,5 @@ public class Module
     public const string TBS = "TBS";
     public const string WMS = "WMS";
     public const string TRN = "TRN";
+    public const string UIS = "UIS";
 }

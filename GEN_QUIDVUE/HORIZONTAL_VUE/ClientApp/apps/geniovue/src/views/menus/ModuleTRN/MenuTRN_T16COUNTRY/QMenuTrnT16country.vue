@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TRN_Menu_T16COUNTRY]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -168,8 +170,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -270,6 +271,7 @@
 							rowClickAction: {
 								id: 'RCA_TRN_1G3111',
 								name: 'form-CTRY03',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -299,6 +301,7 @@
 						uuid: 'c16ede99-97ca-4f4f-b37b-04e64722440c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_4251]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.FACILITY_NAME19514),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodfacil',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -173,6 +176,7 @@
 								label: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -188,8 +192,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -290,6 +293,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_42511',
 								name: 'form-LOCAT',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -315,10 +319,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACIL', 'changed-LOCAT', 'changed-ENTIT'],
+						globalEvents: ['changed-LOCAT', 'changed-ENTIT', 'changed-FACIL'],
 						uuid: '9bb6799c-11e3-4bcc-98f8-97323e8e3c8e',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -22,6 +22,12 @@ public class RegraForm : Form
 	/// </summary>
 	public EnumControl RulesLocal => new EnumControl(driver, ContainerLocator, "container-REGRA___RULESLOCAL___");
 
+	/// <summary>
+	/// Description
+	/// </summary>
+	public LookupControl Up_rulesDescript => new LookupControl(driver, ContainerLocator, "container-REGRA__UP_RULES__DESCRIPT");
+	public SeeMorePage Up_rulesDescriptSeeMorePage => new SeeMorePage(driver, "REGRA", "REGRA__UP_RULES__DESCRIPT");
+
 	public RegraForm(IWebDriver driver, FORM_MODE mode, By? containerLocator = null)
 		: base(driver, mode, "REGRA", containerLocator: containerLocator) { }
 }

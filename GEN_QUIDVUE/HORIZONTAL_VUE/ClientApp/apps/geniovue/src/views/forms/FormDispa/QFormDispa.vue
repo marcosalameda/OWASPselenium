@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="DISPA"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.DISPA___DISPADISPADT_.isVisible || controls.DISPA___DISPADISPANR_.isVisible || controls.DISPA___DISSTSTATUS__.isVisible || controls.DISPA___DISPASTATUS__.isVisible">
-					<q-control-wrapper
-						v-show="controls.DISPA___DISPADISPADT_.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.DISPA___DISPADISPADT_.isVisible || controls.DISPA___DISPADISPANR_.isVisible || controls.DISPA___DISSTSTATUS__.isVisible || controls.DISPA___DISPASTATUS__.isVisible">
+					<q-col
+						v-if="controls.DISPA___DISPADISPADT_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DISPA___DISPADISPADT_.isVisible"
 							class="i-text"
 							v-bind="controls.DISPA___DISPADISPADT_"
 							v-on="controls.DISPA___DISPADISPADT_.handlers"
@@ -109,11 +118,12 @@
 								@reset-icon-click="model.ValDispadt.fnUpdateValue(model.ValDispadt.originalValue ?? new Date())"
 								@update:model-value="model.ValDispadt.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.DISPA___DISPADISPANR_.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.DISPA___DISPADISPANR_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DISPA___DISPADISPANR_.isVisible"
 							class="i-text"
 							v-bind="controls.DISPA___DISPADISPANR_"
 							v-on="controls.DISPA___DISPADISPANR_.handlers"
@@ -125,11 +135,12 @@
 								v-bind="controls.DISPA___DISPADISPANR_.props"
 								@update:model-value="model.ValDispanr.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.DISPA___DISSTSTATUS__.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.DISPA___DISSTSTATUS__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DISPA___DISSTSTATUS__.isVisible"
 							class="i-text"
 							v-bind="controls.DISPA___DISSTSTATUS__"
 							v-on="controls.DISPA___DISSTSTATUS__.handlers"
@@ -145,11 +156,12 @@
 								v-bind="controls.DISPA___DISSTSTATUS__.seeMoreParams"
 								v-on="controls.DISPA___DISSTSTATUS__.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.DISPA___DISPASTATUS__.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.DISPA___DISPASTATUS__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DISPA___DISPASTATUS__.isVisible"
 							class="i-text"
 							v-bind="controls.DISPA___DISPASTATUS__"
 							v-on="controls.DISPA___DISPASTATUS__.handlers"
@@ -160,13 +172,14 @@
 								v-if="controls.DISPA___DISPASTATUS__.isVisible"
 								v-bind="controls.DISPA___DISPASTATUS__.props" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.DISPA___ENTITNAME____.isVisible">
-					<q-control-wrapper
-						v-show="controls.DISPA___ENTITNAME____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.DISPA___ENTITNAME____.isVisible">
+					<q-col
+						v-if="controls.DISPA___ENTITNAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DISPA___ENTITNAME____.isVisible"
 							class="i-text"
 							v-bind="controls.DISPA___ENTITNAME____"
 							v-on="controls.DISPA___ENTITNAME____.handlers"
@@ -182,13 +195,14 @@
 								v-bind="controls.DISPA___ENTITNAME____.seeMoreParams"
 								v-on="controls.DISPA___ENTITNAME____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.DISPA___DISPAISPREPAR.isVisible">
-					<q-control-wrapper
-						v-show="controls.DISPA___DISPAISPREPAR.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.DISPA___DISPAISPREPAR.isVisible">
+					<q-col
+						v-if="controls.DISPA___DISPAISPREPAR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DISPA___DISPAISPREPAR.isVisible"
 							class="i-checkbox"
 							v-bind="controls.DISPA___DISPAISPREPAR"
 							v-on="controls.DISPA___DISPAISPREPAR.handlers"
@@ -196,19 +210,20 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.DISPA___DISPAISPREPAR.isVisible"
 									v-bind="controls.DISPA___DISPAISPREPAR.props"
 									v-on="controls.DISPA___DISPAISPREPAR.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.DISPA___DISPAPREPARED.isVisible || controls.DISPA___PERSONAME____.isVisible">
-					<q-control-wrapper
-						v-show="controls.DISPA___DISPAPREPARED.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.DISPA___DISPAPREPARED.isVisible || controls.DISPA___PERSONAME____.isVisible">
+					<q-col
+						v-if="controls.DISPA___DISPAPREPARED.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DISPA___DISPAPREPARED.isVisible"
 							class="i-text"
 							v-bind="controls.DISPA___DISPAPREPARED"
 							v-on="controls.DISPA___DISPAPREPARED.handlers"
@@ -222,11 +237,12 @@
 								@reset-icon-click="model.ValPrepared.fnUpdateValue(model.ValPrepared.originalValue ?? new Date())"
 								@update:model-value="model.ValPrepared.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.DISPA___PERSONAME____.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.DISPA___PERSONAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DISPA___PERSONAME____.isVisible"
 							class="i-text"
 							v-bind="controls.DISPA___PERSONAME____"
 							v-on="controls.DISPA___PERSONAME____.handlers"
@@ -242,24 +258,27 @@
 								v-bind="controls.DISPA___PERSONAME____.seeMoreParams"
 								v-on="controls.DISPA___PERSONAME____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.DISPA___PSEUDDISPATCH.isVisible">
-					<q-control-wrapper
-						v-show="controls.DISPA___PSEUDDISPATCH.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.DISPA___PSEUDDISPATCH.isVisible">
+					<q-col
+						v-if="controls.DISPA___PSEUDDISPATCH.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.DISPA___PSEUDDISPATCH.isVisible"
+							v-if="controls.DISPA___PSEUDDISPATCH.isVisible"
 							v-bind="controls.DISPA___PSEUDDISPATCH"
-							v-on="controls.DISPA___PSEUDDISPATCH.handlers" />
+							v-on="controls.DISPA___PSEUDDISPATCH.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE DISPA___PSEUDDISPATCH]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.DISPA___PSEUDDISPATCH.isVisible"
 							:list-ctrl="controls.DISPA___PSEUDDISPATCH"
 							:filter-operators="controls.DISPA___PSEUDDISPATCH.filterOperators"
 							v-on="controls.DISPA___PSEUDDISPATCH.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -268,7 +287,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -277,6 +296,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -288,7 +308,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -502,7 +522,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -672,7 +696,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
 						maxLength: 1,
-						labelId: 'label_DISPA___DISPASTATUS__',
 						arrayName: 'DispStat',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -781,6 +804,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -790,6 +814,7 @@
 								label: computed(() => this.Resources.SKU42303),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodprodu',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -801,6 +826,7 @@
 								dataLength: 14,
 								scrollData: 14,
 								isVisible: false,
+								export: 1,
 								pkColumn: 'ValCodprodu',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -811,6 +837,7 @@
 								label: computed(() => this.Resources.PRODUCT12880),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodprodu',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -822,6 +849,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -832,6 +860,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -842,6 +871,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -857,8 +887,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -983,7 +1012,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PRODU', 'changed-DILIN', 'changed-DISPA'],
+						globalEvents: ['changed-DISPA', 'changed-DILIN', 'changed-PRODU'],
 						uuid: 'Dispa_ValDispatch',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1160,16 +1189,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1213,16 +1256,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1374,6 +1431,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS DISPA]/
 // eslint-disable-next-line

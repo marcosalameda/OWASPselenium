@@ -3560,22 +3560,25 @@ namespace CSGenio.business
                 }
             }
 
-            //below table anexes
-            foreach (var rel in this.Information.ChildTable)
+            if (this.Information.ChildTable != null)
             {
-                var child = pub.Tables.Find(x => x.IsAnex && x.Areas.Contains(rel.ChildArea));
-                if (child != null)
+                //below table anexes
+                foreach (var rel in this.Information.ChildTable)
                 {
-                    var criteria = CriteriaSet.Or();
-                    foreach (var foreignKey in rel.RelatedFields)
-                        criteria.Equal(rel.ChildArea, foreignKey, QPrimaryKey);
-
-                    var rows = Area.searchList(rel.ChildArea, sp, user, criteria, child.Fields.ToArray());
-                    foreach (var row in rows)
+                    var child = pub.Tables.Find(x => x.IsAnex && x.Areas.Contains(rel.ChildArea));
+                    if (child != null)
                     {
-                        if (!CheckTableFilter(child, row, sp))
-                            continue;
-                        sp.DeferMessageUpdate(pub, child, row);
+                        var criteria = CriteriaSet.Or();
+                        foreach (var foreignKey in rel.RelatedFields)
+                            criteria.Equal(rel.ChildArea, foreignKey, QPrimaryKey);
+
+                        var rows = Area.searchList(rel.ChildArea, sp, user, criteria, child.Fields.ToArray());
+                        foreach (var row in rows)
+                        {
+                            if (!CheckTableFilter(child, row, sp))
+                                continue;
+                            sp.DeferMessageUpdate(pub, child, row);
+                        }
                     }
                 }
             }
@@ -3583,21 +3586,24 @@ namespace CSGenio.business
 
         private void MessageChildren(PersistentSupport sp, PublisherMetadata pub)
         {
-            foreach (var rel in this.Information.ChildTable)
+            if (this.Information.ChildTable != null)
             {
-                var child = pub.Tables.Find(x => !x.IsAnex && x.Areas.Contains(rel.ChildArea));
-                if (child != null)
+                foreach (var rel in this.Information.ChildTable)
                 {
-                    var criteria = CriteriaSet.Or();
-                    foreach (var foreignKey in rel.RelatedFields)
-                        criteria.Equal(rel.ChildArea, foreignKey, QPrimaryKey);
-
-                    var rows = Area.searchList(rel.ChildArea, sp, user, criteria, child.Fields.ToArray());
-                    foreach (var row in rows)
+                    var child = pub.Tables.Find(x => !x.IsAnex && x.Areas.Contains(rel.ChildArea));
+                    if (child != null)
                     {
-                        if (!CheckTableFilter(child, row, sp))
-                            continue;
-                        sp.DeferMessageUpdate(pub, child, row);
+                        var criteria = CriteriaSet.Or();
+                        foreach (var foreignKey in rel.RelatedFields)
+                            criteria.Equal(rel.ChildArea, foreignKey, QPrimaryKey);
+
+                        var rows = Area.searchList(rel.ChildArea, sp, user, criteria, child.Fields.ToArray());
+                        foreach (var row in rows)
+                        {
+                            if (!CheckTableFilter(child, row, sp))
+                                continue;
+                            sp.DeferMessageUpdate(pub, child, row);
+                        }
                     }
                 }
             }

@@ -7,16 +7,16 @@
 		is-nested />
 	<div v-else-if="userIsLoggedIn">
 <!-- eslint-disable indent, vue/html-indent, vue/script-indent -->
-<!--Platform: VUE | Type: INDEX_AUTHENTICATED | Module: GQT | Parameter:  | File:  | Order: 0-->
-<!--BEGIN_MANUALCODE_CODMANUA:193f80d9-d308-4b2f-af22-3650bbd986d5-->
-<h2>Welcome teste</h2>
-<!--END_MANUALCODE-->
+<!-- USE /[MANUAL GQT INDEX_AUTHENTICATED]/ -->
 <!-- eslint-disable-next-line -->
 <!-- eslint-enable indent, vue/html-indent, vue/script-indent -->
 <!-- eslint-disable indent, vue/html-indent, vue/script-indent -->
 <!-- USE /[MANUAL GQT INDEX_AUTHENTICATED HORIZONTAL_VUE]/ -->
 <!-- eslint-disable-next-line -->
 <!-- eslint-enable indent, vue/html-indent, vue/script-indent -->
+		<div class="welcome-authenticated">
+			<span>{{ Resources.BEM_VINDO38622 }} {{ userData.name }}</span>
+		</div>
 	</div>
 </template>
 
@@ -90,6 +90,9 @@
 				{
 					case 'HomepageGQT':
 						this.currentComponent = defineAsyncComponent(() => import('@/views/forms/FormHomeg/QFormHomeg.vue'))
+						break
+					case 'HomepageUIS':
+						this.currentComponent = defineAsyncComponent(() => import('@/views/menus/ModuleUIS/MenuUIS_111/QMenuUis111.vue'))
 						break
 					case 'HomepageSTY':
 						this.currentComponent = defineAsyncComponent(() => import('@/views/menus/ModuleSTY/MenuSTY_OVERVIEW/QMenuStyOverview.vue'))

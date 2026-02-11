@@ -1,579 +1,294 @@
 ﻿using CSGenio.business;
+using CSGenio.core.framework.table;
 using CSGenio.framework;
-using CSGenio.persistence;
 using Microsoft.AspNetCore.Mvc;
-using Quidgest.Persistence.GenericQuery;
 
-namespace GenioMVC.Controllers.Tblcfg
+namespace GenioMVC.Controllers.Tblcfg;
+
+/// <summary>
+/// Web API controller for managing table configuration operations.
+/// Provides endpoints for saving, loading, selecting, deleting, renaming, and copying
+/// user-specific table view configurations through HTTP POST requests.
+/// </summary>
+/// <remarks>
+/// This controller acts as a web API layer over the TableConfigurationManager,
+/// handling HTTP requests and responses while delegating business logic to the manager.
+/// All endpoints return JSON responses and include proper error handling.
+/// </remarks>
+/// <param name="userContextService">Service providing user context information for the current session.</param>
+public class TblcfgController(UserContextService userContextService) : ControllerBase(userContextService)
 {
-	public class TblcfgController : ControllerBase
+	/// <summary>
+	/// Base request model containing the fundamental identifiers needed for table configuration operations.
+	/// </summary>
+	public class RequestConfigModel
 	{
-        public TblcfgController(UserContextService userContextService) : base(userContextService)
-        {
-        }
+		/// <summary>
+		/// Gets or sets the unique identifier of the table whose configuration is being managed.
+		/// </summary>
+		public string Uuid { get; set; }
 
-		public ActionResult Index()
+		/// <summary>
+		/// Gets or sets the name of the table configuration.
+		/// </summary>
+		public string ConfigName { get; set; }
+	}
+
+	/// <summary>
+	/// Request model that extends the base model with selection status for configuration operations.
+	/// </summary>
+	public class RequestConfigSelectedModel : RequestConfigModel
+	{
+		/// <summary>
+		/// Gets or sets whether this configuration should be marked as default.
+		/// Values: 1 = set as default, 0 = not default, -1 = no change to default status.
+		/// </summary>
+		public int IsSelected { get; set; } = -1;
+	}
+
+	/// <summary>
+	/// Request model for saving table configuration data.
+	/// Contains all the information needed to persist a table configuration.
+	/// </summary>
+	public class RequestConfigSaveModel : RequestConfigSelectedModel
+	{
+		/// <summary>
+		/// Gets or sets the serialized configuration data to be saved.
+		/// This typically contains JSON-serialized table settings including column visibility, filters, etc.
+		/// </summary>
+		public TableConfiguration Data { get; set; }
+	}
+
+	/// <summary>
+	/// Request model for renaming an existing table configuration.
+	/// Contains both the new name and the current name of the configuration to rename.
+	/// </summary>
+	public class RequestConfigRenameModel : RequestConfigSelectedModel
+	{
+		/// <summary>
+		/// Gets or sets the current name of the configuration that should be renamed.
+		/// This is used to identify the existing configuration in the database.
+		/// </summary>
+		public string RenameFromName { get; set; }
+	}
+
+	/// <summary>
+	/// Request model for copying an existing table configuration to create a new one.
+	/// Contains both the new configuration name and the source configuration to copy from.
+	/// </summary>
+	public class RequestConfigCopyModel : RequestConfigSelectedModel
+	{
+		/// <summary>
+		/// Gets or sets the name of the existing configuration to copy from.
+		/// This configuration will serve as the template for the new configuration.
+		/// </summary>
+		public string CopyFromName { get; set; }
+	}
+
+	/// <summary>
+	/// Handles exceptions by extracting appropriate error messages and returning JSON error responses.
+	/// </summary>
+	/// <param name="e">The exception that occurred during the operation.</param>
+	/// <returns>A JSON error response containing the user-friendly error message.</returns>
+	/// <remarks>
+	/// Business exceptions are handled specially to extract user-friendly messages,
+	/// while other exceptions use their standard message property.
+	/// </remarks>
+	private JsonResult HandleException(Exception e)
+	{
+		string message = e is BusinessException
+			? (e as BusinessException).UserMessage
+			: e.Message;
+		return JsonERROR(message);
+	}
+
+	/// <summary>
+	/// Retrieves a specific table configuration for the current user.
+	/// </summary>
+	/// <param name="requestModel">The request model containing the table UUID and configuration name.</param>
+	/// <returns>
+	/// A JSON response containing the configuration data and name if found,
+	/// or an error response if the configuration doesn't exist.
+	/// </returns>
+	/// <remarks>
+	/// This endpoint fetches saved table configurations from the database.
+	/// If the specified configuration is not found, it returns a localized error message.
+	/// </remarks>
+	[HttpPost]
+	public ActionResult GetConfig([FromBody] RequestConfigModel requestModel)
+	{
+		User user = m_userContext.User;
+		string uuid = requestModel.Uuid;
+		string configName = requestModel.ConfigName;
+
+		// Get saved configuration
+		TableConfiguration config = TableConfigurationManager.GetConfig(user, uuid, configName);
+
+		return config == null
+			? JsonERROR(string.Format(Translations.Get("A vista com o nome '{0}' não existe.", user.Language), configName))
+			: JsonOK(new { config });
+	}
+
+	/// <summary>
+	/// Saves a table configuration for the current user.
+	/// </summary>
+	/// <param name="requestModel">The request model containing all configuration data to save.</param>
+	/// <returns>
+	/// A JSON success response if the configuration was saved successfully,
+	/// or a JSON error response if the operation failed.
+	/// </returns>
+	/// <remarks>
+	/// This endpoint can create new configurations or update existing ones.
+	/// If the configuration is marked as default, any previous default configurations
+	/// for the same table will be automatically cleared.
+	/// The system must not be in maintenance mode for this operation to succeed.
+	/// </remarks>
+	[HttpPost]
+	public ActionResult SaveConfig([FromBody] RequestConfigSaveModel requestModel)
+	{
+		try
 		{
-			return Json(new { Success = true });
+			TableConfigurationManager.SaveConfig(
+				m_userContext.User,
+				requestModel.Uuid,
+				requestModel.ConfigName,
+				requestModel.IsSelected,
+				requestModel.Data);
+			return JsonOK();
 		}
-
-		public class RequestConfigModel
+		catch (Exception e)
 		{
-            public string Uuid { get; set; }
-            public string ConfigName { get; set; }
-        }
-
-        public class RequestConfigSelectedModel : RequestConfigModel
-        {
-            public bool IsSelected { get; set; }
-        }
-
-        public class RequestConfigSaveModel : RequestConfigSelectedModel
-        {
-            public string? Data { get; set; }
-        }
-
-        public class RequestConfigRenameModel : RequestConfigSelectedModel
-        {
-            public string? RenameFromName { get; set; }
-        }
-
-        public class RequestConfigCopyModel : RequestConfigSelectedModel
-        {
-            public string? CopyFromName { get; set; }
-        }
-
-        [HttpPost]
-		public ActionResult SaveConfig([FromBody] RequestConfigSaveModel requestModel)
-		{
-			// Don't allow changes in maintenance mode
-			if(Maintenance.Current.IsActive)
-                return Json(new { Success = false, Message = Resources.Resources.O_SISTEMA_ENCONTRA_S37912 });
-
-            var uuid = requestModel.Uuid;
-			var configName = requestModel.ConfigName;
-			var isSelected = requestModel.IsSelected;
-			var data = requestModel.Data;
-
-			User user = UserContext.Current.User;
-			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-
-			//Get saved configuration
-			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName))
-				.FirstOrDefault();
-
-			//If record doesn't exist, create new record
-			if (userTableConfig == null)
-			{
-                userTableConfig = new CSGenioAtblcfg(user);
-				sp.openConnection();
-                userTableConfig.insert(sp);
-				sp.closeConnection();
-
-                userTableConfig.ValCodpsw = user.Codpsw;
-                userTableConfig.ValUuid = uuid;
-                userTableConfig.ValName = configName;
-                userTableConfig.ValConfig = "";
-			}
-
-            //Store configuration data
-            userTableConfig.ValConfig = data;
-
-			//Set to current version
-			userTableConfig.ValUsrsetv = Configuration.UserSettingsVersion;
-
-			try
-			{
-				//Save record
-				sp.openTransaction();
-                userTableConfig.change(sp, (CriteriaSet)null);
-				sp.closeTransaction();
-
-				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
-					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
-					.FirstOrDefault();
-
-				//If record doesn't exist, create it
-				if (userTableConfigSelectedInfo == null)
-				{
-					userTableConfigSelectedInfo = new CSGenioAtblcfgsel(user);
-					sp.openConnection();
-					userTableConfigSelectedInfo.insert(sp);
-					sp.closeConnection();
-
-					userTableConfigSelectedInfo.ValCodpsw = user.Codpsw;
-					userTableConfigSelectedInfo.ValUuid = uuid;
-					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
-
-					//Save record
-					sp.openTransaction();
-					userTableConfigSelectedInfo.change(sp, (CriteriaSet)null);
-					sp.closeTransaction();
-				}
-				// If this record is set as the default record
-				// add the corresponding record that specifies the default
-				else if (isSelected)
-				{
-					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
-
-					//Save record
-					sp.openTransaction();
-					userTableConfigSelectedInfo.change(sp, (CriteriaSet)null);
-					sp.closeTransaction();
-				}
-
-				//Clear cache
-				TableUiSettings.Invalidate(uuid, user);
-
-				return Json(new { Success = true });
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-
-				return Json(new { Success = false, e.Message });
-			}
+			return HandleException(e);
 		}
+	}
 
-		[HttpPost]
-        public ActionResult SelectConfig([FromBody] RequestConfigModel requestModel)
+	/// <summary>
+	/// Selects a table configuration as the default for the current user,
+	/// or clears the default selection if no configuration name is provided.
+	/// </summary>
+	/// <param name="requestModel">The request model containing the table UUID and configuration name to select.</param>
+	/// <returns>
+	/// A JSON success response if the selection was successful,
+	/// or a JSON error response if the operation failed.
+	/// </returns>
+	/// <remarks>
+	/// When a configuration name is provided, it becomes the new default and any previously
+	/// selected default is cleared. When the configuration name is null or empty,
+	/// all default selections for the table are cleared.
+	/// The system must not be in maintenance mode for this operation to succeed.
+	/// </remarks>
+	[HttpPost]
+	public ActionResult SelectConfig([FromBody] RequestConfigModel requestModel)
+	{
+		try
 		{
-            // Don't allow changes in maintenance mode
-            if (Maintenance.Current.IsActive)
-                return Json(new { Success = false, Message = Resources.Resources.O_SISTEMA_ENCONTRA_S37912 });
-
-            var uuid = requestModel.Uuid;
-            var configName = requestModel.ConfigName;
-
-			User user = UserContext.Current.User;
-			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-
-			//If clearing what is set as the default configuration
-			if (string.IsNullOrEmpty(configName))
-			{
-				//Get record of what view is set as default
-				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
-					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
-					.FirstOrDefault();
-
-				//If record exists, delete it
-				if (userTableConfigSelectedInfo != null)
-				{
-					sp.openConnection();
-					userTableConfigSelectedInfo.delete(sp);
-					sp.closeConnection();
-
-					//Clear cache
-					TableUiSettings.Invalidate(uuid, user);
-				}
-
-				return JsonOK();
-			}
-
-			//Get saved configuration
-			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName))
-				.FirstOrDefault();
-
-			//If record doesn't exist
-			if (userTableConfig == null)
-				return Json(new { Success = false });
-
-			try
-			{
-				//Get record of what view is selected
-				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
-					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
-					.FirstOrDefault();
-
-				//If record doesn't exist, create it
-				if (userTableConfigSelectedInfo == null)
-				{
-					userTableConfigSelectedInfo = new CSGenioAtblcfgsel(user);
-					sp.openConnection();
-					userTableConfigSelectedInfo.insert(sp);
-					sp.closeConnection();
-
-					userTableConfigSelectedInfo.ValCodpsw = user.Codpsw;
-					userTableConfigSelectedInfo.ValUuid = uuid;
-				}
-
-				userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
-
-				//Save record
-				sp.openTransaction();
-				userTableConfigSelectedInfo.change(sp, (CriteriaSet)null);
-				sp.closeTransaction();
-
-				//Clear cache
-				TableUiSettings.Invalidate(uuid, user);
-
-				return Json(new { Success = true });
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-
-				return Json(new { Success = false, e.Message });
-			}
+			TableConfigurationManager.SelectConfig(
+				m_userContext.User,
+				requestModel.Uuid,
+				requestModel.ConfigName);
+			return JsonOK();
 		}
-
-		[HttpPost]
-		public ActionResult GetConfig([FromBody] RequestConfigModel requestModel)
+		catch (Exception e)
 		{
-            var uuid = requestModel.Uuid;
-            var configName = requestModel.ConfigName;
-
-			User user = UserContext.Current.User;
-			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-
-			//Get saved configuration
-			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName))
-				.FirstOrDefault();
-
-			//If record doesn't exist
-			if (userTableConfig == null)
-				return Json(new { Success = false });
-
-			return Json(new
-			{
-				Success = true,
-				Config = userTableConfig.ValConfig,
-				ConfigName = configName
-			});
+			return HandleException(e);
 		}
+	}
 
-		[HttpPost]
-		public ActionResult DeleteConfig([FromBody] RequestConfigModel requestModel)
+	/// <summary>
+	/// Deletes a specific table configuration for the current user.
+	/// </summary>
+	/// <param name="requestModel">The request model containing the table UUID and configuration name to delete.</param>
+	/// <returns>
+	/// A JSON success response with information about whether the deleted configuration was the default,
+	/// or a JSON error response if the operation failed.
+	/// </returns>
+	/// <remarks>
+	/// This endpoint permanently removes the specified configuration from the database.
+	/// The response includes a flag indicating whether the deleted configuration was marked as default,
+	/// which can be useful for client-side UI updates.
+	/// The system must not be in maintenance mode for this operation to succeed.
+	/// </remarks>
+	[HttpPost]
+	public ActionResult DeleteConfig([FromBody] RequestConfigModel requestModel)
+	{
+		try
 		{
-            // Don't allow changes in maintenance mode
-            if (Maintenance.Current.IsActive)
-                return Json(new { Success = false, Message = Resources.Resources.O_SISTEMA_ENCONTRA_S37912 });
-
-            var uuid = requestModel.Uuid;
-            var configName = requestModel.ConfigName;
-
-			User user = UserContext.Current.User;
-			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-
-			bool deletedDefaultView = false;
-
-			//Get saved configuration
-			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName))
-				.FirstOrDefault();
-
-			//If record doesn't exist
-			if (userTableConfig == null)
-				return Json(new { Success = false });
-
-			try
-			{
-				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
-					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
-					.FirstOrDefault();
-
-				//If record exists
-				if (userTableConfigSelectedInfo != null)
-				{
-					//If view is selected as default
-					if (userTableConfigSelectedInfo.ValCodtblcfg.Equals(userTableConfig.ValCodtblcfg))
-					{
-						sp.openTransaction();
-						userTableConfigSelectedInfo.delete(sp);
-                        userTableConfig.delete(sp);
-						sp.closeTransaction();
-						deletedDefaultView = true;
-					}
-					//If view is not selected as default
-					else
-					{
-						sp.openTransaction();
-                        userTableConfig.delete(sp);
-						sp.closeTransaction();
-					}
-				}
-				//If record does not exist
-				else
-				{
-					sp.openTransaction();
-                    userTableConfig.delete(sp);
-					sp.closeTransaction();
-				}
-
-				//Clear cache
-				TableUiSettings.Invalidate(uuid, user);
-
-				return Json(new
-				{
-					Success = true,
-					DeletedDefaultView = deletedDefaultView
-				});
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-
-				return Json(new { Success = false, e.Message });
-			}
+			bool deletedDefaultView = TableConfigurationManager.DeleteConfig(
+				m_userContext.User,
+				requestModel.Uuid,
+				requestModel.ConfigName);
+			return JsonOK(new { deletedDefaultView });
 		}
-
-        [HttpPost]
-        public ActionResult RenameConfig([FromBody] RequestConfigRenameModel requestModel)
-        {
-            User user = UserContext.Current.User;
-
-            // Don't allow changes in maintenance mode
-            if (Maintenance.Current.IsActive)
-                return JsonERROR(Translations.Get("The system is under maintenance! We apologize for the inconvenience.", user.Language));
-
-            PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-
-            var uuid = requestModel.Uuid;
-            var configName = requestModel.ConfigName;
-            var isSelected = requestModel.IsSelected;
-            var renameFromName = requestModel.RenameFromName;
-
-            //Get saved configuration
-            List<CSGenioAtblcfg> userTableConfigs = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-                .Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-                .Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.SubSet(
-                    CriteriaSet.Or()
-						.Equal(CSGenioAtblcfg.FldName, renameFromName)
-                        .Equal(CSGenioAtblcfg.FldName, configName)
-                )
-            );
-
-			//Get saved configuration
-			CSGenioAtblcfg userTableConfigToRename = userTableConfigs.Where(config => config.ValName.Equals(renameFromName)).ToList().FirstOrDefault();
-
-            //If record to rename doesn't exist
-            if (userTableConfigToRename == null)
-            {
-                return Json(new
-                {
-                    Success = false,
-                    ErrorNo = 1,
-                    ErrorMsg = Translations.Get("Erro ao guardar o registo.", user.Language)
-                });
-            }
-
-            //Check if saved configuration with new name already exists
-            CSGenioAtblcfg userTableConfigWithNewName = userTableConfigs.Where(config => config.ValName.Equals(configName)).ToList().FirstOrDefault();
-
-            //If record already exists
-            if (userTableConfigWithNewName != null)
-            {
-                return Json(new
-                {
-                    Success = false,
-                    ErrorNo = 2,
-                    ErrorMsg = Translations.Get("Essa vista já existe.", user.Language)
-                });
-            }
-
-            //Update record
-            userTableConfigToRename.ValName = configName;
-
-            try
-            {
-                //Save record
-                sp.openTransaction();
-                userTableConfigToRename.change(sp, (CriteriaSet)null);
-                sp.closeTransaction();
-
-				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
-					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
-					.FirstOrDefault();
-
-				// If this record is set as the default record
-				// add / update the corresponding record that specifies the default
-				if (isSelected)
-				{
-					sp.openTransaction();
-
-					//If record doesn't exist, create it
-					if (userTableConfigSelectedInfo == null)
-					{
-						userTableConfigSelectedInfo = new CSGenioAtblcfgsel(user);
-
-						userTableConfigSelectedInfo.ValCodpsw = user.Codpsw;
-						userTableConfigSelectedInfo.ValUuid = uuid;
-						userTableConfigSelectedInfo.ValCodtblcfg = userTableConfigToRename.ValCodtblcfg;
-
-						userTableConfigSelectedInfo.insert(sp);
-					}
-
-					// Update and save
-					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfigToRename.ValCodtblcfg;
-					userTableConfigSelectedInfo.change(sp, (CriteriaSet)null);
-					sp.closeTransaction();
-				}
-				// If this configuration is the default and is being set as not being the default
-				else if (userTableConfigSelectedInfo.ValCodtblcfg.Equals(userTableConfigToRename.ValCodtblcfg))
-				{
-                    sp.openTransaction();
-                    userTableConfigSelectedInfo.delete(sp);
-                    sp.closeTransaction();
-                }
-
-                //Clear cache
-                TableUiSettings.Invalidate(uuid, user);
-
-                return Json(new
-                {
-                    Success = true,
-                    LoadDefaultView = isSelected
-                });
-            }
-            catch
-            {
-                sp.rollbackTransaction();
-                sp.closeConnection();
-
-                return Json(new { Success = false, Message = Translations.Get("Erro ao guardar o registo.", user.Language) });
-            }
-        }
-
-        [HttpPost]
-		public ActionResult CopyConfig([FromBody] RequestConfigCopyModel requestModel)
+		catch (Exception e)
 		{
-            // Don't allow changes in maintenance mode
-            if (Maintenance.Current.IsActive)
-                return Json(new { Success = false, Message = Resources.Resources.O_SISTEMA_ENCONTRA_S37912 });
+			return HandleException(e);
+		}
+	}
 
-            var uuid = requestModel.Uuid;
-            var configName = requestModel.ConfigName;
-            var isSelected = requestModel.IsSelected;
-            var copyFromName = requestModel.CopyFromName;
+	/// <summary>
+	/// Renames an existing table configuration for the current user.
+	/// </summary>
+	/// <param name="requestModel">The request model containing the new name and the current name of the configuration to rename.</param>
+	/// <returns>
+	/// A JSON success response if the rename was successful,
+	/// or a JSON error response if the operation failed.
+	/// </returns>
+	/// <remarks>
+	/// This endpoint changes the name of an existing configuration and optionally updates
+	/// its default status. It validates that the source configuration exists and that
+	/// the new name is not already in use.
+	/// The system must not be in maintenance mode for this operation to succeed.
+	/// </remarks>
+	[HttpPost]
+	public ActionResult RenameConfig([FromBody] RequestConfigRenameModel requestModel)
+	{
+		try
+		{
+			TableConfigurationManager.RenameConfig(
+				m_userContext.User,
+				requestModel.Uuid,
+				requestModel.ConfigName,
+				requestModel.IsSelected,
+				requestModel.RenameFromName);
+			return JsonOK();
+		}
+		catch (Exception e)
+		{
+			return HandleException(e);
+		}
+	}
 
-			User user = UserContext.Current.User;
-			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
-
-			//Get saved configuration
-			CSGenioAtblcfg userTableConfigToCopy = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, copyFromName))
-				.FirstOrDefault();
-
-			//If record to copy doesn't exist
-			if (userTableConfigToCopy == null)
-			{
-				return Json(new
-				{
-					Success = false,
-					ErrorNo = 1,
-					ErrorMsg = "copyFromName view does not exist"
-				});
-			}
-
-			//Check for saved configuration
-			CSGenioAtblcfg userTableConfig = CSGenioAtblcfg.searchList(sp, user, CriteriaSet.And()
-				.Equal(CSGenioAtblcfg.FldCodpsw, user.Codpsw)
-				.Equal(CSGenioAtblcfg.FldUuid, uuid)
-				.Equal(CSGenioAtblcfg.FldName, configName))
-				.FirstOrDefault();
-
-			//If record already exists
-			if (userTableConfig != null)
-			{
-				return Json(new
-				{
-					Success = false,
-					ErrorNo = 2,
-					ErrorMsg = "configName view already exists"
-				});
-			}
-
-            //Create new record
-            userTableConfig = new CSGenioAtblcfg(user);
-			sp.openConnection();
-            userTableConfig.insert(sp);
-			sp.closeConnection();
-
-            userTableConfig.ValCodpsw = user.Codpsw;
-            userTableConfig.ValUuid = uuid;
-            userTableConfig.ValName = configName;
-            userTableConfig.ValConfig = userTableConfigToCopy.ValConfig;
-
-			try
-			{
-				//Save record
-				sp.openTransaction();
-                userTableConfig.change(sp, (CriteriaSet)null);
-				sp.closeTransaction();
-
-				CSGenioAtblcfgsel userTableConfigSelectedInfo = CSGenioAtblcfgsel.searchList(sp, user, CriteriaSet.And()
-					.Equal(CSGenioAtblcfgsel.FldCodpsw, user.Codpsw)
-					.Equal(CSGenioAtblcfgsel.FldUuid, uuid))
-					.FirstOrDefault();
-
-				// If this record is set as the default record
-				// add / update the corresponding record that specifies the default
-				if (isSelected)
-				{
-					//If record doesn't exist, create it
-					if (userTableConfigSelectedInfo == null)
-					{
-						userTableConfigSelectedInfo = new CSGenioAtblcfgsel(user);
-						sp.openConnection();
-						userTableConfigSelectedInfo.insert(sp);
-						sp.closeConnection();
-
-						userTableConfigSelectedInfo.ValCodpsw = user.Codpsw;
-						userTableConfigSelectedInfo.ValUuid = uuid;
-						userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
-
-						//Save record
-						sp.openTransaction();
-						userTableConfigSelectedInfo.change(sp, (CriteriaSet)null);
-						sp.closeTransaction();
-					}
-
-					userTableConfigSelectedInfo.ValCodtblcfg = userTableConfig.ValCodtblcfg;
-
-					//Save record
-					sp.openTransaction();
-					userTableConfigSelectedInfo.change(sp, (CriteriaSet)null);
-					sp.closeTransaction();
-				}
-
-				//Clear cache
-				TableUiSettings.Invalidate(uuid, user);
-
-				return Json(new
-				{
-					Success = true,
-					LoadDefaultView = isSelected
-				});
-			}
-			catch (Exception e)
-			{
-				sp.rollbackTransaction();
-				sp.closeConnection();
-
-				return Json(new { Success = false, e.Message });
-			}
+	/// <summary>
+	/// Creates a copy of an existing table configuration with a new name for the current user.
+	/// </summary>
+	/// <param name="requestModel">The request model containing the new configuration name and the source configuration to copy from.</param>
+	/// <returns>
+	/// A JSON success response if the copy was successful,
+	/// or a JSON error response if the operation failed.
+	/// </returns>
+	/// <remarks>
+	/// This endpoint duplicates an existing configuration with all its settings and data,
+	/// creating a new configuration record with a different name. The new configuration
+	/// can optionally be marked as default.
+	/// It validates that the source configuration exists and that the new name is available.
+	/// The system must not be in maintenance mode for this operation to succeed.
+	/// </remarks>
+	[HttpPost]
+	public ActionResult CopyConfig([FromBody] RequestConfigCopyModel requestModel)
+	{
+		try
+		{
+			TableConfigurationManager.CopyConfig(
+				m_userContext.User,
+				requestModel.Uuid,
+				requestModel.ConfigName,
+				requestModel.IsSelected,
+				requestModel.CopyFromName);
+			return JsonOK();
+		}
+		catch (Exception e)
+		{
+			return HandleException(e);
 		}
 	}
 }

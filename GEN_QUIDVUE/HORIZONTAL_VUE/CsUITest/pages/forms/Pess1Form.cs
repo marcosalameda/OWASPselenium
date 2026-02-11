@@ -8,6 +8,11 @@ namespace quidgest.uitests.pages.forms;
 public class Pess1Form : Form
 {
 	/// <summary>
+	/// Create Mock Person
+	/// </summary>
+ 	public ButtonControl PseudField001 => new ButtonControl(driver, ContainerLocator, "#PESS1___PSEUDFIELD001");
+
+	/// <summary>
 	/// Company:
 	/// </summary>
 	public LookupControl CmpnyDesignat => new LookupControl(driver, ContainerLocator, "container-PESS1___CMPNYDESIGNAT");

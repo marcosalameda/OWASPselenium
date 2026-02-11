@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_4241]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.FACILITY_TYPE44577),
 								dataLength: 25,
 								scrollData: 25,
+								export: 1,
 								pkColumn: 'ValCodfacty',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -169,8 +171,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -271,6 +272,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_42411',
 								name: 'form-GLOBFACT',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -296,10 +298,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACTY', 'changed-GLOB'],
+						globalEvents: ['changed-GLOB', 'changed-FACTY'],
 						uuid: '0666b85e-6c85-44dd-a3e5-555d90e861d9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

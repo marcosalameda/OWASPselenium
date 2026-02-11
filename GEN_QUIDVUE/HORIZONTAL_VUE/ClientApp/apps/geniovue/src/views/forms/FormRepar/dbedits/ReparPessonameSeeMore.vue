@@ -2,11 +2,11 @@
 	<teleport
 		v-if="isReady"
 		to="#q-modal-see-more-repar-pessoname-body">
-		<q-row-container>
+		<q-row>
 			<q-table
 				v-bind="listCtrl"
 				v-on="listCtrl.handlers" />
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -24,6 +24,7 @@
 	import { TableListControl } from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
@@ -128,15 +129,25 @@
 
 			const modalProps = {
 				id: 'see-more-repar-pessoname',
-				headerTitle: computed(() => this.Resources.PEOPLE34206),
-				closeButtonEnable: true,
-				hideFooter: true,
-				dismissWithEsc: true,
 				dismissAction: this.close,
-				isActive: true,
 				returnElement: 'REPAR___PESSONAME_____see-more_button'
 			}
-			this.setModal(modalProps)
+			const props = {
+				class: 'q-dialog-see-more',
+				title: computed(() => this.Resources.PEOPLE34206),
+				buttons: [
+					{
+						id: 'dialog-button-close',
+						action: this.close,
+						icon: { icon: 'cancel', type: 'svg' },
+						props: {
+							label: computed(() => this.Resources[hardcodedTexts.cancel]),
+							variant: 'bold'
+						}
+					}
+				]
+			}
+			this.setModal(props, modalProps)
 		},
 
 		beforeUnmount()
@@ -166,13 +177,16 @@
 
 			onTableDBDataChanged()
 			{
-				const params = {
-					id: this.id || null,
-					limits: this.limits,
-					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
-				}
+				// Wait for the computed properties of columns to finish resolving (e.g. "isVisible").
+				setTimeout(() => {
+					const params = {
+						id: this.id || null,
+						limits: this.limits,
+						tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
+					}
 
-				this.listCtrl.fetchListData(params)
+					this.listCtrl.fetchListData(params)
+				}, 0)
 			},
 
 			handleRowAction(eventData)
@@ -207,6 +221,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 85,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -221,8 +236,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -248,7 +262,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGI1', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-CMPNY', 'changed-CATEG'],
+						globalEvents: ['changed-PESSO', 'changed-PAIS1', 'changed-CNTRY', 'changed-CMPNY', 'changed-REGI1', 'changed-CATEG'],
 						uuid: 'Repar_Repar_PessoValName',
 						allSelectedRows: 'false',
 						handlers: {

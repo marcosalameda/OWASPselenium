@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW REPAR]/
 
 		[HttpPost]
-		public ActionResult Repar_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Repar_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Repar_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Repar_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_Show_GET",
 				AreaName = "repar",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET REPAR]/
 		[HttpPost]
-		public ActionResult Repar_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Repar_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Repar_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Repar_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_New_GET",
 				AreaName = "repar",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Repar_New([FromBody]Repar_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_New",
 				ViewName = "Repar",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET REPAR]/
 		[HttpPost]
-		public ActionResult Repar_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Repar_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Repar_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Repar_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_Edit_GET",
 				AreaName = "repar",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Repar_Edit([FromBody]Repar_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_Edit",
 				ViewName = "Repar",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET REPAR]/
 		[HttpPost]
-		public ActionResult Repar_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Repar_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Repar_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Repar_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_Delete_GET",
 				AreaName = "repar",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Repar/Repar_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST REPAR]/
 		[HttpPost]
-		public ActionResult Repar_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Repar_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Repar_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Repar_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_Delete",
 				ViewName = "Repar",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET REPAR]/
 
 		[HttpPost]
-		public ActionResult Repar_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Repar_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Repar_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Repar_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_Duplicate_GET",
 				AreaName = "repar",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Repar_Duplicate([FromBody]Repar_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Repar_Duplicate",
 				ViewName = "Repar",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Repar(UserContext.Current);
+					GenioMVC.Models.Repar model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("repar");
 
 // USE /[MANUAL GQT BEFORE_CANCEL REPAR]/
@@ -404,9 +405,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_equip")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -416,7 +414,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -426,35 +424,12 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Repar parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Repar parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Repar_EquipValRegistnr_ViewModel model = new(UserContext.Current, parentCtx);
+			Repar_EquipValRegistnr_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -475,9 +450,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_speci")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -487,7 +459,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -497,35 +469,12 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Repar parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Repar parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Repar_SpeciValEspecial_ViewModel model = new(UserContext.Current, parentCtx);
+			Repar_SpeciValEspecial_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
 
 			model.setModes(Request.Query["m"].ToString());
 			// Map received value to field - The 'field' type limit
@@ -548,9 +497,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_pesso")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -560,7 +506,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -570,35 +516,12 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Repar parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Repar parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Repar_PessoValName_ViewModel model = new(UserContext.Current, parentCtx);
+			Repar_PessoValName_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -614,6 +537,7 @@ namespace GenioMVC.Controllers
 		/// <returns>
 		/// Success message
 		/// </returns>
+		[ActionName("Repar_BT_CATEG_AI_REPAIR_AGENT_1")]
 		public ActionResult Repar_BT_CATEG_AI_REPAIR_AGENT_1([FromBody] Repar_ViewModel vm)
 		{
 			var key = vm.ValCodrepar;

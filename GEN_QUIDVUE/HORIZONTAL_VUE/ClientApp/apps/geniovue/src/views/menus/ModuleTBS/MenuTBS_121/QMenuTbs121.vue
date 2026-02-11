@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TBS_Menu_121]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 50,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.GENUS37471),
 								dataLength: 1,
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayGenero(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGenero.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -173,6 +176,7 @@
 								label: computed(() => this.Resources.BIRTH21799),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -182,6 +186,7 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -191,6 +196,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
@@ -202,6 +208,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -212,6 +219,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
@@ -221,6 +229,7 @@
 								label: computed(() => this.Resources.SINCE47259),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
@@ -230,6 +239,7 @@
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcateg',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -249,6 +259,7 @@
 									mode: 'SHOW'
 								},
 								cellAction: true,
+								export: 1,
 								pkColumn: 'ValCodempre',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -265,8 +276,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -367,6 +377,7 @@
 							rowClickAction: {
 								id: 'RCA_TBS_1211',
 								name: 'form-PESSO',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -396,10 +407,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-REGI1', 'changed-PAIS1', 'changed-CNTRY', 'changed-PESSO', 'changed-CMPNY', 'changed-CATEG'],
+						globalEvents: ['changed-PESSO', 'changed-PAIS1', 'changed-CNTRY', 'changed-CMPNY', 'changed-REGI1', 'changed-CATEG'],
 						uuid: '5bbb3c85-0f2b-4e4a-a096-baeef7fb9b34',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

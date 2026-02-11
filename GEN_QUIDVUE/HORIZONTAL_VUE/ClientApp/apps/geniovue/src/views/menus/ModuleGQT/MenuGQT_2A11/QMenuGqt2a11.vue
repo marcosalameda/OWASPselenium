@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_2A11]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -154,7 +155,8 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-								isOrderingColumn: true,
+								export: 1,
+								sortOrder: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -174,6 +177,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -185,6 +189,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -202,8 +207,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -304,6 +308,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_2A111',
 								name: 'form-CMPKI',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -342,7 +347,8 @@
 								dependencyField: '',
 								fnValueSelector: () => vm.$route.params['tpequ'],
 							},
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

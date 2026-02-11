@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW PEDID]/
 
 		[HttpPost]
-		public ActionResult Pedid_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Pedid_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Pedid_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Pedid_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_Show_GET",
 				AreaName = "pedid",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET PEDID]/
 		[HttpPost]
-		public ActionResult Pedid_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Pedid_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Pedid_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Pedid_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_New_GET",
 				AreaName = "pedid",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Pedid_New([FromBody]Pedid_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_New",
 				ViewName = "Pedid",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET PEDID]/
 		[HttpPost]
-		public ActionResult Pedid_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Pedid_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Pedid_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Pedid_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_Edit_GET",
 				AreaName = "pedid",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Pedid_Edit([FromBody]Pedid_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_Edit",
 				ViewName = "Pedid",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET PEDID]/
 		[HttpPost]
-		public ActionResult Pedid_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Pedid_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Pedid_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Pedid_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_Delete_GET",
 				AreaName = "pedid",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Pedid/Pedid_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST PEDID]/
 		[HttpPost]
-		public ActionResult Pedid_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Pedid_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Pedid_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Pedid_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_Delete",
 				ViewName = "Pedid",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET PEDID]/
 
 		[HttpPost]
-		public ActionResult Pedid_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Pedid_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Pedid_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Pedid_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_Duplicate_GET",
 				AreaName = "pedid",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Pedid_Duplicate([FromBody]Pedid_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pedid_Duplicate",
 				ViewName = "Pedid",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Pedid(UserContext.Current);
+					GenioMVC.Models.Pedid model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("pedid");
 
 // USE /[MANUAL GQT BEFORE_CANCEL PEDID]/
@@ -404,9 +405,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lnhpd")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -416,7 +414,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -424,35 +422,27 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Models.Pedid parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Pedid parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Pedid_ValLinhas_ViewModel model = new(UserContext.Current, parentCtx);
+			Pedid_ValLinhas_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
+				requestModel.TableConfiguration,
+				requestModel.UserTableConfigName,
+				requestModel.LoadDefaultView);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
 			// Determine which columns have totalizers
 			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
 
 			// For tables with multiple selection enabled, determine currently selected rows
 			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			// Add form field filters to the table configuration
+			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -473,9 +463,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lnhde")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -485,7 +472,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -493,35 +480,27 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Models.Pedid parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Pedid parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Pedid_ValDesagreg_ViewModel model = new(UserContext.Current, parentCtx);
+			Pedid_ValDesagreg_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
+				requestModel.TableConfiguration,
+				requestModel.UserTableConfigName,
+				requestModel.LoadDefaultView);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
 			// Determine which columns have totalizers
 			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
 
 			// For tables with multiple selection enabled, determine currently selected rows
 			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			// Add form field filters to the table configuration
+			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -542,9 +521,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_lnhag")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -554,7 +530,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -562,35 +538,27 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Models.Pedid parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Pedid parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Pedid_ValAgrupame_ViewModel model = new(UserContext.Current, parentCtx);
+			Pedid_ValAgrupame_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
+				requestModel.TableConfiguration,
+				requestModel.UserTableConfigName,
+				requestModel.LoadDefaultView);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
 			// Determine which columns have totalizers
 			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
 
 			// For tables with multiple selection enabled, determine currently selected rows
 			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			// Add form field filters to the table configuration
+			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());

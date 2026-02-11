@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_35911]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -152,6 +153,7 @@
 								field: 'QUESTION',
 								label: computed(() => this.Resources.QUESTION00194),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -160,6 +162,7 @@
 								field: 'ANSWER',
 								label: computed(() => this.Resources.ANSWER22961),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -180,8 +183,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -253,7 +255,8 @@
 								dependencyField: '',
 								fnValueSelector: () => vm.$route.params['cfaqs'],
 							},
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

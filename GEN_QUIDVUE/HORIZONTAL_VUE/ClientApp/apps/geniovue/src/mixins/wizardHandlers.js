@@ -147,7 +147,7 @@ export default {
 						{
 							this.$eventTracker.addError({
 								origin: 'stepClicked (wizardHandlers)',
-								message: `Error while going changing from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".`
+								message: `Error while changing from step "${this.formInfo.name}" in wizard "${this.wizardData.wizardId}".`
 							})
 						}
 					})

@@ -11,7 +11,9 @@
 				:resources-path="$app.resourcesPath" />
 
 			<template v-if="progressBar.isVisible">
-				<teleport :to="`#${progressBar.containerId}-body`">
+				<teleport
+					defer
+					:to="`#${progressBar.containerId}-body`">
 					<q-progress
 						v-bind="progressBar.props"
 						v-on="progressBar.handlers" />
@@ -19,6 +21,7 @@
 
 				<teleport
 					v-if="progressBar.modalProps.buttons?.length > 0"
+					defer
 					:to="`#${progressBar.containerId}-footer`">
 					<template
 						v-for="btn in progressBar.modalProps.buttons"
@@ -118,14 +121,14 @@
 		</template>
 	</q-layout>
 
-	<q-modal-container
+	<q-dialog
 		v-for="modal in modals"
 		:key="modal.id"
-		v-bind="modal"
+		:model-value="modal.isActive"
 		:id="`q-modal-${modal.id}`"
-		@dismiss="closeModal(modal)"
-		@is-ready="warnModalIsReady(modal)">
-		<template #header>
+		v-bind="modal.props"
+		@update:model-value="(val) => onModalUpdateModelValue(modal, val)">
+		<template #[`header.append`]>
 			<div :id="`q-modal-${modal.id}-header`" />
 		</template>
 
@@ -136,10 +139,12 @@
 			<div :id="`q-modal-${modal.id}-body`" />
 		</template>
 
-		<template #footer>
+		<template #[`footer.append`]>
 			<div :id="`q-modal-${modal.id}-footer`" />
 		</template>
-	</q-modal-container>
+	</q-dialog>
+	
+	<q-dialog-provider />
 
 	<q-suggestions
 		v-if="!isEmpty(suggestionsPopupData.component)"
@@ -509,7 +514,10 @@
 				if (typeof modal.dismissAction === 'function')
 					modal.dismissAction()
 
-				removeModal(modal.id)
+				// If the modal is not from a route, remove it
+				// If the modal is from a route, it will be removed when the route changes
+				if (!modal.hasRoute)
+					removeModal(modal.id)
 			},
 
 			/**
@@ -519,6 +527,19 @@
 			warnModalIsReady(modal)
 			{
 				this.$eventHub.emit('modal-is-ready', modal.id)
+			},
+
+			/**
+			 * Called when the modal's model value is updated.
+			 * @param {object} modal The modal to close
+			 * @param {object} modelValue The model value for whether the modal is visible
+			 */
+			onModalUpdateModelValue(modal, modelValue)
+			{
+				if (modelValue)
+					this.warnModalIsReady(modal)
+				else
+					this.closeModal(modal)
 			},
 
 			/**
@@ -628,7 +649,7 @@
 
 				if (to.name !== from.name || !this.showContent)
 				{
-					if (to.params.isPopup === 'true')
+					if (to.meta.isPopup)
 					{
 						this.showInfoMessagesInPopup = true
 
@@ -671,7 +692,7 @@
 						else
 						{
 							// If it is already used as a background, there is no need to update it.
-							if (from.params.isPopup !== 'true' && this.displayRoute?.name !== from.name)
+							if (from.meta.isPopup !== true && this.displayRoute?.name !== from.name)
 								this.displayRoute = shallowRef(from)
 							this.hasPopup = true
 						}

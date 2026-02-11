@@ -193,6 +193,24 @@ namespace GenioMVC.ViewModels
 		/// </summary>
 		/// <param name="values">A dictionary containing the keys in the format "table.field" and values to populate the view model with. Must not be null.</param>
 		void PopulateViewModel(Dictionary<string, object> values);
+
+		/// <summary>
+		/// Indicates whether saving is permitted despite warnings being present.
+		/// </summary>
+		bool CanSaveWithWarnings { get; set; }
+
+		/// <summary>
+		/// Configures whether saving is allowed even when warnings are present.
+		/// </summary>
+		/// <param name="enabled">
+		/// If set to <c>true</c>, the save operation will be permitted despite active warnings.
+		/// If <c>false</c>, warnings will prevent saving.
+		/// </param>
+		/// <remarks>
+		/// Use this method when the operation should proceed with non-critical issues
+		/// that do not require user intervention or correction.
+		/// </remarks>
+		void AllowSavingWithWarnings(bool enabled);
 	}
 
 	public abstract class CrudViewModel<T> : ViewModelBase, ICrudViewModel where T : Models.ModelBase
@@ -426,6 +444,28 @@ namespace GenioMVC.ViewModels
 				foreach (var kvp in values)
 					SetViewModelValue(kvp.Key, kvp.Value);
 			}
+		}
+
+		/// <summary>
+		/// Indicates whether saving is permitted despite warnings being present.
+		/// </summary>
+		[ShouldSerialize("CanSaveWithWarnings")]
+		public bool CanSaveWithWarnings { get; set; } = false;
+
+		/// <summary>
+		/// Configures whether saving is allowed even when warnings are present.
+		/// </summary>
+		/// <param name="enabled">
+		/// If set to <c>true</c>, the save operation will be permitted despite active warnings.
+		/// If <c>false</c>, warnings will prevent saving.
+		/// </param>
+		/// <remarks>
+		/// Use this method when the operation should proceed with non-critical issues
+		/// that do not require user intervention or correction.
+		/// </remarks>
+		public void AllowSavingWithWarnings(bool enabled)
+		{
+			CanSaveWithWarnings = enabled;
 		}
 	}
 }

@@ -12,7 +12,7 @@ import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
  * projectGlobalFuntions.js v1.0.0
  * http://www.quidgest.com
  * ====================================================
- * Copyright 2025 Quidgest, S.A.
+ * Copyright 2026 Quidgest, S.A.
  *
  * All global functions and methods will be placed here.
  * This will be customized JavaScript and reused in multiple places.

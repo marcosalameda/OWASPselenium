@@ -177,6 +177,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -197,8 +198,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -222,7 +222,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ITEM', 'changed-WAREH', 'changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-DECOM', 'changed-PESS1'],
+						globalEvents: ['changed-PESS1', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-EQUIP', 'changed-CMPNY', 'changed-ITEM', 'changed-DECOM'],
 						uuid: '4a5e2c5a-b9ce-47ad-88fe-7f1fc6e0cd0f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -255,6 +255,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -275,8 +276,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -300,7 +300,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ITEM', 'changed-WAREH', 'changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-DECOM', 'changed-PESS1'],
+						globalEvents: ['changed-PESS1', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-EQUIP', 'changed-CMPNY', 'changed-ITEM', 'changed-DECOM'],
 						uuid: '4a5e2c5a-b9ce-47ad-88fe-7f1fc6e0cd0f',
 						allSelectedRows: 'false',
 						headerLevel: 1,

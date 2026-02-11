@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW ESPEC]/
 
 		[HttpPost]
-		public ActionResult Espec_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Espec_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Espec_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Espec_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Espec_Show_GET",
 				AreaName = "speci",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET ESPEC]/
 		[HttpPost]
-		public ActionResult Espec_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Espec_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Espec_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Espec_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Espec_New_GET",
 				AreaName = "speci",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Espec_New([FromBody]Espec_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Espec_New",
 				ViewName = "Espec",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET ESPEC]/
 		[HttpPost]
-		public ActionResult Espec_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Espec_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Espec_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Espec_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Espec_Edit_GET",
 				AreaName = "speci",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Espec_Edit([FromBody]Espec_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Espec_Edit",
 				ViewName = "Espec",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET ESPEC]/
 		[HttpPost]
-		public ActionResult Espec_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Espec_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Espec_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Espec_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Espec_Delete_GET",
 				AreaName = "speci",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Speci/Espec_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST ESPEC]/
 		[HttpPost]
-		public ActionResult Espec_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Espec_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Espec_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Espec_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Espec_Delete",
 				ViewName = "Espec",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET ESPEC]/
 
 		[HttpPost]
-		public ActionResult Espec_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Espec_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Espec_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Espec_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Espec_Duplicate_GET",
 				AreaName = "speci",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Espec_Duplicate([FromBody]Espec_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Espec_Duplicate",
 				ViewName = "Espec",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Speci(UserContext.Current);
+					GenioMVC.Models.Speci model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("speci");
 
 // USE /[MANUAL GQT BEFORE_CANCEL ESPEC]/

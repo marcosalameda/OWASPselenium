@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_2921]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.FAMILIA_DE_EQUIPAMEN12158),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -168,8 +170,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -270,6 +271,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_29211',
 								name: 'form-FAMI1',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -299,6 +301,7 @@
 						uuid: '7d41ceb4-cb60-497f-b5c3-07676a99758b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

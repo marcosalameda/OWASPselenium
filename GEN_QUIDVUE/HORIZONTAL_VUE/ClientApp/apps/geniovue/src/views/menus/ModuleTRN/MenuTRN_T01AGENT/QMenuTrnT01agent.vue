@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TRN_Menu_T01AGENT]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.BIRTHDATE22743),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -173,6 +176,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -182,6 +186,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -197,8 +202,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -299,6 +303,7 @@
 							rowClickAction: {
 								id: 'RCA_TRN_11111',
 								name: 'form-AGENT01',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -328,6 +333,7 @@
 						uuid: '8eff371d-1d96-4236-9a5f-99682561ce0b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

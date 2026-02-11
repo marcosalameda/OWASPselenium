@@ -102,12 +102,12 @@ namespace Administration.Controllers
                     //decode the username and remove the password before sending to client side
                     model.Messaging.Host.Username = model.Messaging.Host.UsernameDecode();
                     model.Messaging.Host.Password = "";
-                    model.MessagingMetadata = CSGenio.core.di.GenioDI.Messaging.Metadata;
                 }
                 else
                 {
                     model.Messaging = new MessagingXml();
                 }
+                model.MessagingMetadata = CSGenio.messaging.MessageMetadataFactory.GeneratedMetadata();
 
                 //----------------
                 // Scheduler
@@ -1220,7 +1220,7 @@ namespace Administration.Controllers
 
             var valueContent = model.Val;
             if (ExtraProperties.IsPasswordType(model.Key))
-                valueContent = Convert.ToBase64String(Encoding.Unicode.GetBytes(model.Val));
+                valueContent = Convert.ToBase64String(Encoding.UTF8.GetBytes(model.Val));
 
             if (model.FormMode == "delete")
             {

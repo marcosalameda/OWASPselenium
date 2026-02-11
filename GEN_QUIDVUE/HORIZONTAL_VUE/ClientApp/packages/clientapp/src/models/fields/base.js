@@ -4,14 +4,12 @@ import _has from 'lodash-es/has'
 import _isEmpty from 'lodash-es/isEmpty'
 import _isEqual from 'lodash-es/isEqual'
 import _some from 'lodash-es/some'
-import { computed, reactive, unref, isReadonly } from 'vue'
+import { computed, isReadonly, reactive, unref } from 'vue'
+import { v4 as uuidv4 } from 'uuid'
 
 import { useTracingDataStore } from '../../stores/tracingData'
-import {
-	BlockConditionStack,
-	ClearConditionStack,
-	HideConditionStack
-} from '../conditionStack'
+import { BlockConditionStack, ClearConditionStack, HideConditionStack } from '../conditionStack'
+import asyncProcM from '../../composables/async'
 
 export class Base {
 	static EMPTY_VALUE = null
@@ -36,6 +34,8 @@ export class Base {
 		this.serverWarningMessages = []
 		// Indicates if the field is permanently readonly, regardless of form mode.
 		this.isFixed = false
+		// Indicates if the field is Global Filter field
+		this.isGlobalFilterField = false
 
 		// This should be a private field, but unfortunately they don't work with proxies:
 		// https://github.com/tc39/proposal-class-fields/issues/106
@@ -47,6 +47,11 @@ export class Base {
 		})
 
 		_assignIn(this, options)
+
+		this.processMonitor = asyncProcM.getProcListMonitor(`${this.id ?? uuidv4()}`, true)
+		this.showWhenConditions.setProcessMonitor(this.processMonitor)
+		this.blockWhenConditions.setProcessMonitor(this.processMonitor)
+		this.fillWhenConditions.setProcessMonitor(this.processMonitor)
 	}
 
 	/**
@@ -356,8 +361,10 @@ export class Base {
 		this.serverWarningMessages.length = 0
 	}
 
-	destroy()
-	{
+	/**
+	 * Destroys this field view model.
+	 */
+	destroy() {
 		this.showWhenConditions?.destroy?.()
 		this.showWhenConditions = null
 
@@ -367,7 +374,10 @@ export class Base {
 		this.fillWhenConditions?.destroy?.()
 		this.fillWhenConditions = null
 
-		if(this.arrayOptions?.length > 0 && !isReadonly(this.arrayOptions))
+		this.processMonitor.destroy()
+		this.processMonitor = null
+
+		if (this.arrayOptions?.length > 0 && !isReadonly(this.arrayOptions))
 			this.arrayOptions.length = 0
 
 		delete this.arrayOptions

@@ -45,7 +45,7 @@ public class ProdusimForm : Form
 	/// <summary>
 	/// Location
 	/// </summary>
-	public IWebElement PseudNovogr02 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#PRODUSIMPSEUDNOVOGR02-container");
 
 	/// <summary>
 	/// Global Location Number

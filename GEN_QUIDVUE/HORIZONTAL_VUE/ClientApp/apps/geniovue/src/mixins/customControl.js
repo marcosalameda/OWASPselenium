@@ -416,7 +416,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 			}
 
 			this.onDependencyChange()
-			this.onStyleDependencyChange()
+			this.hydrateStyleVariables()
 		}
 
 		/**
@@ -594,7 +594,7 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 			}
 
 			this.onViewModeChange(this.viewModes)
-			this.onStyleDependencyChange()
+			this.hydrateStyleVariables()
 		}
 
 		/**
@@ -636,7 +636,8 @@ export default function getSpecialRenderingControls(BaseControl, TableListContro
 					const mappedValues = reactive({
 						rowKey: row.rowKey,
 						btnPermission: row.btnPermission ?? {},
-						actionVisibility: row.actionVisibility ?? {}
+						actionVisibility: row.actionVisibility ?? {},
+						actionDisability: row.actionDisability ?? {}
 					})
 
 					this.columns.forEach((column) => {

@@ -51,6 +51,7 @@
 
 				<q-button
 					:id="option.elementId ? id + '-' + option.elementId : null"
+					:data-action-key="option.elementId"
 					role="menuitem"
 					borderless
 					:disabled="disabled || option.active === false"

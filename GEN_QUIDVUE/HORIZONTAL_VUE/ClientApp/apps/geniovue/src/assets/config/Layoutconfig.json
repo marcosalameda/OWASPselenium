@@ -94,6 +94,13 @@
 		],
 		"default": false
 	},
+	"TableHorizontalScrollers": {
+		"values": [
+			true,
+			false
+		],
+		"default": false
+	},
 	"BookmarkEnable": {
 		"values": [
 			true,

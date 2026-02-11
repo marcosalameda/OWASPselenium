@@ -73,8 +73,7 @@ export function setupRouter(i18n)
 		// Check locale.
 		if (locale && !systemInfo.locale.availableLocales.find(lang => lang.language === locale))
 		{
-			next(false)
-			return
+			to.params.culture = systemDataStore.system.currentLang;		
 		}
 
 		// Check system.
@@ -107,18 +106,31 @@ export function setupRouter(i18n)
 			to.params.mode = 'SHOW'
 		}
 
-		// Sets up a modal to display the route content (the modal will only be used if the route is a popup, but it needs to always be in the DOM).
+		// Sets up a modal to display the route content if the route is a popup.
 		if (to.name !== from.name && !to.params.noModal)
 		{
 			await genericDataStore.clearModals()
 
-			const modalProps = {
-				id: to.name,
-				isActive: false,
-				hasRoute: true
-			}
+			if (to.meta.isPopup)
+			{
+				// Focus wrap will be activated after the form has loaded
+				// because it needs to have focusable elements to work.
+				const props = {
+					class: 'q-dialog-form',
+					dismissible: false,
+					focusWrap: false,
+					returnFocusOnDeactivate: false,
+					size: 'medium'
+				}
 
-			await genericDataStore.setModal(modalProps)
+				const modalProps = {
+					id: to.name,
+					isActive: true,
+					hasRoute: true
+				}
+
+				await genericDataStore.setModal(props, modalProps)
+			}
 		}
 		else
 			delete to.params.noModal // We only want to skip clearing the modals the first time.

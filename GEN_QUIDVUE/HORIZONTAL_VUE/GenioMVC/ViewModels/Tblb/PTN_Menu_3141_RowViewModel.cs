@@ -127,6 +127,8 @@ public class PTN_Menu_3141_RowViewModel : Models.Tblb
 
 		using (new CSGenio.persistence.ScopedPersistentSupport(m_userContext.PersistentSupport))
 		{
+
+			// Table TBLB CRUD conditions.
 		}
 
 		BtnPermission = new TableRowCrudButtonPermissions()

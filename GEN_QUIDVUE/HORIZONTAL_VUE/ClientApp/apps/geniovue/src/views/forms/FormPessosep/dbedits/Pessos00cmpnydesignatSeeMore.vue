@@ -2,11 +2,11 @@
 	<teleport
 		v-if="isReady"
 		to="#q-modal-see-more-pessos00cmpnydesignat-body">
-		<q-row-container>
+		<q-row>
 			<q-table
 				v-bind="listCtrl"
 				v-on="listCtrl.handlers" />
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -24,6 +24,7 @@
 	import { TableListControl } from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
@@ -128,15 +129,25 @@
 
 			const modalProps = {
 				id: 'see-more-pessos00cmpnydesignat',
-				headerTitle: computed(() => this.Resources.COMPANIES04875),
-				closeButtonEnable: true,
-				hideFooter: true,
-				dismissWithEsc: true,
 				dismissAction: this.close,
-				isActive: true,
 				returnElement: 'PESSOS00CMPNYDESIGNAT_see-more_button'
 			}
-			this.setModal(modalProps)
+			const props = {
+				class: 'q-dialog-see-more',
+				title: computed(() => this.Resources.COMPANIES04875),
+				buttons: [
+					{
+						id: 'dialog-button-close',
+						action: this.close,
+						icon: { icon: 'cancel', type: 'svg' },
+						props: {
+							label: computed(() => this.Resources[hardcodedTexts.cancel]),
+							variant: 'bold'
+						}
+					}
+				]
+			}
+			this.setModal(props, modalProps)
 		},
 
 		beforeUnmount()
@@ -166,13 +177,16 @@
 
 			onTableDBDataChanged()
 			{
-				const params = {
-					id: this.id || null,
-					limits: this.limits,
-					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
-				}
+				// Wait for the computed properties of columns to finish resolving (e.g. "isVisible").
+				setTimeout(() => {
+					const params = {
+						id: this.id || null,
+						limits: this.limits,
+						tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
+					}
 
-				this.listCtrl.fetchListData(params)
+					this.listCtrl.fetchListData(params)
+				}, 0)
 			},
 
 			handleRowAction(eventData)
@@ -207,6 +221,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -216,6 +231,7 @@
 								label: computed(() => this.Resources.ACRONYM00872),
 								dataLength: 15,
 								scrollData: 15,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -225,6 +241,7 @@
 								label: computed(() => this.Resources.TAX_IDENTIFICATION51190),
 								dataLength: 15,
 								scrollData: 15,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -234,6 +251,7 @@
 								label: computed(() => this.Resources.PHONE56703),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -243,6 +261,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
@@ -254,6 +273,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -269,8 +289,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,

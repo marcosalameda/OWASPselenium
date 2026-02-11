@@ -53,7 +53,7 @@ export class ScopedWatch {
 	 *                   If `false` (default), the new scope is *linked* to the
 	 *                   currently active one and will be stopped alongside it.
 	 */
-	constructor (detached: boolean = false) {
+	constructor(detached: boolean = false) {
 		/** @private */
 		this._scope = markRaw(effectScope(detached))
 		Object.defineProperty(this, '_scope', { enumerable: false })
@@ -66,7 +66,7 @@ export class ScopedWatch {
 	 * @returns A stop-handle that halts **only** this watcher.
 	 *          Invoke {@link dispose} to stop all watchers at once.
 	 */
-	watch (
+	watch(
 		source: WatchSource | WatchSource[],
 		cb: WatchCallback,
 		options?: WatchOptions | undefined
@@ -78,10 +78,7 @@ export class ScopedWatch {
 	 * Equivalent to {@link _watchEffect}, but lifecycle-managed by this scope.
 	 *
 	 */
-	watchEffect (
-		effect: WatchEffect,
-		options?: WatchEffectOptions | undefined
-	): WatchStopHandle {
+	watchEffect(effect: WatchEffect, options?: WatchEffectOptions | undefined): WatchStopHandle {
 		return this._scope.run(() => _watchEffect(effect, options))!
 	}
 
@@ -89,7 +86,7 @@ export class ScopedWatch {
 	 * Stops every watcher created through this instance and
 	 * releases all associated resources.
 	 */
-	dispose (): void {
+	dispose(): void {
 		this._scope.stop()
 	}
 }

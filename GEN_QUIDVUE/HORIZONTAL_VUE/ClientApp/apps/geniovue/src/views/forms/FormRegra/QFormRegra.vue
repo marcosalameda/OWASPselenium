@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="REGRA"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.REGRA___RULESTIPOCOND.isVisible || controls.REGRA___RULESDESCRIPT.isVisible || controls.REGRA___RULESLOCAL___.isVisible">
-					<q-control-wrapper
-						v-show="controls.REGRA___RULESTIPOCOND.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.REGRA___RULESTIPOCOND.isVisible || controls.REGRA___RULESDESCRIPT.isVisible || controls.REGRA___RULESLOCAL___.isVisible">
+					<q-col
+						v-if="controls.REGRA___RULESTIPOCOND.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.REGRA___RULESTIPOCOND.isVisible"
 							class="i-text"
 							v-bind="controls.REGRA___RULESTIPOCOND"
 							v-on="controls.REGRA___RULESTIPOCOND.handlers"
@@ -107,11 +116,12 @@
 								v-bind="controls.REGRA___RULESTIPOCOND.props"
 								@update:model-value="model.ValTipocond.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.REGRA___RULESDESCRIPT.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.REGRA___RULESDESCRIPT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.REGRA___RULESDESCRIPT.isVisible"
 							class="i-text"
 							v-bind="controls.REGRA___RULESDESCRIPT"
 							v-on="controls.REGRA___RULESDESCRIPT.handlers"
@@ -123,11 +133,12 @@
 								@blur="onBlur(controls.REGRA___RULESDESCRIPT, model.ValDescript.value)"
 								@change="model.ValDescript.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.REGRA___RULESLOCAL___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.REGRA___RULESLOCAL___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.REGRA___RULESLOCAL___.isVisible"
 							class="i-text"
 							v-bind="controls.REGRA___RULESLOCAL___"
 							v-on="controls.REGRA___RULESLOCAL___.handlers"
@@ -139,10 +150,33 @@
 								v-bind="controls.REGRA___RULESLOCAL___.props"
 								@update:model-value="model.ValLocal.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.REGRA__UP_RULES__DESCRIPT.isVisible">
+					<q-col
+						v-if="controls.REGRA__UP_RULES__DESCRIPT.isVisible"
+						cols="auto">
+						<base-input-structure
+							v-if="controls.REGRA__UP_RULES__DESCRIPT.isVisible"
+							class="i-text"
+							v-bind="controls.REGRA__UP_RULES__DESCRIPT"
+							v-on="controls.REGRA__UP_RULES__DESCRIPT.handlers"
+							:loading="controls.REGRA__UP_RULES__DESCRIPT.props.loading"
+							:reporting-mode-on="reportingModeCAV"
+							:suggestion-mode-on="suggestionModeOn">
+							<q-lookup
+								v-if="controls.REGRA__UP_RULES__DESCRIPT.isVisible"
+								v-bind="controls.REGRA__UP_RULES__DESCRIPT.props"
+								v-on="controls.REGRA__UP_RULES__DESCRIPT.handlers" />
+							<q-see-more-regra-up-rules-descript
+								v-if="controls.REGRA__UP_RULES__DESCRIPT.seeMoreIsVisible"
+								v-bind="controls.REGRA__UP_RULES__DESCRIPT.seeMoreParams"
+								v-on="controls.REGRA__UP_RULES__DESCRIPT.handlers" />
+						</base-input-structure>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -151,7 +185,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -160,6 +194,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -171,7 +206,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -211,6 +246,7 @@
 		name: 'QFormRegra',
 
 		components: {
+			QSeeMoreRegraUpRulesDescript: defineAsyncComponent(() => import('@/views/forms/FormRegra/dbedits/RegraUpRulesDescriptSeeMore.vue')),
 		},
 
 		mixins: [
@@ -354,6 +390,22 @@
 						isVisible: computed(() => vm.authData.isAllowed && vm.formModes.duplicate !== vm.formInfo.mode),
 						action: vm.changeToInsertMode
 					},
+					applyBtn: {
+						id: 'apply-btn',
+						icon: {
+							icon: 'apply',
+							type: 'svg'
+						},
+						type: 'form-action',
+						text: computed(() => vm.Resources[hardcodedTexts.apply]),
+						classes: [],
+						showInHeader: true,
+						showInFooter: true,
+						isActive: true,
+						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
+						disabled: false,
+						action: () => vm.applyChanges(true)
+					},
 					repeatInsertBtn: {
 						id: 'repeat-insert-btn',
 						icon: {
@@ -382,7 +434,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -492,7 +548,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
-						labelId: 'label_REGRA___RULESTIPOCOND',
 						arrayName: 'tipoCond',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -509,7 +564,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 100,
-						labelId: 'label_REGRA___RULESDESCRIPT',
 						controlLimits: [
 						],
 						requiredConditions: {
@@ -541,10 +595,39 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 1,
-						labelId: 'label_REGRA___RULESLOCAL___',
 						arrayName: 'aLocRegr',
 						helpShortItem: '',
 						helpDetailedItem: '',
+						controlLimits: [
+						],
+					}, this),
+					REGRA__UP_RULES__DESCRIPT: new fieldControlClass.LookupControl({
+						modelField: 'TableUp_rulesDescript',
+						valueChangeEvent: 'fieldChange:up_rules.descript',
+						id: 'REGRA__UP_RULES__DESCRIPT',
+						name: 'DESCRIPT',
+						size: 'xxlarge',
+						label: computed(() => this.Resources.DESCRIPTION07383),
+						placeholder: '',
+						labelPosition: computed(() => this.labelAlignment.topleft),
+						externalCallbacks: {
+							getModelField: vm.getModelField,
+							getModelFieldValue: vm.getModelFieldValue,
+							setModelFieldValue: vm.setModelFieldValue
+						},
+						externalProperties: {
+							modelKeys: computed(() => vm.modelKeys)
+						},
+						lookupKeyModelField: {
+							name: 'ValCodup_rules',
+							dependencyEvent: 'fieldChange:rules.codup_rules'
+						},
+						dependentFields: () => ({
+							set 'up_rules.codup_rules'(value) { vm.model.ValCodup_rules.updateValue(value) },
+							set 'up_rules.descript'(value) { vm.model.TableUp_rulesDescript.updateValue(value) },
+						}),
+						insertEnabled: true,
+						supportForm: 'UP_RULES',
 						controlLimits: [
 						],
 					}, this),
@@ -571,6 +654,8 @@
 				 */
 				dataApi: {
 					Rules: {
+						get ValCodup_rules() { return vm.model.ValCodup_rules.value },
+						set ValCodup_rules(value) { vm.model.ValCodup_rules.updateValue(value) },
 						get ValDescript() { return vm.model.ValDescript.value },
 						set ValDescript(value) { vm.model.ValDescript.updateValue(value) },
 						get ValLocal() { return vm.model.ValLocal.value },
@@ -578,9 +663,15 @@
 						get ValTipocond() { return vm.model.ValTipocond.value },
 						set ValTipocond(value) { vm.model.ValTipocond.updateValue(value) },
 					},
+					Up_rules: {
+						get ValDescript() { return vm.model.TableUp_rulesDescript.value },
+						set ValDescript(value) { vm.model.TableUp_rulesDescript.updateValue(value) },
+					},
 					keys: {
 						/** The primary key of the RULES table */
 						get rules() { return vm.model.ValCodregra },
+						/** The foreign key to the UP_RULES table */
+						get up_rules() { return vm.model.ValCodup_rules },
 					},
 					get extraProperties() { return vm.model.extraProperties },
 				},
@@ -684,16 +775,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -737,16 +842,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -898,6 +1017,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS REGRA]/
 // eslint-disable-next-line

@@ -9,7 +9,8 @@
 				<a
 					ref="menuButton"
 					id="bookmarks__toggle"
-					href="javascript:void(0)"
+					role="button"
+					href="#"
 					:class="['nav-link n-sidebar__nav-link', 'has-icon', 'bookmarks__menu-text']"
 					@click.stop.prevent="toggleBookmarksMenu"
 					@keyup="menuItemKeyup">

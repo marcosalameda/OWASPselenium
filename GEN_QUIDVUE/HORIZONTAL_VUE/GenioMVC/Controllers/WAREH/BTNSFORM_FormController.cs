@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW BTNSFORM]/
 
 		[HttpPost]
-		public ActionResult Btnsform_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Btnsform_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Btnsform_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Btnsform_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Btnsform_Show_GET",
 				AreaName = "wareh",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET BTNSFORM]/
 		[HttpPost]
-		public ActionResult Btnsform_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Btnsform_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Btnsform_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Btnsform_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Btnsform_New_GET",
 				AreaName = "wareh",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Btnsform_New([FromBody]Btnsform_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Btnsform_New",
 				ViewName = "Btnsform",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET BTNSFORM]/
 		[HttpPost]
-		public ActionResult Btnsform_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Btnsform_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Btnsform_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Btnsform_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Btnsform_Edit_GET",
 				AreaName = "wareh",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Btnsform_Edit([FromBody]Btnsform_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Btnsform_Edit",
 				ViewName = "Btnsform",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET BTNSFORM]/
 		[HttpPost]
-		public ActionResult Btnsform_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Btnsform_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Btnsform_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Btnsform_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Btnsform_Delete_GET",
 				AreaName = "wareh",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Wareh/Btnsform_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST BTNSFORM]/
 		[HttpPost]
-		public ActionResult Btnsform_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Btnsform_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Btnsform_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Btnsform_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Btnsform_Delete",
 				ViewName = "Btnsform",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET BTNSFORM]/
 
 		[HttpPost]
-		public ActionResult Btnsform_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Btnsform_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Btnsform_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Btnsform_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Btnsform_Duplicate_GET",
 				AreaName = "wareh",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Btnsform_Duplicate([FromBody]Btnsform_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Btnsform_Duplicate",
 				ViewName = "Btnsform",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Wareh(UserContext.Current);
+					GenioMVC.Models.Wareh model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("wareh");
 
 // USE /[MANUAL GQT BEFORE_CANCEL BTNSFORM]/

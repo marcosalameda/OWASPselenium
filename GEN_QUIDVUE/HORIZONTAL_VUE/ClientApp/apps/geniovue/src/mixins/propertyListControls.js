@@ -74,9 +74,12 @@ export class BooleanProperty extends BaseProperty {
 	constructor(options, vueContext)
 	{
 		super({
-			component: 'q-toggle-input',
+			component: 'q-switch',
 			type: 'boolean',
-			defaultValue: false
+			defaultValue: false,
+			props: {
+				size: 'small'
+			}
 		}, vueContext)
 
 		_merge(this, options)

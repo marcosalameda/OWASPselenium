@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_5411]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.COMPANY_INITIALS56204),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -171,6 +174,7 @@
 								label: computed(() => this.Resources.LEGAL_REGISTRATION04413),
 								dataLength: 30,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -180,6 +184,7 @@
 								label: computed(() => this.Resources.VAT_NUMBER24236),
 								dataLength: 30,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -189,6 +194,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -198,6 +204,7 @@
 								label: computed(() => this.Resources.PHONE_NUMBER20774),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -208,6 +215,7 @@
 								dataLength: 33,
 								scrollData: 25,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -218,6 +226,7 @@
 								dataLength: 25,
 								scrollData: 10,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
@@ -228,6 +237,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
@@ -238,6 +248,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
@@ -248,6 +259,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 12,
@@ -258,6 +270,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
@@ -268,6 +281,7 @@
 								dataLength: 5,
 								scrollData: 5,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 14,
@@ -278,6 +292,7 @@
 								dataLength: 10,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 15,
@@ -288,6 +303,7 @@
 								dataLength: 20,
 								scrollData: 20,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 16,
@@ -298,6 +314,7 @@
 								dataLength: 20,
 								scrollData: 20,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 17,
@@ -308,6 +325,7 @@
 								dataLength: 254,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 18,
@@ -318,6 +336,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 19,
@@ -328,6 +347,7 @@
 								dataLength: 30,
 								scrollData: 20,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 20,
@@ -337,6 +357,7 @@
 								label: computed(() => this.Resources.MANUFACTURER50759),
 								scrollData: 1,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 21,
@@ -347,6 +368,7 @@
 								scrollData: 8,
 								dateTimeType: 'date',
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 22,
@@ -357,6 +379,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 								pkColumn: 'ValCodfacil',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -368,6 +391,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 								pkColumn: 'ValCodfacil',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -379,6 +403,7 @@
 								dataLength: 2,
 								scrollData: 2,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 25,
@@ -389,6 +414,7 @@
 								dataLength: 3,
 								scrollData: 3,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 26,
@@ -398,6 +424,7 @@
 								label: computed(() => this.Resources.OWNER09558),
 								dataLength: 50,
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 27,
@@ -406,6 +433,7 @@
 								field: 'CARRIER',
 								label: computed(() => this.Resources.CARRIER64855),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 28,
@@ -414,6 +442,7 @@
 								field: 'SUPPLIER',
 								label: computed(() => this.Resources.SUPPLIER17230),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -429,8 +458,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -531,6 +559,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_54111',
 								name: 'form-ENTIT',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -556,14 +585,15 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACI2', 'changed-ENTIT', 'changed-FACI1'],
+						globalEvents: ['changed-ENTIT', 'changed-FACI1', 'changed-FACI2'],
 						uuid: '7c66b6d5-d903-4719-bd1e-67b5650e047d',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						/** Menu limits */
 						controlLimits: [
 							/** SC */
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

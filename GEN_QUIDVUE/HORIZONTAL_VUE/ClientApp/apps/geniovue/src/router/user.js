@@ -128,7 +128,7 @@ export default function getUserRoutes()
 			}
 		},
 		{
-			path: '/:culture/Change2FA',
+			path: '/:culture/:system/Change2FA',
 			name: 'change2fa',
 			meta: {
 				hasInitialPHE: false

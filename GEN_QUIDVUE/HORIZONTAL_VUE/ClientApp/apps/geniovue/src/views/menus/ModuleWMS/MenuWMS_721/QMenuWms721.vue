@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_721]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.ADDRESS_USE16014),
 								dataLength: 7,
 								scrollData: 7,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayAddressu(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAddressu.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.ADDRESS_TYPE12455),
 								dataLength: 8,
 								scrollData: 8,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayAddresst(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAddresst.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -174,6 +177,7 @@
 								field: 'ADDRESSTEXT',
 								label: computed(() => this.Resources.ENTIRE_ADDRESS64248),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -183,6 +187,7 @@
 								label: computed(() => this.Resources.ADDRESS_CITY41109),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -192,6 +197,7 @@
 								label: computed(() => this.Resources.ADDRESS_DISTRICT48524),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -201,6 +207,7 @@
 								label: computed(() => this.Resources.ADDRESS_STATE16863),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -210,6 +217,7 @@
 								label: computed(() => this.Resources.ADDRESS_POSTAL_CODE41631),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -219,6 +227,7 @@
 								label: computed(() => this.Resources.ADDRESS_COUNTRY56159),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
@@ -228,6 +237,7 @@
 								label: computed(() => this.Resources.PERIOD_START07901),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 10,
@@ -237,6 +247,7 @@
 								label: computed(() => this.Resources.PERIOD_END31576),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -252,8 +263,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -354,6 +364,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_7211',
 								name: 'form-ADDRE',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -383,6 +394,7 @@
 						uuid: 'effd297d-4589-4a9c-b1c1-d836902892b1',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

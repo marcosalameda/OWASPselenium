@@ -159,11 +159,11 @@ namespace CSGenio.business
 			info.Pathways = new Dictionary<string, string>(11);
 			info.Pathways.Add("item","item");
 			info.Pathways.Add("indoc","indoc");
-			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("wareh","item");
+			info.Pathways.Add("gitem","item");
 			info.Pathways.Add("cntry","indoc");
-			info.Pathways.Add("cmpny","indoc");
 			info.Pathways.Add("ware1","indoc");
+			info.Pathways.Add("cmpny","indoc");
 			info.Pathways.Add("pesso","indoc");
 			info.Pathways.Add("categ","indoc");
 			info.Pathways.Add("pais1","indoc");
@@ -406,16 +406,17 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
+		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAccorr search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioAccorr search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAccorr area = new CSGenioAccorr(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields))
+            if (sp.getRecord(area, key, fields, forUpdate))
                 return area;
 			return null;
         }
@@ -482,7 +483,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX CCORR]/
 
      
-
           
 
 	}

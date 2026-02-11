@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_131]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -154,6 +155,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.RECEIPT_DATE00996),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -172,6 +175,7 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -188,8 +192,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -290,6 +293,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_1311',
 								name: 'form-RECEI',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -315,10 +319,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ENTIT', 'changed-RECEI'],
+						globalEvents: ['changed-RECEI', 'changed-ENTIT'],
 						uuid: 'ac035288-6c74-4087-b1b9-28e5aa6cd29c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

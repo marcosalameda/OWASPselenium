@@ -33,10 +33,6 @@
 		color: rgb($on-color-rgb / 0.7);
 	}
 
-	.q-custom-widget .i-checkbox__container.disabled input:checked ~ span.i-checkbox__field::after {
-		border-color: $on-color;
-	}
-
 	.q-custom-widget .q-table-list {
 		.c-table {
 			.row-action-btn .q-icon__svg {
@@ -58,7 +54,7 @@
 
 				.footer-pagination-row {
 					.q-button {
-						&:not(.q-button--active):hover {
+						&:not(:disabled):hover {
 							background: $color;
 
 							.q-icon__svg {
@@ -546,15 +542,6 @@
 		}
 	}
 
-	.i-checkbox__container.disabled input:checked ~ .i-checkbox__field {
-		background: none;
-		border: none;
-
-		&::after {
-			border-color: $primary;
-		}
-	}
-
 	.suggest--hidden {
 		display: none;
 	}
@@ -624,10 +611,10 @@
 		}
 
 		.footer-pagination-row {
-			.q-button:not(.q-button--active) {
+			.q-button {
 				background: $background;
-
-				&:hover {
+	  
+				&:hover:not(:disabled) {
 					background: $primary-dark;
 				}
 			}

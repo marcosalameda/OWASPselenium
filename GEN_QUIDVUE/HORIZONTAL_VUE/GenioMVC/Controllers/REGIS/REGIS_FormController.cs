@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -56,11 +57,11 @@ namespace GenioMVC.Controllers
 
 		[HttpPost]
 		[AllowAnonymous]
-		public ActionResult Regis_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Regis_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Regis_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Regis_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_Show_GET",
 				AreaName = "regis",
@@ -86,14 +87,14 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_NEW_GET REGIS]/
 		[HttpPost]
 		[AllowAnonymous]
-		public ActionResult Regis_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Regis_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Regis_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Regis_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_New_GET",
 				AreaName = "regis",
@@ -123,7 +124,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Regis_New([FromBody]Regis_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_New",
 				ViewName = "Regis",
@@ -158,11 +159,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET REGIS]/
 		[HttpPost]
 		[AllowAnonymous]
-		public ActionResult Regis_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Regis_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Regis_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Regis_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_Edit_GET",
 				AreaName = "regis",
@@ -189,7 +190,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Regis_Edit([FromBody]Regis_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_Edit",
 				ViewName = "Regis",
@@ -224,11 +225,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET REGIS]/
 		[HttpPost]
 		[AllowAnonymous]
-		public ActionResult Regis_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Regis_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Regis_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Regis_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_Delete_GET",
 				AreaName = "regis",
@@ -253,13 +254,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST REGIS]/
 		[AllowAnonymous]
 		[HttpPost]
-		public ActionResult Regis_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Regis_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Regis_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Regis_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_Delete",
 				ViewName = "Regis",
@@ -292,13 +293,13 @@ namespace GenioMVC.Controllers
 
 		[HttpPost]
 		[AllowAnonymous]
-		public ActionResult Regis_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Regis_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Regis_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Regis_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_Duplicate_GET",
 				AreaName = "regis",
@@ -324,7 +325,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Regis_Duplicate([FromBody]Regis_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regis_Duplicate",
 				ViewName = "Regis",
@@ -367,7 +368,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Regis(UserContext.Current);
+					GenioMVC.Models.Regis model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("regis");
 
 // USE /[MANUAL GQT BEFORE_CANCEL REGIS]/

@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_A41]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.ANO33022),
 								dataLength: 4,
 								scrollData: 4,
+								export: 1,
 								pkColumn: 'ValCodyear',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
@@ -164,6 +166,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -179,8 +182,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -281,6 +283,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_A411',
 								name: 'form-AGREG',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -306,10 +309,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROJE', 'changed-AGREG', 'changed-YEAR'],
+						globalEvents: ['changed-AGREG', 'changed-YEAR', 'changed-PROJE'],
 						uuid: '469f180d-8af8-44e6-b8c8-94ac1147a812',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

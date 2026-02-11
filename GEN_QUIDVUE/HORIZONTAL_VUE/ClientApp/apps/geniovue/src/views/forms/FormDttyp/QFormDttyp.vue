@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,33 +94,30 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="DTTYP"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.DTTYP___PSEUDNOVOGR06.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.DTTYP___PSEUDNOVOGR06.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.DTTYP___PSEUDNOVOGR06.isVisible">
+					<q-col v-if="controls.DTTYP___PSEUDNOVOGR06.isVisible">
 						<q-accordion
 							v-if="controls.DTTYP___PSEUDNOVOGR06.isVisible"
 							id="DTTYP___PSEUDNOVOGR06"
-							v-model="controls.DTTYP___PSEUDNOVOGR06.openChild"
-							v-bind="controls.DTTYP___PSEUDNOVOGR06">
+							v-model="controls.DTTYP___PSEUDNOVOGR06.openChild">
 							<!-- Start DTTYP___PSEUDNOVOGR06 -->
 							<q-accordion-item
+								v-if="controls.DTTYP___PSEUDNOVOGR01.isVisible"
 								id="DTTYP___PSEUDNOVOGR01-container"
 								value="DTTYP___PSEUDNOVOGR01"
 								:title="controls.DTTYP___PSEUDNOVOGR01.label">
 								<!-- Start DTTYP___PSEUDNOVOGR01 -->
-								<q-row-container v-show="controls.DTTYP___DTTYPSTRING__.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPSTRING__.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.DTTYP___DTTYPSTRING__.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPSTRING__.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPSTRING__.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPSTRING__"
 											v-on="controls.DTTYP___DTTYPSTRING__.handlers"
@@ -124,13 +129,14 @@
 												@blur="onBlur(controls.DTTYP___DTTYPSTRING__, model.ValString.value)"
 												@change="model.ValString.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPUPPERCAS.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPUPPERCAS.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPUPPERCAS.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPUPPERCAS.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPUPPERCAS.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPUPPERCAS"
 											v-on="controls.DTTYP___DTTYPUPPERCAS.handlers"
@@ -143,13 +149,14 @@
 												:model-value="model.ValUppercas.value"
 												@change="model.ValUppercas.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPUUID____.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPUUID____.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPUUID____.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPUUID____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPUUID____.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPUUID____"
 											v-on="controls.DTTYP___DTTYPUUID____.handlers"
@@ -161,13 +168,14 @@
 												@blur="onBlur(controls.DTTYP___DTTYPUUID____, model.ValUuid.value)"
 												@change="model.ValUuid.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPMULTILIN.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPMULTILIN.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPMULTILIN.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPMULTILIN.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPMULTILIN.isVisible"
 											class="i-textarea"
 											v-bind="controls.DTTYP___DTTYPMULTILIN"
 											v-on="controls.DTTYP___DTTYPMULTILIN.handlers"
@@ -179,13 +187,14 @@
 												v-bind="controls.DTTYP___DTTYPMULTILIN.props"
 												v-on="controls.DTTYP___DTTYPMULTILIN.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPMULTILI3.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPMULTILI3.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPMULTILI3.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPMULTILI3.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPMULTILI3.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPMULTILI3"
 											v-on="controls.DTTYP___DTTYPMULTILI3.handlers"
@@ -197,20 +206,22 @@
 												v-bind="controls.DTTYP___DTTYPMULTILI3.props"
 												v-on="controls.DTTYP___DTTYPMULTILI3.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End DTTYP___PSEUDNOVOGR01 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.DTTYP___PSEUDNOVOGR02.isVisible"
 								id="DTTYP___PSEUDNOVOGR02-container"
 								value="DTTYP___PSEUDNOVOGR02"
 								:title="controls.DTTYP___PSEUDNOVOGR02.label">
 								<!-- Start DTTYP___PSEUDNOVOGR02 -->
-								<q-row-container v-show="controls.DTTYP___DTTYPBOOLEAN_.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPBOOLEAN_.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.DTTYP___DTTYPBOOLEAN_.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPBOOLEAN_.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPBOOLEAN_.isVisible"
 											class="i-checkbox"
 											v-bind="controls.DTTYP___DTTYPBOOLEAN_"
 											v-on="controls.DTTYP___DTTYPBOOLEAN_.handlers"
@@ -218,19 +229,20 @@
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<template #label>
-												<q-checkbox-input
+												<q-checkbox
 													v-if="controls.DTTYP___DTTYPBOOLEAN_.isVisible"
 													v-bind="controls.DTTYP___DTTYPBOOLEAN_.props"
 													v-on="controls.DTTYP___DTTYPBOOLEAN_.handlers" />
 											</template>
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPBOOLEAN2.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPBOOLEAN2.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPBOOLEAN2.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPBOOLEAN2.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPBOOLEAN2.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPBOOLEAN2"
 											v-on="controls.DTTYP___DTTYPBOOLEAN2.handlers"
@@ -238,26 +250,28 @@
 											:reporting-mode-on="reportingModeCAV"
 											:suggestion-mode-on="suggestionModeOn">
 											<template #label>
-												<q-checkbox-input
+												<q-checkbox
 													v-if="controls.DTTYP___DTTYPBOOLEAN2.isVisible"
 													v-bind="controls.DTTYP___DTTYPBOOLEAN2.props"
 													v-on="controls.DTTYP___DTTYPBOOLEAN2.handlers" />
 											</template>
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End DTTYP___PSEUDNOVOGR02 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.DTTYP___PSEUDNOVOGR03.isVisible"
 								id="DTTYP___PSEUDNOVOGR03-container"
 								value="DTTYP___PSEUDNOVOGR03"
 								:title="controls.DTTYP___PSEUDNOVOGR03.label">
 								<!-- Start DTTYP___PSEUDNOVOGR03 -->
-								<q-row-container v-show="controls.DTTYP___DTTYPSMALLINT.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPSMALLINT.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.DTTYP___DTTYPSMALLINT.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPSMALLINT.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPSMALLINT.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPSMALLINT"
 											v-on="controls.DTTYP___DTTYPSMALLINT.handlers"
@@ -269,13 +283,14 @@
 												v-bind="controls.DTTYP___DTTYPSMALLINT.props"
 												@update:model-value="model.ValSmallint.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPINTEGER_.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPINTEGER_.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPINTEGER_.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPINTEGER_.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPINTEGER_.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPINTEGER_"
 											v-on="controls.DTTYP___DTTYPINTEGER_.handlers"
@@ -287,13 +302,14 @@
 												v-bind="controls.DTTYP___DTTYPINTEGER_.props"
 												@update:model-value="model.ValInteger.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPBIGINT__.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPBIGINT__.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPBIGINT__.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPBIGINT__.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPBIGINT__.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPBIGINT__"
 											v-on="controls.DTTYP___DTTYPBIGINT__.handlers"
@@ -305,13 +321,14 @@
 												v-bind="controls.DTTYP___DTTYPBIGINT__.props"
 												@update:model-value="model.ValBigint.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPREAL____.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPREAL____.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPREAL____.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPREAL____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPREAL____.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPREAL____"
 											v-on="controls.DTTYP___DTTYPREAL____.handlers"
@@ -323,13 +340,14 @@
 												v-bind="controls.DTTYP___DTTYPREAL____.props"
 												@update:model-value="model.ValReal.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPFLOAT___.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPFLOAT___.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPFLOAT___.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPFLOAT___.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPFLOAT___.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPFLOAT___"
 											v-on="controls.DTTYP___DTTYPFLOAT___.handlers"
@@ -341,13 +359,14 @@
 												v-bind="controls.DTTYP___DTTYPFLOAT___.props"
 												@update:model-value="model.ValFloat.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPDECIMAL_.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPDECIMAL_.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPDECIMAL_.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPDECIMAL_.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPDECIMAL_.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPDECIMAL_"
 											v-on="controls.DTTYP___DTTYPDECIMAL_.handlers"
@@ -359,13 +378,14 @@
 												v-bind="controls.DTTYP___DTTYPDECIMAL_.props"
 												@update:model-value="model.ValDecimal.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPDECIMAL9.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPDECIMAL9.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPDECIMAL9.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPDECIMAL9.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPDECIMAL9.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPDECIMAL9"
 											v-on="controls.DTTYP___DTTYPDECIMAL9.handlers"
@@ -377,13 +397,14 @@
 												v-bind="controls.DTTYP___DTTYPDECIMAL9.props"
 												@update:model-value="model.ValDecimal9.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPMONEY___.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPMONEY___.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPMONEY___.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPMONEY___.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPMONEY___.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPMONEY___"
 											v-on="controls.DTTYP___DTTYPMONEY___.handlers"
@@ -395,13 +416,14 @@
 												v-bind="controls.DTTYP___DTTYPMONEY___.props"
 												@update:model-value="model.ValMoney.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPMONEY9__.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPMONEY9__.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPMONEY9__.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPMONEY9__.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPMONEY9__.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPMONEY9__"
 											v-on="controls.DTTYP___DTTYPMONEY9__.handlers"
@@ -413,20 +435,22 @@
 												v-bind="controls.DTTYP___DTTYPMONEY9__.props"
 												@update:model-value="model.ValMoney9.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End DTTYP___PSEUDNOVOGR03 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.DTTYP___PSEUDNOVOGR04.isVisible"
 								id="DTTYP___PSEUDNOVOGR04-container"
 								value="DTTYP___PSEUDNOVOGR04"
 								:title="controls.DTTYP___PSEUDNOVOGR04.label">
 								<!-- Start DTTYP___PSEUDNOVOGR04 -->
-								<q-row-container v-show="controls.DTTYP___DTTYPDATE____.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPDATE____.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.DTTYP___DTTYPDATE____.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPDATE____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPDATE____.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPDATE____"
 											v-on="controls.DTTYP___DTTYPDATE____.handlers"
@@ -440,13 +464,14 @@
 												@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 												@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPDATETIME.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPDATETIME.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPDATETIME.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPDATETIME.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPDATETIME.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPDATETIME"
 											v-on="controls.DTTYP___DTTYPDATETIME.handlers"
@@ -460,13 +485,14 @@
 												@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
 												@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPDTSESOND.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPDTSESOND.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPDTSESOND.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPDTSESOND.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPDTSESOND.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPDTSESOND"
 											v-on="controls.DTTYP___DTTYPDTSESOND.handlers"
@@ -480,13 +506,14 @@
 												@reset-icon-click="model.ValDtsesond.fnUpdateValue(model.ValDtsesond.originalValue ?? new Date())"
 												@update:model-value="model.ValDtsesond.fnUpdateValue($event ?? '')" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.DTTYP___DTTYPTIME____.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPTIME____.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.DTTYP___DTTYPTIME____.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPTIME____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPTIME____.isVisible"
 											class="i-text"
 											v-bind="controls.DTTYP___DTTYPTIME____"
 											v-on="controls.DTTYP___DTTYPTIME____.handlers"
@@ -500,20 +527,22 @@
 												@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
 												@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End DTTYP___PSEUDNOVOGR04 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.DTTYP___PSEUDNOVOGR05.isVisible"
 								id="DTTYP___PSEUDNOVOGR05-container"
 								value="DTTYP___PSEUDNOVOGR05"
 								:title="controls.DTTYP___PSEUDNOVOGR05.label">
 								<!-- Start DTTYP___PSEUDNOVOGR05 -->
-								<q-row-container v-show="controls.DTTYP___DTTYPIMAGE___.isVisible">
-									<q-control-wrapper
-										v-show="controls.DTTYP___DTTYPIMAGE___.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.DTTYP___DTTYPIMAGE___.isVisible">
+									<q-col
+										v-if="controls.DTTYP___DTTYPIMAGE___.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.DTTYP___DTTYPIMAGE___.isVisible"
 											class="q-image"
 											v-bind="controls.DTTYP___DTTYPIMAGE___"
 											v-on="controls.DTTYP___DTTYPIMAGE___.handlers"
@@ -525,16 +554,16 @@
 												v-bind="controls.DTTYP___DTTYPIMAGE___.props"
 												v-on="controls.DTTYP___DTTYPIMAGE___.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End DTTYP___PSEUDNOVOGR05 -->
 							</q-accordion-item>
 							<!-- End DTTYP___PSEUDNOVOGR06 -->
 						</q-accordion>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -543,7 +572,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -552,6 +581,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -563,7 +593,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -774,7 +804,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -913,7 +947,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR01',
 						maxLength: 50,
-						labelId: 'label_DTTYP___DTTYPSTRING__',
 						controlLimits: [
 						],
 					}, this),
@@ -928,7 +961,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR01',
 						maxLength: 50,
-						labelId: 'label_DTTYP___DTTYPUPPERCAS',
 						controlLimits: [
 						],
 					}, this),
@@ -943,7 +975,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'DTTYP___PSEUDNOVOGR01',
 						maxLength: 36,
-						labelId: 'label_DTTYP___DTTYPUUID____',
 						controlLimits: [
 						],
 					}, this),
@@ -1448,16 +1479,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1501,16 +1546,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1662,6 +1721,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS DTTYP]/
 // eslint-disable-next-line

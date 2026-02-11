@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -32,12 +33,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new("EQUIPMENT_DECOMMISSI11875", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_ABATE_SHOW = new("EQUIPMENT_DECOMMISSI11875", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_ABATE_NEW = new("EQUIPMENT_DECOMMISSI11875", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_ABATE_EDIT = new("EQUIPMENT_DECOMMISSI11875", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new("EQUIPMENT_DECOMMISSI11875", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_ABATE_DELETE = new("EQUIPMENT_DECOMMISSI11875", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_ABATE_CANCEL = new("DESATIVACAO_DE_EQUIP16900", "Abate_Cancel", "Decom") { vueRouteName = "form-ABATE", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_ABATE_SHOW = new("DESATIVACAO_DE_EQUIP16900", "Abate_Show", "Decom") { vueRouteName = "form-ABATE", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_ABATE_NEW = new("DESATIVACAO_DE_EQUIP16900", "Abate_New", "Decom") { vueRouteName = "form-ABATE", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_ABATE_EDIT = new("DESATIVACAO_DE_EQUIP16900", "Abate_Edit", "Decom") { vueRouteName = "form-ABATE", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_ABATE_DUPLICATE = new("DESATIVACAO_DE_EQUIP16900", "Abate_Duplicate", "Decom") { vueRouteName = "form-ABATE", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_ABATE_DELETE = new("DESATIVACAO_DE_EQUIP16900", "Abate_Delete", "Decom") { vueRouteName = "form-ABATE", mode = "DELETE" };
 
 		#endregion
 
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW ABATE]/
 
 		[HttpPost]
-		public ActionResult Abate_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Abate_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Abate_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Abate_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abate_Show_GET",
 				AreaName = "decom",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET ABATE]/
 		[HttpPost]
-		public ActionResult Abate_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Abate_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Abate_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Abate_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abate_New_GET",
 				AreaName = "decom",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Abate_New([FromBody]Abate_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Abate_New",
 				ViewName = "Abate",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET ABATE]/
 		[HttpPost]
-		public ActionResult Abate_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Abate_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Abate_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Abate_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abate_Edit_GET",
 				AreaName = "decom",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Abate_Edit([FromBody]Abate_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Abate_Edit",
 				ViewName = "Abate",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET ABATE]/
 		[HttpPost]
-		public ActionResult Abate_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Abate_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Abate_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Abate_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abate_Delete_GET",
 				AreaName = "decom",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Decom/Abate_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST ABATE]/
 		[HttpPost]
-		public ActionResult Abate_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Abate_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Abate_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Abate_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Abate_Delete",
 				ViewName = "Abate",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET ABATE]/
 
 		[HttpPost]
-		public ActionResult Abate_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Abate_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Abate_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Abate_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abate_Duplicate_GET",
 				AreaName = "decom",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Abate_Duplicate([FromBody]Abate_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Abate_Duplicate",
 				ViewName = "Abate",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Decom(UserContext.Current);
+					GenioMVC.Models.Decom model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("decom");
 
 // USE /[MANUAL GQT BEFORE_CANCEL ABATE]/

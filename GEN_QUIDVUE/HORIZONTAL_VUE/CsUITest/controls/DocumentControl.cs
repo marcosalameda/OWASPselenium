@@ -3,8 +3,8 @@ namespace quidgest.uitests.controls;
 public class DocumentControl(IWebDriver driver, By containerLocator, string controlId) : ControlObject(driver, containerLocator, By.Id(controlId))
 {
     protected IWebElement FileInput => m_control.FindElement(By.CssSelector("[data-testid='file-input']"));
-    protected IWebElement OptionsBtn => m_control.FindElement(By.CssSelector("[data-testid='options-button']"));
-    protected IWebElement DeleteBtn => driver.FindElement(By.CssSelector("[data-testid='document-delete']"));
+    protected IWebElement OptionsBtn => m_control.FindElement(By.CssSelector("[data-type='options-button']"));
+    protected IWebElement DeleteBtn => driver.FindElement(By.CssSelector("[data-key='delete']"));
 
     /// <summary>
     /// True if the control is blocked, false otherwise

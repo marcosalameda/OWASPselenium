@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TBS_Menu_1931]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -152,6 +153,7 @@
 								field: 'DESCRIP',
 								label: computed(() => this.Resources.DESCRICAO51618),
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodflds',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.FEEDBACK52855),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 3,
@@ -172,6 +175,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodflds',
 								viewType: qEnums.documentViewTypeMode.print,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -189,8 +193,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -291,6 +294,7 @@
 							rowClickAction: {
 								id: 'RCA_TBS_19311',
 								name: 'form-FEECA',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -320,6 +324,7 @@
 						uuid: 'bcd28de4-9e50-4d1a-92e0-3c661c0ab999',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

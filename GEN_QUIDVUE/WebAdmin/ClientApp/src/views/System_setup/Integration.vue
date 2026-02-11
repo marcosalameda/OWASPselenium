@@ -9,7 +9,6 @@
 					<message
 						:Messaging="Messaging"
 						:Metadata="Metadata"
-						:model="model"
 						:resources="resources"
 						@alert-class="forwardAlert"
 					/>
@@ -28,14 +27,12 @@
 						:resources="resources"
 						@update-model="forwardUpdate"
 						@alert-class="forwardAlert" />
+					<q-button
+						variant="bold"
+						:label="hardcodedTexts.saveConfiguration"
+						@click="SaveIntegrationConfig" />
 				</q-row-container>
 			</q-card>
-		</row>
-		<row class="footer-btn">
-			<q-button
-				variant="bold"
-				:label="hardcodedTexts.saveConfiguration"
-				@click="SaveIntegrationConfig" />
 		</row>
 	</div>
 </template>

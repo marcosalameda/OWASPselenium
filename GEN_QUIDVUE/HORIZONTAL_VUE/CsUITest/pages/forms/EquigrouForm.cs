@@ -146,7 +146,7 @@ public class EquigrouForm : Form
 	/// <summary>
 	/// Audit
 	/// </summary>
-	public IWebElement PseudNewgrp08 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNewgrp08 => new CollapsibleZoneControl(driver, ContainerLocator, "#EQUIGROUPSEUDNEWGRP08-container");
 
 	/// <summary>
 	/// Changes number

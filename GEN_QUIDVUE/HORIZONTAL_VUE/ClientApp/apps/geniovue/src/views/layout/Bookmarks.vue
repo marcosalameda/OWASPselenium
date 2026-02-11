@@ -10,7 +10,8 @@
 				<a
 					ref="menuButton"
 					class="bookmarks__header"
-					href="javascript:void(0)"
+					role="button"
+					href="#"
 					:aria-expanded="bookmarkMenuIsOpen"
 					:title="texts.favorites"
 					@click.stop.prevent="toggleMenu"

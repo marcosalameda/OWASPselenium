@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_GROUPBOX]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodempre',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodpesso',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -174,6 +177,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -183,6 +187,7 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -192,6 +197,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -202,6 +208,7 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodwareh',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -212,6 +219,7 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCoditem',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -222,6 +230,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
@@ -231,6 +240,7 @@
 								label: computed(() => this.Resources.ACQUISITION44180),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -241,6 +251,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 								pkColumn: 'ValCoddeco',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -251,6 +262,7 @@
 								label: computed(() => this.Resources.DECOMISSION14486),
 								scrollData: 8,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 12,
@@ -259,6 +271,7 @@
 								field: 'IFABATIF',
 								label: computed(() => this.Resources.DOWNED_EQUIPMENT43331),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 13,
@@ -270,6 +283,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 14,
@@ -280,6 +294,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 15,
@@ -290,6 +305,7 @@
 								scrollData: 1,
 								maxDigits: 2,
 								decimalPlaces: 0,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayFreqempr.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -300,6 +316,7 @@
 								field: 'BOUGHT',
 								label: computed(() => this.Resources.BOUGHT32044),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 17,
@@ -309,6 +326,7 @@
 								label: computed(() => this.Resources.N_R__ROOM43805),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 								pkColumn: 'ValCodrooms',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -319,6 +337,7 @@
 								label: computed(() => this.Resources.REFERENCE28402),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 19,
@@ -328,6 +347,7 @@
 								label: computed(() => this.Resources.FIRST42972),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 20,
@@ -337,6 +357,7 @@
 								label: computed(() => this.Resources.BEFORE60156),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 21,
@@ -346,6 +367,7 @@
 								label: computed(() => this.Resources.FOLLOWING22170),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 22,
@@ -355,6 +377,7 @@
 								label: computed(() => this.Resources.LAST49207),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.HyperLinkColumn({
 								order: 23,
@@ -364,6 +387,7 @@
 								label: computed(() => this.Resources.MANUFACTURER_S_WEBSI11084),
 								dataLength: 256,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 24,
@@ -375,6 +399,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 25,
@@ -383,6 +408,7 @@
 								field: 'MOVIMENT',
 								label: computed(() => this.Resources.DRIVES34119),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 26,
@@ -393,6 +419,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 27,
@@ -401,6 +428,7 @@
 								field: 'SHOWRC',
 								label: computed(() => this.Resources.SHOW_RECORD53851),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -416,8 +444,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -518,6 +545,7 @@
 							rowClickAction: {
 								id: 'RCA_STY_23111',
 								name: 'form-GROUPBX',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -543,14 +571,15 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ITEM', 'changed-WAREH', 'changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-DECOM', 'changed-PESS1'],
+						globalEvents: ['changed-PESS1', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-EQUIP', 'changed-CMPNY', 'changed-ITEM', 'changed-DECOM'],
 						uuid: '4e9ccb50-3e83-46f4-b9ec-5040fa799e8f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						/** Menu limits */
 						controlLimits: [
 							/** SC */
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

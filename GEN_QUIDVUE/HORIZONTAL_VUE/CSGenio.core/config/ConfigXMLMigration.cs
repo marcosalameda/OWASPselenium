@@ -19,7 +19,7 @@ namespace GenioServer.framework
     public class ConfigXMLMigration
     {
 
-        public static int CurConfigurationVerion = 11;
+        public static int CurConfigurationVerion = 14;
 
         public static void Migration(IConfigurationManager configManager, int fileConfigVersion)
         {            
@@ -47,10 +47,39 @@ namespace GenioServer.framework
                 configFileTxt = migrateConfigToVersion9(fileConfigVersion, configFileTxt);
                 configFileTxt = migrateConfigToVersion10(fileConfigVersion, configFileTxt);
                 configFileTxt = migrateConfigToVersion11(fileConfigVersion, configFileTxt);
+                configFileTxt = migrateConfigToVersion12(fileConfigVersion, configFileTxt);
+                configFileTxt = migrateConfigTo(Version13, 13, fileConfigVersion, configFileTxt);
+                configFileTxt = migrateConfigTo(Version14, 14, fileConfigVersion, configFileTxt);
             }
 
             //write the final file
             System.IO.File.WriteAllText(pathConfig, configFileTxt);
+        }
+
+        /// <summary>
+        /// Standard migration pattern for version upgrade methods
+        /// </summary>
+        /// <param name="migrationFunction">Upgrade method</param>
+        /// <param name="version">Target version</param>
+        /// <param name="fileVersion">Current config version</param>
+        /// <param name="configFileTxt">Current config content</param>
+        /// <returns>The upgraded config content</returns>
+        private static string migrateConfigTo(Func<string, string> migrationFunction, int version, int fileVersion, string configFileTxt)
+        {
+            //if file already on right version doesn't migrate to that version
+            if (fileVersion >= version)
+                return configFileTxt;
+
+            //else will do migration
+            try
+            {
+                var txt = migrationFunction(configFileTxt);
+                return changeVersion(txt, version.ToString());
+            }
+            catch (Exception) 
+            {
+                return configFileTxt;
+            }
         }
 
         //With Xdocument this function is not necessary! It's only .ToString()
@@ -801,5 +830,212 @@ namespace GenioServer.framework
                 return configFileTxt;
             }
         }
+
+        /// <summary>
+        /// Convert all password advanced properties value to Base64 format
+        /// </summary>
+        /// <param name="fileVersion"></param>
+        /// <param name="configFileTxt"></param>
+        /// <returns></returns>
+        private static string migrateConfigToVersion12(int fileVersion, string configFileTxt)
+        {
+            // if the file is already on the right version, doesn't migrate.
+            if (fileVersion >= 12)
+                return configFileTxt;
+
+            try
+            {
+                XDocument xdoc = XDocument.Parse(configFileTxt);
+                var moreProperties = xdoc.Root.Elements("maisPropriedades").Elements("item");
+                foreach (var element in moreProperties)
+                {                    
+                    var oldElement = element;
+                    var key = element.Attribute("key");
+                    var keyValue = element.Attribute("value");
+
+                    if (ExtraProperties.IsPasswordType(key.Value))
+                    {
+                        XElement newElement = new XElement("item");
+                        newElement.SetAttributeValue("key", key.Value);
+                        newElement.SetAttributeValue("value", Convert.ToBase64String(Encoding.Unicode.GetBytes(keyValue.Value)));
+                        oldElement.ReplaceWith(newElement);
+                    } 
+                }
+                string changedXml_Text = xdoc.Declaration.ToString() + Environment.NewLine + xdoc.ToString();
+                return changeVersion(changedXml_Text, "12");
+            }
+            catch (Exception)
+            {
+                return configFileTxt;
+            }
+        }
+
+
+        /// <summary>
+        /// Change provider properties to key value pairs
+        /// </summary>
+        /// <param name="fileVersion"></param>
+        /// <param name="configFileTxt"></param>
+        /// <returns></returns>
+        private static string Version13(string configFileTxt)
+        {
+            XDocument xdoc = XDocument.Parse(configFileTxt);
+
+            //convert identity provider config into a key value dictionary
+            var identityProviders = xdoc.Root.Elements("Security")
+                .Elements("AppSecurity")
+                .Elements("identityProviders")
+                .Elements("identityProvider");
+            foreach(var element in identityProviders)
+            {
+                var iconfig = element.Attribute("config");
+                if (iconfig == null)
+                    continue;
+
+                var sconfig = iconfig.Value;
+                iconfig.Remove();
+
+                var optionsElem = new XElement("options");
+
+                string[] keyValues = sconfig.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string keyValue in keyValues)
+                {
+                    string key = System.Web.HttpUtility.UrlDecode(keyValue.Substring(0, keyValue.IndexOf("=")));
+                    string value = System.Web.HttpUtility.UrlDecode(keyValue.Substring(keyValue.IndexOf("=") + 1));
+
+                    if (value.StartsWith("{"))
+                    {
+                        //json properties
+                        var jsonOp = Newtonsoft.Json.Linq.JObject.Parse(value);
+                        foreach (var jchild in jsonOp.Descendants())
+                            if (jchild is Newtonsoft.Json.Linq.JProperty jprop)
+                            {
+                                //arrays get turned into semicolon separated strings
+                                if (jprop.Value is Newtonsoft.Json.Linq.JArray array)
+                                {
+                                    var itemElem = new XElement("item",
+                                        new XAttribute("key", jprop.Name),
+                                        new XAttribute("value", string.Join(";", array.Select(a => a.ToString())))
+                                    );
+                                    optionsElem.Add(itemElem);
+                                }
+                                //normal properties just get turned into strings
+                                else
+                                {
+                                    var itemElem = new XElement("item", new XAttribute("key", jprop.Name), new XAttribute("value", jprop.Value));
+                                    optionsElem.Add(itemElem);
+                                }
+                            }
+                    }
+                    else
+                    {
+                        //normal properties
+                        var itemElem = new XElement("item", new XAttribute("key", key), new XAttribute("value", value));
+                        optionsElem.Add(itemElem);
+                    }
+                }
+
+                element.Add(optionsElem);
+            }
+
+            //convert identity provider config into a key value dictionary
+            var roleProviders = xdoc.Root.Elements("Security")
+                .Elements("AppSecurity")
+                .Elements("roleProviders")
+                .Elements("roleProvider");
+            foreach (var element in roleProviders)
+            {
+                //precond attribute has been deprecated
+                var iprecond = element.Attribute("precond");
+                iprecond?.Remove();
+
+                //transform the config attribute into the Options element
+                var iconfig = element.Attribute("config");
+                if (iconfig == null)
+                    continue;
+
+                var sconfig = iconfig.Value;
+                iconfig.Remove();
+
+                var optionsElem = new XElement("options");
+
+                string[] keyValues = sconfig.Split(new char[] { '&' }, StringSplitOptions.RemoveEmptyEntries);
+                foreach (string keyValue in keyValues)
+                {
+                    string key = System.Web.HttpUtility.UrlDecode(keyValue.Substring(0, keyValue.IndexOf("=")));
+                    string value = System.Web.HttpUtility.UrlDecode(keyValue.Substring(keyValue.IndexOf("=") + 1));
+                    //only normal properties were supported
+                    var itemElem = new XElement("item", new XAttribute("key", key), new XAttribute("value", value));
+                    optionsElem.Add(itemElem);
+                }
+
+                element.Add(optionsElem);
+
+            }
+
+            return xdoc.Declaration.ToString() + Environment.NewLine + xdoc.ToString();
+        }
+
+        /// <summary>
+        /// Move Activate2FA into a identiy provider line
+        /// </summary>
+        /// <param name="fileVersion"></param>
+        /// <param name="configFileTxt"></param>
+        /// <returns></returns>
+        private static string Version14(string configFileTxt)
+        {
+            XDocument xdoc = XDocument.Parse(configFileTxt);
+
+            var securityList = xdoc.Root.Elements("Security")
+                .Elements("AppSecurity");
+            foreach (var element in securityList)
+            {
+                var iactivate = element.Attribute("activate2FA");
+                if (iactivate == null)
+                    continue;
+
+                var vactivate = iactivate.Value;
+                iactivate.Remove();
+
+                if (vactivate == "TOTP")
+                {
+                    //create the provider declaration
+                    var provider = new XElement("identityProvider",
+                        new XAttribute("name", "TOTP"),
+                        new XAttribute("description", "TOTP"),
+                        new XAttribute("type", "GenioServer.security.TOTPIdentityProvider"),
+                        new XAttribute("is2fa", "true")
+                        );
+                    var optionsElem = new XElement("options");
+                    optionsElem.Add(new XElement("item",
+                        new XAttribute("key", "Issuer"),
+                        new XAttribute("value", Configuration.Program)
+                        ));
+                    provider.Add(optionsElem);
+                    element.Element("identityProviders").Add(provider);
+                }
+                else if (vactivate == "WebAuth")
+                {
+                    //create the provider declaration
+                    var provider = new XElement("identityProvider",
+                        new XAttribute("name", "Webauth"),
+                        new XAttribute("description", "WebAuthN"),
+                        new XAttribute("type", "GenioServer.security.WebauthnIdentityProvider, GenioServer"),
+                        new XAttribute("is2fa", "true")
+                        );
+                    var optionsElem = new XElement("options");
+                    //note, its impossible to know the actual server deployment url, so we generate a default placeholder
+                    optionsElem.Add(new XElement("item",
+                        new XAttribute("key", "Origin"),
+                        new XAttribute("value", "https://localhost:5173")
+                        ));
+                    provider.Add(optionsElem);
+                    element.Element("identityProviders").Add(provider);
+                }
+            }
+
+            return xdoc.Declaration.ToString() + Environment.NewLine + xdoc.ToString();
+        }
+
     }
 }

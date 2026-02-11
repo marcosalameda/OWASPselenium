@@ -110,6 +110,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'DIGDOCUMFK'
 		}).cloneFrom(values?.ValDigdocumfk))
 		this.stopWatchers.push(watch(() => this.ValDigdocumfk.value, (newValue, oldValue) => this.onUpdate('manua.digdocumfk', this.ValDigdocumfk, newValue, oldValue)))
+
 		this.ValDigdocumData = reactive(new modelFieldType.DocumentData({
 			id: 'ValDigdocumData',
 			area: 'MANUA',

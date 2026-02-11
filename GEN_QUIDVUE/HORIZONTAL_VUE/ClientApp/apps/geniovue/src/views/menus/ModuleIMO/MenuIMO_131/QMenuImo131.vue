@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE IMO_Menu_131]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 2,
@@ -161,6 +163,7 @@
 								field: 'ACTIVE',
 								label: computed(() => this.Resources.ACTIVE03270),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -170,6 +173,7 @@
 								label: computed(() => this.Resources.NUMERIC19292),
 								dataLength: 3,
 								scrollData: 3,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -179,6 +183,7 @@
 								label: computed(() => this.Resources.ALPHABETIC_232435),
 								dataLength: 2,
 								scrollData: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -188,6 +193,7 @@
 								label: computed(() => this.Resources.ALPHABETIC_316640),
 								dataLength: 3,
 								scrollData: 3,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
@@ -199,6 +205,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -214,8 +221,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -316,6 +322,7 @@
 							rowClickAction: {
 								id: 'RCA_IMO_1311',
 								name: 'menu-IMO_1311',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -346,6 +353,7 @@
 						uuid: '2e0383bf-f54f-41d7-b7e7-76c78c1dc049',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

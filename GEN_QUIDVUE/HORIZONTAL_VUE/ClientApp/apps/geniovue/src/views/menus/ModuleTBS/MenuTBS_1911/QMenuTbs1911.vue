@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TBS_Menu_1911]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.NOME_DA_COMPANHIA48638),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -178,8 +181,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -280,6 +282,7 @@
 							rowClickAction: {
 								id: 'RCA_TBS_19111',
 								name: 'form-AERO',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -309,6 +312,7 @@
 						uuid: '63bd7bf2-d3e4-4b13-9f68-862ccec2fe93',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

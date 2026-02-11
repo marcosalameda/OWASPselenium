@@ -246,6 +246,7 @@
 				zoomControl: null,
 				searchControl: null,
 				printControl: null,
+				centerControl: null,
 				legendControl: null
 			}
 		},
@@ -548,6 +549,9 @@
 
 				// Add printing option.
 				this.setPrintingOption()
+				
+				// Add center map control to the map.
+				this.setCenterMapControl()
 
 				// Activate all the layers with shapes by default.
 				this.activateShapeLayers()
@@ -1205,6 +1209,25 @@
 
 				this.map.pm?.Toolbar.createCustomControl(this.printControl)
 			},
+			
+			/**
+			 * Add center map control to the map.
+			 */
+			setCenterMapControl() {
+				if (!this.styleVariables.allowCenterControl?.value || this.map === null || this.centerControl !== null) return;
+
+				this.centerControl = {
+					name: 'centerMap',
+					block: 'custom',
+					title: computed(() => this.texts.centerControlMap),
+					className: 'leaflet-map-center',
+					onClick: () => {
+						this.fitMapZoom()
+					}
+				};
+
+				this.map.pm.Toolbar.createCustomControl(this.centerControl);
+			},
 
 			/**
 			 * Makes all the controls in the map hidden.
@@ -1518,7 +1541,8 @@
 					removalMode: this.canDraw && (this.styleVariables.allowRemoval ? this.styleVariables.allowRemoval.value : true),
 					rotateMode: this.canDraw && (this.styleVariables.allowRotate ? this.styleVariables.allowRotate.value : true),
 					// Custom features.
-					printMap: this.styleVariables.allowExporting ? this.styleVariables.allowExporting.value : true
+					printMap: this.styleVariables.allowExporting ? this.styleVariables.allowExporting.value : true,
+					centerMap: this.styleVariables.allowCenterControl ? this.styleVariables.allowCenterControl.value : true
 				})
 			},
 
@@ -2111,6 +2135,11 @@
 			},
 
 			'styleVariables.allowExporting.value'()
+			{
+				this.setDrawingTool()
+			},
+			
+			'styleVariables.allowCenterControl.value'()
 			{
 				this.setDrawingTool()
 			},

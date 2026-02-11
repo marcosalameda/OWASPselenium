@@ -207,7 +207,6 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValEnd.value, (newValue, oldValue) => this.onUpdate('lendi.end', this.ValEnd, newValue, oldValue)))
 
 		this.ValObservat = reactive(new modelFieldType.MultiLineString({
-			type: 'MarkdownEditor',
 			id: 'ValObservat',
 			originId: 'ValObservat',
 			area: 'LENDI',

@@ -198,7 +198,7 @@ export default {
 			{
 				const params = {
 					ticket: eObj.ticket,
-					formIdentifier: ""
+					formIdentifier: ''
 				}
 
 				netAPI.retrieveImage(
@@ -287,6 +287,10 @@ export default {
 			if (!listFunctions.actionIsAllowed(actionCfg, row?.btnPermission, listConf.config.permissions, listConf.readonly))
 				return
 
+			// Check for row specific visibility conditions
+			if (typeof actionCfg.checkIsVisible === 'function' && !actionCfg.checkIsVisible(row))
+				return
+
 			// Check if the action is a row-specific action
 			let crudAction = _find(listConf.config.crudActions, (act) => act.id === actionId)
 			let insertAction = _find(listConf.config.generalActions, (act) => act.id === actionId && act.id === 'insert')
@@ -333,7 +337,7 @@ export default {
 			// Calendar currently does not support this.
 			const storeTableConfig = (rowSpecificAction || actionCfg.params.isRoute) && listConf.activeViewModeId !== 'CALENDAR'
 
-			listConf.setListReturnControl(row, storeTableConfig)
+			listConf.setListReturnControl(row, storeTableConfig, eObj.returnElement)
 			this.setParamValue({
 				navigationId: this.navigationId,
 				key: 'anchor',

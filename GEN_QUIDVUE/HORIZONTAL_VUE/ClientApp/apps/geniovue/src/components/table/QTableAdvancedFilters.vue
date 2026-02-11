@@ -1,186 +1,267 @@
 ﻿<template>
 	<!-- BEGIN: Advanced Filters Popup -->
 	<teleport
-		:to="`#q-modal-${modalId}-header`"
-		:key="domKey"
-		v-if="(showPopup || showInline) && showHeader">
-		<div>
-			<h2
-				class="c-modal__header-title"
-				:id="`q-modal-${modalId}_title`">
-				{{ texts.advancedFiltersText }}
-			</h2>
-		</div>
-	</teleport>
-
-	<teleport
+		v-if="showPopup"
 		:to="`#q-modal-${modalId}-body`"
-		:key="domKey"
-		v-if="(showPopup || showInline) && showBody">
+		:key="domKey">
+		<q-table-static-filters
+			v-if="hasStaticFilters"
+			id="advanced-static-filters"
+			:active-filters="editedActiveFilters"
+			:group-filters="editedGroupFilters"
+			:date-formats="dateFormats"
+			:locale="locale"
+			:texts="texts"
+			@update:active-filters="setActiveFilters"
+			@update:group-filters="setGroupFilters" />
+
+		<q-divider v-if="hasStaticFilters" />
+
+		<q-row>
+			<q-col cols="auto">
+				<q-button
+					data-testid="filter-create"
+					:label="texts.createFilterText"
+					:title="texts.createFilterText"
+					@click="addFilter()">
+					<q-icon icon="filter" />
+				</q-button>
+			</q-col>
+
+			<q-col cols="auto">
+				<q-button
+					data-testid="filter-remove"
+					:disabled="editedFilters.length === 0"
+					:label="texts.removeAll"
+					:title="texts.removeAll"
+					@click="clearFilters">
+					<q-icon icon="delete" />
+				</q-button>
+			</q-col>
+		</q-row>
+
 		<template
-			v-for="(editFilter, filterIdx) in editFilters"
+			v-for="(filter, filterIdx) in editedFilters"
 			:key="filterIdx">
-			<div
-				v-if="isValidFilter(editFilter, searchableColumns)"
-				:id="'filter_' + filterIdx">
-				<hr v-if="filterIdx > 0" />
-				<div :class="['search-filter-form', { 'selected-filter': selectedFilterIdx === filterIdx }]">
-					<!-- BEGIN: Edit filter -->
-					<!-- BEGIN: Filter name, state, delete -->
-					<div>
-						<span>
-							<base-input-structure
-								:id="'filter_' + filterIdx + '_state'"
-								class="d-inline-flex valign-top">
-								<q-toggle-input
-									:id="'filter_' + filterIdx + '_state'"
-									v-model="editFilter.active"
-									:true-label="texts.activeText"
-									:false-label="texts.inactiveText"
-									style="display: inline" />
-							</base-input-structure>
-						</span>
-					</div>
-					<!-- END: Filter name, state, delete -->
-					<div class="search-filter-conds no-gutters">
-						<!-- BEGIN: Conditions -->
-						<template
-							v-for="(_, conditionIdx) in editFilter.conditions"
-							:key="conditionIdx">
-							<div
-								v-if="isValidFilterCondition(editFilter, conditionIdx, searchableColumns)"
-								class="row no-gutters mb-2">
-								<div class="col-12">
-									<label v-if="getValidFilterConditionRelativeIndex(editFilter, conditionIdx, searchableColumns) === 0">{{ texts.createFilterText }}</label>
-									<label v-else>{{ texts.orText }}</label>
-								</div>
-								<div class="filter-input-container">
-									<base-input-structure
-										:id="getFilterIdBase(filterIdx, conditionIdx) + '_field'"
-										data-control-type="field">
-										<q-select
-											v-model="editFilter.conditions[conditionIdx].field"
-											size="large"
-											:items="searchableColumnOptions"
-											:texts="texts"
-											@update:model-value="setFilterDefaultOperator(editFilter, conditionIdx, searchableColumns)" />
-									</base-input-structure>
-								</div>
+			<q-row
+				v-if="filterIdx > 0"
+				:gutter="6">
+				<q-col>
+					<q-badge
+						color="highlight"
+						size="large"
+						variant="bold"
+						:title="texts.andText">
+						{{ texts.andText }}
+					</q-badge>
+				</q-col>
+			</q-row>
 
-								<div class="filter-input-container">
-									<base-input-structure
-										:id="getFilterIdBase(filterIdx, conditionIdx) + '_operator'"
-										data-control-type="operator">
-										<q-select
-											v-model="editFilter.conditions[conditionIdx].operator"
-											size="large"
-											:items="getFilterOperatorOptions(editFilter, conditionIdx, filterOperators, searchableColumns)"
-											:texts="texts"
-											@update:model-value="setFilterDefaultValues(editFilter, conditionIdx, searchableColumns)" />
-									</base-input-structure>
-								</div>
+			<q-container
+				:id="`filter_${filterIdx}`"
+				:class="['q-table__filter', { 'q-table__filter-selected': selectedFilterIdx === filterIdx }]"
+				fluid>
+				<q-row :gutter="4">
+					<q-col>
+						<q-switch
+							:model-value="filter.active"
+							show-state-labels
+							:label="texts.filterStatus"
+							:true-label="texts.activeText"
+							:false-label="texts.inactiveText"
+							@update:model-value="setFilterStatus(filterIdx, filter, $event)" />
+					</q-col>
 
-								<div
-									class="filter-input-container"
-									:data-search-type="getFilterColumnFromName(editFilter, conditionIdx, searchableColumns)?.searchFieldType">
-									<base-input-structure
-										:id="getFilterIdBase(filterIdx, conditionIdx) + '_value_' + valueIdx"
-										data-control-type="value">
-										<component
-											:is="getFilterInputComponent(editFilter, conditionIdx, searchableColumns)"
-											v-for="(__, valueIdx) in getFilterValueCount(editFilter, conditionIdx, searchableColumns)"
-											:key="editFilter.conditions[conditionIdx].field + '_' + valueIdx"
-											:table-name="tableName + '_filters'"
-											:row-index="filterIdx"
-											:column-name="conditionIdx + '_' + valueIdx"
-											:options="{
-												...getFilterColumnFromName(editFilter, conditionIdx, searchableColumns),
-												...{ keyIsValue: true },
-												component: 'grid-base-input-structure',
-												errorDisplayType: 'text',
-												teleport: true
-											}"
-											:classes="[
-												getFilterColumnFromName(editFilter, conditionIdx, searchableColumns).currency !== undefined
-													? ''
-													: 'filter-input-field'
-											]"
-											:container-classes="['filter-value-container']"
-											size="large"
-											:value="editFilter.conditions[conditionIdx].values[valueIdx]"
-											:raw-value="editFilter.conditions[conditionIdx].values[valueIdx]"
-											:placeholder="getFilterPlaceholder(editFilter, conditionIdx, searchableColumns)"
-											:error-messages="getFilterValueErrorMessages(filterIdx, conditionIdx, valueIdx)"
-											:texts="texts"
-											:locale="locale"
-											@update="setFilterConditionValue(editFilter, conditionIdx, valueIdx, $event)">
-										</component>
-									</base-input-structure>
-								</div>
-
-								<div class="filter-input-container">
-									<q-button
-										:title="texts.removeConditionText"
-										:disabled="getValidFilterConditionCount(editFilter, searchableColumns) < 2"
-										@click="removeCondition(editFilter, conditionIdx)">
-										<q-icon icon="remove" />
-									</q-button>
-								</div>
-							</div>
-						</template>
-						<!-- END: Conditions -->
-					</div>
-					<div class="actions">
+					<q-col cols="auto">
 						<q-button
-							:label="texts.createConditionText"
-							:title="texts.createConditionText"
-							@click="addCondition(editFilter, editFilter.conditions.length, searchableColumns)">
-							<q-icon icon="add" />
-						</q-button>
-						<q-button
-							v-if="mode !== 'new'"
-							:title="texts.deleteFilterText"
-							:label="texts.deleteFilterText"
+							variant="ghost"
+							:title="texts.removeText"
 							@click="removeFilter(filterIdx)">
+							<q-icon icon="delete" />
+						</q-button>
+					</q-col>
+				</q-row>
+
+				<q-row :gutter="3">
+					<q-col data-control-type="field">
+						<q-select
+							:model-value="filter.field"
+							required
+							size="block"
+							:items="searchableColumnOptions"
+							:texts="texts"
+							@update:model-value="setFilterDefaultOperator(filterIdx, $event, filter)" />
+					</q-col>
+
+					<q-col data-control-type="operator">
+						<q-select
+							:model-value="filter.operator"
+							required
+							size="block"
+							:items="getFilterOperatorOptions(filter)"
+							:texts="texts"
+							@update:model-value="setFilterDefaultValues(filterIdx, $event, filter)" />
+					</q-col>
+
+					<q-col
+						class="q-table__filter-values"
+						data-control-type="value"
+						:data-search-type="getFilterColumnFromName(filter, searchableColumns)?.searchFieldType">
+						<template
+							v-for="(_, valueIdx) in getFilterValueCount(filter)"
+							:key="`${filter.field}_${valueIdx}`">
+							<component
+								:is="getFilterInputComponent(filter)"
+								size="block"
+								:container-classes="[{ 'q-field--invalid': getFilterValueErrorMessages(filterIdx, valueIdx).length > 0 }]"
+								:table-name="`${tableName}_filters`"
+								:column-name="`${filterIdx}_${valueIdx}`"
+								:row-index="filterIdx"
+								:options="getValueOptions(filter)"
+								:value="filter.values[valueIdx]"
+								:placeholder="getFilterPlaceholder(filter)"
+								:texts="texts"
+								:locale="locale"
+								@update="setFilterConditionValue(filterIdx, filter, valueIdx, $event)" />
+
+							<span
+								v-for="(errorMessage, idx) in getFilterValueErrorMessages(filterIdx, valueIdx)"
+								:key="idx"
+								class="q-table__filter-error">
+								<q-icon icon="exclamation-sign" />
+								{{ errorMessage }}
+							</span>
+						</template>
+					</q-col>
+
+					<q-col
+						v-if="filter.subFilters.length > 0"
+						cols="auto">
+						<q-button
+							:title="texts.removeConditionText"
+							@click="removeMainCondition(filterIdx)">
 							<q-icon icon="remove" />
 						</q-button>
-					</div>
-					<!-- END: Edit filter -->
-				</div>
-			</div>
+					</q-col>
+				</q-row>
+
+				<template
+					v-for="(subFilter, subFilterIdx) in filter.subFilters"
+					:key="subFilterIdx">
+					<q-row :gutter="2">
+						<q-col>
+							<q-badge
+								color="secondary"
+								size="large"
+								variant="bold"
+								:title="texts.orText">
+								{{ texts.orText }}
+							</q-badge>
+						</q-col>
+					</q-row>
+
+					<q-row :gutter="3">
+						<q-col data-control-type="field">
+							<q-select
+								:model-value="subFilter.field"
+								required
+								size="block"
+								:items="searchableColumnOptions"
+								:texts="texts"
+								@update:model-value="setFilterDefaultOperator(filterIdx, $event, subFilter)" />
+						</q-col>
+
+						<q-col data-control-type="operator">
+							<q-select
+								:model-value="subFilter.operator"
+								required
+								size="block"
+								:items="getFilterOperatorOptions(subFilter)"
+								:texts="texts"
+								@update:model-value="setFilterDefaultValues(filterIdx, $event, subFilter)" />
+						</q-col>
+
+						<q-col
+							class="q-table__filter-values"
+							data-control-type="value"
+							:data-search-type="getFilterColumnFromName(subFilter, searchableColumns)?.searchFieldType">
+							<template
+								v-for="(_, valueIdx) in getFilterValueCount(subFilter)"
+								:key="`${subFilter.field}_${valueIdx}`">
+								<component
+									:is="getFilterInputComponent(subFilter)"
+									size="block"
+									:container-classes="[{ 'q-field--invalid': getFilterValueErrorMessages(filterIdx, valueIdx, subFilterIdx).length > 0 }]"
+									:table-name="`${tableName}_filters`"
+									:column-name="`${subFilterIdx}_${valueIdx}`"
+									:row-index="subFilterIdx"
+									:options="getValueOptions(subFilter)"
+									:value="subFilter.values[valueIdx]"
+									:placeholder="getFilterPlaceholder(subFilter)"
+									:texts="texts"
+									:locale="locale"
+									@update="setFilterConditionValue(filterIdx, subFilter, valueIdx, $event)" />
+
+								<span
+									v-for="(errorMessage, idx) in getFilterValueErrorMessages(filterIdx, valueIdx, subFilterIdx)"
+									:key="idx"
+									class="q-table__filter-error">
+									<q-icon icon="exclamation-sign" />
+									{{ errorMessage }}
+								</span>
+							</template>
+						</q-col>
+
+						<q-col cols="auto">
+							<q-button
+								:title="texts.removeConditionText"
+								@click="removeSubFilter(filterIdx, subFilterIdx)">
+								<q-icon icon="remove" />
+							</q-button>
+						</q-col>
+					</q-row>
+				</template>
+
+				<q-row :gutter="4">
+					<q-col cols="auto">
+						<q-button
+							:title="texts.createConditionText"
+							:label="texts.createConditionText"
+							@click="addSubFilter(filterIdx)">
+							<q-icon icon="add" />
+						</q-button>
+					</q-col>
+				</q-row>
+			</q-container>
 		</template>
 	</teleport>
 
 	<teleport
+		v-if="showPopup"
 		:to="`#q-modal-${modalId}-footer`"
-		:key="domKey"
-		v-if="(showPopup || showInline) && showFooter">
-		<div class="actions float-right">
-			<q-button
-				variant="bold"
-				:title="mode === 'new' ? texts.applyFilterText : texts.applyFiltersText"
-				:label="mode === 'new' ? texts.applyFilterText : texts.applyFiltersText"
-				data-control-type="save"
-				@click="saveFilters(editFilters)">
-				<q-icon icon="ok" />
-			</q-button>
+		:key="domKey">
+		<q-row justify="end">
+			<q-col cols="auto">
+				<q-button
+					data-testid="filter-save"
+					variant="bold"
+					:title="texts.applyFiltersText"
+					:label="texts.applyFiltersText"
+					@click="saveFilters">
+					<q-icon icon="ok" />
+				</q-button>
+			</q-col>
 
-			<q-button
-				v-if="mode === 'editAll'"
-				:title="texts.deleteFiltersText"
-				:label="texts.deleteFiltersText"
-				@click="removeFilters">
-				<q-icon icon="remove" />
-			</q-button>
-
-			<q-button
-				@click="fnHidePopup()"
-				:title="texts.cancelText"
-				:label="texts.cancelText"
-				data-control-type="cancel">
-				<q-icon icon="cancel" />
-			</q-button>
-		</div>
+			<q-col cols="auto">
+				<q-button
+					data-testid="filter-cancel"
+					:title="texts.cancelText"
+					:label="texts.cancelText"
+					@click="fnHidePopup">
+					<q-icon icon="cancel" />
+				</q-button>
+			</q-col>
+		</q-row>
 	</teleport>
 	<!-- END: Advanced Filters Popup -->
 </template>
@@ -188,28 +269,19 @@
 <script>
 	import cloneDeep from 'lodash-es/cloneDeep'
 
+	import { deepUnwrap } from '@quidgest/clientapp/utils/deepUnwrap'
 	import searchFilterDataModule from '@/api/genio/searchFilterData.js'
 	import listFunctions from '@/mixins/listFunctions.js'
-	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'
 
 	export default {
 		name: 'QTableAdvancedFilters',
 
 		emits: [
-			'show-popup',
 			'hide-popup',
-			'update-config',
-			'add-advanced-filter',
-			'edit-advanced-filters',
-			'set-advanced-filter-state',
-			'remove-advanced-filter',
-			'remove-all-advanced-filters',
-			'remove-column-filter'
+			'update:activeFilters',
+			'update:groupFilters',
+			'update:filters'
 		],
-
-		components: {
-			BaseInputStructure
-		},
 
 		inheritAttrs: false,
 
@@ -255,6 +327,19 @@
 			},
 
 			/**
+			 * An object representing active filters, which can be a mixture of various filter types including boolean or date.
+			 */
+			activeFilters: Object,
+
+			/**
+			 * An array representing groups of filters that apply globally to the data set, affecting all columns.
+			 */
+			groupFilters: {
+				type: Array,
+				default: () => []
+			},
+
+			/**
 			 * An array of filter objects that represents the advanced filters' current configuration.
 			 */
 			filters: {
@@ -263,19 +348,19 @@
 			},
 
 			/**
+			 * Date formats
+			 */
+			dateFormats: {
+				type: Object,
+				default: () => ({})
+			},
+
+			/**
 			 * A set of predefined filter operators used in building the filter conditions (e.g., 'contains', 'equals').
 			 */
 			filterOperators: {
 				type: Object,
 				default: () => new searchFilterDataModule.SearchFilterConditionOperators()
-			},
-
-			/**
-			 * The mode of the popup, which can be 'new' for adding new filters or 'editAll' for modifying existing filters.
-			 */
-			mode: {
-				type: String,
-				default: 'new'
 			},
 
 			/**
@@ -291,20 +376,14 @@
 
 		data() {
 			return {
-				showPopup: false,
-				showInline: false,
-				showHeader: true,
-				showBody: true,
-				showFooter: true,
 				domKey: 0,
-				editFilters: [],
-				selectedFilterIdx: null,
-				validationErrorFieldIndex: []
+				showPopup: false,
+				editedActiveFilters: null,
+				editedGroupFilters: [],
+				editedFilters: [],
+				selectedFilterIdx: -1,
+				validationErrors: []
 			}
-		},
-
-		mounted() {
-			this.updateFilters()
 		},
 
 		computed: {
@@ -316,34 +395,53 @@
 				return listFunctions.getSearchableColumnOptions(this.searchableColumns)
 			},
 
-			validationErrorMessages() {
-				return this.validationErrorFieldIndex.map((x) => x.message)
+			hasStaticFilters() {
+				return this.groupFilters.length > 0 || Object.keys(this.activeFilters ?? {}).length > 0
 			}
 		},
 
 		methods: {
-			getFilterOperatorOptions: listFunctions.getFilterOperatorOptions,
-			isValidFilterCondition: listFunctions.isValidFilterCondition,
-			isValidFilter: listFunctions.isValidFilter,
-			getValidFilterConditionRelativeIndex: listFunctions.getValidFilterConditionRelativeIndex,
-			getValidFilterConditionCount: listFunctions.getValidFilterConditionCount,
+			fnShowContent() {
+				this.updateFilters()
 
-			//Show popup
-			fnShowPopup() {
-				this.$emit('show-popup', this.modalId)
 				this.$nextTick().then(() => {
 					this.showPopup = true
 					this.domKey++
-					this.initValidation()
-					if (this.mode === 'new') {
-						this.selectNewFilter()
-					}
 				})
 			},
 
-			//Hide popup
 			fnHidePopup() {
+				this.showPopup = false
 				this.$emit('hide-popup', this.modalId)
+			},
+
+			/**
+			 * Gets the items for the operator dropdown of the specified filter.
+			 * @param filter The filter
+			 * @returns A list with the items.
+			 */
+			getFilterOperatorOptions(filter) {
+				return listFunctions.getFilterOperatorOptions(filter, this.filterOperators, this.searchableColumns)
+			},
+
+			/**
+			 * Gets the options to pass to the filter value component.
+			 * @param filter The filter
+			 * @returns An object with the options for the filter value.
+			 */
+			getValueOptions(filter) {
+				const column = this.getFilterColumnFromName(filter)
+
+				return {
+					array: this.getColumnArray(filter),
+					currencySymbol: column?.currencySymbol,
+					decimalPlaces: column?.decimalPlaces,
+					maxDigits: column?.maxDigits,
+					numberFormat: column?.numberFormat,
+					format: column?.format,
+					dateTimeType: column?.dateTimeType,
+					teleport: true
+				}
 			},
 
 			/**
@@ -357,333 +455,317 @@
 			/**
 			 * Get column of condition by index
 			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
-			 * @param {Array} searchableColumns
 			 * @returns {Object}
 			 */
-			getFilterColumnFromName(filter, conditionIdx, searchableColumns) {
-				return listFunctions.getFilterColumnFromName(filter, conditionIdx, searchableColumns)
-			},
-
-			/**
-			 * Get operators for condition by index
-			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
-			 * @returns {Object}
-			 */
-			getFilterOperators(filter, conditionIdx, searchableColumns) {
-				return listFunctions.getFilterOperators(this.filterOperators, filter, conditionIdx, searchableColumns)
+			getFilterColumnFromName(filter) {
+				return listFunctions.getColumnFromTableColumnName(this.searchableColumns, filter.field)
 			},
 
 			/**
 			 * Get number of values for condition by index
 			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
 			 * @returns {Object}
 			 */
-			getFilterValueCount(filter, conditionIdx, searchableColumns) {
-				return listFunctions.getFilterValueCount(this.filterOperators, filter, conditionIdx, searchableColumns)
+			getFilterValueCount(filter) {
+				return listFunctions.getFilterValueCount(this.filterOperators, filter, this.searchableColumns)
 			},
 
 			/**
 			 * Get input component for condition by index
 			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
 			 * @returns {string}
 			 */
-			getFilterInputComponent(filter, conditionIdx, searchableColumns) {
-				return listFunctions.getFilterInputComponent(this.filterOperators, filter, conditionIdx, searchableColumns)
+			getFilterInputComponent(filter) {
+				return listFunctions.getFilterInputComponent(this.filterOperators, filter, this.searchableColumns)
 			},
 
 			/**
 			 * Get placeholder for condition input by index
 			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
 			 * @returns {string}
 			 */
-			getFilterPlaceholder(filter, conditionIdx, searchableColumns) {
-				return listFunctions.getFilterPlaceholder(this.filterOperators, filter, conditionIdx, searchableColumns)
+			getFilterPlaceholder(filter) {
+				return listFunctions.getFilterPlaceholder(this.filterOperators, filter, this.searchableColumns)
+			},
+
+			/**
+			 * Sets the status of the filter (active/inactive)
+			 * @param {number} filterIdx
+			 * @param {Object} filter
+			 * @param {boolean} value
+			 */
+			setFilterStatus(filterIdx, filter, value) {
+				filter.active = value
+				// Also set the sub filters to active/inactive
+				for (const subFilter of filter.subFilters)
+					subFilter.active = value
+
+				this.selectFilter(filterIdx)
 			},
 
 			/**
 			 * Select default operator for condition by index
+			 * @param {number} filterIdx
+			 * @param {string} field
 			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
 			 */
-			setFilterDefaultOperator(filter, conditionIdx, searchableColumns) {
-				return listFunctions.setFilterDefaultOperator(this.filterOperators, filter, conditionIdx, searchableColumns)
+			setFilterDefaultOperator(filterIdx, field, filter) {
+				filter.field = field ?? ''
+				listFunctions.setFilterDefaultOperator(this.filterOperators, filter, this.searchableColumns)
+				this.selectFilter(filterIdx)
 			},
 
 			/**
 			 * Set default values for condition by index
+			 * @param {number} filterIdx
+			 * @param {string} operator
 			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
 			 */
-			setFilterDefaultValues(filter, conditionIdx, searchableColumns) {
-				return listFunctions.setFilterDefaultValues(this.filterOperators, filter, conditionIdx, searchableColumns)
+			setFilterDefaultValues(filterIdx, operator, filter) {
+				filter.operator = operator ?? ''
+				listFunctions.setFilterDefaultValues(this.filterOperators, filter, this.searchableColumns)
+				this.selectFilter(filterIdx)
 			},
 
 			/**
 			 * Set value of condition by index
+			 * @param {number} filterIdx
 			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
 			 * @param {number} valueIdx : index
 			 * @param {object} value : value
 			 */
-			setFilterConditionValue(filter, conditionIdx, valueIdx, value) {
-				return listFunctions.setFilterConditionValue(filter, conditionIdx, valueIdx, value)
+			setFilterConditionValue(filterIdx, filter, valueIdx, value) {
+				listFunctions.setFilterConditionValue(filter, valueIdx, value)
+				this.selectFilter(filterIdx)
 			},
 
 			/**
 			 * Set filter data in internal property for editing
 			 */
 			updateFilters() {
-				if (this.mode === 'new') {
-					this.selectNewFilter()
-				} else {
-					this.editFilters = cloneDeep(this.filters)
-					if (this.signal.columnFilter)
-						this.editFilters.push(this.signal.columnFilter)
+				this.editedFilters = cloneDeep(this.filters.toReversed())
+				this.validationErrors = []
+
+				if (this.hasStaticFilters)
+				{
+					this.editedActiveFilters = cloneDeep(this.activeFilters)
+					this.editedGroupFilters = cloneDeep(this.groupFilters)
 				}
 			},
 
 			/**
-			 * Initialize new filter
+			 * Clears all search filters
 			 */
-			initNewFilter() {
-				this.editFilters = []
-				//Create new filter
-				this.editFilters.push(listFunctions.searchFilter('', true, []))
-				//Add first condition (each filter must have at least 1 condition)
-				this.addCondition(this.editFilters[0], 0, this.searchableColumns)
+			clearFilters() {
+				this.editedFilters = []
+				this.selectFilter(-1)
 			},
 
 			/**
 			 * Save filters
-			 * @param {Array} filters
 			 */
-			saveFilters(filters) {
-				//Validate filters
-				this.validationErrorFieldIndex = this.getValidationErrorFieldIndex(filters, this.columns)
-				//Not all filters are valid, don't save
-				if (this.validationErrorFieldIndex.length > 0) {
+			saveFilters() {
+				this.validateFilters()
+
+				// Not all filters are valid, don't save
+				if (this.validationErrors.length > 0)
 					return
-				}
 
-				//If there is a column filter being turned into an advanced filter, remove the column filter
-				if (this.signal.columnName) {
-					this.$emit('remove-column-filter', this.signal.columnName)
-				}
+				this.$emit('update:filters', this.editedFilters.toReversed())
 
-				//Filters are valid, save
-				//If adding new filter
-				if (this.mode === 'new') {
-					this.$emit('add-advanced-filter', filters[0])
-					this.selectNewFilter()
+				if (this.hasStaticFilters)
+				{
+					this.$emit('update:activeFilters', this.editedActiveFilters)
+					this.$emit('update:groupFilters', this.editedGroupFilters)
 				}
-				//If saving existing filters
-				else {
-					this.$emit('edit-advanced-filters', filters)
-				}
-
-				this.$emit('update-config')
 
 				this.fnHidePopup()
 			},
 
 			/**
-			 * Set advanced filter state
-			 * @param {number} selectedFilterIdx : index
-			 * @param {boolean} active : active state
+			 * Set the default value for the operator select.
+			 * @param {object} filter The filter
 			 */
-			setFilterState(selectedFilterIdx, active) {
-				//Set filter state
-				this.$emit('set-advanced-filter-state', [selectedFilterIdx, active])
-
-				this.selectNewFilter()
+			setDefaultOperator(filter) {
+				const operators = this.getFilterOperatorOptions(filter, this.filterOperators, this.searchableColumns)
+				if (operators.length > 0)
+					filter.operator = operators[0].key
 			},
 
 			/**
-			 * Remove advanced filter
-			 * @param {number} selectedFilterIdx : index
+			 * Gets the enumeration values associated to the column of the specified filter
+			 * @param filter The filter
+			 * @returns A list with the enumeration values associated to the column
 			 */
-			removeFilter(selectedFilterIdx) {
-				if (selectedFilterIdx === undefined || selectedFilterIdx === null) {
+			getColumnArray(filter) {
+				const column = this.getFilterColumnFromName(filter)
+				return deepUnwrap(column?.array ?? [])
+			},
+
+			/**
+			 * Sets the active filters
+			 * @param filters The value of the filters
+			 */
+			setActiveFilters(filters) {
+				this.editedActiveFilters = filters
+			},
+
+			/**
+			 * Sets the group filters
+			 * @param filters The value of the filters
+			 */
+			setGroupFilters(filters) {
+				this.editedGroupFilters = filters
+			},
+
+			/**
+			 * Remove filter
+			 * @param {number} filterIdx The index of the filter
+			 */
+			removeFilter(filterIdx) {
+				this.editedFilters.splice(filterIdx, 1)
+				this.selectFilter(-1)
+			},
+
+			/**
+			 * Remove the first condition of the filter
+			 * @param {number} filterIdx The index of the filter
+			 */
+			removeMainCondition(filterIdx) {
+				this.editedFilters[filterIdx] = listFunctions.removeFirstFilterCondition(this.editedFilters[filterIdx])
+				this.selectFilter(filterIdx)
+			},
+
+			/**
+			 * Add new filter
+			 * @param {string} column The column to use in the filter
+			 */
+			async addFilter(column) {
+				const filter = listFunctions.searchFilter('', true, column || listFunctions.columnFullName(this.searchableColumns[0]), '', [])
+				this.editedFilters.unshift(filter)
+				this.setDefaultOperator(filter)
+				listFunctions.setFilterDefaultValues(this.filterOperators, filter, this.searchableColumns)
+
+				await this.$nextTick()
+				this.selectFilter(0)
+			},
+
+			/**
+			 * Remove sub filter
+			 * @param {number} filterIdx The index of the filter
+			 * @param {number} subFilterIdx The index of the sub filter
+			 */
+			removeSubFilter(filterIdx, subFilterIdx) {
+				this.editedFilters[filterIdx].subFilters.splice(subFilterIdx, 1)
+				this.selectFilter(filterIdx)
+			},
+
+			/**
+			 * Add new sub filter
+			 * @param {number} filterIdx The index of the filter
+			 */
+			addSubFilter(filterIdx) {
+				const filter = listFunctions.searchFilter('', true, listFunctions.columnFullName(this.searchableColumns[0]), '', [])
+				this.editedFilters[filterIdx].subFilters.push(filter)
+				this.setDefaultOperator(filter)
+				filter.useOr = true
+				listFunctions.setFilterDefaultValues(this.filterOperators, filter, this.searchableColumns)
+				this.selectFilter(filterIdx)
+			},
+
+			/**
+			 * Set the currently selected filter
+			 * @param {number} filterIdx The index of the filter
+			 */
+			selectFilter(filterIdx) {
+				if (this.selectedFilterIdx === filterIdx)
 					return
-				}
 
-				this.editFilters.splice(selectedFilterIdx, 1)
+				this.selectedFilterIdx = filterIdx
+
+				if (this.selectedFilterIdx < 0 || this.selectedFilterIdx > this.editedFilters.length)
+					return
+
+				setTimeout(() => {
+					// Scroll to filter controls
+					const filterForm = document.getElementById(`filter_${this.selectedFilterIdx}`)
+					if (filterForm)
+						filterForm.scrollIntoView({ block: 'center', inline: 'nearest' })
+				}, 0)
 			},
 
 			/**
-			 * Remove filters
-			 * @param {Array} filters
+			 * Gets the identifier of the filter
+			 * @param filterIdx The index of the filter
+			 * @param valueIdx The index of the filter value
+			 * @param subFilterIdx The index of the sub filter, in case it's one
 			 */
-			removeFilters() {
-				this.$emit('remove-all-advanced-filters')
-				this.$emit('update-config')
-				this.fnHidePopup()
+			getFilterId(filterIdx, valueIdx, subFilterIdx = -1) {
+				return `${this.tableName}_filters_${filterIdx}${subFilterIdx > -1 ? '_' + subFilterIdx : ''}_${valueIdx}`
 			},
 
 			/**
-			 * Add condition at index
-			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
-			 * @param {Array} searchableColumns
+			 * Validates the specified filter
+			 * @param filter The filter
+			 * @param filterIdx The index of the filter
+			 * @param subFilterIdx The index of the sub filter, in case it's one
 			 */
-			addCondition(filter, conditionIdx, searchableColumns) {
-				listFunctions.searchFilterAddCondition(
-					filter,
-					conditionIdx,
-					listFunctions.searchFilterCondition('', true, listFunctions.columnFullName(this.searchableColumns[0]), '', [])
-				)
-				this.setFilterDefaultOperator(filter, conditionIdx, searchableColumns)
-			},
+			validateFilter(filter, filterIdx, subFilterIdx) {
+				const valueCount = this.getFilterValueCount(filter)
+				const conditionStates = listFunctions.filterValidate(filter, this.columns, valueCount)
 
-			/**
-			 * Remove condition at index
-			 * @param {Object} filter
-			 * @param {number} conditionIdx : index
-			 */
-			removeCondition(filter, conditionIdx) {
-				listFunctions.searchFilterRemoveCondition(filter, conditionIdx)
-			},
-
-			/**
-			 * Get formatted string representing filter name for a table cell.
-			 * @param table {Object}
-			 * @param row {Object}
-			 * @param column {Object}
-			 * @param options {Object}
-			 * @returns String
-			 */
-			filterNameDisplayCell(table, row, column, options) {
-				const value = listFunctions.textDisplayCell(table, row, column, options)
-				if (value.length > 0) {
-					return value
-				}
-				return listFunctions.getFilterName(this.filterOperators, row.Fields, this.searchableColumns, this.texts.orText)
-			},
-
-			/**
-			 * Select filter to edit
-			 * @param {string} rowKey : rowKey
-			 * @returns {string}
-			 */
-			selectFilter(rowKey) {
-				this.editFilter = cloneDeep(this.filters[rowKey])
-				this.selectedFilterIdx = rowKey
-
-				this.$nextTick().then(() => {
-					//Scroll to filter controls
-					const filterForm = document.getElementById('filter_' + this.selectedFilterIdx)
-					if (filterForm) {
-						filterForm.scrollIntoView({ block: 'end', inline: 'nearest' })
-					}
-				})
-			},
-
-			/**
-			 * Unselect filters and set new filter as filter to edit
-			 * @returns {string}
-			 */
-			selectNewFilter() {
-				this.selectedFilterIdx = null
-				this.initNewFilter()
-			},
-
-			/**
-			 * Custom actions
-			 * @param {Object} emitAction
-			 * @returns {string}
-			 */
-			executeAction(emitAction) {
-				if (emitAction.id === 'insert') {
-					this.selectNewFilter()
-				}
-			},
-
-			/**
-			 * Initialize validation
-			 */
-			initValidation() {
-				this.validationErrorFieldIndex = []
-			},
-
-			/**
-			 * Get validation error information
-			 * @param {Array} filters
-			 * @param {Array} columns
-			 * @returns {Array}
-			 */
-			getValidationErrorFieldIndex(filters, columns) {
-				const validationErrorFieldIndex = []
-				let conditionStates = []
-				//Iterate filters
-				for (let filterIdx = 0; filterIdx < filters.length; filterIdx++) {
-					const filter = filters[filterIdx]
-					conditionStates = listFunctions.filterValidate(filter, columns)
-					//Iterate filter conditions
-					for (const conditionIdx in conditionStates) {
-						const conditionState = conditionStates[conditionIdx]
-						if (conditionState.State !== 'VALID') {
-							//Iterate values
-							for (const valueIdx in conditionState.ValueStates) {
-								const valueState = conditionState.ValueStates[valueIdx]
-								if (valueState !== 'VALID') {
-									validationErrorFieldIndex.push({
-										elemId: this.tableName + '_filters_' + filterIdx + '_' + conditionIdx + '_' + valueIdx,
-										fieldType: conditionState.Type,
-										message: conditionState.Label + ' ' + this.texts.isRequired
-									})
-								}
+				//Iterate filter conditions
+				for (const conditionState of conditionStates)
+				{
+					if (conditionState.state !== 'VALID')
+					{
+						//Iterate values
+						for (const valueIdx in conditionState.valueStates)
+						{
+							const valueState = conditionState.valueStates[valueIdx]
+							if (valueState !== 'VALID')
+							{
+								this.validationErrors.push({
+									id: this.getFilterId(filterIdx, valueIdx, subFilterIdx),
+									fieldType: conditionState.type,
+									message: `${conditionState.label} ${this.texts.isRequired}`
+								})
 							}
 						}
 					}
 				}
-				return validationErrorFieldIndex
+			},
+
+			/**
+			 * Get validation error information
+			 * @returns {Array}
+			 */
+			validateFilters() {
+				this.validationErrors = []
+
+				for (let filterIdx = 0; filterIdx < this.editedFilters.length; filterIdx++)
+				{
+					const editedFilter = this.editedFilters[filterIdx]
+					this.validateFilter(editedFilter, filterIdx)
+
+					for (let subFilterIdx = 0; subFilterIdx < editedFilter.subFilters.length; subFilterIdx++)
+					{
+						const filter = editedFilter.subFilters[subFilterIdx]
+						this.validateFilter(filter, filterIdx, subFilterIdx)
+					}
+				}
 			},
 
 			/**
 			 * Get value field error messages
 			 * @param {number} filterIdx
-			 * @param {number} conditionIdx
 			 * @param {number} valueIdx
+			 * @param {number} subFilterIdx
 			 * @returns {Array}
 			 */
-			getFilterValueErrorMessages(filterIdx, conditionIdx, valueIdx) {
-				const errors = this.validationErrorFieldIndex.filter(
-					(error) => error.elemId === this.tableName + '_filters_' + filterIdx + '_' + conditionIdx + '_' + valueIdx
-				)
+			getFilterValueErrorMessages(filterIdx, valueIdx, subFilterIdx) {
+				const errors = this.validationErrors.filter((error) => error.id === this.getFilterId(filterIdx, valueIdx, subFilterIdx))
 				return errors.map((error) => error.message)
-			},
-
-			/**
-			 * Focus on a field by error index
-			 * @param {string} id
-			 */
-			focusErrorField(id) {
-				const fieldInfo = this.validationErrorFieldIndex[id]
-				if (!fieldInfo) return
-
-				let elemId = fieldInfo.elemId
-				if (fieldInfo.fieldType === 'Date') {
-					elemId = 'dp-input-' + elemId
-				}
-				const elem = document.getElementById(elemId)
-				if (!elem) return
-
-				elem.focus()
-			},
-
-			/**
-			 * Get the base part of a filter control ID.
-			 * @param {number} filterIdx
-			 * @param {number} conditionIdx
-			 * @returns {string}
-			 */
-			getFilterIdBase(filterIdx, conditionIdx) {
-				return 'filter_' + filterIdx + '_' + conditionIdx
 			}
 		},
 
@@ -692,41 +774,29 @@
 				handler(newValue) {
 					for (const key in newValue) {
 						switch (key) {
-							case 'show':
-								if (newValue.show) {
-									this.fnShowPopup()
-								}
+							case 'showInline':
+								if (newValue.showInline)
+									this.fnShowContent()
 								break
 							case 'selectedFilterIdx':
-								if (newValue.selectedFilterIdx !== null) {
-									if (newValue.selectedFilterIdx < 0) {
-										this.selectFilter(this.editFilters.length + newValue.selectedFilterIdx)
-									} else {
-										this.selectFilter(newValue.selectedFilterIdx)
-									}
+								if (typeof newValue.selectedFilterIdx === 'number')
+								{
+									const reversedIndex = this.filters.length - 1 - newValue.selectedFilterIdx
+									this.selectFilter(reversedIndex)
 								}
+								else
+									this.selectFilter(-1)
 								break
-							case 'columnFilter':
-								this.updateFilters()
-								break;
-							default:
-								if (['showInline', 'showHeader', 'showBody', 'showFooter'].includes(key)) {
-									this[key] = newValue[key]
+							case 'columnName':
+								if (typeof newValue.columnName === 'string')
+								{
+									this.$nextTick().then(() => {
+										this.updateFilters()
+										this.addFilter(newValue.columnName)
+									})
 								}
 								break
 						}
-					}
-					if (!this.editFilters) {
-						this.selectNewFilter()
-					}
-				},
-				deep: true
-			},
-
-			searchableColumns: {
-				handler() {
-					if (this.mode === 'new') {
-						this.selectNewFilter()
 					}
 				},
 				deep: true
@@ -736,16 +806,7 @@
 				handler() {
 					this.updateFilters()
 				},
-				deep: true
-			},
-
-			showInline: {
-				handler(newValue) {
-					if (newValue === true) {
-						this.initValidation()
-					}
-				},
-				deep: true
+				immediate: true
 			}
 		}
 	}

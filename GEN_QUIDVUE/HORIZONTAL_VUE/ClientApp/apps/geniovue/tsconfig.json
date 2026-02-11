@@ -28,7 +28,7 @@
     "src/**/*",
     "src/**/*.vue",
     "src/assets/config/Layoutconfig.json",
-    "test",
+    "tests/**/*",
     "svgstore.config.ts"
   ],
   "exclude": []

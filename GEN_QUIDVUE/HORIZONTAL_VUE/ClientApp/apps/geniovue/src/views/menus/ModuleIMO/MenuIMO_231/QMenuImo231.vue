@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE IMO_Menu_231]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 2,
@@ -161,6 +163,7 @@
 								field: 'ACTIVE',
 								label: computed(() => this.Resources.ACTIVE03270),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -170,6 +173,7 @@
 								label: computed(() => this.Resources.NUMERIC19292),
 								dataLength: 3,
 								scrollData: 3,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -179,6 +183,7 @@
 								label: computed(() => this.Resources.ALPHABETIC_232435),
 								dataLength: 2,
 								scrollData: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -188,6 +193,7 @@
 								label: computed(() => this.Resources.ALPHABETIC_316640),
 								dataLength: 3,
 								scrollData: 3,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -203,8 +209,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -305,6 +310,7 @@
 							rowClickAction: {
 								id: 'RCA_IMO_2311',
 								name: 'menu-IMO_2311',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -335,6 +341,7 @@
 						uuid: '92e9ac39-cb12-4a4f-9153-c5e720ca8e78',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

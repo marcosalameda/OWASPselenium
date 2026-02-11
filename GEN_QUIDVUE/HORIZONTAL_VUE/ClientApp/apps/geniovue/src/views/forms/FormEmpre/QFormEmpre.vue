@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,25 +94,27 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="EMPRE"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.EMPRE___PSEUDNOVOGR02.isVisible">
-					<q-control-wrapper
-						v-show="controls.EMPRE___PSEUDNOVOGR02.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.EMPRE___PSEUDNOVOGR02.isVisible">
+					<q-col
+						v-if="controls.EMPRE___PSEUDNOVOGR02.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.EMPRE___PSEUDNOVOGR02.isVisible"
 							id="EMPRE___PSEUDNOVOGR02"
 							v-bind="controls.EMPRE___PSEUDNOVOGR02"
 							:is-visible="controls.EMPRE___PSEUDNOVOGR02.isVisible">
 							<!-- Start EMPRE___PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.EMPRE___CMPNYLOGO____.isVisible">
-								<q-control-wrapper
-									v-show="controls.EMPRE___CMPNYLOGO____.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EMPRE___CMPNYLOGO____.isVisible">
+								<q-col
+									v-if="controls.EMPRE___CMPNYLOGO____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EMPRE___CMPNYLOGO____.isVisible"
 										class="q-image"
 										v-bind="controls.EMPRE___CMPNYLOGO____"
 										v-on="controls.EMPRE___CMPNYLOGO____.handlers"
@@ -116,26 +126,28 @@
 											v-bind="controls.EMPRE___CMPNYLOGO____.props"
 											v-on="controls.EMPRE___CMPNYLOGO____.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End EMPRE___PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.EMPRE___PSEUDNOVOGR01.isVisible">
-					<q-control-wrapper
-						v-show="controls.EMPRE___PSEUDNOVOGR01.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EMPRE___PSEUDNOVOGR01.isVisible">
+					<q-col
+						v-if="controls.EMPRE___PSEUDNOVOGR01.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.EMPRE___PSEUDNOVOGR01.isVisible"
 							id="EMPRE___PSEUDNOVOGR01"
 							v-bind="controls.EMPRE___PSEUDNOVOGR01"
 							:is-visible="controls.EMPRE___PSEUDNOVOGR01.isVisible">
 							<!-- Start EMPRE___PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.EMPRE___CMPNYACRONYM_.isVisible">
-								<q-control-wrapper
-									v-show="controls.EMPRE___CMPNYACRONYM_.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EMPRE___CMPNYACRONYM_.isVisible">
+								<q-col
+									v-if="controls.EMPRE___CMPNYACRONYM_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EMPRE___CMPNYACRONYM_.isVisible"
 										class="i-text"
 										v-bind="controls.EMPRE___CMPNYACRONYM_"
 										v-on="controls.EMPRE___CMPNYACRONYM_.handlers"
@@ -147,13 +159,14 @@
 											@blur="onBlur(controls.EMPRE___CMPNYACRONYM_, model.ValAcronym.value)"
 											@change="model.ValAcronym.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.EMPRE___CMPNYNIF_____.isVisible">
-								<q-control-wrapper
-									v-show="controls.EMPRE___CMPNYNIF_____.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.EMPRE___CMPNYNIF_____.isVisible">
+								<q-col
+									v-if="controls.EMPRE___CMPNYNIF_____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EMPRE___CMPNYNIF_____.isVisible"
 										class="i-text"
 										v-bind="controls.EMPRE___CMPNYNIF_____"
 										v-on="controls.EMPRE___CMPNYNIF_____.handlers"
@@ -165,13 +178,14 @@
 											@blur="onBlur(controls.EMPRE___CMPNYNIF_____, model.ValNif.value)"
 											@change="model.ValNif.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.EMPRE___CMPNYTELEPHON.isVisible">
-								<q-control-wrapper
-									v-show="controls.EMPRE___CMPNYTELEPHON.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.EMPRE___CMPNYTELEPHON.isVisible">
+								<q-col
+									v-if="controls.EMPRE___CMPNYTELEPHON.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EMPRE___CMPNYTELEPHON.isVisible"
 										class="i-text"
 										v-bind="controls.EMPRE___CMPNYTELEPHON"
 										v-on="controls.EMPRE___CMPNYTELEPHON.handlers"
@@ -183,13 +197,14 @@
 											@blur="onBlur(controls.EMPRE___CMPNYTELEPHON, model.ValTelephon.value)"
 											@change="model.ValTelephon.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.EMPRE___CMPNYEMAIL___.isVisible">
-								<q-control-wrapper
-									v-show="controls.EMPRE___CMPNYEMAIL___.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.EMPRE___CMPNYEMAIL___.isVisible">
+								<q-col
+									v-if="controls.EMPRE___CMPNYEMAIL___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EMPRE___CMPNYEMAIL___.isVisible"
 										class="i-text"
 										v-bind="controls.EMPRE___CMPNYEMAIL___"
 										v-on="controls.EMPRE___CMPNYEMAIL___.handlers"
@@ -201,17 +216,18 @@
 											@blur="onBlur(controls.EMPRE___CMPNYEMAIL___, model.ValEmail.value)"
 											@change="model.ValEmail.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End EMPRE___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.EMPRE___CMPNYDESIGNAT.isVisible">
-					<q-control-wrapper
-						v-show="controls.EMPRE___CMPNYDESIGNAT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EMPRE___CMPNYDESIGNAT.isVisible">
+					<q-col
+						v-if="controls.EMPRE___CMPNYDESIGNAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EMPRE___CMPNYDESIGNAT.isVisible"
 							class="i-text"
 							v-bind="controls.EMPRE___CMPNYDESIGNAT"
 							v-on="controls.EMPRE___CMPNYDESIGNAT.handlers"
@@ -223,24 +239,22 @@
 								@blur="onBlur(controls.EMPRE___CMPNYDESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EMPRE___PSEUDNOVOGR03.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EMPRE___PSEUDNOVOGR03.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EMPRE___PSEUDNOVOGR03.isVisible">
+					<q-col v-if="controls.EMPRE___PSEUDNOVOGR03.isVisible">
 						<q-group-box-container
+							v-if="controls.EMPRE___PSEUDNOVOGR03.isVisible"
 							id="EMPRE___PSEUDNOVOGR03"
 							v-bind="controls.EMPRE___PSEUDNOVOGR03"
 							:is-visible="controls.EMPRE___PSEUDNOVOGR03.isVisible">
 							<!-- Start EMPRE___PSEUDNOVOGR03 -->
-							<q-row-container v-show="controls.EMPRE___CNTRYCOUNTRY_.isVisible">
-								<q-control-wrapper
-									v-show="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible">
+								<q-col
+									v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.EMPRE___CNTRYCOUNTRY_.isVisible"
 										class="i-text"
 										v-bind="controls.EMPRE___CNTRYCOUNTRY_"
 										v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers"
@@ -256,17 +270,18 @@
 											v-bind="controls.EMPRE___CNTRYCOUNTRY_.seeMoreParams"
 											v-on="controls.EMPRE___CNTRYCOUNTRY_.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End EMPRE___PSEUDNOVOGR03 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.EMPRE___CMPNYQTDPESSO.isVisible">
-					<q-control-wrapper
-						v-show="controls.EMPRE___CMPNYQTDPESSO.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible">
+					<q-col
+						v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.EMPRE___CMPNYQTDPESSO.isVisible"
 							class="i-text"
 							v-bind="controls.EMPRE___CMPNYQTDPESSO"
 							v-on="controls.EMPRE___CMPNYQTDPESSO.handlers"
@@ -278,15 +293,12 @@
 								v-bind="controls.EMPRE___CMPNYQTDPESSO.props"
 								@update:model-value="model.ValQtdpesso.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.EMPRE___CMPNYHEADLOC_.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.EMPRE___CMPNYHEADLOC_.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.EMPRE___CMPNYHEADLOC_.isVisible">
+					<q-col v-if="controls.EMPRE___CMPNYHEADLOC_.isVisible">
 						<base-input-structure
+							v-if="controls.EMPRE___CMPNYHEADLOC_.isVisible"
 							class="i-text"
 							v-bind="controls.EMPRE___CMPNYHEADLOC_"
 							v-on="controls.EMPRE___CMPNYHEADLOC_.handlers"
@@ -298,10 +310,10 @@
 								@blur="onBlur(controls.EMPRE___CMPNYHEADLOC_, model.ValHeadloc.value)"
 								@change="model.ValHeadloc.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -310,7 +322,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -319,6 +331,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -330,7 +343,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -542,7 +555,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -694,7 +711,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
-						labelId: 'label_EMPRE___CMPNYDESIGNAT',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -710,7 +726,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 15,
-						labelId: 'label_EMPRE___CMPNYACRONYM_',
 						controlLimits: [
 						],
 					}, this),
@@ -725,7 +740,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 15,
-						labelId: 'label_EMPRE___CMPNYNIF_____',
 						controlLimits: [
 						],
 					}, this),
@@ -740,7 +754,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 20,
-						labelId: 'label_EMPRE___CMPNYTELEPHON',
 						controlLimits: [
 						],
 					}, this),
@@ -755,7 +768,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'EMPRE___PSEUDNOVOGR01',
 						maxLength: 254,
-						labelId: 'label_EMPRE___CMPNYEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -959,6 +971,10 @@
 										rawValue: true,
 										isMapped: false
 									},
+									allowCenterControl: {
+										rawValue: true,
+										isMapped: false
+									},
 									backgroundOverlay: {
 										rawValue: 'OpenStreetMap',
 										isMapped: false
@@ -1042,8 +1058,6 @@
 			// Called before the route that renders this component is confirmed.
 			// Does NOT have access to `this` component instance, because
 			// it has not been created yet when this guard is called!
-
-			to.params.isPopup = 'true'
 
 			next((vm) => {
 				vm.initFormProperties(to)
@@ -1136,16 +1150,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1189,16 +1217,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1350,6 +1392,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS EMPRE]/
 // eslint-disable-next-line

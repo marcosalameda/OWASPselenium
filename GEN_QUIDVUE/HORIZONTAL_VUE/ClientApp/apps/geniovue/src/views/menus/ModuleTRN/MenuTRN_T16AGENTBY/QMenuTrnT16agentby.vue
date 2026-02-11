@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TRN_Menu_T16AGENTBY]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.BIRTHDATE22743),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -171,6 +174,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 4,
@@ -182,6 +186,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -191,6 +196,7 @@
 								label: computed(() => this.Resources.TELEPHONE28697),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -211,8 +217,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -228,6 +233,7 @@
 							rowClickAction: {
 								id: 'RCA_TRN_T16PROPERTYBYAGENT',
 								name: 'menu-TRN_T16PROPERTYBYAGENT',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -252,6 +258,7 @@
 						uuid: '58e9b1d8-dd6b-4d74-8e18-1d2b6de442c5',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

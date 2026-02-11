@@ -54,17 +54,6 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('pesso.codpesso', this.ValCodpesso, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
-		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodregia',
-			originId: 'ValCodregia',
-			area: 'PESSO',
-			field: 'CODREGIA',
-			relatedArea: 'REGI1',
-			isFixed: true,
-			description: '',
-		}).cloneFrom(values?.ValCodregia))
-		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pesso.codregia', this.ValCodregia, newValue, oldValue)))
-
 		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodcntry',
 			originId: 'ValCodcntry',
@@ -86,6 +75,17 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.COMPANY_PARENTS01581),
 		}).cloneFrom(values?.ValCodpaise))
 		this.stopWatchers.push(watch(() => this.ValCodpaise.value, (newValue, oldValue) => this.onUpdate('pesso.codpaise', this.ValCodpaise, newValue, oldValue)))
+
+		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodregia',
+			originId: 'ValCodregia',
+			area: 'PESSO',
+			field: 'CODREGIA',
+			relatedArea: 'REGI1',
+			isFixed: true,
+			description: '',
+		}).cloneFrom(values?.ValCodregia))
+		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pesso.codregia', this.ValCodregia, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
@@ -213,6 +213,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'CURRICULFK'
 		}).cloneFrom(values?.ValCurriculfk))
 		this.stopWatchers.push(watch(() => this.ValCurriculfk.value, (newValue, oldValue) => this.onUpdate('pesso.curriculfk', this.ValCurriculfk, newValue, oldValue)))
+
 		this.ValCurriculData = reactive(new modelFieldType.DocumentData({
 			id: 'ValCurriculData',
 			area: 'PESSO',

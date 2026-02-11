@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW REGRA]/
 
 		[HttpPost]
-		public ActionResult Regra_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Regra_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Regra_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Regra_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_Show_GET",
 				AreaName = "rules",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET REGRA]/
 		[HttpPost]
-		public ActionResult Regra_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Regra_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Regra_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Regra_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_New_GET",
 				AreaName = "rules",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Regra_New([FromBody]Regra_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_New",
 				ViewName = "Regra",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET REGRA]/
 		[HttpPost]
-		public ActionResult Regra_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Regra_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Regra_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Regra_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_Edit_GET",
 				AreaName = "rules",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Regra_Edit([FromBody]Regra_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_Edit",
 				ViewName = "Regra",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET REGRA]/
 		[HttpPost]
-		public ActionResult Regra_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Regra_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Regra_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Regra_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_Delete_GET",
 				AreaName = "rules",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Rules/Regra_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST REGRA]/
 		[HttpPost]
-		public ActionResult Regra_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Regra_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Regra_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Regra_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_Delete",
 				ViewName = "Regra",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET REGRA]/
 
 		[HttpPost]
-		public ActionResult Regra_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Regra_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Regra_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Regra_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_Duplicate_GET",
 				AreaName = "rules",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Regra_Duplicate([FromBody]Regra_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Regra_Duplicate",
 				ViewName = "Regra",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Rules(UserContext.Current);
+					GenioMVC.Models.Rules model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("rules");
 
 // USE /[MANUAL GQT BEFORE_CANCEL REGRA]/
@@ -390,6 +391,51 @@ namespace GenioMVC.Controllers
 
 		#endregion
 
+
+		public class Regra_Up_rulesValDescriptModel : RequestLookupModel
+		{
+			public Regra_ViewModel Model { get; set; }
+		}
+
+		//
+		// GET: /Rules/Regra_Up_rulesValDescript
+		// POST: /Rules/Regra_Up_rulesValDescript
+		[ActionName("Regra_Up_rulesValDescript")]
+		public ActionResult Regra_Up_rulesValDescript([FromBody] Regra_Up_rulesValDescriptModel requestModel)
+		{
+			var queryParams = requestModel.QueryParams;
+
+			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
+			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_up_rules")))
+				UserContext.Current.SetPersistenceReadOnly(true);
+			else
+			{
+				Navigation.DestroyEntry("ForcePrimaryRead_up_rules");
+				UserContext.Current.SetPersistenceReadOnly(false);
+			}
+
+			NameValueCollection requestValues = [];
+			if (queryParams != null)
+			{
+				// Add to request values
+				foreach (var kv in queryParams)
+					requestValues.Add(kv.Key, kv.Value);
+			}
+
+			IsStateReadonly = true;
+
+			Models.Rules parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
+			requestModel.Model?.MapToModel(parentCtx);
+			Regra_Up_rulesValDescript_ViewModel model = new(m_userContext, parentCtx);
+
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
+
+			model.setModes(Request.Query["m"].ToString());
+			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
+
+			return JsonOK(model);
+		}
 
 		// POST: /Rules/Regra_SaveEdit
 		[HttpPost]

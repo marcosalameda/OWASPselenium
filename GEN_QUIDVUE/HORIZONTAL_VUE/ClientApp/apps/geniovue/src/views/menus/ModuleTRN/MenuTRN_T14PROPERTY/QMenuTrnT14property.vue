@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TRN_Menu_T14PROPERTY]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -174,6 +177,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -183,6 +187,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodagent',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -194,6 +199,7 @@
 								scrollData: 15,
 								maxDigits: 15,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -204,6 +210,7 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -213,6 +220,7 @@
 								label: computed(() => this.Resources.YEAR_BUILT55277),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -221,6 +229,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
@@ -230,6 +239,7 @@
 								label: computed(() => this.Resources.CITY42505),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcity',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -240,6 +250,7 @@
 								label: computed(() => this.Resources.BUILDING_TYPE57152),
 								dataLength: 1,
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayBuildtyp(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayBuildtyp.type,
 								arrayDisplayMode: 'D',
@@ -253,6 +264,7 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayAparttyp(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAparttyp.type,
 								arrayDisplayMode: 'D',
@@ -271,8 +283,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -373,6 +384,7 @@
 							rowClickAction: {
 								id: 'RCA_TRN_1E1111',
 								name: 'form-PROPE11',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -398,7 +410,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROPE', 'changed-CITY', 'changed-AGENT'],
+						globalEvents: ['changed-CITY', 'changed-AGENT', 'changed-PROPE'],
 						uuid: '0637b9a3-1863-4478-8b1c-cc516b9ac249',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -411,7 +423,8 @@
 								dependencyField: '',
 								fnValueSelector: () => vm.$route.params['agent'],
 							},
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

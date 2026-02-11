@@ -1,20 +1,19 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Asspa
 {
@@ -80,6 +79,8 @@ namespace GenioMVC.ViewModels.Asspa
 		/// </summary>
 		[ValidateSetAccess]
 		public string ValToshow { get; set; }
+
+
 
 		#region Navigations
 		#endregion
@@ -365,6 +366,17 @@ namespace GenioMVC.ViewModels.Asspa
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -499,7 +511,7 @@ namespace GenioMVC.ViewModels.Asspa
 
 			if (asspa___assetname____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableAssetName, "sTableAssetName", "dTableAssetName", qs, "asset");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -528,7 +540,7 @@ namespace GenioMVC.ViewModels.Asspa
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAasset.FldCodasset, CSGenioAasset.FldName, CSGenioAasset.FldZzstate };
+				FieldRef[] fields = [CSGenioAasset.FldCodasset, CSGenioAasset.FldName, CSGenioAasset.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ ASSPA_ASSETNAME]/
 
@@ -549,7 +561,7 @@ namespace GenioMVC.ViewModels.Asspa
 
 				TableAssetName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableAssetName.Query = query;
-				TableAssetName.Elements = listing.RowsForViewModel<GenioMVC.Models.Asset>((r) => new GenioMVC.Models.Asset(m_userContext, r, true, _fieldsToSerialize_ASSPA___ASSETNAME____));
+				TableAssetName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Asset(m_userContext, r, true, _fieldsToSerialize_ASSPA___ASSETNAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -670,6 +682,10 @@ namespace GenioMVC.ViewModels.Asspa
 					this.ValCodparam = DBConversion.ToString(hValue);
 				}
 			}
+			// Limits Generation
+
+			// History limit
+			asspa___paramparameteDoLoad &= AddCriteriaHistoryLimit(asspa___paramparameteConds, CSGenio.business.CSGenioAparam.FldCodkinde, OperationType.EQUAL, "kinde", false);
 
 			TableParamParamete = new TableDBEdit<Models.Param>
 			{
@@ -689,7 +705,7 @@ namespace GenioMVC.ViewModels.Asspa
 
 			if (asspa___paramparameteDoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableParamParamete, "sTableParamParamete", "dTableParamParamete", qs, "param");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -718,7 +734,7 @@ namespace GenioMVC.ViewModels.Asspa
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAparam.FldCodparam, CSGenioAparam.FldParameter, CSGenioAparam.FldZzstate };
+				FieldRef[] fields = [CSGenioAparam.FldCodparam, CSGenioAparam.FldParameter, CSGenioAparam.FldDecimalplaces, CSGenioAkinde.FldDesignat, CSGenioAparam.FldDatatype, CSGenioAparam.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ ASSPA_PARAMPARAMETE]/
 
@@ -739,7 +755,7 @@ namespace GenioMVC.ViewModels.Asspa
 
 				TableParamParamete.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableParamParamete.Query = query;
-				TableParamParamete.Elements = listing.RowsForViewModel<GenioMVC.Models.Param>((r) => new GenioMVC.Models.Param(m_userContext, r, true, _fieldsToSerialize_ASSPA___PARAMPARAMETE));
+				TableParamParamete.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Param(m_userContext, r, true, _fieldsToSerialize_ASSPA___PARAMPARAMETE));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -841,7 +857,7 @@ namespace GenioMVC.ViewModels.Asspa
 			}
 		}
 
-		private readonly string[] _fieldsToSerialize_ASSPA___PARAMPARAMETE = ["Param", "Param.ValCodparam", "Param.ValZzstate", "Param.ValParameter"];
+		private readonly string[] _fieldsToSerialize_ASSPA___PARAMPARAMETE = ["Param", "Param.ValCodparam", "Param.ValZzstate", "Param.ValParameter", "Param.ValDecimalplaces", "Kinde", "Kinde.ValDesignat", "Param.ValDatatype"];
 
 		protected override object GetViewModelValue(string identifier, object modelValue)
 		{

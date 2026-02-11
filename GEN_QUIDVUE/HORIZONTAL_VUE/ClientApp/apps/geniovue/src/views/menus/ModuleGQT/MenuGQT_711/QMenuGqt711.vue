@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_711]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.LOGIN48703),
 								dataLength: 100,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodpsw',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodpesso',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
@@ -175,6 +178,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -185,6 +189,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -200,8 +205,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -302,6 +306,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_7111',
 								name: 'form-PWCOM',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -327,10 +332,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PESS1', 'changed-PSW', 'changed-PWCOM'],
+						globalEvents: ['changed-PWCOM', 'changed-PESS1', 'changed-PSW'],
 						uuid: 'b84668d1-565f-459d-a7c5-24dcba182b3d',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

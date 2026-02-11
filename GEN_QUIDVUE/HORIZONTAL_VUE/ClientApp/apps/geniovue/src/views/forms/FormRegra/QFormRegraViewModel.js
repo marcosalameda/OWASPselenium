@@ -53,6 +53,17 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCodregra))
 		this.stopWatchers.push(watch(() => this.ValCodregra.value, (newValue, oldValue) => this.onUpdate('rules.codregra', this.ValCodregra, newValue, oldValue)))
 
+		/** The used foreign keys. */
+		this.ValCodup_rules = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodup_rules',
+			originId: 'ValCodup_rules',
+			area: 'RULES',
+			field: 'CODUP_RULES',
+			relatedArea: 'UP_RULES',
+			description: '',
+		}).cloneFrom(values?.ValCodup_rules))
+		this.stopWatchers.push(watch(() => this.ValCodup_rules.value, (newValue, oldValue) => this.onUpdate('rules.codup_rules', this.ValCodup_rules, newValue, oldValue)))
+
 		/** The remaining form fields. */
 		this.ValTipocond = reactive(new modelFieldType.String({
 			id: 'ValTipocond',
@@ -85,6 +96,17 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources.PLACE_WHERE_YOU_RUN27490),
 		}).cloneFrom(values?.ValLocal))
 		this.stopWatchers.push(watch(() => this.ValLocal.value, (newValue, oldValue) => this.onUpdate('rules.local', this.ValLocal, newValue, oldValue)))
+
+		this.TableUp_rulesDescript = reactive(new modelFieldType.String({
+			type: 'Lookup',
+			id: 'TableUp_rulesDescript',
+			originId: 'ValDescript',
+			area: 'UP_RULES',
+			field: 'DESCRIPT',
+			maxLength: 50,
+			description: computed(() => this.Resources.DESCRIPTION07383),
+		}).cloneFrom(values?.TableUp_rulesDescript))
+		this.stopWatchers.push(watch(() => this.TableUp_rulesDescript.value, (newValue, oldValue) => this.onUpdate('up_rules.descript', this.TableUp_rulesDescript, newValue, oldValue)))
 	}
 
 	/**

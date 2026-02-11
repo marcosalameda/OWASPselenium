@@ -23,18 +23,6 @@
 		height: 17px;
 		width: 17px;
 
-		&.disabled,
-		&.disabled .i-checkbox:hover {
-			input:checked ~ .i-checkbox__field {
-				background-color: $gray;
-				border: 1px solid $gray;
-			}
-
-			.i-checkbox__field {
-				background-color: $light;
-			}
-		}
-
 		&:focus-within {
 			outline: $action-focus-width $action-focus-style rgb(var(--q-theme-primary-rgb) / 0.25);
 			border-radius: $border-radius;
@@ -42,15 +30,6 @@
 
 		input {
 			opacity: 0;
-
-			&:checked ~ .i-checkbox__field {
-				background-color: $primary;
-				border: 1px solid $primary;
-
-				&:after {
-					display: block;
-				}
-			}
 		}
 	}
 
@@ -85,6 +64,7 @@
 		cursor: pointer;
 		gap: 0.25rem;
 		line-height: 16px;
+		text-wrap-mode: wrap;
 	}
 
 	&__error {

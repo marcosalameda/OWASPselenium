@@ -58,7 +58,7 @@ namespace CSGenio.persistence
         /// <returns>The modified SelectQuery. Its the same object it was passed in, just for chaining purposes.</returns>
         public static SelectQuery SelectDatabaseFields(this SelectQuery qs, IArea area, string[] fields = null)
         {
-            if (fields != null)
+            if (fields != null && fields.Length > 0)
             {
                 foreach (string field in fields)
                 {
@@ -104,7 +104,7 @@ namespace CSGenio.persistence
         /// <returns>The modified SelectQuery. Its the same object it was passed in, just for chaining purposes.</returns>
         public static SelectQuery SelectDatabaseFields(this SelectQuery qs, IArea area, FieldRef[] fields)
         {
-            if (fields != null)
+            if (fields != null && fields.Length > 0)
             {
                 foreach (var field in fields)
                 {

@@ -12,45 +12,46 @@ import { dateToISOString } from '../utils/genericFunctions'
 /**
  * The object that represents a new level
  */
-export class HistoryLevel
-{
-	constructor(previousLevel, options)
-	{
-		_assignIn(this, {
-			uniqueIdentifier: uuidv4(),
-			previousLevel,
-			/**
-			 * Indicates if the level is active.
-			 * Default state is active.
-			 * It is used to identify the Nested Levels that should have been removed but were kept in memory for potential recovery later.
-			 */
-			isActive: true,
-			/**
-			 * Time-to-Live (TTL).
-			 * No expiration time by default.
-			 * If the Nested Level that should have been removed was only deactivated to allow recovery if needed, and it is not used for recovery within a short time, it means it is no longer necessary.
-			 */
-			expiresAt: null,
-			isNested: false,
-			upperLevels: new Map(),
-			entries: {},
-			params: {},
-			location: '',
-			properties: {
-				routeBranch: '',
-				breadcrumbName: ''
+export class HistoryLevel {
+	constructor(previousLevel, options) {
+		_assignIn(
+			this,
+			{
+				uniqueIdentifier: uuidv4(),
+				previousLevel,
+				/**
+				 * Indicates if the level is active.
+				 * Default state is active.
+				 * It is used to identify the Nested Levels that should have been removed but were kept in memory for potential recovery later.
+				 */
+				isActive: true,
+				/**
+				 * Time-to-Live (TTL).
+				 * No expiration time by default.
+				 * If the Nested Level that should have been removed was only deactivated to allow recovery if needed, and it is not used for recovery within a short time, it means it is no longer necessary.
+				 */
+				expiresAt: null,
+				isNested: false,
+				upperLevels: new Map(),
+				entries: {},
+				params: {},
+				location: '',
+				properties: {
+					routeBranch: '',
+					breadcrumbName: ''
+				},
+				// Stores the values of open forms.
+				formValues: {},
+				// Stores the state of collapsible groups (is open) and tabs (is selected).
+				containersState: {},
+				// Stores the currently active control.
+				currentControl: {}
 			},
-			// Stores the values of open forms.
-			formValues: {},
-			// Stores the state of collapsible groups (is open) and tabs (is selected).
-			containersState: {},
-			// Stores the currently active control.
-			currentControl: {}
-		}, options || {})
+			options || {}
+		)
 	}
 
-	get level()
-	{
+	get level() {
 		return _isEmpty(this.previousLevel) ? 0 : this.previousLevel.level + 1
 	}
 
@@ -63,8 +64,7 @@ export class HistoryLevel
 	 * - The level is inactive without an expiration time.
 	 * - The level is inactive and the expiration time has passed.
 	 */
-	get isValid()
-	{
+	get isValid() {
 		return this.isActive || (this.expiresAt && Date.now() <= this.expiresAt)
 	}
 
@@ -72,8 +72,7 @@ export class HistoryLevel
 	 * Marks the level as inactive and sets a time-to-live for expiration.
 	 * @param {Number} ttl Default Time-to-Live (TTL) in milliseconds (default: 1 minute)
 	 */
-	deactivate(ttl = 1 * 60 * 1000)
-	{
+	deactivate(ttl = 1 * 60 * 1000) {
 		this.isActive = false
 		this.expiresAt = Date.now() + ttl
 	}
@@ -81,8 +80,7 @@ export class HistoryLevel
 	/**
 	 * Marks the level as active and clears the expiration time.
 	 */
-	activate()
-	{
+	activate() {
 		this.isActive = true
 		// Clear the expiration time when activated
 		this.expiresAt = null
@@ -92,8 +90,7 @@ export class HistoryLevel
 	 * Sets the previous history level.
 	 * @param {HistoryLevel} previousLevel The previous history level
 	 */
-	setPreviousLevel(previousLevel)
-	{
+	setPreviousLevel(previousLevel) {
 		this.previousLevel = previousLevel
 	}
 
@@ -101,8 +98,7 @@ export class HistoryLevel
 	 * Adds/updates a value in the entries of the current level.
 	 * @param {object} param1 The key and value to set
 	 */
-	setEntryValue({ key, value })
-	{
+	setEntryValue({ key, value }) {
 		Reflect.set(this.entries, key, value)
 	}
 
@@ -110,12 +106,9 @@ export class HistoryLevel
 	 * Get a value of the entry.
 	 * @param {string} key The key to get
 	 */
-	getEntryValue(key)
-	{
-		if (Reflect.has(this.entries, key))
-			return Reflect.get(this.entries, key)
-		else if (!_isEmpty(this.previousLevel))
-			return this.previousLevel.getEntryValue(key)
+	getEntryValue(key) {
+		if (Reflect.has(this.entries, key)) return Reflect.get(this.entries, key)
+		else if (!_isEmpty(this.previousLevel)) return this.previousLevel.getEntryValue(key)
 		return null
 	}
 
@@ -123,16 +116,14 @@ export class HistoryLevel
 	 * Removes the value with the specified key from the entries of the current level.
 	 * @param {string} key The key to remove
 	 */
-	removeEntryValue(key)
-	{
+	removeEntryValue(key) {
 		Reflect.deleteProperty(this.entries, key)
 	}
 
 	/**
 	 * Clears the values of all the entries of the current level.
 	 */
-	clearEntries()
-	{
+	clearEntries() {
 		this.entries = {}
 	}
 
@@ -140,8 +131,7 @@ export class HistoryLevel
 	 * Adds/updates a value in the params of the current level.
 	 * @param {object} param1 The key and value to set
 	 */
-	setParamValue({ key, value })
-	{
+	setParamValue({ key, value }) {
 		Reflect.set(this.params, key, value)
 	}
 
@@ -149,8 +139,7 @@ export class HistoryLevel
 	 * Removes the value with the specified key from the params of the current level.
 	 * @param {string} key The key to remove
 	 */
-	removeParamValue(key)
-	{
+	removeParamValue(key) {
 		Reflect.deleteProperty(this.params, key)
 	}
 
@@ -158,8 +147,7 @@ export class HistoryLevel
 	 * Sets the value of the form mode in the navigation
 	 * @param {string} mode The new mode to set
 	 */
-	setMode(mode)
-	{
+	setMode(mode) {
 		Reflect.set(this.params, 'mode', mode)
 	}
 
@@ -167,8 +155,7 @@ export class HistoryLevel
 	 * Adds/updates a value in the properties of the current level.
 	 * @param {object} param0 The key and value to set
 	 */
-	setProperty({ key, value })
-	{
+	setProperty({ key, value }) {
 		this.properties[key] = value
 	}
 
@@ -176,8 +163,7 @@ export class HistoryLevel
 	 * Removes the value with the specified key from the properties of the current level.
 	 * @param {string} key The key to remove
 	 */
-	removeProperty(key)
-	{
+	removeProperty(key) {
 		delete this.properties[key]
 	}
 
@@ -187,8 +173,7 @@ export class HistoryLevel
 	 * @returns True if it the location matches, false otherwise.
 	 */
 	// TODO: Validate params | the record Id ?
-	checkLocation({ location })
-	{
+	checkLocation({ location }) {
 		return this.location === location
 	}
 
@@ -197,10 +182,8 @@ export class HistoryLevel
 	 * @param {object} param0 The location that has to be found.
 	 * @returns True if contains
 	 */
-	containsLocation({ location, params })
-	{
-		if (this.checkLocation({ location, params }))
-			return true
+	containsLocation({ location, params }) {
+		if (this.checkLocation({ location, params })) return true
 		else if (!_isEmpty(this.previousLevel))
 			return this.previousLevel.containsLocation({ location, params })
 		return false
@@ -211,10 +194,8 @@ export class HistoryLevel
 	 * @param {object} param0 The location that has to be found.
 	 * @returns The HistoryLevel or null
 	 */
-	getLevelByLocation({ location, params })
-	{
-		if (this.checkLocation({ location, params }))
-			return this
+	getLevelByLocation({ location, params }) {
+		if (this.checkLocation({ location, params })) return this
 		else if (!_isEmpty(this.previousLevel))
 			return this.previousLevel.getLevelByLocation({ location, params })
 		return null
@@ -225,10 +206,8 @@ export class HistoryLevel
 	 * @param {string} uniqueIdentifier The unique identifier that has to be found.
 	 * @returns The HistoryLevel or null
 	 */
-	getLevelByUId(uniqueIdentifier)
-	{
-		if (this.uniqueIdentifier === uniqueIdentifier)
-			return this
+	getLevelByUId(uniqueIdentifier) {
+		if (this.uniqueIdentifier === uniqueIdentifier) return this
 		else if (!_isEmpty(this.previousLevel))
 			return this.previousLevel.getLevelByUId(uniqueIdentifier)
 		return null
@@ -238,17 +217,15 @@ export class HistoryLevel
 	 * Update the property values for the current level.
 	 * @param {object} options Object with the new property values.
 	 */
-	updateData(options)
-	{
+	updateData(options) {
 		_assignIn(this, options || {})
 	}
 
 	/**
 	 * Destroy the next levels.
 	 */
-	destroy()
-	{
-		this.upperLevels.forEach(upperLevel => upperLevel.destroy())
+	destroy() {
+		this.upperLevels.forEach((upperLevel) => upperLevel.destroy())
 		this.upperLevels.clear()
 
 		this.entries = null
@@ -259,10 +236,10 @@ export class HistoryLevel
 
 		// Removal of Proxy objects from the central store so that there are no subscribers.
 		// While we have several things holding objects, a simple «this.formValues = null» keeps references in memory (based on the heap snapshot analysis).
-		for(let areaName in this.formValues) {
-			for(let dataKey in this.formValues[areaName]) {
-				for(let formName in this.formValues[areaName][dataKey]) {
-					for(let fieldName in this.formValues[areaName][dataKey][formName]) {
+		for (let areaName in this.formValues) {
+			for (let dataKey in this.formValues[areaName]) {
+				for (let formName in this.formValues[areaName][dataKey]) {
+					for (let fieldName in this.formValues[areaName][dataKey][formName]) {
 						this.formValues[areaName][dataKey][formName][fieldName] = null
 					}
 					this.formValues[areaName][dataKey][formName] = null
@@ -279,17 +256,18 @@ export class HistoryLevel
 	 * Convert the structure in graph to a collection of levels.
 	 * @returns An array of history levels.
 	 */
-	convertToCollection()
-	{
-		return [...(!_isEmpty(this.previousLevel) ? this.previousLevel.convertToCollection() : []), this]
+	convertToCollection() {
+		return [
+			...(!_isEmpty(this.previousLevel) ? this.previousLevel.convertToCollection() : []),
+			this
+		]
 	}
 
 	/**
 	 * The first HistoryLevel that is not nested or the last one.
 	 * @returns The HistoryLevel that is not nested or the last one.
 	 */
-	getFirstNotNested()
-	{
+	getFirstNotNested() {
 		if (this.isNested && !_isEmpty(this.previousLevel))
 			return this.previousLevel.getFirstNotNested()
 		return this
@@ -300,8 +278,7 @@ export class HistoryLevel
 	 * @param {string} area The area
 	 * @returns The first previous level, that was found, from a different area than the specified one.
 	 */
-	getPrevLevelFromOtherArea(area)
-	{
+	getPrevLevelFromOtherArea(area) {
 		return getPrevLevelFromOtherArea(area, null, this.previousLevel)
 	}
 
@@ -313,14 +290,11 @@ export class HistoryLevel
 	 * @param {string} currentArea The area of the current history level
 	 * @returns True if the entry exists, false otherwise.
 	 */
-	hasEntry(key, includeNulls = true, startAtPrevious = false, currentArea = '')
-	{
-		if (!startAtPrevious && Reflect.has(this.entries, key))
-		{
+	hasEntry(key, includeNulls = true, startAtPrevious = false, currentArea = '') {
+		if (!startAtPrevious && Reflect.has(this.entries, key)) {
 			const entryValue = Reflect.get(this.entries, key)
 			return entryValue !== undefined && (entryValue !== null || includeNulls)
-		}
-		else if (!_isEmpty(this.previousLevel))
+		} else if (!_isEmpty(this.previousLevel))
 			return this.getPrevLevelFromOtherArea(currentArea).hasEntry(key, includeNulls)
 		return false
 	}
@@ -329,10 +303,8 @@ export class HistoryLevel
 	 * Saves the value of the specified field in the store.
 	 * @param {object} param0 The field data
 	 */
-	setStoreValue({ key, formInfo, field })
-	{
-		if (!validateParams(this.formValues, key, formInfo, false))
-			return false
+	setStoreValue({ key, formInfo, field }) {
+		if (!validateParams(this.formValues, key, formInfo, false)) return false
 
 		const area = formInfo.area
 		const formName = formInfo.name
@@ -356,12 +328,9 @@ export class HistoryLevel
 	 * Saves the state of the specified container in the store.
 	 * @param {object} param0 The container and it's current state
 	 */
-	storeContainerState({ key, formInfo, fieldId, containerState })
-	{
-		if (!validateParams(this.containersState, key, formInfo, false))
-			return false
-		if (typeof fieldId !== 'string' || typeof containerState === 'undefined')
-			return false
+	storeContainerState({ key, formInfo, fieldId, containerState }) {
+		if (!validateParams(this.containersState, key, formInfo, false)) return false
+		if (typeof fieldId !== 'string' || typeof containerState === 'undefined') return false
 
 		const area = formInfo.area
 		const formName = formInfo.name
@@ -375,20 +344,15 @@ export class HistoryLevel
 	 * @param {object} controlData The data of the current control
 	 * @param {boolean} isNested Whether or not the control is for a nested form
 	 */
-	setCurrentControl(controlData, isNested)
-	{
-		if (_isEmpty(controlData) || typeof controlData.id !== 'string')
-			return false
+	setCurrentControl(controlData, isNested) {
+		if (_isEmpty(controlData) || typeof controlData.id !== 'string') return false
 
-		if (isNested)
-		{
+		if (isNested) {
 			if (!Array.isArray(this.currentControl.nestedControls))
 				this.currentControl.nestedControls = []
 
 			this.currentControl.nestedControls.push(controlData)
-		}
-		else
-		{
+		} else {
 			this.currentControl = {
 				...this.currentControl,
 				...controlData
@@ -402,14 +366,11 @@ export class HistoryLevel
 	 * Removes the currently active control with the specified id.
 	 * @param {string} controlId The id of the control to remove
 	 */
-	removeCurrentControl(controlId)
-	{
-		if (_isEmpty(this.currentControl))
-			return false
+	removeCurrentControl(controlId) {
+		if (_isEmpty(this.currentControl)) return false
 
 		// Check if the main control is the one that should be removed.
-		if (this.currentControl.id === controlId)
-		{
+		if (this.currentControl.id === controlId) {
 			delete this.currentControl.id
 			delete this.currentControl.data
 			return true
@@ -417,12 +378,9 @@ export class HistoryLevel
 
 		// Check if the control to remove is one of the nested ones.
 		const nestedControls = this.currentControl.nestedControls
-		if (Array.isArray(nestedControls))
-		{
-			for (let i = 0; i < nestedControls.length; i++)
-			{
-				if (nestedControls[i].id === controlId)
-				{
+		if (Array.isArray(nestedControls)) {
+			for (let i = 0; i < nestedControls.length; i++) {
+				if (nestedControls[i].id === controlId) {
 					nestedControls.splice(i, 1)
 					return true
 				}
@@ -435,8 +393,7 @@ export class HistoryLevel
 	/**
 	 * Clears the data of the currently active control.
 	 */
-	clearCurrentControl()
-	{
+	clearCurrentControl() {
 		this.currentControl = {}
 	}
 }
@@ -451,17 +408,13 @@ export class HistoryLevel
  * @param {any} srcValue The source value to be converted
  * @returns The converted value.
  */
-function _entryConvert(srcValue)
-{
+function _entryConvert(srcValue) {
 	// Convert Date objects to ISO string format.
-	if (_isDate(srcValue))
-		return dateToISOString(srcValue)
+	if (_isDate(srcValue)) return dateToISOString(srcValue)
 	// Recursively process arrays, converting each element.
-	if (_isArray(srcValue))
-		return srcValue.map((item) => _entryConvert(item))
+	if (_isArray(srcValue)) return srcValue.map((item) => _entryConvert(item))
 	// Recursively process objects, converting each value.
-	if (typeof srcValue === 'object' && srcValue !== null)
-	{
+	if (typeof srcValue === 'object' && srcValue !== null) {
 		const convertedObject = {}
 		Object.entries(srcValue).forEach(([key, value]) => {
 			// Use the conversion function for each value.
@@ -481,15 +434,12 @@ function _entryConvert(srcValue)
  * @param {string} currentArea The area of the current history level
  * @returns {Array} An array of processed history levels.
  */
-function _transformHistoryLevels(hLevel, currentArea = '')
-{
+function _transformHistoryLevels(hLevel, currentArea = '') {
 	let mode = 'None',
 		result = []
 
-	if (!_isEmpty(hLevel))
-	{
-		if ((hLevel.location || '').startsWith('menu-'))
-			mode = 'List'
+	if (!_isEmpty(hLevel)) {
+		if ((hLevel.location || '').startsWith('menu-')) mode = 'List'
 		else if ((hLevel.location || '').startsWith('form-'))
 			mode = _upperFirst((hLevel.params || {}).mode || 'Show')
 
@@ -506,8 +456,7 @@ function _transformHistoryLevels(hLevel, currentArea = '')
 		})
 
 		const previousLevel = getPrevLevelFromOtherArea(currentArea, null, hLevel.previousLevel)
-		if (!_isEmpty(previousLevel))
-			result.push(..._transformHistoryLevels(previousLevel))
+		if (!_isEmpty(previousLevel)) result.push(..._transformHistoryLevels(previousLevel))
 	}
 
 	return result
@@ -520,10 +469,8 @@ function _transformHistoryLevels(hLevel, currentArea = '')
  * @param {object} defaultLevel The default level to use, in case no previous level from a different area is found
  * @returns The first previous level, that was found, from a different area than the specified one.
  */
-function getPrevLevelFromOtherArea(area, previousLevel, defaultLevel)
-{
-	if (typeof previousLevel !== 'object' || previousLevel === null)
-		previousLevel = defaultLevel
+function getPrevLevelFromOtherArea(area, previousLevel, defaultLevel) {
+	if (typeof previousLevel !== 'object' || previousLevel === null) previousLevel = defaultLevel
 
 	if (typeof area !== 'string' || area.trim().length === 0 || !previousLevel?.hasEntry(area))
 		return previousLevel
@@ -536,14 +483,10 @@ function getPrevLevelFromOtherArea(area, previousLevel, defaultLevel)
  * @param {object} param1 The object keys
  * @param {any} data The new value
  */
-function setValues(valObj, { area, key, formName, fieldId }, data)
-{
-	if (typeof valObj[area] === 'undefined')
-		valObj[area] = {}
-	if (typeof valObj[area][key] === 'undefined')
-		valObj[area][key] = {}
-	if (typeof valObj[area][key][formName] === 'undefined')
-		valObj[area][key][formName] = {}
+function setValues(valObj, { area, key, formName, fieldId }, data) {
+	if (typeof valObj[area] === 'undefined') valObj[area] = {}
+	if (typeof valObj[area][key] === 'undefined') valObj[area][key] = {}
+	if (typeof valObj[area][key][formName] === 'undefined') valObj[area][key][formName] = {}
 
 	valObj[area][key][formName][fieldId] = data
 }
@@ -556,28 +499,27 @@ function setValues(valObj, { area, key, formName, fieldId }, data)
  * @param {boolean} checkPresence Whether or not to check if the object already has values for the keys
  * @returns True if the object has stored values that match the specified keys, false otherwise.
  */
-function validateParams(valObj, key, formInfo, checkPresence)
-{
-	if (typeof formInfo !== 'object' || formInfo === null)
-		return false
+function validateParams(valObj, key, formInfo, checkPresence) {
+	if (typeof formInfo !== 'object' || formInfo === null) return false
 
 	const area = formInfo.area
 	const formName = formInfo.name
 
-	if (typeof area !== 'string' || checkPresence && typeof valObj[area] === 'undefined')
+	if (typeof area !== 'string' || (checkPresence && typeof valObj[area] === 'undefined'))
 		return false
-	if (typeof key === 'undefined' || checkPresence && typeof valObj[area][key] === 'undefined')
+	if (typeof key === 'undefined' || (checkPresence && typeof valObj[area][key] === 'undefined'))
 		return false
-	if (typeof formName !== 'string' || checkPresence && typeof valObj[area][key][formName] === 'undefined')
+	if (
+		typeof formName !== 'string' ||
+		(checkPresence && typeof valObj[area][key][formName] === 'undefined')
+	)
 		return false
 
 	return true
 }
 
-export class NavigationContext
-{
-	constructor(uniqueIdentifier)
-	{
+export class NavigationContext {
+	constructor(uniqueIdentifier) {
 		this.navigationId = uniqueIdentifier || uuidv4()
 
 		/**
@@ -589,10 +531,8 @@ export class NavigationContext
 	/**
 	 * The previous history level
 	 */
-	get previousLevel()
-	{
-		if (!_isEmpty(this.currentLevel))
-			return this.currentLevel.previousLevel
+	get previousLevel() {
+		if (!_isEmpty(this.currentLevel)) return this.currentLevel.previousLevel
 		return null
 	}
 
@@ -601,15 +541,16 @@ export class NavigationContext
 	 * @param {object} options Additional options about the level (optional)
 	 * @param {object} previousLevel The previous history level
 	 */
-	addHistoryLevel(options, previousLevel)
-	{
+	addHistoryLevel(options, previousLevel) {
 		this.cleanUpTo(options)
 
 		// If no history level exists yet, we try to create one for the home page.
-		if (_isEmpty(previousLevel) && _isEmpty(this.currentLevel) && (_isEmpty(options.location) || !options.location.startsWith('home')))
-		{
-			if (!options.params || typeof options.params.module !== 'string')
-				return
+		if (
+			_isEmpty(previousLevel) &&
+			_isEmpty(this.currentLevel) &&
+			(_isEmpty(options.location) || !options.location.startsWith('home'))
+		) {
+			if (!options.params || typeof options.params.module !== 'string') return
 
 			const homeOptions = {
 				location: `home-${options.params.module}`,
@@ -623,50 +564,43 @@ export class NavigationContext
 			this.currentLevel = new HistoryLevel(null, homeOptions)
 		}
 
-		if (this.checkLocation(options))
-			this.updateHistoryLevelData(options)
-		else
-		{
+		if (this.checkLocation(options)) this.updateHistoryLevelData(options)
+		else {
 			// When navigating to the previous level, if the form contained Nested Forms and we are opening it,
 			// we will attempt to recover it from upperLevels.
 			let nestedLevelRestore = null
-			if (previousLevel?.upperLevels)
-			{
-				for (const [key, upperLevel] of previousLevel.upperLevels.entries())
-				{
+			if (previousLevel?.upperLevels) {
+				for (const [key, upperLevel] of previousLevel.upperLevels.entries()) {
 					// Clean up deactivated nested levels, as they were not used to recover the history level.
 					// If we navigate to the next normal level and the deactivated level was not recovered, it means it is no longer needed.
-					if (!upperLevel.isValid)
-					{
+					if (!upperLevel.isValid) {
 						// Destroy the level
 						upperLevel.destroy()
 						// Remove it from the Map
 						previousLevel.upperLevels.delete(key)
-					}
-					else if (
+					} else if (
 						upperLevel.isNested === true &&
 						upperLevel.checkLocation(options) &&
 						upperLevel.params?.id === options?.params?.id &&
 						upperLevel.previousLevel === previousLevel
-					)
-					{
+					) {
 						// Assign the nested level to restore if it matches the conditions.
 						nestedLevelRestore = upperLevel
 					}
 				}
 			}
 
-			if (nestedLevelRestore instanceof HistoryLevel)
-			{
+			if (nestedLevelRestore instanceof HistoryLevel) {
 				nestedLevelRestore.activate()
 				this.currentLevel = nestedLevelRestore
 				this.updateHistoryLevelData(options)
-			}
-			else
-			{
+			} else {
 				const historyLevel = new HistoryLevel(previousLevel || this.currentLevel, options)
 				if (!_isEmpty(historyLevel.previousLevel))
-					historyLevel.previousLevel.upperLevels.set(historyLevel.uniqueIdentifier, historyLevel)
+					historyLevel.previousLevel.upperLevels.set(
+						historyLevel.uniqueIdentifier,
+						historyLevel
+					)
 
 				this.currentLevel = historyLevel
 			}
@@ -676,10 +610,8 @@ export class NavigationContext
 	/**
 	 * Removes the most recent history level from the navigation.
 	 */
-	removeNavigationLevel()
-	{
-		if (!_isEmpty(this.currentLevel))
-		{
+	removeNavigationLevel() {
+		if (!_isEmpty(this.currentLevel)) {
 			let curUId = this.currentLevel.uniqueIdentifier
 			this.currentLevel.destroy()
 			this.currentLevel = this.currentLevel.previousLevel
@@ -692,32 +624,25 @@ export class NavigationContext
 	 * Removes several history levels from the navigation.
 	 * @param {number} levels The number of levels to remove
 	 */
-	removeHistoryLevels(levels)
-	{
-		if (typeof levels !== 'number')
-			return
+	removeHistoryLevels(levels) {
+		if (typeof levels !== 'number') return
 
-		while (levels-- > 0)
-			this.removeNavigationLevel()
+		while (levels-- > 0) this.removeNavigationLevel()
 	}
 
 	/**
 	 * Remove history levels up to the indicated level. But it doesn't let remove the level 0 which corresponds to the «base» level / home page.
 	 * @param {number} upToLevel The history level from which every highest level goes to be removed ( >= 0 )
 	 */
-	removeNavigationLevelsUpTo(upToLevel)
-	{
-		if (typeof upToLevel !== 'number')
-			return
-		if (_isEmpty(this.currentLevel))
-			return
+	removeNavigationLevelsUpTo(upToLevel) {
+		if (typeof upToLevel !== 'number') return
+		if (_isEmpty(this.currentLevel)) return
 
 		while (this.currentLevel.level > 0 && this.currentLevel.level > upToLevel)
 			this.removeNavigationLevel()
 	}
 
-	checkLocation({ location, params })
-	{
+	checkLocation({ location, params }) {
 		if (!_isEmpty(this.currentLevel))
 			return this.currentLevel.checkLocation({ location, params })
 		return false
@@ -728,8 +653,7 @@ export class NavigationContext
 	 * @param {object} param0 The location that has to be found.
 	 * @returns True if contains
 	 */
-	containsLocation({ location, params })
-	{
+	containsLocation({ location, params }) {
 		if (!_isEmpty(this.currentLevel))
 			return this.currentLevel.containsLocation({ location, params })
 		return false
@@ -740,8 +664,7 @@ export class NavigationContext
 	 * @param {object} param0 The location that has to be found.
 	 * @returns The HistoryLevel or null
 	 */
-	getLevelByLocation({ location, params })
-	{
+	getLevelByLocation({ location, params }) {
 		if (!_isEmpty(this.currentLevel))
 			return this.currentLevel.getLevelByLocation({ location, params })
 		return null
@@ -752,10 +675,8 @@ export class NavigationContext
 	 * @param {string} uniqueIdentifier The unique identifier that has to be found.
 	 * @returns The HistoryLevel or null
 	 */
-	getLevelByUId(uniqueIdentifier)
-	{
-		if (!_isEmpty(this.currentLevel))
-			return this.currentLevel.getLevelByUId(uniqueIdentifier)
+	getLevelByUId(uniqueIdentifier) {
+		if (!_isEmpty(this.currentLevel)) return this.currentLevel.getLevelByUId(uniqueIdentifier)
 		return null
 	}
 
@@ -764,25 +685,19 @@ export class NavigationContext
 	 * if so, removes it and all levels after it.
 	 * @param {object} param0
 	 */
-	cleanUpTo({ location, params })
-	{
-		while (this.containsLocation({ location, params }))
-		{
-			if (this.checkLocation({ location, params }))
-				break
+	cleanUpTo({ location, params }) {
+		while (this.containsLocation({ location, params })) {
+			if (this.checkLocation({ location, params })) break
 
 			/*
 				The levels of Nested forms will be ignores to allow recovery later if needed.
 				It still needs to be analyzed how to deactivate other Nested Levels that may no longer be required.
 				For example, a form with multiple nested forms, and navigation moves forward from one of them. Currently, we only deactivate one and not all of them at once.
 			*/
-			if (this.currentLevel?.isNested)
-			{
+			if (this.currentLevel?.isNested) {
 				this.currentLevel.deactivate()
 				this.currentLevel = this.currentLevel.previousLevel
-			}
-			else
-				this.removeNavigationLevel()
+			} else this.removeNavigationLevel()
 		}
 	}
 
@@ -790,16 +705,14 @@ export class NavigationContext
 	 * Update the property values for the current level.
 	 * @param {object} options Object with the new property values.
 	 */
-	updateHistoryLevelData(options)
-	{
-		if (this.containsLocation(options))
-		{
+	updateHistoryLevelData(options) {
+		if (this.containsLocation(options)) {
 			// Default function, to be called in case an error occurs.
 			const updateData = () => {
 				// eslint-disable-next-line no-console
 				console.warn('Problems updating the history level data.', options)
 			}
-			(this.getLevelByLocation(options) || { updateData }).updateData(options)
+			;(this.getLevelByLocation(options) || { updateData }).updateData(options)
 		}
 	}
 
@@ -807,20 +720,16 @@ export class NavigationContext
 	 * Adds/updates a value in the entries of the current level.
 	 * @param {object} param1 The key and value to set
 	 */
-	setEntryValue({ key, value })
-	{
-		if (!_isEmpty(this.currentLevel))
-			this.currentLevel.setEntryValue({ key, value })
+	setEntryValue({ key, value }) {
+		if (!_isEmpty(this.currentLevel)) this.currentLevel.setEntryValue({ key, value })
 	}
 
 	/**
 	 * Get a value of the entry.
 	 * @param {string} key The key to get
 	 */
-	getEntryValue(key)
-	{
-		if (_isEmpty(this.currentLevel))
-			return null
+	getEntryValue(key) {
+		if (_isEmpty(this.currentLevel)) return null
 		return this.currentLevel.getEntryValue(key)
 	}
 
@@ -828,59 +737,47 @@ export class NavigationContext
 	 * Removes the value with the specified key from the entries of the current level.
 	 * @param {string} key The key to remove
 	 */
-	removeEntryValue(key)
-	{
-		if (!_isEmpty(this.currentLevel))
-			this.currentLevel.removeEntryValue(key)
+	removeEntryValue(key) {
+		if (!_isEmpty(this.currentLevel)) this.currentLevel.removeEntryValue(key)
 	}
 
 	/**
 	 * Clears the values of all the entries of the current level.
 	 */
-	clearEntries()
-	{
-		if (!_isEmpty(this.currentLevel))
-			this.currentLevel.clearEntries()
+	clearEntries() {
+		if (!_isEmpty(this.currentLevel)) this.currentLevel.clearEntries()
 	}
 
 	/**
 	 * Adds/updates a value in the params of the current level.
 	 * @param {object} param1 The key and value to set
 	 */
-	setParamValue({ key, value })
-	{
-		if (!_isEmpty(this.currentLevel))
-			this.currentLevel.setParamValue({ key, value })
+	setParamValue({ key, value }) {
+		if (!_isEmpty(this.currentLevel)) this.currentLevel.setParamValue({ key, value })
 	}
 
 	/**
 	 * Removes the value with the specified key from the params of the current level.
 	 * @param {string} key The key to remove
 	 */
-	removeParamValue(key)
-	{
-		if (!_isEmpty(this.currentLevel))
-			this.currentLevel.removeParamValue(key)
+	removeParamValue(key) {
+		if (!_isEmpty(this.currentLevel)) this.currentLevel.removeParamValue(key)
 	}
 
 	/**
 	 * Adds/updates a value in the properties of the current level.
 	 * @param {object} param0 The key and value to set
 	 */
-	setProperty({ key, value })
-	{
-		if (!_isEmpty(this.currentLevel))
-			this.currentLevel.setProperty({ key, value })
+	setProperty({ key, value }) {
+		if (!_isEmpty(this.currentLevel)) this.currentLevel.setProperty({ key, value })
 	}
 
 	/**
 	 * Removes the value with the specified key from the properties of the current level.
 	 * @param {string} key The key to remove
 	 */
-	removeProperty(key)
-	{
-		if (!_isEmpty(this.currentLevel))
-			this.currentLevel.removeProperty(key)
+	removeProperty(key) {
+		if (!_isEmpty(this.currentLevel)) this.currentLevel.removeProperty(key)
 	}
 
 	/**
@@ -888,8 +785,7 @@ export class NavigationContext
 	 * @param {string} currentArea The area of the current history level
 	 * @returns A History structure in the format expected by the server.
 	 */
-	historyToSend(currentArea = '')
-	{
+	historyToSend(currentArea = '') {
 		const history = _transformHistoryLevels(this.currentLevel, currentArea),
 			historyToSend = []
 
@@ -905,10 +801,8 @@ export class NavigationContext
 	 * Convert the structure in graph to a collection of levels.
 	 * @returns An array of history levels.
 	 */
-	convertToCollection()
-	{
-		if (!_isEmpty(this.currentLevel))
-			return this.currentLevel.convertToCollection()
+	convertToCollection() {
+		if (!_isEmpty(this.currentLevel)) return this.currentLevel.convertToCollection()
 		return []
 	}
 
@@ -916,12 +810,10 @@ export class NavigationContext
 	 * Updates the history entries according to history coming from the server.
 	 * @param {object} srvHistory The history coming from the server
 	 */
-	applyServerChanges(srvHistory)
-	{
+	applyServerChanges(srvHistory) {
 		_forEach(srvHistory, (hLevel) => {
 			const level = this.getLevelByUId(hLevel.uId)
-			if (level !== null)
-			{
+			if (level !== null) {
 				_forEach(hLevel.remove, (entryKey) => level.removeEntryValue(entryKey))
 				_forEach(hLevel.set, (value, key) => level.setEntryValue({ key, value }))
 			}
@@ -932,28 +824,21 @@ export class NavigationContext
 	 * Saves the values of the specified fields in the store.
 	 * @param {object} param0 The fields data
 	 */
-	storeValues({ key, formInfo, fields })
-	{
-		for (let i in fields)
-			this.storeValue({ key, formInfo, field: fields[i] })
+	storeValues({ key, formInfo, fields }) {
+		for (let i in fields) this.storeValue({ key, formInfo, field: fields[i] })
 	}
 
 	/**
 	 * Saves the value of the specified field in the store.
 	 * @param {object} param0 The field data
 	 */
-	storeValue({ key, formInfo, field, levelNumber })
-	{
+	storeValue({ key, formInfo, field, levelNumber }) {
 		let navLevel = this.currentLevel
 
-		if (levelNumber !== '')
-		{
-			while (navLevel.level.toString() !== levelNumber)
-			{
-				if (!_isEmpty(navLevel.previousLevel))
-					navLevel = navLevel.previousLevel
-				else
-					return false
+		if (levelNumber !== '') {
+			while (navLevel.level.toString() !== levelNumber) {
+				if (!_isEmpty(navLevel.previousLevel)) navLevel = navLevel.previousLevel
+				else return false
 			}
 		}
 
@@ -964,8 +849,7 @@ export class NavigationContext
 	 * Saves the state of the specified container in the store.
 	 * @param {object} containerData The container and it's current state
 	 */
-	storeContainerState(containerData)
-	{
+	storeContainerState(containerData) {
 		return this.currentLevel.storeContainerState(containerData)
 	}
 
@@ -974,8 +858,7 @@ export class NavigationContext
 	 * @param {object} controlData The data of the current control
 	 * @param {boolean} isNested Whether or not the control is for a nested form
 	 */
-	setCurrentControl(controlData, isNested)
-	{
+	setCurrentControl(controlData, isNested) {
 		return this.currentLevel.setCurrentControl(controlData, isNested)
 	}
 
@@ -983,16 +866,14 @@ export class NavigationContext
 	 * Removes the currently active control with the specified id.
 	 * @param {string} controlId The id of the control to remove
 	 */
-	removeCurrentControl(controlId)
-	{
+	removeCurrentControl(controlId) {
 		return this.currentLevel.removeCurrentControl(controlId)
 	}
 
 	/**
 	 * Clears the data of the currently active control.
 	 */
-	clearCurrentControl()
-	{
+	clearCurrentControl() {
 		this.currentLevel.clearCurrentControl()
 	}
 }

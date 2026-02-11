@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_6141]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.CATEGORY18978),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.ABBREVIATION31267),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -177,8 +180,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -279,6 +281,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_61411',
 								name: 'menu-GQT_61411',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -307,6 +310,7 @@
 						uuid: '78e89b41-c18a-4d5e-af02-3117ce9c80e0',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

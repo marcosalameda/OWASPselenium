@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_3591]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -161,6 +163,7 @@
 								field: 'CATEGORY',
 								label: computed(() => this.Resources.CATEGORY18978),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -169,6 +172,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -189,8 +193,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -206,6 +209,7 @@
 							rowClickAction: {
 								id: 'RCA_STY_35911',
 								name: 'menu-STY_35911',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -293,6 +297,10 @@
 										rawValue: 'grid',
 										isMapped: false
 									},
+									gridMode: {
+										rawValue: 'fixed',
+										isMapped: false
+									},
 									containerAlignment: {
 										rawValue: 'left',
 										isMapped: false
@@ -319,6 +327,7 @@
 							},
 						],
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

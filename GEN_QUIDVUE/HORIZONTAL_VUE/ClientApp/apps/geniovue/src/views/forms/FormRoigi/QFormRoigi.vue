@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="ROIGI"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.ROIGI___ROGL1TITLE___.isVisible">
-					<q-control-wrapper
-						v-show="controls.ROIGI___ROGL1TITLE___.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.ROIGI___ROGL1TITLE___.isVisible">
+					<q-col
+						v-if="controls.ROIGI___ROGL1TITLE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ROIGI___ROGL1TITLE___.isVisible"
 							class="i-text"
 							v-bind="controls.ROIGI___ROGL1TITLE___"
 							v-on="controls.ROIGI___ROGL1TITLE___.handlers"
@@ -111,13 +120,14 @@
 								v-bind="controls.ROIGI___ROGL1TITLE___.seeMoreParams"
 								v-on="controls.ROIGI___ROGL1TITLE___.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ROIGI___ROIGIORDER___.isVisible || controls.ROIGI___ROIGITITLE___.isVisible">
-					<q-control-wrapper
-						v-show="controls.ROIGI___ROIGIORDER___.isVisible || controls.ROIGI___ROIGITITLE___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ROIGI___ROIGIORDER___.isVisible || controls.ROIGI___ROIGITITLE___.isVisible">
+					<q-col
+						v-if="controls.ROIGI___ROIGIORDER___.isVisible || controls.ROIGI___ROIGITITLE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ROIGI___ROIGIORDER___.isVisible"
 							class="i-text"
 							v-bind="controls.ROIGI___ROIGIORDER___"
 							v-on="controls.ROIGI___ROIGIORDER___.handlers"
@@ -130,6 +140,7 @@
 								@update:model-value="model.ValOrder.fnUpdateValue" />
 						</base-input-structure>
 						<base-input-structure
+							v-if="controls.ROIGI___ROIGITITLE___.isVisible"
 							class="i-text"
 							v-bind="controls.ROIGI___ROIGITITLE___"
 							v-on="controls.ROIGI___ROIGITITLE___.handlers"
@@ -141,10 +152,10 @@
 								@blur="onBlur(controls.ROIGI___ROIGITITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -153,7 +164,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -162,6 +173,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -173,7 +185,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -385,7 +397,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -539,7 +555,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_ROIGI___ROIGITITLE___',
 						controlLimits: [
 						],
 					}, this),
@@ -685,16 +700,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -738,16 +767,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -899,6 +942,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ROIGI]/
 // eslint-disable-next-line

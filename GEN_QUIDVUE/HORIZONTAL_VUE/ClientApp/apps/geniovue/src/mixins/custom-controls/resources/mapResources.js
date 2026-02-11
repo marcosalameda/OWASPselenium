@@ -193,6 +193,10 @@
 			get: () => this._fnGetResource('IMPRIMIR_MAPA10717'),
 			enumerable: true
 		})
+		Object.defineProperty(this, 'centerControlMap', {
+			get: () => this._fnGetResource('CENTRAR_NO_MAPA05060'),
+			enumerable: true
+		})
 		Object.defineProperty(this, 'printLandscape', {
 			get: () => this._fnGetResource('PAISAGEM06194'),
 			enumerable: true

@@ -14,7 +14,12 @@ namespace GenioMVC.ViewModels
 
 		public void Load(NameValueCollection qs)
 		{
-			LoadPartial(qs);
+			Load(qs, false);
+		}
+
+		public void Load(NameValueCollection qs, bool lazyLoad)
+		{
+			LoadPartial(qs, lazyLoad);
 		}
 
 		protected abstract void InitLevels();

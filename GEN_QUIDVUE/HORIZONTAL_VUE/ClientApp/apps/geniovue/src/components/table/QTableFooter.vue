@@ -1,9 +1,16 @@
 ﻿<template>
-	<span
-		v-if="showRowsSelectedCount"
-		class="selected-rows-counter">
-		{{ rowsSelectedCount }} {{ texts.textRowsSelected }}
-	</span>
+	<template v-if="showRowsSelectedCount">
+		<span
+			v-if="allRowsSelected"
+			class="selected-rows-counter">
+			{{ texts.allRowsSelected }}
+		</span>
+		<span
+			v-else
+			class="selected-rows-counter">
+			{{ rowsSelectedCount }} {{ texts.textRowsSelected }}
+		</span>
+	</template>
 
 	<q-table-group-actions-menu
 		v-if="hasRowSelectActions"
@@ -24,8 +31,7 @@
 	</div>
 	<!-- END: Record count -->
 	<!-- BEGIN: Pagination row -->
-	<div
-		:class="paginationClasses">
+	<div :class="paginationClasses">
 		<!-- BEGIN: Pagination -->
 		<q-table-pagination-alt
 			v-if="showAlternatePagination"
@@ -140,22 +146,6 @@
 			},
 
 			/**
-			 * The count of all rows that match the current filters applied.
-			 */
-			filteredRowsLength: {
-				type: Number,
-				default: 0
-			},
-
-			/**
-			 * The count of all rows in the dataset without any filters applied.
-			 */
-			originalRowsLength: {
-				type: Number,
-				default: 0
-			},
-
-			/**
 			 * The current active page number.
 			 */
 			page: {
@@ -230,6 +220,14 @@
 			 * Flag to determine if the counter for selected rows should be shown.
 			 */
 			showRowsSelectedCount: {
+				type: Boolean,
+				default: false
+			},
+
+			/**
+			 * Flag to determine if all rows are selected.
+			 */
+			allRowsSelected: {
 				type: Boolean,
 				default: false
 			},

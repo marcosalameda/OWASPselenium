@@ -204,9 +204,14 @@
 			<q-control-wrapper class="row-line-group">
 				<q-group-box-container :label="texts.twoFactorAuth">
 					<p>{{ texts.twoFactorAuthHelp }} {{ $app.applicationName }}</p>
-
 					<p>{{ texts.twoFactorAuthFirstStep }}</p>
-
+					<div>
+						<q-badge
+							color="primary"
+							v-if="model.Current2FA">
+							{{ model.Current2FA }}
+						</q-badge>
+					</div>
 					<q-button
 						class="fit-content"
 						:label="texts.setup2fa"
@@ -334,7 +339,6 @@
 						valueChangeEvent: 'fieldChange:pseud.nome',
 						name: 'ValNome',
 						maxLength: this.$app.authConfig.maxUsrSize,
-						labelId: 'label_ValNome',
 						isRequired: true,
 						size: 'medium'
 					}, this),
@@ -347,7 +351,6 @@
 						label: computed(() => this.Resources[hardcodedTexts.currentPassword]),
 						labelPosition: '',
 						maxLength: this.$app.authConfig.maxPswSize,
-						labelId: 'label_OldPassword',
 						isRequired: true,
 						size: 'large'
 					}, this),
@@ -360,7 +363,6 @@
 						label: computed(() => this.Resources[hardcodedTexts.newPassword]),
 						labelPosition: '',
 						maxLength: this.$app.authConfig.maxPswSize,
-						labelId: 'label_NewPassword',
 						isRequired: true,
 						size: 'large'
 					}, this),
@@ -373,7 +375,6 @@
 						label: computed(() => this.Resources[hardcodedTexts.confirmPassword]),
 						labelPosition: '',
 						maxLength: this.$app.authConfig.maxPswSize,
-						labelId: 'label_ConfirmPassword',
 						isRequired: true,
 						size: 'large'
 					}, this),
@@ -387,7 +388,6 @@
 						labelPosition: '',
 						placeholder: computed(() => this.Resources[hardcodedTexts.currentPassword]),
 						maxLength: this.$app.authConfig.maxPswSize,
-						labelId: 'label_Password',
 						isRequired: true,
 						size: 'large'
 					}, this)

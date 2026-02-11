@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_1311]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodpesso',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
+								export: 1,
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -173,6 +176,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodpesso',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -184,6 +188,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
@@ -193,6 +198,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 6,
@@ -203,6 +209,7 @@
 								scrollData: 2,
 								maxDigits: 2,
 								decimalPlaces: 0,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayFreqempr(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayFreqempr.type,
 								pkColumn: 'ValCodequip',
@@ -215,6 +222,7 @@
 								label: computed(() => this.Resources.WARNING52043),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
@@ -224,6 +232,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
@@ -232,6 +241,7 @@
 								field: 'OBSERVAT',
 								label: computed(() => this.Resources.OBSERVATIONS03729),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 10,
@@ -241,6 +251,7 @@
 								label: computed(() => this.Resources.RETURN32222),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 11,
@@ -250,6 +261,7 @@
 								label: computed(() => this.Resources.RETURNED01606),
 								scrollData: 1,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 12,
@@ -260,6 +272,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -275,8 +288,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -377,6 +389,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_13111',
 								name: 'form-COMOD',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -407,38 +420,36 @@
 							{
 								id: 'filter_GQT_Menu_1311_DEVOLUCAO',
 								isMultiple: false,
-								filters: [
+								items: [
 									{
 										id: 'filter_GQT_Menu_1311_DEVOLUCAO_1',
-										key: '1',
 										value: computed(() => this.Resources.FOR_RETURNING61907),
-										selected: true
+										key: '1'
 									},
 									{
 										id: 'filter_GQT_Menu_1311_DEVOLUCAO_2',
-										key: '2',
 										value: computed(() => this.Resources.RETURNED01606),
-										selected: false
+										key: '2'
 									},
 									{
 										id: 'filter_GQT_Menu_1311_DEVOLUCAO_3',
-										key: '3',
 										value: computed(() => this.Resources.ALL38603),
-										selected: false
+										key: '3'
 									},
 								],
-								value: '1',
-								defaultValue: '1'
+								selected: '1',
+								default: '1'
 							},
 						],
-						globalEvents: ['changed-PESS1', 'changed-LENDI', 'changed-EQUIP', 'changed-PESS2'],
+						globalEvents: ['changed-PESS2', 'changed-LENDI', 'changed-PESS1', 'changed-EQUIP'],
 						uuid: '7c5b168c-36e1-428a-b409-4b372e706c23',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						/** Menu limits */
 						controlLimits: [
 							/** SH */
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

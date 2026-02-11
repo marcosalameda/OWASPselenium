@@ -54,6 +54,17 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodrepar.value, (newValue, oldValue) => this.onUpdate('repar.codrepar', this.ValCodrepar, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
+		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodcateg',
+			originId: 'ValCodcateg',
+			area: 'REPAR',
+			field: 'CODCATEG',
+			relatedArea: 'CATE1',
+			isFixed: true,
+			description: computed(() => this.Resources._CATEGORY37591),
+		}).cloneFrom(values?.ValCodcateg))
+		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('repar.codcateg', this.ValCodcateg, newValue, oldValue)))
+
 		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodempre',
 			originId: 'ValCodempre',
@@ -77,17 +88,6 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources._COMPANY02087),
 		}).cloneFrom(values?.ValCodempre))
 		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('repar.codempre', this.ValCodempre, newValue, oldValue)))
-
-		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodcateg',
-			originId: 'ValCodcateg',
-			area: 'REPAR',
-			field: 'CODCATEG',
-			relatedArea: 'CATE1',
-			isFixed: true,
-			description: computed(() => this.Resources._CATEGORY37591),
-		}).cloneFrom(values?.ValCodcateg))
-		this.stopWatchers.push(watch(() => this.ValCodcateg.value, (newValue, oldValue) => this.onUpdate('repar.codcateg', this.ValCodcateg, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({

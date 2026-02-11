@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_3M1]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.BOOLEAN45002),
 								scrollData: 1,
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
@@ -176,6 +179,7 @@
 								maxDigits: 5,
 								decimalPlaces: 4,
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
@@ -189,6 +193,7 @@
 								maxDigits: 7,
 								decimalPlaces: 2,
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -201,6 +206,7 @@
 								scrollData: 8,
 								dateTimeType: 'date',
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -213,6 +219,7 @@
 								scrollData: 16,
 								dateTimeType: 'dateTime',
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -225,6 +232,7 @@
 								scrollData: 19,
 								dateTimeType: 'dateTimeSeconds',
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
@@ -238,6 +246,7 @@
 								maxDigits: 1,
 								decimalPlaces: 0,
 								sortable: false,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayTypen(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTypen.type,
 								pkColumn: 'ValCodtblb',
@@ -252,6 +261,7 @@
 								dataLength: 1,
 								scrollData: 1,
 								sortable: false,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayTypet(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTypet.type,
 								pkColumn: 'ValCodtblb',
@@ -267,6 +277,7 @@
 								maxDigits: 6,
 								decimalPlaces: 3,
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -280,6 +291,7 @@
 								maxDigits: 10,
 								decimalPlaces: 0,
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -292,6 +304,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -303,6 +316,7 @@
 								label: computed(() => this.Resources.MULTILINE_TEXT38013),
 								scrollData: 30,
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -316,6 +330,7 @@
 								scrollData: 5,
 								dateTimeType: 'time',
 								sortable: false,
+								export: 1,
 								pkColumn: 'ValCodtblb',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -333,8 +348,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -451,6 +465,7 @@
 						uuid: 'fa354599-4a30-4174-adb2-39d65e17489c',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

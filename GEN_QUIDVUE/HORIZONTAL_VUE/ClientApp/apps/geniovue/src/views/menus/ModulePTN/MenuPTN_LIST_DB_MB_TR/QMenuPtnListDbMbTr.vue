@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MB_TR]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.ANO33022),
 								dataLength: 4,
 								scrollData: 4,
+								export: 1,
 								pkColumn: 'ValCodyear',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -164,6 +166,7 @@
 								scrollData: 4,
 								maxDigits: 4,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 3,
@@ -174,6 +177,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
+								export: 1,
 								pkColumn: 'ValCodaggre',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -184,6 +188,7 @@
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
@@ -194,6 +199,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 6,
@@ -204,6 +210,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -213,6 +220,7 @@
 								label: computed(() => this.Resources.PROJECTO50142),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodproje',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -229,8 +237,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -346,6 +353,7 @@
 							rowClickAction: {
 								id: 'RCA_PTN_TRIGGER_MENU1',
 								name: 'PTN_MenuR_TRIGGER_MENU1',
+								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -369,10 +377,17 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-AGREG', 'changed-EXPEN', 'changed-PROJE', 'changed-YEAR'],
+						actionIDs: [
+							'PTN_BUTTONTRIGGERTEST1',
+						],
+						globalEvents: ['changed-YEAR', 'changed-PROJE', 'changed-AGREG', 'changed-EXPEN'],
 						uuid: '4d59767d-72c2-4fc8-afe5-1220c23dfd7b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
+					}, this),
+					PTN_BUTTONTRIGGERTEST1: new controlClass.ButtonControl({
+						id: 'PTN_BUTTONTRIGGERTEST1',
 					}, this),
 				}
 			}
@@ -415,16 +430,14 @@
 			 * Event triggered by a click on the trigger button TRIGGER_MENU1.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_TRIGGER_MENU1(listConf, actionCfg, row)
 			{
 				const id = row.rowKey
 
 				// Parallel trigger execution.
 				await Promise.all([
-					Promise.resolve((async () => {
-						await this.PTN_MenuTR_TRIGGER_MENU1_MENUTRIGER_1(id)
-					})()),
+					this.PTN_MenuTR_TRIGGER_MENU1_MENUTRIGER_1(id),
 				])
 			},
 
@@ -432,7 +445,7 @@
 			 * Client-side component of action #1 (FLDUPDT) of trigger MENUTRIGER.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_TRIGGER_MENU1_MENUTRIGER_1(id)
 			{
 				try
@@ -483,7 +496,7 @@
 			 * Client-side component of action #2 (PREFRESH) of trigger MENUTRIGER.
 			 * @param {string} id The primary key of the record
 			 */
-			// eslint-disable-next-line
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
 			async PTN_MenuTR_TRIGGER_MENU1_MENUTRIGER_2(id)
 			{
 				await this.loadList()

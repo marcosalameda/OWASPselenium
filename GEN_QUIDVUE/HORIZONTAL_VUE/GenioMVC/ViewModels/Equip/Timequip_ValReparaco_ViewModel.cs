@@ -1,13 +1,13 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
-using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+﻿using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 using CSGenio.business;
 using CSGenio.core.di;
+using CSGenio.core.framework.table;
 using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Models.Exception;
@@ -22,7 +22,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <summary>
 		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
-		[JsonPropertyName("Table")]
+		[JsonPropertyName("table")]
 		public TablePartial<Timequip_ValReparaco_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
@@ -30,6 +30,7 @@ namespace GenioMVC.ViewModels.Equip
 		public override string TableAlias => "repar";
 
 		/// <inheritdoc/>
+		[JsonPropertyName("uuid")]
 		public override string Uuid => "Timequip_ValReparaco";
 
 		/// <inheritdoc/>
@@ -64,7 +65,7 @@ namespace GenioMVC.ViewModels.Equip
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override CriteriaSet baseConditions
+		public override CriteriaSet BaseConditions
 		{
 			get
 			{
@@ -76,7 +77,7 @@ namespace GenioMVC.ViewModels.Equip
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override List<Relation> relations
+		public override List<Relation> Relations
 		{
 			get
 			{
@@ -137,15 +138,15 @@ namespace GenioMVC.ViewModels.Equip
 
 		public void LoadToExport(out ListingMVC<CSGenioArepar> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
-		public void LoadToExport(out ListingMVC<CSGenioArepar> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		public void LoadToExport(out ListingMVC<CSGenioArepar> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
 			listing = null;
 			conditions = null;
-			columns = this.GetExportColumns(tableConfig.ColumnConfiguration);
+			columns = this.GetExportColumns(tableConfig.ColumnConfigurations);
 
 			// Store number of records to reset it after loading
 			int rowsPerPage = tableConfig.RowsPerPage;
@@ -160,30 +161,26 @@ namespace GenioMVC.ViewModels.Equip
 		/// <inheritdoc/>
 		public override CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 			return BuildCriteriaSet(tableConfig, requestValues, out tableReload, crs, isToExport);
 		}
 
 		/// <inheritdoc/>
-		public override CriteriaSet BuildCriteriaSet(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		public override CriteriaSet BuildCriteriaSet(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
 			User u = m_userContext.User;
 			tableReload = true;
 
-			if (crs == null)
-				crs = CriteriaSet.And();
+			crs ??= CriteriaSet.And();
 
 
-
-			if (Menu == null)
-				Menu = new TablePartial<Timequip_ValReparaco_RowViewModel>();
+			Menu ??= new TablePartial<Timequip_ValReparaco_RowViewModel>();
 			// Set table name (used in getting searchable column names)
 			Menu.TableName = TableAlias;
 
 			Menu.SetFilters(false, false);
 
-
-			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
+			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfigurations), tableConfig));
 
 
 			//Subfilters
@@ -192,9 +189,15 @@ namespace GenioMVC.ViewModels.Equip
 
 			crs.SubSets.Add(subfilters);
 
+			// Form field filters
+			if (tableConfig.FieldFilters != null)
+				crs.SubSets.Add(ProcessFieldFilters(tableConfig.FieldFilters));
+
 			if (this.EquipValCodequip != null)
 				crs.Equal(CSGenioArepar.FldCodequip, this.EquipValCodequip);
-
+			else
+				tableReload = false;
+				
 
 			crs.SubSets.Add(GetCustomizedStaticLimits(StaticLimits));
 
@@ -260,7 +263,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="conditions">The conditions.</param>
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioArepar> Qlisting, ref CriteriaSet conditions)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 
 			tableConfig.RowsPerPage = numberListItems;
 
@@ -275,7 +278,7 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
+		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
 		{
 			ListingMVC<CSGenioArepar> listing = null;
 
@@ -291,135 +294,135 @@ namespace GenioMVC.ViewModels.Equip
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="Qlisting">The rows.</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioArepar> Qlisting, ref CriteriaSet conditions)
+		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioArepar> Qlisting, ref CriteriaSet conditions)
 		{
-				User u = m_userContext.User;
-				Menu = new TablePartial<Timequip_ValReparaco_RowViewModel>();
+			User u = m_userContext.User;
+			Menu = new TablePartial<Timequip_ValReparaco_RowViewModel>();
 
-				CriteriaSet timequippseudreparacoConds = CriteriaSet.And();
-				bool tableReload = true;
+			CriteriaSet timequippseudreparacoConds = CriteriaSet.And();
+			bool tableReload = true;
 
-				//FOR: MENU LIST SORTING
-				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-
-
-
-				int numberListItems = tableConfig.RowsPerPage;
-				var pageNumber = ajaxRequest ? tableConfig.Page : 1;
-
-				// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-				if (pageNumber < 1)
-					pageNumber = 1;
-
-				List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig.ColumnOrderBy, "repar", allSortOrders);
+			//FOR: MENU LIST SORTING
+			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
 
 
-				FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.FldZzstate, CSGenioArepar.FldDtrepara, CSGenioArepar.FldNrrepara, CSGenioArepar.FldTipoarea, CSGenioArepar.FldDescript, CSGenioArepar.FldHours };
+			int numberListItems = tableConfig.RowsPerPage;
+			var pageNumber = ajaxRequest ? tableConfig.Page : 1;
+
+			// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+			if (pageNumber < 1)
+				pageNumber = 1;
+
+			List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig, "repar", allSortOrders);
 
 
-				// Totalizers
-				List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
-
-				FieldRef firstVisibleColumn = null;
-
-				if (sorts == null)
-				{
-					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
-
-					firstVisibleColumn ??= new FieldRef("repar", "dtrepara");
-				}
+			FieldRef[] fields = new FieldRef[] { CSGenioArepar.FldCodrepar, CSGenioArepar.FldZzstate, CSGenioArepar.FldDtrepara, CSGenioArepar.FldNrrepara, CSGenioArepar.FldTipoarea, CSGenioArepar.FldDescript, CSGenioArepar.FldHours };
 
 
-				// Limitations
-				this.tableLimits ??= [];
-				// Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new();
+			// Totalizers
+			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
 
-				//Tooltip for EPHs affecting this viewmodel list
-				{
-					Limit limit = new Limit();
-					limit.TipoLimite = LimitType.EPH;
-					CSGenioArepar model_limit_area = new CSGenioArepar(m_userContext.User);
-					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_TIMEQUIPPSEUDREPARACO");
-					if (area_EPH_limits.Count > 0)
-						this.tableLimits.AddRange(area_EPH_limits);
-				}
+			FieldRef firstVisibleColumn = null;
+
+			if (sorts.Count == 0)
+			{
+				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
+
+				firstVisibleColumn ??= new FieldRef("repar", "dtrepara");
+			}
+			// Limitations
+			this.TableLimits ??= [];
+			// Comparer to check if limit is already present in TableLimits
+			LimitComparer limitComparer = new();
+
+			//Tooltip for EPHs affecting this viewmodel list
+			{
+				Limit limit = new Limit();
+				limit.TipoLimite = LimitType.EPH;
+				CSGenioArepar model_limit_area = new CSGenioArepar(m_userContext.User);
+				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "IBL_TIMEQUIPPSEUDREPARACO");
+				if (area_EPH_limits.Count > 0)
+					this.TableLimits.AddRange(area_EPH_limits);
+			}
 
 
-				if (conditions == null)
-					conditions = CriteriaSet.And();
+			if (conditions == null)
+				conditions = CriteriaSet.And();
 
-				conditions.SubSets.Add(timequippseudreparacoConds);
-				timequippseudreparacoConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
-				tableReload &= hasAllRequiredLimits;
+			conditions.SubSets.Add(timequippseudreparacoConds);
+			timequippseudreparacoConds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
+			tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL GQT OVERRQ TIMEQUIP_PSEUDREPARACO]/
 
-				bool distinct = false;
+			bool distinct = false;
 
-				if (isToExport)
-				{
-					if (!tableReload)
-						return;
+			if (isToExport)
+			{
+				if (!tableReload)
+					return;
 
-					Qlisting = Models.ModelBase.Where<CSGenioArepar>(m_userContext, false, timequippseudreparacoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TIMEQUIPPSEUDREPARACO", true, firstVisibleColumn: firstVisibleColumn);
+				var exportColumns = GetExportColumns(tableConfig.ColumnConfigurations);
+				var exportFieldRefs = exportColumns.Select(eCol => eCol.Field).Where(fldRef => fldRef != null).ToArray();
+
+				Qlisting = Models.ModelBase.BuildListingForExport<CSGenioArepar>(m_userContext, false, ref timequippseudreparacoConds, exportFieldRefs, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TIMEQUIPPSEUDREPARACO", true, firstVisibleColumn: firstVisibleColumn);
 
 // USE /[MANUAL GQT OVERRQLSTEXP TIMEQUIP_PSEUDREPARACO]/
 
-					return;
-				}
+				return;
+			}
 
-				if (tableReload)
-				{
+			if (tableReload)
+			{
 // USE /[MANUAL GQT OVERRQLIST TIMEQUIP_PSEUDREPARACO]/
 
-					string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_repar");
-					Navigation.DestroyEntry("QMVC_POS_RECORD_repar");
-					CriteriaSet m_PagingPosEPHs = null;
+				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_repar");
+				Navigation.DestroyEntry("QMVC_POS_RECORD_repar");
+				CriteriaSet m_PagingPosEPHs = null;
 
-					if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
-					{
-						var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioArepar.GetInformation(), QMVC_POS_RECORD, sorts, timequippseudreparacoConds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
-						if (m_iCurPag != -1)
-							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
-					}
-
-					ListingMVC<CSGenioArepar> listing = Models.ModelBase.Where<CSGenioArepar>(m_userContext, distinct, timequippseudreparacoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TIMEQUIPPSEUDREPARACO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
-
-					if (listing.CurrentPage > 0)
-						pageNumber = listing.CurrentPage;
-
-					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-					if (pageNumber < 1)
-						pageNumber = 1;
-
-					//Set document field values to objects
-					SetDocumentFields(listing);
-
-					Menu.Elements = MapTimequip_ValReparaco(listing);
-
-					Menu.Identifier = "IBL_TIMEQUIPPSEUDREPARACO";
-
-					// Last updated by [CJP] at [2015.02.03]
-					// Adds the identifier to each element
-					foreach (var element in Menu.Elements)
-						element.Identifier = "IBL_TIMEQUIPPSEUDREPARACO";
-
-					Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
-
-					// Set table totalizers
-					if (listing.Totalizers != null && listing.Totalizers.Count > 0)
-						Menu.SetTotalizers(listing.Totalizers);
+				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
+				{
+					var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioArepar.GetInformation(), QMVC_POS_RECORD, sorts, timequippseudreparacoConds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
+					if (m_iCurPag != -1)
+						pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 				}
 
-				// Set table limits display property
-				FillTableLimitsDisplayData();
+				ListingMVC<CSGenioArepar> listing = Models.ModelBase.Where<CSGenioArepar>(m_userContext, distinct, timequippseudreparacoConds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "IBL_TIMEQUIPPSEUDREPARACO", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
+				if (listing.CurrentPage > 0)
+					pageNumber = listing.CurrentPage;
 
-				// Load the user table configuration names and default name
-				LoadUserTableConfigNameProperties();
+				//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+				if (pageNumber < 1)
+					pageNumber = 1;
+
+				//Set document field values to objects
+				SetDocumentFields(listing);
+
+				Menu.Elements = MapTimequip_ValReparaco(listing);
+
+				Menu.Identifier = "IBL_TIMEQUIPPSEUDREPARACO";
+
+				// Last updated by [CJP] at [2015.02.03]
+				// Adds the identifier to each element
+				foreach (var element in Menu.Elements)
+					element.Identifier = "IBL_TIMEQUIPPSEUDREPARACO";
+
+				Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+
+				// Set table totalizers
+				if (listing.Totalizers != null && listing.Totalizers.Count > 0)
+					Menu.SetTotalizers(listing.Totalizers);
+			}
+
+			// Set table limits display property
+			FillTableLimitsDisplayData();
+
+			// Store table configuration so it gets sent to the client-side to be processed
+			CurrentTableConfig = tableConfig;
+
+			// Load the user table configuration names and default name
+			LoadUserTableConfigNameProperties();
 		}
 
 		private List<Timequip_ValReparaco_RowViewModel> MapTimequip_ValReparaco(ListingMVC<CSGenioArepar> Qlisting)

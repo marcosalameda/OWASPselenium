@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TRN_Menu_T03PHOTOS]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -155,6 +156,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -173,6 +176,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodprope',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -189,8 +193,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -291,6 +294,7 @@
 							rowClickAction: {
 								id: 'RCA_TRN_13511',
 								name: 'form-PHOTO03',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -320,6 +324,7 @@
 						uuid: '1b922be3-3c02-481c-9ecb-b4436e31b7df',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_4331]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.NOME47814),
 								dataLength: 100,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodpsw',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.PERSON_NAME40980),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodperso',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -179,8 +182,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -281,6 +283,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_43311',
 								name: 'form-USERS',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -306,10 +309,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PERSO', 'changed-USERS', 'changed-PSW'],
+						globalEvents: ['changed-PSW', 'changed-USERS', 'changed-PERSO'],
 						uuid: 'c5a5ce8c-7964-41c6-b248-bd9d4be5dc71',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

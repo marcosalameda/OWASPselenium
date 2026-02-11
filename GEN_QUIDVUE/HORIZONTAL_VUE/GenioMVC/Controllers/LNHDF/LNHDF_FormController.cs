@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW LNHDF]/
 
 		[HttpPost]
-		public ActionResult Lnhdf_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Lnhdf_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Lnhdf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Lnhdf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhdf_Show_GET",
 				AreaName = "lnhdf",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET LNHDF]/
 		[HttpPost]
-		public ActionResult Lnhdf_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Lnhdf_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Lnhdf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Lnhdf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhdf_New_GET",
 				AreaName = "lnhdf",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Lnhdf_New([FromBody]Lnhdf_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhdf_New",
 				ViewName = "Lnhdf",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET LNHDF]/
 		[HttpPost]
-		public ActionResult Lnhdf_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Lnhdf_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Lnhdf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Lnhdf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhdf_Edit_GET",
 				AreaName = "lnhdf",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Lnhdf_Edit([FromBody]Lnhdf_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhdf_Edit",
 				ViewName = "Lnhdf",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET LNHDF]/
 		[HttpPost]
-		public ActionResult Lnhdf_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Lnhdf_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Lnhdf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Lnhdf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhdf_Delete_GET",
 				AreaName = "lnhdf",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Lnhdf/Lnhdf_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST LNHDF]/
 		[HttpPost]
-		public ActionResult Lnhdf_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Lnhdf_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Lnhdf_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Lnhdf_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhdf_Delete",
 				ViewName = "Lnhdf",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET LNHDF]/
 
 		[HttpPost]
-		public ActionResult Lnhdf_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Lnhdf_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Lnhdf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Lnhdf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhdf_Duplicate_GET",
 				AreaName = "lnhdf",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Lnhdf_Duplicate([FromBody]Lnhdf_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Lnhdf_Duplicate",
 				ViewName = "Lnhdf",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Lnhdf(UserContext.Current);
+					GenioMVC.Models.Lnhdf model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("lnhdf");
 
 // USE /[MANUAL GQT BEFORE_CANCEL LNHDF]/

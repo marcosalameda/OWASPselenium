@@ -1,13 +1,13 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
-using JsonPropertyName = System.Text.Json.Serialization.JsonPropertyNameAttribute;
-using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+﻿using SelectList = Microsoft.AspNetCore.Mvc.Rendering.SelectList;
 using System.Collections.Specialized;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Text.Json.Serialization;
 
 using CSGenio.business;
 using CSGenio.core.di;
+using CSGenio.core.framework.table;
 using CSGenio.framework;
 using GenioMVC.Helpers;
 using GenioMVC.Models.Exception;
@@ -22,7 +22,7 @@ namespace GenioMVC.ViewModels.Aero
 		/// <summary>
 		/// Gets or sets the object that represents the table and its elements.
 		/// </summary>
-		[JsonPropertyName("Table")]
+		[JsonPropertyName("table")]
 		public TablePartial<PTN_Menu_321_RowViewModel> Menu { get; set; }
 
 		/// <inheritdoc/>
@@ -30,6 +30,7 @@ namespace GenioMVC.ViewModels.Aero
 		public override string TableAlias => "aero";
 
 		/// <inheritdoc/>
+		[JsonPropertyName("uuid")]
 		public override string Uuid => "bbf3d181-a4e9-436f-a35f-4d48f9b24aae";
 
 		/// <inheritdoc/>
@@ -58,7 +59,7 @@ namespace GenioMVC.ViewModels.Aero
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override CriteriaSet baseConditions
+		public override CriteriaSet BaseConditions
 		{
 			get
 			{
@@ -70,7 +71,7 @@ namespace GenioMVC.ViewModels.Aero
 
 		/// <inheritdoc/>
 		[JsonIgnore]
-		public override List<Relation> relations
+		public override List<Relation> Relations
 		{
 			get
 			{
@@ -152,15 +153,15 @@ namespace GenioMVC.ViewModels.Aero
 
 		public void LoadToExport(out ListingMVC<CSGenioAaero> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 			LoadToExport(out listing, out conditions, out columns, tableConfig, requestValues, ajaxRequest);
 		}
 
-		public void LoadToExport(out ListingMVC<CSGenioAaero> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
+		public void LoadToExport(out ListingMVC<CSGenioAaero> listing, out CriteriaSet conditions, out List<Exports.QColumn> columns, CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest = false)
 		{
 			listing = null;
 			conditions = null;
-			columns = this.GetExportColumns(tableConfig.ColumnConfiguration);
+			columns = this.GetExportColumns(tableConfig.ColumnConfigurations);
 
 			// Store number of records to reset it after loading
 			int rowsPerPage = tableConfig.RowsPerPage;
@@ -175,29 +176,25 @@ namespace GenioMVC.ViewModels.Aero
 		/// <inheritdoc/>
 		public override CriteriaSet BuildCriteriaSet(NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 			return BuildCriteriaSet(tableConfig, requestValues, out tableReload, crs, isToExport);
 		}
 
 		/// <inheritdoc/>
-		public override CriteriaSet BuildCriteriaSet(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
+		public override CriteriaSet BuildCriteriaSet(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, out bool tableReload, CriteriaSet crs = null, bool isToExport = false)
 		{
 			User u = m_userContext.User;
 			tableReload = true;
 
-			if (crs == null)
-				crs = CriteriaSet.And();
+			crs ??= CriteriaSet.And();
 
-
-			if (Menu == null)
-				Menu = new TablePartial<PTN_Menu_321_RowViewModel>();
+			Menu ??= new TablePartial<PTN_Menu_321_RowViewModel>();
 			// Set table name (used in getting searchable column names)
 			Menu.TableName = TableAlias;
 
 			Menu.SetFilters(false, false);
 
-
-			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfiguration), tableConfig));
+			crs.SubSets.Add(ProcessSearchFilters(Menu, GetSearchColumns(tableConfig.ColumnConfigurations), tableConfig));
 
 
 			//Subfilters
@@ -271,7 +268,7 @@ namespace GenioMVC.ViewModels.Aero
 		/// <param name="conditions">The conditions.</param>
 		public void Load(int numberListItems, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAaero> Qlisting, ref CriteriaSet conditions)
 		{
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = new CSGenio.framework.TableConfiguration.TableConfiguration();
+			CSGenio.core.framework.table.TableConfiguration tableConfig = new();
 
 			tableConfig.RowsPerPage = numberListItems;
 
@@ -286,7 +283,7 @@ namespace GenioMVC.ViewModels.Aero
 		/// <param name="ajaxRequest">Whether the request was initiated via AJAX.</param>
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
+		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport = false, CriteriaSet conditions = null)
 		{
 			ListingMVC<CSGenioAaero> listing = null;
 
@@ -302,144 +299,144 @@ namespace GenioMVC.ViewModels.Aero
 		/// <param name="isToExport">Whether the list is being loaded to be exported</param>
 		/// <param name="Qlisting">The rows.</param>
 		/// <param name="conditions">The conditions.</param>
-		public void Load(CSGenio.framework.TableConfiguration.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAaero> Qlisting, ref CriteriaSet conditions)
+		public void Load(CSGenio.core.framework.table.TableConfiguration tableConfig, NameValueCollection requestValues, bool ajaxRequest, bool isToExport, ref ListingMVC<CSGenioAaero> Qlisting, ref CriteriaSet conditions)
 		{
-				User u = m_userContext.User;
-				Menu = new TablePartial<PTN_Menu_321_RowViewModel>();
+			User u = m_userContext.User;
+			Menu = new TablePartial<PTN_Menu_321_RowViewModel>();
 
-				CriteriaSet ptn_menu_321Conds = CriteriaSet.And();
-				bool tableReload = true;
+			CriteriaSet ptn_menu_321Conds = CriteriaSet.And();
+			bool tableReload = true;
 
-				//FOR: MENU LIST SORTING
-				Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
-				allSortOrders.Add("AERO.NAME", new OrderedDictionary());
-				allSortOrders["AERO.NAME"].Add("AERO.NAME", "A");
+			//FOR: MENU LIST SORTING
+			Dictionary<string, OrderedDictionary> allSortOrders = new Dictionary<string, OrderedDictionary>();
+			allSortOrders.Add("AERO.NAME", new OrderedDictionary());
+			allSortOrders["AERO.NAME"].Add("AERO.NAME", "A");
 
 
+			int numberListItems = tableConfig.RowsPerPage;
+			var pageNumber = ajaxRequest ? tableConfig.Page : 1;
 
-				int numberListItems = tableConfig.RowsPerPage;
-				var pageNumber = ajaxRequest ? tableConfig.Page : 1;
+			// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+			if (pageNumber < 1)
+				pageNumber = 1;
 
-				// Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-				if (pageNumber < 1)
-					pageNumber = 1;
+			List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig, "aero", allSortOrders);
 
-				List<ColumnSort> sorts = GetRequestSorts(this.Menu, tableConfig.ColumnOrderBy, "aero", allSortOrders);
-
-				if (sorts == null || sorts.Count == 0)
-				{
-					sorts = new List<ColumnSort>();
+			if (sorts == null || sorts.Count == 0)
+			{
+				sorts = new List<ColumnSort>();
 				sorts.Add(new ColumnSort(new ColumnReference(CSGenioAaero.FldName), SortOrder.Ascending));
 
-				}
+			}
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZzstate, CSGenioAaero.FldCodcmaer, CSGenioAaero.FldName };
-
-
-				// Totalizers
-				List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
-
-				FieldRef firstVisibleColumn = null;
-
-				if (sorts == null)
-				{
-					firstVisibleColumn = tableConfig?.getFirstVisibleColumn(TableAlias);
-
-					firstVisibleColumn ??= new FieldRef("aero", "codcmaer");
-				}
+			FieldRef[] fields = new FieldRef[] { CSGenioAaero.FldCodaero, CSGenioAaero.FldZzstate, CSGenioAaero.FldCodcmaer, CSGenioAaero.FldName };
 
 
-				// Limitations
-				this.tableLimits ??= [];
-				// Comparer to check if limit is already present in tableLimits
-				LimitComparer limitComparer = new();
+			// Totalizers
+			List<FieldRef> fieldsWithTotalizers = fields.Where(field => tableConfig.TotalizerColumns.Contains(field.FullName)).ToList();
 
-				//Tooltip for EPHs affecting this viewmodel list
-				{
-					Limit limit = new Limit();
-					limit.TipoLimite = LimitType.EPH;
-					CSGenioAaero model_limit_area = new CSGenioAaero(m_userContext.User);
-					List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML321");
-					if (area_EPH_limits.Count > 0)
-						this.tableLimits.AddRange(area_EPH_limits);
-				}
+			FieldRef firstVisibleColumn = null;
+
+			if (sorts.Count == 0)
+			{
+				firstVisibleColumn = tableConfig?.GetFirstVisibleColumn(TableAlias);
+
+				firstVisibleColumn ??= new FieldRef("aero", "codcmaer");
+			}
+			// Limitations
+			this.TableLimits ??= [];
+			// Comparer to check if limit is already present in TableLimits
+			LimitComparer limitComparer = new();
+
+			//Tooltip for EPHs affecting this viewmodel list
+			{
+				Limit limit = new Limit();
+				limit.TipoLimite = LimitType.EPH;
+				CSGenioAaero model_limit_area = new CSGenioAaero(m_userContext.User);
+				List<Limit> area_EPH_limits = EPH_Limit_Filler(ref limit, model_limit_area, "ML321");
+				if (area_EPH_limits.Count > 0)
+					this.TableLimits.AddRange(area_EPH_limits);
+			}
 
 
-				if (conditions == null)
-					conditions = CriteriaSet.And();
+			if (conditions == null)
+				conditions = CriteriaSet.And();
 
-				conditions.SubSets.Add(ptn_menu_321Conds);
-				ptn_menu_321Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
-				tableReload &= hasAllRequiredLimits;
+			conditions.SubSets.Add(ptn_menu_321Conds);
+			ptn_menu_321Conds = BuildCriteriaSet(tableConfig, requestValues, out bool hasAllRequiredLimits, conditions, isToExport);
+			tableReload &= hasAllRequiredLimits;
 
 // USE /[MANUAL PTN OVERRQ 321]/
 
-				bool distinct = false;
+			bool distinct = false;
 
-				if (isToExport)
-				{
-					if (!tableReload)
-						return;
+			if (isToExport)
+			{
+				if (!tableReload)
+					return;
 
-					Qlisting = Models.ModelBase.Where<CSGenioAaero>(m_userContext, false, ptn_menu_321Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, firstVisibleColumn: firstVisibleColumn);
+				var exportColumns = GetExportColumns(tableConfig.ColumnConfigurations);
+				var exportFieldRefs = exportColumns.Select(eCol => eCol.Field).Where(fldRef => fldRef != null).ToArray();
+
+				Qlisting = Models.ModelBase.BuildListingForExport<CSGenioAaero>(m_userContext, false, ref ptn_menu_321Conds, exportFieldRefs, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, firstVisibleColumn: firstVisibleColumn);
 
 // USE /[MANUAL PTN OVERRQLSTEXP 321]/
 
-					return;
-				}
+				return;
+			}
 
-				if (tableReload)
-				{
+			if (tableReload)
+			{
 // USE /[MANUAL PTN OVERRQLIST 321]/
 
-					string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_aero");
-					Navigation.DestroyEntry("QMVC_POS_RECORD_aero");
-					CriteriaSet m_PagingPosEPHs = null;
+				string QMVC_POS_RECORD = Navigation.GetStrValue("QMVC_POS_RECORD_aero");
+				Navigation.DestroyEntry("QMVC_POS_RECORD_aero");
+				CriteriaSet m_PagingPosEPHs = null;
 
-					if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
-					{
-						var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAaero.GetInformation(), QMVC_POS_RECORD, sorts, ptn_menu_321Conds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
-						if (m_iCurPag != -1)
-							pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
-					}
-
-					ListingMVC<CSGenioAaero> listing = Models.ModelBase.Where<CSGenioAaero>(m_userContext, distinct, ptn_menu_321Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
-
-					if (listing.CurrentPage > 0)
-						pageNumber = listing.CurrentPage;
-
-					//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
-					if (pageNumber < 1)
-						pageNumber = 1;
-
-					//Set document field values to objects
-					SetDocumentFields(listing);
-
-					Menu.Elements = MapPTN_Menu_321(listing);
-
-					Menu.Identifier = "ML321";
-					Menu.Slots = new Dictionary<string, List<object>>();
-
-					// Last updated by [CJP] at [2015.02.03]
-					// Adds the identifier to each element
-					foreach (var element in Menu.Elements)
-						element.Identifier = "ML321";
-
-					Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
-
-					// Set table totalizers
-					if (listing.Totalizers != null && listing.Totalizers.Count > 0)
-						Menu.SetTotalizers(listing.Totalizers);
+				if (!string.IsNullOrEmpty(QMVC_POS_RECORD))
+				{
+					var m_iCurPag = m_userContext.PersistentSupport.getPagingPos(CSGenioAaero.GetInformation(), QMVC_POS_RECORD, sorts, ptn_menu_321Conds, m_PagingPosEPHs, firstVisibleColumn: firstVisibleColumn);
+					if (m_iCurPag != -1)
+						pageNumber = ((m_iCurPag - 1) / numberListItems) + 1;
 				}
 
-				// Set table limits display property
-				FillTableLimitsDisplayData();
+				ListingMVC<CSGenioAaero> listing = Models.ModelBase.Where<CSGenioAaero>(m_userContext, distinct, ptn_menu_321Conds, fields, (pageNumber - 1) * numberListItems, numberListItems, sorts, "ML321", true, false, QMVC_POS_RECORD, m_PagingPosEPHs, firstVisibleColumn, fieldsWithTotalizers, tableConfig.SelectedRows);
 
-				// Store table configuration so it gets sent to the client-side to be processed
-				CurrentTableConfig = tableConfig;
+				if (listing.CurrentPage > 0)
+					pageNumber = listing.CurrentPage;
 
-				// Load the user table configuration names and default name
-				LoadUserTableConfigNameProperties();
+				//Added to avoid 0 or -1 pages when setting number of records to -1 to disable pagination
+				if (pageNumber < 1)
+					pageNumber = 1;
+
+				//Set document field values to objects
+				SetDocumentFields(listing);
+
+				Menu.Elements = MapPTN_Menu_321(listing);
+
+				Menu.Identifier = "ML321";
+				Menu.Slots = new Dictionary<string, List<object>>();
+
+				// Last updated by [CJP] at [2015.02.03]
+				// Adds the identifier to each element
+				foreach (var element in Menu.Elements)
+					element.Identifier = "ML321";
+
+				Menu.SetPagination(pageNumber, listing.NumRegs, listing.HasMore, listing.GetTotal, listing.TotalRecords);
+
+				// Set table totalizers
+				if (listing.Totalizers != null && listing.Totalizers.Count > 0)
+					Menu.SetTotalizers(listing.Totalizers);
+			}
+
+			// Set table limits display property
+			FillTableLimitsDisplayData();
+
+			// Store table configuration so it gets sent to the client-side to be processed
+			CurrentTableConfig = tableConfig;
+
+			// Load the user table configuration names and default name
+			LoadUserTableConfigNameProperties();
 		}
 
 		private List<PTN_Menu_321_RowViewModel> MapPTN_Menu_321(ListingMVC<CSGenioAaero> Qlisting)

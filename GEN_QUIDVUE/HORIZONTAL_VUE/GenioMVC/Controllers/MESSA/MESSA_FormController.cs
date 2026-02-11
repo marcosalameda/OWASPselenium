@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW MESSA]/
 
 		[HttpPost]
-		public ActionResult Messa_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Messa_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Messa_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Messa_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_Show_GET",
 				AreaName = "messa",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET MESSA]/
 		[HttpPost]
-		public ActionResult Messa_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Messa_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Messa_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Messa_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_New_GET",
 				AreaName = "messa",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Messa_New([FromBody]Messa_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_New",
 				ViewName = "Messa",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET MESSA]/
 		[HttpPost]
-		public ActionResult Messa_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Messa_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Messa_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Messa_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_Edit_GET",
 				AreaName = "messa",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Messa_Edit([FromBody]Messa_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_Edit",
 				ViewName = "Messa",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET MESSA]/
 		[HttpPost]
-		public ActionResult Messa_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Messa_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Messa_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Messa_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_Delete_GET",
 				AreaName = "messa",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Messa/Messa_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST MESSA]/
 		[HttpPost]
-		public ActionResult Messa_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Messa_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Messa_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Messa_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_Delete",
 				ViewName = "Messa",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET MESSA]/
 
 		[HttpPost]
-		public ActionResult Messa_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Messa_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Messa_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Messa_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_Duplicate_GET",
 				AreaName = "messa",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Messa_Duplicate([FromBody]Messa_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Messa_Duplicate",
 				ViewName = "Messa",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Messa(UserContext.Current);
+					GenioMVC.Models.Messa model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("messa");
 
 // USE /[MANUAL GQT BEFORE_CANCEL MESSA]/
@@ -404,9 +405,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_entit")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -416,7 +414,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -426,35 +424,12 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Messa parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Messa parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Messa_EntitValName_ViewModel model = new(UserContext.Current, parentCtx);
+			Messa_EntitValName_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -475,9 +450,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_perso")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -487,7 +459,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -497,35 +469,12 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Messa parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Messa parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Messa_PersoValName_ViewModel model = new(UserContext.Current, parentCtx);
+			Messa_PersoValName_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());

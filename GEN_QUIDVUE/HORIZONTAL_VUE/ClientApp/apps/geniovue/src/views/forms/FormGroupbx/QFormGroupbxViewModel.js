@@ -54,6 +54,17 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('equip.codequip', this.ValCodequip, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
+		this.ValCodpess1 = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodpess1',
+			originId: 'ValCodpess1',
+			area: 'EQUIP',
+			field: 'CODPESS1',
+			relatedArea: 'PESS1',
+			isFixed: true,
+			description: computed(() => this.Resources._COMOMODOR01469),
+		}).cloneFrom(values?.ValCodpess1))
+		this.stopWatchers.push(watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('equip.codpess1', this.ValCodpess1, newValue, oldValue)))
+
 		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodempre',
 			originId: 'ValCodempre',
@@ -75,17 +86,6 @@ export default class ViewModel extends FormViewModelBase
 			description: '',
 		}).cloneFrom(values?.ValCoddeco))
 		this.stopWatchers.push(watch(() => this.ValCoddeco.value, (newValue, oldValue) => this.onUpdate('equip.coddeco', this.ValCoddeco, newValue, oldValue)))
-
-		this.ValCodpess1 = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodpess1',
-			originId: 'ValCodpess1',
-			area: 'EQUIP',
-			field: 'CODPESS1',
-			relatedArea: 'PESS1',
-			isFixed: true,
-			description: computed(() => this.Resources._COMOMODOR01469),
-		}).cloneFrom(values?.ValCodpess1))
-		this.stopWatchers.push(watch(() => this.ValCodpess1.value, (newValue, oldValue) => this.onUpdate('equip.codpess1', this.ValCodpess1, newValue, oldValue)))
 
 		/** The used foreign keys. */
 		this.ValCodtpequ = reactive(new modelFieldType.ForeignKey({

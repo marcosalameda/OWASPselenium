@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_PESSCARD]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.DATA_DE_NASCIMENTO48110),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -171,6 +174,7 @@
 								label: computed(() => this.Resources.SEXO52099),
 								dataLength: 9,
 								scrollData: 9,
+								export: 1,
 								array: computed(() => new qProjArrays.QArraySexo(vm.$getResource).elements),
 								arrayType: qProjArrays.QArraySexo.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -183,6 +187,7 @@
 								scrollData: 1,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -192,6 +197,7 @@
 								label: computed(() => this.Resources.ADDRESS04342),
 								dataLength: 100,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -201,6 +207,7 @@
 								label: computed(() => this.Resources.ZIP_CODE56964),
 								dataLength: 8,
 								scrollData: 8,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -210,6 +217,7 @@
 								label: computed(() => this.Resources.PAIS04637),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -219,6 +227,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 150,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
@@ -229,6 +238,7 @@
 								scrollData: 9,
 								maxDigits: 9,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
@@ -238,6 +248,7 @@
 								label: computed(() => this.Resources.NATURALNESS33189),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
@@ -247,6 +258,7 @@
 								label: computed(() => this.Resources.NACIONALIDADE23735),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 12,
@@ -258,6 +270,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
@@ -267,6 +280,7 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodwareh',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -287,8 +301,7 @@
 								canDelete: false,
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -325,6 +338,7 @@
 							rowClickAction: {
 								id: 'RCA_STY_22211',
 								name: 'form-ARMAPESS',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -350,7 +364,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-WPESS'],
+						globalEvents: ['changed-WPESS', 'changed-WAREH'],
 						uuid: '644ad93f-2ee6-44bf-b95b-53f4e8a1f4da',
 						allSelectedRows: 'false',
 						viewModes: [
@@ -438,6 +452,10 @@
 										rawValue: 'grid',
 										isMapped: false
 									},
+									gridMode: {
+										rawValue: 'fixed',
+										isMapped: false
+									},
 									containerAlignment: {
 										rawValue: 'left',
 										isMapped: false
@@ -468,6 +486,7 @@
 							},
 						],
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

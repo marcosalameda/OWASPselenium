@@ -10,5 +10,4 @@ export * from './systemData'
 export * from './tracingData'
 // @ts-expect-error -- types still WIP
 export * from './userData'
-//@ts-expect-error -- types still WIP
 export * from './aiData'

@@ -3,7 +3,7 @@
 	<Definicoes>
 		<Sistema>GQT</Sistema>
 		<Cliente>QUIDVUE</Cliente>
-		<Versao>4420</Versao>
+		<Versao>4421</Versao>
 	</Definicoes>
 	<Modulos>
 		<Modulo ID="TRN">

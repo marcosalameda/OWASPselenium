@@ -9,11 +9,12 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
 using MimeKit;
-using System.Text.Json;
 using Newtonsoft.Json;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
+using System.Linq;
+using System.Text.Json.Nodes;
 
 
 namespace CSGenio.core.ai
@@ -95,7 +96,7 @@ namespace CSGenio.core.ai
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        private void SetAuthorizationHeaders(HttpRequestMessage request, User user)
+        private static void SetAuthorizationHeaders(HttpRequestMessage request, User user)
         {
             // Add JWT token to Authorization header if JWT security mode is enabled
             if (Configuration.AiConfig.MCPSecurityMode == MCPSecurityMode.JWT)
@@ -116,6 +117,19 @@ namespace CSGenio.core.ai
             }
         }
 
+
+        private static string EnrichJsonWithServerData(string content, User user)
+        {
+            var json = JsonNode.Parse(content);
+
+            json["project"] = Configuration.Application.Name;
+            json["user"] = user.Name;
+            json["appVersion"] = VersionInfo.GenAssemblyVersion;
+
+            return json.ToJsonString();
+        }
+
+
         /// <summary>
         /// Sends a JSON-based HTTP request to the Chatbot API with user context.
         /// </summary>
@@ -131,6 +145,7 @@ namespace CSGenio.core.ai
             using (StreamReader reader = new StreamReader(content))
                 jsonContent = await reader.ReadToEndAsync();
 
+            jsonContent = EnrichJsonWithServerData(jsonContent, user);
             // Build the HTTP request
             var request = new HttpRequestMessage
             {
@@ -204,6 +219,7 @@ namespace CSGenio.core.ai
             using (StreamReader reader = new StreamReader(requestData))
                 jsonContent = await reader.ReadToEndAsync();
 
+            jsonContent = EnrichJsonWithServerData(jsonContent, user);
             var content = new StringContent(jsonContent, Encoding.UTF8, "application/json");
             var request = new HttpRequestMessage(HttpMethod.Post, BuildEndpoint("get-job-result"))
             {
@@ -230,8 +246,15 @@ namespace CSGenio.core.ai
         {
             var boundary = Guid.NewGuid().ToString();
             var multipartContent = new MultipartFormDataContent(boundary);
+
+            //Add server side information to form fields, never trust client to send these values
+            var enrichedFields = fields.ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            enrichedFields["project"] = Configuration.Application.Name;
+            enrichedFields["user"] = user.Name;
+            enrichedFields["appVersion"] = VersionInfo.GenAssemblyVersion;
+
             //Add fields
-            foreach (var field in fields)
+            foreach (var field in enrichedFields)
             {
                 var stringContent = new StringContent(field.Value);
                 multipartContent.Add(stringContent, $"\"{field.Key}\"");

@@ -69,7 +69,7 @@ public class GenioDataset
     /// <remarks>Primary keys will be set in the same input rows when this function returns</remarks>
     public void InsertBlock(IEnumerable<Area> rows)
     {
-        if(!rows.Any()) 
+        if (!rows.Any())
             return;
         var info = rows.First().Information;
 
@@ -102,7 +102,7 @@ public class GenioDataset
         //insert all of them into the database
         _sp.bulkInsert(sortedRows);
 
-        //run the calcblock procedure over the list of inserted records        
+        //run the calcblock procedure over the list of inserted records
         var newvalues = CalculateBlock(sortedRows.Select(x => x.QPrimaryKey), info);
 
         //give back the results to the application can chain this call
@@ -121,7 +121,8 @@ public class GenioDataset
     {
         if (!rows.Any())
             return;
-        var info = rows.First().Information;
+
+        AreaInfo info = rows.First().Information;
 
         //force the zzstate to 0 if it isn't already
         foreach (var row in rows)
@@ -137,7 +138,7 @@ public class GenioDataset
         //fetch oldvalues (we assume the ones given to us in rows are new values)
         var keys = rows.Select(x => x.QPrimaryKey);
         List<Area> sortedoldrows;
-        if(oldrows != null)
+        if (oldrows != null)
         {
             sortedoldrows = oldrows.ToList();
             sortedoldrows.Sort((x, y) => x.QPrimaryKey.CompareTo(y.QPrimaryKey));
@@ -205,7 +206,14 @@ public class GenioDataset
     }
 
 
-    private List<Area> CalculateBlock(IEnumerable<string> keys, AreaInfo info, List<Area> oldvalues = null)
+    /// <summary>
+    /// Invokes the Calc Block stored procedure and handles the necessary propagations
+    /// </summary>
+    /// <param name="keys">The primary keys of the rows</param>
+    /// <param name="info">The area information</param>
+    /// <param name="oldvalues">The current row values</param>
+    /// <returns>A list with the new row values</returns>
+    private List<Area> CalculateBlock(IEnumerable<string> keys, AreaInfo info, ICollection<Area> oldvalues = null)
     {
         //update in block the rows
         InvokeCalcBlock(keys, info);
@@ -217,13 +225,13 @@ public class GenioDataset
         ValidateRows(newvalues);
 
         //analize the values to determine what other rows in other tables should be recalculated
-        Propagations propagations = new Propagations();
+        Propagations propagations = new();
 
         int ixMatch = 0;
         foreach (var newrow in newvalues)
         {
             //match up the new row with the old row
-            var oldrow = oldvalues is null ? null : oldvalues[ixMatch++];
+            var oldrow = oldvalues?.ToList()[ixMatch++];
 
             DetermineClPropagation(propagations, newrow, oldrow);
             DetermineSrPropagation(propagations, newrow, oldrow);
@@ -262,7 +270,7 @@ public class GenioDataset
             if (row.UserRecord)
             {
                 var validationResults = Validation.validateFieldsChange(row, _sp, _user);
-                if (validationResults.Status == Status.E)
+                if (validationResults.HasError)
                     throw new Exception(validationResults.Message);
             }
         }
@@ -304,7 +312,7 @@ public class GenioDataset
             // - an update that changes the ndup prefix
             // - an update that still holds an invalid number
             var changedrows = newrows;
-            if(oldrows != null)
+            if (oldrows != null)
             {
                 changedrows = newrows.Zip(oldrows, (newrow, oldrow) => {
                     var needsUpdate = (oldrow.Zzstate != 0)
@@ -317,7 +325,7 @@ public class GenioDataset
             //if no rows need change do nothing
             if (!changedrows.Any())
                 continue;
-            
+
             //base query for fetching the current largest number
             SelectQuery qs = new SelectQuery()
                 .From(info.QSystem, info.TableName, info.Alias);
@@ -360,8 +368,8 @@ public class GenioDataset
                 for (int i = 0; i < matrix.NumRows; i++)
                     prefixmap.Add(matrix.GetString(i, 1), matrix.GetInteger(i, 0));
                 //initialize non-existent prefixes at 0
-                foreach(var prefix in prefixes)
-                    if(!prefixmap.ContainsKey(prefix))
+                foreach (var prefix in prefixes)
+                    if (!prefixmap.ContainsKey(prefix))
                         prefixmap.Add(prefix, 0);
 
                 //fill in the corresponding value for each row, incrementing each value
@@ -416,9 +424,9 @@ public class GenioDataset
     {
         //naming used in calcblock sproc is the physical table name without the system prefix
         //there are expections for views and for manual tables but those should not be part of block calculations
-        var tablename = info.TableName.Substring(info.QSystem.Length).ToUpperInvariant();
+        string tableName = info.TableName.Substring(info.QSystem.Length).ToUpperInvariant();
         List<IDbDataParameter> paramList = [_sp.CreateParameter("x", keys)];
-        _sp.ExecuteProcedure("Genio_CalcBlock_" + tablename, paramList);
+        _sp.ExecuteProcedure($"Genio_CalcBlock_{tableName}", paramList);
     }
 
     private class Propagations
@@ -545,7 +553,7 @@ public class GenioDataset
         if (info.ChildTable == null)
             return;
         var tvp = QueryUtils.CreateKeyListType(keys);
-        foreach(ChildRelation child in info.ChildTable)
+        foreach (ChildRelation child in info.ChildTable)
         {
             if (child.ProcWhenDelete == DeleteProc.DM)
             {
@@ -592,7 +600,7 @@ public class GenioDataset
         if (info.HistoryList == null)
             return;
 
-        foreach(var histTable in info.HistoryList)
+        foreach (var histTable in info.HistoryList)
         {
             //collect changed rows
             var changedrows = newrows;
@@ -611,7 +619,7 @@ public class GenioDataset
 
             //prepare the bulk insert list
             List<Area> histRows = new List<Area>();
-            foreach(var row in changedrows)
+            foreach (var row in changedrows)
             {
                 Area areaHist = Area.createArea(histTable.CreateHistTables, _user, _user.CurrentModule);
                 foreach (var histField in histTable.CreateHistFields)
@@ -631,7 +639,7 @@ public class GenioDataset
         if (info.SumCreateRecords == null)
             return;
 
-        foreach(var stFormula in info.SumCreateRecords) 
+        foreach (var stFormula in info.SumCreateRecords)
         {
             //find out the unique combinations of (non-empty) st fields
             var groups = new Dictionary<string, object[]>();
@@ -644,7 +652,7 @@ public class GenioDataset
                 int vx = 0;
                 foreach (var stField in stFormula.STSourceFields)
                 {
-                    var fieldInfo = info.DBFields[stField];   
+                    var fieldInfo = info.DBFields[stField];
                     object value = row.returnValueField(info.Alias + "." + stField);
                     if (fieldInfo.isEmptyValue(value))
                     {
@@ -693,7 +701,7 @@ public class GenioDataset
             InsertBlock(inserts);
 
             //add to the dictionary the pk for each inserted group
-            foreach(var row in inserts)
+            foreach (var row in inserts)
             {
                 var concatkey = new StringBuilder();
                 foreach (var stField in stFormula.STTargetFields)
@@ -706,7 +714,7 @@ public class GenioDataset
 
             //fill in the fk's to the newly inserted st rows in the corresponding records
             int ix = 0;
-            foreach (var row in newrows) 
+            foreach (var row in newrows)
             {
                 var rowkey = rowkeys[ix];
                 if (rowkey != "" && groupkeys.TryGetValue(rowkey, out string pk))
@@ -715,5 +723,4 @@ public class GenioDataset
             }
         }
     }
-
 }

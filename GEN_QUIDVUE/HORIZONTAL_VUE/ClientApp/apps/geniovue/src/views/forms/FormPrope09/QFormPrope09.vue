@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,25 +94,27 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="PROPE09"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.PROPE09_PSEUDMAININF_.isVisible">
-					<q-control-wrapper
-						v-show="controls.PROPE09_PSEUDMAININF_.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.PROPE09_PSEUDMAININF_.isVisible">
+					<q-col
+						v-if="controls.PROPE09_PSEUDMAININF_.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.PROPE09_PSEUDMAININF_.isVisible"
 							id="PROPE09_PSEUDMAININF_"
 							v-bind="controls.PROPE09_PSEUDMAININF_"
 							:is-visible="controls.PROPE09_PSEUDMAININF_.isVisible">
 							<!-- Start PROPE09_PSEUDMAININF_ -->
-							<q-row-container v-show="controls.PROPE09_PROPEPHOTO___.isVisible">
-								<q-control-wrapper
-									v-show="controls.PROPE09_PROPEPHOTO___.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PROPE09_PROPEPHOTO___.isVisible">
+								<q-col
+									v-if="controls.PROPE09_PROPEPHOTO___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PROPE09_PROPEPHOTO___.isVisible"
 										class="q-image"
 										v-bind="controls.PROPE09_PROPEPHOTO___"
 										v-on="controls.PROPE09_PROPEPHOTO___.handlers"
@@ -116,13 +126,14 @@
 											v-bind="controls.PROPE09_PROPEPHOTO___.props"
 											v-on="controls.PROPE09_PROPEPHOTO___.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PROPE09_PROPETITLE___.isVisible">
-								<q-control-wrapper
-									v-show="controls.PROPE09_PROPETITLE___.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PROPE09_PROPETITLE___.isVisible">
+								<q-col
+									v-if="controls.PROPE09_PROPETITLE___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PROPE09_PROPETITLE___.isVisible"
 										class="i-text"
 										v-bind="controls.PROPE09_PROPETITLE___"
 										v-on="controls.PROPE09_PROPETITLE___.handlers"
@@ -134,13 +145,14 @@
 											@blur="onBlur(controls.PROPE09_PROPETITLE___, model.ValTitle.value)"
 											@change="model.ValTitle.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PROPE09_PROPEPRICE___.isVisible">
-								<q-control-wrapper
-									v-show="controls.PROPE09_PROPEPRICE___.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PROPE09_PROPEPRICE___.isVisible">
+								<q-col
+									v-if="controls.PROPE09_PROPEPRICE___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PROPE09_PROPEPRICE___.isVisible"
 										class="i-text"
 										v-bind="controls.PROPE09_PROPEPRICE___"
 										v-on="controls.PROPE09_PROPEPRICE___.handlers"
@@ -152,13 +164,14 @@
 											v-bind="controls.PROPE09_PROPEPRICE___.props"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PROPE09_PROPEDESCRIPT.isVisible">
-								<q-control-wrapper
-									v-show="controls.PROPE09_PROPEDESCRIPT.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PROPE09_PROPEDESCRIPT.isVisible">
+								<q-col
+									v-if="controls.PROPE09_PROPEDESCRIPT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PROPE09_PROPEDESCRIPT.isVisible"
 										class="i-textarea"
 										v-bind="controls.PROPE09_PROPEDESCRIPT"
 										v-on="controls.PROPE09_PROPEDESCRIPT.handlers"
@@ -170,32 +183,33 @@
 											v-bind="controls.PROPE09_PROPEDESCRIPT.props"
 											v-on="controls.PROPE09_PROPEDESCRIPT.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PROPE09_PSEUDMAININF_ -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PROPE09_PSEUDACC01___.isVisible">
-					<q-control-wrapper
-						v-show="controls.PROPE09_PSEUDACC01___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PROPE09_PSEUDACC01___.isVisible">
+					<q-col
+						v-if="controls.PROPE09_PSEUDACC01___.isVisible"
+						cols="auto">
 						<q-accordion
 							v-if="controls.PROPE09_PSEUDACC01___.isVisible"
 							id="PROPE09_PSEUDACC01___"
-							v-model="controls.PROPE09_PSEUDACC01___.openChild"
-							v-bind="controls.PROPE09_PSEUDACC01___">
+							v-model="controls.PROPE09_PSEUDACC01___.openChild">
 							<!-- Start PROPE09_PSEUDACC01___ -->
 							<q-accordion-item
+								v-if="controls.PROPE09_PSEUDLOCALIZA.isVisible"
 								id="PROPE09_PSEUDLOCALIZA-container"
 								value="PROPE09_PSEUDLOCALIZA"
 								:title="controls.PROPE09_PSEUDLOCALIZA.label">
 								<!-- Start PROPE09_PSEUDLOCALIZA -->
-								<q-row-container v-show="controls.PROPE09_CITY_CITY____.isVisible">
-									<q-control-wrapper
-										v-show="controls.PROPE09_CITY_CITY____.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.PROPE09_CITY_CITY____.isVisible">
+									<q-col
+										v-if="controls.PROPE09_CITY_CITY____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.PROPE09_CITY_CITY____.isVisible"
 											class="i-text"
 											v-bind="controls.PROPE09_CITY_CITY____"
 											v-on="controls.PROPE09_CITY_CITY____.handlers"
@@ -211,13 +225,14 @@
 												v-bind="controls.PROPE09_CITY_CITY____.seeMoreParams"
 												v-on="controls.PROPE09_CITY_CITY____.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.PROPE09_CTRY_COUNTRY_.isVisible">
-									<q-control-wrapper
-										v-show="controls.PROPE09_CTRY_COUNTRY_.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.PROPE09_CTRY_COUNTRY_.isVisible">
+									<q-col
+										v-if="controls.PROPE09_CTRY_COUNTRY_.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.PROPE09_CTRY_COUNTRY_.isVisible"
 											class="i-text"
 											v-bind="controls.PROPE09_CTRY_COUNTRY_"
 											v-on="controls.PROPE09_CTRY_COUNTRY_.handlers"
@@ -229,20 +244,22 @@
 												@blur="onBlur(controls.PROPE09_CTRY_COUNTRY_, model.CityCtryValCountry.value)"
 												@change="model.CityCtryValCountry.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End PROPE09_PSEUDLOCALIZA -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.PROPE09_PSEUDDETAILS_.isVisible"
 								id="PROPE09_PSEUDDETAILS_-container"
 								value="PROPE09_PSEUDDETAILS_"
 								:title="controls.PROPE09_PSEUDDETAILS_.label">
 								<!-- Start PROPE09_PSEUDDETAILS_ -->
-								<q-row-container v-show="controls.PROPE09_PROPESIZE____.isVisible">
-									<q-control-wrapper
-										v-show="controls.PROPE09_PROPESIZE____.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.PROPE09_PROPESIZE____.isVisible">
+									<q-col
+										v-if="controls.PROPE09_PROPESIZE____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.PROPE09_PROPESIZE____.isVisible"
 											class="i-text"
 											v-bind="controls.PROPE09_PROPESIZE____"
 											v-on="controls.PROPE09_PROPESIZE____.handlers"
@@ -254,13 +271,14 @@
 												v-bind="controls.PROPE09_PROPESIZE____.props"
 												@update:model-value="model.ValSize.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.PROPE09_PROPEBATHRMS_.isVisible">
-									<q-control-wrapper
-										v-show="controls.PROPE09_PROPEBATHRMS_.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.PROPE09_PROPEBATHRMS_.isVisible">
+									<q-col
+										v-if="controls.PROPE09_PROPEBATHRMS_.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.PROPE09_PROPEBATHRMS_.isVisible"
 											class="i-text"
 											v-bind="controls.PROPE09_PROPEBATHRMS_"
 											v-on="controls.PROPE09_PROPEBATHRMS_.handlers"
@@ -272,13 +290,14 @@
 												v-bind="controls.PROPE09_PROPEBATHRMS_.props"
 												@update:model-value="model.ValBathrms.fnUpdateValue" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.PROPE09_PROPEYEAR____.isVisible">
-									<q-control-wrapper
-										v-show="controls.PROPE09_PROPEYEAR____.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.PROPE09_PROPEYEAR____.isVisible">
+									<q-col
+										v-if="controls.PROPE09_PROPEYEAR____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.PROPE09_PROPEYEAR____.isVisible"
 											class="i-text"
 											v-bind="controls.PROPE09_PROPEYEAR____"
 											v-on="controls.PROPE09_PROPEYEAR____.handlers"
@@ -290,20 +309,22 @@
 												@blur="onBlur(controls.PROPE09_PROPEYEAR____, model.ValYear.value)"
 												@change="model.ValYear.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End PROPE09_PSEUDDETAILS_ -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.PROPE09_PSEUDAGENTINF.isVisible"
 								id="PROPE09_PSEUDAGENTINF-container"
 								value="PROPE09_PSEUDAGENTINF"
 								:title="controls.PROPE09_PSEUDAGENTINF.label">
 								<!-- Start PROPE09_PSEUDAGENTINF -->
-								<q-row-container v-show="controls.PROPE09_AGENTNAME____.isVisible">
-									<q-control-wrapper
-										v-show="controls.PROPE09_AGENTNAME____.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.PROPE09_AGENTNAME____.isVisible">
+									<q-col
+										v-if="controls.PROPE09_AGENTNAME____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.PROPE09_AGENTNAME____.isVisible"
 											class="i-text"
 											v-bind="controls.PROPE09_AGENTNAME____"
 											v-on="controls.PROPE09_AGENTNAME____.handlers"
@@ -319,13 +340,14 @@
 												v-bind="controls.PROPE09_AGENTNAME____.seeMoreParams"
 												v-on="controls.PROPE09_AGENTNAME____.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.PROPE09_AGENTEMAIL___.isVisible">
-									<q-control-wrapper
-										v-show="controls.PROPE09_AGENTEMAIL___.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.PROPE09_AGENTEMAIL___.isVisible">
+									<q-col
+										v-if="controls.PROPE09_AGENTEMAIL___.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.PROPE09_AGENTEMAIL___.isVisible"
 											class="i-text"
 											v-bind="controls.PROPE09_AGENTEMAIL___"
 											v-on="controls.PROPE09_AGENTEMAIL___.handlers"
@@ -338,13 +360,14 @@
 												:model-value="model.AgentValEmail.value"
 												@change="model.AgentValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.PROPE09_AGENTPHOTO___.isVisible">
-									<q-control-wrapper
-										v-show="controls.PROPE09_AGENTPHOTO___.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.PROPE09_AGENTPHOTO___.isVisible">
+									<q-col
+										v-if="controls.PROPE09_AGENTPHOTO___.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.PROPE09_AGENTPHOTO___.isVisible"
 											class="q-image"
 											v-bind="controls.PROPE09_AGENTPHOTO___"
 											v-on="controls.PROPE09_AGENTPHOTO___.handlers"
@@ -356,30 +379,33 @@
 												v-bind="controls.PROPE09_AGENTPHOTO___.props"
 												v-on="controls.PROPE09_AGENTPHOTO___.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End PROPE09_PSEUDAGENTINF -->
 							</q-accordion-item>
 							<!-- End PROPE09_PSEUDACC01___ -->
 						</q-accordion>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PROPE09_PSEUDPROPCONT.isVisible">
-					<q-control-wrapper
-						v-show="controls.PROPE09_PSEUDPROPCONT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PROPE09_PSEUDPROPCONT.isVisible">
+					<q-col
+						v-if="controls.PROPE09_PSEUDPROPCONT.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.PROPE09_PSEUDPROPCONT.isVisible"
+							v-if="controls.PROPE09_PSEUDPROPCONT.isVisible"
 							v-bind="controls.PROPE09_PSEUDPROPCONT"
-							v-on="controls.PROPE09_PSEUDPROPCONT.handlers" />
+							v-on="controls.PROPE09_PSEUDPROPCONT.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE PROPE09_PSEUDPROPCONT]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.PROPE09_PSEUDPROPCONT.isVisible"
 							:list-ctrl="controls.PROPE09_PSEUDPROPCONT"
 							:filter-operators="controls.PROPE09_PSEUDPROPCONT.filterOperators"
 							v-on="controls.PROPE09_PSEUDPROPCONT.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -388,7 +414,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -397,6 +423,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -408,7 +435,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -621,7 +648,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -761,7 +792,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDMAININF_',
 						maxLength: 50,
-						labelId: 'label_PROPE09_PROPETITLE___',
 						controlLimits: [
 						],
 					}, this),
@@ -866,7 +896,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDLOCALIZA',
 						maxLength: 50,
-						labelId: 'label_PROPE09_CTRY_COUNTRY_',
 						controlLimits: [
 						],
 					}, this),
@@ -926,7 +955,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDDETAILS_',
 						maxLength: 50,
-						labelId: 'label_PROPE09_PROPEYEAR____',
 						controlLimits: [
 						],
 					}, this),
@@ -989,7 +1017,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPE09_PSEUDAGENTINF',
 						maxLength: 50,
-						labelId: 'label_PROPE09_AGENTEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -1033,6 +1060,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1042,6 +1070,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1051,6 +1080,7 @@
 								label: computed(() => this.Resources.TELEPHONE28697),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1059,6 +1089,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 5,
@@ -1068,6 +1099,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1083,8 +1115,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -1401,16 +1432,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1454,16 +1499,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1615,6 +1674,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROPE09]/
 // eslint-disable-next-line

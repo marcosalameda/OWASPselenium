@@ -1,20 +1,19 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Pwreg
 {
@@ -50,6 +49,8 @@ namespace GenioMVC.ViewModels.Pwreg
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Regio> TableRegioRegiao { get; set; }
+
+
 
 		#region Navigations
 		#endregion
@@ -300,6 +301,17 @@ namespace GenioMVC.ViewModels.Pwreg
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -430,7 +442,7 @@ namespace GenioMVC.ViewModels.Pwreg
 
 			if (pwreg___psw__nome____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TablePswNome, "sTablePswNome", "dTablePswNome", qs, "psw");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -459,7 +471,7 @@ namespace GenioMVC.ViewModels.Pwreg
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioApsw.FldCodpsw, CSGenioApsw.FldNome, CSGenioApsw.FldZzstate };
+				FieldRef[] fields = [CSGenioApsw.FldCodpsw, CSGenioApsw.FldNome, CSGenioApsw.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PWREG_PSWNOME]/
 
@@ -480,7 +492,7 @@ namespace GenioMVC.ViewModels.Pwreg
 
 				TablePswNome.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TablePswNome.Query = query;
-				TablePswNome.Elements = listing.RowsForViewModel<GenioMVC.Models.Psw>((r) => new GenioMVC.Models.Psw(m_userContext, r, true, _fieldsToSerialize_PWREG___PSW__NOME____));
+				TablePswNome.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Psw(m_userContext, r, true, _fieldsToSerialize_PWREG___PSW__NOME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -620,7 +632,7 @@ namespace GenioMVC.ViewModels.Pwreg
 
 			if (pwreg___regioregiao__DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableRegioRegiao, "sTableRegioRegiao", "dTableRegioRegiao", qs, "regio");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -649,7 +661,7 @@ namespace GenioMVC.ViewModels.Pwreg
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAregio.FldCodregia, CSGenioAregio.FldRegiao, CSGenioAregio.FldZzstate };
+				FieldRef[] fields = [CSGenioAregio.FldCodregia, CSGenioAregio.FldRegiao, CSGenioAregio.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PWREG_REGIOREGIAO]/
 
@@ -670,7 +682,7 @@ namespace GenioMVC.ViewModels.Pwreg
 
 				TableRegioRegiao.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableRegioRegiao.Query = query;
-				TableRegioRegiao.Elements = listing.RowsForViewModel<GenioMVC.Models.Regio>((r) => new GenioMVC.Models.Regio(m_userContext, r, true, _fieldsToSerialize_PWREG___REGIOREGIAO__));
+				TableRegioRegiao.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Regio(m_userContext, r, true, _fieldsToSerialize_PWREG___REGIOREGIAO__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

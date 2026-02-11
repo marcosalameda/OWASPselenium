@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,35 +94,38 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="PERSO"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.PERSO___PSEUDNOVOGR01.isVisible">
-					<q-control-wrapper
-						v-show="controls.PERSO___PSEUDNOVOGR01.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.PERSO___PSEUDNOVOGR01.isVisible">
+					<q-col
+						v-if="controls.PERSO___PSEUDNOVOGR01.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.PERSO___PSEUDNOVOGR01.isVisible"
 							id="PERSO___PSEUDNOVOGR01"
 							v-bind="controls.PERSO___PSEUDNOVOGR01"
 							:is-visible="controls.PERSO___PSEUDNOVOGR01.isVisible">
 							<!-- Start PERSO___PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.PERSO___PSEUDNOVOGR04.isVisible || controls.PERSO___PSEUDNOVOGR05.isVisible">
-								<q-control-wrapper
-									v-show="controls.PERSO___PSEUDNOVOGR04.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PERSO___PSEUDNOVOGR04.isVisible || controls.PERSO___PSEUDNOVOGR05.isVisible">
+								<q-col
+									v-if="controls.PERSO___PSEUDNOVOGR04.isVisible"
+									cols="auto">
 									<q-group-box-container
+										v-if="controls.PERSO___PSEUDNOVOGR04.isVisible"
 										id="PERSO___PSEUDNOVOGR04"
 										v-bind="controls.PERSO___PSEUDNOVOGR04"
 										no-border
 										:is-visible="controls.PERSO___PSEUDNOVOGR04.isVisible">
 										<!-- Start PERSO___PSEUDNOVOGR04 -->
-										<q-row-container v-show="controls.PERSO___PERSOPHOTO___.isVisible">
-											<q-control-wrapper
-												v-show="controls.PERSO___PERSOPHOTO___.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PERSO___PERSOPHOTO___.isVisible">
+											<q-col
+												v-if="controls.PERSO___PERSOPHOTO___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PERSO___PERSOPHOTO___.isVisible"
 													class="q-image"
 													v-bind="controls.PERSO___PERSOPHOTO___"
 													v-on="controls.PERSO___PERSOPHOTO___.handlers"
@@ -126,25 +137,27 @@
 														v-bind="controls.PERSO___PERSOPHOTO___.props"
 														v-on="controls.PERSO___PERSOPHOTO___.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End PERSO___PSEUDNOVOGR04 -->
 									</q-group-box-container>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PERSO___PSEUDNOVOGR05.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PERSO___PSEUDNOVOGR05.isVisible"
+									cols="auto">
 									<q-group-box-container
+										v-if="controls.PERSO___PSEUDNOVOGR05.isVisible"
 										id="PERSO___PSEUDNOVOGR05"
 										v-bind="controls.PERSO___PSEUDNOVOGR05"
 										no-border
 										:is-visible="controls.PERSO___PSEUDNOVOGR05.isVisible">
 										<!-- Start PERSO___PSEUDNOVOGR05 -->
-										<q-row-container v-show="controls.PERSO___PERSONAME____.isVisible">
-											<q-control-wrapper
-												v-show="controls.PERSO___PERSONAME____.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PERSO___PERSONAME____.isVisible">
+											<q-col
+												v-if="controls.PERSO___PERSONAME____.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PERSO___PERSONAME____.isVisible"
 													class="i-text"
 													v-bind="controls.PERSO___PERSONAME____"
 													v-on="controls.PERSO___PERSONAME____.handlers"
@@ -156,13 +169,14 @@
 														@blur="onBlur(controls.PERSO___PERSONAME____, model.ValName.value)"
 														@change="model.ValName.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PERSO___PERSOIDENTIFI.isVisible">
-											<q-control-wrapper
-												v-show="controls.PERSO___PERSOIDENTIFI.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PERSO___PERSOIDENTIFI.isVisible">
+											<q-col
+												v-if="controls.PERSO___PERSOIDENTIFI.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PERSO___PERSOIDENTIFI.isVisible"
 													class="i-text"
 													v-bind="controls.PERSO___PERSOIDENTIFI"
 													v-on="controls.PERSO___PERSOIDENTIFI.handlers"
@@ -174,13 +188,14 @@
 														@blur="onBlur(controls.PERSO___PERSOIDENTIFI, model.ValIdentifi.value)"
 														@change="model.ValIdentifi.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PERSO___PERSOGENDER__.isVisible">
-											<q-control-wrapper
-												v-show="controls.PERSO___PERSOGENDER__.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PERSO___PERSOGENDER__.isVisible">
+											<q-col
+												v-if="controls.PERSO___PERSOGENDER__.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PERSO___PERSOGENDER__.isVisible"
 													class="i-text"
 													v-bind="controls.PERSO___PERSOGENDER__"
 													v-on="controls.PERSO___PERSOGENDER__.handlers"
@@ -192,13 +207,14 @@
 														v-bind="controls.PERSO___PERSOGENDER__.props"
 														@update:model-value="model.ValGender.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.PERSO___PERSOEMAIL___.isVisible">
-											<q-control-wrapper
-												v-show="controls.PERSO___PERSOEMAIL___.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.PERSO___PERSOEMAIL___.isVisible">
+											<q-col
+												v-if="controls.PERSO___PERSOEMAIL___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PERSO___PERSOEMAIL___.isVisible"
 													class="i-text"
 													v-bind="controls.PERSO___PERSOEMAIL___"
 													v-on="controls.PERSO___PERSOEMAIL___.handlers"
@@ -210,30 +226,32 @@
 														@blur="onBlur(controls.PERSO___PERSOEMAIL___, model.ValEmail.value)"
 														@change="model.ValEmail.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End PERSO___PSEUDNOVOGR05 -->
 									</q-group-box-container>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PERSO___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PERSO___PSEUDNOVOGR02.isVisible">
-					<q-control-wrapper
-						v-show="controls.PERSO___PSEUDNOVOGR02.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PERSO___PSEUDNOVOGR02.isVisible">
+					<q-col
+						v-if="controls.PERSO___PSEUDNOVOGR02.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.PERSO___PSEUDNOVOGR02.isVisible"
 							id="PERSO___PSEUDNOVOGR02"
 							v-bind="controls.PERSO___PSEUDNOVOGR02"
 							:is-visible="controls.PERSO___PSEUDNOVOGR02.isVisible">
 							<!-- Start PERSO___PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.PERSO___PERSODOB_____.isVisible || controls.PERSO___PERSOTOB_____.isVisible || controls.PERSO___PERSOYEAR____.isVisible || controls.PERSO___PERSOMONTH___.isVisible">
-								<q-control-wrapper
-									v-show="controls.PERSO___PERSODOB_____.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PERSO___PERSODOB_____.isVisible || controls.PERSO___PERSOTOB_____.isVisible || controls.PERSO___PERSOYEAR____.isVisible || controls.PERSO___PERSOMONTH___.isVisible">
+								<q-col
+									v-if="controls.PERSO___PERSODOB_____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PERSO___PERSODOB_____.isVisible"
 										class="i-text"
 										v-bind="controls.PERSO___PERSODOB_____"
 										v-on="controls.PERSO___PERSODOB_____.handlers"
@@ -247,11 +265,12 @@
 											@reset-icon-click="model.ValDob.fnUpdateValue(model.ValDob.originalValue ?? new Date())"
 											@update:model-value="model.ValDob.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PERSO___PERSOTOB_____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PERSO___PERSOTOB_____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PERSO___PERSOTOB_____.isVisible"
 										class="i-text"
 										v-bind="controls.PERSO___PERSOTOB_____"
 										v-on="controls.PERSO___PERSOTOB_____.handlers"
@@ -265,11 +284,12 @@
 											@reset-icon-click="model.ValTob.fnUpdateValue(model.ValTob.originalValue ?? new Date())"
 											@update:model-value="model.ValTob.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PERSO___PERSOYEAR____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PERSO___PERSOYEAR____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PERSO___PERSOYEAR____.isVisible"
 										class="i-text"
 										v-bind="controls.PERSO___PERSOYEAR____"
 										v-on="controls.PERSO___PERSOYEAR____.handlers"
@@ -281,11 +301,12 @@
 											v-bind="controls.PERSO___PERSOYEAR____.props"
 											@update:model-value="model.ValYear.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PERSO___PERSOMONTH___.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PERSO___PERSOMONTH___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PERSO___PERSOMONTH___.isVisible"
 										class="i-text"
 										v-bind="controls.PERSO___PERSOMONTH___"
 										v-on="controls.PERSO___PERSOMONTH___.handlers"
@@ -297,17 +318,18 @@
 											v-bind="controls.PERSO___PERSOMONTH___.props"
 											@update:model-value="model.ValMonth.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PERSO___PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PERSO___PERSOCREATUSR.isVisible || controls.PERSO___PERSOCREATDAT.isVisible || controls.PERSO___PERSOMODIFUSR.isVisible || controls.PERSO___PERSOMODIFDAT.isVisible">
-					<q-control-wrapper
-						v-show="controls.PERSO___PERSOCREATUSR.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PERSO___PERSOCREATUSR.isVisible || controls.PERSO___PERSOCREATDAT.isVisible || controls.PERSO___PERSOMODIFUSR.isVisible || controls.PERSO___PERSOMODIFDAT.isVisible">
+					<q-col
+						v-if="controls.PERSO___PERSOCREATUSR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PERSO___PERSOCREATUSR.isVisible"
 							class="i-text"
 							v-bind="controls.PERSO___PERSOCREATUSR"
 							v-on="controls.PERSO___PERSOCREATUSR.handlers"
@@ -319,11 +341,12 @@
 								@blur="onBlur(controls.PERSO___PERSOCREATUSR, model.ValCreatusr.value)"
 								@change="model.ValCreatusr.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.PERSO___PERSOCREATDAT.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.PERSO___PERSOCREATDAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PERSO___PERSOCREATDAT.isVisible"
 							class="i-text"
 							v-bind="controls.PERSO___PERSOCREATDAT"
 							v-on="controls.PERSO___PERSOCREATDAT.handlers"
@@ -337,11 +360,12 @@
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.PERSO___PERSOMODIFUSR.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.PERSO___PERSOMODIFUSR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PERSO___PERSOMODIFUSR.isVisible"
 							class="i-text"
 							v-bind="controls.PERSO___PERSOMODIFUSR"
 							v-on="controls.PERSO___PERSOMODIFUSR.handlers"
@@ -353,11 +377,12 @@
 								@blur="onBlur(controls.PERSO___PERSOMODIFUSR, model.ValModifusr.value)"
 								@change="model.ValModifusr.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.PERSO___PERSOMODIFDAT.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.PERSO___PERSOMODIFDAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.PERSO___PERSOMODIFDAT.isVisible"
 							class="i-text"
 							v-bind="controls.PERSO___PERSOMODIFDAT"
 							v-on="controls.PERSO___PERSOMODIFDAT.handlers"
@@ -371,10 +396,10 @@
 								@reset-icon-click="model.ValModifdat.fnUpdateValue(model.ValModifdat.originalValue ?? new Date())"
 								@update:model-value="model.ValModifdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -383,7 +408,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -392,6 +417,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -403,7 +429,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -614,7 +640,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -782,7 +812,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR05',
 						maxLength: 85,
-						labelId: 'label_PERSO___PERSONAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -797,7 +826,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR05',
 						maxLength: 10,
-						labelId: 'label_PERSO___PERSOIDENTIFI',
 						controlLimits: [
 						],
 					}, this),
@@ -812,7 +840,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR05',
 						maxLength: 1,
-						labelId: 'label_PERSO___PERSOGENDER__',
 						arrayName: 'Gender',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -830,7 +857,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PERSO___PSEUDNOVOGR05',
 						maxLength: 254,
-						labelId: 'label_PERSO___PERSOEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -918,7 +944,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
-						labelId: 'label_PERSO___PERSOCREATUSR',
 						controlLimits: [
 						],
 					}, this),
@@ -945,7 +970,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
-						labelId: 'label_PERSO___PERSOMODIFUSR',
 						controlLimits: [
 						],
 					}, this),
@@ -1122,16 +1146,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1175,16 +1213,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1336,6 +1388,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PERSO]/
 // eslint-disable-next-line

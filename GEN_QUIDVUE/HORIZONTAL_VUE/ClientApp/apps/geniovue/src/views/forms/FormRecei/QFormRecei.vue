@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="RECEI"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.RECEI___RECEIDTRECEIP.isVisible || controls.RECEI___RECEINUMBER__.isVisible || controls.RECEI___ENTITNAME____.isVisible">
-					<q-control-wrapper
-						v-show="controls.RECEI___RECEIDTRECEIP.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.RECEI___RECEIDTRECEIP.isVisible || controls.RECEI___RECEINUMBER__.isVisible || controls.RECEI___ENTITNAME____.isVisible">
+					<q-col
+						v-if="controls.RECEI___RECEIDTRECEIP.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.RECEI___RECEIDTRECEIP.isVisible"
 							class="i-text"
 							v-bind="controls.RECEI___RECEIDTRECEIP"
 							v-on="controls.RECEI___RECEIDTRECEIP.handlers"
@@ -109,11 +118,12 @@
 								@reset-icon-click="model.ValDtreceip.fnUpdateValue(model.ValDtreceip.originalValue ?? new Date())"
 								@update:model-value="model.ValDtreceip.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.RECEI___RECEINUMBER__.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.RECEI___RECEINUMBER__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.RECEI___RECEINUMBER__.isVisible"
 							class="i-text"
 							v-bind="controls.RECEI___RECEINUMBER__"
 							v-on="controls.RECEI___RECEINUMBER__.handlers"
@@ -125,11 +135,12 @@
 								v-bind="controls.RECEI___RECEINUMBER__.props"
 								@update:model-value="model.ValNumber.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.RECEI___ENTITNAME____.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.RECEI___ENTITNAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.RECEI___ENTITNAME____.isVisible"
 							class="i-text"
 							v-bind="controls.RECEI___ENTITNAME____"
 							v-on="controls.RECEI___ENTITNAME____.handlers"
@@ -145,25 +156,29 @@
 								v-bind="controls.RECEI___ENTITNAME____.seeMoreParams"
 								v-on="controls.RECEI___ENTITNAME____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.RECEI___PSEUDRECEIPTL.isVisible || controls.RECEI___RECEIDTCHECK_.isVisible">
-					<q-control-wrapper
-						v-show="controls.RECEI___PSEUDRECEIPTL.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.RECEI___PSEUDRECEIPTL.isVisible || controls.RECEI___RECEIDTCHECK_.isVisible">
+					<q-col
+						v-if="controls.RECEI___PSEUDRECEIPTL.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.RECEI___PSEUDRECEIPTL.isVisible"
+							v-if="controls.RECEI___PSEUDRECEIPTL.isVisible"
 							v-bind="controls.RECEI___PSEUDRECEIPTL"
-							v-on="controls.RECEI___PSEUDRECEIPTL.handlers" />
+							v-on="controls.RECEI___PSEUDRECEIPTL.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE RECEI___PSEUDRECEIPTL]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.RECEI___PSEUDRECEIPTL.isVisible"
 							:list-ctrl="controls.RECEI___PSEUDRECEIPTL"
 							:filter-operators="controls.RECEI___PSEUDRECEIPTL.filterOperators"
 							v-on="controls.RECEI___PSEUDRECEIPTL.handlers" />
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.RECEI___RECEIDTCHECK_.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.RECEI___RECEIDTCHECK_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.RECEI___RECEIDTCHECK_.isVisible"
 							class="i-text"
 							v-bind="controls.RECEI___RECEIDTCHECK_"
 							v-on="controls.RECEI___RECEIDTCHECK_.handlers"
@@ -177,13 +192,14 @@
 								@reset-icon-click="model.ValDtcheck.fnUpdateValue(model.ValDtcheck.originalValue ?? new Date())"
 								@update:model-value="model.ValDtcheck.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.RECEI___RECEITOCHECK_.isVisible">
-					<q-control-wrapper
-						v-show="controls.RECEI___RECEITOCHECK_.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.RECEI___RECEITOCHECK_.isVisible">
+					<q-col
+						v-if="controls.RECEI___RECEITOCHECK_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.RECEI___RECEITOCHECK_.isVisible"
 							class="i-checkbox"
 							v-bind="controls.RECEI___RECEITOCHECK_"
 							v-on="controls.RECEI___RECEITOCHECK_.handlers"
@@ -191,19 +207,20 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.RECEI___RECEITOCHECK_.isVisible"
 									v-bind="controls.RECEI___RECEITOCHECK_.props"
 									v-on="controls.RECEI___RECEITOCHECK_.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.RECEI___RECEICHECKED_.isVisible">
-					<q-control-wrapper
-						v-show="controls.RECEI___RECEICHECKED_.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.RECEI___RECEICHECKED_.isVisible">
+					<q-col
+						v-if="controls.RECEI___RECEICHECKED_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.RECEI___RECEICHECKED_.isVisible"
 							class="i-checkbox"
 							v-bind="controls.RECEI___RECEICHECKED_"
 							v-on="controls.RECEI___RECEICHECKED_.handlers"
@@ -211,19 +228,20 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.RECEI___RECEICHECKED_.isVisible"
 									v-bind="controls.RECEI___RECEICHECKED_.props"
 									v-on="controls.RECEI___RECEICHECKED_.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.RECEI___RECEISTORED__.isVisible || controls.RECEI___RECEIDTSTORAG.isVisible">
-					<q-control-wrapper
-						v-show="controls.RECEI___RECEISTORED__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.RECEI___RECEISTORED__.isVisible || controls.RECEI___RECEIDTSTORAG.isVisible">
+					<q-col
+						v-if="controls.RECEI___RECEISTORED__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.RECEI___RECEISTORED__.isVisible"
 							class="i-checkbox"
 							v-bind="controls.RECEI___RECEISTORED__"
 							v-on="controls.RECEI___RECEISTORED__.handlers"
@@ -231,17 +249,18 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.RECEI___RECEISTORED__.isVisible"
 									v-bind="controls.RECEI___RECEISTORED__.props"
 									v-on="controls.RECEI___RECEISTORED__.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.RECEI___RECEIDTSTORAG.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.RECEI___RECEIDTSTORAG.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.RECEI___RECEIDTSTORAG.isVisible"
 							class="i-text"
 							v-bind="controls.RECEI___RECEIDTSTORAG"
 							v-on="controls.RECEI___RECEIDTSTORAG.handlers"
@@ -255,10 +274,10 @@
 								@reset-icon-click="model.ValDtstorag.fnUpdateValue(model.ValDtstorag.originalValue ?? new Date())"
 								@update:model-value="model.ValDtstorag.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -267,7 +286,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -276,6 +295,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -287,7 +307,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -499,7 +519,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -677,6 +701,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -686,6 +711,7 @@
 								label: computed(() => this.Resources.SKU42303),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodprodu',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -697,6 +723,7 @@
 								dataLength: 14,
 								scrollData: 14,
 								isVisible: false,
+								export: 1,
 								pkColumn: 'ValCodprodu',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -707,6 +734,7 @@
 								label: computed(() => this.Resources.PRODUCT12880),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodprodu',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -718,6 +746,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -728,6 +757,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -738,6 +768,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -753,8 +784,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -879,7 +909,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-RECEI', 'changed-ENTIT', 'changed-PRODU', 'changed-RELIN'],
+						globalEvents: ['changed-PRODU', 'changed-RELIN', 'changed-ENTIT', 'changed-RECEI'],
 						uuid: 'Recei_ValReceiptl',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1118,16 +1148,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1171,16 +1215,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1332,6 +1390,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS RECEI]/
 // eslint-disable-next-line

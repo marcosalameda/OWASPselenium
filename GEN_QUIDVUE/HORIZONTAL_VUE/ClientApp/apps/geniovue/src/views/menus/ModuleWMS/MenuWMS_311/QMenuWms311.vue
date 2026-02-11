@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_311]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.PRODUCT12880),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.SKU42303),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -171,6 +174,7 @@
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -181,6 +185,7 @@
 								dataLength: 14,
 								scrollData: 14,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -191,6 +196,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -202,6 +208,7 @@
 								maxDigits: 7,
 								decimalPlaces: 2,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -211,6 +218,7 @@
 								label: computed(() => this.Resources.GLN35528),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodlocat',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -221,6 +229,7 @@
 								label: computed(() => this.Resources.GLN_EXT31913),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodlcext',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -232,6 +241,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -242,6 +252,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
@@ -252,6 +263,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 12,
@@ -262,6 +274,7 @@
 								scrollData: 12,
 								maxDigits: 7,
 								decimalPlaces: 4,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 13,
@@ -270,6 +283,7 @@
 								field: 'IN_USE',
 								label: computed(() => this.Resources.IN_USE42606),
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayYesno(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayYesno.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -283,6 +297,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -298,8 +313,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -400,6 +414,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_3111',
 								name: 'form-PRODU',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -426,10 +441,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-LOCAT', 'changed-PRODU', 'changed-LCEXT'],
+						globalEvents: ['changed-PRODU', 'changed-LOCAT', 'changed-LCEXT'],
 						uuid: '92697297-35db-4e66-a7dc-b3b9b29febb5',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

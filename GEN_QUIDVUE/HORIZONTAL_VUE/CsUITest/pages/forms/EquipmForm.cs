@@ -49,6 +49,12 @@ public class EquipmForm : Form
 	public SeeMorePage ManufNameSeeMorePage => new SeeMorePage(driver, "EQUIPM", "EQUIPM__MANUFNAME____");
 
 	/// <summary>
+	/// Kind of equipment
+	/// </summary>
+	public LookupControl KindeDesignat => new LookupControl(driver, ContainerLocator, "container-EQUIPM__KINDEDESIGNAT");
+	public SeeMorePage KindeDesignatSeeMorePage => new SeeMorePage(driver, "EQUIPM", "EQUIPM__KINDEDESIGNAT");
+
+	/// <summary>
 	/// Photo
 	/// </summary>
 	public TabControl PseudEquip01 => new TabControl(driver, ContainerLocator, "#tab-container-EQUIPM__PSEUDEQUIP01_");
@@ -69,10 +75,29 @@ public class EquipmForm : Form
 	public TabControl PseudEquip04 => new TabControl(driver, ContainerLocator, "#tab-container-EQUIPM__PSEUDEQUIP04_");
 
 	/// <summary>
-	/// Kind of equipment
+	/// Description
 	/// </summary>
-	public LookupControl KindeDesignat => new LookupControl(driver, ContainerLocator, "container-EQUIPM__KINDEDESIGNAT");
-	public SeeMorePage KindeDesignatSeeMorePage => new SeeMorePage(driver, "EQUIPM", "EQUIPM__KINDEDESIGNAT");
+	public BaseInputControl AssetDescript => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETDESCRIPT", "#EQUIPM__ASSETDESCRIPT");
+
+	/// <summary>
+	/// Detailed description
+	/// </summary>
+	public IWebElement AssetLongdesc => throw new NotImplementedException();
+
+	/// <summary>
+	/// Category
+	/// </summary>
+	public EnumControl AssetCategory => new EnumControl(driver, ContainerLocator, "container-EQUIPM__ASSETCATEGORY");
+
+	/// <summary>
+	/// Background color for category
+	/// </summary>
+	public BaseInputControl AssetBg_color => new BaseInputControl(driver, ContainerLocator, "container-EQUIPM__ASSETBG_COLOR", "#EQUIPM__ASSETBG_COLOR");
+
+	/// <summary>
+	/// Asset tags
+	/// </summary>
+	public EquipmPseudA_tagsGrid PseudA_tags => new EquipmPseudA_tagsGrid(driver, ContainerLocator, "#EQUIPM__PSEUDA_TAGS__");
 
 	/// <summary>
 	/// Photo

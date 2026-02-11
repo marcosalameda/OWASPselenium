@@ -435,10 +435,10 @@ namespace CSGenio.business
 
 			// ROW_REORDERING
 			CriteriaSet criteria = CriteriaSet.And();
+			var prefixField = DBFields[FldCodpedid.Field];
 			// For key fields, an empty prefix means 'no value', so we normalise it to null
 			// to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
 			// prefix to a database-safe value (e.g. Guid) before applying the equality filter.
-			var prefixField = DBFields[FldCodpedid.Field];
 			object prefixRealValue = prefixField.isEmptyValue(ValCodpedid) ? null : QueryUtils.ToValidDbValue(ValCodpedid, prefixField);
 			criteria.Equal(FldCodpedid, prefixRealValue);
 			sp.ReorderSequence(this, DBFields[FldLine.Field], criteria);

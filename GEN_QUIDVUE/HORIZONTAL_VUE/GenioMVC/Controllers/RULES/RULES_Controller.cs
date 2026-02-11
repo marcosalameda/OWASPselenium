@@ -50,6 +50,115 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT MANUAL_CONTROLLER RULES]/
 
+		[HttpPost]
+		public JsonResult ReloadDBEdit([FromBody]RequestReloadDBEditModel requestModel)
+		{
+			var Identifier = requestModel.Identifier ?? "";
+			var qs = new NameValueCollection();
+			qs.AddRange(Request.Query);
+			// The value of the lookup search field comes in 'Values'
+			if (requestModel.Values != null)
+				qs.AddRange(requestModel.Values);
+			this.IsStateReadonly = true;
+
+			dynamic result = null;
+			/*
+				Instead of loading the entire record from the database, a record will be created in memory with the keys filled in,
+					and additional fields from "Field" type limits will be mapped later.
+				This allows us to reduce database queries, as we already have all the necessary information to apply the limits.
+			*/
+			Models.Rules row = new Models.Rules(UserContext.Current, isEmpty: true);
+			row.klass.QPrimaryKey = Navigation.GetStrValue("rules");
+			row.LoadKeysFromHistory(Navigation, Navigation.CurrentLevel.Level, false, true, true, true);
+
+			// Only the last reload request is accepted.
+			var requestNumber = Request.Headers["ReloadDBEditRequestNumber"];
+			if (requestNumber != StringValues.Empty)
+				Response.Headers["ReloadDBEditRequestNumber"] = requestNumber.First();
+
+			try
+			{
+				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
+				{
+					case "REGRA__UP_RULES__DESCRIPT":	// Field (DB)
+						{
+							var model = new Regra_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Regra__up_rules__descript(qs);
+							result = model.TableUp_rulesDescript;
+						}
+						break;
+					case "REGRA2__UP_RULES__DESCRIPT":	// Field (DB)
+						{
+							var model = new Regra2_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Regra2__up_rules__descript(qs);
+							result = model.TableUp_rulesDescript;
+						}
+						break;
+					default:
+						break;
+				}
+			}
+			catch (Exception)
+			{
+				return JsonERROR("On Reload form field: " + Identifier);
+			}
+
+			if (result != null)
+				return JsonOK(new { List = result.List, TotalRows = result.Pagination.TotalRows, Selected = result.Selected, Value = result.Value });
+			return JsonERROR("Not found any valid result");
+		}
+
+		[HttpPost]
+		public JsonResult GetDependants([FromBody]RequestDependantsModel requestModel)
+		{
+			var Identifier = requestModel.Identifier;
+			var Selected = requestModel.Selected;
+
+			ConcurrentDictionary<string, object> values = null;
+			this.IsStateReadonly = true;
+
+			try
+			{
+				// Only the last reload request is accepted.
+				var requestNumber = Request.Headers["GetDependantsRequestNumber"];
+				if (requestNumber != StringValues.Empty)
+					Response.Headers["GetDependantsRequestNumber"] = requestNumber.First();
+
+				UserContext.Current.PersistentSupport.openConnection();
+				switch (string.IsNullOrEmpty(Identifier) ? "" : Identifier)
+				{
+					case "REGRA__UP_RULES__DESCRIPT":	// Field (DB)
+						values = new Regra_ViewModel(UserContext.Current).GetDependant_RegraTableUp_rulesDescript(Selected);
+						break;
+					case "REGRA2__UP_RULES__DESCRIPT":	// Field (DB)
+						values = new Regra2_ViewModel(UserContext.Current).GetDependant_Regra2TableUp_rulesDescript(Selected);
+						break;
+					default: break;
+				}
+
+				if (values == null || !values.Any())
+					return JsonERROR("List is empty");
+
+				// Remove DateTime.MinValue
+				foreach (KeyValuePair<string, object> field in values)
+					if (field.Value is DateTime && (DateTime)field.Value == DateTime.MinValue)
+						values.TryUpdate(field.Key, "", DateTime.MinValue);
+
+				// TODO: Sanitize HTML content
+				return JsonOK(values);
+			}
+			catch (Exception)
+			{
+				return JsonERROR("On Get Dependants - " + Identifier);
+			}
+			finally
+			{
+				UserContext.Current.PersistentSupport.closeConnection();
+			}
+		}
+
 
 
 
@@ -64,6 +173,22 @@ namespace GenioMVC.Controllers
 		{
 			return GenericRecalculateFormulas(formData, "rules",
 				(primaryKey) => Models.Rules.Find(primaryKey, UserContext.Current, "FREGRA"),
+				(model) => formData.MapToModel(model as Models.Rules)
+			);
+		}
+
+
+
+		/// <summary>
+		/// Recalculate formulas of the "Regra2" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Regra2([FromBody]Regra2_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "rules",
+				(primaryKey) => Models.Rules.Find(primaryKey, UserContext.Current, "FREGRA2"),
 				(model) => formData.MapToModel(model as Models.Rules)
 			);
 		}

@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW CMPKI]/
 
 		[HttpPost]
-		public ActionResult Cmpki_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Cmpki_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Cmpki_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Cmpki_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_Show_GET",
 				AreaName = "cmpki",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET CMPKI]/
 		[HttpPost]
-		public ActionResult Cmpki_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Cmpki_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Cmpki_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Cmpki_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_New_GET",
 				AreaName = "cmpki",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Cmpki_New([FromBody]Cmpki_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_New",
 				ViewName = "Cmpki",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET CMPKI]/
 		[HttpPost]
-		public ActionResult Cmpki_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Cmpki_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Cmpki_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Cmpki_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_Edit_GET",
 				AreaName = "cmpki",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Cmpki_Edit([FromBody]Cmpki_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_Edit",
 				ViewName = "Cmpki",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET CMPKI]/
 		[HttpPost]
-		public ActionResult Cmpki_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Cmpki_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Cmpki_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Cmpki_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_Delete_GET",
 				AreaName = "cmpki",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Cmpki/Cmpki_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST CMPKI]/
 		[HttpPost]
-		public ActionResult Cmpki_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Cmpki_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Cmpki_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Cmpki_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_Delete",
 				ViewName = "Cmpki",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET CMPKI]/
 
 		[HttpPost]
-		public ActionResult Cmpki_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Cmpki_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Cmpki_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Cmpki_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_Duplicate_GET",
 				AreaName = "cmpki",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Cmpki_Duplicate([FromBody]Cmpki_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Cmpki_Duplicate",
 				ViewName = "Cmpki",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Cmpki(UserContext.Current);
+					GenioMVC.Models.Cmpki model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("cmpki");
 
 // USE /[MANUAL GQT BEFORE_CANCEL CMPKI]/
@@ -404,9 +405,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tpequ")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -416,7 +414,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -426,35 +424,12 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Cmpki parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Cmpki parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Cmpki_TpequValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+			Cmpki_TpequValTipoequi_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -475,9 +450,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tpeq1")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -487,7 +459,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -497,35 +469,12 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Cmpki parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Cmpki parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Cmpki_Tpeq1ValTipoequi_ViewModel model = new(UserContext.Current, parentCtx);
+			Cmpki_Tpeq1ValTipoequi_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());

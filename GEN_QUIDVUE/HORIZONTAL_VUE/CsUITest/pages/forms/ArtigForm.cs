@@ -127,7 +127,7 @@ public class ArtigForm : Form
 	/// <summary>
 	/// Categorization
 	/// </summary>
-	public IWebElement PseudNovogr06 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr06 => new CollapsibleZoneControl(driver, ContainerLocator, "#ARTIG___PSEUDNOVOGR06-container");
 
 	/// <summary>
 	/// Existence
@@ -142,7 +142,7 @@ public class ArtigForm : Form
 	/// <summary>
 	/// Image
 	/// </summary>
-	public IWebElement PseudNovogr08 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr08 => new CollapsibleZoneControl(driver, ContainerLocator, "#ARTIG___PSEUDNOVOGR08-container");
 
 	/// <summary>
 	/// Date

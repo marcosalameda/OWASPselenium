@@ -398,6 +398,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'ATTACHFK'
 		}).cloneFrom(values?.ValAttachfk))
 		this.stopWatchers.push(watch(() => this.ValAttachfk.value, (newValue, oldValue) => this.onUpdate('flds.attachfk', this.ValAttachfk, newValue, oldValue)))
+
 		this.ValAttachData = reactive(new modelFieldType.DocumentData({
 			id: 'ValAttachData',
 			area: 'FLDS',

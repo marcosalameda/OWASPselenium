@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,25 +94,27 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="FLDSTBL"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.FLDSTBL_PSEUDNOVOGR02.isVisible || controls.FLDSTBL_PSEUDNOVOGR06.isVisible || controls.FLDSTBL_PSEUDNOVOGR01.isVisible || controls.FLDSTBL_PSEUDNOVOGR03.isVisible || controls.FLDSTBL_PSEUDNOVOGR04.isVisible || controls.FLDSTBL_PSEUDNOVOGR05.isVisible || controls.FLDSTBL_PSEUDNOVOGR07.isVisible || controls.FLDSTBL_FLDS_CREATDAT.isVisible || controls.FLDSTBL_FLDS_CREATUSE.isVisible || controls.FLDSTBL_FLDS_CREATINS.isVisible || controls.FLDSTBL_FLDS_CREATHOU.isVisible || controls.FLDSTBL_PSEUDFEECA___.isVisible">
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_PSEUDNOVOGR02.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.FLDSTBL_PSEUDNOVOGR02.isVisible || controls.FLDSTBL_PSEUDNOVOGR06.isVisible || controls.FLDSTBL_PSEUDNOVOGR01.isVisible || controls.FLDSTBL_PSEUDNOVOGR03.isVisible || controls.FLDSTBL_PSEUDNOVOGR04.isVisible || controls.FLDSTBL_PSEUDNOVOGR05.isVisible || controls.FLDSTBL_PSEUDNOVOGR07.isVisible || controls.FLDSTBL_FLDS_CREATDAT.isVisible || controls.FLDSTBL_FLDS_CREATUSE.isVisible || controls.FLDSTBL_FLDS_CREATINS.isVisible || controls.FLDSTBL_FLDS_CREATHOU.isVisible || controls.FLDSTBL_PSEUDFEECA___.isVisible">
+					<q-col
+						v-if="controls.FLDSTBL_PSEUDNOVOGR02.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.FLDSTBL_PSEUDNOVOGR02.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR02"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR02"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR02.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.FLDSTBL_FLDS_TXTFIELD.isVisible || controls.FLDSTBL_FLDS_DESCRIP_.isVisible">
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_TXTFIELD.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.FLDSTBL_FLDS_TXTFIELD.isVisible || controls.FLDSTBL_FLDS_DESCRIP_.isVisible">
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_TXTFIELD.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_TXTFIELD.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_TXTFIELD"
 										v-on="controls.FLDSTBL_FLDS_TXTFIELD.handlers"
@@ -116,11 +126,12 @@
 											@blur="onBlur(controls.FLDSTBL_FLDS_TXTFIELD, model.ValTxtfield.value)"
 											@change="model.ValTxtfield.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_DESCRIP_.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_DESCRIP_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_DESCRIP_.isVisible"
 										class="i-textarea"
 										v-bind="controls.FLDSTBL_FLDS_DESCRIP_"
 										v-on="controls.FLDSTBL_FLDS_DESCRIP_.handlers"
@@ -132,24 +143,26 @@
 											v-bind="controls.FLDSTBL_FLDS_DESCRIP_.props"
 											v-on="controls.FLDSTBL_FLDS_DESCRIP_.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End FLDSTBL_PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_PSEUDNOVOGR06.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_PSEUDNOVOGR06.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.FLDSTBL_PSEUDNOVOGR06.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR06"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR06"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR06.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR06 -->
-							<q-row-container v-show="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible || controls.FLDSTBL_FLDS_LOGICENU.isVisible || controls.FLDSTBL_FLDS_CLASSNUM.isVisible || controls.FLDSTBL_FLDS_RADIOB__.isVisible || controls.FLDSTBL_PSEUDFIELD002.isVisible || controls.FLDSTBL_PSEUDFIELD003.isVisible || controls.FLDSTBL_PSEUDFIELD001.isVisible">
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible || controls.FLDSTBL_FLDS_LOGICENU.isVisible || controls.FLDSTBL_FLDS_CLASSNUM.isVisible || controls.FLDSTBL_FLDS_RADIOB__.isVisible || controls.FLDSTBL_PSEUDFIELD002.isVisible || controls.FLDSTBL_PSEUDFIELD003.isVisible || controls.FLDSTBL_PSEUDFIELD001.isVisible">
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible"
 										class="i-checkbox"
 										v-bind="controls.FLDSTBL_FLDS_PRIMVIAG"
 										v-on="controls.FLDSTBL_FLDS_PRIMVIAG.handlers"
@@ -157,33 +170,35 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.FLDSTBL_FLDS_PRIMVIAG.isVisible"
 												v-bind="controls.FLDSTBL_FLDS_PRIMVIAG.props"
 												v-on="controls.FLDSTBL_FLDS_PRIMVIAG.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_LOGICENU.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_LOGICENU.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_LOGICENU.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_LOGICENU"
 										v-on="controls.FLDSTBL_FLDS_LOGICENU.handlers"
 										:loading="controls.FLDSTBL_FLDS_LOGICENU.props.loading"
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
-										<q-toggle-input
+										<q-switch
 											v-if="controls.FLDSTBL_FLDS_LOGICENU.isVisible"
 											v-bind="controls.FLDSTBL_FLDS_LOGICENU.props"
 											v-on="controls.FLDSTBL_FLDS_LOGICENU.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_CLASSNUM.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_CLASSNUM.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_CLASSNUM.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_CLASSNUM"
 										v-on="controls.FLDSTBL_FLDS_CLASSNUM.handlers"
@@ -195,11 +210,12 @@
 											v-bind="controls.FLDSTBL_FLDS_CLASSNUM.props"
 											@update:model-value="model.ValClassnum.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_RADIOB__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_RADIOB__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_RADIOB__.isVisible"
 										class="i-radio-container"
 										v-bind="controls.FLDSTBL_FLDS_RADIOB__"
 										v-on="controls.FLDSTBL_FLDS_RADIOB__.handlers"
@@ -218,11 +234,12 @@
 												:value="radio.key" />
 										</q-radio-group>
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_PSEUDFIELD002.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_PSEUDFIELD002.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_PSEUDFIELD002.isVisible"
 										class="i-static-text"
 										v-bind="controls.FLDSTBL_PSEUDFIELD002"
 										v-on="controls.FLDSTBL_PSEUDFIELD002.handlers"
@@ -235,11 +252,12 @@
 											:size="controls.FLDSTBL_PSEUDFIELD002.size"
 											:text="controls.FLDSTBL_PSEUDFIELD002.label" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_PSEUDFIELD003.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_PSEUDFIELD003.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_PSEUDFIELD003.isVisible"
 										class="q-image"
 										v-bind="controls.FLDSTBL_PSEUDFIELD003"
 										v-on="controls.FLDSTBL_PSEUDFIELD003.handlers"
@@ -251,11 +269,12 @@
 											v-bind="controls.FLDSTBL_PSEUDFIELD003.props"
 											v-on="controls.FLDSTBL_PSEUDFIELD003.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_PSEUDFIELD001.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_PSEUDFIELD001.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_PSEUDFIELD001.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_PSEUDFIELD001"
 										v-on="controls.FLDSTBL_PSEUDFIELD001.handlers"
@@ -267,24 +286,26 @@
 											@blur="onBlur(controls.FLDSTBL_PSEUDFIELD001, model.PseudValField001.value)"
 											@change="model.PseudValField001.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End FLDSTBL_PSEUDNOVOGR06 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_PSEUDNOVOGR01.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_PSEUDNOVOGR01.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.FLDSTBL_PSEUDNOVOGR01.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR01"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR01"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR01.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.FLDSTBL_FLDS_YEAR____.isVisible || controls.FLDSTBL_FLDS_TIME____.isVisible || controls.FLDSTBL_FLDS_DATE____.isVisible || controls.FLDSTBL_FLDS_DATETIME.isVisible || controls.FLDSTBL_FLDS_DATESECO.isVisible">
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_YEAR____.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.FLDSTBL_FLDS_YEAR____.isVisible || controls.FLDSTBL_FLDS_TIME____.isVisible || controls.FLDSTBL_FLDS_DATE____.isVisible || controls.FLDSTBL_FLDS_DATETIME.isVisible || controls.FLDSTBL_FLDS_DATESECO.isVisible">
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_YEAR____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_YEAR____.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_YEAR____"
 										v-on="controls.FLDSTBL_FLDS_YEAR____.handlers"
@@ -296,11 +317,12 @@
 											v-bind="controls.FLDSTBL_FLDS_YEAR____.props"
 											@update:model-value="model.ValYear.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_TIME____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_TIME____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_TIME____.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_TIME____"
 										v-on="controls.FLDSTBL_FLDS_TIME____.handlers"
@@ -314,11 +336,12 @@
 											@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
 											@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_DATE____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_DATE____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_DATE____.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_DATE____"
 										v-on="controls.FLDSTBL_FLDS_DATE____.handlers"
@@ -332,11 +355,12 @@
 											@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 											@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_DATETIME.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_DATETIME.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_DATETIME.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_DATETIME"
 										v-on="controls.FLDSTBL_FLDS_DATETIME.handlers"
@@ -350,11 +374,12 @@
 											@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
 											@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_DATESECO.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_DATESECO.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_DATESECO.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_DATESECO"
 										v-on="controls.FLDSTBL_FLDS_DATESECO.handlers"
@@ -368,24 +393,26 @@
 											@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
 											@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End FLDSTBL_PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_PSEUDNOVOGR03.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_PSEUDNOVOGR03.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.FLDSTBL_PSEUDNOVOGR03.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR03"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR03"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR03.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR03 -->
-							<q-row-container v-show="controls.FLDSTBL_FLDS_DURATION.isVisible || controls.FLDSTBL_FLDS_NPASSAGE.isVisible || controls.FLDSTBL_FLDS_PRECOBIL.isVisible || controls.FLDSTBL_FLDS_PRICE___.isVisible">
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_DURATION.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.FLDSTBL_FLDS_DURATION.isVisible || controls.FLDSTBL_FLDS_NPASSAGE.isVisible || controls.FLDSTBL_FLDS_PRECOBIL.isVisible || controls.FLDSTBL_FLDS_PRICE___.isVisible">
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_DURATION.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_DURATION.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_DURATION"
 										v-on="controls.FLDSTBL_FLDS_DURATION.handlers"
@@ -397,11 +424,12 @@
 											v-bind="controls.FLDSTBL_FLDS_DURATION.props"
 											@update:model-value="model.ValDuration.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_NPASSAGE.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_NPASSAGE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_NPASSAGE.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_NPASSAGE"
 										v-on="controls.FLDSTBL_FLDS_NPASSAGE.handlers"
@@ -413,11 +441,12 @@
 											v-bind="controls.FLDSTBL_FLDS_NPASSAGE.props"
 											@update:model-value="model.ValNpassage.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_PRECOBIL.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_PRECOBIL.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_PRECOBIL.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_PRECOBIL"
 										v-on="controls.FLDSTBL_FLDS_PRECOBIL.handlers"
@@ -429,11 +458,12 @@
 											v-bind="controls.FLDSTBL_FLDS_PRECOBIL.props"
 											@update:model-value="model.ValPrecobil.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_PRICE___.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_PRICE___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_PRICE___.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_PRICE___"
 										v-on="controls.FLDSTBL_FLDS_PRICE___.handlers"
@@ -445,24 +475,26 @@
 											v-bind="controls.FLDSTBL_FLDS_PRICE___.props"
 											@update:model-value="model.ValPrice.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End FLDSTBL_PSEUDNOVOGR03 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_PSEUDNOVOGR04.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_PSEUDNOVOGR04.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.FLDSTBL_PSEUDNOVOGR04.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR04"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR04"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR04.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR04 -->
-							<q-row-container v-show="controls.FLDSTBL_FLDS_SSNUMBER.isVisible || controls.FLDSTBL_FLDS_ZIPFIELD.isVisible || controls.FLDSTBL_FLDS_VATNUMBR.isVisible || controls.FLDSTBL_FLDS_LICPLATE.isVisible || controls.FLDSTBL_FLDS_BANKNMBR.isVisible || controls.FLDSTBL_FLDS_EMAILFLD.isVisible || controls.FLDSTBL_FLDS_IBANFIEL.isVisible || controls.FLDSTBL_FLDS_UPPRTEXT.isVisible || controls.FLDSTBL_FLDS_NRCNTRY_.isVisible">
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_SSNUMBER.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.FLDSTBL_FLDS_SSNUMBER.isVisible || controls.FLDSTBL_FLDS_ZIPFIELD.isVisible || controls.FLDSTBL_FLDS_VATNUMBR.isVisible || controls.FLDSTBL_FLDS_LICPLATE.isVisible || controls.FLDSTBL_FLDS_BANKNMBR.isVisible || controls.FLDSTBL_FLDS_EMAILFLD.isVisible || controls.FLDSTBL_FLDS_IBANFIEL.isVisible || controls.FLDSTBL_FLDS_UPPRTEXT.isVisible || controls.FLDSTBL_FLDS_NRCNTRY_.isVisible">
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_SSNUMBER.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_SSNUMBER.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_SSNUMBER"
 										v-on="controls.FLDSTBL_FLDS_SSNUMBER.handlers"
@@ -475,11 +507,12 @@
 											:model-value="model.ValSsnumber.value"
 											@change="model.ValSsnumber.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_ZIPFIELD.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_ZIPFIELD.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_ZIPFIELD.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_ZIPFIELD"
 										v-on="controls.FLDSTBL_FLDS_ZIPFIELD.handlers"
@@ -492,11 +525,12 @@
 											:model-value="model.ValZipfield.value"
 											@change="model.ValZipfield.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_VATNUMBR.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_VATNUMBR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_VATNUMBR.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_VATNUMBR"
 										v-on="controls.FLDSTBL_FLDS_VATNUMBR.handlers"
@@ -509,11 +543,12 @@
 											:model-value="model.ValVatnumbr.value"
 											@change="model.ValVatnumbr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_LICPLATE.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_LICPLATE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_LICPLATE.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_LICPLATE"
 										v-on="controls.FLDSTBL_FLDS_LICPLATE.handlers"
@@ -526,11 +561,12 @@
 											:model-value="model.ValLicplate.value"
 											@change="model.ValLicplate.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_BANKNMBR.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_BANKNMBR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_BANKNMBR.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_BANKNMBR"
 										v-on="controls.FLDSTBL_FLDS_BANKNMBR.handlers"
@@ -543,11 +579,12 @@
 											:model-value="model.ValBanknmbr.value"
 											@change="model.ValBanknmbr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_EMAILFLD.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_EMAILFLD.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_EMAILFLD.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_EMAILFLD"
 										v-on="controls.FLDSTBL_FLDS_EMAILFLD.handlers"
@@ -560,11 +597,12 @@
 											:model-value="model.ValEmailfld.value"
 											@change="model.ValEmailfld.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_IBANFIEL.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_IBANFIEL.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_IBANFIEL.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_IBANFIEL"
 										v-on="controls.FLDSTBL_FLDS_IBANFIEL.handlers"
@@ -577,11 +615,12 @@
 											:model-value="model.ValIbanfiel.value"
 											@change="model.ValIbanfiel.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_UPPRTEXT.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_UPPRTEXT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_UPPRTEXT.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_UPPRTEXT"
 										v-on="controls.FLDSTBL_FLDS_UPPRTEXT.handlers"
@@ -594,11 +633,12 @@
 											:model-value="model.ValUpprtext.value"
 											@change="model.ValUpprtext.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_NRCNTRY_.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_NRCNTRY_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_NRCNTRY_.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_NRCNTRY_"
 										v-on="controls.FLDSTBL_FLDS_NRCNTRY_.handlers"
@@ -610,24 +650,26 @@
 											v-bind="controls.FLDSTBL_FLDS_NRCNTRY_.props"
 											@update:model-value="model.ValNrcntry.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End FLDSTBL_PSEUDNOVOGR04 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_PSEUDNOVOGR05.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_PSEUDNOVOGR05.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.FLDSTBL_PSEUDNOVOGR05.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR05"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR05"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR05.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR05 -->
-							<q-row-container v-show="controls.FLDSTBL_FLDS_PASSFLD_.isVisible || controls.FLDSTBL_FLDS_CLRPICKE.isVisible">
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_PASSFLD_.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.FLDSTBL_FLDS_PASSFLD_.isVisible || controls.FLDSTBL_FLDS_CLRPICKE.isVisible">
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_PASSFLD_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_PASSFLD_.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_PASSFLD_"
 										v-on="controls.FLDSTBL_FLDS_PASSFLD_.handlers"
@@ -639,11 +681,12 @@
 											@blur="onBlur(controls.FLDSTBL_FLDS_PASSFLD_, model.ValPassfld.value)"
 											@change="model.ValPassfld.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_CLRPICKE.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_CLRPICKE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_CLRPICKE.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_CLRPICKE"
 										v-on="controls.FLDSTBL_FLDS_CLRPICKE.handlers"
@@ -655,24 +698,26 @@
 											@blur="onBlur(controls.FLDSTBL_FLDS_CLRPICKE, model.ValClrpicke.value)"
 											@change="model.ValClrpicke.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End FLDSTBL_PSEUDNOVOGR05 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_PSEUDNOVOGR07.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_PSEUDNOVOGR07.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.FLDSTBL_PSEUDNOVOGR07.isVisible"
 							id="FLDSTBL_PSEUDNOVOGR07"
 							v-bind="controls.FLDSTBL_PSEUDNOVOGR07"
 							:is-visible="controls.FLDSTBL_PSEUDNOVOGR07.isVisible">
 							<!-- Start FLDSTBL_PSEUDNOVOGR07 -->
-							<q-row-container v-show="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible || controls.FLDSTBL_FLDS_LOGO____.isVisible || controls.FLDSTBL_FLDS_ATTACH__.isVisible">
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible || controls.FLDSTBL_FLDS_LOGO____.isVisible || controls.FLDSTBL_FLDS_ATTACH__.isVisible">
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_LOGOEXTE.isVisible"
 										class="q-image"
 										v-bind="controls.FLDSTBL_FLDS_LOGOEXTE"
 										v-on="controls.FLDSTBL_FLDS_LOGOEXTE.handlers"
@@ -684,11 +729,12 @@
 											v-bind="controls.FLDSTBL_FLDS_LOGOEXTE.props"
 											v-on="controls.FLDSTBL_FLDS_LOGOEXTE.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_LOGO____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_LOGO____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_LOGO____.isVisible"
 										class="q-image"
 										v-bind="controls.FLDSTBL_FLDS_LOGO____"
 										v-on="controls.FLDSTBL_FLDS_LOGO____.handlers"
@@ -700,11 +746,12 @@
 											v-bind="controls.FLDSTBL_FLDS_LOGO____.props"
 											v-on="controls.FLDSTBL_FLDS_LOGO____.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.FLDSTBL_FLDS_ATTACH__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.FLDSTBL_FLDS_ATTACH__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.FLDSTBL_FLDS_ATTACH__.isVisible"
 										class="i-text"
 										v-bind="controls.FLDSTBL_FLDS_ATTACH__"
 										v-on="controls.FLDSTBL_FLDS_ATTACH__.handlers"
@@ -716,15 +763,16 @@
 											v-bind="controls.FLDSTBL_FLDS_ATTACH__.props"
 											v-on="controls.FLDSTBL_FLDS_ATTACH__.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End FLDSTBL_PSEUDNOVOGR07 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_FLDS_CREATDAT.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_FLDS_CREATDAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FLDSTBL_FLDS_CREATDAT.isVisible"
 							class="i-text"
 							v-bind="controls.FLDSTBL_FLDS_CREATDAT"
 							v-on="controls.FLDSTBL_FLDS_CREATDAT.handlers"
@@ -738,11 +786,12 @@
 								@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_FLDS_CREATUSE.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_FLDS_CREATUSE.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FLDSTBL_FLDS_CREATUSE.isVisible"
 							class="i-text"
 							v-bind="controls.FLDSTBL_FLDS_CREATUSE"
 							v-on="controls.FLDSTBL_FLDS_CREATUSE.handlers"
@@ -754,11 +803,12 @@
 								@blur="onBlur(controls.FLDSTBL_FLDS_CREATUSE, model.ValCreatuse.value)"
 								@change="model.ValCreatuse.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_FLDS_CREATINS.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_FLDS_CREATINS.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FLDSTBL_FLDS_CREATINS.isVisible"
 							class="i-text"
 							v-bind="controls.FLDSTBL_FLDS_CREATINS"
 							v-on="controls.FLDSTBL_FLDS_CREATINS.handlers"
@@ -772,11 +822,12 @@
 								@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
 								@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_FLDS_CREATHOU.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_FLDS_CREATHOU.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FLDSTBL_FLDS_CREATHOU.isVisible"
 							class="i-text"
 							v-bind="controls.FLDSTBL_FLDS_CREATHOU"
 							v-on="controls.FLDSTBL_FLDS_CREATHOU.handlers"
@@ -790,22 +841,25 @@
 								@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
 								@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FLDSTBL_PSEUDFEECA___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FLDSTBL_PSEUDFEECA___.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.FLDSTBL_PSEUDFEECA___.isVisible"
+							v-if="controls.FLDSTBL_PSEUDFEECA___.isVisible"
 							v-bind="controls.FLDSTBL_PSEUDFEECA___"
-							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers" />
+							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE FLDSTBL_PSEUDFEECA___]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.FLDSTBL_PSEUDFEECA___.isVisible"
 							:list-ctrl="controls.FLDSTBL_PSEUDFEECA___"
 							:filter-operators="controls.FLDSTBL_PSEUDFEECA___.filterOperators"
 							v-on="controls.FLDSTBL_PSEUDFEECA___.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -814,7 +868,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -823,6 +877,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -834,7 +889,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -1061,7 +1116,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1193,11 +1252,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._111536184),
+								text: computed(() => this.Resources._111515945),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1115_VERBOSE27480),
+								text: computed(() => this.Resources._1115_VERBOSE01763),
 							}
 						},
 						label: computed(() => this.Resources.TEXT_FIELD41810),
@@ -1205,7 +1264,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR02',
 						maxLength: 50,
-						labelId: 'label_FLDSTBL_FLDS_TXTFIELD',
 						controlLimits: [
 						],
 					}, this),
@@ -1218,11 +1276,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Subtext',
-								text: computed(() => this.Resources._111636045),
+								text: computed(() => this.Resources._111650304),
 							},
 							detailedHelp: {
 								type: 'None',
-								text: computed(() => this.Resources._1116_VERBOSE64950),
+								text: computed(() => this.Resources._1116_VERBOSE45457),
 							}
 						},
 						label: computed(() => this.Resources.MULTINE_TEXT05310),
@@ -1289,11 +1347,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.YES_OR_NO49030),
@@ -1336,7 +1394,7 @@
 						controlLimits: [
 						],
 					}, this),
-					FLDSTBL_FLDS_RADIOB__: new fieldControlClass.ArrayStringControl({
+					FLDSTBL_FLDS_RADIOB__: new fieldControlClass.RadioGroupControl({
 						modelField: 'ValRadiob',
 						valueChangeEvent: 'fieldChange:flds.radiob',
 						id: 'FLDSTBL_FLDS_RADIOB__',
@@ -1346,7 +1404,6 @@
 						labelPosition: computed(() => this.labelAlignment.right),
 						container: 'FLDSTBL_PSEUDNOVOGR06',
 						maxLength: 5,
-						labelId: 'label_FLDSTBL_FLDS_RADIOB__',
 						arrayName: 'RADIOBTN',
 						columns: 2,
 						controlLimits: [
@@ -1386,7 +1443,7 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR06',
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=2932`),
+							icon: computed(() => `${this.$app.resourcesPath}pexels-polat-eyyüp-albayrak-13933341.jpg?v=3093`),
 							type: 'img',
 						},
 						height: 500,
@@ -1413,7 +1470,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR06',
 						maxLength: 15,
-						labelId: 'label_FLDSTBL_PSEUDFIELD001',
 						controlLimits: [
 						],
 					}, this),
@@ -1439,11 +1495,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._111737822),
+								text: computed(() => this.Resources._111750451),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1117_VERBOSE04450),
+								text: computed(() => this.Resources._1117_VERBOSE35583),
 							}
 						},
 						label: computed(() => this.Resources.YEAR61794),
@@ -1464,11 +1520,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._111838179),
+								text: computed(() => this.Resources._111816434),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1118_VERBOSE37983),
+								text: computed(() => this.Resources._1118_VERBOSE48580),
 							}
 						},
 						label: computed(() => this.Resources.TIME15328),
@@ -1488,11 +1544,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._111938548),
+								text: computed(() => this.Resources._111916541),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1119_VERBOSE52944),
+								text: computed(() => this.Resources._1119_VERBOSE20366),
 							}
 						},
 						label: computed(() => this.Resources.DATE18475),
@@ -1512,11 +1568,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.DATE_TIME59103),
@@ -1536,11 +1592,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.DATE_SECOND44057),
@@ -1573,11 +1629,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.NUMERIC_DECIMAL49512),
@@ -1598,11 +1654,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.NUMERIC19292),
@@ -1623,11 +1679,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.CURRENCY_DECIMAL48296),
@@ -1648,11 +1704,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.CURRENCY13881),
@@ -1686,19 +1742,18 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.SOCIAL_SECURITY_NO48150),
-						placeholder: computed(() => this.Resources._1234567891237929),
+						placeholder: computed(() => this.Resources._1234567891202679),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 11,
-						labelId: 'label_FLDSTBL_FLDS_SSNUMBER',
 						controlLimits: [
 						],
 					}, this),
@@ -1711,11 +1766,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.ZIPCODE21021),
@@ -1723,7 +1778,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 8,
-						labelId: 'label_FLDSTBL_FLDS_ZIPFIELD',
 						controlLimits: [
 						],
 					}, this),
@@ -1736,19 +1790,18 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.VAT_NUMBER24236),
-						placeholder: computed(() => this.Resources._12345678953785),
+						placeholder: computed(() => this.Resources._12345678902714),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 9,
-						labelId: 'label_FLDSTBL_FLDS_VATNUMBR',
 						controlLimits: [
 						],
 					}, this),
@@ -1769,7 +1822,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 8,
-						labelId: 'label_FLDSTBL_FLDS_LICPLATE',
 						controlLimits: [
 						],
 					}, this),
@@ -1782,19 +1834,18 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
-						placeholder: computed(() => this.Resources._1234_5678_90123456761043),
+						placeholder: computed(() => this.Resources._1234_5678_901234567844057),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 24,
-						labelId: 'label_FLDSTBL_FLDS_BANKNMBR',
 						controlLimits: [
 						],
 					}, this),
@@ -1807,11 +1858,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.EMAIL25170),
@@ -1819,7 +1870,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 50,
-						labelId: 'label_FLDSTBL_FLDS_EMAILFLD',
 						controlLimits: [
 						],
 					}, this),
@@ -1832,11 +1882,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.IBAN28506),
@@ -1844,7 +1894,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 34,
-						labelId: 'label_FLDSTBL_FLDS_IBANFIEL',
 						controlLimits: [
 						],
 					}, this),
@@ -1857,11 +1906,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.UPPERCASE48238),
@@ -1869,7 +1918,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR04',
 						maxLength: 50,
-						labelId: 'label_FLDSTBL_FLDS_UPPRTEXT',
 						controlLimits: [
 						],
 					}, this),
@@ -1882,11 +1930,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.NUMERIC19292),
@@ -1930,11 +1978,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.PASSWORD09467),
@@ -1942,7 +1990,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR05',
 						maxLength: 50,
-						labelId: 'label_FLDSTBL_FLDS_PASSFLD_',
 						controlLimits: [
 						],
 					}, this),
@@ -1955,11 +2002,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.COLORPICKER39653),
@@ -1967,7 +2014,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'FLDSTBL_PSEUDNOVOGR05',
 						maxLength: 50,
-						labelId: 'label_FLDSTBL_FLDS_CLRPICKE',
 						controlLimits: [
 						],
 					}, this),
@@ -1993,11 +2039,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Subtext',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.LOGO__EXTERNAL_FILE_58162),
@@ -2051,11 +2097,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.DAY27593),
@@ -2074,18 +2120,17 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.CREATED_BY12292),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 20,
-						labelId: 'label_FLDSTBL_FLDS_CREATUSE',
 						controlLimits: [
 						],
 					}, this),
@@ -2098,11 +2143,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.COMPLETE_DATE53774),
@@ -2121,11 +2166,11 @@
 						helpControl: {
 							shortHelp: {
 								type: 'Tooltip',
-								text: computed(() => this.Resources._112047598),
+								text: computed(() => this.Resources._112049780),
 							},
 							detailedHelp: {
 								type: 'Popover',
-								text: computed(() => this.Resources._1120_VERBOSE06198),
+								text: computed(() => this.Resources._1120_VERBOSE38514),
 							}
 						},
 						label: computed(() => this.Resources.HOUR15646),
@@ -2154,6 +2199,7 @@
 								field: 'DESCRIP',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodflds',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -2164,6 +2210,7 @@
 								label: computed(() => this.Resources.FEEDBACK52855),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -2179,8 +2226,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -2547,16 +2593,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -2600,16 +2660,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -2761,6 +2835,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FLDSTBL]/
 // eslint-disable-next-line

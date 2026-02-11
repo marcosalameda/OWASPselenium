@@ -190,6 +190,7 @@ namespace CSGenio.persistence
 	manualQueries.Add("SR_ARTIGO____",new Q_sr_artigo());
 	manualQueries.Add("STOCK________",new Q_stock());
 	manualQueries.Add("DISPATCHALERT",new Q_dispatchalert());
+	manualQueries.Add("EMPTYSEARCHCOUNTRY",new Q_emptysearchcountry());
 
         }
 
@@ -631,6 +632,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             result.Add(new KeyValuePair<string, string>("W_GnReUse", "0"));
             result.Add(new KeyValuePair<string, string>("W_GnLogBD", schemaLog));
 
+            result.Add(new KeyValuePair<string, string>("W_GnUser", param.Username));
             result.Add(new KeyValuePair<string, string>("W_GnPSW", param.Password));
             result.Add(new KeyValuePair<string, string>("W_PathFS", param.DirFilestream));
             result.Add(new KeyValuePair<string, string>("W_AppAno", param.Year));
@@ -1800,186 +1802,131 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
 
         /// <summary>
-        /// Method to return EPH values depending on user (level and password)
+        /// Method to return EPH values depending on user
         /// </summary>
-        /// <param name="codpsw">internal user code on psw table</param>
-        /// <param name="condicoes">array with EPH conditions</param>
-        /// <param name="modulo">module to consider</param>
-        /// <returns>list with the conditions to each EPH to this user</returns>
-        public string[] ValuesEPH(string codpsw, EPHCondition condition, string module)
+        /// <param name="codpsw">internal unique user code</param>
+        /// <param name="condition">EPH to fetch values for</param>
+        /// <returns>list with the EPH values for this user</returns>
+        public string[] ValuesEPH(string codpsw, EPHCondition condition)
         {
-            //AV 20091229 Redone conditions to allow Tree EPH, with multiple values and
-            //applied to different key fields
             try
             {
-                List<string> Qvalues = new List<string>();
-
-                // constructs the query to interrogate the BD about the value of the EPH limiter field
+                AreaInfo tabelaEPH = Area.GetInfoArea(condition.EPHTable);
                 SelectQuery query = new SelectQuery();
-                if (condition.TableName == condition.EPHTable)
+                //TODO: This field needs to be modeled instead of hardcoded to allow external user directories to work with EPH
+                var useridField = "codpsw";
+
+                if (tabelaEPH.TableName == condition.TableName)
                 {
-                    query.Select(condition.AliasTable, condition.EPHField);
+                    //Get the values from the same table
+                    query.Select(tabelaEPH.Alias, condition.EPHField)
+                        .From(condition.TableSystem, condition.TableName, tabelaEPH.Alias)
+                        .Where(CriteriaSet.And()
+                            .Equal(condition.AliasTable, useridField, codpsw));
                 }
                 else
                 {
-                    query.Select(condition.AliasTable, condition.RelationField);
-                }
+                    //The values we are after are in a table above this one, so we need to follow the relation
+                    AreaInfo tabelaAssoc = Area.GetInfoArea(condition.AliasTable);
+                    Relation rel = tabelaAssoc.ParentTables[tabelaEPH.Alias];
 
-                query.From(condition.TableSystem, condition.TableName, condition.AliasTable);
-                query.Where(CriteriaSet.And()
-                    .Equal(condition.AliasTable, "codpsw", codpsw));
-                ArrayList valorChaves = executeReaderOneColumn(query);
-
-                if (valorChaves != null)
-                {
-                    // MH [10/25/2016] - EPHTable may contain the long table name which is not supported by GetInfoArea because it will look for a CSGenioA class
-                    AreaInfo tabelaEPH = Area.GetInfoArea(condition.EPHTable/*.substring(3)*/);
-
-                    if (condition.TableName == tabelaEPH.TableName)
-                        foreach (object chaveBD in valorChaves)
-                        {
-                            Qvalues.Add(DBConversion.ToString(chaveBD));
-                        }
+                    //If the EPHfield we are after is the primary key of the Value table
+                    //then we can use the foreign key of the relation to that table and avoid the inner join
+                    if (condition.EPHField == rel.TargetIntKey)
+                    {
+                        query.Select(tabelaEPH.Alias, rel.SourceRelField)
+                            .From(condition.TableSystem, condition.TableName, tabelaEPH.Alias)
+                            .Where(CriteriaSet.And()
+                                .Equal(condition.AliasTable, useridField, codpsw));
+                    }
                     else
                     {
-                        foreach (object chaveBD in valorChaves)
-                        {
-                            object key = chaveBD;
-                            if (key != null && !Object.Equals(key, "") && !Object.Equals(key, Guid.Empty))
-                            {
-                                SelectQuery queryvalores = new SelectQuery()
-                                    .Select(tabelaEPH.TableName, condition.EPHField)
-                                    .From(tabelaEPH.TableName)
-                                    .Where(CriteriaSet.And()
-                                        .Equal(tabelaEPH.TableName, tabelaEPH.PrimaryKeyName, key));
-                                ArrayList valorEPHs = executeReaderOneColumn(queryvalores);
-                                // if there is no input to the user in the table that makes the interface to this EPH
-                                // a condition should be placed in the session which does not allow it to view any
-                                foreach (object Qvalue in valorEPHs)
-                                {
-                                    if (Qvalue != null)
-                                        Qvalues.Add(DBConversion.ToString(Qvalue));
-                                    else
-                                    {
-                                        Qvalues.Clear();
-                                        return Qvalues.ToArray();
-                                    }
-                                }
-                            }
-                        }
+                        query.Select(tabelaEPH.Alias, condition.EPHField)
+                            .From(condition.TableSystem, condition.TableName, condition.AliasTable)
+                            .Join(tabelaEPH.TableName, tabelaEPH.Alias)
+                            .On(CriteriaSet.And().Equal(rel.AliasSourceTab, rel.SourceRelField, rel.AliasTargetTab, rel.TargetIntKey))
+                            .Where(CriteriaSet.And()
+                                .Equal(condition.AliasTable, useridField, codpsw));
                     }
                 }
-                else
-                {
-                    Qvalues.Clear();
-                    return Qvalues.ToArray();
-                }                    // another hypothesis is to throw an exception to the user's warning
+                ArrayList valorChaves = executeReaderOneColumn(query);
+                if (valorChaves == null)
+                    return [];
+                List<string> Qvalues = new List<string>();
+                foreach (object chaveBD in valorChaves)
+                    Qvalues.Add(DBConversion.ToString(chaveBD));
                 return Qvalues.ToArray();
             }
             catch (PersistenceException ex)
             {
-                throw new PersistenceException(ex.UserMessage, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + " for module " + module + "where " + condition.ToString() + ": " + ex.Message, ex);
+                throw new PersistenceException(ex.UserMessage, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + "where " + condition.ToString() + ": " + ex.Message, ex);
             }
             catch (Exception ex)
             {
-				throw new PersistenceException(null, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + " for module " + module + "where " + condition.ToString() + ": " + ex.Message, ex);
+				throw new PersistenceException(null, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + "where " + condition.ToString() + ": " + ex.Message, ex);
             }
         }
 
-		        /// <summary>
+		/// <summary>
         /// Return initial eph values
         /// </summary>
-        /// <param name="codpsw">internal user code on psw table</param>
-        /// <param name="condicoes">array with EPH conditions</param>
-        /// <param name="modulo">module to consider</param>
+        /// <param name="condition">The initial EPH to fetch values for</param>
         /// <param name="values">values to filter</param>
-        /// <returns>list with the conditions to each EPH to this user</returns>
-        public string[] ValuesEphInitial(string codpsw, EPHCondition condition, string module, string[] values)
+        /// <returns>list with the initial EPH values for this user</returns>
+        public string[] ValuesEphInitial(EPHCondition condition, string[] values)
         {
             try
             {
-                List<string> Qvalues = new List<string>();
-
-                string primaryKeyName = Area.GetInfoArea(condition.EPHTable).PrimaryKeyName;
-				string ligacao = primaryKeyName;
-
-                // constructs the query to interrogate the BD about the value of the EPH limiter field
+                AreaInfo tabelaEPH = Area.GetInfoArea(condition.EPHTable);
+                string primaryKeyName = tabelaEPH.PrimaryKeyName;
                 SelectQuery query = new SelectQuery();
-                if (condition.TableName == condition.EPHTable)
+
+                if (tabelaEPH.TableName == condition.TableName)
                 {
+                    //If the values we want are exactly the values of the primary keys we got, then just return them as is
                     if (condition.EPHField == primaryKeyName)
                         return values;
 
-                    query.Select(condition.AliasTable, condition.EPHField);
+                    //otherwise we need to exchange the primary key values for another field of this same table
+                    query.Select(tabelaEPH.Alias, condition.EPHField)
+                        .From(condition.TableSystem, condition.TableName, tabelaEPH.Alias)
+                        .Where(CriteriaSet.And()
+                            .In(condition.AliasTable, primaryKeyName, new List<string>(values)));
                 }
                 else
                 {
-                    //if the connection is not the same as in the eph
-                    string ligacao_nova = Area.GetInfoArea(condition.AliasTable).PrimaryKeyName;
+                    //The values we are after are in a table above this one, so we need to follow the relation
+                    AreaInfo tabelaAssoc = Area.GetInfoArea(condition.AliasTable);
+                    Relation rel = tabelaAssoc.ParentTables[tabelaEPH.Alias];
 
-                    if(ligacao_nova != primaryKeyName)
-                        ligacao = ligacao_nova;
+                    //If the EPHfield we are after is the primary key of the Value table,
+                    //then we again already have the values we are looking for
+                    if (condition.EPHField == rel.TargetIntKey)
+                        return values;                    
 
-                    query.Select(condition.AliasTable, condition.RelationField);
+                    query.Select(tabelaEPH.Alias, condition.EPHField)
+                        .From(condition.TableSystem, condition.TableName, condition.AliasTable)
+                        .Join(tabelaEPH.TableName, tabelaEPH.Alias)
+                        .On(CriteriaSet.And().Equal(rel.AliasSourceTab, rel.SourceRelField, rel.AliasTargetTab, rel.TargetIntKey))
+                        .Where(CriteriaSet.And()
+                            .In(condition.AliasTable, primaryKeyName, new List<string>(values)));
                 }
 
-                query.From(condition.TableSystem, condition.TableName, condition.AliasTable);
-                query.Where(CriteriaSet.And()
-                    .In(condition.AliasTable, ligacao, new List<string>(values)));
                 ArrayList valorChaves = executeReaderOneColumn(query);
-
-                if (valorChaves != null)
-                {
-                    AreaInfo tabelaEPH = Area.GetInfoArea(condition.EPHTable);
-
-                    if (condition.TableName == tabelaEPH.TableName)
-                        foreach (object chaveBD in valorChaves)
-                        {
-                            Qvalues.Add(DBConversion.ToString(chaveBD));
-                        }
-                    else
-                    {
-                        foreach (object chaveBD in valorChaves)
-                        {
-                            object key = chaveBD;
-                            if (key != null && !Object.Equals(key, "") && !Object.Equals(key, Guid.Empty))
-                            {
-                                SelectQuery queryvalores = new SelectQuery()
-                                    .Select(tabelaEPH.TableName, condition.EPHField)
-                                    .From(tabelaEPH.TableName)
-                                    .Where(CriteriaSet.And()
-                                        .Equal(tabelaEPH.TableName, tabelaEPH.PrimaryKeyName, key));
-                                ArrayList valorEPHs = executeReaderOneColumn(queryvalores);
-                                // if there is no input to the user in the table that makes the interface to this EPH
-                                // a condition should be placed in the session which does not allow it to view any
-                                foreach (object Qvalue in valorEPHs)
-                                {
-                                    if (Qvalue != null)
-                                        Qvalues.Add(DBConversion.ToString(Qvalue));
-                                    else
-                                    {
-                                        Qvalues.Clear();
-                                        return Qvalues.ToArray();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    Qvalues.Clear();
-                    return Qvalues.ToArray();
-                }                    // another hypothesis is to throw an exception to the user's warning
+                if (valorChaves == null)
+                    return [];
+                List<string> Qvalues = new List<string>();
+                foreach (object chaveBD in valorChaves)
+                    Qvalues.Add(DBConversion.ToString(chaveBD));
                 return Qvalues.ToArray();
             }
             catch (PersistenceException ex)
             {
-                throw new PersistenceException(ex.UserMessage, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + " for module " + module + "where " + condition.ToString() + ": " + ex.Message, ex);
+                throw new PersistenceException(ex.UserMessage, "PersistentSupport.devolveCampos", "Error returning EPHs for " + condition.ToString() + ": " + ex.Message, ex);
             }
             catch (Exception ex)
             {
-                throw new PersistenceException(null, "PersistentSupport.devolveCampos", "Error returning EPHs for user with password " + codpsw + " for module " + module + "where " + condition.ToString() + ": " + ex.Message, ex);
+                throw new PersistenceException(null, "PersistentSupport.devolveCampos", "Error returning EPHs for " + condition.ToString() + ": " + ex.Message, ex);
             }
         }
 
@@ -2108,23 +2055,45 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     if (isLed)
                     {
                         ControlQueryDefinition queryGenio = controlQueries[identifier];
-                        //NH(02.08.2010) - Does not place the condition zzstate = 0
-                        /*Não funcionava to os casos de inserção de registos através de um expõe table de um form em que a ficha ainda era Pseudo-nova.
-                          Não carimbava a relação.
-                        */
-                        if (queryGenio.WhereConditions != null
-                            && (queryGenio.WhereConditions.Criterias.Count > 1 || queryGenio.WhereConditions.SubSets.Count > 0))
+
+                        if (queryGenio.WhereConditions != null)
                         {
+                            //Find a criteria for the area's primary key because it means we have a specific selection
+                            Criteria critPrimaryKey = conditions.FindCriteria(area.Alias, area.PrimaryKeyName, CriteriaOperator.Equal, CriteriaSet.FindVariable.Any);
+                            if (critPrimaryKey is null || critPrimaryKey.RightTerm is null)
+                            {
+                                foreach (CriteriaSet sub in conditions.SubSets)
+                                {
+                                    critPrimaryKey = sub.FindCriteria(area.Alias, area.PrimaryKeyName, CriteriaOperator.Equal, CriteriaSet.FindVariable.Any);
+                                    if (critPrimaryKey != null && critPrimaryKey.RightTerm != null)
+                                        break;
+                                }
+                            }
+
                             CriteriaSet where = CriteriaSet.And();
-                            for (int i = 1; i < queryGenio.WhereConditions.Criterias.Count; i++)
+                            //When there isn't a specific selection we include the zzstate condition to ensure the returned records are valid
+                            //Use case: QWeb autocomplete searches should not include zzstate invalid records
+                            if (critPrimaryKey is null && queryGenio.WhereConditions.Criterias.Count > 0)
                             {
-                                where.Criterias.Add(queryGenio.WhereConditions.Criterias[i]);
+                                foreach (Criteria crit in queryGenio.WhereConditions.Criterias)
+                                    where.Criterias.Add(crit);
                             }
-                            foreach (CriteriaSet subSet in queryGenio.WhereConditions.SubSets)
+                            //When there's a specific selection there's no need to include the zzstate = 0 condition (previously handled on the selection moment)
+                            //This is particularly important when inserting a record through a table list of a pseudo-new record (it ensures the relation is correctly mapped)
+                            else if (queryGenio.WhereConditions.Criterias.Count > 1)
                             {
-                                where.SubSets.Add(subSet);
+                                for (int i = 1; i < queryGenio.WhereConditions.Criterias.Count; i++)
+                                    where.Criterias.Add(queryGenio.WhereConditions.Criterias[i]);
                             }
-                            query.WhereCondition.SubSet(where);
+
+                            if (queryGenio.WhereConditions.SubSets.Count > 0)
+                            {
+                                foreach (CriteriaSet subSet in queryGenio.WhereConditions.SubSets)
+                                    where.SubSets.Add(subSet);
+                            }
+
+                            if (where.Criterias.Count > 0 || where.SubSets.Count > 0)
+                                query.WhereCondition.SubSet(where);
                         }
                     }
 
@@ -2318,13 +2287,36 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             return query;
         }
 
-		/// <summary>
+        /// <summary>
         /// Reorders a field within a subset from startPos to N maintaining the relative order of the records
         /// </summary>
-        /// <param name="arearef">The table to reorder</param>
+        /// <param name="area">The table to reorder</param>
         /// <param name="orderField">The field to reorder</param>
         /// <param name="partition">The partition corresponding to the rows to be reordered</param>
-        public void ReorderSequence(AreaRef arearef, FieldRef orderField, CriteriaSet partition, List<Relation> relations = null, int startPos = 1)
+        public void ReorderSequence(AreaRef area, FieldRef orderField, CriteriaSet partition, int startPos = 1)
+        {
+            AreaInfo areaInfo = Area.GetInfoArea(area.Alias);
+            ReorderSequence(areaInfo, orderField.Field, partition, startPos);
+        }
+
+        /// <summary>
+        /// Reorders a field within a subset from startPos to N maintaining the relative order of the records
+        /// </summary>
+        /// <param name="area">The table to reorder</param>
+        /// <param name="orderField">The field to reorder</param>
+        /// <param name="partition">The partition corresponding to the rows to be reordered</param>
+        public void ReorderSequence(Area area, Field orderField, CriteriaSet partition, int startPos = 1)
+        {
+            ReorderSequence(area.Information, orderField.Name, partition, startPos);
+        }
+
+        /// <summary>
+        /// Reorders a field within a subset from startPos to N maintaining the relative order of the records
+        /// </summary>
+        /// <param name="area">The table to reorder</param>
+        /// <param name="orderField">The field to reorder</param>
+        /// <param name="partition">The partition corresponding to the rows to be reordered</param>
+        public void ReorderSequence(AreaInfo area, string orderField, CriteriaSet partition, int startPos = 1)
         {
             // UPDATE [GENNOV0].[dbo].[gencmpbd]
             // SET [num] = [renum_campo].[new_num]
@@ -2334,28 +2326,22 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             //          WHERE ([campo].[codtabel] = @param1)) AS [renum_campo]
             // ON ([renum_campo].[pk] = [campo].[codcmpbd])
 
-            string pkName = Area.GetInfoArea(arearef.Alias).PrimaryKeyName;
+            ColumnReference orderingFieldColumn = new(area.Alias, orderField);
+            ColumnSort[] orderBy = [new ColumnSort(orderingFieldColumn, GenericSortOrder.Ascending)];
 
-			//RowNumber starts at 1 so, add startPos - 1 to RowNumber to start numbering at startPos
+            //RowNumber starts at 1 so, add startPos - 1 to RowNumber to start numbering at startPos
             SelectQuery sq = new SelectQuery()
-                .Select(SqlFunctions.Add(SqlFunctions.RowNumber(orderField, GenericSortOrder.Ascending, orderField), startPos - 1), "new_num")
-                .Select(arearef.Alias, pkName, "pk")
-                .From(arearef)
+                .Select(SqlFunctions.Add(SqlFunctions.RowNumber(orderBy), startPos - 1), "new_num")
+                .Select(area.Alias, area.PrimaryKeyName, "pk")
+                .From(area.TableName, area.Alias)
                 .Where(partition);
 
-            if(relations != null)
-            {
-                foreach (Relation r in relations)
-                {
-                    sq.Join(r.TargetTable, r.AliasTargetTab, TableJoinType.Left)
-                        .On(CriteriaSet.And()
-                            .Equal(r.AliasSourceTab, r.SourceRelField, r.AliasTargetTab, r.TargetRelField));
-                }
-            }
-
-            UpdateQuery up = new UpdateQuery().Update(arearef)
-                .Set(orderField.Field, new ColumnReference("renum_" + arearef.Alias, "new_num"))
-                .Join(sq, "renum_" + arearef.Alias, TableJoinType.Inner).On(CriteriaSet.And().Equal("renum_" + arearef.Alias, "pk", arearef.Alias, pkName));
+            string renumArea = "renum_" + area.Alias;
+            UpdateQuery up = new UpdateQuery().Update(area.TableName)
+                .Set(orderField, new ColumnReference(renumArea, "new_num"))
+                .Join(sq, renumArea, TableJoinType.Inner)
+                .On(CriteriaSet.And()
+                    .Equal(renumArea, "pk", area.TableName, area.PrimaryKeyName));
 
             Execute(up);
         }
@@ -2366,20 +2352,13 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="area">The table</param>
         /// <param name="field">The field</param>
         /// <param name="partition">The partition corresponding to the rows</param>
-        /// <param name="relations">Relations</param>
-        public int GetMaxFieldValue(AreaRef area, FieldRef field, CriteriaSet partition, List<Relation> relations = null)
+        public int GetMaxFieldValue(Area area, Field field, CriteriaSet partition)
         {
-            SelectQuery maxOrderQuery = new SelectQuery().Select(SqlFunctions.Max(field), "maxOrder").From(area).Where(partition);
-
-            if (relations != null)
-            {
-                foreach (Relation r in relations)
-                {
-                    maxOrderQuery.Join(r.TargetTable, r.AliasTargetTab, TableJoinType.Left)
-                        .On(CriteriaSet.And()
-                            .Equal(r.AliasSourceTab, r.SourceRelField, r.AliasTargetTab, r.TargetRelField));
-                }
-            }
+            SelectQuery maxOrderQuery = new SelectQuery()
+                .Select(SqlFunctions
+                    .Max(new ColumnReference(area.Alias, field.Name)), "maxOrder")
+                .From(area.TableName, area.Alias)
+                .Where(partition);
 
             DataMatrix maxOrderRows = Execute(maxOrderQuery);
 
@@ -2412,13 +2391,12 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             //if we are allocating pk's in the database then read back the result of the query
             if(DatabaseSidePk)
-                area.insertNameValueField(area.PrimaryKeyName, DBConversion.ToKey(res));
+                area.insertNameValueField(area.PrimaryKeyName, DBConversion.ToKey(res), fromDatabase: true);
         }
 
         /// <summary>
         /// Bulk insert records into the database
         /// </summary>
-        /// <typeparam name="A">Specific Area class of the rows</typeparam>
         /// <param name="rows">The list of rows to insert</param>
         public virtual void bulkInsert(IEnumerable<IArea> rows)
         {
@@ -2469,7 +2447,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <summary>
         /// Bulk updates records in the database
         /// </summary>
-        /// <typeparam name="A">Specific Area class of the rows</typeparam>
         /// <param name="rows">The list of rows to update</param>
         public virtual void bulkUpdate(IEnumerable<IArea> rows)
         {
@@ -2481,7 +2458,6 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <summary>
         /// Bulk delete records in the database
         /// </summary>
-        /// <typeparam name="A">Specific Area class of the rows</typeparam>
         /// <param name="rows">The list of rows to delete</param>
         public virtual void bulkDelete(IEnumerable<IArea> rows)
         {
@@ -2557,7 +2533,12 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
             if (area.DBFields[area.PrimaryKeyName].FieldType == FieldType.KEY_GUID)
                 primaryKeyValue = primaryKeyValue.ToString().Replace("-", "");
             Field chaveDocums = CSGenioAdocums.GetInformation().DBFields["coddocums"];
-            object valorChavePrimariaDocums = generatePrimaryKey(tabelaDocums, "coddocums", chaveDocums.FieldSize, CSGenioAdocums.GetInformation().KeyType);
+            var fieldType = CSGenioAdocums.GetInformation().KeyType;
+            string valorChavePrimariaDocumsStr = generatePrimaryKey(tabelaDocums, "coddocums", chaveDocums.FieldSize, fieldType);
+            object valorChavePrimariaDocums = fieldType == FieldType.KEY_INT
+	                ? DBConversion.ToInteger(valorChavePrimariaDocumsStr)
+                    : valorChavePrimariaDocumsStr;
+
 
             //RS(2010.09.16) The table docums starts to gardar several verses and the author of the document
             InsertQuery query = new InsertQuery()
@@ -2657,7 +2638,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                                 Execute(insert);
 
                                 //update the record that references the document
-                                area.insertNameValueField(campoPedido.FullName, documid);
+                                area.insertNameValueField(campoPedido.FullName, documid, fromDatabase: true);
                             }
                         }
                     }
@@ -2780,6 +2761,10 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
 
             UpdateQuery query = new UpdateQuery();
             QueryUtils.fillQueryUpdate(query, area);
+
+            //there is no reason to execute a update to 0 columns
+            if (query.SetValues.Count == 0)
+                return;
 
             int linha = Execute(query);
             if (linha == 0)
@@ -3532,7 +3517,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                         // Since this field no longer exists in the structure, an exception would obviously arise from this.
                         if (area.DBFields.ContainsKey(qs.SelectFields[j].Alias.Split('.')[1])) //I'm assuming that the keys are the long names and that's never going to change
                         {
-                            area.insertNameValueField(qs.SelectFields[j].Alias, mx.GetDirect(i, j));
+                            area.insertNameValueField(qs.SelectFields[j].Alias, mx.GetDirect(i, j), fromDatabase: true);
                         }
                     }
                     Qresult.Add(area);
@@ -3734,7 +3719,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="relatedTables">List of other tables</param>
         /// <param name="area"></param>
         /// <returns>True or false</returns>
-        private bool checkPathToRelations<A>(List<string> relatedTables, A area)where A : IArea
+        private bool checkPathToRelations<A>(List<string> relatedTables, A area) where A : IArea
         {
             foreach (string otherTable in relatedTables)
             {
@@ -3843,18 +3828,25 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         /// <param name="internalCodeValue">The value of the primary key with which we position the record</param>
         /// <param name="fields">The fields to fill in the area. Null to get all fields</param>
         /// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
+        /// <param name="bookmarkOnly">True if the current values should be perserved and only oldvalues or missing values should be read</param>
         /// <returns>True if the record was correctly positioned, false otherwise</returns>
-        public virtual bool getRecord(IArea area, object internalCodeValue, string[] fields=null, bool forUpdate=false)
+        public virtual bool getRecord(IArea area, object internalCodeValue, string[] fields=null, bool forUpdate=false, bool bookmarkOnly=false)
         {
             try
             {
-                bool result = false;
+                string[] fields2 = fields;
+                if (bookmarkOnly)
+                    fields2 = GetFieldsForBookmark(area, fields, forUpdate);
 
                 SelectQuery select = new SelectQuery();
                 if (forUpdate)
                     select.updateLock = true;
 
-                select.SelectDatabaseFields(area, fields);
+                select.SelectDatabaseFields(area, fields2);
+
+                //if we end up with zero fields to read then we don't need to execute the query
+                if (select.SelectFields.Count == 0)
+                    return true;
 
                 select.From(area.QSystem, area.TableName, area.Alias);
                 var pk = QueryUtils.ToValidDbValue(internalCodeValue, area.DBFields[area.PrimaryKeyName]);
@@ -3862,36 +3854,63 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                     .Equal(area.Alias, area.PrimaryKeyName, pk));
 
                 DataMatrix mx = Execute(select);
-                if (mx.NumRows > 0)
-                {
-                    result = true;
+                if (mx.NumRows == 0)
+                    return false;
 
-                    for (int i = 0; i < mx.NumCols; i++)
+                for (int i = 0; i < mx.NumCols; i++)
+                {
+                    // Don't take this condition off. Explanation: The user can remove columns from an area in the settings
+                    // and the database still to be had on the corresponding table. If the user querys with "*", the
+                    // below call would try to search in the corresponding Area structure all fields returned by SQL query.
+                    // Since this field no longer exists in the structure, an exception would obviously arise from this.
+                    if(area.DBFields.TryGetValue(select.SelectFields[i].Alias.Split('.')[1], out var fieldInfo))
                     {
-                        // Don't take this condition off. Explanation: The user can remove columns from an area in the settings
-                        // and the database still to be had on the corresponding table. If the user querys with "*", the
-                        // below call would try to search in the corresponding Area structure all fields returned by SQL query.
-                        // Since this field no longer exists in the structure, an exception would obviously arise from this.
-                        if (area.DBFields.ContainsKey(select.SelectFields[i].Alias.Split('.')[1])) //I'm assuming that the keys are the long names and that's never going to change
-                        {
-                            area.insertNameValueField(select.SelectFields[i].Alias, mx.GetDirect(0, i));
-                        }
+                        var internalValue = DBConversion.ToInternal(mx.GetDirect(0, i), fieldInfo.FieldFormat);
+                        if (area.Fields.TryGetValue(fieldInfo.FullName, out var dbfield) && bookmarkOnly)
+                            dbfield.OldValue = internalValue;
+                        else 
+                            area.insertNameValueField(select.SelectFields[i].Alias, internalValue, fromDatabase: true);
                     }
                 }
 
-                return result;
+                //primary key is always the same
+                area.insertNameValueField(area.PrimaryKeyName, internalCodeValue, fromDatabase: true);
+                area.IsBookmarkLocked = forUpdate;
+
+                return true;
             }
-			catch (GenioException ex)
+			catch (Exception ex)
             {
-                throw new PersistenceException(ex.UserMessage, "PersistentSupport.getRecord",
-				                               "Error selecting fields " + fields + " from table " + area.TableName + " where code is " + internalCodeValue.ToString() + ": " + ex.Message, ex);
+                string usermessage = (ex as GenioException)?.UserMessage;
+                throw new PersistenceException(usermessage
+                    , "PersistentSupport.getRecord"
+                    , "Error selecting fields " + fields + " from table " + area.TableName + " where code is " + internalCodeValue.ToString() + ": " + ex.Message
+                    , ex);
             }
-            catch (Exception ex)
+        }
+
+        private static string[] GetFieldsForBookmark(IArea area, string[] fields, bool forUpdate)
+        {
+            //add only non-bookmarked fields
+            List<string> bookmarkFields = [];
+            foreach (var fieldInfo in area.DBFields.Values)
             {
-                // closeConnection(); to have a uniform behavior with other catch of other sp functions and not close the connection for no apparent reason to this.
-                throw new PersistenceException(null, "PersistentSupport.getRecord",
-				                               "Error selecting fields " + fields + " from table " + area.TableName + " where code is " + internalCodeValue.ToString() + ": " + ex.Message, ex);
+                //primary key cannot change, we already have it, so we never need to read it
+                if (fieldInfo.Name == area.PrimaryKeyName)
+                    continue;
+                //if this is a update critical operation and the current bookmark was not update locked
+                // we need to read all fields again
+                //otherwise we read the fields that have not been bookmarked yet
+                if (!(forUpdate && !area.IsBookmarkLocked)
+                    && area.Fields.TryGetValue(fieldInfo.FullName, out var reqField) && reqField.IsBookmarked)
+                    continue;
+                //skip non-requested fields
+                if (fields is not null && !fields.Contains(fieldInfo.Name))
+                    continue;
+
+                bookmarkFields.Add(fieldInfo.Name);
             }
+            return bookmarkFields.ToArray();
         }
 
         /// <summary>
@@ -4203,6 +4222,16 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
         }
 
         /// <summary>
+        /// Update the bookmark (old values) of a record with their current database value
+        /// </summary>
+        /// <remarks>Any missing current value will be set as equal to the read bookmark, and existing current value will be perserved</remarks>
+        /// <param name="area">The area to read</param>
+        public virtual void getBookmark(IArea area)
+        {
+            getRecord(area, area.QPrimaryKey, null, true, true);
+        }
+
+        /// <summary>
         /// Function that executes a query that returns a database record
         /// </summary>
         /// <param name="query">query to be executed</param>
@@ -4228,7 +4257,7 @@ notifications.Add("NOTIF_2_DISPATCHALERT",new Q_NOTIF_2_DISPATCHALERT());
                         // Since this field no longer exists in the structure, an exception would obviously arise from this.
                         string colName = dr.GetName(i).ToLower();
                         if (area.DBFields.TryGetValue(colName, out var fieldInfo))
-                            area.insertNameValueField(fieldInfo.FullName, dr.GetValue(i));
+                            area.insertNameValueField(fieldInfo.FullName, dr.GetValue(i), fromDatabase: true);
                     }
                 }
                 dr.Close();

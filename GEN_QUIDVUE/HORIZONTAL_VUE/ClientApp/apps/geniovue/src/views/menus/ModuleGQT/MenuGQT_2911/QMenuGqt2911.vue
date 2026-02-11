@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_2911]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -171,6 +174,7 @@
 								label: computed(() => this.Resources.FAMILIA_DE_EQUIPAMEN12158),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodfamil',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -182,6 +186,7 @@
 								dataLength: 20,
 								scrollData: 20,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -193,6 +198,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -203,6 +209,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -213,6 +220,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 8,
@@ -224,6 +232,7 @@
 								maxDigits: 9,
 								decimalPlaces: 2,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 9,
@@ -235,6 +244,7 @@
 								maxDigits: 9,
 								decimalPlaces: 2,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 10,
@@ -245,6 +255,7 @@
 								scrollData: 16,
 								dateTimeType: 'dateTime',
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
@@ -256,6 +267,7 @@
 								maxDigits: 6,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 12,
@@ -265,6 +277,7 @@
 								label: computed(() => this.Resources.KIT27179),
 								scrollData: 1,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -280,8 +293,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -382,6 +394,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_29111',
 								name: 'form-TPEQU',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -407,10 +420,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPEQU', 'changed-FAMIL'],
+						globalEvents: ['changed-FAMIL', 'changed-TPEQU'],
 						uuid: 'ccb896ea-08b1-4f02-afd9-fc6db34c63ef',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

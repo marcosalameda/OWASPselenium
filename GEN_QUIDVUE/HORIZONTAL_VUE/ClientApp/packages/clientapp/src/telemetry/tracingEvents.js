@@ -7,9 +7,8 @@ import { deepUnwrap } from '../utils/deepUnwrap'
  * Function to retrieve the call stack.
  * @returns {string} Call stack as a string.
  */
-function getCallStack()
-{
-	return (new Error()).stack
+function getCallStack() {
+	return new Error().stack
 }
 
 /**
@@ -28,8 +27,7 @@ export const TraceEventType = {
 /**
  * Represents a trace event.
  */
-export class TraceEvent
-{
+export class TraceEvent {
 	/**
 	 * Creates a TraceEvent instance.
 	 * @param {Object} options - Event options.
@@ -39,8 +37,7 @@ export class TraceEvent
 	 * @param {*} options.contextData - Context data associated with the event.
 	 * @param {number} [options.timestamp=Date.now()] - Timestamp of the event.
 	 */
-	constructor(options)
-	{
+	constructor(options) {
 		this.uid = uuidv4()
 
 		this.traceId = _get(options, 'traceId', this.uid)
@@ -52,9 +49,7 @@ export class TraceEvent
 
 		try {
 			this.contextData = JSON.stringify(deepUnwrap(_get(options, 'contextData')))
-		}
-		catch(err)
-		{
+		} catch (err) {
 			this.contextData = `TraceEvent - Failed to get context data. ${err?.message}`
 			// To facilitate debugging during development
 			if (import.meta.env.DEV)
@@ -69,14 +64,12 @@ export class TraceEvent
 /**
  * Represents a warning event.
  */
-export class WarningEvent extends TraceEvent
-{
+export class WarningEvent extends TraceEvent {
 	/**
 	 * Creates a WarningEvent instance.
 	 * @param {Object} options - Event options.
 	 */
-	constructor(options)
-	{
+	constructor(options) {
 		super(options)
 		this.type = TraceEventType.WARNING
 	}
@@ -85,14 +78,12 @@ export class WarningEvent extends TraceEvent
 /**
  * Represents an error event.
  */
-export class ErrorEvent extends TraceEvent
-{
+export class ErrorEvent extends TraceEvent {
 	/**
 	 * Creates an ErrorEvent instance.
 	 * @param {Object} options - Event options.
 	 */
-	constructor(options)
-	{
+	constructor(options) {
 		super(options)
 		this.type = TraceEventType.ERROR
 	}
@@ -101,8 +92,7 @@ export class ErrorEvent extends TraceEvent
 /**
  * Represents a request event.
  */
-export class RequestEvent extends TraceEvent
-{
+export class RequestEvent extends TraceEvent {
 	/**
 	 * Creates a RequestEvent instance.
 	 * @param {Object} options - Event options.
@@ -111,8 +101,7 @@ export class RequestEvent extends TraceEvent
 	 * @param {*} options.requestParams - Parameters of the request.
 	 * @param {*} options.requestData - Data associated with the request.
 	 */
-	constructor(options)
-	{
+	constructor(options) {
 		super(options)
 
 		/**
@@ -146,16 +135,14 @@ export class RequestEvent extends TraceEvent
 /**
  * Represents a response event.
  */
-export class ResponseEvent extends RequestEvent
-{
+export class ResponseEvent extends RequestEvent {
 	/**
 	 * Creates a ResponseEvent instance.
 	 * @param {Object} options - Event options.
 	 * @param {string} [options.responseStatus=''] - The status of the response.
 	 * @param {*} options.responseData - Data associated with the response.
 	 */
-	constructor(options)
-	{
+	constructor(options) {
 		super(options)
 
 		/**
@@ -183,19 +170,16 @@ export class ResponseEvent extends RequestEvent
 	}
 }
 
-export class ServerErrorEvent extends TraceEvent
-{
+export class ServerErrorEvent extends TraceEvent {
 	/**
 	 * Creates an ServerErrorEvent instance.
 	 * @param {Object} options - Event options.
 	 */
-	constructor(options)
-	{
+	constructor(options) {
 		super(options)
 		this.type = TraceEventType.SERVER_ERROR
 	}
 }
-
 
 /**
  * Module exporting TraceEventType and event classes
@@ -205,5 +189,5 @@ export default {
 	TraceEventType,
 	TraceEvent,
 	WarningEvent,
-	ErrorEvent,
+	ErrorEvent
 }

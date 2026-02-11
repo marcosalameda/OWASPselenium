@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_421]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -154,7 +155,8 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
-								isOrderingColumn: true,
+								export: 1,
+								sortOrder: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -181,8 +184,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -283,6 +285,7 @@
 							rowClickAction: {
 								id: 'RCA_PTN_4211',
 								name: 'form-RORDI',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -312,6 +315,7 @@
 						uuid: 'af0e17ac-78f6-4be8-a719-3dab8ea29e3b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

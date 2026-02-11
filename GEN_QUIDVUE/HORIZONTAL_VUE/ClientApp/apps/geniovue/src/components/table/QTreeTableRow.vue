@@ -39,7 +39,7 @@
 						v-if="hasSubTable"
 						:columns="columnHierarchy[columnsLevel + 1] ?? null"
 						:table-name="tableName + '_sub_' + row.rowKey"
-						:allow-column-filters="false"
+						:allow-filters="false"
 						:texts="texts" />
 					<component
 						:is="hasSubTable ? 'tbody' : 'v-fragment'"

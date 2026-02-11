@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="VENDA"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.VENDA___ORGANORGANIZA.isVisible">
-					<q-control-wrapper
-						v-show="controls.VENDA___ORGANORGANIZA.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.VENDA___ORGANORGANIZA.isVisible">
+					<q-col
+						v-if="controls.VENDA___ORGANORGANIZA.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VENDA___ORGANORGANIZA.isVisible"
 							class="i-text"
 							v-bind="controls.VENDA___ORGANORGANIZA"
 							v-on="controls.VENDA___ORGANORGANIZA.handlers"
@@ -111,13 +120,14 @@
 								v-bind="controls.VENDA___ORGANORGANIZA.seeMoreParams"
 								v-on="controls.VENDA___ORGANORGANIZA.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.VENDA___SALE_NRLIDE__.isVisible || controls.VENDA___SALE_STARTDT_.isVisible">
-					<q-control-wrapper
-						v-show="controls.VENDA___SALE_NRLIDE__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VENDA___SALE_NRLIDE__.isVisible || controls.VENDA___SALE_STARTDT_.isVisible">
+					<q-col
+						v-if="controls.VENDA___SALE_NRLIDE__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VENDA___SALE_NRLIDE__.isVisible"
 							class="i-text"
 							v-bind="controls.VENDA___SALE_NRLIDE__"
 							v-on="controls.VENDA___SALE_NRLIDE__.handlers"
@@ -129,11 +139,12 @@
 								v-bind="controls.VENDA___SALE_NRLIDE__.props"
 								@update:model-value="model.ValNrlide.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.VENDA___SALE_STARTDT_.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.VENDA___SALE_STARTDT_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VENDA___SALE_STARTDT_.isVisible"
 							class="i-text"
 							v-bind="controls.VENDA___SALE_STARTDT_"
 							v-on="controls.VENDA___SALE_STARTDT_.handlers"
@@ -147,24 +158,22 @@
 								@reset-icon-click="model.ValStartdt.fnUpdateValue(model.ValStartdt.originalValue ?? new Date())"
 								@update:model-value="model.ValStartdt.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.VENDA___PSEUDNOVOGR01.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.VENDA___PSEUDNOVOGR01.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VENDA___PSEUDNOVOGR01.isVisible">
+					<q-col v-if="controls.VENDA___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
+							v-if="controls.VENDA___PSEUDNOVOGR01.isVisible"
 							id="VENDA___PSEUDNOVOGR01"
 							v-bind="controls.VENDA___PSEUDNOVOGR01"
 							:is-visible="controls.VENDA___PSEUDNOVOGR01.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.VENDA___SALE_IDENTIFI.isVisible || controls.VENDA___SALE_POTCOMPR.isVisible || controls.VENDA___SALE_PROSPECC.isVisible">
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_IDENTIFI.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.VENDA___SALE_IDENTIFI.isVisible || controls.VENDA___SALE_POTCOMPR.isVisible || controls.VENDA___SALE_PROSPECC.isVisible">
+								<q-col
+									v-if="controls.VENDA___SALE_IDENTIFI.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_IDENTIFI.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_IDENTIFI"
 										v-on="controls.VENDA___SALE_IDENTIFI.handlers"
@@ -176,11 +185,12 @@
 											@blur="onBlur(controls.VENDA___SALE_IDENTIFI, model.ValIdentifi.value)"
 											@change="model.ValIdentifi.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_POTCOMPR.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_POTCOMPR.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_POTCOMPR.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_POTCOMPR"
 										v-on="controls.VENDA___SALE_POTCOMPR.handlers"
@@ -192,11 +202,12 @@
 											@blur="onBlur(controls.VENDA___SALE_POTCOMPR, model.ValPotcompr.value)"
 											@change="model.ValPotcompr.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_PROSPECC.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_PROSPECC.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_PROSPECC.isVisible"
 										class="i-checkbox"
 										v-bind="controls.VENDA___SALE_PROSPECC"
 										v-on="controls.VENDA___SALE_PROSPECC.handlers"
@@ -204,34 +215,32 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.VENDA___SALE_PROSPECC.isVisible"
 												v-bind="controls.VENDA___SALE_PROSPECC.props"
 												v-on="controls.VENDA___SALE_PROSPECC.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End VENDA___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.VENDA___PSEUDNOVOGR02.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.VENDA___PSEUDNOVOGR02.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VENDA___PSEUDNOVOGR02.isVisible">
+					<q-col v-if="controls.VENDA___PSEUDNOVOGR02.isVisible">
 						<q-group-box-container
+							v-if="controls.VENDA___PSEUDNOVOGR02.isVisible"
 							id="VENDA___PSEUDNOVOGR02"
 							v-bind="controls.VENDA___PSEUDNOVOGR02"
 							:is-visible="controls.VENDA___PSEUDNOVOGR02.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.VENDA___SALE_INTERESS.isVisible || controls.VENDA___SALE_SEMRFINA.isVisible || controls.VENDA___SALE_SEMCAPAC.isVisible || controls.VENDA___SALE_DTQUALIF.isVisible || controls.VENDA___SALE_QUALIFIC.isVisible">
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_INTERESS.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.VENDA___SALE_INTERESS.isVisible || controls.VENDA___SALE_SEMRFINA.isVisible || controls.VENDA___SALE_SEMCAPAC.isVisible || controls.VENDA___SALE_DTQUALIF.isVisible || controls.VENDA___SALE_QUALIFIC.isVisible">
+								<q-col
+									v-if="controls.VENDA___SALE_INTERESS.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_INTERESS.isVisible"
 										class="i-checkbox"
 										v-bind="controls.VENDA___SALE_INTERESS"
 										v-on="controls.VENDA___SALE_INTERESS.handlers"
@@ -239,17 +248,18 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.VENDA___SALE_INTERESS.isVisible"
 												v-bind="controls.VENDA___SALE_INTERESS.props"
 												v-on="controls.VENDA___SALE_INTERESS.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_SEMRFINA.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
 										class="i-checkbox"
 										v-bind="controls.VENDA___SALE_SEMRFINA"
 										v-on="controls.VENDA___SALE_SEMRFINA.handlers"
@@ -257,17 +267,18 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.VENDA___SALE_SEMRFINA.isVisible"
 												v-bind="controls.VENDA___SALE_SEMRFINA.props"
 												v-on="controls.VENDA___SALE_SEMRFINA.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_SEMCAPAC.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
 										class="i-checkbox"
 										v-bind="controls.VENDA___SALE_SEMCAPAC"
 										v-on="controls.VENDA___SALE_SEMCAPAC.handlers"
@@ -275,17 +286,18 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.VENDA___SALE_SEMCAPAC.isVisible"
 												v-bind="controls.VENDA___SALE_SEMCAPAC.props"
 												v-on="controls.VENDA___SALE_SEMCAPAC.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_DTQUALIF.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_DTQUALIF.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_DTQUALIF.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_DTQUALIF"
 										v-on="controls.VENDA___SALE_DTQUALIF.handlers"
@@ -299,11 +311,12 @@
 											@reset-icon-click="model.ValDtqualif.fnUpdateValue(model.ValDtqualif.originalValue ?? new Date())"
 											@update:model-value="model.ValDtqualif.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_QUALIFIC.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
 										class="i-checkbox"
 										v-bind="controls.VENDA___SALE_QUALIFIC"
 										v-on="controls.VENDA___SALE_QUALIFIC.handlers"
@@ -311,34 +324,32 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.VENDA___SALE_QUALIFIC.isVisible"
 												v-bind="controls.VENDA___SALE_QUALIFIC.props"
 												v-on="controls.VENDA___SALE_QUALIFIC.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End VENDA___PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.VENDA___PSEUDNOVOGR03.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.VENDA___PSEUDNOVOGR03.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VENDA___PSEUDNOVOGR03.isVisible">
+					<q-col v-if="controls.VENDA___PSEUDNOVOGR03.isVisible">
 						<q-group-box-container
+							v-if="controls.VENDA___PSEUDNOVOGR03.isVisible"
 							id="VENDA___PSEUDNOVOGR03"
 							v-bind="controls.VENDA___PSEUDNOVOGR03"
 							:is-visible="controls.VENDA___PSEUDNOVOGR03.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR03 -->
-							<q-row-container v-show="controls.VENDA___SALE_PREABORD.isVisible || controls.VENDA___SALE_HOMEWORK.isVisible">
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_PREABORD.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.VENDA___SALE_PREABORD.isVisible || controls.VENDA___SALE_HOMEWORK.isVisible">
+								<q-col
+									v-if="controls.VENDA___SALE_PREABORD.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_PREABORD.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_PREABORD"
 										v-on="controls.VENDA___SALE_PREABORD.handlers"
@@ -352,11 +363,12 @@
 											@reset-icon-click="model.ValPreabord.fnUpdateValue(model.ValPreabord.originalValue ?? new Date())"
 											@update:model-value="model.ValPreabord.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_HOMEWORK.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
 										class="i-checkbox"
 										v-bind="controls.VENDA___SALE_HOMEWORK"
 										v-on="controls.VENDA___SALE_HOMEWORK.handlers"
@@ -364,34 +376,32 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.VENDA___SALE_HOMEWORK.isVisible"
 												v-bind="controls.VENDA___SALE_HOMEWORK.props"
 												v-on="controls.VENDA___SALE_HOMEWORK.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End VENDA___PSEUDNOVOGR03 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.VENDA___PSEUDNOVOGR04.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.VENDA___PSEUDNOVOGR04.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VENDA___PSEUDNOVOGR04.isVisible">
+					<q-col v-if="controls.VENDA___PSEUDNOVOGR04.isVisible">
 						<q-group-box-container
+							v-if="controls.VENDA___PSEUDNOVOGR04.isVisible"
 							id="VENDA___PSEUDNOVOGR04"
 							v-bind="controls.VENDA___PSEUDNOVOGR04"
 							:is-visible="controls.VENDA___PSEUDNOVOGR04.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR04 -->
-							<q-row-container v-show="controls.VENDA___SALE_DTABORDA.isVisible || controls.VENDA___SALE_APPROACH.isVisible">
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_DTABORDA.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.VENDA___SALE_DTABORDA.isVisible || controls.VENDA___SALE_APPROACH.isVisible">
+								<q-col
+									v-if="controls.VENDA___SALE_DTABORDA.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_DTABORDA.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_DTABORDA"
 										v-on="controls.VENDA___SALE_DTABORDA.handlers"
@@ -405,11 +415,12 @@
 											@reset-icon-click="model.ValDtaborda.fnUpdateValue(model.ValDtaborda.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaborda.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_APPROACH.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_APPROACH.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_APPROACH.isVisible"
 										class="i-checkbox"
 										v-bind="controls.VENDA___SALE_APPROACH"
 										v-on="controls.VENDA___SALE_APPROACH.handlers"
@@ -417,34 +428,32 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.VENDA___SALE_APPROACH.isVisible"
 												v-bind="controls.VENDA___SALE_APPROACH.props"
 												v-on="controls.VENDA___SALE_APPROACH.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End VENDA___PSEUDNOVOGR04 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.VENDA___PSEUDNOVOGR05.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.VENDA___PSEUDNOVOGR05.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VENDA___PSEUDNOVOGR05.isVisible">
+					<q-col v-if="controls.VENDA___PSEUDNOVOGR05.isVisible">
 						<q-group-box-container
+							v-if="controls.VENDA___PSEUDNOVOGR05.isVisible"
 							id="VENDA___PSEUDNOVOGR05"
 							v-bind="controls.VENDA___PSEUDNOVOGR05"
 							:is-visible="controls.VENDA___PSEUDNOVOGR05.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR05 -->
-							<q-row-container v-show="controls.VENDA___SALE_DTAPRESE.isVisible || controls.VENDA___SALE_APRESENT.isVisible">
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_DTAPRESE.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.VENDA___SALE_DTAPRESE.isVisible || controls.VENDA___SALE_APRESENT.isVisible">
+								<q-col
+									v-if="controls.VENDA___SALE_DTAPRESE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_DTAPRESE.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_DTAPRESE"
 										v-on="controls.VENDA___SALE_DTAPRESE.handlers"
@@ -458,11 +467,12 @@
 											@reset-icon-click="model.ValDtaprese.fnUpdateValue(model.ValDtaprese.originalValue ?? new Date())"
 											@update:model-value="model.ValDtaprese.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_APRESENT.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_APRESENT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_APRESENT.isVisible"
 										class="i-checkbox"
 										v-bind="controls.VENDA___SALE_APRESENT"
 										v-on="controls.VENDA___SALE_APRESENT.handlers"
@@ -470,34 +480,32 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.VENDA___SALE_APRESENT.isVisible"
 												v-bind="controls.VENDA___SALE_APRESENT.props"
 												v-on="controls.VENDA___SALE_APRESENT.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End VENDA___PSEUDNOVOGR05 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.VENDA___PSEUDNOVOGR06.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.VENDA___PSEUDNOVOGR06.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VENDA___PSEUDNOVOGR06.isVisible">
+					<q-col v-if="controls.VENDA___PSEUDNOVOGR06.isVisible">
 						<q-group-box-container
+							v-if="controls.VENDA___PSEUDNOVOGR06.isVisible"
 							id="VENDA___PSEUDNOVOGR06"
 							v-bind="controls.VENDA___PSEUDNOVOGR06"
 							:is-visible="controls.VENDA___PSEUDNOVOGR06.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR06 -->
-							<q-row-container v-show="controls.VENDA___SALE_DTSUPERA.isVisible">
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_DTSUPERA.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.VENDA___SALE_DTSUPERA.isVisible">
+								<q-col
+									v-if="controls.VENDA___SALE_DTSUPERA.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_DTSUPERA.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_DTSUPERA"
 										v-on="controls.VENDA___SALE_DTSUPERA.handlers"
@@ -511,28 +519,26 @@
 											@reset-icon-click="model.ValDtsupera.fnUpdateValue(model.ValDtsupera.originalValue ?? new Date())"
 											@update:model-value="model.ValDtsupera.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End VENDA___PSEUDNOVOGR06 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.VENDA___PSEUDNOVOGR07.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.VENDA___PSEUDNOVOGR07.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VENDA___PSEUDNOVOGR07.isVisible">
+					<q-col v-if="controls.VENDA___PSEUDNOVOGR07.isVisible">
 						<q-group-box-container
+							v-if="controls.VENDA___PSEUDNOVOGR07.isVisible"
 							id="VENDA___PSEUDNOVOGR07"
 							v-bind="controls.VENDA___PSEUDNOVOGR07"
 							:is-visible="controls.VENDA___PSEUDNOVOGR07.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR07 -->
-							<q-row-container v-show="controls.VENDA___SALE_TENTFECH.isVisible || controls.VENDA___SALE_DTVENDA_.isVisible">
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_TENTFECH.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.VENDA___SALE_TENTFECH.isVisible || controls.VENDA___SALE_DTVENDA_.isVisible">
+								<q-col
+									v-if="controls.VENDA___SALE_TENTFECH.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_TENTFECH.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_TENTFECH"
 										v-on="controls.VENDA___SALE_TENTFECH.handlers"
@@ -546,11 +552,12 @@
 											@reset-icon-click="model.ValTentfech.fnUpdateValue(model.ValTentfech.originalValue ?? new Date())"
 											@update:model-value="model.ValTentfech.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_DTVENDA_.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.VENDA___SALE_DTVENDA_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_DTVENDA_.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_DTVENDA_"
 										v-on="controls.VENDA___SALE_DTVENDA_.handlers"
@@ -564,28 +571,26 @@
 											@reset-icon-click="model.ValDtvenda.fnUpdateValue(model.ValDtvenda.originalValue ?? new Date())"
 											@update:model-value="model.ValDtvenda.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End VENDA___PSEUDNOVOGR07 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.VENDA___PSEUDNOVOGR08.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.VENDA___PSEUDNOVOGR08.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VENDA___PSEUDNOVOGR08.isVisible">
+					<q-col v-if="controls.VENDA___PSEUDNOVOGR08.isVisible">
 						<q-group-box-container
+							v-if="controls.VENDA___PSEUDNOVOGR08.isVisible"
 							id="VENDA___PSEUDNOVOGR08"
 							v-bind="controls.VENDA___PSEUDNOVOGR08"
 							:is-visible="controls.VENDA___PSEUDNOVOGR08.isVisible">
 							<!-- Start VENDA___PSEUDNOVOGR08 -->
-							<q-row-container v-show="controls.VENDA___SALE_DTACOMPA.isVisible">
-								<q-control-wrapper
-									v-show="controls.VENDA___SALE_DTACOMPA.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.VENDA___SALE_DTACOMPA.isVisible">
+								<q-col
+									v-if="controls.VENDA___SALE_DTACOMPA.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.VENDA___SALE_DTACOMPA.isVisible"
 										class="i-text"
 										v-bind="controls.VENDA___SALE_DTACOMPA"
 										v-on="controls.VENDA___SALE_DTACOMPA.handlers"
@@ -599,14 +604,14 @@
 											@reset-icon-click="model.ValDtacompa.fnUpdateValue(model.ValDtacompa.originalValue ?? new Date())"
 											@update:model-value="model.ValDtacompa.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End VENDA___PSEUDNOVOGR08 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -615,7 +620,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -624,6 +629,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -635,7 +641,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -847,7 +853,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1026,7 +1036,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR01',
 						maxLength: 85,
-						labelId: 'label_VENDA___SALE_IDENTIFI',
 						controlLimits: [
 						],
 					}, this),
@@ -1041,7 +1050,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'VENDA___PSEUDNOVOGR01',
 						maxLength: 50,
-						labelId: 'label_VENDA___SALE_POTCOMPR',
 						controlLimits: [
 						],
 					}, this),
@@ -1538,16 +1546,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1591,16 +1613,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1752,6 +1788,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS VENDA]/
 // eslint-disable-next-line

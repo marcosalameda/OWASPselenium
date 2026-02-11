@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE STY_Menu_TABS]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.TEXT_FIELD41810),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -168,8 +170,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -270,6 +271,7 @@
 							rowClickAction: {
 								id: 'RCA_STY_26111',
 								name: 'form-LISTACAM',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -295,14 +297,15 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-AERO', 'changed-FLDS', 'changed-EQUIP'],
+						globalEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
 						uuid: '5fdc29f1-c37a-422d-a13c-97b03a5593b6',
 						allSelectedRows: 'false',
 						headerLevel: 1,
 						/** Menu limits */
 						controlLimits: [
 							/** SC */
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

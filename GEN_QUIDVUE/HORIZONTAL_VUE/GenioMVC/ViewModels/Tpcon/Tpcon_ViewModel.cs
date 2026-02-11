@@ -1,20 +1,19 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Tpcon
 {
@@ -45,6 +44,8 @@ namespace GenioMVC.ViewModels.Tpcon
 		/// Title: "Contact Type:" | Type: "C"
 		/// </summary>
 		public string ValTipocont { get; set; }
+
+
 
 		#region Navigations
 		#endregion
@@ -295,6 +296,17 @@ namespace GenioMVC.ViewModels.Tpcon
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -425,7 +437,7 @@ namespace GenioMVC.ViewModels.Tpcon
 
 			if (tpcon___genregender__DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableGenreGender, "sTableGenreGender", "dTableGenreGender", qs, "genre");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -454,7 +466,7 @@ namespace GenioMVC.ViewModels.Tpcon
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAgenre.FldCodgenre, CSGenioAgenre.FldGender, CSGenioAgenre.FldZzstate };
+				FieldRef[] fields = [CSGenioAgenre.FldCodgenre, CSGenioAgenre.FldGender, CSGenioAgenre.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ TPCON_GENREGENDER]/
 
@@ -475,7 +487,7 @@ namespace GenioMVC.ViewModels.Tpcon
 
 				TableGenreGender.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableGenreGender.Query = query;
-				TableGenreGender.Elements = listing.RowsForViewModel<GenioMVC.Models.Genre>((r) => new GenioMVC.Models.Genre(m_userContext, r, true, _fieldsToSerialize_TPCON___GENREGENDER__));
+				TableGenreGender.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Genre(m_userContext, r, true, _fieldsToSerialize_TPCON___GENREGENDER__));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

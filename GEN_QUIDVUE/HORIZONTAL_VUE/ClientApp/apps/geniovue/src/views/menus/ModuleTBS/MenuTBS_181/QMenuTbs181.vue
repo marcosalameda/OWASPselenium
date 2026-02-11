@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TBS_Menu_181]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 100,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodpsw',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.REGION12723),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodregia',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -179,8 +182,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -281,6 +283,7 @@
 							rowClickAction: {
 								id: 'RCA_TBS_1811',
 								name: 'form-PWREG',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -306,10 +309,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PSW', 'changed-PWREG', 'changed-REGIO'],
+						globalEvents: ['changed-REGIO', 'changed-PWREG', 'changed-PSW'],
 						uuid: 'd00b4f2a-57b6-4d04-a521-47133a9dcfee',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

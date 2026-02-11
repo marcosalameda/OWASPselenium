@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW AGENT01]/
 
 		[HttpPost]
-		public ActionResult Agent01_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Agent01_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Agent01_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Agent01_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Agent01_Show_GET",
 				AreaName = "agent",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET AGENT01]/
 		[HttpPost]
-		public ActionResult Agent01_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Agent01_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Agent01_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Agent01_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Agent01_New_GET",
 				AreaName = "agent",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Agent01_New([FromBody]Agent01_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Agent01_New",
 				ViewName = "Agent01",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET AGENT01]/
 		[HttpPost]
-		public ActionResult Agent01_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Agent01_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Agent01_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Agent01_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Agent01_Edit_GET",
 				AreaName = "agent",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Agent01_Edit([FromBody]Agent01_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Agent01_Edit",
 				ViewName = "Agent01",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET AGENT01]/
 		[HttpPost]
-		public ActionResult Agent01_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Agent01_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Agent01_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Agent01_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Agent01_Delete_GET",
 				AreaName = "agent",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Agent/Agent01_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST AGENT01]/
 		[HttpPost]
-		public ActionResult Agent01_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Agent01_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Agent01_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Agent01_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Agent01_Delete",
 				ViewName = "Agent01",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET AGENT01]/
 
 		[HttpPost]
-		public ActionResult Agent01_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Agent01_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Agent01_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Agent01_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Agent01_Duplicate_GET",
 				AreaName = "agent",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Agent01_Duplicate([FromBody]Agent01_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Agent01_Duplicate",
 				ViewName = "Agent01",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Agent(UserContext.Current);
+					GenioMVC.Models.Agent model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("agent");
 
 // USE /[MANUAL GQT BEFORE_CANCEL AGENT01]/

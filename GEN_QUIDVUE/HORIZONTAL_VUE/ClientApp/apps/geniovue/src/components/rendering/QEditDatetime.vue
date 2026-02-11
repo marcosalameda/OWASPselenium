@@ -1,25 +1,16 @@
 ﻿<template>
-	<component
-		:is="options?.component ? options.component : 'base-input-structure'"
+	<q-date-time-picker
 		:id="`${tableName}_${rowIndex}_${columnName}`"
-		:class="containerClasses"
-		:d-flex-inline="false"
-		:label-attrs="{ class: 'i-text__label' }"
-		:model-field-ref="modelField"
-		:error-display-type="options?.errorDisplayType">
-		<q-date-time-picker
-			:id="`${tableName}_${rowIndex}_${columnName}`"
-			:size="size"
-			:classes="classes"
-			:date-time-type="options?.dateTimeType"
-			:format="options?.format"
-			:disabled="options.disabled"
-			:readonly="options.readonly"
-			:model-value="datetimeValue"
-			:teleport="options?.teleport ?? false"
-			:locale="locale"
-			@update:model-value="update($event)" />
-	</component>
+		:size="size"
+		:classes="classes"
+		:date-time-type="options.dateTimeType"
+		:format="options.format"
+		:disabled="options.disabled"
+		:readonly="options.readonly"
+		:model-value="datetimeValue"
+		:teleport="options.teleport ?? false"
+		:locale="locale"
+		@update:model-value="update" />
 </template>
 
 <script>
@@ -27,10 +18,7 @@
 
 	import { timeToString } from '@quidgest/clientapp/utils/genericFunctions'
 	import { inputSize } from '@quidgest/clientapp/constants/enums'
-	import modelFieldType from '@quidgest/clientapp/models/fields'
 
-	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'
-	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'
 	import QDateTimePicker from '@/components/inputs/QDateTimePicker.vue'
 
 	export default {
@@ -39,8 +27,6 @@
 		emits: ['update', 'loaded'],
 
 		components: {
-			BaseInputStructure,
-			GridBaseInputStructure,
 			QDateTimePicker
 		},
 
@@ -102,22 +88,6 @@
 			},
 
 			/**
-			 * An array of classes to be applied to the input's container.
-			 */
-			containerClasses: {
-				type: Array,
-				default: () => []
-			},
-
-			/**
-			 * A list of error messages to display in relation to the input.
-			 */
-			errorMessages: {
-				type: Array,
-				default: () => []
-			},
-
-			/**
 			 * Current system locale
 			 */
 			locale: {
@@ -127,13 +97,6 @@
 		},
 
 		expose: [],
-
-		data()
-		{
-			return {
-				modelField: new modelFieldType.Date()
-			}
-		},
 
 		mounted()
 		{
@@ -193,16 +156,6 @@
 					updatedTime = event
 
 				this.$emit('update', updatedTime)
-			}
-		},
-
-		watch: {
-			errorMessages: {
-				handler(newValue)
-				{
-					this.modelField.serverErrorMessages = newValue
-				},
-				deep: true
 			}
 		}
 	}

@@ -58,7 +58,7 @@ public class ComodForm : Form
 	/// <summary>
 	/// Observation
 	/// </summary>
-	public IWebElement LendiObservat => throw new NotImplementedException();
+	public BaseInputControl LendiObservat => new BaseInputControl(driver, ContainerLocator, "container-COMOD___LENDIOBSERVAT", "#COMOD___LENDIOBSERVAT");
 
 	/// <summary>
 	/// Returned

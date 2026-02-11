@@ -83,6 +83,14 @@ export default {
 		]),
 
 		/**
+		 * True if the menu is a popup, false otherwise.
+		 */
+		isPopup()
+		{
+			return this.menuInfo.isPopup
+		},
+
+		/**
 		 * The data of the current user.
 		 */
 		userData()
@@ -110,9 +118,9 @@ export default {
 			const menuIdentifier = `q-modal-${this.isHomePage ? `home-${this.system.currentModule}` : this.menuInfo.route}`
 
 			return {
-				main: `${menuIdentifier}`,
-				body: `${menuIdentifier}-body`,
-				footer: `${menuIdentifier}-footer`
+				main: menuIdentifier && this.isPopup ? `${menuIdentifier}` : 'app',
+				body: menuIdentifier && this.isPopup ? `${menuIdentifier}-body` : 'app',
+				footer: menuIdentifier && this.isPopup ? `${menuIdentifier}-footer` : 'app'
 			}
 		},
 
@@ -159,23 +167,28 @@ export default {
 
 		/**
 		 * If the menu should be displayed as a popup, sets it's properties.
-		 * @param {object} props The modal properties
+		 * @param {object} props The dialog component properties
+		 * @param {object} modalProps The modal properties
 		 */
-		setModalProperties(props)
+		setModalProperties(props = {}, modalProps = {})
 		{
 			if (!this.menuInfo.route)
 				return
 			if (!this.menuInfo.isPopup)
 				return
-			if (typeof props !== 'object')
-				return
 
-			const modalProps = {
-				id: this.menuInfo.route,
+			props = {
+				class: 'q-dialog-form',
+				dismissible: false,
 				...props
 			}
 
-			this.setModal(modalProps)
+			modalProps = {
+				id: this.menuInfo.route,
+				...modalProps
+			}
+
+			this.setModal(props, modalProps)
 		},
 
 		/**
@@ -185,7 +198,7 @@ export default {
 		updateMenuNavigation(routeData)
 		{
 			this.menuInfo.route = routeData.name
-			this.menuInfo.isPopup = routeData.params.isPopup === 'true'
+			this.menuInfo.isPopup = routeData.meta.isPopup
 		},
 
 		/**
@@ -293,12 +306,10 @@ export default {
 		'menuInfo.isPopup'(val)
 		{
 			const modalProps = {
-				isActive: val,
-				hideHeader: true,
-				hideFooter: !this.hasButtons
+				isActive: val
 			}
 
-			this.setModalProperties(modalProps)
+			this.setModalProperties({}, modalProps)
 		}
 	}
 }

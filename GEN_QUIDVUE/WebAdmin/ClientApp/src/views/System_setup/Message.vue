@@ -38,9 +38,9 @@
 			<q-row-container>
 				<div v-for="pub in EnabledPublications">
 					<q-checkbox
-						v-model="pub.enabled"
-						:label="pub.id" />
-					<span> - {{ pub.description }}</span>
+						:modelValue="pub.enabled"
+						@update:modelValue="togglePub(pub, $event)"
+						:label="pub.id + ' - ' + pub.description" />
 				</div>
 			</q-row-container>
 		</q-card>
@@ -53,14 +53,18 @@
 			<q-row-container>
 				<template v-for="sub in EnabledSubscriptions">
 					<q-checkbox
-						:v-model="sub.enabled"
-						:label="sub.id" />
-					<span>
-						- {{ sub.description }}
-					</span>
+						:modelValue="sub.enabled"
+						@update:modelValue="toggleSub(sub, $event)"
+						:label="sub.id + ' - ' + sub.description" />
 				</template>
 			</q-row-container>
 		</q-card>
+	</row>
+	<row class="footer-btn">
+		<q-button
+			variant="bold"
+			:label="Resources.GRAVAR_CONFIGURACAO36308"
+			@click="SaveConfigMessaging" />
 	</row>
 </template>
 
@@ -77,9 +81,6 @@
 		mixins: [reusableMixin],
 
 		props: {
-			model: {
-				required: true
-			},
 			Metadata: {
 				required: true
 			},
@@ -99,7 +100,7 @@
 					return {
 						id: p.Id,
 						description: p.Description,
-						enabled: vm.model.EnabledPublications.indexOf(p.Id) != -1
+						enabled: vm.Messaging.EnabledPublications.indexOf(p.Id) != -1
 					}
 				});
 			},
@@ -109,7 +110,7 @@
 					return {
 						id: p.Id,
 						description: p.Description,
-						enabled: vm.model.EnabledSubscriptions.indexOf(p.Id) != -1
+						enabled: vm.Messaging.EnabledSubscriptions.indexOf(p.Id) != -1
 					}
 				});
 			},
@@ -123,10 +124,10 @@
 
 		methods: {
 			togglePub(pub, checked) {
-				this.makeSetHave(this.model.EnabledPublications, pub.id, checked);
+				this.makeSetHave(this.Messaging.EnabledPublications, pub.id, checked);
 			},
 			toggleSub(sub, checked) {
-				this.makeSetHave(this.model.EnabledSubscriptions, sub.id, checked);
+				this.makeSetHave(this.Messaging.EnabledSubscriptions, sub.id, checked);
 			},
 			makeSetHave(set, value, have) {
 				let ix = set.indexOf(value);
@@ -140,6 +141,18 @@
 						set.push(value); //add the item
 					}
 				}
+			},
+			SaveConfigMessaging() {
+				var vm = this;
+				QUtils.log("SaveConfigMessaging - Request", QUtils.apiActionURL('Config', 'SaveConfigMessaging'));
+				QUtils.postData('Config', 'SaveConfigMessaging', vm.Messaging, null, function (data) {
+					QUtils.log("SaveConfigMessaging - Response", data);          
+					vm.$emit('update-model');
+					vm.$emit('alert-class', { 
+						ResultMsg: data.Success ? vm.Resources.ALTERACOES_EFETUADAS10166 : data.Message, 
+						AlertType: data.Success ? 'success' : 'danger' 
+					});
+				});
 			},
 		}
 	};

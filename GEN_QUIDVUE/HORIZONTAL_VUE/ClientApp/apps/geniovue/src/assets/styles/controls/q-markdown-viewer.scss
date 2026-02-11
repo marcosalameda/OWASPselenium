@@ -144,3 +144,18 @@
 		}
 	}
 }
+
+// Styles within popovers
+.q-popover__content {
+	.q-markdown-viewer {
+		// Headings
+		h1,
+		h2,
+		h3,
+		h4,
+		h5,
+		h6 {
+			font-size: calc($font-size-base * 1.1);
+		}
+	}
+}

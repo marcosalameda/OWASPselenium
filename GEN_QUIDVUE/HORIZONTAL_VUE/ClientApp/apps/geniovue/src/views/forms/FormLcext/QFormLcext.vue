@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,27 +94,25 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="LCEXT"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.LCEXT___PSEUDNOVOGR01.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.LCEXT___PSEUDNOVOGR01.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.LCEXT___PSEUDNOVOGR01.isVisible">
+					<q-col v-if="controls.LCEXT___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
+							v-if="controls.LCEXT___PSEUDNOVOGR01.isVisible"
 							id="LCEXT___PSEUDNOVOGR01"
 							v-bind="controls.LCEXT___PSEUDNOVOGR01"
 							:is-visible="controls.LCEXT___PSEUDNOVOGR01.isVisible">
 							<!-- Start LCEXT___PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.LCEXT___LOCATGLN_____.isVisible">
-								<q-control-wrapper
-									v-show="controls.LCEXT___LOCATGLN_____.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.LCEXT___LOCATGLN_____.isVisible">
+								<q-col
+									v-if="controls.LCEXT___LOCATGLN_____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.LCEXT___LOCATGLN_____.isVisible"
 										class="i-text"
 										v-bind="controls.LCEXT___LOCATGLN_____"
 										v-on="controls.LCEXT___LOCATGLN_____.handlers"
@@ -122,13 +128,14 @@
 											v-bind="controls.LCEXT___LOCATGLN_____.seeMoreParams"
 											v-on="controls.LCEXT___LOCATGLN_____.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.LCEXT___LCEXTGLNEXT__.isVisible">
-								<q-control-wrapper
-									v-show="controls.LCEXT___LCEXTGLNEXT__.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.LCEXT___LCEXTGLNEXT__.isVisible">
+								<q-col
+									v-if="controls.LCEXT___LCEXTGLNEXT__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.LCEXT___LCEXTGLNEXT__.isVisible"
 										class="i-text"
 										v-bind="controls.LCEXT___LCEXTGLNEXT__"
 										v-on="controls.LCEXT___LCEXTGLNEXT__.handlers"
@@ -140,13 +147,14 @@
 											@blur="onBlur(controls.LCEXT___LCEXTGLNEXT__, model.ValGlnext.value)"
 											@change="model.ValGlnext.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.LCEXT___LCEXTSPACETYP.isVisible || controls.LCEXT___LCEXTSPACEOBS.isVisible">
-								<q-control-wrapper
-									v-show="controls.LCEXT___LCEXTSPACETYP.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.LCEXT___LCEXTSPACETYP.isVisible || controls.LCEXT___LCEXTSPACEOBS.isVisible">
+								<q-col
+									v-if="controls.LCEXT___LCEXTSPACETYP.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.LCEXT___LCEXTSPACETYP.isVisible"
 										class="i-text"
 										v-bind="controls.LCEXT___LCEXTSPACETYP"
 										v-on="controls.LCEXT___LCEXTSPACETYP.handlers"
@@ -158,11 +166,12 @@
 											v-bind="controls.LCEXT___LCEXTSPACETYP.props"
 											@update:model-value="model.ValSpacetyp.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.LCEXT___LCEXTSPACEOBS.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.LCEXT___LCEXTSPACEOBS.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.LCEXT___LCEXTSPACEOBS.isVisible"
 										class="i-text"
 										v-bind="controls.LCEXT___LCEXTSPACEOBS"
 										v-on="controls.LCEXT___LCEXTSPACEOBS.handlers"
@@ -174,14 +183,14 @@
 											@blur="onBlur(controls.LCEXT___LCEXTSPACEOBS, model.ValSpaceobs.value)"
 											@change="model.ValSpaceobs.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End LCEXT___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -190,7 +199,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -199,6 +208,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -210,7 +220,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -422,7 +432,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -575,7 +589,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LCEXT___PSEUDNOVOGR01',
 						maxLength: 50,
-						labelId: 'label_LCEXT___LCEXTGLNEXT__',
 						controlLimits: [
 						],
 					}, this),
@@ -590,7 +603,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LCEXT___PSEUDNOVOGR01',
 						maxLength: 1,
-						labelId: 'label_LCEXT___LCEXTSPACETYP',
 						arrayName: 'SpaceTyp',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -608,7 +620,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'LCEXT___PSEUDNOVOGR01',
 						maxLength: 50,
-						labelId: 'label_LCEXT___LCEXTSPACEOBS',
 						controlLimits: [
 						],
 					}, this),
@@ -757,16 +768,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -810,16 +835,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -971,6 +1010,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LCEXT]/
 // eslint-disable-next-line

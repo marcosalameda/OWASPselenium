@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_541]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 100,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodpsw',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.ORGANIZACAO47877),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodorgan',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -179,8 +182,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -281,6 +283,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_5411',
 								name: 'form-PWORG',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -306,10 +309,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ORGAN', 'changed-PSW', 'changed-PWORG'],
+						globalEvents: ['changed-PWORG', 'changed-PSW', 'changed-ORGAN'],
 						uuid: '69c157b5-3838-464d-9a91-ee1545f411b3',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

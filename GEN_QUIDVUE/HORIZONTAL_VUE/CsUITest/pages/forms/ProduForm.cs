@@ -70,7 +70,7 @@ public class ProduForm : Form
 	/// <summary>
 	/// Image
 	/// </summary>
-	public IWebElement PseudNovogr02 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr02 => new CollapsibleZoneControl(driver, ContainerLocator, "#PRODU___PSEUDNOVOGR02-container");
 
 	/// <summary>
 	/// Image

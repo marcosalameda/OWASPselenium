@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_271]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.FIELD_STATE03599),
 								dataLength: 8,
 								scrollData: 8,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayAcondtst(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAcondtst.type,
 								arrayDisplayMode: 'D',
@@ -165,6 +167,7 @@
 								label: computed(() => this.Resources.FIELD_WITH_CLIENT_SI60452),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
@@ -174,6 +177,7 @@
 								label: computed(() => this.Resources.FIELD_WITH_SERVER_SI13554),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 4,
@@ -182,6 +186,7 @@
 								field: 'FCLIENT2',
 								label: computed(() => this.Resources.FIELD_WITH_CLIENT_SI60452),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -192,6 +197,7 @@
 								scrollData: 8,
 								maxDigits: 5,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 6,
@@ -202,6 +208,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								export: 1,
 								viewType: qEnums.documentViewTypeMode.preview,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
@@ -214,6 +221,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -229,8 +237,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -331,6 +338,7 @@
 							rowClickAction: {
 								id: 'RCA_PTN_2711',
 								name: 'form-FLDSCOND',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -356,10 +364,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-AERO', 'changed-FLDS', 'changed-EQUIP'],
+						globalEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
 						uuid: '32a1f511-9029-4390-aa28-2f7ddfc6c2c6',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

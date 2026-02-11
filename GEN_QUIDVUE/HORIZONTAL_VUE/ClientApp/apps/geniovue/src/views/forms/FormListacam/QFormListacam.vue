@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="LISTACAM"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.LISTACAMPSEUDCAMTEXTO.isVisible || controls.LISTACAMPSEUDCAMNUM__.isVisible || controls.LISTACAMPSEUDCAMDATE_.isVisible || controls.LISTACAMPSEUDCAMMASK_.isVisible || controls.LISTACAMPSEUDCAMENUM_.isVisible || controls.LISTACAMPSEUDCAMDOCS_.isVisible || controls.LISTACAMPSEUDCAMAUDIT.isVisible">
-					<q-control-wrapper
-						v-show="controls.LISTACAMPSEUDCAMTEXTO.isVisible || controls.LISTACAMPSEUDCAMNUM__.isVisible || controls.LISTACAMPSEUDCAMDATE_.isVisible || controls.LISTACAMPSEUDCAMMASK_.isVisible || controls.LISTACAMPSEUDCAMENUM_.isVisible || controls.LISTACAMPSEUDCAMDOCS_.isVisible || controls.LISTACAMPSEUDCAMAUDIT.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.LISTACAMPSEUDCAMTEXTO.isVisible || controls.LISTACAMPSEUDCAMNUM__.isVisible || controls.LISTACAMPSEUDCAMDATE_.isVisible || controls.LISTACAMPSEUDCAMMASK_.isVisible || controls.LISTACAMPSEUDCAMENUM_.isVisible || controls.LISTACAMPSEUDCAMDOCS_.isVisible || controls.LISTACAMPSEUDCAMAUDIT.isVisible">
+					<q-col
+						v-if="controls.LISTACAMPSEUDCAMTEXTO.isVisible || controls.LISTACAMPSEUDCAMNUM__.isVisible || controls.LISTACAMPSEUDCAMDATE_.isVisible || controls.LISTACAMPSEUDCAMMASK_.isVisible || controls.LISTACAMPSEUDCAMENUM_.isVisible || controls.LISTACAMPSEUDCAMDOCS_.isVisible || controls.LISTACAMPSEUDCAMAUDIT.isVisible"
+						cols="auto">
 						<q-tab-container
+							v-if="controls.formTabs.isVisible"
 							id="q-tabs-LISTACAM"
 							v-bind="controls.formTabs.props"
 							@tab-changed="controls.formTabs.selectTab($event)">
@@ -107,11 +116,12 @@
 										id="LISTACAMPSEUDCAMTEXTO"
 										role="tabpanel"
 										aria-labelledby="tab-container-LISTACAMPSEUDCAMTEXTO">
-										<q-row-container v-show="controls.CAMTEXTOFLDS_TXTFIELD.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMTEXTOFLDS_TXTFIELD.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.CAMTEXTOFLDS_TXTFIELD.isVisible">
+											<q-col
+												v-if="controls.CAMTEXTOFLDS_TXTFIELD.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMTEXTOFLDS_TXTFIELD.isVisible"
 													class="i-text"
 													v-bind="controls.CAMTEXTOFLDS_TXTFIELD"
 													v-on="controls.CAMTEXTOFLDS_TXTFIELD.handlers"
@@ -123,13 +133,14 @@
 														@blur="onBlur(controls.CAMTEXTOFLDS_TXTFIELD, model.ValTxtfield.value)"
 														@change="model.ValTxtfield.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMTEXTOFLDS_DESCRIP_.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMTEXTOFLDS_DESCRIP_.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible">
+											<q-col
+												v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMTEXTOFLDS_DESCRIP_.isVisible"
 													class="i-textarea"
 													v-bind="controls.CAMTEXTOFLDS_DESCRIP_"
 													v-on="controls.CAMTEXTOFLDS_DESCRIP_.handlers"
@@ -141,8 +152,8 @@
 														v-bind="controls.CAMTEXTOFLDS_DESCRIP_.props"
 														v-on="controls.CAMTEXTOFLDS_DESCRIP_.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 								<section
@@ -152,11 +163,12 @@
 										id="LISTACAMPSEUDCAMNUM__"
 										role="tabpanel"
 										aria-labelledby="tab-container-LISTACAMPSEUDCAMNUM__">
-										<q-row-container v-show="controls.CAMNUM__FLDS_NPASSAGE.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMNUM__FLDS_NPASSAGE.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible">
+											<q-col
+												v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMNUM__FLDS_NPASSAGE.isVisible"
 													class="i-text"
 													v-bind="controls.CAMNUM__FLDS_NPASSAGE"
 													v-on="controls.CAMNUM__FLDS_NPASSAGE.handlers"
@@ -168,13 +180,14 @@
 														v-bind="controls.CAMNUM__FLDS_NPASSAGE.props"
 														@update:model-value="model.ValNpassage.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMNUM__FLDS_DURATION.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMNUM__FLDS_DURATION.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMNUM__FLDS_DURATION.isVisible">
+											<q-col
+												v-if="controls.CAMNUM__FLDS_DURATION.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMNUM__FLDS_DURATION.isVisible"
 													class="i-text"
 													v-bind="controls.CAMNUM__FLDS_DURATION"
 													v-on="controls.CAMNUM__FLDS_DURATION.handlers"
@@ -186,13 +199,14 @@
 														v-bind="controls.CAMNUM__FLDS_DURATION.props"
 														@update:model-value="model.ValDuration.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMNUM__FLDS_PRICE___.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMNUM__FLDS_PRICE___.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMNUM__FLDS_PRICE___.isVisible">
+											<q-col
+												v-if="controls.CAMNUM__FLDS_PRICE___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMNUM__FLDS_PRICE___.isVisible"
 													class="i-text"
 													v-bind="controls.CAMNUM__FLDS_PRICE___"
 													v-on="controls.CAMNUM__FLDS_PRICE___.handlers"
@@ -204,13 +218,14 @@
 														v-bind="controls.CAMNUM__FLDS_PRICE___.props"
 														@update:model-value="model.ValPrice.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMNUM__FLDS_PRECOBIL.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMNUM__FLDS_PRECOBIL.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible">
+											<q-col
+												v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMNUM__FLDS_PRECOBIL.isVisible"
 													class="i-text"
 													v-bind="controls.CAMNUM__FLDS_PRECOBIL"
 													v-on="controls.CAMNUM__FLDS_PRECOBIL.handlers"
@@ -222,8 +237,8 @@
 														v-bind="controls.CAMNUM__FLDS_PRECOBIL.props"
 														@update:model-value="model.ValPrecobil.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 								<section
@@ -233,11 +248,12 @@
 										id="LISTACAMPSEUDCAMDATE_"
 										role="tabpanel"
 										aria-labelledby="tab-container-LISTACAMPSEUDCAMDATE_">
-										<q-row-container v-show="controls.CAMDATE_FLDS_YEAR____.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMDATE_FLDS_YEAR____.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.CAMDATE_FLDS_YEAR____.isVisible">
+											<q-col
+												v-if="controls.CAMDATE_FLDS_YEAR____.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMDATE_FLDS_YEAR____.isVisible"
 													class="i-text"
 													v-bind="controls.CAMDATE_FLDS_YEAR____"
 													v-on="controls.CAMDATE_FLDS_YEAR____.handlers"
@@ -249,13 +265,14 @@
 														v-bind="controls.CAMDATE_FLDS_YEAR____.props"
 														@update:model-value="model.ValYear.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMDATE_FLDS_DATE____.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMDATE_FLDS_DATE____.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMDATE_FLDS_DATE____.isVisible">
+											<q-col
+												v-if="controls.CAMDATE_FLDS_DATE____.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMDATE_FLDS_DATE____.isVisible"
 													class="i-text"
 													v-bind="controls.CAMDATE_FLDS_DATE____"
 													v-on="controls.CAMDATE_FLDS_DATE____.handlers"
@@ -269,13 +286,14 @@
 														@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 														@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMDATE_FLDS_DATETIME.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMDATE_FLDS_DATETIME.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMDATE_FLDS_DATETIME.isVisible">
+											<q-col
+												v-if="controls.CAMDATE_FLDS_DATETIME.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMDATE_FLDS_DATETIME.isVisible"
 													class="i-text"
 													v-bind="controls.CAMDATE_FLDS_DATETIME"
 													v-on="controls.CAMDATE_FLDS_DATETIME.handlers"
@@ -289,13 +307,14 @@
 														@reset-icon-click="model.ValDatetime.fnUpdateValue(model.ValDatetime.originalValue ?? new Date())"
 														@update:model-value="model.ValDatetime.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMDATE_FLDS_DATESECO.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMDATE_FLDS_DATESECO.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMDATE_FLDS_DATESECO.isVisible">
+											<q-col
+												v-if="controls.CAMDATE_FLDS_DATESECO.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMDATE_FLDS_DATESECO.isVisible"
 													class="i-text"
 													v-bind="controls.CAMDATE_FLDS_DATESECO"
 													v-on="controls.CAMDATE_FLDS_DATESECO.handlers"
@@ -309,13 +328,14 @@
 														@reset-icon-click="model.ValDateseco.fnUpdateValue(model.ValDateseco.originalValue ?? new Date())"
 														@update:model-value="model.ValDateseco.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMDATE_FLDS_TIME____.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMDATE_FLDS_TIME____.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMDATE_FLDS_TIME____.isVisible">
+											<q-col
+												v-if="controls.CAMDATE_FLDS_TIME____.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMDATE_FLDS_TIME____.isVisible"
 													class="i-text"
 													v-bind="controls.CAMDATE_FLDS_TIME____"
 													v-on="controls.CAMDATE_FLDS_TIME____.handlers"
@@ -329,8 +349,8 @@
 														@reset-icon-click="model.ValTime.fnUpdateValue(model.ValTime.originalValue ?? new Date())"
 														@update:model-value="model.ValTime.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 								<section
@@ -340,11 +360,12 @@
 										id="LISTACAMPSEUDCAMMASK_"
 										role="tabpanel"
 										aria-labelledby="tab-container-LISTACAMPSEUDCAMMASK_">
-										<q-row-container v-show="controls.CAMMASK_FLDS_ZIPFIELD.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMMASK_FLDS_ZIPFIELD.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible">
+											<q-col
+												v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMMASK_FLDS_ZIPFIELD.isVisible"
 													class="i-text"
 													v-bind="controls.CAMMASK_FLDS_ZIPFIELD"
 													v-on="controls.CAMMASK_FLDS_ZIPFIELD.handlers"
@@ -357,13 +378,14 @@
 														:model-value="model.ValZipfield.value"
 														@change="model.ValZipfield.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMMASK_FLDS_VATNUMBR.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMMASK_FLDS_VATNUMBR.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible">
+											<q-col
+												v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMMASK_FLDS_VATNUMBR.isVisible"
 													class="i-text"
 													v-bind="controls.CAMMASK_FLDS_VATNUMBR"
 													v-on="controls.CAMMASK_FLDS_VATNUMBR.handlers"
@@ -376,13 +398,14 @@
 														:model-value="model.ValVatnumbr.value"
 														@change="model.ValVatnumbr.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMMASK_FLDS_LICPLATE.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMMASK_FLDS_LICPLATE.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible">
+											<q-col
+												v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMMASK_FLDS_LICPLATE.isVisible"
 													class="i-text"
 													v-bind="controls.CAMMASK_FLDS_LICPLATE"
 													v-on="controls.CAMMASK_FLDS_LICPLATE.handlers"
@@ -395,13 +418,14 @@
 														:model-value="model.ValLicplate.value"
 														@change="model.ValLicplate.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMMASK_FLDS_SSNUMBER.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMMASK_FLDS_SSNUMBER.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible">
+											<q-col
+												v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMMASK_FLDS_SSNUMBER.isVisible"
 													class="i-text"
 													v-bind="controls.CAMMASK_FLDS_SSNUMBER"
 													v-on="controls.CAMMASK_FLDS_SSNUMBER.handlers"
@@ -414,13 +438,14 @@
 														:model-value="model.ValSsnumber.value"
 														@change="model.ValSsnumber.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMMASK_FLDS_BANKNMBR.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMMASK_FLDS_BANKNMBR.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible">
+											<q-col
+												v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMMASK_FLDS_BANKNMBR.isVisible"
 													class="i-text"
 													v-bind="controls.CAMMASK_FLDS_BANKNMBR"
 													v-on="controls.CAMMASK_FLDS_BANKNMBR.handlers"
@@ -433,13 +458,14 @@
 														:model-value="model.ValBanknmbr.value"
 														@change="model.ValBanknmbr.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMMASK_FLDS_EMAILFLD.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMMASK_FLDS_EMAILFLD.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible">
+											<q-col
+												v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMMASK_FLDS_EMAILFLD.isVisible"
 													class="i-text"
 													v-bind="controls.CAMMASK_FLDS_EMAILFLD"
 													v-on="controls.CAMMASK_FLDS_EMAILFLD.handlers"
@@ -452,13 +478,14 @@
 														:model-value="model.ValEmailfld.value"
 														@change="model.ValEmailfld.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMMASK_FLDS_IBANFIEL.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMMASK_FLDS_IBANFIEL.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible">
+											<q-col
+												v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMMASK_FLDS_IBANFIEL.isVisible"
 													class="i-text"
 													v-bind="controls.CAMMASK_FLDS_IBANFIEL"
 													v-on="controls.CAMMASK_FLDS_IBANFIEL.handlers"
@@ -471,13 +498,14 @@
 														:model-value="model.ValIbanfiel.value"
 														@change="model.ValIbanfiel.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMMASK_FLDS_UPPRTEXT.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMMASK_FLDS_UPPRTEXT.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible">
+											<q-col
+												v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMMASK_FLDS_UPPRTEXT.isVisible"
 													class="i-text"
 													v-bind="controls.CAMMASK_FLDS_UPPRTEXT"
 													v-on="controls.CAMMASK_FLDS_UPPRTEXT.handlers"
@@ -490,8 +518,8 @@
 														:model-value="model.ValUpprtext.value"
 														@change="model.ValUpprtext.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 								<section
@@ -501,11 +529,12 @@
 										id="LISTACAMPSEUDCAMENUM_"
 										role="tabpanel"
 										aria-labelledby="tab-container-LISTACAMPSEUDCAMENUM_">
-										<q-row-container v-show="controls.CAMENUM_FLDS_CLASSNUM.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible">
+											<q-col
+												v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMENUM_FLDS_CLASSNUM.isVisible"
 													class="i-radio-container"
 													v-bind="controls.CAMENUM_FLDS_CLASSNUM"
 													v-on="controls.CAMENUM_FLDS_CLASSNUM.handlers"
@@ -524,13 +553,14 @@
 															:value="radio.key" />
 													</q-radio-group>
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMENUM_FLDS_CLASS___.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMENUM_FLDS_CLASS___.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMENUM_FLDS_CLASS___.isVisible">
+											<q-col
+												v-if="controls.CAMENUM_FLDS_CLASS___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMENUM_FLDS_CLASS___.isVisible"
 													class="i-text"
 													v-bind="controls.CAMENUM_FLDS_CLASS___"
 													v-on="controls.CAMENUM_FLDS_CLASS___.handlers"
@@ -542,26 +572,27 @@
 														v-bind="controls.CAMENUM_FLDS_CLASS___.props"
 														@update:model-value="model.ValClass.fnUpdateValue" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMENUM_FLDS_LOGICENU.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMENUM_FLDS_LOGICENU.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible">
+											<q-col
+												v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible"
 													class="i-text"
 													v-bind="controls.CAMENUM_FLDS_LOGICENU"
 													v-on="controls.CAMENUM_FLDS_LOGICENU.handlers"
 													:loading="controls.CAMENUM_FLDS_LOGICENU.props.loading"
 													:reporting-mode-on="reportingModeCAV"
 													:suggestion-mode-on="suggestionModeOn">
-													<q-toggle-input
+													<q-switch
 														v-if="controls.CAMENUM_FLDS_LOGICENU.isVisible"
 														v-bind="controls.CAMENUM_FLDS_LOGICENU.props"
 														v-on="controls.CAMENUM_FLDS_LOGICENU.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 								<section
@@ -571,11 +602,12 @@
 										id="LISTACAMPSEUDCAMDOCS_"
 										role="tabpanel"
 										aria-labelledby="tab-container-LISTACAMPSEUDCAMDOCS_">
-										<q-row-container v-show="controls.CAMDOCS_FLDS_LOGO____.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMDOCS_FLDS_LOGO____.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible">
+											<q-col
+												v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMDOCS_FLDS_LOGO____.isVisible"
 													class="q-image"
 													v-bind="controls.CAMDOCS_FLDS_LOGO____"
 													v-on="controls.CAMDOCS_FLDS_LOGO____.handlers"
@@ -587,13 +619,14 @@
 														v-bind="controls.CAMDOCS_FLDS_LOGO____.props"
 														v-on="controls.CAMDOCS_FLDS_LOGO____.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMDOCS_FLDS_ATTACH__.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMDOCS_FLDS_ATTACH__.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible">
+											<q-col
+												v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMDOCS_FLDS_ATTACH__.isVisible"
 													class="i-text"
 													v-bind="controls.CAMDOCS_FLDS_ATTACH__"
 													v-on="controls.CAMDOCS_FLDS_ATTACH__.handlers"
@@ -605,8 +638,8 @@
 														v-bind="controls.CAMDOCS_FLDS_ATTACH__.props"
 														v-on="controls.CAMDOCS_FLDS_ATTACH__.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 								<section
@@ -616,11 +649,12 @@
 										id="LISTACAMPSEUDCAMAUDIT"
 										role="tabpanel"
 										aria-labelledby="tab-container-LISTACAMPSEUDCAMAUDIT">
-										<q-row-container v-show="controls.CAMAUDITFLDS_CREATUSE.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMAUDITFLDS_CREATUSE.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.CAMAUDITFLDS_CREATUSE.isVisible">
+											<q-col
+												v-if="controls.CAMAUDITFLDS_CREATUSE.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMAUDITFLDS_CREATUSE.isVisible"
 													class="i-text"
 													v-bind="controls.CAMAUDITFLDS_CREATUSE"
 													v-on="controls.CAMAUDITFLDS_CREATUSE.handlers"
@@ -632,13 +666,14 @@
 														@blur="onBlur(controls.CAMAUDITFLDS_CREATUSE, model.ValCreatuse.value)"
 														@change="model.ValCreatuse.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMAUDITFLDS_CREATDAT.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMAUDITFLDS_CREATDAT.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible">
+											<q-col
+												v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMAUDITFLDS_CREATDAT.isVisible"
 													class="i-text"
 													v-bind="controls.CAMAUDITFLDS_CREATDAT"
 													v-on="controls.CAMAUDITFLDS_CREATDAT.handlers"
@@ -652,13 +687,14 @@
 														@reset-icon-click="model.ValCreatdat.fnUpdateValue(model.ValCreatdat.originalValue ?? new Date())"
 														@update:model-value="model.ValCreatdat.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMAUDITFLDS_CREATHOU.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMAUDITFLDS_CREATHOU.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible">
+											<q-col
+												v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMAUDITFLDS_CREATHOU.isVisible"
 													class="i-text"
 													v-bind="controls.CAMAUDITFLDS_CREATHOU"
 													v-on="controls.CAMAUDITFLDS_CREATHOU.handlers"
@@ -672,13 +708,14 @@
 														@reset-icon-click="model.ValCreathou.fnUpdateValue(model.ValCreathou.originalValue ?? new Date())"
 														@update:model-value="model.ValCreathou.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
-										<q-row-container v-show="controls.CAMAUDITFLDS_CREATINS.isVisible">
-											<q-control-wrapper
-												v-show="controls.CAMAUDITFLDS_CREATINS.isVisible"
-												class="control-join-group">
+											</q-col>
+										</q-row>
+										<q-row v-if="controls.CAMAUDITFLDS_CREATINS.isVisible">
+											<q-col
+												v-if="controls.CAMAUDITFLDS_CREATINS.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.CAMAUDITFLDS_CREATINS.isVisible"
 													class="i-text"
 													v-bind="controls.CAMAUDITFLDS_CREATINS"
 													v-on="controls.CAMAUDITFLDS_CREATINS.handlers"
@@ -692,16 +729,16 @@
 														@reset-icon-click="model.ValCreatins.fnUpdateValue(model.ValCreatins.originalValue ?? new Date())"
 														@update:model-value="model.ValCreatins.fnUpdateValue($event ?? '')" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 									</div>
 								</section>
 							</template>
 						</q-tab-container>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -710,7 +747,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -719,6 +756,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -730,7 +768,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -941,7 +979,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1129,7 +1171,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMTEXTO',
 						maxLength: 50,
-						labelId: 'label_CAMTEXTOFLDS_TXTFIELD',
 						controlLimits: [
 						],
 					}, this),
@@ -1320,7 +1361,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 8,
-						labelId: 'label_CAMMASK_FLDS_ZIPFIELD',
 						controlLimits: [
 						],
 					}, this),
@@ -1331,11 +1371,10 @@
 						name: 'VATNUMBR',
 						size: 'small',
 						label: computed(() => this.Resources.VAT_NUMBER24236),
-						placeholder: computed(() => this.Resources._12345678953785),
+						placeholder: computed(() => this.Resources._12345678902714),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 9,
-						labelId: 'label_CAMMASK_FLDS_VATNUMBR',
 						controlLimits: [
 						],
 					}, this),
@@ -1350,7 +1389,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 8,
-						labelId: 'label_CAMMASK_FLDS_LICPLATE',
 						controlLimits: [
 						],
 					}, this),
@@ -1361,11 +1399,10 @@
 						name: 'SSNUMBER',
 						size: 'medium',
 						label: computed(() => this.Resources.SOCIAL_SECURITY_NO48150),
-						placeholder: computed(() => this.Resources._1234567891237929),
+						placeholder: computed(() => this.Resources._1234567891202679),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 11,
-						labelId: 'label_CAMMASK_FLDS_SSNUMBER',
 						controlLimits: [
 						],
 					}, this),
@@ -1376,11 +1413,10 @@
 						name: 'BANKNMBR',
 						size: 'large',
 						label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
-						placeholder: computed(() => this.Resources._1234_5678_90123456761043),
+						placeholder: computed(() => this.Resources._1234_5678_901234567844057),
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 24,
-						labelId: 'label_CAMMASK_FLDS_BANKNMBR',
 						controlLimits: [
 						],
 					}, this),
@@ -1395,7 +1431,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 50,
-						labelId: 'label_CAMMASK_FLDS_EMAILFLD',
 						controlLimits: [
 						],
 					}, this),
@@ -1410,7 +1445,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 34,
-						labelId: 'label_CAMMASK_FLDS_IBANFIEL',
 						controlLimits: [
 						],
 					}, this),
@@ -1425,11 +1459,10 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMMASK_',
 						maxLength: 50,
-						labelId: 'label_CAMMASK_FLDS_UPPRTEXT',
 						controlLimits: [
 						],
 					}, this),
-					CAMENUM_FLDS_CLASSNUM: new fieldControlClass.ArrayNumberControl({
+					CAMENUM_FLDS_CLASSNUM: new fieldControlClass.RadioGroupControl({
 						modelField: 'ValClassnum',
 						valueChangeEvent: 'fieldChange:flds.classnum',
 						id: 'CAMENUM_FLDS_CLASSNUM',
@@ -1468,7 +1501,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMENUM_',
 						maxLength: 2,
-						labelId: 'label_CAMENUM_FLDS_CLASS___',
 						arrayName: 'CLASS',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -1553,7 +1585,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						tab: 'LISTACAMPSEUDCAMAUDIT',
 						maxLength: 20,
-						labelId: 'label_CAMAUDITFLDS_CREATUSE',
 						controlLimits: [
 						],
 					}, this),
@@ -1600,6 +1631,7 @@
 						],
 					}, this),
 					formTabs: new fieldControlClass.TabsControl({
+						id: 'formTabs',
 						tabControlsIds: readonly([
 							'LISTACAMPSEUDCAMTEXTO',
 							'LISTACAMPSEUDCAMNUM__',
@@ -1815,16 +1847,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1868,16 +1914,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -2029,6 +2089,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LISTACAM]/
 // eslint-disable-next-line
@@ -2036,18 +2097,6 @@
 		},
 
 		watch: {
-			// Watchers for changes in the state of tabs.
-			'controls.formTabs.selectedTab'(newVal)
-			{
-				const data = {
-					navigationId: this.navigationId,
-					key: this.storeKey,
-					formInfo: this.formInfo,
-					fieldId: 'formTabs',
-					containerState: newVal
-				}
-				this.storeContainerState(data)
-			},
 		}
 	}
 </script>

@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="FAMI1"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.FAMI1___FAMI1FAMILY__.isVisible">
-					<q-control-wrapper
-						v-show="controls.FAMI1___FAMI1FAMILY__.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.FAMI1___FAMI1FAMILY__.isVisible">
+					<q-col
+						v-if="controls.FAMI1___FAMI1FAMILY__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FAMI1___FAMI1FAMILY__.isVisible"
 							class="i-text"
 							v-bind="controls.FAMI1___FAMI1FAMILY__"
 							v-on="controls.FAMI1___FAMI1FAMILY__.handlers"
@@ -107,38 +116,44 @@
 								@blur="onBlur(controls.FAMI1___FAMI1FAMILY__, model.ValFamily.value)"
 								@change="model.ValFamily.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.FAMI1___PSEUDTIPOSEQU.isVisible">
-					<q-control-wrapper
-						v-show="controls.FAMI1___PSEUDTIPOSEQU.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.FAMI1___PSEUDTIPOSEQU.isVisible">
+					<q-col
+						v-if="controls.FAMI1___PSEUDTIPOSEQU.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.FAMI1___PSEUDTIPOSEQU.isVisible"
+							v-if="controls.FAMI1___PSEUDTIPOSEQU.isVisible"
 							v-bind="controls.FAMI1___PSEUDTIPOSEQU"
-							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers" />
+							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE FAMI1___PSEUDTIPOSEQU]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.FAMI1___PSEUDTIPOSEQU.isVisible"
 							:list-ctrl="controls.FAMI1___PSEUDTIPOSEQU"
 							:filter-operators="controls.FAMI1___PSEUDTIPOSEQU.filterOperators"
 							v-on="controls.FAMI1___PSEUDTIPOSEQU.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.FAMI1___PSEUDTIPOSEQ1.isVisible">
-					<q-control-wrapper
-						v-show="controls.FAMI1___PSEUDTIPOSEQ1.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.FAMI1___PSEUDTIPOSEQ1.isVisible">
+					<q-col
+						v-if="controls.FAMI1___PSEUDTIPOSEQ1.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.FAMI1___PSEUDTIPOSEQ1.isVisible"
+							v-if="controls.FAMI1___PSEUDTIPOSEQ1.isVisible"
 							v-bind="controls.FAMI1___PSEUDTIPOSEQ1"
-							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers" />
+							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE FAMI1___PSEUDTIPOSEQ1]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.FAMI1___PSEUDTIPOSEQ1.isVisible"
 							:list-ctrl="controls.FAMI1___PSEUDTIPOSEQ1"
 							:filter-operators="controls.FAMI1___PSEUDTIPOSEQ1.filterOperators"
 							v-on="controls.FAMI1___PSEUDTIPOSEQ1.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -147,7 +162,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -156,6 +171,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -167,7 +183,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -378,7 +394,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -488,7 +508,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_FAMI1___FAMI1FAMILY__',
 						controlLimits: [
 						],
 					}, this),
@@ -512,6 +531,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -521,6 +541,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -530,6 +551,7 @@
 								label: computed(() => this.Resources.DEPENDENT_ON28321),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -540,6 +562,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -549,6 +572,7 @@
 								label: computed(() => this.Resources.BACKGROUND_COLOR47883),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -558,6 +582,7 @@
 								label: computed(() => this.Resources.LETTER_COLOR15736),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 7,
@@ -568,6 +593,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 8,
@@ -578,6 +604,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
@@ -587,6 +614,7 @@
 								label: computed(() => this.Resources.IN34902),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -597,6 +625,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 11,
@@ -605,6 +634,7 @@
 								field: 'KIT',
 								label: computed(() => this.Resources.KIT27179),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -620,8 +650,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -746,7 +775,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPEQ1', 'changed-FAMI1'],
+						globalEvents: ['changed-FAMI1', 'changed-TPEQ1'],
 						uuid: 'Fami1_ValTiposequ',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -787,6 +816,7 @@
 									mode: 'SHOW'
 								},
 								cellAction: true,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -797,6 +827,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -806,6 +837,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -815,6 +847,7 @@
 								label: computed(() => this.Resources.DEPENDENT_ON28321),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -926,7 +959,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TPEQ1', 'changed-FAMI1'],
+						globalEvents: ['changed-FAMI1', 'changed-TPEQ1'],
 						uuid: 'Fami1_ValTiposeq1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1072,16 +1105,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1125,16 +1172,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1286,6 +1347,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FAMI1]/
 // eslint-disable-next-line

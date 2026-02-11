@@ -104,6 +104,7 @@
 		positionMarker: 'Position marker',
 		externalLayer: 'External layer',
 		printMap: 'Print map',
+		centerControlMap: 'Center on the map',
 		printLandscape: 'Landscape',
 		printPortrait: 'Portrait'
 	}

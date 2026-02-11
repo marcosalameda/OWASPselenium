@@ -17,7 +17,8 @@
 				<td>
 					<a
 						class="btn"
-						href="javascript:void(0)"
+						role="button"
+						href="#"
 						@click.prevent="followUp(item.key)">
 						<span>
 							<q-icon icon="play" />

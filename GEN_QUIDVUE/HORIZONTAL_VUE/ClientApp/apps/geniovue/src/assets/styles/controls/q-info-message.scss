@@ -57,7 +57,7 @@ $c-alert-theme-colors: map.merge( ( "success": $success, "info": $info, "warning
 
 	&__title {
 		font-weight: 600;
-		text-transform: uppercase;
+		text-transform: $headings-text-transform;
 		font-size: 0.9rem;
 		line-height: 1rem;
 	}

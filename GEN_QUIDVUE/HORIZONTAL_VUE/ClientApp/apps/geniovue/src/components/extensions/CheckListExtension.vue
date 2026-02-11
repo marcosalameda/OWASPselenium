@@ -251,7 +251,8 @@
 							this.$emit(
 								'on-enter',
 								{
-									rowKeyPath: listFunctions.getCellNameValue(this.results[0], this.primaryKeyColumnName)
+									rowKeyPath: listFunctions.getCellNameValue(this.results[0], this.primaryKeyColumnName),
+									multipleSelection: true
 								}
 							)
 						}

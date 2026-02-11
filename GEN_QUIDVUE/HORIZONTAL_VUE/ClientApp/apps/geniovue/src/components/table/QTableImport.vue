@@ -15,7 +15,7 @@
 		:key="domKey">
 		<div
 			v-if="showResponseData"
-			class="bootbox-body c-message"
+			class="c-message"
 			:class="messageClasses">
 			<div class="message-icon">
 				<q-icon :icon="messageIcon" />
@@ -143,14 +143,6 @@
 			dataImportResponse: {
 				type: Object,
 				default: () => ({})
-			},
-
-			/**
-			 * Indicates if the import operation should be handled via server-side functionality.
-			 */
-			serverMode: {
-				type: Boolean,
-				default: false
 			},
 
 			/**

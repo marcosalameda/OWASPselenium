@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_4261]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.GLOBAL_LOCATION_NUMB24637),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodlocat',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.GLN_EXTENSION_COMPON55869),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -172,6 +175,7 @@
 								label: computed(() => this.Resources.SPACE_TYPE42493),
 								dataLength: 1,
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArraySpacetyp(vm.$getResource).elements),
 								arrayType: qProjArrays.QArraySpacetyp.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -183,6 +187,7 @@
 								label: computed(() => this.Resources.SPACE62433),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -198,8 +203,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -300,6 +304,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_42611',
 								name: 'form-LCEXT',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -329,6 +334,7 @@
 						uuid: 'd72dd71e-f678-4fb0-8bf0-1ee9db354a48',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

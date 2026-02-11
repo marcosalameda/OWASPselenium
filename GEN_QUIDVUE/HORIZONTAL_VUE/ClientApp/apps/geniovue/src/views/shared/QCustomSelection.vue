@@ -102,7 +102,6 @@
 					config: {
 						name: 'Records',
 						tableTitle: '',
-						serverMode: false,
 						showFooter: true,
 						initialSortColumnName: 'Record',
 						initialSortColumnOrder: 'asc',

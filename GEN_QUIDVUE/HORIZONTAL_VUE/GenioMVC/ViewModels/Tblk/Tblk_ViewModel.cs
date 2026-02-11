@@ -1,20 +1,19 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Tblk
 {
@@ -54,6 +53,8 @@ namespace GenioMVC.ViewModels.Tblk
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Trsb> TableTrsbName { get; set; }
+
+
 
 		#region Navigations
 		#endregion
@@ -309,6 +310,17 @@ namespace GenioMVC.ViewModels.Tblk
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -440,7 +452,7 @@ namespace GenioMVC.ViewModels.Tblk
 
 			if (tblk____grpb_name____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableGrpbName, "sTableGrpbName", "dTableGrpbName", qs, "grpb");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -469,7 +481,7 @@ namespace GenioMVC.ViewModels.Tblk
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldName, CSGenioAgrpb.FldZzstate };
+				FieldRef[] fields = [CSGenioAgrpb.FldCodgrpb, CSGenioAgrpb.FldName, CSGenioAgrpb.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ TBLK_GRPBNAME]/
 
@@ -490,7 +502,7 @@ namespace GenioMVC.ViewModels.Tblk
 
 				TableGrpbName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableGrpbName.Query = query;
-				TableGrpbName.Elements = listing.RowsForViewModel<GenioMVC.Models.Grpb>((r) => new GenioMVC.Models.Grpb(m_userContext, r, true, _fieldsToSerialize_TBLK____GRPB_NAME____));
+				TableGrpbName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Grpb(m_userContext, r, true, _fieldsToSerialize_TBLK____GRPB_NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.
@@ -630,7 +642,7 @@ namespace GenioMVC.ViewModels.Tblk
 
 			if (tblk____trsb_name____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableTrsbName, "sTableTrsbName", "dTableTrsbName", qs, "trsb");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -659,7 +671,7 @@ namespace GenioMVC.ViewModels.Tblk
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldName, CSGenioAtrsb.FldZzstate };
+				FieldRef[] fields = [CSGenioAtrsb.FldCodtrsb, CSGenioAtrsb.FldName, CSGenioAtrsb.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ TBLK_TRSBNAME]/
 
@@ -680,7 +692,7 @@ namespace GenioMVC.ViewModels.Tblk
 
 				TableTrsbName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableTrsbName.Query = query;
-				TableTrsbName.Elements = listing.RowsForViewModel<GenioMVC.Models.Trsb>((r) => new GenioMVC.Models.Trsb(m_userContext, r, true, _fieldsToSerialize_TBLK____TRSB_NAME____));
+				TableTrsbName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Trsb(m_userContext, r, true, _fieldsToSerialize_TBLK____TRSB_NAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

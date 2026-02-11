@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW HOMEG]/
 
 		[HttpPost]
-		public ActionResult Homeg_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Homeg_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Homeg_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Homeg_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Homeg_Show_GET",
 				AreaName = "glob",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET HOMEG]/
 		[HttpPost]
-		public ActionResult Homeg_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Homeg_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Homeg_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Homeg_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Homeg_New_GET",
 				AreaName = "glob",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Homeg_New([FromBody]Homeg_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Homeg_New",
 				ViewName = "Homeg",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET HOMEG]/
 		[HttpPost]
-		public ActionResult Homeg_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Homeg_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Homeg_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Homeg_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Homeg_Edit_GET",
 				AreaName = "glob",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Homeg_Edit([FromBody]Homeg_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Homeg_Edit",
 				ViewName = "Homeg",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET HOMEG]/
 		[HttpPost]
-		public ActionResult Homeg_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Homeg_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Homeg_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Homeg_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Homeg_Delete_GET",
 				AreaName = "glob",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Glob/Homeg_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST HOMEG]/
 		[HttpPost]
-		public ActionResult Homeg_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Homeg_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Homeg_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Homeg_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Homeg_Delete",
 				ViewName = "Homeg",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET HOMEG]/
 
 		[HttpPost]
-		public ActionResult Homeg_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Homeg_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Homeg_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Homeg_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Homeg_Duplicate_GET",
 				AreaName = "glob",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Homeg_Duplicate([FromBody]Homeg_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Homeg_Duplicate",
 				ViewName = "Homeg",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Glob(UserContext.Current);
+					GenioMVC.Models.Glob model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("glob");
 
 // USE /[MANUAL GQT BEFORE_CANCEL HOMEG]/

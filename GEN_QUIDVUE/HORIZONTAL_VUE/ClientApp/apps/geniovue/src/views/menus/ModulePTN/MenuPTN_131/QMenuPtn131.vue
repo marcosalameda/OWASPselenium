@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_131]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -122,7 +123,7 @@
 					isMenuList: true,
 					designation: computed(() => this.Resources.CONDITIONS63260),
 					acronym: 'PTN_131',
-					name: 'REGRA',
+					name: 'RULES',
 					route: 'menu-PTN_131',
 					order: '131',
 					controller: 'RULES',
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.TIPO_DE_CONDICAO09986),
 								dataLength: 1,
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayTipocond(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayTipocond.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								dataLength: 100,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -173,6 +176,7 @@
 								label: computed(() => this.Resources.LOCAL_ONDE_EXECUTA12798),
 								dataLength: 1,
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayAlocregr(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayAlocregr.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -190,8 +194,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -290,18 +293,17 @@
 							MCActions: [
 							],
 							rowClickAction: {
-								id: 'RCA_PTN_1311',
-								name: 'form-REGRA',
+								id: 'RCA_EDIT_REGRA',
+								name: 'EDIT_REGRA',
+								title: '',
+								isInReadOnly: true,
 								params: {
 									isRoute: true,
-									limits: [
-										{
-											identifier: 'id',
-											fnValueSelector: (row) => row.ValCodregra
-										},
-									],
-									isControlled: true,
-									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'REGRA'
+									action: vm.openFormAction,
+									type: 'form',
+									formName: 'REGRA',
+									mode: 'EDIT',
+									isControlled: true
 								}
 							},
 							formsDefinition: {
@@ -315,8 +317,8 @@
 								fnFormula(params)
 								{
 									// Formula: [RULES->TIPOCOND]!="I"  || [RULES->LOCAL]!="T"
-									if (!(this.ValTipocond.value!=="I"||this.ValLocal.value!=="T"))
-										return false
+									//if (!(this.ValTipocond.value!=="I"||this.ValLocal.value!=="T"))
+										//return false
 									return true
 								},
 								dependencyEvents: ['fieldChange:rules.tipocond', 'fieldChange:rules.local'],
@@ -329,10 +331,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-RULES'],
+						globalEvents: ['changed-RULES', 'changed-UP_RULES'],
 						uuid: '9b87f9f8-b7d7-4ffb-8bd2-a17a81c9ef71',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

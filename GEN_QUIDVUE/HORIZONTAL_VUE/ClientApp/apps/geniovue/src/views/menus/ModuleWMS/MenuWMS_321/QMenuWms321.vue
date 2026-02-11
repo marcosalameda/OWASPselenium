@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_321]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.PRODUCT12880),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.SKU42303),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -171,6 +174,7 @@
 								label: computed(() => this.Resources.GTIN45487),
 								dataLength: 14,
 								scrollData: 14,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -179,6 +183,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -188,6 +193,7 @@
 								label: computed(() => this.Resources.SIZE10299),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -198,6 +204,7 @@
 								scrollData: 10,
 								maxDigits: 7,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -207,6 +214,7 @@
 								label: computed(() => this.Resources.GLN35528),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodlocat',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -217,6 +225,7 @@
 								label: computed(() => this.Resources.GLN_EXT31913),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodlcext',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -233,8 +242,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -335,6 +343,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_3211',
 								name: 'form-PRODUSIM',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -362,10 +371,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-LOCAT', 'changed-PRODU', 'changed-LCEXT'],
+						globalEvents: ['changed-PRODU', 'changed-LOCAT', 'changed-LCEXT'],
 						uuid: '2ea79590-c020-42b1-b8c3-c1e74fe946b6',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -4,13 +4,19 @@ namespace quidgest.uitests.pages;
 
 public class AppPage: PageObject
 {
-	private IWebElement Container => driver.FindElement(By.ClassName("layout-container"));
+	private By containerLocator => By.ClassName("layout-container");
+	private IWebElement Container => driver.FindElement(containerLocator);
 
 	public IMenuControl Menu => new HorizontalMenuControl(driver, _menuTree);
 
 	private By loginBtnLocator => By.Id("logon-menu-btn");
 	private IWebElement loginBtn => driver.FindElement(loginBtnLocator);
 	private By avatarLocator => By.Id("user-avatar");
+	
+	/// <summary>
+	/// Right sidebar
+	/// </summary>
+	public SidebarPage Sidebar => new SidebarPage(driver, containerLocator);
 
 	public AppPage(IWebDriver driver) : base(driver)
 	{
@@ -123,6 +129,9 @@ public class AppPage: PageObject
 		res.AddMenu(module, "14", "1");
 		res.AddMenu(module, "141", "14");
 		res.AddMenu(module, "142", "14");
+		res.AddMenu(module, "15", "1");
+		res.AddMenu(module, "16", "1");
+		res.AddMenu(module, "17", "1");
 		res.AddMenu(module, "2", null);
 		res.AddMenu(module, "21", "2");
 		res.AddMenu(module, "22", "2");
@@ -131,6 +140,11 @@ public class AppPage: PageObject
 		res.AddMenu(module, "25", "2");
 		res.AddMenu(module, "26", "2");
 		res.AddMenu(module, "27", "2");
+		res.AddMenu(module, "28", "2");
+		res.AddMenu(module, "29", "2");
+		res.AddMenu(module, "2A", "2");
+		res.AddMenu(module, "2B", "2");
+		res.AddMenu(module, "2C", "2");
 		res.AddMenu(module, "3", null);
 		res.AddMenu(module, "31", "3");
 		res.AddMenu(module, "311", "31");
@@ -163,6 +177,12 @@ public class AppPage: PageObject
 		res.AddMenu(module, "MENU_DB_TR_F", "3");
 		res.AddMenu(module, "3L", "3");
 		res.AddMenu(module, "3M", "3");
+		res.AddMenu(module, "3N", "3");
+		res.AddMenu(module, "3N1", "3N");
+		res.AddMenu(module, "3N2", "3N");
+		res.AddMenu(module, "3N3", "3N");
+		res.AddMenu(module, "3N4", "3N");
+		res.AddMenu(module, "3N5", "3N");
 		res.AddMenu(module, "4", null);
 		res.AddMenu(module, "41", "4");
 		res.AddMenu(module, "42", "4");
@@ -178,6 +198,8 @@ public class AppPage: PageObject
 		res.AddMenu(module, "6", null);
 		res.AddMenu(module, "61", "6");
 		res.AddMenu(module, "62", "6");
+		res.AddMenu(module, "7", null);
+		res.AddMenu(module, "71", "7");
 		module = "GQT";
 		res.AddModule(module);
 		res.AddMenu(module, "1", null);
@@ -189,6 +211,7 @@ public class AppPage: PageObject
 		res.AddMenu(module, "16", "1");
 		res.AddMenu(module, "17", "1");
 		res.AddMenu(module, "18", "1");
+		res.AddMenu(module, "LEND_EXPLORER", "1");
 		res.AddMenu(module, "2", null);
 		res.AddMenu(module, "21", "2");
 		res.AddMenu(module, "22", "2");
@@ -288,6 +311,10 @@ public class AppPage: PageObject
 		res.AddMenu(module, "191", "19");
 		res.AddMenu(module, "192", "19");
 		res.AddMenu(module, "193", "19");
+		res.AddMenu(module, "1A", "1");
+		res.AddMenu(module, "1B", "1");
+		res.AddMenu(module, "1C", "1");
+		res.AddMenu(module, "1D", "1");
 		module = "WMS";
 		res.AddModule(module);
 		res.AddMenu(module, "1", null);
@@ -304,9 +331,9 @@ public class AppPage: PageObject
 		res.AddMenu(module, "31", "3");
 		res.AddMenu(module, "32", "3");
 		res.AddMenu(module, "4", null);
-		res.AddMenu(module, "41", "4");
-		res.AddMenu(module, "411", "41");
-		res.AddMenu(module, "412", "41");
+		res.AddMenu(module, "ASSET_CARD_M_BTN", "4");
+		res.AddMenu(module, "411", "ASSET_CARD_M_BTN");
+		res.AddMenu(module, "412", "ASSET_CARD_M_BTN");
 		res.AddMenu(module, "42", "4");
 		res.AddMenu(module, "421", "42");
 		res.AddMenu(module, "422", "42");
@@ -394,6 +421,11 @@ public class AppPage: PageObject
 		res.AddMenu(module, "EXERCISE19PROPERTY", "EXERCISE19");
 		res.AddMenu(module, "2", null);
 		res.AddMenu(module, "21", "2");
+		module = "UIS";
+		res.AddModule(module);
+		res.AddMenu(module, "1", null);
+		res.AddMenu(module, "11", "1");
+		res.AddMenu(module, "12", "1");
         return res;
     }
 }

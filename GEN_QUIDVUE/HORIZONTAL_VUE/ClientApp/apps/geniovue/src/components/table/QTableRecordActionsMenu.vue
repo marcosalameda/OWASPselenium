@@ -11,6 +11,7 @@
 			:readonly="readonly"
 			:show-action-text="false"
 			:separator-class="separatorClass"
+			:table-name="tableName"
 			@action-click="executeActionRow" />
 		<!-- END: CRUD action links -->
 
@@ -27,6 +28,7 @@
 			:readonly="readonly"
 			:show-action-text="false"
 			:separator-class="separatorClass"
+			:table-name="tableName"
 			@action-click="executeActionRow" />
 		<!-- END: Custom action links -->
 
@@ -39,6 +41,7 @@
 			:readonly="readonly"
 			:show-action-text="showGeneralActionText"
 			:separator-class="separatorClass"
+			:table-name="tableName"
 			@action-click="executeActionRow" />
 		<!-- END: General action links -->
 
@@ -54,6 +57,7 @@
 			:readonly="readonly"
 			:show-action-text="showGeneralActionText"
 			:separator-class="separatorClass"
+			:table-name="tableName"
 			@action-click="executeActionRow" />
 		<!-- END: General custom action links -->
 	</q-button-group>
@@ -321,6 +325,14 @@
 			dropdownAlignment: {
 				type: String,
 				default: 'left'
+			},
+
+			/**
+			 * The name of the table; used in various operations like reactivity and slot naming.
+			 */
+			tableName: {
+				type: String,
+				default: ''
 			}
 		},
 

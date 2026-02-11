@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_4221]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -155,6 +156,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -174,6 +177,7 @@
 								label: computed(() => this.Resources.INCORPORATION10135),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -183,6 +187,7 @@
 								label: computed(() => this.Resources.FACILITY_NAME19514),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -192,6 +197,7 @@
 								label: computed(() => this.Resources.FACILITY_TYPE44577),
 								dataLength: 25,
 								scrollData: 25,
+								export: 1,
 								pkColumn: 'ValCodfacty',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -201,6 +207,7 @@
 								field: 'ADDRESS',
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -211,6 +218,7 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
@@ -221,6 +229,7 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 9,
@@ -232,6 +241,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -247,8 +257,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -349,6 +358,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_42211',
 								name: 'form-FACIL',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -374,10 +384,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-FACIL', 'changed-ENTIT', 'changed-FACTY'],
+						globalEvents: ['changed-CNTRY', 'changed-ENTIT', 'changed-FACIL', 'changed-FACTY'],
 						uuid: '2150bac1-850e-4286-9577-a349cdb3ea9a',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

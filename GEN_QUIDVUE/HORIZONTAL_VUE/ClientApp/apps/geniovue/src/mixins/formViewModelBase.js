@@ -44,6 +44,13 @@ export default class FormViewModelBase extends ViewModelBase
 			enumerable: false,
 			writable: true
 		})
+
+		// The form filter component current values.
+		Object.defineProperty(this, 'currentFilterValues', {
+			value: markRaw({}),
+			enumerable: false,
+			writable: true
+		})
 	}
 
 	/**
@@ -78,7 +85,7 @@ export default class FormViewModelBase extends ViewModelBase
 	 */
 	get isDirty()
 	{
-		return _some(this, (modelField) => modelField instanceof Base && modelField.isDirty)
+		return _some(this, (modelField) => modelField instanceof Base && modelField.isDirty && !modelField.isGlobalFilterField)
 	}
 
 	/**
@@ -99,6 +106,14 @@ export default class FormViewModelBase extends ViewModelBase
 			const fieldObj = this[modelField]
 			fieldObj.resetValue()
 		}
+	}
+
+	/**
+	 * @override
+	 */
+	hydrate(rawData) {
+		super.hydrate(rawData)
+		this.setCurrentFilterValues(rawData?.DefaultFilterValues)
 	}
 
 	/**
@@ -199,7 +214,7 @@ export default class FormViewModelBase extends ViewModelBase
 				if (typeof modelField.valueFormula.runFormula !== 'function')
 				{
 					modelField.valueFormula.runFormula = (originFieldData) => {
-						if (modelField.valueFormula.stopRecalcCondition())
+						if (modelField.valueFormula.stopRecalcCondition.call(this))
 							return
 
 						const execCondition = modelField.valueFormula.execCondition
@@ -395,7 +410,7 @@ export default class FormViewModelBase extends ViewModelBase
 
 							const areaKeyField = this.vueContext.dataApi.keys[field.area.toLowerCase()]
 							field.setTickets(areaKeyField.value, this.navigationId)
-							currentDocument.reset()
+							currentDocument.clearValue()
 
 							resolve(true)
 						}
@@ -489,7 +504,7 @@ export default class FormViewModelBase extends ViewModelBase
 
 								// Only reset if not also submitting a new file to replace the one that was deleted.
 								if (field.currentDocument.value.submitMode === -1)
-									field.currentDocument.reset()
+									field.currentDocument.clearValue()
 							}
 
 							resolve(true)
@@ -511,9 +526,21 @@ export default class FormViewModelBase extends ViewModelBase
 					this.navigationId)
 			})
 
-			return await Promise.resolve(promise)
+			return await promise
 		}
 
 		return true
+	}
+
+	/**
+	 * Sets the default filter values in the model of the form.
+	 * @param {Record} filters The filter defaults
+	 */
+	setCurrentFilterValues(filters)
+	{
+		if (_isEmpty(filters))
+			return
+
+		this.currentFilterValues = filters
 	}
 }

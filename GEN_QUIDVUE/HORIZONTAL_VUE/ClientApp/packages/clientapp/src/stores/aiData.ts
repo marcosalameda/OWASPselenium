@@ -9,28 +9,28 @@ import { defineStore } from 'pinia'
 import { ref } from 'vue'
 
 type AgentData = {
-    id: string,
-    prompt?: string,
-    systemPrompt?: string,
-    jsonSchema?: Record<string, unknown>,
+	id: string
+	prompt?: string
+	systemPrompt?: string
+	jsonSchema?: Record<string, unknown>
 }
 
 const state = () => ({
 	// this will be a string array of agent IDs
 	availableAgents: ref<string[]>([]),
 
-	currentAgent: ref<AgentData | undefined>(undefined),
-});
+	currentAgent: ref<AgentData | undefined>(undefined)
+})
 
 export const useAiDataStore = defineStore('aiData', {
 	state: () => state(),
 	getters: {
 		/**
-         * Returns the current agent's ID or undefined if no agent is selected.
-         * @param state The current global state
-         */
+		 * Returns the current agent's ID or undefined if no agent is selected.
+		 * @param state The current global state
+		 */
 		currentAgentId(state) {
-			return state.currentAgent?.id;
+			return state.currentAgent?.id
 		},
 
 		chatbotProxyUrl() {
@@ -39,22 +39,22 @@ export const useAiDataStore = defineStore('aiData', {
 	},
 	actions: {
 		/**
-         * Sets the available AI agents.
-         * @param agents The list of available AI agents
-         */
+		 * Sets the available AI agents.
+		 * @param agents The list of available AI agents
+		 */
 		setAvailableAgents(agents: string[]) {
-			this.availableAgents = agents;
+			this.availableAgents = agents
 		},
 
 		/**
-         * Sets the current AI agent.
-         * @param agent The current AI agent
-         */
+		 * Sets the current AI agent.
+		 * @param agent The current AI agent
+		 */
 		setCurrentAgent(agent: AgentData) {
 			this.currentAgent = {
 				...this.currentAgent,
 				...agent
-			};
+			}
 		},
 
 		/**
@@ -63,5 +63,5 @@ export const useAiDataStore = defineStore('aiData', {
 		resetStore() {
 			Object.assign(this, state())
 		}
-	},
-});
+	}
+})

@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="DSAID"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.DSAID___WARE1WAREHDES.isVisible || controls.DSAID___OUTPTDOCUMENR.isVisible">
-					<q-control-wrapper
-						v-show="controls.DSAID___WARE1WAREHDES.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.DSAID___WARE1WAREHDES.isVisible || controls.DSAID___OUTPTDOCUMENR.isVisible">
+					<q-col
+						v-if="controls.DSAID___WARE1WAREHDES.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DSAID___WARE1WAREHDES.isVisible"
 							class="i-text"
 							v-bind="controls.DSAID___WARE1WAREHDES"
 							v-on="controls.DSAID___WARE1WAREHDES.handlers"
@@ -111,11 +120,12 @@
 								v-bind="controls.DSAID___WARE1WAREHDES.seeMoreParams"
 								v-on="controls.DSAID___WARE1WAREHDES.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.DSAID___OUTPTDOCUMENR.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.DSAID___OUTPTDOCUMENR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DSAID___OUTPTDOCUMENR.isVisible"
 							class="i-text"
 							v-bind="controls.DSAID___OUTPTDOCUMENR"
 							v-on="controls.DSAID___OUTPTDOCUMENR.handlers"
@@ -127,27 +137,31 @@
 								v-bind="controls.DSAID___OUTPTDOCUMENR.props"
 								@update:model-value="model.ValDocumenr.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.DSAID___PSEUDSAIDAS__.isVisible">
-					<q-control-wrapper
-						v-show="controls.DSAID___PSEUDSAIDAS__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.DSAID___PSEUDSAIDAS__.isVisible">
+					<q-col
+						v-if="controls.DSAID___PSEUDSAIDAS__.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.DSAID___PSEUDSAIDAS__.isVisible"
+							v-if="controls.DSAID___PSEUDSAIDAS__.isVisible"
 							v-bind="controls.DSAID___PSEUDSAIDAS__"
-							v-on="controls.DSAID___PSEUDSAIDAS__.handlers" />
+							v-on="controls.DSAID___PSEUDSAIDAS__.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE DSAID___PSEUDSAIDAS__]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.DSAID___PSEUDSAIDAS__.isVisible"
 							:list-ctrl="controls.DSAID___PSEUDSAIDAS__"
 							:filter-operators="controls.DSAID___PSEUDSAIDAS__.filterOperators"
 							v-on="controls.DSAID___PSEUDSAIDAS__.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.DSAID___PSEUDSAIDA___.isVisible">
-					<q-control-wrapper
-						v-show="controls.DSAID___PSEUDSAIDA___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.DSAID___PSEUDSAIDA___.isVisible">
+					<q-col
+						v-if="controls.DSAID___PSEUDSAIDA___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.DSAID___PSEUDSAIDA___.isVisible"
 							class="i-button"
 							v-bind="controls.DSAID___PSEUDSAIDA___"
 							v-on="controls.DSAID___PSEUDSAIDA___.handlers"
@@ -156,17 +170,15 @@
 							:suggestion-mode-on="suggestionModeOn">
 							<q-button
 								v-if="controls.DSAID___PSEUDSAIDA___.isVisible"
-								id="DSAID___PSEUDSAIDA___"
-								:label="controls.DSAID___PSEUDSAIDA___.label"
-								:disabled="controls.DSAID___PSEUDSAIDA___.isBlocked"
+								v-bind="controls.DSAID___PSEUDSAIDA___.props"
 								@click="controls.DSAID___PSEUDSAIDA___.action($event)">
 								<q-icon v-bind="controls.DSAID___PSEUDSAIDA___.icon" />
 							</q-button>
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -175,7 +187,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -184,6 +196,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -195,7 +208,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -423,7 +436,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -589,7 +606,8 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
-								isOrderingColumn: true,
+								export: 1,
+								sortOrder: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -599,6 +617,7 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 50,
+								export: 1,
 								pkColumn: 'ValCoditem',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -609,6 +628,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 15,
 								scrollData: 15,
+								export: 1,
 								pkColumn: 'ValCoditem',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -620,6 +640,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -638,6 +659,7 @@
 									mode: 'SHOW'
 								},
 								cellAction: true,
+								export: 1,
 								pkColumn: 'ValCodwareh',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -660,8 +682,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -727,7 +748,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-OUDOC', 'changed-WAREH', 'changed-OUTPU', 'changed-OUTPT', 'changed-ITEM'],
+						globalEvents: ['changed-WAREH', 'changed-OUDOC', 'changed-OUTPU', 'changed-OUTPT', 'changed-ITEM'],
 						uuid: 'Dsaid_ValSaidas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -742,13 +763,12 @@
 					DSAID___PSEUDSAIDA___: new fieldControlClass.ButtonControl({
 						id: 'DSAID___PSEUDSAIDA___',
 						name: 'SAIDA',
-						size: 'small',
 						hasLabel: false,
 						label: computed(() => this.Resources.NEW_OUTPUT02002),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						icon: {
-							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=2932`),
+							icon: computed(() => `${this.$app.resourcesPath}ok.ico?v=3093`),
 							type: 'img',
 							role: 'presentation',
 						},
@@ -917,16 +937,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -970,16 +1004,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1131,6 +1179,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS DSAID]/
 // eslint-disable-next-line

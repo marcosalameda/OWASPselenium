@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_81]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -154,6 +155,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.BEGINNING18124),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 3,
@@ -172,6 +175,7 @@
 								label: computed(() => this.Resources.END47577),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -181,6 +185,7 @@
 								label: computed(() => this.Resources.RECIPIENT_S_EMAIL43894),
 								dataLength: 100,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -190,6 +195,7 @@
 								label: computed(() => this.Resources.NOTIFICATION_ID_THAT61751),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -199,6 +205,7 @@
 								label: computed(() => this.Resources.MESSAGE_ID37133),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -207,6 +214,7 @@
 								field: 'MESSAGE',
 								label: computed(() => this.Resources.TEXT_OF_THE_SENT_MES52307),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -216,6 +224,7 @@
 								label: computed(() => this.Resources.ERROR_SENDING_EMAIL53846),
 								dataLength: 300,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 9,
@@ -225,6 +234,7 @@
 								label: computed(() => this.Resources.RECIPIENT65165),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 10,
@@ -234,6 +244,7 @@
 								label: computed(() => this.Resources.CREATION__DATE13180),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 11,
@@ -243,6 +254,7 @@
 								label: computed(() => this.Resources.CREATION__OPERATOR50535),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 12,
@@ -251,6 +263,7 @@
 								field: 'RETURNED',
 								label: computed(() => this.Resources.RETURNED01606),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 13,
@@ -260,6 +273,7 @@
 								label: computed(() => this.Resources.RETURN32222),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 14,
@@ -269,6 +283,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodpesso',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -285,8 +300,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -387,6 +401,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_811',
 								name: 'form-NOTIF',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -412,10 +427,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-NOTIF', 'changed-PESS2'],
+						globalEvents: ['changed-PESS2', 'changed-NOTIF'],
 						uuid: '8a24817a-f3db-4158-821e-86bf9df25ea0',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

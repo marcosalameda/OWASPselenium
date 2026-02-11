@@ -42,17 +42,10 @@
 
 			<q-row-container v-if="overrideVisible">
 				<q-control-wrapper class="control-join-group">
-					<base-input-structure
+					<q-checkbox
 						id="cav-save-query-is-override"
-						label-position="center"
-						:label="texts.overlapQuery"
-						:label-attrs="{ class: 'i-checkbox i-checkbox__label' }">
-						<template #label>
-							<q-checkbox-input
-								id="cav-save-query-is-override"
-								v-model="isOverride" />
-						</template>
-					</base-input-structure>
+						v-model="isOverride"
+						:label="texts.overlapQuery" />
 				</q-control-wrapper>
 			</q-row-container>
 

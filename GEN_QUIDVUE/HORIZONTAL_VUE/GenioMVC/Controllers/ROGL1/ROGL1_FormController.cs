@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW ROGL1]/
 
 		[HttpPost]
-		public ActionResult Rogl1_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Rogl1_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Rogl1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Rogl1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rogl1_Show_GET",
 				AreaName = "rogl1",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET ROGL1]/
 		[HttpPost]
-		public ActionResult Rogl1_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Rogl1_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Rogl1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Rogl1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rogl1_New_GET",
 				AreaName = "rogl1",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Rogl1_New([FromBody]Rogl1_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Rogl1_New",
 				ViewName = "Rogl1",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET ROGL1]/
 		[HttpPost]
-		public ActionResult Rogl1_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Rogl1_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Rogl1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Rogl1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rogl1_Edit_GET",
 				AreaName = "rogl1",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Rogl1_Edit([FromBody]Rogl1_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Rogl1_Edit",
 				ViewName = "Rogl1",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET ROGL1]/
 		[HttpPost]
-		public ActionResult Rogl1_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Rogl1_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Rogl1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Rogl1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rogl1_Delete_GET",
 				AreaName = "rogl1",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Rogl1/Rogl1_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST ROGL1]/
 		[HttpPost]
-		public ActionResult Rogl1_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Rogl1_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Rogl1_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Rogl1_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Rogl1_Delete",
 				ViewName = "Rogl1",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET ROGL1]/
 
 		[HttpPost]
-		public ActionResult Rogl1_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Rogl1_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Rogl1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Rogl1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rogl1_Duplicate_GET",
 				AreaName = "rogl1",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Rogl1_Duplicate([FromBody]Rogl1_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Rogl1_Duplicate",
 				ViewName = "Rogl1",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Rogl1(UserContext.Current);
+					GenioMVC.Models.Rogl1 model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("rogl1");
 
 // USE /[MANUAL GQT BEFORE_CANCEL ROGL1]/

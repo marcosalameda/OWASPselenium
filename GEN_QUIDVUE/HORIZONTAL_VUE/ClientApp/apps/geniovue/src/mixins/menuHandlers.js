@@ -13,6 +13,14 @@ export default {
 		GenericMenuHandlers
 	],
 
+	data()
+	{
+		return {
+			// When a PopUp form is opened, the menus behind it cannot appear to be loaded, especially because of E2E testing.
+			isActiveMenu: true
+		}
+	},
+
 	created()
 	{
 		this.componentOnLoadProc.addBusy(loadResources(this, this.interfaceMetadata.requiredTextResources), this.Resources[hardcodedTexts.genericLoad], 300)
@@ -34,6 +42,7 @@ export default {
 		this.$eventTracker.addTrace({ origin: 'mounted (menuHandler)', message: 'Menu is mounted', contextData: { menuInfo: this.menuInfo } })
 
 		// Listens for changes to the DB and updates the list accordingly.
+		this.$eventHub.on('change-content-active-state', this.changeMenuActiveState)
 		this.internalEvents.onMany(this.controls.menu.internalEvents, this.loadList)
 		this.$eventHub.onMany(this.controls.menu.globalEvents, this.loadList)
 	},
@@ -44,6 +53,9 @@ export default {
 		// Removes the listeners.
 		this.internalEvents?.offMany(this.controls.menu.internalEvents, this.loadList) // The generic handler, in beforeUnmount, already removes all events.
 		this.$eventHub.offMany(this.controls.menu.globalEvents, this.loadList)
+		this.$eventHub.off('change-content-active-state', this.changeMenuActiveState)
+
+		this.changeMenuActiveState(false)
 
 		if(this.controls)
 		{
@@ -108,6 +120,16 @@ export default {
 				}
 			}
 			this.setNavProperties(navProps)
+		},
+
+		/**
+		 * Changes the menus's status.
+		 * When a PopUp form is opened, the menus behind it should be marked as inactive.
+		 * @param {Boolean} isActive Indicates whether the menu is currently active.
+		 */
+		changeMenuActiveState(isActive)
+		{
+			this.isActiveMenu = isActive
 		}
 	},
 

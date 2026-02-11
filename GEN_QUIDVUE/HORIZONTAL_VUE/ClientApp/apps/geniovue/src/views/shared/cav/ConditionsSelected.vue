@@ -145,18 +145,11 @@
 
 								<q-row-container>
 									<q-control-wrapper class="control-join-group">
-										<base-input-structure
+										<q-checkbox
 											:id="`show-nulls-${cond.internalKey}`"
-											class="i-checkbox"
-											label-position="left"
+											v-model="cond.Operands[0].ShowNulls"
 											:label="texts.showEmptyLines"
-											:label-attrs="{ class: 'i-checkbox i-checkbox__label' }">
-											<template #label>
-												<q-checkbox-input
-													:id="`show-nulls-${cond.internalKey}`"
-													v-model="cond.Operands[0].ShowNulls" />
-											</template>
-										</base-input-structure>
+											label-placement="left" />
 									</q-control-wrapper>
 								</q-row-container>
 							</div>

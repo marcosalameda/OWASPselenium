@@ -490,10 +490,10 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(5);
-			info.Pathways.Add("categ","categ");
 			info.Pathways.Add("cntry","cntry");
-			info.Pathways.Add("cmpny","cmpny");
+			info.Pathways.Add("categ","categ");
 			info.Pathways.Add("pais1","pais1");
+			info.Pathways.Add("cmpny","cmpny");
 			info.Pathways.Add("regi1","regi1");
 		}
 

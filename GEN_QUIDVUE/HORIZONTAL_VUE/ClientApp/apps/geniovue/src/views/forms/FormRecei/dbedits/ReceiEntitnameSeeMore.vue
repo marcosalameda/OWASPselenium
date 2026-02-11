@@ -2,11 +2,11 @@
 	<teleport
 		v-if="isReady"
 		to="#q-modal-see-more-recei-entitname-body">
-		<q-row-container>
+		<q-row>
 			<q-table
 				v-bind="listCtrl"
 				v-on="listCtrl.handlers" />
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -24,6 +24,7 @@
 	import { TableListControl } from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
@@ -128,15 +129,25 @@
 
 			const modalProps = {
 				id: 'see-more-recei-entitname',
-				headerTitle: computed(() => this.Resources.ENTITIES22578),
-				closeButtonEnable: true,
-				hideFooter: true,
-				dismissWithEsc: true,
 				dismissAction: this.close,
-				isActive: true,
 				returnElement: 'RECEI___ENTITNAME_____see-more_button'
 			}
-			this.setModal(modalProps)
+			const props = {
+				class: 'q-dialog-see-more',
+				title: computed(() => this.Resources.ENTITIES22578),
+				buttons: [
+					{
+						id: 'dialog-button-close',
+						action: this.close,
+						icon: { icon: 'cancel', type: 'svg' },
+						props: {
+							label: computed(() => this.Resources[hardcodedTexts.cancel]),
+							variant: 'bold'
+						}
+					}
+				]
+			}
+			this.setModal(props, modalProps)
 		},
 
 		beforeUnmount()
@@ -166,13 +177,16 @@
 
 			onTableDBDataChanged()
 			{
-				const params = {
-					id: this.id || null,
-					limits: this.limits,
-					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
-				}
+				// Wait for the computed properties of columns to finish resolving (e.g. "isVisible").
+				setTimeout(() => {
+					const params = {
+						id: this.id || null,
+						limits: this.limits,
+						tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
+					}
 
-				this.listCtrl.fetchListData(params)
+					this.listCtrl.fetchListData(params)
+				}, 0)
 			},
 
 			handleRowAction(eventData)
@@ -207,6 +221,7 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 85,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -216,6 +231,7 @@
 								label: computed(() => this.Resources.INITIALS22754),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -225,6 +241,7 @@
 								label: computed(() => this.Resources.VAT_NUMBER24236),
 								dataLength: 30,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -234,6 +251,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 254,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -243,6 +261,7 @@
 								label: computed(() => this.Resources.PHONE_NUMBER20774),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -252,6 +271,7 @@
 								label: computed(() => this.Resources.CONTACT59247),
 								dataLength: 30,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -261,6 +281,7 @@
 								label: computed(() => this.Resources.LANGUAGE16872),
 								dataLength: 2,
 								scrollData: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -275,8 +296,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -302,7 +322,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACI2', 'changed-ENTIT', 'changed-FACI1'],
+						globalEvents: ['changed-ENTIT', 'changed-FACI1', 'changed-FACI2'],
 						uuid: 'Recei_Recei_EntitValName',
 						allSelectedRows: 'false',
 						handlers: {

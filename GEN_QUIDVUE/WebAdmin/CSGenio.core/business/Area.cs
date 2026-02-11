@@ -22,6 +22,8 @@ namespace CSGenio.business
     {
         public static AreaRef AreaCOMPB { get { return m_AreaCOMPB; } }
         private static AreaRef m_AreaCOMPB = new AreaRef("GQT", "gqtcompb", "compb");
+        public static AreaRef AreaUP_RULES { get { return m_AreaUP_RULES; } }
+        private static AreaRef m_AreaUP_RULES = new AreaRef("GQT", "gqtup_rules", "up_rules");
         public static AreaRef AreaPWCOM { get { return m_AreaPWCOM; } }
         private static AreaRef m_AreaPWCOM = new AreaRef("GQT", "gqtpwcom", "pwcom");
         public static AreaRef AreaADDRL { get { return m_AreaADDRL; } }
@@ -172,6 +174,8 @@ namespace CSGenio.business
         private static AreaRef m_AreaSPACE = new AreaRef("GQT", "gqtspace", "space");
         public static AreaRef AreaSTAKE { get { return m_AreaSTAKE; } }
         private static AreaRef m_AreaSTAKE = new AreaRef("GQT", "gqtstake", "stake");
+        public static AreaRef AreaDOWN_RULES { get { return m_AreaDOWN_RULES; } }
+        private static AreaRef m_AreaDOWN_RULES = new AreaRef("GQT", "gqtdown_rules", "down_rules");
         public static AreaRef AreaMANUA { get { return m_AreaMANUA; } }
         private static AreaRef m_AreaMANUA = new AreaRef("GQT", "gqtmanualtocollect", "manua");
         public static AreaRef AreaWAREH { get { return m_AreaWAREH; } }
@@ -402,6 +406,7 @@ namespace CSGenio.business
         public static readonly System.Collections.ObjectModel.ReadOnlyCollection<string> ListaAreas = new System.Collections.ObjectModel.ReadOnlyCollection<string>(
             new List<string>() {
             "compb",
+            "up_rules",
             "pwcom",
             "addrl",
             "lnhdf",
@@ -477,6 +482,7 @@ namespace CSGenio.business
             "regi1",
             "space",
             "stake",
+            "down_rules",
             "manua",
             "wareh",
             "glob",

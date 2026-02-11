@@ -144,6 +144,46 @@ namespace GenioMVC.Controllers
 							result = model.TableWarehWarehdes;
 						}
 						break;
+					case "EQUIP_ITEM__GITEM__ITEMDES":	// Field (DB)
+						{
+							var model = new Equip_item_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Equip_item__gitem__itemdes(qs);
+							result = model.TableGitemItemdes;
+						}
+						break;
+					case "EQUIP_ITEM__WAREH__WAREHDES":	// Field (DB)
+						{
+							var model = new Equip_item_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Equip_item__wareh__warehdes(qs);
+							result = model.TableWarehWarehdes;
+						}
+						break;
+					case "EQUIP_ITEM__CNTRY__COUNTRY_FG":	// Field (FG)
+						{
+							var model = new Equip_item_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Equip_item__cntry__country_fg(qs);
+							result = model.TableCntryCountry;
+						}
+						break;
+					case "EQUIP_ITEM__CMPNY__DESIGNAT_FG":	// Field (FG)
+						{
+							var model = new Equip_item_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Equip_item__cmpny__designat_fg(qs);
+							result = model.TableCmpnyDesignat;
+						}
+						break;
+					case "EQUIP_ITEM__PESS1__NAME_FG":	// Field (FG)
+						{
+							var model = new Equip_item_ViewModel(UserContext.Current) { editable = false };
+							model.MapFromModel(row);
+							model.Load_Equip_item__pess1__name_fg(qs);
+							result = model.TablePess1Name;
+						}
+						break;
 					case "ITEM____GITEMITEMDES_":	// Field (DB)
 						{
 							var model = new Item_ViewModel(UserContext.Current) { editable = false };
@@ -224,6 +264,21 @@ namespace GenioMVC.Controllers
 						break;
 					case "ARTIGVALWAREHWAREHDES":	// Field (DB)
 						values = new Artigval_ViewModel(UserContext.Current).GetDependant_ArtigvalTableWarehWarehdes(Selected);
+						break;
+					case "EQUIP_ITEM__GITEM__ITEMDES":	// Field (DB)
+						values = new Equip_item_ViewModel(UserContext.Current).GetDependant_Equip_itemTableGitemItemdes(Selected);
+						break;
+					case "EQUIP_ITEM__WAREH__WAREHDES":	// Field (DB)
+						values = new Equip_item_ViewModel(UserContext.Current).GetDependant_Equip_itemTableWarehWarehdes(Selected);
+						break;
+					case "EQUIP_ITEM__CNTRY__COUNTRY_FG":	// Field (FG)
+						values = new Equip_item_ViewModel(UserContext.Current).GetDependant_Equip_itemTableCntryCountry(Selected);
+						break;
+					case "EQUIP_ITEM__CMPNY__DESIGNAT_FG":	// Field (FG)
+						values = new Equip_item_ViewModel(UserContext.Current).GetDependant_Equip_itemTableCmpnyDesignat(Selected);
+						break;
+					case "EQUIP_ITEM__PESS1__NAME_FG":	// Field (FG)
+						values = new Equip_item_ViewModel(UserContext.Current).GetDependant_Equip_itemTablePess1Name(Selected);
 						break;
 					case "ITEM____GITEMITEMDES_":	// Field (DB)
 						values = new Item_ViewModel(UserContext.Current).GetDependant_ItemTableGitemItemdes(Selected);
@@ -320,6 +375,22 @@ namespace GenioMVC.Controllers
 		{
 			return GenericRecalculateFormulas(formData, "item",
 				(primaryKey) => Models.Item.Find(primaryKey, UserContext.Current, "FARTIGVAL"),
+				(model) => formData.MapToModel(model as Models.Item)
+			);
+		}
+
+
+
+		/// <summary>
+		/// Recalculate formulas of the "Equip_item" form. (++, CT, SR, CL and U1)
+		/// </summary>
+		/// <param name="formData">Current form data</param>
+		/// <returns></returns>
+		[HttpPost]
+		public JsonResult RecalculateFormulas_Equip_item([FromBody]Equip_item_ViewModel formData)
+		{
+			return GenericRecalculateFormulas(formData, "item",
+				(primaryKey) => Models.Item.Find(primaryKey, UserContext.Current, "FEQUIP_ITEM"),
 				(model) => formData.MapToModel(model as Models.Item)
 			);
 		}

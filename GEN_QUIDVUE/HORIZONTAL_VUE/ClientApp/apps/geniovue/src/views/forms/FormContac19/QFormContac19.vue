@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="CONTAC19"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.CONTAC19PROCNNAME____.isVisible">
-					<q-control-wrapper
-						v-show="controls.CONTAC19PROCNNAME____.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.CONTAC19PROCNNAME____.isVisible">
+					<q-col
+						v-if="controls.CONTAC19PROCNNAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CONTAC19PROCNNAME____.isVisible"
 							class="i-text"
 							v-bind="controls.CONTAC19PROCNNAME____"
 							v-on="controls.CONTAC19PROCNNAME____.handlers"
@@ -107,13 +116,14 @@
 								@blur="onBlur(controls.CONTAC19PROCNNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CONTAC19PROCNEMAIL___.isVisible">
-					<q-control-wrapper
-						v-show="controls.CONTAC19PROCNEMAIL___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CONTAC19PROCNEMAIL___.isVisible">
+					<q-col
+						v-if="controls.CONTAC19PROCNEMAIL___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CONTAC19PROCNEMAIL___.isVisible"
 							class="i-text"
 							v-bind="controls.CONTAC19PROCNEMAIL___"
 							v-on="controls.CONTAC19PROCNEMAIL___.handlers"
@@ -125,13 +135,14 @@
 								@blur="onBlur(controls.CONTAC19PROCNEMAIL___, model.ValEmail.value)"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CONTAC19PROCNTELEPHON.isVisible">
-					<q-control-wrapper
-						v-show="controls.CONTAC19PROCNTELEPHON.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CONTAC19PROCNTELEPHON.isVisible">
+					<q-col
+						v-if="controls.CONTAC19PROCNTELEPHON.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CONTAC19PROCNTELEPHON.isVisible"
 							class="i-text"
 							v-bind="controls.CONTAC19PROCNTELEPHON"
 							v-on="controls.CONTAC19PROCNTELEPHON.handlers"
@@ -143,13 +154,14 @@
 								@blur="onBlur(controls.CONTAC19PROCNTELEPHON, model.ValTelephon.value)"
 								@change="model.ValTelephon.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CONTAC19PROCNDESCRIPT.isVisible">
-					<q-control-wrapper
-						v-show="controls.CONTAC19PROCNDESCRIPT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CONTAC19PROCNDESCRIPT.isVisible">
+					<q-col
+						v-if="controls.CONTAC19PROCNDESCRIPT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CONTAC19PROCNDESCRIPT.isVisible"
 							class="i-textarea"
 							v-bind="controls.CONTAC19PROCNDESCRIPT"
 							v-on="controls.CONTAC19PROCNDESCRIPT.handlers"
@@ -161,13 +173,14 @@
 								v-bind="controls.CONTAC19PROCNDESCRIPT.props"
 								v-on="controls.CONTAC19PROCNDESCRIPT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CONTAC19PROCNDATE____.isVisible">
-					<q-control-wrapper
-						v-show="controls.CONTAC19PROCNDATE____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CONTAC19PROCNDATE____.isVisible">
+					<q-col
+						v-if="controls.CONTAC19PROCNDATE____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CONTAC19PROCNDATE____.isVisible"
 							class="i-text"
 							v-bind="controls.CONTAC19PROCNDATE____"
 							v-on="controls.CONTAC19PROCNDATE____.handlers"
@@ -181,13 +194,14 @@
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CONTAC19PROPETITLE___.isVisible">
-					<q-control-wrapper
-						v-show="controls.CONTAC19PROPETITLE___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CONTAC19PROPETITLE___.isVisible">
+					<q-col
+						v-if="controls.CONTAC19PROPETITLE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CONTAC19PROPETITLE___.isVisible"
 							class="i-text"
 							v-bind="controls.CONTAC19PROPETITLE___"
 							v-on="controls.CONTAC19PROPETITLE___.handlers"
@@ -203,10 +217,10 @@
 								v-bind="controls.CONTAC19PROPETITLE___.seeMoreParams"
 								v-on="controls.CONTAC19PROPETITLE___.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -215,7 +229,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -224,6 +238,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -235,7 +250,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -447,7 +462,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -557,7 +576,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_CONTAC19PROCNNAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -571,7 +589,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_CONTAC19PROCNEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -585,7 +602,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_CONTAC19PROCNTELEPHON',
 						controlLimits: [
 						],
 					}, this),
@@ -711,8 +727,6 @@
 			// Does NOT have access to `this` component instance, because
 			// it has not been created yet when this guard is called!
 
-			to.params.isPopup = 'true'
-
 			next((vm) => {
 				vm.initFormProperties(to)
 			})
@@ -804,16 +818,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -857,16 +885,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1018,6 +1060,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CONTAC19]/
 // eslint-disable-next-line

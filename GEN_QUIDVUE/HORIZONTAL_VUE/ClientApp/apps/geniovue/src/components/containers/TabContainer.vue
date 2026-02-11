@@ -1,7 +1,5 @@
 ﻿<template>
-	<div
-		v-show="isVisible"
-		:class="[$attrs.class, 'tab-group-container']">
+	<div :class="[$attrs.class, 'tab-group-container']">
 		<div
 			v-show="tabsList.length > 0"
 			role="tablist"
@@ -125,14 +123,6 @@
 			iconAlignment: {
 				type: String,
 				default: 'left'
-			},
-
-			/**
-			 * Visible property to hide and show tabs.
-			 */
-			isVisible: {
-				type: Boolean,
-				default: true
 			},
 
 			/**

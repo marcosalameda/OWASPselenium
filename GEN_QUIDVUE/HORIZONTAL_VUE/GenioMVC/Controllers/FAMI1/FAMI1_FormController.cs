@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW FAMI1]/
 
 		[HttpPost]
-		public ActionResult Fami1_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Fami1_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Fami1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Fami1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_Show_GET",
 				AreaName = "fami1",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET FAMI1]/
 		[HttpPost]
-		public ActionResult Fami1_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Fami1_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Fami1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Fami1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_New_GET",
 				AreaName = "fami1",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Fami1_New([FromBody]Fami1_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_New",
 				ViewName = "Fami1",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET FAMI1]/
 		[HttpPost]
-		public ActionResult Fami1_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Fami1_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Fami1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Fami1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_Edit_GET",
 				AreaName = "fami1",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Fami1_Edit([FromBody]Fami1_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_Edit",
 				ViewName = "Fami1",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET FAMI1]/
 		[HttpPost]
-		public ActionResult Fami1_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Fami1_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Fami1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Fami1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_Delete_GET",
 				AreaName = "fami1",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Fami1/Fami1_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST FAMI1]/
 		[HttpPost]
-		public ActionResult Fami1_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Fami1_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Fami1_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Fami1_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_Delete",
 				ViewName = "Fami1",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET FAMI1]/
 
 		[HttpPost]
-		public ActionResult Fami1_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Fami1_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Fami1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Fami1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_Duplicate_GET",
 				AreaName = "fami1",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Fami1_Duplicate([FromBody]Fami1_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Fami1_Duplicate",
 				ViewName = "Fami1",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Fami1(UserContext.Current);
+					GenioMVC.Models.Fami1 model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("fami1");
 
 // USE /[MANUAL GQT BEFORE_CANCEL FAMI1]/
@@ -404,9 +405,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_tpeq1")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -416,7 +414,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -424,35 +422,27 @@ namespace GenioMVC.Controllers
 					requestValues.Add(kv.Key, kv.Value);
 			}
 
-			Models.Fami1 parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Fami1 parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Fami1_ValTiposequ_ViewModel model = new(UserContext.Current, parentCtx);
+			Fami1_ValTiposequ_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
+				requestModel.TableConfiguration,
+				requestModel.UserTableConfigName,
+				requestModel.LoadDefaultView);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
 			// Determine which columns have totalizers
 			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
 
 			// For tables with multiple selection enabled, determine currently selected rows
 			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			// Add form field filters to the table configuration
+			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -461,7 +451,7 @@ namespace GenioMVC.Controllers
 		}
 
 		[ActionName("Fami1_ValTiposeq1")]
-		public ActionResult Fami1_ValTiposeq1([FromBody]RequestLookupModel requestModel, [FromQuery]string partialView)
+		public ActionResult Fami1_ValTiposeq1([FromBody] RequestLookupModel requestModel, [FromQuery] string partialView)
 		{
 			var queryParams = requestModel.QueryParams;
 			Fami1_ValTiposeq1_ViewModel model = new Fami1_ValTiposeq1_ViewModel(UserContext.Current);
@@ -470,7 +460,7 @@ namespace GenioMVC.Controllers
 			if (permission.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(permission.Message);
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 				requestValues.AddRange(queryParams);
 

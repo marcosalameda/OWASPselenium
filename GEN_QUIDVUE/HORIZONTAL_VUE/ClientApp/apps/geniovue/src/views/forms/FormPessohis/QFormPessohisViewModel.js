@@ -54,17 +54,6 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodpesso.value, (newValue, oldValue) => this.onUpdate('pesso.codpesso', this.ValCodpesso, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
-		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodregia',
-			originId: 'ValCodregia',
-			area: 'PESSO',
-			field: 'CODREGIA',
-			relatedArea: 'REGI1',
-			isFixed: true,
-			description: '',
-		}).cloneFrom(values?.ValCodregia))
-		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pesso.codregia', this.ValCodregia, newValue, oldValue)))
-
 		this.ValCodcntry = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodcntry',
 			originId: 'ValCodcntry',
@@ -97,6 +86,17 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources._COMPANY02087),
 		}).cloneFrom(values?.ValCodempre))
 		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('pesso.codempre', this.ValCodempre, newValue, oldValue)))
+
+		this.ValCodregia = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodregia',
+			originId: 'ValCodregia',
+			area: 'PESSO',
+			field: 'CODREGIA',
+			relatedArea: 'REGI1',
+			isFixed: true,
+			description: '',
+		}).cloneFrom(values?.ValCodregia))
+		this.stopWatchers.push(watch(() => this.ValCodregia.value, (newValue, oldValue) => this.onUpdate('pesso.codregia', this.ValCodregia, newValue, oldValue)))
 
 		this.ValCodcateg = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodcateg',

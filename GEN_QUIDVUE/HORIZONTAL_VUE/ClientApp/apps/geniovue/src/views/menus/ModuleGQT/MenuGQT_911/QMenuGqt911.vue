@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_911]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.REF_A30225),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.IDIOMA44057),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodlang',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -172,6 +175,7 @@
 								label: computed(() => this.Resources.A_TRADUZIR48203),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -181,6 +185,7 @@
 								label: computed(() => this.Resources.IDIOMA44057),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodlang',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -191,6 +196,7 @@
 								label: computed(() => this.Resources.TRADUZIDO46556),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -206,8 +212,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -308,6 +313,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_9111',
 								name: 'form-TRADU',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -333,10 +339,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-TRADU', 'changed-LANG2', 'changed-LANG1'],
+						globalEvents: ['changed-LANG1', 'changed-LANG2', 'changed-TRADU'],
 						uuid: '570a4a5e-67ff-46e4-a6d6-71d4b52998e9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from 'uuid'
 
 import { Base } from './base'
 
-class GridTableListValue {
+export class GridTableListValue {
 	constructor(fieldValue) {
 		this.elements = []
 		this.newElements = _get(fieldValue, 'newElements', [])
@@ -155,7 +155,7 @@ class GridTableListValue {
 	 * @param {object} vueContext The Vue context in which this value will be used
 	 */
 	setValue(newValue, viewModelClass, vueContext) {
-		if (viewModelClass === undefined || vueContext === undefined) return
+		if (newValue === null || viewModelClass === undefined || vueContext === undefined) return
 
 		const elements = [],
 			newElements = []
@@ -477,5 +477,19 @@ export class GridTableList extends Base {
 	 */
 	undoDeletion(row) {
 		this.value.undoDeletion(row)
+	}
+
+	/**
+	 * @override
+	 */
+	destroy() {
+		super.destroy()
+
+		const elements = [...this.elements, ...this.newElements]
+		for (const element of elements) element.destroy()
+
+		this.elements.length = 0
+		this.newElements.length = 0
+		this.removedElements.length = 0
 	}
 }

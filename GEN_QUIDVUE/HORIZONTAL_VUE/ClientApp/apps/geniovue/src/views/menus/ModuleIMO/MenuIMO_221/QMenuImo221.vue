@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE IMO_Menu_221]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.COUNTRY64133),
 								dataLength: 90,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodcntry',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.REGION12723),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -178,8 +181,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -280,6 +282,7 @@
 							rowClickAction: {
 								id: 'RCA_IMO_2211',
 								name: 'form-REGIA',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -305,10 +308,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PAIS1', 'changed-CNTRY', 'changed-REGIO'],
+						globalEvents: ['changed-REGIO', 'changed-PAIS1', 'changed-CNTRY'],
 						uuid: 'a6545918-a5bb-44e7-9da0-e237e23c149b',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW C_BRN]/
 
 		[HttpPost]
-		public ActionResult C_brn_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult C_brn_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new C_brn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			C_brn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_Show_GET",
 				AreaName = "c_brn",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET C_BRN]/
 		[HttpPost]
-		public ActionResult C_brn_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult C_brn_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new C_brn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			C_brn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_New_GET",
 				AreaName = "c_brn",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult C_brn_New([FromBody]C_brn_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_New",
 				ViewName = "C_brn",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET C_BRN]/
 		[HttpPost]
-		public ActionResult C_brn_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult C_brn_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new C_brn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			C_brn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_Edit_GET",
 				AreaName = "c_brn",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult C_brn_Edit([FromBody]C_brn_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_Edit",
 				ViewName = "C_brn",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET C_BRN]/
 		[HttpPost]
-		public ActionResult C_brn_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult C_brn_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new C_brn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			C_brn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_Delete_GET",
 				AreaName = "c_brn",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /C_brn/C_brn_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST C_BRN]/
 		[HttpPost]
-		public ActionResult C_brn_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult C_brn_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new C_brn_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			C_brn_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_Delete",
 				ViewName = "C_brn",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET C_BRN]/
 
 		[HttpPost]
-		public ActionResult C_brn_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult C_brn_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new C_brn_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			C_brn_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_Duplicate_GET",
 				AreaName = "c_brn",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult C_brn_Duplicate([FromBody]C_brn_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "C_brn_Duplicate",
 				ViewName = "C_brn",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.C_brn(UserContext.Current);
+					GenioMVC.Models.C_brn model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("c_brn");
 
 // USE /[MANUAL GQT BEFORE_CANCEL C_BRN]/

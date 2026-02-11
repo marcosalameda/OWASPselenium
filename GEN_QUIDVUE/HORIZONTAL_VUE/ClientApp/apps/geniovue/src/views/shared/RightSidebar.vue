@@ -65,6 +65,7 @@
 
 						<q-toggle
 							v-if="$app.appAlerts.length > 0 && !suggestionModeOn"
+							id="alerts-btn"
 							:model-value="isActive('alerts-tab')"
 							:title="texts.alerts"
 							:disabled="disableButtons"
@@ -162,6 +163,7 @@
 							:agent-data="currentAgent"
 							:available-agents="availableAgents"
 							:api-endpoint="chatbotProxyUrl"
+							@direct-agent-chat="setAgentData"
 							@apply-fields="applyFields" />
 					</div>
 
@@ -258,6 +260,10 @@
 				this.openSidebar()
 				this.toggleSidebarTab(tabId)
 			})
+			
+			this.$eventHub.on('toggle-sidebar-on-tab', (tabId) => {
+				this.toggleSidebarTab(tabId)
+			})
 
 			this.$eventHub.on('toggle-sidebar', (state) => {
 				if (state === 'expand' && this.mobileLayoutActive)
@@ -285,6 +291,7 @@
 			this.$eventHub.off('changed-form-buttons')
 			this.$eventHub.off('changed-form-tree')
 			this.$eventHub.off('open-sidebar-on-tab')
+			this.$eventHub.off('toggle-sidebar-on-tab')
 			this.$eventHub.off('user-options-menu-open')
 
 			this.onSidebarWidthChange()
@@ -434,6 +441,15 @@
 			applyFields(fields)
 			{
 				this.$eventHub.emit('apply-agent-fields', fields)
+			},
+
+			setAgentData(agentId, userPrompt)
+			{
+				const agentData = {
+					agentId: agentId,
+					userPrompt: userPrompt
+				}
+				this.$eventHub.emit('set-agent-data', agentData)
 			},
 
 			openSidebar()

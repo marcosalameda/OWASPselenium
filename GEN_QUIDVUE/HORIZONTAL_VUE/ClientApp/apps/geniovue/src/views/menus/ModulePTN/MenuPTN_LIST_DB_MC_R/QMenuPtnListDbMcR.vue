@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_LIST_DB_MC_R]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -155,6 +156,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 3,
@@ -173,6 +176,7 @@
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								dataLength: 1,
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayDsiponib(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayDsiponib.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -183,6 +187,7 @@
 								field: 'VALID',
 								label: computed(() => this.Resources.IN_USE42606),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -203,8 +208,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -246,6 +250,7 @@
 							rowClickAction: {
 								id: 'RCA_PTN_3911',
 								name: 'PTN_MenuMC_LIST_DB_MC_R',
+								isVisible: true,
 								params: {
 									limits: [
 										{
@@ -265,10 +270,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
+						globalEvents: ['changed-WAREH', 'changed-ITEM', 'changed-GITEM'],
 						uuid: 'e101ee50-17a2-4e6b-862d-f798f9598d98',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

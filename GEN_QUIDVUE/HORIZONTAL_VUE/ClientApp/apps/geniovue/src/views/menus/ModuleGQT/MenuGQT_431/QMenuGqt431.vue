@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_431]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -154,6 +155,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.DATE18475),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -172,6 +175,7 @@
 								label: computed(() => this.Resources.WAREHOUSE51864),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodwareh',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -188,8 +192,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -290,6 +293,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_4311',
 								name: 'form-DENTR',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -315,10 +319,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-PESSO', 'changed-CMPNY', 'changed-WARE1', 'changed-INDOC'],
+						globalEvents: ['changed-WARE1', 'changed-PESSO', 'changed-CMPNY', 'changed-INDOC', 'changed-CNTRY'],
 						uuid: '99a66472-9195-457d-8f66-630e59903e49',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

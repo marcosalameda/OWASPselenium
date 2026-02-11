@@ -1,3 +1,5 @@
+using System.Threading;
+
 namespace SeleniumWebTest.tests;
 
 public class FormOperationsTest : BaseSeleniumTest
@@ -131,6 +133,208 @@ public class FormOperationsTest : BaseSeleniumTest
         var empre = new EmpreForm(Driver, FORM_MODE.SHOW);
         var x = empre.CmpnyAcronym.GetValue();
         Assert.That(x, Is.EqualTo("CR"));
+    }
+    
+    [Test]
+    public void PopupFormFromTableList()
+    {
+        var a = Authenticate();
+    
+        a.Menu.ActivateModule("GQT");
+        a.Menu.ActivateMenu("GQT", "45");
+    
+        DateTime startDT = DateTime.Now;
+    
+        string itemCode = $"ET{startDT.Month}{startDT.Day}{startDT.Hour}{startDT.Minute}{startDT.Second}{startDT.Millisecond}";
+        string itemDesc = $"E2E Item - {startDT.Month}_{startDT.Day}_{startDT.Hour}_{startDT.Minute}_{startDT.Second}_{startDT.Millisecond}";
+    
+        try
+        {
+            TestContext.WriteLine("Open menu GQT_451 and inser new Artig");
+            ListControl list = new MenuListPage(Driver, "GQT", "451").List;
+            list.Insert();
+    
+            var artig = new ArtigForm(Driver, FORM_MODE.EDIT);
+
+            TestContext.WriteLine("Set new Artig values");
+            artig.WarehWarehdes.SetValue("Lisbon warehouse"); // Lisbon warehouse (jenkinsvm)/ Odivelas Warehouse (loki)
+            artig.GitemItemdes.SetValue("test change");
+            artig.ItemItemcod.SetValue(itemCode);
+            artig.ItemItemdes.SetValue(itemDesc);
+    
+            /* Replace by Apply */
+            artig.Save();
+
+            TestContext.WriteLine("Check if new Artig was inserted and open to edit");
+            list = new MenuListPage(Driver, "GQT", "451").List;
+            list.ClearFilters();
+            list.Search.Search(itemDesc, "ITEMDES");
+    
+            string currentValItemdes = list.GetValue(0, "ValItemdes");
+            Assert.That(currentValItemdes, Is.EqualTo(itemDesc), "Field 'Article' does not match");
+    
+            list.ExecuteAction(0, CrudAction.Edit);
+            artig = new ArtigForm(Driver, FORM_MODE.EDIT);
+            /* -------- */
+
+            TestContext.WriteLine("Insert first Ldent");
+            artig.PseudNovogr04.Toggle();
+    
+            int initialLdentCount = artig.PseudLentrada.RowCount;
+            string ldentLine = "1";
+            string ldentInputQnt = "10";
+            string changedLdentInputQnt = "50";
+            int expectedSRvalue = 50;
+
+
+            artig.PseudLentrada.Insert();
+
+            TestContext.WriteLine("Set new Ldent values");
+            var ldent = new LdentForm(Driver, FORM_MODE.EDIT);
+            ldent.LdentLine.SetValue(ldentLine);
+            ldent.LdentQtdentra.SetValue(ldentInputQnt);
+            ldent.Save();
+    
+            artig = new ArtigForm(Driver, FORM_MODE.EDIT);
+
+            TestContext.WriteLine("Check if new Ldent was inserted and open to edit");
+            Assert.That(artig.PseudLentrada.RowCount, Is.EqualTo(initialLdentCount + 1), "'Ldent' count did not increase after adding new one");
+    
+            string currentListValueQtd = artig.PseudLentrada.GetValue(0, "ValQtdentra"); // There we should have just one record
+            Assert.That(currentListValueQtd, Is.EqualTo(ldentInputQnt), "Field 'Qtd entry' does not match");
+    
+            artig.PseudLentrada.ExecuteAction(0, CrudAction.Edit);
+
+            TestContext.WriteLine("Edit Ldent");
+            ldent = new LdentForm(Driver, FORM_MODE.EDIT);
+            ldent.LdentQtdentra.SetValue(changedLdentInputQnt);
+            ldent.Save();
+    
+            artig = new ArtigForm(Driver, FORM_MODE.EDIT);
+
+            TestContext.WriteLine("Check if changed record and Table list values was updated");
+            // Check if changed, without any list reload (removed from pupups, MR#4164) ant without search that can invoke reload
+            currentListValueQtd = artig.PseudLentrada.GetValue(0, "ValQtdentra"); // There we should have just one record
+            Assert.That(currentListValueQtd, Is.EqualTo(changedLdentInputQnt), "Field 'Qtd entry' does not match");
+
+            // Insert more records
+            TestContext.WriteLine("Insert mode Ldent records");
+            const int NumLdent = 5;
+            for(int iLdent = 2; iLdent <= NumLdent; iLdent++)
+            {
+                artig.PseudLentrada.Insert();
+
+                int quantity = iLdent * 10;
+                expectedSRvalue += quantity;
+
+                ldent = new LdentForm(Driver, FORM_MODE.EDIT);
+                ldent.LdentLine.SetValue($"{iLdent}");
+                ldent.LdentQtdentra.SetValue($"{quantity}");
+                ldent.Save();
+                artig = new ArtigForm(Driver, FORM_MODE.EDIT);
+            }
+
+            // Check SR value
+            TestContext.WriteLine("Check SR formula value");
+            string expectedSRValue = $"{expectedSRvalue}";
+            string currentSRValue = artig.ItemEntries.GetValue();
+            Assert.That(currentSRValue, Is.EqualTo(expectedSRValue), "SR Field 'Entries' does not match");
+
+            TestContext.WriteLine("Check new Ldent records value");
+            artig.PseudLentrada.ClearFilters();
+            artig.PseudLentrada.Search.Search("3", "LINE");
+            currentListValueQtd = artig.PseudLentrada.GetValue(0, "ValQtdentra");
+            Assert.That(currentListValueQtd, Is.EqualTo("30"), "Field 'Qtd entry' does not match");
+
+            artig.PseudLentrada.ClearFilters();
+            artig.PseudLentrada.Search.Search($"{NumLdent}", "LINE");
+            currentListValueQtd = artig.PseudLentrada.GetValue(0, "ValQtdentra");
+            Assert.That(currentListValueQtd, Is.EqualTo($"{NumLdent * 10}"), "Field 'Qtd entry' does not match");
+    
+            artig.Save();
+    
+            list = new MenuListPage(Driver, "GQT", "451").List;
+
+            TestContext.WriteLine("Check Artig record value");
+            list.ClearFilters();
+            list.Search.Search(itemDesc, "ITEMDES");
+    
+            string currentItemCod = list.GetValue(0, "ValItemcod");
+            string currentItemDesc = list.GetValue(0, "ValItemdes");
+    
+            Assert.That(currentItemCod, Is.EqualTo(itemCode), "Field 'Code' does not match");
+            Assert.That(currentItemDesc, Is.EqualTo(itemDesc), "Field 'Article' does not match");
+        }
+        catch
+        {
+            /*var logEntries = Driver.Manage().Logs.GetLog(LogType.Browser);
+            TestContext.WriteLine("\u2022 catch Exception |" + $" ({DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}) |{Environment.NewLine}"
+                + string.Join($";{Environment.NewLine}", logEntries.Select(logE => $"\t[{logE.Level}] - {logE.Message}")));*/
+            throw;
+        }
+    }
+
+    [Test]
+    public void PopupFormFromMenu()
+    {
+        var a = Authenticate();
+
+        a.Menu.ActivateModule("GQT");
+        a.Menu.ActivateMenu("GQT", "44");
+
+        DateTime startDT = DateTime.Now;
+
+        string itemCode = $"ET{startDT.Month}{startDT.Day}{startDT.Hour}{startDT.Minute}{startDT.Second}{startDT.Millisecond}";
+        string itemDesc = $"E2E Item - {startDT.Month}_{startDT.Day}_{startDT.Hour}_{startDT.Minute}_{startDT.Second}_{startDT.Millisecond}";
+
+        try
+        {
+            ListControl list = new MenuListPage(Driver, "GQT", "441").List;
+            list.Insert();
+
+            var artgl = new ArtglForm(Driver, FORM_MODE.EDIT);
+
+            artgl.GitemItemgcod.SetValue(itemCode);
+            artgl.GitemItemdes.SetValue(itemDesc);
+            artgl.Save();
+
+            list = new MenuListPage(Driver, "GQT", "441").List;
+            list.ClearFilters();
+            list.Search.Search(itemCode, "ITEMGCOD");
+
+            string currentValItemdes = list.GetValue(0, "ValItemdes");
+            string currentValItemgcod = list.GetValue(0, "ValItemgcod");
+            Assert.That(currentValItemdes, Is.EqualTo(itemDesc), "Field 'Global articles' does not match");
+            Assert.That(currentValItemgcod, Is.EqualTo(itemCode), "Field 'Code' does not match");
+
+            list.ExecuteAction(0, CrudAction.Edit);
+            artgl = new ArtglForm(Driver, FORM_MODE.EDIT);
+
+            string changedItemDesc = $"{itemDesc} Changed";
+            string expectedItemDesc = $"{changedItemDesc[..int.Min(changedItemDesc.Length, 30)].TrimEnd()} (...)"; // TrimEnd -> when there are two consecutive spaces, the returned text (visible) will only contains onde space.
+            artgl.GitemItemdes.SetValue(changedItemDesc);
+            artgl.Save();
+
+            TestContext.WriteLine("The 'Artgl' has been changed");
+
+            list = new MenuListPage(Driver, "GQT", "441").List;
+
+            list.ClearFilters();
+            list.Search.Search(itemCode, "ITEMGCOD");
+
+            currentValItemdes = list.GetValue(0, "ValItemdes");
+            currentValItemgcod = list.GetValue(0, "ValItemgcod");
+
+            Assert.That(currentValItemdes, Is.EqualTo(expectedItemDesc), "Field 'Global articles' does not match");
+            Assert.That(currentValItemgcod, Is.EqualTo(itemCode), "Field 'Code' does not match (after change)");
+        }
+        catch
+        {
+            /*var logEntries = Driver.Manage().Logs.GetLog(LogType.Browser);
+            TestContext.WriteLine("\u2022 catch Exception |" + $" ({DateTime.Now:yyyy-MM-dd HH:mm:ss.fff}) |{Environment.NewLine}"
+                + string.Join($";{Environment.NewLine}", logEntries.Select(logE => $"\t[{logE.Level}] - {logE.Message}")));*/
+            throw;
+        }
     }
 
     [Test]
@@ -400,12 +604,10 @@ public class FormOperationsTest : BaseSeleniumTest
         grid.FeecaFeedback.Confirm();
 
         int gridRows = grid.RowCount;
-
         // Navigate to a different form.
         form.PseudListtbl.Insert();
         FeecaForm subForm = new(Driver, FORM_MODE.EDIT);
         subForm.Cancel(true);
-
         form = new(Driver, FORM_MODE.EDIT);
         grid = form.PseudGridtbl;
 
@@ -429,7 +631,7 @@ public class FormOperationsTest : BaseSeleniumTest
 
         int numDecimalPlaces = valueParts[1].Length;
 
-        Assert.That(numDecimalPlaces == 2);
+        Assert.That(numDecimalPlaces, Is.EqualTo(2));
     }
 
     [Test]
@@ -448,7 +650,7 @@ public class FormOperationsTest : BaseSeleniumTest
 
         int numDecimalPlaces = valueParts[1].Length;
 
-        Assert.That(numDecimalPlaces == 4);
+        Assert.That(numDecimalPlaces, Is.EqualTo(4));
     }
 
     [Test]
@@ -461,10 +663,10 @@ public class FormOperationsTest : BaseSeleniumTest
 
         var list = new MenuListPage(Driver, "PTN", "3131").List;
 
-        list.AddAdvancedFilter("Text", FilterOperators.Text.Equal, "first");
+        list.AddFilter("Text", FilterOperators.Text.Equal, "first");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValText").Equals("first"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValText"), Is.EqualTo("first"));
     }
 
     [Test]
@@ -477,10 +679,10 @@ public class FormOperationsTest : BaseSeleniumTest
 
         var list = new MenuListPage(Driver, "PTN", "3131").List;
 
-        list.AddAdvancedFilter("Numeric (Integer)", FilterOperators.Text.Equal, "30");
+        list.AddFilter("Numeric (Integer)", FilterOperators.Text.Equal, "30");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValNumint").Equals("30"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValNumint"), Is.EqualTo("30"));
     }
 
     [Test]
@@ -493,10 +695,10 @@ public class FormOperationsTest : BaseSeleniumTest
 
         var list = new MenuListPage(Driver, "PTN", "3131").List;
 
-        list.AddAdvancedFilter("Numeric (Decimal)", FilterOperators.Text.Equal, "20.890");
+        list.AddFilter("Numeric (Decimal)", FilterOperators.Text.Equal, "20.890");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValNumdec").Equals("20.890"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValNumdec"), Is.EqualTo("20.890"));
     }
 
     [Test]
@@ -509,10 +711,10 @@ public class FormOperationsTest : BaseSeleniumTest
 
         var list = new MenuListPage(Driver, "PTN", "3131").List;
 
-        list.AddAdvancedFilter("Date", FilterOperators.Text.Equal, "03/02/2023");
+        list.AddFilter("Date", FilterOperators.Text.Equal, "03/02/2023");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValDate").Equals("03/02/2023"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValDate"), Is.EqualTo("03/02/2023"));
     }
 
     [Test]
@@ -525,10 +727,10 @@ public class FormOperationsTest : BaseSeleniumTest
 
         var list = new MenuListPage(Driver, "PTN", "3131").List;
 
-        list.AddAdvancedFilter("DateTime (Minutes)", FilterOperators.Text.Equal, "24/02/2023 15:13");
+        list.AddFilter("DateTime (Minutes)", FilterOperators.Text.Equal, "24/02/2023 15:13");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValDatetm").Equals("24/02/2023 15:13"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValDatetm"), Is.EqualTo("24/02/2023 15:13"));
     }
 
     [Test]
@@ -541,106 +743,10 @@ public class FormOperationsTest : BaseSeleniumTest
 
         var list = new MenuListPage(Driver, "PTN", "3131").List;
 
-        list.AddAdvancedFilter("DateTime (Seconds)", FilterOperators.Text.Equal, "24/02/2023 15:17:34");
+        list.AddFilter("DateTime (Seconds)", FilterOperators.Text.Equal, "24/02/2023 15:17:34");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValDatets").Equals("24/02/2023 15:17:34"));
-    }
-
-    [Test]
-    public void ColumnFilterText()
-    {
-        AppPage app = Authenticate();
-
-        app.Menu.ActivateModule("PTN");
-        app.Menu.ActivateMenu("PTN", "313");
-
-        var list = new MenuListPage(Driver, "PTN", "3131").List;
-
-        list.FilterByColumn("ValText", FilterOperators.Text.Equal, "first");
-
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValText").Equals("first"));
-    }
-
-    [Test]
-    public void ColumnFilterInteger()
-    {
-        AppPage app = Authenticate();
-
-        app.Menu.ActivateModule("PTN");
-        app.Menu.ActivateMenu("PTN", "313");
-
-        var list = new MenuListPage(Driver, "PTN", "3131").List;
-
-        list.FilterByColumn("ValNumint", FilterOperators.Number.Equal, "30");
-
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValNumint"), Is.EqualTo("30"));
-    }
-
-    [Test]
-    public void ColumnFilterDecimal()
-    {
-        AppPage app = Authenticate();
-
-        app.Menu.ActivateModule("PTN");
-        app.Menu.ActivateMenu("PTN", "313");
-
-        var list = new MenuListPage(Driver, "PTN", "3131").List;
-
-        list.FilterByColumn("ValNumdec", FilterOperators.Number.Equal, "20.890");
-
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValNumdec"), Is.EqualTo("20.890"));
-    }
-
-    [Test]
-    public void ColumnFilterDate()
-    {
-        AppPage app = Authenticate();
-
-        app.Menu.ActivateModule("PTN");
-        app.Menu.ActivateMenu("PTN", "313");
-
-        var list = new MenuListPage(Driver, "PTN", "3131").List;
-
-        list.FilterByColumn("ValDate", FilterOperators.Date.Equal, "03/02/2023");
-
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValDate").Equals("03/02/2023"));
-    }
-
-    [Test]
-    public void ColumnFilterDateTime()
-    {
-        AppPage app = Authenticate();
-
-        app.Menu.ActivateModule("PTN");
-        app.Menu.ActivateMenu("PTN", "313");
-
-        var list = new MenuListPage(Driver, "PTN", "3131").List;
-
-        list.FilterByColumn("ValDatetm", FilterOperators.Date.Equal, "24/02/2023 15:13");
-
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValDatetm").Equals("24/02/2023 15:13"));
-    }
-
-    [Test]
-    public void ColumnFilterDateTimeSeconds()
-    {
-        AppPage app = Authenticate();
-
-        app.Menu.ActivateModule("PTN");
-        app.Menu.ActivateMenu("PTN", "313");
-
-        var list = new MenuListPage(Driver, "PTN", "3131").List;
-
-        list.FilterByColumn("ValDatets", FilterOperators.Date.Equal, "24/02/2023 15:17:34");
-
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValDatets").Equals("24/02/2023 15:17:34"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValDatets"), Is.EqualTo("24/02/2023 15:17:34"));
     }
 
     [Test]
@@ -655,8 +761,8 @@ public class FormOperationsTest : BaseSeleniumTest
 
         list.Search.Search("first", "TEXT");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValText").Equals("first"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValText"), Is.EqualTo("first"));
     }
 
     [Test]
@@ -671,8 +777,8 @@ public class FormOperationsTest : BaseSeleniumTest
 
         list.Search.Search("50", "NUMINT");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValNumint").Equals("50"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValNumint"), Is.EqualTo("50"));
     }
 
     [Test]
@@ -687,8 +793,8 @@ public class FormOperationsTest : BaseSeleniumTest
 
         list.Search.Search("12.058", "NUMDEC");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValNumdec").Equals("12.058"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValNumdec"), Is.EqualTo("12.058"));
     }
 
     [Test]
@@ -703,8 +809,8 @@ public class FormOperationsTest : BaseSeleniumTest
 
         list.Search.Search("03/02/2023", "DATE");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValDate").Equals("03/02/2023"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValDate"), Is.EqualTo("03/02/2023"));
     }
 
     [Test]
@@ -719,8 +825,8 @@ public class FormOperationsTest : BaseSeleniumTest
 
         list.Search.Search("24/02/2023 15:13", "DATETM");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValDatetm").Equals("24/02/2023 15:13"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValDatetm"), Is.EqualTo("24/02/2023 15:13"));
     }
 
     [Test]
@@ -735,8 +841,8 @@ public class FormOperationsTest : BaseSeleniumTest
 
         list.Search.Search("24/02/2023 15:14:47", "DATETS");
 
-        Assert.That(list.RowCount == 1);
-        Assert.That(list.GetValue(0, "ValDatets").Equals("24/02/2023 15:14:47"));
+        Assert.That(list.RowCount, Is.EqualTo(1));
+        Assert.That(list.GetValue(0, "ValDatets"), Is.EqualTo("24/02/2023 15:14:47"));
     }
 
     [Test]
@@ -751,10 +857,10 @@ public class FormOperationsTest : BaseSeleniumTest
 
         list.Search.Search("00:00", "TIMEHM");
 
-        Assert.That(list.RowCount == 3);
-        Assert.That(list.GetValue(0, "ValTimehm").Equals("00:00"));
-        Assert.That(list.GetValue(1, "ValTimehm").Equals("00:00"));
-        Assert.That(list.GetValue(2, "ValTimehm").Equals("00:00"));
+        Assert.That(list.RowCount, Is.EqualTo(3));
+        Assert.That(list.GetValue(0, "ValTimehm"), Is.EqualTo("00:00"));
+        Assert.That(list.GetValue(1, "ValTimehm"), Is.EqualTo("00:00"));
+        Assert.That(list.GetValue(2, "ValTimehm"), Is.EqualTo("00:00"));
     }
 
     private TableConfigurationPage GetTableConfigPage()
@@ -799,7 +905,7 @@ public class FormOperationsTest : BaseSeleniumTest
         // Get name of column at new index after reordering
         string newColumnName = list.GetColumnNameByIndex(newRowIndex);
 
-        Assert.That(newColumnName.Equals(currentColumnName));
+        Assert.That(newColumnName, Is.EqualTo(currentColumnName));
     }
 
     [Test]
@@ -961,14 +1067,16 @@ public class FormOperationsTest : BaseSeleniumTest
         var list = new MenuListPage(Driver, "GQT", "UNUSED_ITEMS").List;
         Assert.That(list.TotalRecordCount, Is.EqualTo(alertCount));
     }
-
+    
     [Test]
     public void DashboardFavouritesWidget()
     {
         AppPage app = Authenticate();
-        app.Menu.ActivateModule("GQT");
-        app.Menu.ActivateMenu("GQT", "C");
 
+        bool wasFavorited = app.Menu.HasBookmark("GQT", "REPAIR");
+        app.Menu.AddBookmark("GQT", "REPAIR");
+
+        app.Menu.ActivateMenu("GQT", "C");
         var dashboard = new MenuDashboardPage<GQT_TESTDSDashboard>(Driver, "GQT", "TESTDS").Dashboard;
 
         var favorites = dashboard.FAVORITES;
@@ -976,10 +1084,155 @@ public class FormOperationsTest : BaseSeleniumTest
         // All bookmarks should be in the dashboard as widgets
         Assert.That(favorites.Widgets.Count, Is.EqualTo(app.Menu.GetBookmarkCount()));
 
-        // Favorite widgets work as menu widgets - navigate to bookmarked menu or form (STY-Overview-Accordions) - Disabled until a function to add favorites is implemented
-        // var accordionsWidget = favorites.GetBookmarkWidget("Accordions");
-        // accordionsWidget.ExecuteAction();
-        // var accordionsForm = new AccordiForm(Driver, FORM_MODE.SHOW);
-        // Assert.That(accordionsForm.ValidateFormMode(), Is.True);
+        // Favorite widgets work as menu widgets - navigate to bookmarked menu or form (GQT-Repairs-Repairs)
+        var repairsWidget = favorites.GetBookmarkWidget("Repairs");
+        repairsWidget.ExecuteAction();
+        Assert.That(app.ValidateMenuNavigation("GQT", "REPAIR_LIST"), Is.True);
+
+        if (!wasFavorited)
+            app.Menu.RemoveBookmark("GQT", "REPAIR");
+    }
+
+    [Test]
+    public void Bookmarks()
+    {
+        AppPage app = Authenticate();
+
+        bool wasFavorited = app.Menu.HasBookmark("GQT", "REPAIR");
+        if (wasFavorited)
+            app.Menu.RemoveBookmark("GQT", "REPAIR");
+
+        int startBookmarkCount = app.Menu.GetBookmarkCount();
+
+        app.Menu.AddBookmark("GQT", "REPAIR");
+        Assert.That(app.Menu.HasBookmark("GQT", "REPAIR"), Is.True);
+        Assert.That(app.Menu.GetBookmarkCount(), Is.EqualTo(startBookmarkCount + 1));
+
+        // Adding a duplicate bookmark doesn't re-add it
+        app.Menu.AddBookmark("GQT", "REPAIR");
+        Assert.That(app.Menu.GetBookmarkCount(), Is.EqualTo(startBookmarkCount + 1));
+
+        // Bookmarks should navigate to the bookmarked menu when clicked
+        app.Menu.ActivateMenu("GQT", "C");
+        app.Menu.ActivateBookmark("GQT", "REPAIR");
+        Assert.That(app.ValidateMenuNavigation("GQT", "REPAIR_LIST"), Is.True);
+
+        app.Menu.RemoveBookmark("GQT", "REPAIR");
+        Assert.That(app.Menu.HasBookmark("GQT", "REPAIR"), Is.False);
+        Assert.That(app.Menu.GetBookmarkCount(), Is.EqualTo(startBookmarkCount));
+
+        if (wasFavorited)
+            app.Menu.AddBookmark("GQT", "REPAIR");
+    }
+    
+    [Test]
+    public void FormFilters()
+    {
+        AppPage app = Authenticate();
+        app.Menu.ActivateModule("GQT");
+        app.Menu.ActivateMenu("GQT", "LEND_EXPLORER");
+
+        LendexplForm form = new(Driver, FORM_MODE.SHOW);
+
+        // Open filters collapsible
+        form.PseudNewgrp01.Toggle();
+
+        // Filter lendings by returned
+        form.LendiReturned_FG.Toggle();
+        // Wait for the debounce duration (0.5s)
+        Thread.Sleep(500);
+        var lendiValues = form.PseudLendings.GetAllColumnValues("ValReturned");
+        Assert.That(lendiValues.TrueForAll(colValue => colValue == "True"), Is.True);
+        // Reset lendings state
+        form.LendiReturned_FG.Toggle();
+
+        // Filter equipment and lendings by Equip.bought
+        form.EquipBought_FG.Toggle();
+        Thread.Sleep(500);
+        var equipValues = form.PseudEquips.GetAllColumnValues("ValBought");
+        lendiValues = form.PseudLendings.GetAllColumnValues("Equip.Bought");
+        Assert.That(equipValues.TrueForAll(colValue => colValue == "True"), Is.True);
+        Assert.That(lendiValues.TrueForAll(colValue => colValue == "True"), Is.True);
+        // Reset equipment state
+        form.EquipBought_FG.Toggle();
+
+        // Filter lenders, equipment and lendings by Pess1.gender
+        form.Pess1Gender_FG.CheckValue("Male");
+        Thread.Sleep(500);
+        var pess1Values = form.PseudLenders.GetAllColumnValues("ValGender");
+        equipValues = form.PseudEquips.GetAllColumnValues("Pess1.Gender");
+        lendiValues = form.PseudLendings.GetAllColumnValues("Pess1.Gender");
+        Assert.That(pess1Values.TrueForAll(colValue => colValue == "Male"), Is.True);
+        Assert.That(equipValues.TrueForAll(colValue => colValue == "Male"), Is.True);
+        Assert.That(lendiValues.TrueForAll(colValue => colValue == "Male"), Is.True);
+        // Reset equipment state
+        form.Pess1Gender_FG.UncheckValue("Male");
+    }
+
+    [Test]
+    public void HealthCheck()
+    {
+        string baseUrl = Configuration.Instance.BaseUrl;
+        HealthCheckPage healthCheck = new(Driver, baseUrl);
+
+        healthCheck.NavigateToHealthCheck();
+        Assert.That(healthCheck.IsHealthStatusOk());
+    }
+    
+    [Test]
+    public void SidebarOpenCloseTest()
+    {
+        var a = Authenticate();
+    
+        if (a.Sidebar.IsOpen)
+        {
+            a.Sidebar.Close();
+            Assert.That(a.Sidebar.IsOpen, Is.False);
+    
+            a.Sidebar.Open();
+            Assert.That(a.Sidebar.IsOpen, Is.True);
+        }
+        else
+        {
+            a.Sidebar.Open();
+            Assert.That(a.Sidebar.IsOpen, Is.True);
+    
+            a.Sidebar.Close();
+            Assert.That(a.Sidebar.IsOpen, Is.False);
+        }
+    }
+    
+    /// <summary>
+    /// Send a message to the chat bot and check if the response is right
+    /// </summary>
+    /// <param name="message">The message to send to the chat bot</param>
+    /// <param name="expectedAnswer">The text expected to be in the response from the chat bot</param>
+    public void ChatbotCheckAnswer(string message, string expectedAnswer)
+    {
+        var a = Authenticate();
+    
+        a.Sidebar.Open();
+    
+        a.Sidebar.ChatbotButton.Click();
+    
+        var chatbot = new ChatbotPage(Driver);
+    
+        chatbot.ClearChat();
+    
+        string response = chatbot.SendMessage(message);
+    
+        Assert.That(response.Contains(expectedAnswer));
+    }
+    
+    [Test]
+    public void ChatbotCapitalFrance()
+    {
+        ChatbotCheckAnswer("What's the capital of France?", "Paris");
+    }
+    
+    [Test]
+    public void ChatbotTemperatureWaterBoil()
+    {
+        ChatbotCheckAnswer("What is the boiling temperature of water, in degrees Celsius?", "100");
     }
 }

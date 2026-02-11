@@ -1,78 +1,30 @@
 ﻿<template>
-	<tr
-		:data-key="id"
-		:class="rowClass">
-		<td class="grid-table-row__state">
-			<div class="grid-table-row__state-icon">
-				<q-icon
-					v-if="rowStateIcon"
-					:icon="rowStateIcon" />
-
-				<q-button
-					v-if="hasMessages"
-					variant="text"
-					@click="toggleErrors">
-					<q-icon :icon="expandIcon" />
-				</q-button>
-			</div>
-
-			<div v-if="hasMessages">
-				<q-badge :color="badgeColor">
-					{{ numMessages }}
-				</q-badge>
-				<span class="grid-table-row__messages">
-					{{ texts.messages }}
-				</span>
-			</div>
-		</td>
-
-		<td class="grid-table-row__action">
-			<div class="grid-table-row__action-btn">
-				<q-button
-					v-if="showDeleteBtn"
-					variant="text"
-					:title="texts.delete"
-					data-testid="delete"
-					@click="markForDeletion">
-					<q-icon icon="delete" />
-				</q-button>
-
-				<q-button
-					v-if="showRemoveBtn"
-					variant="text"
-					:title="texts.remove"
-					data-testid="delete"
-					@click="markForDeletion">
-					<q-icon icon="remove-sign" />
-				</q-button>
-
-				<q-button
-					v-if="showUndoBtn"
-					variant="text"
-					:title="texts.restore"
-					data-testid="undo"
-					@click="undoMarkForDeletion">
-					<q-icon icon="undo" />
-				</q-button>
-			</div>
-		</td>
-
-		<td v-if="canShowColumn('FEECA', 'FEEDBACK')">
-			<grid-base-input-structure
-				class=""
-				v-bind="controls.FLDSCONDPSEUDGRIDTBL_FEECAFEEDBACK.wrapperProps">
-				<q-text-field
-					v-bind="controls.FLDSCONDPSEUDGRIDTBL_FEECAFEEDBACK.props"
-					@blur="onBlur(controls.FLDSCONDPSEUDGRIDTBL_FEECAFEEDBACK, model.ValFeedback.value)"
-					@change="model.ValFeedback.fnUpdateValueOnChange" />
-			</grid-base-input-structure>
-		</td>
-	</tr>
+	<q-grid-table-row
+		:id="id"
+		:initial-state="initialState"
+		:is-deleted-state="isDeletedState"
+		:mode="mode"
+		:nested-model="nestedModel"
+		:permissions="permissions"
+		:texts="texts"
+		@mark-for-deletion="emitEvent('mark-for-deletion')"
+		@undo-deletion="emitEvent('undo-deletion')"
+		@toggle-errors="emitEvent('toggle-errors')">
+		<q-grid-table-column
+			v-if="canShowColumn('FEECA', 'FEEDBACK')"
+			class=""
+			v-bind="controls.FLDSCONDPSEUDGRIDTBL___FEECA__FEEDBACK.wrapperProps">
+			<q-text-field
+				v-bind="controls.FLDSCONDPSEUDGRIDTBL___FEECA__FEEDBACK.props"
+				@blur="onBlur(controls.FLDSCONDPSEUDGRIDTBL___FEECA__FEEDBACK, model.ValFeedback.value)"
+				@change="model.ValFeedback.fnUpdateValueOnChange" />
+		</q-grid-table-column>
+	</q-grid-table-row>
 </template>
 
 <script>
 	/* eslint-disable @typescript-eslint/no-unused-vars */
-	import { computed, defineAsyncComponent } from 'vue'
+	import { computed, defineAsyncComponent, readonly } from 'vue'
 
 	import GridFormHandlers from '@/mixins/gridFormHandlers.js'
 	import formFunctions from '@/mixins/formFunctions.js'
@@ -87,9 +39,10 @@
 	import qFunctions from '@/api/genio/projectFunctions.js'
 	import qProjArrays from '@/api/genio/projectArrays.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
-
-	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'
 	/* eslint-enable @typescript-eslint/no-unused-vars */
+
+	import QGridTableColumn from '@/components/inputs/GridBaseInputStructure.vue'
+	import QGridTableRow from '@/components/table/QGridTableRow.vue'
 
 	const requiredTextResources = ['QGridFormFldscondpseudgridtbl', 'hardcoded', 'messages']
 
@@ -102,16 +55,13 @@
 		name: 'QGridFormFldscondpseudgridtbl',
 
 		components: {
-			GridBaseInputStructure
+			QGridTableColumn,
+			QGridTableRow
 		},
 
-		mixins: [
-			GridFormHandlers
-		],
+		mixins: [GridFormHandlers],
 
-		expose: [
-			'navigationId'
-		],
+		expose: ['navigationId'],
 
 		data()
 		{
@@ -143,17 +93,16 @@
 					.setNavigationId(this.navigationId),
 
 				controls: {
-					FLDSCONDPSEUDGRIDTBL_FEECAFEEDBACK: new fieldControlClass.StringControl({
+					FLDSCONDPSEUDGRIDTBL___FEECA__FEEDBACK: new fieldControlClass.StringControl({
 						modelField: 'ValFeedback',
 						valueChangeEvent: 'fieldChange:feeca.feedback',
-						id: 'FLDSCONDPSEUDGRIDTBL_FEECAFEEDBACK',
+						id: 'FLDSCONDPSEUDGRIDTBL___FEECA__FEEDBACK',
 						name: 'FEEDBACK',
 						size: 'xlarge',
 						label: computed(() => this.Resources.FEEDBACK52855),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_FLDSCONDPSEUDGRIDTBL_FEECAFEEDBACK',
 						controlLimits: [
 						],
 					}, this),
@@ -247,16 +196,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -300,16 +263,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 

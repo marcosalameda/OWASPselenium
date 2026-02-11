@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,25 +94,27 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="PROPPAIS"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.PROPPAISPSEUDNOVOGR02.isVisible">
-					<q-control-wrapper
-						v-show="controls.PROPPAISPSEUDNOVOGR02.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.PROPPAISPSEUDNOVOGR02.isVisible">
+					<q-col
+						v-if="controls.PROPPAISPSEUDNOVOGR02.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.PROPPAISPSEUDNOVOGR02.isVisible"
 							id="PROPPAISPSEUDNOVOGR02"
 							v-bind="controls.PROPPAISPSEUDNOVOGR02"
 							:is-visible="controls.PROPPAISPSEUDNOVOGR02.isVisible">
 							<!-- Start PROPPAISPSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.PROPPAISCNTRYCOUNTRY_.isVisible || controls.PROPPAISCNTRYACTIVE__.isVisible || controls.PROPPAISPSEUDNOVOGR01.isVisible">
-								<q-control-wrapper
-									v-show="controls.PROPPAISCNTRYCOUNTRY_.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PROPPAISCNTRYCOUNTRY_.isVisible || controls.PROPPAISCNTRYACTIVE__.isVisible || controls.PROPPAISPSEUDNOVOGR01.isVisible">
+								<q-col
+									v-if="controls.PROPPAISCNTRYCOUNTRY_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PROPPAISCNTRYCOUNTRY_.isVisible"
 										class="i-text"
 										v-bind="controls.PROPPAISCNTRYCOUNTRY_"
 										v-on="controls.PROPPAISCNTRYCOUNTRY_.handlers"
@@ -116,11 +126,12 @@
 											@blur="onBlur(controls.PROPPAISCNTRYCOUNTRY_, model.ValCountry.value)"
 											@change="model.ValCountry.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PROPPAISCNTRYACTIVE__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PROPPAISCNTRYACTIVE__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PROPPAISCNTRYACTIVE__.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PROPPAISCNTRYACTIVE__"
 										v-on="controls.PROPPAISCNTRYACTIVE__.handlers"
@@ -128,26 +139,28 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PROPPAISCNTRYACTIVE__.isVisible"
 												v-bind="controls.PROPPAISCNTRYACTIVE__.props"
 												v-on="controls.PROPPAISCNTRYACTIVE__.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PROPPAISPSEUDNOVOGR01.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PROPPAISPSEUDNOVOGR01.isVisible"
+									cols="auto">
 									<q-group-collapsible
+										v-if="controls.PROPPAISPSEUDNOVOGR01.isVisible"
 										id="PROPPAISPSEUDNOVOGR01"
 										v-bind="controls.PROPPAISPSEUDNOVOGR01"
 										v-on="controls.PROPPAISPSEUDNOVOGR01.handlers">
 										<!-- Start PROPPAISPSEUDNOVOGR01 -->
-										<q-row-container v-show="controls.PROPPAISCNTRYCODIGONR.isVisible || controls.PROPPAISCNTRYALFA2___.isVisible || controls.PROPPAISCNTRYALFA3___.isVisible">
-											<q-control-wrapper
-												v-show="controls.PROPPAISCNTRYCODIGONR.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PROPPAISCNTRYCODIGONR.isVisible || controls.PROPPAISCNTRYALFA2___.isVisible || controls.PROPPAISCNTRYALFA3___.isVisible">
+											<q-col
+												v-if="controls.PROPPAISCNTRYCODIGONR.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPPAISCNTRYCODIGONR.isVisible"
 													class="i-text"
 													v-bind="controls.PROPPAISCNTRYCODIGONR"
 													v-on="controls.PROPPAISCNTRYCODIGONR.handlers"
@@ -159,11 +172,12 @@
 														@blur="onBlur(controls.PROPPAISCNTRYCODIGONR, model.ValCodigonr.value)"
 														@change="model.ValCodigonr.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PROPPAISCNTRYALFA2___.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PROPPAISCNTRYALFA2___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPPAISCNTRYALFA2___.isVisible"
 													class="i-text"
 													v-bind="controls.PROPPAISCNTRYALFA2___"
 													v-on="controls.PROPPAISCNTRYALFA2___.handlers"
@@ -175,11 +189,12 @@
 														@blur="onBlur(controls.PROPPAISCNTRYALFA2___, model.ValAlfa2.value)"
 														@change="model.ValAlfa2.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PROPPAISCNTRYALFA3___.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PROPPAISCNTRYALFA3___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PROPPAISCNTRYALFA3___.isVisible"
 													class="i-text"
 													v-bind="controls.PROPPAISCNTRYALFA3___"
 													v-on="controls.PROPPAISCNTRYALFA3___.handlers"
@@ -191,32 +206,35 @@
 														@blur="onBlur(controls.PROPPAISCNTRYALFA3___, model.ValAlfa3.value)"
 														@change="model.ValAlfa3.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End PROPPAISPSEUDNOVOGR01 -->
 									</q-group-collapsible>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PROPPAISPSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PROPPAISPSEUDPROPRIED.isVisible">
-					<q-control-wrapper
-						v-show="controls.PROPPAISPSEUDPROPRIED.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PROPPAISPSEUDPROPRIED.isVisible">
+					<q-col
+						v-if="controls.PROPPAISPSEUDPROPRIED.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.PROPPAISPSEUDPROPRIED.isVisible"
+							v-if="controls.PROPPAISPSEUDPROPRIED.isVisible"
 							v-bind="controls.PROPPAISPSEUDPROPRIED"
-							v-on="controls.PROPPAISPSEUDPROPRIED.handlers" />
+							v-on="controls.PROPPAISPSEUDPROPRIED.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE PROPPAISPSEUDPROPRIED]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.PROPPAISPSEUDPROPRIED.isVisible"
 							:list-ctrl="controls.PROPPAISPSEUDPROPRIED"
 							:filter-operators="controls.PROPPAISPSEUDPROPRIED.filterOperators"
 							v-on="controls.PROPPAISPSEUDPROPRIED.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -225,7 +243,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -234,6 +252,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -245,7 +264,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -456,7 +475,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -580,7 +603,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPPAISPSEUDNOVOGR02',
 						maxLength: 90,
-						labelId: 'label_PROPPAISCNTRYCOUNTRY_',
 						controlLimits: [
 						],
 					}, this),
@@ -605,6 +627,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPPAISPSEUDNOVOGR02',
+						startsExpanded: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PROPPAISCNTRYCODIGONR', 'PROPPAISCNTRYALFA2___', 'PROPPAISCNTRYALFA3___'],
@@ -622,7 +645,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPPAISPSEUDNOVOGR01',
 						maxLength: 3,
-						labelId: 'label_PROPPAISCNTRYCODIGONR',
 						controlLimits: [
 						],
 					}, this),
@@ -637,7 +659,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPPAISPSEUDNOVOGR01',
 						maxLength: 2,
-						labelId: 'label_PROPPAISCNTRYALFA2___',
 						controlLimits: [
 						],
 					}, this),
@@ -652,7 +673,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PROPPAISPSEUDNOVOGR01',
 						maxLength: 3,
-						labelId: 'label_PROPPAISCNTRYALFA3___',
 						controlLimits: [
 						],
 					}, this),
@@ -679,6 +699,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -689,6 +710,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -698,6 +720,7 @@
 								label: computed(() => this.Resources.PROPERTY_TYPE51419),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodtppro',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -708,6 +731,7 @@
 								label: computed(() => this.Resources.REGION12723),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodregia',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -718,6 +742,7 @@
 								label: computed(() => this.Resources.LOCALE34521),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -727,6 +752,7 @@
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 7,
@@ -737,6 +763,7 @@
 								dataLength: 20,
 								scrollData: 20,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 8,
@@ -747,6 +774,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 9,
@@ -755,6 +783,7 @@
 								field: 'MOBILADA',
 								label: computed(() => this.Resources.FURNISHED37431),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -765,6 +794,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
@@ -775,6 +805,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 12,
@@ -785,6 +816,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 13,
@@ -794,6 +826,7 @@
 								label: computed(() => this.Resources.AVAILABILITY56489),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 14,
@@ -805,6 +838,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 15,
@@ -813,6 +847,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -828,8 +863,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -960,7 +994,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-PROPR', 'changed-REGIO', 'changed-TPPRO', 'changed-PESSO', 'changed-PAIS1'],
+						globalEvents: ['changed-REGIO', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO', 'changed-CNTRY', 'changed-PAIS1'],
 						uuid: 'Proppais_ValPropried',
 						allSelectedRows: 'false',
 						component: 'QFormProprall',
@@ -1158,16 +1192,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1211,16 +1259,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1372,6 +1434,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PROPPAIS]/
 // eslint-disable-next-line

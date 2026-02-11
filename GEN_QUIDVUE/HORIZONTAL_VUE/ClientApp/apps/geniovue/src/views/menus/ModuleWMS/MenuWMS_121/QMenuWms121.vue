@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_121]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -154,6 +155,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.RECEIPT_DATE00996),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -172,6 +175,7 @@
 								label: computed(() => this.Resources.LEGAL_NAME42902),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodentit',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
@@ -182,6 +186,7 @@
 								label: computed(() => this.Resources.RECEIPT_VERIFICATION62328),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 5,
@@ -190,6 +195,7 @@
 								field: 'CHECKED',
 								label: computed(() => this.Resources.CHECKED31708),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 6,
@@ -198,6 +204,7 @@
 								field: 'TOCHECK',
 								label: computed(() => this.Resources.TO_CHECK57511),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -207,6 +214,7 @@
 								label: computed(() => this.Resources.STORAGE_DATE59954),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -222,8 +230,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -324,6 +331,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_1211',
 								name: 'form-RECEI',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -353,28 +361,27 @@
 							{
 								id: 'filter_WMS_Menu_121_VERIFICATI',
 								isMultiple: false,
-								filters: [
+								items: [
 									{
 										id: 'filter_WMS_Menu_121_VERIFICATI_1',
-										key: '1',
 										value: computed(() => this.Resources.TO_CHECK57511),
-										selected: true
+										key: '1'
 									},
 									{
 										id: 'filter_WMS_Menu_121_VERIFICATI_2',
-										key: '2',
 										value: computed(() => this.Resources.CHECKED31708),
-										selected: false
+										key: '2'
 									},
 								],
-								value: '1',
-								defaultValue: '1'
+								selected: '1',
+								default: '1'
 							},
 						],
-						globalEvents: ['changed-ENTIT', 'changed-RECEI'],
+						globalEvents: ['changed-RECEI', 'changed-ENTIT'],
 						uuid: 'd5a95839-cfc6-40f7-89d3-b36149d26ab4',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

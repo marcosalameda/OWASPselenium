@@ -19,9 +19,6 @@
 @import "layout.scss";
 @import "customstyles.scss";
 
-// The popup messages style.
-@import "@sweetalert2/theme-bootstrap-4/bootstrap-4.scss";
-
 // App components
 @import "components/badge.scss";
 @import "components/breadcrumb.scss";
@@ -36,14 +33,12 @@
 // Controls
 @import "controls/q-anchors.scss";
 @import "controls/q-captcha.scss";
-@import "controls/q-card.scss";
 @import "controls/q-checkbox.scss";
 @import "controls/q-checklist.scss";
 @import "controls/q-code-editor.scss";
 @import "controls/q-cookies.scss";
 @import "controls/q-dashboard.scss";
 @import "controls/q-datetime.scss";
-@import "controls/q-document.scss";
 @import "controls/q-dropdown.scss";
 @import "controls/q-dropdown-button.scss";
 @import "controls/q-dropdown-menu.scss";
@@ -58,7 +53,6 @@
 @import "controls/q-lookup.scss";
 @import "controls/q-markdown-editor.scss";
 @import "controls/q-markdown-viewer.scss";
-@import "controls/q-modal.scss";
 @import "controls/q-multiform.scss";
 @import "controls/q-numeric-input.scss";
 @import "controls/q-password-meter.scss";
@@ -77,11 +71,13 @@
 @import "controls/q-step.scss";
 @import "controls/q-slider-ui.scss";
 @import "controls/q-keyboard-input.scss";
-@import "controls/q-separator.scss";
 @import "controls/q-duallist.scss";
 
 // The custom controls
 @import "custom-control-styles.scss";
+
+// @quidgest/clientapp styling
+@import "@quidgest/clientapp/styles";
 
 html {
 	height: 100%;
@@ -106,6 +102,15 @@ body {
 label {
 	margin-bottom: unset !important;
 	font-weight: inherit !important;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-weight: 500;
 }
 
 #app {
@@ -184,21 +189,9 @@ label {
 	}
 }
 
-// Global style for inputs
-.q-field__control {
-	background-color: $input-bg;
-}
-
-.q-field--readonly > .q-field__control {
-	background-color: $input-bg-readonly;
-}
-
-.i-checkbox__field,
-.i-textarea__field {
-	background-color: $input-bg;
-}
-
-.i-checkbox__field[readonly],
-.i-textarea__field[readonly] {
-	background-color: $input-bg-readonly;
+//
+// Global style for containters
+//
+:root {
+	--q-spacing: .25rem;
 }

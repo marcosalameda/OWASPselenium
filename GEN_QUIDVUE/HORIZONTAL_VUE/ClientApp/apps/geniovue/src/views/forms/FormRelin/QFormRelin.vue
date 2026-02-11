@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,27 +94,25 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="RELIN"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.RELIN___PSEUDNOVOGR01.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.RELIN___PSEUDNOVOGR01.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.RELIN___PSEUDNOVOGR01.isVisible">
+					<q-col v-if="controls.RELIN___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
+							v-if="controls.RELIN___PSEUDNOVOGR01.isVisible"
 							id="RELIN___PSEUDNOVOGR01"
 							v-bind="controls.RELIN___PSEUDNOVOGR01"
 							:is-visible="controls.RELIN___PSEUDNOVOGR01.isVisible">
 							<!-- Start RELIN___PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.RELIN___RECEINUMBER__.isVisible || controls.RELIN___ENTITNAME____.isVisible">
-								<q-control-wrapper
-									v-show="controls.RELIN___RECEINUMBER__.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.RELIN___RECEINUMBER__.isVisible || controls.RELIN___ENTITNAME____.isVisible">
+								<q-col
+									v-if="controls.RELIN___RECEINUMBER__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.RELIN___RECEINUMBER__.isVisible"
 										class="i-text"
 										v-bind="controls.RELIN___RECEINUMBER__"
 										v-on="controls.RELIN___RECEINUMBER__.handlers"
@@ -122,11 +128,12 @@
 											v-bind="controls.RELIN___RECEINUMBER__.seeMoreParams"
 											v-on="controls.RELIN___RECEINUMBER__.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.RELIN___ENTITNAME____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.RELIN___ENTITNAME____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.RELIN___ENTITNAME____.isVisible"
 										class="i-text"
 										v-bind="controls.RELIN___ENTITNAME____"
 										v-on="controls.RELIN___ENTITNAME____.handlers"
@@ -138,28 +145,26 @@
 											@blur="onBlur(controls.RELIN___ENTITNAME____, model.EntitValName.value)"
 											@change="model.EntitValName.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End RELIN___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.RELIN___PSEUDNOVOGR02.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.RELIN___PSEUDNOVOGR02.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.RELIN___PSEUDNOVOGR02.isVisible">
+					<q-col v-if="controls.RELIN___PSEUDNOVOGR02.isVisible">
 						<q-group-box-container
+							v-if="controls.RELIN___PSEUDNOVOGR02.isVisible"
 							id="RELIN___PSEUDNOVOGR02"
 							v-bind="controls.RELIN___PSEUDNOVOGR02"
 							:is-visible="controls.RELIN___PSEUDNOVOGR02.isVisible">
 							<!-- Start RELIN___PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.RELIN___RELINLINENUMB.isVisible">
-								<q-control-wrapper
-									v-show="controls.RELIN___RELINLINENUMB.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.RELIN___RELINLINENUMB.isVisible">
+								<q-col
+									v-if="controls.RELIN___RELINLINENUMB.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.RELIN___RELINLINENUMB.isVisible"
 										class="i-text"
 										v-bind="controls.RELIN___RELINLINENUMB"
 										v-on="controls.RELIN___RELINLINENUMB.handlers"
@@ -171,13 +176,14 @@
 											v-bind="controls.RELIN___RELINLINENUMB.props"
 											@update:model-value="model.ValLinenumb.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.RELIN___PRODUPRODUCT_.isVisible">
-								<q-control-wrapper
-									v-show="controls.RELIN___PRODUPRODUCT_.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.RELIN___PRODUPRODUCT_.isVisible">
+								<q-col
+									v-if="controls.RELIN___PRODUPRODUCT_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.RELIN___PRODUPRODUCT_.isVisible"
 										class="i-text"
 										v-bind="controls.RELIN___PRODUPRODUCT_"
 										v-on="controls.RELIN___PRODUPRODUCT_.handlers"
@@ -193,13 +199,14 @@
 											v-bind="controls.RELIN___PRODUPRODUCT_.seeMoreParams"
 											v-on="controls.RELIN___PRODUPRODUCT_.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.RELIN___RELINORDERED_.isVisible || controls.RELIN___RELINRECEIVED.isVisible || controls.RELIN___RELINOUTSTAND.isVisible">
-								<q-control-wrapper
-									v-show="controls.RELIN___RELINORDERED_.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.RELIN___RELINORDERED_.isVisible || controls.RELIN___RELINRECEIVED.isVisible || controls.RELIN___RELINOUTSTAND.isVisible">
+								<q-col
+									v-if="controls.RELIN___RELINORDERED_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.RELIN___RELINORDERED_.isVisible"
 										class="i-text"
 										v-bind="controls.RELIN___RELINORDERED_"
 										v-on="controls.RELIN___RELINORDERED_.handlers"
@@ -211,11 +218,12 @@
 											v-bind="controls.RELIN___RELINORDERED_.props"
 											@update:model-value="model.ValOrdered.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.RELIN___RELINRECEIVED.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.RELIN___RELINRECEIVED.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.RELIN___RELINRECEIVED.isVisible"
 										class="i-text"
 										v-bind="controls.RELIN___RELINRECEIVED"
 										v-on="controls.RELIN___RELINRECEIVED.handlers"
@@ -227,11 +235,12 @@
 											v-bind="controls.RELIN___RELINRECEIVED.props"
 											@update:model-value="model.ValReceived.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.RELIN___RELINOUTSTAND.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.RELIN___RELINOUTSTAND.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.RELIN___RELINOUTSTAND.isVisible"
 										class="i-text"
 										v-bind="controls.RELIN___RELINOUTSTAND"
 										v-on="controls.RELIN___RELINOUTSTAND.handlers"
@@ -243,14 +252,14 @@
 											v-bind="controls.RELIN___RELINOUTSTAND.props"
 											@update:model-value="model.ValOutstand.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End RELIN___PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -259,7 +268,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -268,6 +277,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -279,7 +289,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -492,7 +502,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -650,7 +664,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'RELIN___PSEUDNOVOGR01',
 						maxLength: 85,
-						labelId: 'label_RELIN___ENTITNAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -924,16 +937,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -977,16 +1004,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1138,6 +1179,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS RELIN]/
 // eslint-disable-next-line

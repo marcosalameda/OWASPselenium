@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="CFAQS"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.CFAQS___CFAQSICON____.isVisible">
-					<q-control-wrapper
-						v-show="controls.CFAQS___CFAQSICON____.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.CFAQS___CFAQSICON____.isVisible">
+					<q-col
+						v-if="controls.CFAQS___CFAQSICON____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CFAQS___CFAQSICON____.isVisible"
 							class="q-image"
 							v-bind="controls.CFAQS___CFAQSICON____"
 							v-on="controls.CFAQS___CFAQSICON____.handlers"
@@ -107,13 +116,14 @@
 								v-bind="controls.CFAQS___CFAQSICON____.props"
 								v-on="controls.CFAQS___CFAQSICON____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CFAQS___CFAQSCATEGORY.isVisible">
-					<q-control-wrapper
-						v-show="controls.CFAQS___CFAQSCATEGORY.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CFAQS___CFAQSCATEGORY.isVisible">
+					<q-col
+						v-if="controls.CFAQS___CFAQSCATEGORY.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CFAQS___CFAQSCATEGORY.isVisible"
 							class="i-textarea"
 							v-bind="controls.CFAQS___CFAQSCATEGORY"
 							v-on="controls.CFAQS___CFAQSCATEGORY.handlers"
@@ -125,13 +135,14 @@
 								v-bind="controls.CFAQS___CFAQSCATEGORY.props"
 								v-on="controls.CFAQS___CFAQSCATEGORY.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CFAQS___CFAQSDESCRIPT.isVisible">
-					<q-control-wrapper
-						v-show="controls.CFAQS___CFAQSDESCRIPT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CFAQS___CFAQSDESCRIPT.isVisible">
+					<q-col
+						v-if="controls.CFAQS___CFAQSDESCRIPT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.CFAQS___CFAQSDESCRIPT.isVisible"
 							class="i-textarea"
 							v-bind="controls.CFAQS___CFAQSDESCRIPT"
 							v-on="controls.CFAQS___CFAQSDESCRIPT.handlers"
@@ -143,24 +154,27 @@
 								v-bind="controls.CFAQS___CFAQSDESCRIPT.props"
 								v-on="controls.CFAQS___CFAQSDESCRIPT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.CFAQS___PSEUDEXPFAQS_.isVisible">
-					<q-control-wrapper
-						v-show="controls.CFAQS___PSEUDEXPFAQS_.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.CFAQS___PSEUDEXPFAQS_.isVisible">
+					<q-col
+						v-if="controls.CFAQS___PSEUDEXPFAQS_.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.CFAQS___PSEUDEXPFAQS_.isVisible"
+							v-if="controls.CFAQS___PSEUDEXPFAQS_.isVisible"
 							v-bind="controls.CFAQS___PSEUDEXPFAQS_"
-							v-on="controls.CFAQS___PSEUDEXPFAQS_.handlers" />
+							v-on="controls.CFAQS___PSEUDEXPFAQS_.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE CFAQS___PSEUDEXPFAQS_]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.CFAQS___PSEUDEXPFAQS_.isVisible"
 							:list-ctrl="controls.CFAQS___PSEUDEXPFAQS_"
 							:filter-operators="controls.CFAQS___PSEUDEXPFAQS_.filterOperators"
 							v-on="controls.CFAQS___PSEUDEXPFAQS_.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -169,7 +183,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -178,6 +192,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -189,7 +204,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -400,7 +415,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -562,6 +581,7 @@
 								field: 'QUESTION',
 								label: computed(() => this.Resources.QUESTION00194),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -570,6 +590,7 @@
 								field: 'ANSWER',
 								label: computed(() => this.Resources.ANSWER22961),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -585,8 +606,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -860,16 +880,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -913,16 +947,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1074,6 +1122,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS CFAQS]/
 // eslint-disable-next-line

@@ -145,8 +145,6 @@
 			// does NOT have access to `this` component instance,
 			// because it has not been created yet when this guard is called!
 
-			to.params.isPopup = 'true'
-
 			next((vm) => vm.updateMenuNavigation(to))
 		},
 
@@ -178,25 +176,31 @@
 
 		mounted()
 		{
+			const props = {
+				title: computed(() => this.Resources.LENDING_IN_THE_PERIO23741),
+				dismissible: true,
+				size: 'medium',
+				focusWrap: true
+			}
 			const modalProps = {
 				isActive: true,
-				hideHeader: false,
-				hideFooter: false,
-				dismissWithEsc: true,
-				modalWidth: 'sm',
-				closeButtonEnable: true,
-				dismissAction: this.goBack,
-				headerTitle: computed(() => this.Resources.LENDING_IN_THE_PERIO23741)
+				dismissAction: this.goBack
 			}
 
 			// Show modal after necessary resources are loaded (e.g., header title)
-			this.componentOnLoadProc.once(() => this.setModalProperties(modalProps), this)
+			this.componentOnLoadProc.once(() => this.setModalProperties(props, modalProps), this)
 		},
 
 		beforeUnmount()
 		{
 			// Removes the listener
 			this.internalEvents?.removeAllListeners()
+		},
+		
+		unmounted()
+		{
+			// Focus on the top level navigation menu item
+			genericFunctions.focusElementBySelector('#GQT1 > a:first-child')
 		},
 
 		computed: {

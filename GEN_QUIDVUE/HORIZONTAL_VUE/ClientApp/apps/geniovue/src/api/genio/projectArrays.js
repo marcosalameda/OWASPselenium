@@ -719,13 +719,13 @@ export class QArrayAhorasse
 			new Option({
 				num: 1,
 				key: 35,
-				resourceId: '_3534512',
+				resourceId: '_3554693',
 				fnResources,
 			}),
 			new Option({
 				num: 2,
 				key: 40,
-				resourceId: '_4033029',
+				resourceId: '_4000330',
 				fnResources,
 			}),
 		]
@@ -1043,7 +1043,7 @@ export class QArrayAperiodi
 			new Option({
 				num: 11,
 				key: 12,
-				resourceId: '_5_ANOS28378',
+				resourceId: '_5_ANOS50688',
 				fnResources,
 			}),
 		]
@@ -1297,6 +1297,122 @@ export class QArrayAsimnao
 				key: 'N',
 				resourceId: 'NAO06521',
 				fnResources,
+			}),
+		]
+
+	}
+}
+
+/**
+ * The assetCategory array.
+ */
+export class QArrayAssetcategory
+{
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(fnResources)
+	{
+		this.type = 'C'
+		this.pluralName = 'ASSET_CATEGORY65154'
+		this.singularName = 'ASSET_CATEGORIES64344'
+
+		this.elements = [
+			new Option({
+				num: 1,
+				key: 'RE',
+				resourceId: 'REAL_ESTATE07188',
+				fnResources,
+				icon: {
+					icon: 'asset-real-estate',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 2,
+				key: 'VCL',
+				resourceId: 'VEHICLE49593',
+				fnResources,
+				icon: {
+					icon: 'asset-vehicle',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 3,
+				key: 'EQUIP',
+				resourceId: 'EQUIPMENT03632',
+				fnResources,
+				icon: {
+					icon: 'asset-equipment',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 4,
+				key: 'FNTR',
+				resourceId: 'FURNITURE42200',
+				fnResources,
+				icon: {
+					icon: 'asset-furniture',
+					type: 'svg',
+				},
+			}),
+		]
+
+	}
+}
+
+/**
+ * The assetTags array.
+ */
+export class QArrayAssettags
+{
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(fnResources)
+	{
+		this.type = 'N'
+		this.pluralName = 'ASSET_TAGS23725'
+		this.singularName = 'ASSET_TAG59305'
+
+		this.elements = [
+			new Option({
+				num: 1,
+				key: 1,
+				resourceId: 'URGENT40554',
+				fnResources,
+				icon: {
+					icon: 'asset-warning',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 2,
+				key: 2,
+				resourceId: 'CHECKED31708',
+				fnResources,
+				icon: {
+					icon: 'asset-check-mark',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 3,
+				key: 3,
+				resourceId: 'IN_REPAIR33602',
+				fnResources,
+				icon: {
+					icon: 'asset-tools-repair',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 4,
+				key: 4,
+				resourceId: 'IMPORTANT21753',
+				fnResources,
+				icon: {
+					icon: 'asset-pin-priority',
+					type: 'svg',
+				},
 			}),
 		]
 
@@ -1967,13 +2083,13 @@ export class QArrayClass
 			new Option({
 				num: 1,
 				key: '1C',
-				resourceId: '_1ACLASSE14213',
+				resourceId: '_1ACLASSE52698',
 				fnResources,
 			}),
 			new Option({
 				num: 2,
 				key: '2C',
-				resourceId: '_2ACLASSE01747',
+				resourceId: '_2ACLASSE04789',
 				fnResources,
 			}),
 			new Option({
@@ -2003,7 +2119,7 @@ export class QArrayClassnum
 			new Option({
 				num: 1,
 				key: 1,
-				resourceId: '_1O_CLASSE38057',
+				resourceId: '_1O_CLASSE18418',
 				fnResources,
 				helpResourceId: '_114530146',
 				helpResourceVerboseId: '_1145_VERBOSE04491',
@@ -2011,7 +2127,7 @@ export class QArrayClassnum
 			new Option({
 				num: 2,
 				key: 2,
-				resourceId: '_2A_CLASSE35193',
+				resourceId: '_2A_CLASSE50409',
 				fnResources,
 				helpResourceId: '_114630263',
 				helpResourceVerboseId: '_1146_VERBOSE39468',
@@ -2021,6 +2137,104 @@ export class QArrayClassnum
 				key: 3,
 				resourceId: 'ECONOMICA05942',
 				fnResources,
+			}),
+		]
+
+	}
+}
+
+/**
+ * The componenticons array.
+ */
+export class QArrayComponenticons
+{
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(fnResources)
+	{
+		this.type = 'N'
+		this.pluralName = 'COMPONENTS_ICON53573'
+		this.singularName = 'COMPONENTS_ICON53573'
+
+		this.elements = [
+			new Option({
+				num: 1,
+				key: 2,
+				resourceId: 'DATA_INPUT23684',
+				fnResources,
+				icon: {
+					icon: 'components-class-DataInput-01',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 2,
+				key: 6,
+				resourceId: 'DATA_DISPLAY32113',
+				fnResources,
+				icon: {
+					icon: 'components-class-DataDisplay-02',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 3,
+				key: 3,
+				resourceId: 'DATA_GRID17400',
+				fnResources,
+				icon: {
+					icon: 'components-class-DataGrid',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 4,
+				key: 4,
+				resourceId: 'ACTION41832',
+				fnResources,
+				icon: {
+					icon: 'components-class-Action',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 5,
+				key: 5,
+				resourceId: 'CONTAINER62757',
+				fnResources,
+				icon: {
+					icon: 'components-class-LayoutContainer',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 6,
+				key: 8,
+				resourceId: 'RELATIONAL_STRUCTURE39801',
+				fnResources,
+				icon: {
+					icon: 'components-class-relationalStructure',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 7,
+				key: 7,
+				resourceId: 'INTERACTIVE04535',
+				fnResources,
+				icon: {
+					icon: 'components-class-AdvancedInteractive',
+					type: 'svg',
+				},
+			}),
+			new Option({
+				num: 8,
+				key: 1,
+				resourceId: 'MEDIA07084',
+				fnResources,
+				icon: {
+					icon: 'components-class-media',
+					type: 'svg',
+				},
 			}),
 		]
 
@@ -3058,6 +3272,30 @@ export class QArraySexo
 }
 
 /**
+ * The Sistema_Contabilistico array.
+ */
+export class QArraySistema_contabilistico
+{
+	// eslint-disable-next-line @typescript-eslint/no-unused-vars
+	constructor(fnResources)
+	{
+		this.type = 'C'
+		this.pluralName = 'SISTEMA_CONTABILISTI21743'
+		this.singularName = 'SISTEMA_CONTABILISTI21743'
+
+		this.elements = [
+			new Option({
+				num: 1,
+				key: 'SNC',
+				resourceId: 'SNC09928',
+				fnResources,
+			}),
+		]
+
+	}
+}
+
+/**
  * The SpaceTyp array.
  */
 export class QArraySpacetyp
@@ -3334,6 +3572,8 @@ export default {
 	QArrayAscorout,
 	QArrayAside,
 	QArrayAsimnao,
+	QArrayAssetcategory,
+	QArrayAssettags,
 	QArrayAssettyp,
 	QArrayAtipoind,
 	QArrayAtipopro,
@@ -3354,6 +3594,7 @@ export default {
 	QArrayBuildtyp,
 	QArrayClass,
 	QArrayClassnum,
+	QArrayComponenticons,
 	QArrayDatatype,
 	QArrayDecplace,
 	QArrayDispstat,
@@ -3378,6 +3619,7 @@ export default {
 	QArrayS_roles,
 	QArrayS_tpproc,
 	QArraySexo,
+	QArraySistema_contabilistico,
 	QArraySpacetyp,
 	QArrayTipoarti,
 	QArrayTipocond,

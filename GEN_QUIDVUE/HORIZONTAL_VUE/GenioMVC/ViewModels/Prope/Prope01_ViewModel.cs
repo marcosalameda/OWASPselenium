@@ -1,20 +1,19 @@
-﻿using JsonIgnoreAttribute = System.Text.Json.Serialization.JsonIgnoreAttribute;
+﻿using CSGenio.business;
+using CSGenio.framework;
+using CSGenio.persistence;
+using GenioMVC.Helpers;
+using GenioMVC.Models.Exception;
+using GenioMVC.Models.Navigation;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Quidgest.Persistence;
+using Quidgest.Persistence.GenericQuery;
 using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Specialized;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Globalization;
-
-using CSGenio.business;
-using CSGenio.framework;
-using CSGenio.persistence;
-using GenioMVC.Helpers;
-using GenioMVC.Models.Exception;
-using GenioMVC.Models.Navigation;
-using Quidgest.Persistence;
-using Quidgest.Persistence.GenericQuery;
+using System.Text.Json.Serialization;
 
 namespace GenioMVC.ViewModels.Prope
 {
@@ -59,6 +58,8 @@ namespace GenioMVC.ViewModels.Prope
 		/// </summary>
 		[ValidateSetAccess]
 		public TableDBEdit<GenioMVC.Models.Agent> TableAgentName { get; set; }
+
+
 
 		#region Navigations
 		#endregion
@@ -330,6 +331,17 @@ namespace GenioMVC.ViewModels.Prope
 				// Conexão deve estar aberta de fora. Podem haver formulas que utilizam funções "manuais".
 				// TODO: It needs to be analyzed whether we should disable the security of field filling here. If there is any case where the field with the block condition can only be calculated after the double calculation of the formulas.
 				MapToModel(Model);
+
+				// If it's inserting or duplicating, needs to fill the default values.
+				if (Navigation.CurrentLevel.FormMode == FormMode.New || Navigation.CurrentLevel.FormMode == FormMode.Duplicate)
+				{
+					FunctionType funcType = Navigation.CurrentLevel.FormMode == FormMode.New
+						? FunctionType.INS
+						: FunctionType.DUP;
+
+					Model.baseklass.fillValuesDefault(m_userContext.PersistentSupport, funcType);
+				}
+
 				// Preencher operações internas
 				Model.klass.fillInternalOperations(m_userContext.PersistentSupport, oldvalues);
 				MapFromModel(Model);
@@ -460,7 +472,7 @@ namespace GenioMVC.ViewModels.Prope
 
 			if (prope01_agentname____DoLoad)
 			{
-				List<ColumnSort> sorts = new List<ColumnSort>();
+				List<ColumnSort> sorts = [];
 				ColumnSort requestedSort = GetRequestSort(TableAgentName, "sTableAgentName", "dTableAgentName", qs, "agent");
 				if (requestedSort != null)
 					sorts.Add(requestedSort);
@@ -489,7 +501,7 @@ namespace GenioMVC.ViewModels.Prope
 				int numberItems = CSGenio.framework.Configuration.NrRegDBedit;
 				int offset = (page - 1) * numberItems;
 
-				FieldRef[] fields = new FieldRef[] { CSGenioAagent.FldCodagent, CSGenioAagent.FldName, CSGenioAagent.FldZzstate };
+				FieldRef[] fields = [CSGenioAagent.FldCodagent, CSGenioAagent.FldName, CSGenioAagent.FldZzstate];
 
 // USE /[MANUAL GQT OVERRQ PROPE01_AGENTNAME]/
 
@@ -510,7 +522,7 @@ namespace GenioMVC.ViewModels.Prope
 
 				TableAgentName.SetPagination(page, numberItems, listing.HasMore, listing.GetTotal, listing.TotalRecords);
 				TableAgentName.Query = query;
-				TableAgentName.Elements = listing.RowsForViewModel<GenioMVC.Models.Agent>((r) => new GenioMVC.Models.Agent(m_userContext, r, true, _fieldsToSerialize_PROPE01_AGENTNAME____));
+				TableAgentName.Elements = listing.RowsForViewModel((r) => new GenioMVC.Models.Agent(m_userContext, r, true, _fieldsToSerialize_PROPE01_AGENTNAME____));
 
 				//created by [ MH ] at [ 14.04.2016 ] - Foi alterada a forma de retornar a key do novo registo inserido / editado no form de apoio do DBEdit.
 				//last update by [ MH ] at [ 10.05.2016 ] - Validação se key encontra-se no level atual, as chaves dos niveis anteriores devem ser ignorados.

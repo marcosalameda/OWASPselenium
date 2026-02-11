@@ -41,11 +41,6 @@ namespace CSGenio.core.di
         /// <summary>
         /// EPH association manager for user registration functions
         /// </summary>
-        public static IUserBusinessManager EphManager { get; set; } = null;
-
-        /// <summary>
-        /// EPH association manager for user registration functions
-        /// </summary>
         public static IMetricsOtlp MetricsOtlp { get; set; } = null;
 
 

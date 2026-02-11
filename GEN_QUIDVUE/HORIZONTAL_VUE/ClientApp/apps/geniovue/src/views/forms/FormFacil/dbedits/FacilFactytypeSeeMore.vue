@@ -2,11 +2,11 @@
 	<teleport
 		v-if="isReady"
 		to="#q-modal-see-more-facil-factytype-body">
-		<q-row-container>
+		<q-row>
 			<q-table
 				v-bind="listCtrl"
 				v-on="listCtrl.handlers" />
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -24,6 +24,7 @@
 	import { TableListControl } from '@/mixins/fieldControl.js'
 	import listFunctions from '@/mixins/listFunctions.js'
 	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import hardcodedTexts from '@/hardcodedTexts.js'
 
 	import { loadResources } from '@/plugins/i18n.js'
 	import asyncProcM from '@quidgest/clientapp/composables/async'
@@ -128,15 +129,25 @@
 
 			const modalProps = {
 				id: 'see-more-facil-factytype',
-				headerTitle: computed(() => this.Resources.FACILITY_TYPES57319),
-				closeButtonEnable: true,
-				hideFooter: true,
-				dismissWithEsc: true,
 				dismissAction: this.close,
-				isActive: true,
 				returnElement: 'FACIL___FACTYTYPE_____see-more_button'
 			}
-			this.setModal(modalProps)
+			const props = {
+				class: 'q-dialog-see-more',
+				title: computed(() => this.Resources.FACILITY_TYPES57319),
+				buttons: [
+					{
+						id: 'dialog-button-close',
+						action: this.close,
+						icon: { icon: 'cancel', type: 'svg' },
+						props: {
+							label: computed(() => this.Resources[hardcodedTexts.cancel]),
+							variant: 'bold'
+						}
+					}
+				]
+			}
+			this.setModal(props, modalProps)
 		},
 
 		beforeUnmount()
@@ -166,13 +177,16 @@
 
 			onTableDBDataChanged()
 			{
-				const params = {
-					id: this.id || null,
-					limits: this.limits,
-					tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
-				}
+				// Wait for the computed properties of columns to finish resolving (e.g. "isVisible").
+				setTimeout(() => {
+					const params = {
+						id: this.id || null,
+						limits: this.limits,
+						tableConfiguration: listFunctions.getTableConfiguration(this.listCtrl)
+					}
 
-				this.listCtrl.fetchListData(params)
+					this.listCtrl.fetchListData(params)
+				}, 0)
 			},
 
 			handleRowAction(eventData)
@@ -207,6 +221,7 @@
 								label: computed(() => this.Resources.FACILITY_TYPE44577),
 								dataLength: 25,
 								scrollData: 25,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -216,6 +231,7 @@
 								label: computed(() => this.Resources.LAYER_NAME49545),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -225,6 +241,7 @@
 								label: computed(() => this.Resources.ICON41974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -235,6 +252,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -246,6 +264,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -257,6 +276,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 7,
@@ -268,6 +288,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
@@ -279,6 +300,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
@@ -290,6 +312,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -301,6 +324,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
@@ -312,6 +336,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 12,
@@ -323,6 +348,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 13,
@@ -334,6 +360,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 14,
@@ -345,6 +372,7 @@
 								maxDigits: 3,
 								decimalPlaces: 0,
 								isVisible: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -359,8 +387,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,

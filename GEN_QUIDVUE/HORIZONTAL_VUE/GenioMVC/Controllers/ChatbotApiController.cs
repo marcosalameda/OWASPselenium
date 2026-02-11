@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
+using System;
 
 using CSGenio.core.ai;
 using GenioMVC.Models.Navigation;
@@ -21,19 +22,20 @@ namespace GenioMVC.Controllers
         {
             var path = HttpContext.Request.Path.Value!.Substring("/chatbotapi/".Length);
 
-            return await _chatbotService.SendChatbotRequestAsync(path, new HttpMethod(HttpContext.Request.Method), HttpContext.Request.Body);
+            return await _chatbotService.SendChatbotRequestAsync(path, new HttpMethod(HttpContext.Request.Method), HttpContext.Request.Body, UserContext.Current.User);
         }
+
 
         public async Task ChatbotApiStreamProxy()
         {
             Stream stream;
 
             // If it's a structured prompt, it likely comes as raw JSON body (not multipart/form)
-            var contentType = Request.ContentType ?? "";
+            var contentType = Request.ContentType ?? "";            
 
             if (contentType.Contains("application/json", StringComparison.OrdinalIgnoreCase))
             {
-                stream = await _chatbotService.GetChatbotStreamAsync(Request.Body);
+                stream = await _chatbotService.GetChatbotStreamAsync(Request.Body, UserContext.Current.User);
             }
             else if (contentType.Contains("multipart/form-data", StringComparison.OrdinalIgnoreCase))
             {
@@ -53,29 +55,27 @@ namespace GenioMVC.Controllers
             using var reader = new StreamReader(stream);
             char[] buffer = new char[1024];
             int bytesRead;
+            var sb = new StringBuilder();
 
             while ((bytesRead = await reader.ReadAsync(buffer, 0, buffer.Length)) > 0)
             {
-                string chunk = new string(buffer, 0, bytesRead);
-                await Response.WriteAsync(chunk);
-                await Response.Body.FlushAsync();
+                sb.Append(buffer, 0, bytesRead);
+                var text = sb.ToString();
+                int index;
+
+                while ((index = text.IndexOf("\n\n", StringComparison.Ordinal)) >= 0)
+                {
+                    var eventText = text[..(index + 2)];
+                    await Response.WriteAsync(eventText);
+                    await Response.Body.FlushAsync();
+                    text = text[(index + 2)..];
+                }
+                sb.Clear();
+                sb.Append(text);
             }
         }
 
-        public async Task<string> ChatbotApiAuth()
-        {
-            var request = await _chatbotService.BuildRequest("auth", new HttpMethod("POST"), HttpContext.Request.Body);
-            var user = _userContextService.Current.User;
-
-            var newContent = new {
-                content = request.Content,
-                userName = user.Name,
-                ModuleRoles = user.GetModuleRoles(user.CurrentModule)
-            };
-            request.Content = new StringContent(JsonConvert.SerializeObject(newContent), Encoding.UTF8, "application/json");
-            return await _chatbotService.SendChatbotRequestAsync(request);
-        }
-
+        [Obsolete]
         public async Task<T> ChatbotApiFunction<T>(StringContent content)
         {
             // Convert StringContent to object for the service call
@@ -89,14 +89,11 @@ namespace GenioMVC.Controllers
             var form = await Request.ReadFormAsync();
 
             var formFields = form
-                .SelectMany(f => f.Value.Select(val => new KeyValuePair<string, string>(f.Key, val)))
-                .ToList();
+                .SelectMany(f => f.Value.Select(val => new KeyValuePair<string, string>(f.Key, val)));
 
-            var formFiles = form.Files
-                .Select(file => (file.Name, file.ContentType, file.OpenReadStream()))
-                .ToList();
+            var formFiles = form.Files.Select(file => (file.Name, file.ContentType, file.OpenReadStream()));
 
-            return await _chatbotService.GetChatbotStreamAsync(formFields, formFiles);
+            return await _chatbotService.GetChatbotStreamAsync(formFields, formFiles, UserContext.Current.User);
         }
     }
 }

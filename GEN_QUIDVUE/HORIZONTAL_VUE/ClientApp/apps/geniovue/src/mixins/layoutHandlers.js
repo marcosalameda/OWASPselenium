@@ -278,7 +278,7 @@ export default {
 			}
 
 			//Normal navigation bar or invalid order value
-			return null
+			return 0
 		}
 	}
 }

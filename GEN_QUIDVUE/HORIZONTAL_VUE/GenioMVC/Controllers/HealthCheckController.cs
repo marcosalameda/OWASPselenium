@@ -23,8 +23,8 @@ public class HealthCheckController : Controller
 		string environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") ?? "Production";
 		WebAppHealthChecker healthChecker = new(environment);
 
-		if (healthChecker.IsHealthy())
-			return Ok(healthChecker.LastResult.ToJson());
-		return StatusCode(503, healthChecker.LastResult.ToJson());
+		return healthChecker.IsHealthy()
+			? Ok(healthChecker.LastResult.ToJson())
+			: StatusCode(503, healthChecker.LastResult.ToJson());
 	}
 }

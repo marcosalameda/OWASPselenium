@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW GLOB]/
 
 		[HttpPost]
-		public ActionResult Glob_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Glob_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Glob_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Glob_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Glob_Show_GET",
 				AreaName = "glob",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET GLOB]/
 		[HttpPost]
-		public ActionResult Glob_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Glob_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Glob_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Glob_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Glob_New_GET",
 				AreaName = "glob",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Glob_New([FromBody]Glob_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Glob_New",
 				ViewName = "Glob",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET GLOB]/
 		[HttpPost]
-		public ActionResult Glob_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Glob_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Glob_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Glob_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Glob_Edit_GET",
 				AreaName = "glob",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Glob_Edit([FromBody]Glob_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Glob_Edit",
 				ViewName = "Glob",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET GLOB]/
 		[HttpPost]
-		public ActionResult Glob_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Glob_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Glob_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Glob_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Glob_Delete_GET",
 				AreaName = "glob",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Glob/Glob_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST GLOB]/
 		[HttpPost]
-		public ActionResult Glob_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Glob_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Glob_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Glob_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Glob_Delete",
 				ViewName = "Glob",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET GLOB]/
 
 		[HttpPost]
-		public ActionResult Glob_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Glob_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Glob_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Glob_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Glob_Duplicate_GET",
 				AreaName = "glob",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Glob_Duplicate([FromBody]Glob_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Glob_Duplicate",
 				ViewName = "Glob",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Glob(UserContext.Current);
+					GenioMVC.Models.Glob model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("glob");
 
 // USE /[MANUAL GQT BEFORE_CANCEL GLOB]/

@@ -55,17 +55,6 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodflds.value, (newValue, oldValue) => this.onUpdate('flds.codflds', this.ValCodflds, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
-		this.ValCodaero = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodaero',
-			originId: 'ValCodaero',
-			area: 'FLDS',
-			field: 'CODAERO',
-			relatedArea: 'AERO',
-			isFixed: true,
-			description: computed(() => this.Resources.COMPANY_NAME10342),
-		}).cloneFrom(values?.ValCodaero))
-		this.stopWatchers.push(watch(() => this.ValCodaero.value, (newValue, oldValue) => this.onUpdate('flds.codaero', this.ValCodaero, newValue, oldValue)))
-
 		this.ValCodequip = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodequip',
 			originId: 'ValCodequip',
@@ -76,6 +65,17 @@ export default class ViewModel extends FormViewModelBase
 			description: '',
 		}).cloneFrom(values?.ValCodequip))
 		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('flds.codequip', this.ValCodequip, newValue, oldValue)))
+
+		this.ValCodaero = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodaero',
+			originId: 'ValCodaero',
+			area: 'FLDS',
+			field: 'CODAERO',
+			relatedArea: 'AERO',
+			isFixed: true,
+			description: computed(() => this.Resources.COMPANY_NAME10342),
+		}).cloneFrom(values?.ValCodaero))
+		this.stopWatchers.push(watch(() => this.ValCodaero.value, (newValue, oldValue) => this.onUpdate('flds.codaero', this.ValCodaero, newValue, oldValue)))
 
 		/** The remaining form fields. */
 		this.ValCond = reactive(new modelFieldType.String({
@@ -269,6 +269,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'FCLIENT3FK'
 		}).cloneFrom(values?.ValFclient3fk))
 		this.stopWatchers.push(watch(() => this.ValFclient3fk.value, (newValue, oldValue) => this.onUpdate('flds.fclient3fk', this.ValFclient3fk, newValue, oldValue)))
+
 		this.ValFclient3Data = reactive(new modelFieldType.DocumentData({
 			id: 'ValFclient3Data',
 			area: 'FLDS',

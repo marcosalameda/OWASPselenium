@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW AUTHENT]/
 
 		[HttpPost]
-		public ActionResult Authent_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Authent_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Authent_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Authent_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Authent_Show_GET",
 				AreaName = "wareh",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET AUTHENT]/
 		[HttpPost]
-		public ActionResult Authent_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Authent_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Authent_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Authent_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Authent_New_GET",
 				AreaName = "wareh",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Authent_New([FromBody]Authent_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Authent_New",
 				ViewName = "Authent",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET AUTHENT]/
 		[HttpPost]
-		public ActionResult Authent_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Authent_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Authent_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Authent_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Authent_Edit_GET",
 				AreaName = "wareh",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Authent_Edit([FromBody]Authent_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Authent_Edit",
 				ViewName = "Authent",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET AUTHENT]/
 		[HttpPost]
-		public ActionResult Authent_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Authent_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Authent_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Authent_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Authent_Delete_GET",
 				AreaName = "wareh",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Wareh/Authent_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST AUTHENT]/
 		[HttpPost]
-		public ActionResult Authent_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Authent_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Authent_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Authent_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Authent_Delete",
 				ViewName = "Authent",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET AUTHENT]/
 
 		[HttpPost]
-		public ActionResult Authent_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Authent_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Authent_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Authent_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Authent_Duplicate_GET",
 				AreaName = "wareh",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Authent_Duplicate([FromBody]Authent_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Authent_Duplicate",
 				ViewName = "Authent",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Wareh(UserContext.Current);
+					GenioMVC.Models.Wareh model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("wareh");
 
 // USE /[MANUAL GQT BEFORE_CANCEL AUTHENT]/

@@ -491,6 +491,15 @@ namespace CSGenio.reporting
                             SetLimitValues(limit.FullFieldName, limit.FieldValue, paramReportNames, ref result);
                         }
                         break;
+                    case ReportLimitParameter.LimitSource.AC:
+                        {
+                            //AC - Array choice Conditions
+                            var limit = genLimit as ReportLimitParameter_AC;
+                            if (string.IsNullOrEmpty(limit.FieldValue))
+                                throw new BusinessException(null, "ReportSSRS.getFillLimits", "Null or Empty area condition limit value");
+                            SetLimitValue(limit.FullFieldName, Convert.ToString(limit.FieldValue), paramReportNames, ref result);
+                        }
+                        break;
                 }
             }
 
@@ -509,6 +518,12 @@ namespace CSGenio.reporting
             }
         }
 
+        private ReportParameter BuildMultipleValueParameter(string parameterName, IEnumerable<string> values) {
+            //The values are concatenated so that it's easier to use in the report with STRING_SPLIT
+            var valueStr = string.Join(",", values);
+            return new ReportParameter(parameterName, valueStr);
+        }
+
         private void SetLimitValues(string FieldName, string[] FieldValue, string[] paramReportNames, ref List<ReportParameter> output)
         {
 			if (FieldValue == null)
@@ -519,7 +534,8 @@ namespace CSGenio.reporting
             var finalFullFieldName = FieldName.Replace('.', '_');
             if (paramReportNames.Any(x => x == finalFullFieldName))
             {
-                output.Add(new ReportParameter(finalFullFieldName, string.Join(",", FieldValue)));
+                var reportParam = BuildMultipleValueParameter(finalFullFieldName, FieldValue);
+                output.Add(reportParam);
             }
         }
 
@@ -540,37 +556,32 @@ namespace CSGenio.reporting
         #endregion
 
         /// <summary>
-        /// Devolve a lista de report parameters das EPHs
+        /// Gets EPH parameters for report generation based on user permissions and area configuration.
+        /// Groups EPHs by parameter key and consolidates unique values to avoid duplicates.
         /// </summary>
-        /// <param name="utilizador">user em sess�o</param>
-        /// <param name="modulo">module</param>
-        /// <param name="area">area base do report</param>
+        /// <param name="user">User object containing EPH permissions</param>
+        /// <param name="module">Module identifier</param>
+        /// <param name="area">Area identifier</param>
+        /// <returns>Collection of report parameters with unique values</returns>
         private IEnumerable<ReportParameter> getEphParameters(User user, string module, string area)
         {
             List<ReportParameter> result = new List<ReportParameter>();
 
-            //obter as ephs ligadas ao user
+            // Get EPHs linked to the user
             Area areaBase = Area.createArea(area, user, module);
             List<EPHOfArea> ephsDaArea = areaBase.CalculateAreaEphs(user.Ephs, null, false);
 
-            //to cada uma delas, criar um par�metro de report
-            foreach (EPHOfArea v in ephsDaArea)
-            {
-                //criar o name do parametro
-                var paramKey = string.Join("_", new string[] { v.Eph.Name, v.Eph.Table, v.Eph.Field });    //nomeEph_tabela_campo
+            // Group by parameter key and consolidate unique values
+            var groupedEphs = ephsDaArea
+                .GroupBy(v => string.Join("_", new string[] { v.Eph.Name, v.Eph.Table, v.Eph.Field }))
+                .Select(group => new {
+                    ParamKey = group.Key,
+                    UniqueValues = group.SelectMany(v => v.ValuesList).Distinct()
+                });
 
-                //se j� existir uma entrada com o mesmo name, estamos perante uma eph multivalue
-                //Nesse caso, adicionamos os Qvalues ao j� existente
-                int idx = result.FindIndex(x => x.Name == paramKey);
-                if (idx != -1)
-                    result[idx].Values.AddRange(v.ValuesList);
-                else
-                    result.Add(new ReportParameter(paramKey, v.ValuesList));
-            }
-
-            return result;
+            // Create report parameters for each group, with possibly multiple values
+            return groupedEphs.Select(item => BuildMultipleValueParameter(item.ParamKey, item.UniqueValues));
         }
-
 
         /// <summary>
         /// M�todo to preencher as condi��es de historial

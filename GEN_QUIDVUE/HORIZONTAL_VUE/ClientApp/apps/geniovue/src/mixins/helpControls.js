@@ -45,6 +45,13 @@ export default {
 				return `#${this.labelId}`;
 			}
 			return this.controlId ? `#${this.controlId}` : "";
+		},
+
+		isMarkdown() {			
+			if (this.helpControl?.detailedHelp?.markdown === true)
+				return true
+			else
+				return false
 		}
 	}
 }

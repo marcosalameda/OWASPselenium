@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE IMO_Menu_LISTA_REGIAO]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.LOGIN48703),
 								dataLength: 100,
 								scrollData: 20,
+								export: 1,
 								pkColumn: 'ValCodpsw',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.REGION12723),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodregia',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -187,8 +190,7 @@
 								canInsert: false
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -220,10 +222,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PSW', 'changed-PWREG', 'changed-REGIO'],
+						globalEvents: ['changed-REGIO', 'changed-PWREG', 'changed-PSW'],
 						uuid: '8b11f295-fa69-4195-a32e-829fc2eab416',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}
@@ -234,8 +237,6 @@
 			// called before the route that renders this component is confirmed.
 			// does NOT have access to `this` component instance,
 			// because it has not been created yet when this guard is called!
-
-			to.params.isPopup = 'true'
 
 			next((vm) => vm.updateMenuNavigation(to))
 		},

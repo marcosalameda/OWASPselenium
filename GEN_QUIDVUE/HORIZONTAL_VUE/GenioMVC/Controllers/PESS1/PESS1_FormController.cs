@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -32,12 +33,12 @@ namespace GenioMVC.Controllers
 	{
 		#region NavigationLocation Names
 
-		private static readonly NavigationLocation ACTION_PESS1_CANCEL = new("COMODANTE63029", "Pess1_Cancel", "Pess1") { vueRouteName = "form-PESS1", mode = "CANCEL" };
-		private static readonly NavigationLocation ACTION_PESS1_SHOW = new("COMODANTE63029", "Pess1_Show", "Pess1") { vueRouteName = "form-PESS1", mode = "SHOW" };
-		private static readonly NavigationLocation ACTION_PESS1_NEW = new("COMODANTE63029", "Pess1_New", "Pess1") { vueRouteName = "form-PESS1", mode = "NEW" };
-		private static readonly NavigationLocation ACTION_PESS1_EDIT = new("COMODANTE63029", "Pess1_Edit", "Pess1") { vueRouteName = "form-PESS1", mode = "EDIT" };
-		private static readonly NavigationLocation ACTION_PESS1_DUPLICATE = new("COMODANTE63029", "Pess1_Duplicate", "Pess1") { vueRouteName = "form-PESS1", mode = "DUPLICATE" };
-		private static readonly NavigationLocation ACTION_PESS1_DELETE = new("COMODANTE63029", "Pess1_Delete", "Pess1") { vueRouteName = "form-PESS1", mode = "DELETE" };
+		private static readonly NavigationLocation ACTION_PESS1_CANCEL = new("PERSON10446", "Pess1_Cancel", "Pess1") { vueRouteName = "form-PESS1", mode = "CANCEL" };
+		private static readonly NavigationLocation ACTION_PESS1_SHOW = new("PERSON10446", "Pess1_Show", "Pess1") { vueRouteName = "form-PESS1", mode = "SHOW" };
+		private static readonly NavigationLocation ACTION_PESS1_NEW = new("PERSON10446", "Pess1_New", "Pess1") { vueRouteName = "form-PESS1", mode = "NEW" };
+		private static readonly NavigationLocation ACTION_PESS1_EDIT = new("PERSON10446", "Pess1_Edit", "Pess1") { vueRouteName = "form-PESS1", mode = "EDIT" };
+		private static readonly NavigationLocation ACTION_PESS1_DUPLICATE = new("PERSON10446", "Pess1_Duplicate", "Pess1") { vueRouteName = "form-PESS1", mode = "DUPLICATE" };
+		private static readonly NavigationLocation ACTION_PESS1_DELETE = new("PERSON10446", "Pess1_Delete", "Pess1") { vueRouteName = "form-PESS1", mode = "DELETE" };
 
 		#endregion
 
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW PESS1]/
 
 		[HttpPost]
-		public ActionResult Pess1_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Pess1_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Pess1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Pess1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pess1_Show_GET",
 				AreaName = "pess1",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET PESS1]/
 		[HttpPost]
-		public ActionResult Pess1_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Pess1_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Pess1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Pess1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pess1_New_GET",
 				AreaName = "pess1",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Pess1_New([FromBody]Pess1_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pess1_New",
 				ViewName = "Pess1",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET PESS1]/
 		[HttpPost]
-		public ActionResult Pess1_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Pess1_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Pess1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Pess1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pess1_Edit_GET",
 				AreaName = "pess1",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Pess1_Edit([FromBody]Pess1_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pess1_Edit",
 				ViewName = "Pess1",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET PESS1]/
 		[HttpPost]
-		public ActionResult Pess1_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Pess1_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Pess1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Pess1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pess1_Delete_GET",
 				AreaName = "pess1",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Pess1/Pess1_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST PESS1]/
 		[HttpPost]
-		public ActionResult Pess1_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Pess1_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Pess1_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Pess1_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pess1_Delete",
 				ViewName = "Pess1",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET PESS1]/
 
 		[HttpPost]
-		public ActionResult Pess1_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Pess1_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Pess1_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Pess1_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Pess1_Duplicate_GET",
 				AreaName = "pess1",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Pess1_Duplicate([FromBody]Pess1_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Pess1_Duplicate",
 				ViewName = "Pess1",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Pess1(UserContext.Current);
+					GenioMVC.Models.Pess1 model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("pess1");
 
 // USE /[MANUAL GQT BEFORE_CANCEL PESS1]/
@@ -404,9 +405,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_cmpny")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -416,7 +414,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -426,35 +424,12 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Pess1 parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Pess1 parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Pess1_CmpnyValDesignat_ViewModel model = new(UserContext.Current, parentCtx);
+			Pess1_CmpnyValDesignat_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -475,9 +450,6 @@ namespace GenioMVC.Controllers
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
-
 			// If there was a recent operation on this table then force the primary persistence server to be called and ignore the read only feature
 			if (string.IsNullOrEmpty(Navigation.GetStrValue("ForcePrimaryRead_stake")))
 				UserContext.Current.SetPersistenceReadOnly(true);
@@ -487,7 +459,7 @@ namespace GenioMVC.Controllers
 				UserContext.Current.SetPersistenceReadOnly(false);
 			}
 
-			var requestValues = new NameValueCollection();
+			NameValueCollection requestValues = [];
 			if (queryParams != null)
 			{
 				// Add to request values
@@ -497,35 +469,12 @@ namespace GenioMVC.Controllers
 
 			IsStateReadonly = true;
 
-			Models.Pess1 parentCtx = requestModel.Model == null ? null : new(UserContext.Current);
-			requestModel.Model?.Init(UserContext.Current);
+			Models.Pess1 parentCtx = requestModel.Model == null ? null : new(m_userContext);
+			requestModel.Model?.Init(m_userContext);
 			requestModel.Model?.MapToModel(parentCtx);
-			Pess1_StakeValDesignat_ViewModel model = new(UserContext.Current, parentCtx);
+			Pess1_StakeValDesignat_ViewModel model = new(m_userContext, parentCtx);
 
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
-
-			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
-
-			// Determine which columns have totalizers
-			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
-
-			// For tables with multiple selection enabled, determine currently selected rows
-			tableConfig.SelectedRows = requestModel.SelectedRows;
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(requestModel.TableConfiguration);
 
 			model.setModes(Request.Query["m"].ToString());
 			model.Load(tableConfig, requestValues, Request.IsAjaxRequest());
@@ -569,6 +518,71 @@ namespace GenioMVC.Controllers
 		{
 			requestModel.Model.Init(UserContext.Current);
 			return UpdateFilesTickets(requestModel.Tickets, requestModel.Model, requestModel.IsApply);
+		}
+		// Supressing the warning because we are actually just deserializing
+#pragma warning disable CS0618
+		public class Pess1_MockPersonCreator_CB_ViewModel : Pess1_ViewModel
+#pragma warning restore CS0618
+		{
+			public string ChatBotUserPrompt { get; set; }
+		}
+
+		/// <summary>
+		/// Call the MockPersonCreator
+		/// </summary>
+		public ActionResult Pess1_MockPersonCreator_CB([FromBody] Pess1_MockPersonCreator_CB_ViewModel vm)
+		{
+			var key = vm.ValCodpesso;
+
+			User user = UserContext.Current.User;
+			PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+
+			try
+			{
+				sp.openTransaction();
+				var model = Pess1.Find(key, UserContext.Current);
+				vm.MapToModel(model);
+
+				GenioServer.ai.MockPersonCreatorAgent agent = new(_aiService);
+				CSGenio.core.ai.AgentContextData agentContext = new()
+				{
+					Username = user.Name,
+					AgentId = agent.AGENT_ID,
+					FormId = "PESS1",
+					CurrentRecordId = key,
+					Module = user.CurrentModule,
+					Subsystem = user.Year
+				};
+				agent.LoadRecords(key, sp, user);
+				sp.closeTransaction();
+				if (!string.IsNullOrEmpty(vm.ChatBotUserPrompt))
+				{
+					agentContext.UserPrompt = vm.ChatBotUserPrompt;
+				}
+
+				var jobId = agent.GetAgentPromptJobId(agentContext);
+
+				return Json(new {
+					success = true,
+					data = new
+					{
+						agentId = agent.AGENT_ID,
+						jobId
+					},
+				});
+			}
+			catch (Exception ex)
+			{
+				Log.Error($"Error in Pess1_MockPersonCreator_CB: {ex.Message}");
+				sp.rollbackTransaction();
+				return Json(
+					new
+					{
+						success = true,
+						message = Resources.Resources.PEDIMOS_DESCULPA__OC63848
+					}
+				);
+			}
 		}
 	}
 }

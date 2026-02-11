@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="ANEXD"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.ANEXD___EQUIPREGISTNR.isVisible">
-					<q-control-wrapper
-						v-show="controls.ANEXD___EQUIPREGISTNR.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.ANEXD___EQUIPREGISTNR.isVisible">
+					<q-col
+						v-if="controls.ANEXD___EQUIPREGISTNR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ANEXD___EQUIPREGISTNR.isVisible"
 							class="i-text"
 							v-bind="controls.ANEXD___EQUIPREGISTNR"
 							v-on="controls.ANEXD___EQUIPREGISTNR.handlers"
@@ -111,13 +120,14 @@
 								v-bind="controls.ANEXD___EQUIPREGISTNR.seeMoreParams"
 								v-on="controls.ANEXD___EQUIPREGISTNR.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ANEXD___ANEXDDTHRANEX.isVisible || controls.ANEXD___ANEXDREFERENC.isVisible">
-					<q-control-wrapper
-						v-show="controls.ANEXD___ANEXDDTHRANEX.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ANEXD___ANEXDDTHRANEX.isVisible || controls.ANEXD___ANEXDREFERENC.isVisible">
+					<q-col
+						v-if="controls.ANEXD___ANEXDDTHRANEX.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ANEXD___ANEXDDTHRANEX.isVisible"
 							class="i-text"
 							v-bind="controls.ANEXD___ANEXDDTHRANEX"
 							v-on="controls.ANEXD___ANEXDDTHRANEX.handlers"
@@ -131,11 +141,12 @@
 								@reset-icon-click="model.ValDthranex.fnUpdateValue(model.ValDthranex.originalValue ?? new Date())"
 								@update:model-value="model.ValDthranex.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.ANEXD___ANEXDREFERENC.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.ANEXD___ANEXDREFERENC.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ANEXD___ANEXDREFERENC.isVisible"
 							class="i-text"
 							v-bind="controls.ANEXD___ANEXDREFERENC"
 							v-on="controls.ANEXD___ANEXDREFERENC.handlers"
@@ -147,13 +158,14 @@
 								@blur="onBlur(controls.ANEXD___ANEXDREFERENC, model.ValReferenc.value)"
 								@change="model.ValReferenc.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ANEXD___ANEXDTITLE___.isVisible">
-					<q-control-wrapper
-						v-show="controls.ANEXD___ANEXDTITLE___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ANEXD___ANEXDTITLE___.isVisible">
+					<q-col
+						v-if="controls.ANEXD___ANEXDTITLE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ANEXD___ANEXDTITLE___.isVisible"
 							class="i-text"
 							v-bind="controls.ANEXD___ANEXDTITLE___"
 							v-on="controls.ANEXD___ANEXDTITLE___.handlers"
@@ -165,13 +177,14 @@
 								@blur="onBlur(controls.ANEXD___ANEXDTITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ANEXD___LANGULANGUA__.isVisible">
-					<q-control-wrapper
-						v-show="controls.ANEXD___LANGULANGUA__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ANEXD___LANGULANGUA__.isVisible">
+					<q-col
+						v-if="controls.ANEXD___LANGULANGUA__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ANEXD___LANGULANGUA__.isVisible"
 							class="i-text"
 							v-bind="controls.ANEXD___LANGULANGUA__"
 							v-on="controls.ANEXD___LANGULANGUA__.handlers"
@@ -187,13 +200,14 @@
 								v-bind="controls.ANEXD___LANGULANGUA__.seeMoreParams"
 								v-on="controls.ANEXD___LANGULANGUA__.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ANEXD___ANEXDTITTRADU.isVisible">
-					<q-control-wrapper
-						v-show="controls.ANEXD___ANEXDTITTRADU.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ANEXD___ANEXDTITTRADU.isVisible">
+					<q-col
+						v-if="controls.ANEXD___ANEXDTITTRADU.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ANEXD___ANEXDTITTRADU.isVisible"
 							class="i-text"
 							v-bind="controls.ANEXD___ANEXDTITTRADU"
 							v-on="controls.ANEXD___ANEXDTITTRADU.handlers"
@@ -205,13 +219,14 @@
 								@blur="onBlur(controls.ANEXD___ANEXDTITTRADU, model.ValTittradu.value)"
 								@change="model.ValTittradu.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ANEXD___ANEXDDOCUMENT.isVisible">
-					<q-control-wrapper
-						v-show="controls.ANEXD___ANEXDDOCUMENT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ANEXD___ANEXDDOCUMENT.isVisible">
+					<q-col
+						v-if="controls.ANEXD___ANEXDDOCUMENT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ANEXD___ANEXDDOCUMENT.isVisible"
 							class="i-text"
 							v-bind="controls.ANEXD___ANEXDDOCUMENT"
 							v-on="controls.ANEXD___ANEXDDOCUMENT.handlers"
@@ -223,10 +238,10 @@
 								v-bind="controls.ANEXD___ANEXDDOCUMENT.props"
 								v-on="controls.ANEXD___ANEXDDOCUMENT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -235,7 +250,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -244,6 +259,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -255,7 +271,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -468,7 +484,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -619,7 +639,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_ANEXD___ANEXDREFERENC',
 						controlLimits: [
 						],
 					}, this),
@@ -633,7 +652,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
-						labelId: 'label_ANEXD___ANEXDTITLE___',
 						controlLimits: [
 						],
 					}, this),
@@ -676,7 +694,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						isFormulaBlocked: true,
 						maxLength: 85,
-						labelId: 'label_ANEXD___ANEXDTITTRADU',
 						controlLimits: [
 						],
 					}, this),
@@ -858,16 +875,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -911,16 +942,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1072,6 +1117,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ANEXD]/
 // eslint-disable-next-line

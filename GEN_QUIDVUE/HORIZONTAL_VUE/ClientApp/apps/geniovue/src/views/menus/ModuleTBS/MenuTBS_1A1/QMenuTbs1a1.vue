@@ -1,0 +1,483 @@
+﻿<template>
+	<teleport
+		v-if="menuModalIsReady"
+		:to="`#${uiContainersId.body}`"
+		:disabled="!menuInfo.isPopup">
+		<form
+			class="form-horizontal"
+			@submit.prevent>
+			<q-row-container>
+				<q-table
+					v-bind="controls.menu"
+					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TBS_Menu_1A1]/ -->
+				</q-table>
+
+				<q-table-extra-extension
+					:list-ctrl="controls.menu"
+					:filter-operators="controls.menu.filterOperators"
+					v-on="controls.menu.handlers" />
+			</q-row-container>
+		</form>
+	</teleport>
+
+	<teleport
+		v-if="menuModalIsReady && hasButtons"
+		:to="`#${uiContainersId.footer}`"
+		:disabled="!menuInfo.isPopup">
+		<q-row-container>
+			<div id="footer-action-btns">
+				<template
+					v-for="btn in menuButtons"
+					:key="btn.id">
+					<q-button
+						v-if="btn.isVisible"
+						:id="btn.id"
+						:label="btn.text"
+						:variant="btn.variant"
+						:disabled="btn.disabled"
+						:icon-pos="btn.iconPos"
+						:class="btn.classes"
+						@click="btn.action">
+						<q-icon
+							v-if="btn.icon"
+							v-bind="btn.icon" />
+					</q-button>
+				</template>
+			</div>
+		</q-row-container>
+	</teleport>
+</template>
+
+<script>
+	/* eslint-disable @typescript-eslint/no-unused-vars */
+	import asyncProcM from '@quidgest/clientapp/composables/async'
+	import qEnums from '@quidgest/clientapp/constants/enums'
+	import netAPI from '@quidgest/clientapp/network'
+	import openQSign from '@quidgest/clientapp/plugins/qSign'
+	import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
+	import { computed, readonly } from 'vue'
+
+	import MenuHandlers from '@/mixins/menuHandlers.js'
+	import controlClass from '@/mixins/fieldControl.js'
+	import listFunctions from '@/mixins/listFunctions.js'
+	import listColumnTypes from '@/mixins/listColumnTypes.js'
+	import { resetProgressBar, setProgressBar } from '@/utils/layout.js'
+
+	import { loadResources } from '@/plugins/i18n.js'
+
+	import hardcodedTexts from '@/hardcodedTexts'
+	import qApi from '@/api/genio/quidgestFunctions.js'
+	import qFunctions from '@/api/genio/projectFunctions.js'
+	import qProjArrays from '@/api/genio/projectArrays.js'
+	/* eslint-enable @typescript-eslint/no-unused-vars */
+
+	import MenuViewModel from './QMenuTBS_1A1ViewModel.js'
+
+	const requiredTextResources = ['QMenuTBS_1A1', 'hardcoded', 'messages']
+
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FORM_INCLUDEJS TBS_MENU_1A1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+
+	export default {
+		name: 'QMenuTbs1a1',
+
+		mixins: [
+			MenuHandlers
+		],
+
+		inheritAttrs: false,
+
+		props: {
+			/**
+			 * Whether or not the menu is used as a homepage.
+			 */
+			isHomePage: {
+				type: Boolean,
+				default: false
+			}
+		},
+
+		expose: [
+			'navigationId',
+			'onBeforeRouteLeave',
+			'updateMenuNavigation'
+		],
+
+		data()
+		{
+			// eslint-disable-next-line
+			const vm = this
+			return {
+				componentOnLoadProc: asyncProcM.getProcListMonitor('QMenuTBS_1A1', false),
+
+				interfaceMetadata: {
+					id: 'QMenuTBS_1A1', // Used for resources
+					requiredTextResources
+				},
+
+				menuInfo: {
+					id: '1A1',
+					isMenuList: true,
+					designation: computed(() => this.Resources.ASSETS12081),
+					acronym: 'TBS_1A1',
+					name: 'ASSET',
+					route: 'menu-TBS_1A1',
+					order: '1A1',
+					controller: 'ASSET',
+					action: 'TBS_Menu_1A1',
+					isPopup: false
+				},
+
+				model: new MenuViewModel(this),
+
+				controls: {
+					menu: new controlClass.TableListControl({
+						fnHydrateViewModel: (data) => vm.model.hydrate(data),
+						id: 'TBS_Menu_1A1',
+						controller: 'ASSET',
+						action: 'TBS_Menu_1A1',
+						hasDependencies: false,
+						isInCollapsible: false,
+						tableModeClasses: [
+							'q-table--full-height',
+							'page-full-height'
+						],
+						columnsOriginal: [
+							new listColumnTypes.TextColumn({
+								order: 1,
+								name: 'ValBg_color',
+								area: 'ASSET',
+								field: 'BG_COLOR',
+								label: computed(() => this.Resources.BACKGROUND_COLOR_FOR59228),
+								dataLength: 50,
+								scrollData: 30,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.NumericColumn({
+								order: 2,
+								name: 'ValAssetnum',
+								area: 'ASSET',
+								field: 'ASSETNUM',
+								label: computed(() => this.Resources.ASSET_NUMBER52372),
+								scrollData: 10,
+								maxDigits: 10,
+								decimalPlaces: 0,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 3,
+								name: 'ValGrai',
+								area: 'ASSET',
+								field: 'GRAI',
+								label: computed(() => this.Resources.GRAI___GLOBAL_RETURN06821),
+								dataLength: 50,
+								scrollData: 30,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.ArrayColumn({
+								order: 4,
+								name: 'ValIdenttyp',
+								area: 'ASSET',
+								field: 'IDENTTYP',
+								label: computed(() => this.Resources.IDENTIFIER_TYPE60623),
+								dataLength: 1,
+								scrollData: 1,
+								export: 1,
+								array: computed(() => new qProjArrays.QArrayIdenttyp(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayIdenttyp.type,
+								arrayDisplayMode: 'D',
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.ArrayColumn({
+								order: 5,
+								name: 'ValCategory',
+								area: 'ASSET',
+								field: 'CATEGORY',
+								label: computed(() => this.Resources.CATEGORY18978),
+								dataLength: 5,
+								scrollData: 5,
+								export: 1,
+								array: computed(() => new qProjArrays.QArrayAssetcategory(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayAssetcategory.type,
+								arrayDisplayMode: 'D',
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 6,
+								name: 'Kinde.ValDesignat',
+								area: 'KINDE',
+								field: 'DESIGNAT',
+								label: computed(() => this.Resources.KIND_OF_EQUIPMENT22928),
+								dataLength: 85,
+								scrollData: 30,
+								export: 1,
+								pkColumn: 'ValCodkinde',
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 7,
+								name: 'ValName',
+								area: 'ASSET',
+								field: 'NAME',
+								label: computed(() => this.Resources.IDENTIFICATION_NAME16317),
+								dataLength: 85,
+								scrollData: 30,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 8,
+								name: 'Manuf.ValName',
+								area: 'MANUF',
+								field: 'NAME',
+								label: computed(() => this.Resources.LEGAL_NAME42902),
+								dataLength: 85,
+								scrollData: 30,
+								export: 1,
+								pkColumn: 'ValCodentit',
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 9,
+								name: 'ValGiai',
+								area: 'ASSET',
+								field: 'GIAI',
+								label: computed(() => this.Resources.GIAI___GLOBAL_INDIVI63214),
+								dataLength: 50,
+								scrollData: 30,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.ImageColumn({
+								order: 10,
+								name: 'ValPhoto',
+								area: 'ASSET',
+								field: 'PHOTO',
+								label: computed(() => this.Resources.PHOTO51874),
+								dataTitle: computed(() => genericFunctions.formatString(vm.Resources.IMAGEM_UTILIZADA_PAR58591, vm.Resources.PHOTO51874)),
+								scrollData: 3,
+								sortable: false,
+								searchable: false,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 11,
+								name: 'ValLongdesc',
+								area: 'ASSET',
+								field: 'LONGDESC',
+								label: computed(() => this.Resources.DETAILED_DESCRIPTION36560),
+								scrollData: 30,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.ArrayColumn({
+								order: 12,
+								name: 'ValAssettyp',
+								area: 'ASSET',
+								field: 'ASSETTYP',
+								label: computed(() => this.Resources.ASSET_TYPE02033),
+								dataLength: 1,
+								scrollData: 1,
+								export: 1,
+								array: computed(() => new qProjArrays.QArrayAssettyp(vm.$getResource).elements),
+								arrayType: qProjArrays.QArrayAssettyp.type,
+								arrayDisplayMode: 'D',
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+							new listColumnTypes.TextColumn({
+								order: 13,
+								name: 'ValDescription',
+								area: 'ASSET',
+								field: 'DESCRIPTION',
+								label: computed(() => this.Resources.DESCRIPTION07383),
+								scrollData: 30,
+								export: 1,
+							}, computed(() => vm.model), computed(() => vm.internalEvents)),
+						],
+						config: {
+							name: 'TBS_Menu_1A1',
+							serverMode: true,
+							pkColumn: 'ValCodasset',
+							tableAlias: 'ASSET',
+							tableNamePlural: computed(() => this.Resources.ASSETS12081),
+							viewManagement: '',
+							showLimitsInfo: true,
+							tableTitle: computed(() => this.Resources.ASSETS12081),
+							showAlternatePagination: true,
+							permissions: {
+							},
+							searchBarConfig: {
+								visibility: true
+							},
+							filtersVisible: true,
+							allowColumnFilters: true,
+							allowColumnSort: true,
+							crudActions: [
+								{
+									id: 'show',
+									name: 'show',
+									title: computed(() => this.Resources.CONSULTAR57388),
+									icon: {
+										icon: 'view'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ASSET',
+										mode: 'SHOW',
+										isControlled: true
+									}
+								},
+								{
+									id: 'edit',
+									name: 'edit',
+									title: computed(() => this.Resources.EDITAR11616),
+									icon: {
+										icon: 'pencil'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ASSET',
+										mode: 'EDIT',
+										isControlled: true
+									}
+								},
+								{
+									id: 'duplicate',
+									name: 'duplicate',
+									title: computed(() => this.Resources.DUPLICAR09748),
+									icon: {
+										icon: 'duplicate'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ASSET',
+										mode: 'DUPLICATE',
+										isControlled: true
+									}
+								},
+								{
+									id: 'delete',
+									name: 'delete',
+									title: computed(() => this.Resources.ELIMINAR21155),
+									icon: {
+										icon: 'delete'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ASSET',
+										mode: 'DELETE',
+										isControlled: true
+									}
+								}
+							],
+							generalActions: [
+								{
+									id: 'insert',
+									name: 'insert',
+									title: computed(() => this.Resources.INSERIR43365),
+									icon: {
+										icon: 'add'
+									},
+									isInReadOnly: true,
+									params: {
+										action: vm.openFormAction,
+										type: 'form',
+										formName: 'ASSET',
+										mode: 'NEW',
+										repeatInsertion: false,
+										isControlled: true
+									}
+								},
+							],
+							generalCustomActions: [
+							],
+							groupActions: [
+							],
+							customActions: [
+							],
+							MCActions: [
+							],
+							rowClickAction: {
+								id: 'RCA_TBS_1A11',
+								name: 'form-ASSET',
+								isVisible: true,
+								params: {
+									isRoute: true,
+									limits: [
+										{
+											identifier: 'id',
+											fnValueSelector: (row) => row.ValCodasset
+										},
+									],
+									isControlled: true,
+									action: vm.openFormAction, type: 'form', mode: 'SHOW', formName: 'ASSET'
+								}
+							},
+							formsDefinition: {
+								'ASSET': {
+									fnKeySelector: (row) => row.Fields.ValCodasset,
+									isPopup: false
+								},
+							},
+							defaultSearchColumnName: 'ValName',
+							defaultSearchColumnNameOriginal: 'ValName',
+							defaultColumnSorting: {
+								columnName: 'ValBg_color',
+								sortOrder: 'asc'
+							}
+						},
+						globalEvents: ['changed-KINDE', 'changed-ASSET', 'changed-MANUF'],
+						uuid: '5ab779f3-1df6-4903-a7a0-c9dc77297b18',
+						allSelectedRows: 'false',
+						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
+					}, this),
+				}
+			}
+		},
+
+		beforeRouteEnter(to, _, next)
+		{
+			// called before the route that renders this component is confirmed.
+			// does NOT have access to `this` component instance,
+			// because it has not been created yet when this guard is called!
+
+			next((vm) => vm.updateMenuNavigation(to))
+		},
+
+		beforeRouteLeave(to, _, next)
+		{
+			this.onBeforeRouteLeave(next)
+		},
+
+		mounted()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FORM_CODEJS TBS_MENU_1A1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		beforeUnmount()
+		{
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT COMPONENT_BEFORE_UNMOUNT TBS_MENU_1A1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		},
+
+		methods: {
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT FUNCTIONS_JS TBS_1A1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+/* eslint-disable indent, vue/html-indent, vue/script-indent */
+// USE /[MANUAL GQT LISTING_CODEJS TBS_MENU_1A1]/
+// eslint-disable-next-line
+/* eslint-enable indent, vue/html-indent, vue/script-indent */
+		}
+	}
+</script>

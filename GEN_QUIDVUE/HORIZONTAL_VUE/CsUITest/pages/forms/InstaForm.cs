@@ -10,7 +10,7 @@ public class InstaForm : Form
 	/// <summary>
 	/// Equipment
 	/// </summary>
-	public IWebElement PseudNovogr01 => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudNovogr01 => new CollapsibleZoneControl(driver, ContainerLocator, "#INSTA___PSEUDNOVOGR01-container");
 
 	/// <summary>
 	/// Type of equipment

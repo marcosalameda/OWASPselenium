@@ -63,7 +63,7 @@ namespace GenioMVC.Models
 	{
 		[JsonConverter(typeof(VariantToStringDictionaryConverter))]
 		public Dictionary<string, string> QueryParams { get; set; } = [];
-		public CSGenio.framework.TableConfiguration.TableConfiguration TableConfiguration { get; set; }
+		public CSGenio.core.framework.table.TableConfiguration TableConfiguration { get; set; }
 		public string UserTableConfigName { get; set; }
 		public bool LoadDefaultView { get; set; } = false;
 		public bool IsFirstLoad { get; set; } = false;
@@ -76,6 +76,9 @@ namespace GenioMVC.Models
 		public List<string> TotalizerColumns { get; set; } = [];
 		// The table has multiple selection enabled.
 		public List<string> SelectedRows { get; set; } = [];
+
+		[JsonConverter(typeof(VariantToObjectDictionaryConverter))]
+		public Dictionary<string, object> RelatedFilterValues { get; set; } = [];
 	}
 
 	public class RequestInitialEPH
@@ -230,7 +233,7 @@ namespace GenioMVC.Models
 		[JsonConverter(typeof(VariantToStringDictionaryConverter))]
 		public Dictionary<string, string> QueryParams { get; set; }
 		public bool AllSelected { get; set; } = false;
-		public CSGenio.framework.TableConfiguration.TableConfiguration TableConfiguration { get; set; }
+		public CSGenio.core.framework.table.TableConfiguration TableConfiguration { get; set; }
 		public string UserTableConfigName { get; set; }
 		public bool LoadDefaultView { get; set; } = false;
 	}

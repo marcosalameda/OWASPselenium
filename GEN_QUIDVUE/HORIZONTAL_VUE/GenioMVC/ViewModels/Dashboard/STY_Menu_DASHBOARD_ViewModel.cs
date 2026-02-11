@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 using CSGenio.business;
 using GenioMVC.Models.Navigation;
@@ -11,6 +12,7 @@ namespace GenioMVC.ViewModels.Dashboard
 	/// </summary>
 	public class STY_Menu_DASHBOARD_ViewModel : DashboardViewModel
 	{
+		[JsonPropertyName("uuid")]
 		public override string Uuid => "69a50a9c-107e-4d43-8d65-93932183554f";
 
 		public STY_Menu_DASHBOARD_ViewModel(UserContext userContext): base(userContext)

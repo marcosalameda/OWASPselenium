@@ -127,8 +127,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("lang2","lang2");
 			info.Pathways.Add("lang1","lang1");
+			info.Pathways.Add("lang2","lang2");
 		}
 
 		/// <summary>
@@ -334,16 +334,17 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
+		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAtradu search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioAtradu search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAtradu area = new CSGenioAtradu(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields))
+            if (sp.getRecord(area, key, fields, forUpdate))
                 return area;
 			return null;
         }
@@ -410,7 +411,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX TRADU]/
 
      
-
        
 
 	}

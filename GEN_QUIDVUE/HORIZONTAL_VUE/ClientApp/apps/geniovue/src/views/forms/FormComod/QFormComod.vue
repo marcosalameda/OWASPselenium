@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="COMOD"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.COMOD___PESS1NAME____.isVisible">
-					<q-control-wrapper
-						v-show="controls.COMOD___PESS1NAME____.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.COMOD___PESS1NAME____.isVisible">
+					<q-col
+						v-if="controls.COMOD___PESS1NAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.COMOD___PESS1NAME____.isVisible"
 							class="i-text"
 							v-bind="controls.COMOD___PESS1NAME____"
 							v-on="controls.COMOD___PESS1NAME____.handlers"
@@ -111,13 +120,14 @@
 								v-bind="controls.COMOD___PESS1NAME____.seeMoreParams"
 								v-on="controls.COMOD___PESS1NAME____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.COMOD___PESS2NAME____.isVisible || controls.COMOD___EQUIPREGISTNR.isVisible">
-					<q-control-wrapper
-						v-show="controls.COMOD___PESS2NAME____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.COMOD___PESS2NAME____.isVisible || controls.COMOD___EQUIPREGISTNR.isVisible">
+					<q-col
+						v-if="controls.COMOD___PESS2NAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.COMOD___PESS2NAME____.isVisible"
 							class="i-text"
 							v-bind="controls.COMOD___PESS2NAME____"
 							v-on="controls.COMOD___PESS2NAME____.handlers"
@@ -133,11 +143,12 @@
 								v-bind="controls.COMOD___PESS2NAME____.seeMoreParams"
 								v-on="controls.COMOD___PESS2NAME____.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.COMOD___EQUIPREGISTNR.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.COMOD___EQUIPREGISTNR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.COMOD___EQUIPREGISTNR.isVisible"
 							class="i-text"
 							v-bind="controls.COMOD___EQUIPREGISTNR"
 							v-on="controls.COMOD___EQUIPREGISTNR.handlers"
@@ -153,13 +164,14 @@
 								v-bind="controls.COMOD___EQUIPREGISTNR.seeMoreParams"
 								v-on="controls.COMOD___EQUIPREGISTNR.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.COMOD___EQUIPDESIGNAT.isVisible || controls.COMOD___EQUIPFREQUENC.isVisible">
-					<q-control-wrapper
-						v-show="controls.COMOD___EQUIPDESIGNAT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.COMOD___EQUIPDESIGNAT.isVisible || controls.COMOD___EQUIPFREQUENC.isVisible">
+					<q-col
+						v-if="controls.COMOD___EQUIPDESIGNAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.COMOD___EQUIPDESIGNAT.isVisible"
 							class="i-text"
 							v-bind="controls.COMOD___EQUIPDESIGNAT"
 							v-on="controls.COMOD___EQUIPDESIGNAT.handlers"
@@ -171,11 +183,12 @@
 								@blur="onBlur(controls.COMOD___EQUIPDESIGNAT, model.EquipValDesignat.value)"
 								@change="model.EquipValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.COMOD___EQUIPFREQUENC.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.COMOD___EQUIPFREQUENC.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.COMOD___EQUIPFREQUENC.isVisible"
 							class="i-text"
 							v-bind="controls.COMOD___EQUIPFREQUENC"
 							v-on="controls.COMOD___EQUIPFREQUENC.handlers"
@@ -186,13 +199,14 @@
 								v-if="controls.COMOD___EQUIPFREQUENC.isVisible"
 								v-bind="controls.COMOD___EQUIPFREQUENC.props" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.COMOD___LENDILENDINNR.isVisible || controls.COMOD___LENDISTART___.isVisible || controls.COMOD___LENDIWARNDT__.isVisible || controls.COMOD___LENDIEND_____.isVisible">
-					<q-control-wrapper
-						v-show="controls.COMOD___LENDILENDINNR.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.COMOD___LENDILENDINNR.isVisible || controls.COMOD___LENDISTART___.isVisible || controls.COMOD___LENDIWARNDT__.isVisible || controls.COMOD___LENDIEND_____.isVisible">
+					<q-col
+						v-if="controls.COMOD___LENDILENDINNR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.COMOD___LENDILENDINNR.isVisible"
 							class="i-text"
 							v-bind="controls.COMOD___LENDILENDINNR"
 							v-on="controls.COMOD___LENDILENDINNR.handlers"
@@ -204,11 +218,12 @@
 								v-bind="controls.COMOD___LENDILENDINNR.props"
 								@update:model-value="model.ValLendinnr.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.COMOD___LENDISTART___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.COMOD___LENDISTART___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.COMOD___LENDISTART___.isVisible"
 							class="i-text"
 							v-bind="controls.COMOD___LENDISTART___"
 							v-on="controls.COMOD___LENDISTART___.handlers"
@@ -222,11 +237,12 @@
 								@reset-icon-click="model.ValStart.fnUpdateValue(model.ValStart.originalValue ?? new Date())"
 								@update:model-value="model.ValStart.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.COMOD___LENDIWARNDT__.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.COMOD___LENDIWARNDT__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.COMOD___LENDIWARNDT__.isVisible"
 							class="i-text"
 							v-bind="controls.COMOD___LENDIWARNDT__"
 							v-on="controls.COMOD___LENDIWARNDT__.handlers"
@@ -240,11 +256,12 @@
 								@reset-icon-click="model.ValWarndt.fnUpdateValue(model.ValWarndt.originalValue ?? new Date())"
 								@update:model-value="model.ValWarndt.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.COMOD___LENDIEND_____.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.COMOD___LENDIEND_____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.COMOD___LENDIEND_____.isVisible"
 							class="i-text"
 							v-bind="controls.COMOD___LENDIEND_____"
 							v-on="controls.COMOD___LENDIEND_____.handlers"
@@ -258,29 +275,29 @@
 								@reset-icon-click="model.ValEnd.fnUpdateValue(model.ValEnd.originalValue ?? new Date())"
 								@update:model-value="model.ValEnd.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.COMOD___LENDIOBSERVAT.isVisible">
-					<q-control-wrapper
-						v-show="controls.COMOD___LENDIOBSERVAT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.COMOD___LENDIOBSERVAT.isVisible">
+					<q-col
+						v-if="controls.COMOD___LENDIOBSERVAT.isVisible"
+						cols="auto">
 						<base-input-structure
-							class="i-text"
+							v-if="controls.COMOD___LENDIOBSERVAT.isVisible"
+							class="i-textarea"
 							v-bind="controls.COMOD___LENDIOBSERVAT"
 							v-on="controls.COMOD___LENDIOBSERVAT.handlers"
 							:loading="controls.COMOD___LENDIOBSERVAT.props.loading"
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
-							<q-markdown-editor
+							<q-text-area
 								v-if="controls.COMOD___LENDIOBSERVAT.isVisible"
 								v-bind="controls.COMOD___LENDIOBSERVAT.props"
-								:model-value="model.ValObservat.value"
-								@update:model-value="model.ValObservat.fnUpdateValue" />
+								v-on="controls.COMOD___LENDIOBSERVAT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -289,7 +306,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -298,6 +315,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -309,7 +327,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -523,7 +541,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -752,7 +774,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
-						labelId: 'label_COMOD___EQUIPDESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -839,7 +860,7 @@
 						controlLimits: [
 						],
 					}, this),
-					COMOD___LENDIOBSERVAT: new fieldControlClass.MarkdownEditorControl({
+					COMOD___LENDIOBSERVAT: new fieldControlClass.MultilineStringControl({
 						modelField: 'ValObservat',
 						valueChangeEvent: 'fieldChange:lendi.observat',
 						id: 'COMOD___LENDIOBSERVAT',
@@ -848,12 +869,8 @@
 						label: computed(() => this.Resources.OBSERVATION37880),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
-						showAlternativeView: computed(() => !this.isEditable),
-						markdownOptions: {
-							allowAttributes: false,
-							allowImage: true,
-							enableTypographer: true,
-						},
+						rows: 3,
+						cols: 85,
 						controlLimits: [
 						],
 					}, this),
@@ -1029,16 +1046,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1082,16 +1113,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1243,6 +1288,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS COMOD]/
 // eslint-disable-next-line

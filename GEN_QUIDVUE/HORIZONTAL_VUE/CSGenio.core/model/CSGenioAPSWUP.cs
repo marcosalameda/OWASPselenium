@@ -71,6 +71,8 @@ namespace CSGenio.business
 			info.DBFields["wms"].FieldSize = 3;
 			info.RegisterFieldDB(new Field(info.Alias, "trn", FieldType.NUMERIC));
 			info.DBFields["trn"].FieldSize = 3;
+			info.RegisterFieldDB(new Field(info.Alias, "uis", FieldType.NUMERIC));
+			info.DBFields["uis"].FieldSize = 3;
 			info.RegisterFieldDB(new Field(info.Alias, "nome", FieldType.TEXT));
 			info.DBFields["nome"].FieldSize = 100;
 			

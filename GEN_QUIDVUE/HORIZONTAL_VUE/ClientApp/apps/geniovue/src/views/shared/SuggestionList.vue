@@ -67,17 +67,18 @@
 
 		mounted()
 		{
+			const props = {
+				title: computed(() => this.Resources[hardcodedTexts.suggestions]),
+				dismissible: true
+			}
+
 			const modalProps = {
 				id: 'form-suggestion-list',
-				headerTitle: computed(() => this.Resources[hardcodedTexts.suggestions]),
-				closeButtonEnable: true,
-				hideFooter: true,
-				dismissWithEsc: true,
 				dismissAction: this.goBack,
 				isActive: true
 			}
 
-			this.setModal(modalProps)
+			this.setModal(props, modalProps)
 			this.fetchData()
 		},
 

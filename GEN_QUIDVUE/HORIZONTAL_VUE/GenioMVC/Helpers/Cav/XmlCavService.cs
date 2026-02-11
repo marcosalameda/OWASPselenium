@@ -57,7 +57,6 @@ namespace GenioMVC.Helpers.Cav
 			fieldMapList.Add(FieldType.LOGIC, "B");
 			fieldMapList.Add(FieldType.MEMO, "A");
 			fieldMapList.Add(FieldType.BINARY, "A");
-			fieldMapList.Add(FieldType.MEMO, "A");
 			fieldMapList.Add(FieldType.MEMO_COMP_RTF, "A");
 			fieldMapList.Add(FieldType.IMAGE, "A");
 			fieldMapList.Add(FieldType.DOCUMENT, "A");

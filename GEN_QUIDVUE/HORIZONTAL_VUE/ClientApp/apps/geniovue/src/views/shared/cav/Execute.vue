@@ -116,9 +116,7 @@
 			v-if="showSQL"
 			:to="`#q-modal-${modalId}-body`">
 			<div class="content">
-				<div class="bootbox-body">
-					{{ data.querySQL }}
-				</div>
+				{{ data.querySQL }}
 			</div>
 		</teleport>
 	</div>
@@ -242,16 +240,27 @@
 			 */
 			fnShowSQL()
 			{
+				const props = {
+					title: 'SQL',
+					class: 'q-dialog-form',
+					buttons: [
+						{
+							id: 'dialog-button-close',
+							action: this.fnHideSQL,
+							icon: { icon: 'close', type: 'svg' },
+							props: {
+								label: computed(() => this.Resources[hardcodedTexts.close]),
+								variant: 'bold'
+							}
+						}
+					]
+				}
 				const modalProps = {
 					id: this.modalId,
-					headerTitle: 'SQL',
-					closeButtonEnable: true,
 					isActive: true,
-					hideFooter: true,
-					dismissWithEsc: true,
 					dismissAction: this.fnHideSQL
 				}
-				this.setModal(modalProps)
+				this.setModal(props, modalProps)
 
 				this.$nextTick().then(() => (this.showSQL = true))
 			},

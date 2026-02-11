@@ -4,6 +4,7 @@ import { visualizer } from 'rollup-plugin-visualizer'
 import { defineConfig } from 'vite'
 import mkcert from 'vite-plugin-mkcert'
 
+
 import { viteSvgSpritePlugin } from './plugins/svgbundle'
 
 export default defineConfig(({ mode }) => {

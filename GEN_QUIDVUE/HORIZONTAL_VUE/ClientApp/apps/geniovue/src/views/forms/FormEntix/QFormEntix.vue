@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,27 +94,25 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="ENTIX"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.ENTIX___PSEUDNOVOGR01.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.ENTIX___PSEUDNOVOGR01.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.ENTIX___PSEUDNOVOGR01.isVisible">
+					<q-col v-if="controls.ENTIX___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
+							v-if="controls.ENTIX___PSEUDNOVOGR01.isVisible"
 							id="ENTIX___PSEUDNOVOGR01"
 							v-bind="controls.ENTIX___PSEUDNOVOGR01"
 							:is-visible="controls.ENTIX___PSEUDNOVOGR01.isVisible">
 							<!-- Start ENTIX___PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.ENTIX___ENTITNAME____.isVisible">
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITNAME____.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.ENTIX___ENTITNAME____.isVisible">
+								<q-col
+									v-if="controls.ENTIX___ENTITNAME____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITNAME____.isVisible"
 										class="i-text"
 										v-bind="controls.ENTIX___ENTITNAME____"
 										v-on="controls.ENTIX___ENTITNAME____.handlers"
@@ -118,13 +124,14 @@
 											@blur="onBlur(controls.ENTIX___ENTITNAME____, model.ValName.value)"
 											@change="model.ValName.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.ENTIX___ENTITFOUNDED_.isVisible || controls.ENTIX___ENTITINITIALS.isVisible || controls.ENTIX___ENTITREGISTRA.isVisible || controls.ENTIX___ENTITTAXNUMBE.isVisible">
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITFOUNDED_.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.ENTIX___ENTITFOUNDED_.isVisible || controls.ENTIX___ENTITINITIALS.isVisible || controls.ENTIX___ENTITREGISTRA.isVisible || controls.ENTIX___ENTITTAXNUMBE.isVisible">
+								<q-col
+									v-if="controls.ENTIX___ENTITFOUNDED_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITFOUNDED_.isVisible"
 										class="i-text"
 										v-bind="controls.ENTIX___ENTITFOUNDED_"
 										v-on="controls.ENTIX___ENTITFOUNDED_.handlers"
@@ -138,11 +145,12 @@
 											@reset-icon-click="model.ValFounded.fnUpdateValue(model.ValFounded.originalValue ?? new Date())"
 											@update:model-value="model.ValFounded.fnUpdateValue($event ?? '')" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITINITIALS.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ENTIX___ENTITINITIALS.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITINITIALS.isVisible"
 										class="i-text"
 										v-bind="controls.ENTIX___ENTITINITIALS"
 										v-on="controls.ENTIX___ENTITINITIALS.handlers"
@@ -154,11 +162,12 @@
 											@blur="onBlur(controls.ENTIX___ENTITINITIALS, model.ValInitials.value)"
 											@change="model.ValInitials.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITREGISTRA.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ENTIX___ENTITREGISTRA.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITREGISTRA.isVisible"
 										class="i-text"
 										v-bind="controls.ENTIX___ENTITREGISTRA"
 										v-on="controls.ENTIX___ENTITREGISTRA.handlers"
@@ -170,11 +179,12 @@
 											@blur="onBlur(controls.ENTIX___ENTITREGISTRA, model.ValRegistra.value)"
 											@change="model.ValRegistra.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITTAXNUMBE.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ENTIX___ENTITTAXNUMBE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITTAXNUMBE.isVisible"
 										class="i-text"
 										v-bind="controls.ENTIX___ENTITTAXNUMBE"
 										v-on="controls.ENTIX___ENTITTAXNUMBE.handlers"
@@ -186,13 +196,14 @@
 											@blur="onBlur(controls.ENTIX___ENTITTAXNUMBE, model.ValTaxnumbe.value)"
 											@change="model.ValTaxnumbe.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.ENTIX___ENTITIBAN____.isVisible || controls.ENTIX___ENTITPHONENUM.isVisible">
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITIBAN____.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.ENTIX___ENTITIBAN____.isVisible || controls.ENTIX___ENTITPHONENUM.isVisible">
+								<q-col
+									v-if="controls.ENTIX___ENTITIBAN____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITIBAN____.isVisible"
 										class="i-text"
 										v-bind="controls.ENTIX___ENTITIBAN____"
 										v-on="controls.ENTIX___ENTITIBAN____.handlers"
@@ -204,11 +215,12 @@
 											@blur="onBlur(controls.ENTIX___ENTITIBAN____, model.ValIban.value)"
 											@change="model.ValIban.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITPHONENUM.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ENTIX___ENTITPHONENUM.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITPHONENUM.isVisible"
 										class="i-text"
 										v-bind="controls.ENTIX___ENTITPHONENUM"
 										v-on="controls.ENTIX___ENTITPHONENUM.handlers"
@@ -220,13 +232,14 @@
 											@blur="onBlur(controls.ENTIX___ENTITPHONENUM, model.ValPhonenum.value)"
 											@change="model.ValPhonenum.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.ENTIX___ENTITOWNER___.isVisible || controls.ENTIX___ENTITCARRIER_.isVisible || controls.ENTIX___ENTITSUPPLIER.isVisible || controls.ENTIX___ENTITMANUFACT.isVisible">
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITOWNER___.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.ENTIX___ENTITOWNER___.isVisible || controls.ENTIX___ENTITCARRIER_.isVisible || controls.ENTIX___ENTITSUPPLIER.isVisible || controls.ENTIX___ENTITMANUFACT.isVisible">
+								<q-col
+									v-if="controls.ENTIX___ENTITOWNER___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITOWNER___.isVisible"
 										class="i-text"
 										v-bind="controls.ENTIX___ENTITOWNER___"
 										v-on="controls.ENTIX___ENTITOWNER___.handlers"
@@ -238,11 +251,12 @@
 											@blur="onBlur(controls.ENTIX___ENTITOWNER___, model.ValOwner.value)"
 											@change="model.ValOwner.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITCARRIER_.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
 										class="i-checkbox"
 										v-bind="controls.ENTIX___ENTITCARRIER_"
 										v-on="controls.ENTIX___ENTITCARRIER_.handlers"
@@ -250,17 +264,18 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.ENTIX___ENTITCARRIER_.isVisible"
 												v-bind="controls.ENTIX___ENTITCARRIER_.props"
 												v-on="controls.ENTIX___ENTITCARRIER_.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITSUPPLIER.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
 										class="i-checkbox"
 										v-bind="controls.ENTIX___ENTITSUPPLIER"
 										v-on="controls.ENTIX___ENTITSUPPLIER.handlers"
@@ -268,17 +283,18 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.ENTIX___ENTITSUPPLIER.isVisible"
 												v-bind="controls.ENTIX___ENTITSUPPLIER.props"
 												v-on="controls.ENTIX___ENTITSUPPLIER.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ENTIX___ENTITMANUFACT.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
 										class="i-checkbox"
 										v-bind="controls.ENTIX___ENTITMANUFACT"
 										v-on="controls.ENTIX___ENTITMANUFACT.handlers"
@@ -286,40 +302,37 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.ENTIX___ENTITMANUFACT.isVisible"
 												v-bind="controls.ENTIX___ENTITMANUFACT.props"
 												v-on="controls.ENTIX___ENTITMANUFACT.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End ENTIX___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.ENTIX___PSEUDNOVOGR05.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible">
+					<q-col v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible">
 						<q-accordion
 							v-if="controls.ENTIX___PSEUDNOVOGR05.isVisible"
 							id="ENTIX___PSEUDNOVOGR05"
-							v-model="controls.ENTIX___PSEUDNOVOGR05.openChild"
-							v-bind="controls.ENTIX___PSEUDNOVOGR05">
+							v-model="controls.ENTIX___PSEUDNOVOGR05.openChild">
 							<!-- Start ENTIX___PSEUDNOVOGR05 -->
 							<q-accordion-item
+								v-if="controls.ENTIX___PSEUDNOVOGR02.isVisible"
 								id="ENTIX___PSEUDNOVOGR02-container"
 								value="ENTIX___PSEUDNOVOGR02"
 								:title="controls.ENTIX___PSEUDNOVOGR02.label">
 								<!-- Start ENTIX___PSEUDNOVOGR02 -->
-								<q-row-container v-show="controls.ENTIX___ENTITTELEPHON.isVisible || controls.ENTIX___ENTITFAX_____.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITTELEPHON.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.ENTIX___ENTITTELEPHON.isVisible || controls.ENTIX___ENTITFAX_____.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITTELEPHON.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITTELEPHON.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITTELEPHON"
 											v-on="controls.ENTIX___ENTITTELEPHON.handlers"
@@ -331,11 +344,12 @@
 												@blur="onBlur(controls.ENTIX___ENTITTELEPHON, model.ValTelephon.value)"
 												@change="model.ValTelephon.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITFAX_____.isVisible"
-										class="control-join-group">
+									</q-col>
+									<q-col
+										v-if="controls.ENTIX___ENTITFAX_____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITFAX_____.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITFAX_____"
 											v-on="controls.ENTIX___ENTITFAX_____.handlers"
@@ -347,13 +361,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITFAX_____, model.ValFax.value)"
 												@change="model.ValFax.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITEMAIL___.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITEMAIL___.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITEMAIL___.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITEMAIL___.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITEMAIL___.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITEMAIL___"
 											v-on="controls.ENTIX___ENTITEMAIL___.handlers"
@@ -365,13 +380,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITEMAIL___, model.ValEmail.value)"
 												@change="model.ValEmail.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITWEBSITE_.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITWEBSITE_.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITWEBSITE_.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITWEBSITE_.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITWEBSITE_.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITWEBSITE_"
 											v-on="controls.ENTIX___ENTITWEBSITE_.handlers"
@@ -383,13 +399,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITWEBSITE_, model.ValWebsite.value)"
 												@change="model.ValWebsite.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITPERSON__.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITPERSON__.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITPERSON__.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITPERSON__.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITPERSON__.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITPERSON__"
 											v-on="controls.ENTIX___ENTITPERSON__.handlers"
@@ -401,13 +418,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITPERSON__, model.ValPerson.value)"
 												@change="model.ValPerson.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITCONTACT_.isVisible || controls.ENTIX___ENTITLANGUAGE.isVisible || controls.ENTIX___ENTITCURRENCY.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITCONTACT_.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITCONTACT_.isVisible || controls.ENTIX___ENTITLANGUAGE.isVisible || controls.ENTIX___ENTITCURRENCY.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITCONTACT_.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITCONTACT_.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITCONTACT_"
 											v-on="controls.ENTIX___ENTITCONTACT_.handlers"
@@ -419,11 +437,12 @@
 												@blur="onBlur(controls.ENTIX___ENTITCONTACT_, model.ValContact.value)"
 												@change="model.ValContact.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITLANGUAGE.isVisible"
-										class="control-join-group">
+									</q-col>
+									<q-col
+										v-if="controls.ENTIX___ENTITLANGUAGE.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITLANGUAGE.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITLANGUAGE"
 											v-on="controls.ENTIX___ENTITLANGUAGE.handlers"
@@ -435,11 +454,12 @@
 												@blur="onBlur(controls.ENTIX___ENTITLANGUAGE, model.ValLanguage.value)"
 												@change="model.ValLanguage.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITCURRENCY.isVisible"
-										class="control-join-group">
+									</q-col>
+									<q-col
+										v-if="controls.ENTIX___ENTITCURRENCY.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITCURRENCY.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITCURRENCY"
 											v-on="controls.ENTIX___ENTITCURRENCY.handlers"
@@ -451,20 +471,22 @@
 												@blur="onBlur(controls.ENTIX___ENTITCURRENCY, model.ValCurrency.value)"
 												@change="model.ValCurrency.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End ENTIX___PSEUDNOVOGR02 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.ENTIX___PSEUDNOVOGR03.isVisible"
 								id="ENTIX___PSEUDNOVOGR03-container"
 								value="ENTIX___PSEUDNOVOGR03"
 								:title="controls.ENTIX___PSEUDNOVOGR03.label">
 								<!-- Start ENTIX___PSEUDNOVOGR03 -->
-								<q-row-container v-show="controls.ENTIX___ENTITBUILDING.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITBUILDING.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.ENTIX___ENTITBUILDING.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITBUILDING.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITBUILDING.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITBUILDING"
 											v-on="controls.ENTIX___ENTITBUILDING.handlers"
@@ -476,13 +498,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITBUILDING, model.ValBuilding.value)"
 												@change="model.ValBuilding.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITSTREET__.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITSTREET__.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITSTREET__.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITSTREET__.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITSTREET__.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITSTREET__"
 											v-on="controls.ENTIX___ENTITSTREET__.handlers"
@@ -494,13 +517,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITSTREET__, model.ValStreet.value)"
 												@change="model.ValStreet.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITTOWN____.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITTOWN____.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITTOWN____.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITTOWN____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITTOWN____.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITTOWN____"
 											v-on="controls.ENTIX___ENTITTOWN____.handlers"
@@ -512,13 +536,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITTOWN____, model.ValTown.value)"
 												@change="model.ValTown.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITCOUNTY__.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITCOUNTY__.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITCOUNTY__.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITCOUNTY__.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITCOUNTY__.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITCOUNTY__"
 											v-on="controls.ENTIX___ENTITCOUNTY__.handlers"
@@ -530,13 +555,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITCOUNTY__, model.ValCounty.value)"
 												@change="model.ValCounty.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITSTATE___.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITSTATE___.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITSTATE___.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITSTATE___.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITSTATE___.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITSTATE___"
 											v-on="controls.ENTIX___ENTITSTATE___.handlers"
@@ -548,13 +574,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITSTATE___, model.ValState.value)"
 												@change="model.ValState.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITPOSTALCO.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITPOSTALCO.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITPOSTALCO.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITPOSTALCO.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITPOSTALCO.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITPOSTALCO"
 											v-on="controls.ENTIX___ENTITPOSTALCO.handlers"
@@ -566,13 +593,14 @@
 												@blur="onBlur(controls.ENTIX___ENTITPOSTALCO, model.ValPostalco.value)"
 												@change="model.ValPostalco.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ENTIX___ENTITPOBOX___.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___ENTITPOBOX___.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ENTIX___ENTITPOBOX___.isVisible">
+									<q-col
+										v-if="controls.ENTIX___ENTITPOBOX___.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___ENTITPOBOX___.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___ENTITPOBOX___"
 											v-on="controls.ENTIX___ENTITPOBOX___.handlers"
@@ -584,20 +612,22 @@
 												@blur="onBlur(controls.ENTIX___ENTITPOBOX___, model.ValPobox.value)"
 												@change="model.ValPobox.fnUpdateValueOnChange" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End ENTIX___PSEUDNOVOGR03 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.ENTIX___PSEUDNOVOGR04.isVisible"
 								id="ENTIX___PSEUDNOVOGR04-container"
 								value="ENTIX___PSEUDNOVOGR04"
 								:title="controls.ENTIX___PSEUDNOVOGR04.label">
 								<!-- Start ENTIX___PSEUDNOVOGR04 -->
-								<q-row-container v-show="controls.ENTIX___FACI1NAME____.isVisible || controls.ENTIX___FACI2NAME____.isVisible">
-									<q-control-wrapper
-										v-show="controls.ENTIX___FACI1NAME____.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.ENTIX___FACI1NAME____.isVisible || controls.ENTIX___FACI2NAME____.isVisible">
+									<q-col
+										v-if="controls.ENTIX___FACI1NAME____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___FACI1NAME____.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___FACI1NAME____"
 											v-on="controls.ENTIX___FACI1NAME____.handlers"
@@ -609,11 +639,12 @@
 												v-bind="controls.ENTIX___FACI1NAME____.props"
 												v-on="controls.ENTIX___FACI1NAME____.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-									<q-control-wrapper
-										v-show="controls.ENTIX___FACI2NAME____.isVisible"
-										class="control-join-group">
+									</q-col>
+									<q-col
+										v-if="controls.ENTIX___FACI2NAME____.isVisible"
+										cols="auto">
 										<base-input-structure
+											v-if="controls.ENTIX___FACI2NAME____.isVisible"
 											class="i-text"
 											v-bind="controls.ENTIX___FACI2NAME____"
 											v-on="controls.ENTIX___FACI2NAME____.handlers"
@@ -625,44 +656,48 @@
 												v-bind="controls.ENTIX___FACI2NAME____.props"
 												v-on="controls.ENTIX___FACI2NAME____.handlers" />
 										</base-input-structure>
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End ENTIX___PSEUDNOVOGR04 -->
 							</q-accordion-item>
 							<!-- End ENTIX___PSEUDNOVOGR05 -->
 						</q-accordion>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ENTIX___PSEUDNOVOGR06.isVisible">
-					<q-control-wrapper
-						v-show="controls.ENTIX___PSEUDNOVOGR06.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ENTIX___PSEUDNOVOGR06.isVisible">
+					<q-col
+						v-if="controls.ENTIX___PSEUDNOVOGR06.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.ENTIX___PSEUDNOVOGR06.isVisible"
 							id="ENTIX___PSEUDNOVOGR06"
 							v-bind="controls.ENTIX___PSEUDNOVOGR06"
 							no-border
 							:is-visible="controls.ENTIX___PSEUDNOVOGR06.isVisible">
 							<!-- Start ENTIX___PSEUDNOVOGR06 -->
-							<q-row-container v-show="controls.ENTIX___PSEUDFACILITE.isVisible">
-								<q-control-wrapper
-									v-show="controls.ENTIX___PSEUDFACILITE.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.ENTIX___PSEUDFACILITE.isVisible">
+								<q-col
+									v-if="controls.ENTIX___PSEUDFACILITE.isVisible"
+									cols="auto">
 									<q-table
-										v-show="controls.ENTIX___PSEUDFACILITE.isVisible"
+										v-if="controls.ENTIX___PSEUDFACILITE.isVisible"
 										v-bind="controls.ENTIX___PSEUDFACILITE"
-										v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
+										v-on="controls.ENTIX___PSEUDFACILITE.handlers">
+										<!-- USE /[MANUAL GQT CUSTOM_TABLE ENTIX___PSEUDFACILITE]/ -->
+									</q-table>
 									<q-table-extra-extension
+										v-if="controls.ENTIX___PSEUDFACILITE.isVisible"
 										:list-ctrl="controls.ENTIX___PSEUDFACILITE"
 										:filter-operators="controls.ENTIX___PSEUDFACILITE.filterOperators"
 										v-on="controls.ENTIX___PSEUDFACILITE.handlers" />
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End ENTIX___PSEUDNOVOGR06 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -671,7 +706,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -680,6 +715,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -691,7 +727,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -902,7 +938,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -1027,7 +1067,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 85,
-						labelId: 'label_ENTIX___ENTITNAME____',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1057,7 +1096,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 10,
-						labelId: 'label_ENTIX___ENTITINITIALS',
 						controlLimits: [
 						],
 					}, this),
@@ -1072,7 +1110,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 30,
-						labelId: 'label_ENTIX___ENTITREGISTRA',
 						controlLimits: [
 						],
 					}, this),
@@ -1087,7 +1124,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 30,
-						labelId: 'label_ENTIX___ENTITTAXNUMBE',
 						controlLimits: [
 						],
 					}, this),
@@ -1102,7 +1138,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 33,
-						labelId: 'label_ENTIX___ENTITIBAN____',
 						controlLimits: [
 						],
 					}, this),
@@ -1117,7 +1152,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 20,
-						labelId: 'label_ENTIX___ENTITPHONENUM',
 						controlLimits: [
 						],
 					}, this),
@@ -1132,7 +1166,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR01',
 						maxLength: 50,
-						labelId: 'label_ENTIX___ENTITOWNER___',
 						controlLimits: [
 						],
 					}, this),
@@ -1214,7 +1247,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 20,
-						labelId: 'label_ENTIX___ENTITTELEPHON',
 						controlLimits: [
 						],
 					}, this),
@@ -1229,7 +1261,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 20,
-						labelId: 'label_ENTIX___ENTITFAX_____',
 						controlLimits: [
 						],
 					}, this),
@@ -1244,7 +1275,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 254,
-						labelId: 'label_ENTIX___ENTITEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -1259,7 +1289,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 254,
-						labelId: 'label_ENTIX___ENTITWEBSITE_',
 						controlLimits: [
 						],
 					}, this),
@@ -1274,7 +1303,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 85,
-						labelId: 'label_ENTIX___ENTITPERSON__',
 						controlLimits: [
 						],
 					}, this),
@@ -1289,7 +1317,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 30,
-						labelId: 'label_ENTIX___ENTITCONTACT_',
 						controlLimits: [
 						],
 					}, this),
@@ -1304,7 +1331,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 2,
-						labelId: 'label_ENTIX___ENTITLANGUAGE',
 						controlLimits: [
 						],
 					}, this),
@@ -1319,7 +1345,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR02',
 						maxLength: 3,
-						labelId: 'label_ENTIX___ENTITCURRENCY',
 						controlLimits: [
 						],
 					}, this),
@@ -1349,7 +1374,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 25,
-						labelId: 'label_ENTIX___ENTITBUILDING',
 						controlLimits: [
 						],
 					}, this),
@@ -1364,7 +1388,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 50,
-						labelId: 'label_ENTIX___ENTITSTREET__',
 						controlLimits: [
 						],
 					}, this),
@@ -1379,7 +1402,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 50,
-						labelId: 'label_ENTIX___ENTITTOWN____',
 						controlLimits: [
 						],
 					}, this),
@@ -1394,7 +1416,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 50,
-						labelId: 'label_ENTIX___ENTITCOUNTY__',
 						controlLimits: [
 						],
 					}, this),
@@ -1409,7 +1430,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 50,
-						labelId: 'label_ENTIX___ENTITSTATE___',
 						controlLimits: [
 						],
 					}, this),
@@ -1424,7 +1444,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 10,
-						labelId: 'label_ENTIX___ENTITPOSTALCO',
 						controlLimits: [
 						],
 					}, this),
@@ -1439,7 +1458,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ENTIX___PSEUDNOVOGR03',
 						maxLength: 5,
-						labelId: 'label_ENTIX___ENTITPOBOX___',
 						controlLimits: [
 						],
 					}, this),
@@ -1552,6 +1570,7 @@
 								label: computed(() => this.Resources.INCORPORATION10135),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1561,6 +1580,7 @@
 								label: computed(() => this.Resources.FACILITY_NAME19514),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1570,6 +1590,7 @@
 								label: computed(() => this.Resources.FACILITY_TYPE44577),
 								dataLength: 25,
 								scrollData: 25,
+								export: 1,
 								pkColumn: 'ValCodfacty',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1581,6 +1602,7 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -1591,6 +1613,7 @@
 								scrollData: 10,
 								maxDigits: 3,
 								decimalPlaces: 6,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 6,
@@ -1602,6 +1625,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 7,
@@ -1613,6 +1637,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1628,8 +1653,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -1754,7 +1778,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-FACIL', 'changed-ENTIT', 'changed-FACTY'],
+						globalEvents: ['changed-CNTRY', 'changed-ENTIT', 'changed-FACIL', 'changed-FACTY'],
 						uuid: 'Entix_ValFacilite',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1971,16 +1995,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -2024,16 +2062,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -2185,6 +2237,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ENTIX]/
 // eslint-disable-next-line

@@ -36,40 +36,28 @@ namespace GenioMVC.Controllers
 		// GET: /Produ/WMS_Menu_311
 		[ActionName("WMS_Menu_311")]
 		[HttpPost]
-		public ActionResult WMS_Menu_311([FromBody]RequestMenuModel requestModel)
+		public ActionResult WMS_Menu_311([FromBody] RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
+			WMS_Menu_311_ViewModel model = new(m_userContext);
 
-			WMS_Menu_311_ViewModel model = new WMS_Menu_311_ViewModel(UserContext.Current);
-
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
+				requestModel.TableConfiguration,
+				requestModel.UserTableConfigName,
+				requestModel.LoadDefaultView);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
 			// Determine what columns have totalizers
 			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
 
 			// For tables with multiple selection enabled, determine currently selected rows
 			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			// Add form field filters to the table configuration
+			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
@@ -87,7 +75,7 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = new NameValueCollection();
+			NameValueCollection querystring = [];
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
@@ -115,29 +103,32 @@ namespace GenioMVC.Controllers
 				List<CSGenio.framework.Exports.QColumn> columns = null;
 				model.LoadToExport(out listing, out conditions, out columns, tableConfig, querystring, Request.IsAjaxRequest());
 
-				// Validate export format
-				if (querystring["ExportValidate"] == "true")
+				// Validate export format (Currently, this functionality is only implemented in MVC Razor)
+				/*if (querystring["ExportValidate"] == "true")
 				{
 					bool isValidExport = new CSGenio.framework.Exports(UserContext.Current.User).ExportListValidation(listing, conditions, columns, exportType);
 					return Json(new { ValidFormat = isValidExport });
-				}
+				}*/
 
 				byte[] fileBytes = null;
 // USE /[MANUAL WMS OVERRQEXPORT 311]/
+				// Protected against cases where it receive zero columns. Otherwise, it will select all columns in the area.
+				if (listing.RequestFields.Length == 0)
+					return JsonERROR(Resources.Resources.A_EXPORTACAO_NAO_POD03671);
 				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, exportType, file,ACTION_WMS_MENU_311.Name);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
 				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));
 			}
 
-            try
-            {
-			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-            }
-            catch(Exception e)
-            {
-                return JsonERROR(HandleException(e), model);
-            }
+			try
+			{
+				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+			}
+			catch (Exception e)
+			{
+				return JsonERROR(HandleException(e), model);
+			}
 
 
 			return JsonOK(model);
@@ -147,40 +138,28 @@ namespace GenioMVC.Controllers
 		// GET: /Produ/WMS_Menu_321
 		[ActionName("WMS_Menu_321")]
 		[HttpPost]
-		public ActionResult WMS_Menu_321([FromBody]RequestMenuModel requestModel)
+		public ActionResult WMS_Menu_321([FromBody] RequestMenuModel requestModel)
 		{
 			var queryParams = requestModel.QueryParams;
 
-			int perPage = CSGenio.framework.Configuration.NrRegDBedit;
-			string rowsPerPageOptionsString = "";
+			WMS_Menu_321_ViewModel model = new(m_userContext);
 
-			WMS_Menu_321_ViewModel model = new WMS_Menu_321_ViewModel(UserContext.Current);
-
-			// Table configuration load options
-			CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions tableConfigOptions = new CSGenio.framework.TableConfiguration.TableConfigurationLoadOptions();
-
-
-			// Determine which table configuration to use and load it
-			CSGenio.framework.TableConfiguration.TableConfiguration tableConfig = TableUiSettings.Load(
-				UserContext.Current.PersistentSupport,
-				model.Uuid,
-				UserContext.Current.User,
-				tableConfigOptions
-			).DetermineTableConfig(
-				requestModel?.TableConfiguration,
-				requestModel?.UserTableConfigName,
-				(bool)requestModel?.LoadDefaultView,
-				tableConfigOptions
-			);
+			CSGenio.core.framework.table.TableConfiguration tableConfig = model.GetTableConfig(
+				requestModel.TableConfiguration,
+				requestModel.UserTableConfigName,
+				requestModel.LoadDefaultView);
 
 			// Determine rows per page
-			tableConfig.RowsPerPage = CSGenio.framework.TableConfiguration.TableConfigurationHelpers.DetermineRowsPerPage(tableConfig.RowsPerPage, perPage, rowsPerPageOptionsString);
+			tableConfig.RowsPerPage = tableConfig.DetermineRowsPerPage(CSGenio.framework.Configuration.NrRegDBedit, "");
 
 			// Determine what columns have totalizers
 			tableConfig.TotalizerColumns = requestModel.TotalizerColumns;
 
 			// For tables with multiple selection enabled, determine currently selected rows
 			tableConfig.SelectedRows = requestModel.SelectedRows;
+
+			// Add form field filters to the table configuration
+			tableConfig.FieldFilters = requestModel.RelatedFilterValues;
 
 			bool isHomePage = RouteData.Values.ContainsKey("isHomePage") ? (bool)RouteData.Values["isHomePage"] : false;
 			if (isHomePage)
@@ -198,7 +177,7 @@ namespace GenioMVC.Controllers
 			if (result.Status.Equals(CSGenio.framework.Status.E))
 				return PermissionError(result.Message);
 
-			NameValueCollection querystring = new NameValueCollection();
+			NameValueCollection querystring = [];
 			if (queryParams != null && queryParams.Count > 0)
 				querystring.AddRange(queryParams);
 
@@ -226,20 +205,24 @@ namespace GenioMVC.Controllers
 				List<CSGenio.framework.Exports.QColumn> columns = null;
 				model.LoadToExport(out listing, out conditions, out columns, tableConfig, querystring, Request.IsAjaxRequest());
 
-				// Validate export format
-				if (querystring["ExportValidate"] == "true")
+				// Validate export format (Currently, this functionality is only implemented in MVC Razor)
+				/*if (querystring["ExportValidate"] == "true")
 				{
 					bool isValidExport = new CSGenio.framework.Exports(UserContext.Current.User).ExportListValidation(listing, conditions, columns, exportType);
 					return Json(new { ValidFormat = isValidExport });
-				}
+				}*/
 
 				byte[] fileBytes = null;
 // USE /[MANUAL WMS OVERRQEXPORT 321]/
+				// Protected against cases where it receive zero columns. Otherwise, it will select all columns in the area.
+				if (listing.RequestFields.Length == 0)
+					return JsonERROR(Resources.Resources.A_EXPORTACAO_NAO_POD03671);
 				fileBytes = new CSGenio.framework.Exports(UserContext.Current.User).ExportList(listing, conditions, columns, exportType, file,ACTION_WMS_MENU_321.Name);
 
 				QCache.Instance.ExportFiles.Put(file, fileBytes);
 				return Json(GetJsonForDownloadExportFile(file, querystring["ExportType"]));
 			}
+
 			if (querystring["ImportList"] != null && Convert.ToBoolean(querystring["ImportList"]) && querystring["ImportType"] != null)
 			{
 				string importType =  querystring["ImportType"];
@@ -254,14 +237,14 @@ namespace GenioMVC.Controllers
 				return Json(GetJsonForDownloadExportFile(file, importType));
 			}
 
-            try
-            {
-			    model.Load(tableConfig, querystring, Request.IsAjaxRequest());
-            }
-            catch(Exception e)
-            {
-                return JsonERROR(HandleException(e), model);
-            }
+			try
+			{
+				model.Load(tableConfig, querystring, Request.IsAjaxRequest());
+			}
+			catch (Exception e)
+			{
+				return JsonERROR(HandleException(e), model);
+			}
 
 
 			return JsonOK(model);

@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,25 +94,27 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="ARTIG"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.ARTIG___PSEUDNOVOGR02.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARTIG___PSEUDNOVOGR02.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.ARTIG___PSEUDNOVOGR02.isVisible">
+					<q-col
+						v-if="controls.ARTIG___PSEUDNOVOGR02.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.ARTIG___PSEUDNOVOGR02.isVisible"
 							id="ARTIG___PSEUDNOVOGR02"
 							v-bind="controls.ARTIG___PSEUDNOVOGR02"
 							:is-visible="controls.ARTIG___PSEUDNOVOGR02.isVisible">
 							<!-- Start ARTIG___PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.ARTIG___WAREHWAREHDES.isVisible">
-								<q-control-wrapper
-									v-show="controls.ARTIG___WAREHWAREHDES.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.ARTIG___WAREHWAREHDES.isVisible">
+								<q-col
+									v-if="controls.ARTIG___WAREHWAREHDES.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___WAREHWAREHDES.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___WAREHWAREHDES"
 										v-on="controls.ARTIG___WAREHWAREHDES.handlers"
@@ -120,28 +130,26 @@
 											v-bind="controls.ARTIG___WAREHWAREHDES.seeMoreParams"
 											v-on="controls.ARTIG___WAREHWAREHDES.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End ARTIG___PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.ARTIG___PSEUDNOVOGR01.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.ARTIG___PSEUDNOVOGR01.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARTIG___PSEUDNOVOGR01.isVisible">
+					<q-col v-if="controls.ARTIG___PSEUDNOVOGR01.isVisible">
 						<q-group-box-container
+							v-if="controls.ARTIG___PSEUDNOVOGR01.isVisible"
 							id="ARTIG___PSEUDNOVOGR01"
 							v-bind="controls.ARTIG___PSEUDNOVOGR01"
 							:is-visible="controls.ARTIG___PSEUDNOVOGR01.isVisible">
 							<!-- Start ARTIG___PSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.ARTIG___GITEMITEMGCOD.isVisible || controls.ARTIG___GITEMITEMDES_.isVisible">
-								<q-control-wrapper
-									v-show="controls.ARTIG___GITEMITEMGCOD.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.ARTIG___GITEMITEMGCOD.isVisible || controls.ARTIG___GITEMITEMDES_.isVisible">
+								<q-col
+									v-if="controls.ARTIG___GITEMITEMGCOD.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___GITEMITEMGCOD.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___GITEMITEMGCOD"
 										v-on="controls.ARTIG___GITEMITEMGCOD.handlers"
@@ -153,11 +161,12 @@
 											@blur="onBlur(controls.ARTIG___GITEMITEMGCOD, model.GitemValItemgcod.value)"
 											@change="model.GitemValItemgcod.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ARTIG___GITEMITEMDES_.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ARTIG___GITEMITEMDES_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___GITEMITEMDES_.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___GITEMITEMDES_"
 										v-on="controls.ARTIG___GITEMITEMDES_.handlers"
@@ -173,28 +182,26 @@
 											v-bind="controls.ARTIG___GITEMITEMDES_.seeMoreParams"
 											v-on="controls.ARTIG___GITEMITEMDES_.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End ARTIG___PSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.ARTIG___PSEUDNOVOGR07.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.ARTIG___PSEUDNOVOGR07.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARTIG___PSEUDNOVOGR07.isVisible">
+					<q-col v-if="controls.ARTIG___PSEUDNOVOGR07.isVisible">
 						<q-group-box-container
+							v-if="controls.ARTIG___PSEUDNOVOGR07.isVisible"
 							id="ARTIG___PSEUDNOVOGR07"
 							v-bind="controls.ARTIG___PSEUDNOVOGR07"
 							:is-visible="controls.ARTIG___PSEUDNOVOGR07.isVisible">
 							<!-- Start ARTIG___PSEUDNOVOGR07 -->
-							<q-row-container v-show="controls.ARTIG___ITEM_ITEMCOD_.isVisible || controls.ARTIG___ITEM_ITEMDES_.isVisible || controls.ARTIG___ITEM_VALID___.isVisible">
-								<q-control-wrapper
-									v-show="controls.ARTIG___ITEM_ITEMCOD_.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.ARTIG___ITEM_ITEMCOD_.isVisible || controls.ARTIG___ITEM_ITEMDES_.isVisible || controls.ARTIG___ITEM_VALID___.isVisible">
+								<q-col
+									v-if="controls.ARTIG___ITEM_ITEMCOD_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___ITEM_ITEMCOD_.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___ITEM_ITEMCOD_"
 										v-on="controls.ARTIG___ITEM_ITEMCOD_.handlers"
@@ -206,11 +213,12 @@
 											@blur="onBlur(controls.ARTIG___ITEM_ITEMCOD_, model.ValItemcod.value)"
 											@change="model.ValItemcod.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ARTIG___ITEM_ITEMDES_.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ARTIG___ITEM_ITEMDES_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___ITEM_ITEMDES_.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___ITEM_ITEMDES_"
 										v-on="controls.ARTIG___ITEM_ITEMDES_.handlers"
@@ -222,11 +230,12 @@
 											@blur="onBlur(controls.ARTIG___ITEM_ITEMDES_, model.ValItemdes.value)"
 											@change="model.ValItemdes.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ARTIG___ITEM_VALID___.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ARTIG___ITEM_VALID___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___ITEM_VALID___.isVisible"
 										class="i-checkbox"
 										v-bind="controls.ARTIG___ITEM_VALID___"
 										v-on="controls.ARTIG___ITEM_VALID___.handlers"
@@ -234,19 +243,20 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.ARTIG___ITEM_VALID___.isVisible"
 												v-bind="controls.ARTIG___ITEM_VALID___.props"
 												v-on="controls.ARTIG___ITEM_VALID___.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.ARTIG___ITEM_ITEMTYPE.isVisible">
-								<q-control-wrapper
-									v-show="controls.ARTIG___ITEM_ITEMTYPE.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.ARTIG___ITEM_ITEMTYPE.isVisible">
+								<q-col
+									v-if="controls.ARTIG___ITEM_ITEMTYPE.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___ITEM_ITEMTYPE.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___ITEM_ITEMTYPE"
 										v-on="controls.ARTIG___ITEM_ITEMTYPE.handlers"
@@ -258,13 +268,14 @@
 											v-bind="controls.ARTIG___ITEM_ITEMTYPE.props"
 											@update:model-value="model.ValItemtype.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.ARTIG___ITEM_ENTRIES_.isVisible || controls.ARTIG___ITEM_EXITS___.isVisible || controls.ARTIG___ITEM_EXISTENC.isVisible || controls.ARTIG___ITEM_DISPONIB.isVisible">
-								<q-control-wrapper
-									v-show="controls.ARTIG___ITEM_ENTRIES_.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.ARTIG___ITEM_ENTRIES_.isVisible || controls.ARTIG___ITEM_EXITS___.isVisible || controls.ARTIG___ITEM_EXISTENC.isVisible || controls.ARTIG___ITEM_DISPONIB.isVisible">
+								<q-col
+									v-if="controls.ARTIG___ITEM_ENTRIES_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___ITEM_ENTRIES_.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___ITEM_ENTRIES_"
 										v-on="controls.ARTIG___ITEM_ENTRIES_.handlers"
@@ -276,11 +287,12 @@
 											v-bind="controls.ARTIG___ITEM_ENTRIES_.props"
 											@update:model-value="model.ValEntries.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ARTIG___ITEM_EXITS___.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ARTIG___ITEM_EXITS___.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___ITEM_EXITS___.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___ITEM_EXITS___"
 										v-on="controls.ARTIG___ITEM_EXITS___.handlers"
@@ -292,11 +304,12 @@
 											v-bind="controls.ARTIG___ITEM_EXITS___.props"
 											@update:model-value="model.ValExits.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ARTIG___ITEM_EXISTENC.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ARTIG___ITEM_EXISTENC.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___ITEM_EXISTENC.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___ITEM_EXISTENC"
 										v-on="controls.ARTIG___ITEM_EXISTENC.handlers"
@@ -308,11 +321,12 @@
 											v-bind="controls.ARTIG___ITEM_EXISTENC.props"
 											@update:model-value="model.ValExistenc.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.ARTIG___ITEM_DISPONIB.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.ARTIG___ITEM_DISPONIB.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___ITEM_DISPONIB.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___ITEM_DISPONIB"
 										v-on="controls.ARTIG___ITEM_DISPONIB.handlers"
@@ -323,24 +337,22 @@
 											v-if="controls.ARTIG___ITEM_DISPONIB.isVisible"
 											v-bind="controls.ARTIG___ITEM_DISPONIB.props" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container
-								v-show="controls.ARTIG___PSEUDNOVOGR08.isVisible"
-								is-large>
-								<q-control-wrapper
-									v-show="controls.ARTIG___PSEUDNOVOGR08.isVisible"
-									class="row-line-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.ARTIG___PSEUDNOVOGR08.isVisible">
+								<q-col v-if="controls.ARTIG___PSEUDNOVOGR08.isVisible">
 									<q-group-collapsible
+										v-if="controls.ARTIG___PSEUDNOVOGR08.isVisible"
 										id="ARTIG___PSEUDNOVOGR08"
 										v-bind="controls.ARTIG___PSEUDNOVOGR08"
 										v-on="controls.ARTIG___PSEUDNOVOGR08.handlers">
 										<!-- Start ARTIG___PSEUDNOVOGR08 -->
-										<q-row-container v-show="controls.ARTIG___ITEM_IMAGE___.isVisible">
-											<q-control-wrapper
-												v-show="controls.ARTIG___ITEM_IMAGE___.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.ARTIG___ITEM_IMAGE___.isVisible">
+											<q-col
+												v-if="controls.ARTIG___ITEM_IMAGE___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.ARTIG___ITEM_IMAGE___.isVisible"
 													class="q-image"
 													v-bind="controls.ARTIG___ITEM_IMAGE___"
 													v-on="controls.ARTIG___ITEM_IMAGE___.handlers"
@@ -352,110 +364,121 @@
 														v-bind="controls.ARTIG___ITEM_IMAGE___.props"
 														v-on="controls.ARTIG___ITEM_IMAGE___.handlers" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End ARTIG___PSEUDNOVOGR08 -->
 									</q-group-collapsible>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End ARTIG___PSEUDNOVOGR07 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.ARTIG___PSEUDNOVOGR05.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.ARTIG___PSEUDNOVOGR05.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARTIG___PSEUDNOVOGR05.isVisible">
+					<q-col v-if="controls.ARTIG___PSEUDNOVOGR05.isVisible">
 						<q-accordion
 							v-if="controls.ARTIG___PSEUDNOVOGR05.isVisible"
 							id="ARTIG___PSEUDNOVOGR05"
-							v-model="controls.ARTIG___PSEUDNOVOGR05.openChild"
-							v-bind="controls.ARTIG___PSEUDNOVOGR05">
+							v-model="controls.ARTIG___PSEUDNOVOGR05.openChild">
 							<!-- Start ARTIG___PSEUDNOVOGR05 -->
 							<q-accordion-item
+								v-if="controls.ARTIG___PSEUDNOVOGR03.isVisible"
 								id="ARTIG___PSEUDNOVOGR03-container"
 								value="ARTIG___PSEUDNOVOGR03"
 								:title="controls.ARTIG___PSEUDNOVOGR03.label">
 								<!-- Start ARTIG___PSEUDNOVOGR03 -->
-								<q-row-container v-show="controls.ARTIG___PSEUDCONTACOR.isVisible">
-									<q-control-wrapper
-										v-show="controls.ARTIG___PSEUDCONTACOR.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.ARTIG___PSEUDCONTACOR.isVisible">
+									<q-col
+										v-if="controls.ARTIG___PSEUDCONTACOR.isVisible"
+										cols="auto">
 										<q-table
-											v-show="controls.ARTIG___PSEUDCONTACOR.isVisible"
+											v-if="controls.ARTIG___PSEUDCONTACOR.isVisible"
 											v-bind="controls.ARTIG___PSEUDCONTACOR"
-											v-on="controls.ARTIG___PSEUDCONTACOR.handlers" />
+											v-on="controls.ARTIG___PSEUDCONTACOR.handlers">
+											<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDCONTACOR]/ -->
+										</q-table>
 										<q-table-extra-extension
+											v-if="controls.ARTIG___PSEUDCONTACOR.isVisible"
 											:list-ctrl="controls.ARTIG___PSEUDCONTACOR"
 											:filter-operators="controls.ARTIG___PSEUDCONTACOR.filterOperators"
 											v-on="controls.ARTIG___PSEUDCONTACOR.handlers" />
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End ARTIG___PSEUDNOVOGR03 -->
 							</q-accordion-item>
 							<q-accordion-item
+								v-if="controls.ARTIG___PSEUDNOVOGR04.isVisible"
 								id="ARTIG___PSEUDNOVOGR04-container"
 								value="ARTIG___PSEUDNOVOGR04"
 								:title="controls.ARTIG___PSEUDNOVOGR04.label">
 								<!-- Start ARTIG___PSEUDNOVOGR04 -->
-								<q-row-container v-show="controls.ARTIG___PSEUDLENTRADA.isVisible">
-									<q-control-wrapper
-										v-show="controls.ARTIG___PSEUDLENTRADA.isVisible"
-										class="control-join-group">
+								<q-row v-if="controls.ARTIG___PSEUDLENTRADA.isVisible">
+									<q-col
+										v-if="controls.ARTIG___PSEUDLENTRADA.isVisible"
+										cols="auto">
 										<q-table
-											v-show="controls.ARTIG___PSEUDLENTRADA.isVisible"
+											v-if="controls.ARTIG___PSEUDLENTRADA.isVisible"
 											v-bind="controls.ARTIG___PSEUDLENTRADA"
-											v-on="controls.ARTIG___PSEUDLENTRADA.handlers" />
+											v-on="controls.ARTIG___PSEUDLENTRADA.handlers">
+											<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDLENTRADA]/ -->
+										</q-table>
 										<q-table-extra-extension
+											v-if="controls.ARTIG___PSEUDLENTRADA.isVisible"
 											:list-ctrl="controls.ARTIG___PSEUDLENTRADA"
 											:filter-operators="controls.ARTIG___PSEUDLENTRADA.filterOperators"
 											v-on="controls.ARTIG___PSEUDLENTRADA.handlers" />
-									</q-control-wrapper>
-								</q-row-container>
-								<q-row-container v-show="controls.ARTIG___PSEUDLSAIDAS_.isVisible">
-									<q-control-wrapper
-										v-show="controls.ARTIG___PSEUDLSAIDAS_.isVisible"
-										class="control-join-group">
+									</q-col>
+								</q-row>
+								<q-row v-if="controls.ARTIG___PSEUDLSAIDAS_.isVisible">
+									<q-col
+										v-if="controls.ARTIG___PSEUDLSAIDAS_.isVisible"
+										cols="auto">
 										<q-table
-											v-show="controls.ARTIG___PSEUDLSAIDAS_.isVisible"
+											v-if="controls.ARTIG___PSEUDLSAIDAS_.isVisible"
 											v-bind="controls.ARTIG___PSEUDLSAIDAS_"
-											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers" />
+											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers">
+											<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDLSAIDAS_]/ -->
+										</q-table>
 										<q-table-extra-extension
+											v-if="controls.ARTIG___PSEUDLSAIDAS_.isVisible"
 											:list-ctrl="controls.ARTIG___PSEUDLSAIDAS_"
 											:filter-operators="controls.ARTIG___PSEUDLSAIDAS_.filterOperators"
 											v-on="controls.ARTIG___PSEUDLSAIDAS_.handlers" />
-									</q-control-wrapper>
-								</q-row-container>
+									</q-col>
+								</q-row>
 								<!-- End ARTIG___PSEUDNOVOGR04 -->
 							</q-accordion-item>
 							<!-- End ARTIG___PSEUDNOVOGR05 -->
 						</q-accordion>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARTIG___PSEUDNOVOGR06.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARTIG___PSEUDNOVOGR06.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARTIG___PSEUDNOVOGR06.isVisible">
+					<q-col
+						v-if="controls.ARTIG___PSEUDNOVOGR06.isVisible"
+						cols="auto">
 						<q-group-collapsible
+							v-if="controls.ARTIG___PSEUDNOVOGR06.isVisible"
 							id="ARTIG___PSEUDNOVOGR06"
 							v-bind="controls.ARTIG___PSEUDNOVOGR06"
 							v-on="controls.ARTIG___PSEUDNOVOGR06.handlers">
 							<!-- Start ARTIG___PSEUDNOVOGR06 -->
-							<q-row-container v-show="controls.ARTIG___PSEUDCATEGORI.isVisible || controls.ARTIG___PSEUDESCCATEG.isVisible">
-								<q-control-wrapper
-									v-show="controls.ARTIG___PSEUDCATEGORI.isVisible || controls.ARTIG___PSEUDESCCATEG.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.ARTIG___PSEUDCATEGORI.isVisible || controls.ARTIG___PSEUDESCCATEG.isVisible">
+								<q-col
+									v-if="controls.ARTIG___PSEUDCATEGORI.isVisible || controls.ARTIG___PSEUDESCCATEG.isVisible"
+									cols="auto">
 									<q-table
-										v-show="controls.ARTIG___PSEUDCATEGORI.isVisible"
+										v-if="controls.ARTIG___PSEUDCATEGORI.isVisible"
 										v-bind="controls.ARTIG___PSEUDCATEGORI"
-										v-on="controls.ARTIG___PSEUDCATEGORI.handlers" />
+										v-on="controls.ARTIG___PSEUDCATEGORI.handlers">
+										<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDCATEGORI]/ -->
+									</q-table>
 									<q-table-extra-extension
+										v-if="controls.ARTIG___PSEUDCATEGORI.isVisible"
 										:list-ctrl="controls.ARTIG___PSEUDCATEGORI"
 										:filter-operators="controls.ARTIG___PSEUDCATEGORI.filterOperators"
 										v-on="controls.ARTIG___PSEUDCATEGORI.handlers" />
 									<base-input-structure
+										v-if="controls.ARTIG___PSEUDESCCATEG.isVisible"
 										class="i-text"
 										v-bind="controls.ARTIG___PSEUDESCCATEG"
 										v-on="controls.ARTIG___PSEUDESCCATEG.handlers"
@@ -475,27 +498,31 @@
 											@remove-label="controls.ARTIG___PSEUDCATEGORI.onUnselectRow($event); model.List_Categori_SelectedIds.updateValue(controls.ARTIG___PSEUDCATEGORI.rowsSelectedKeys)"
 											@on-enter="controls.ARTIG___PSEUDCATEGORI.onSelectRow($event); model.List_Categori_SelectedIds.updateValue(controls.ARTIG___PSEUDCATEGORI.rowsSelectedKeys)" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.ARTIG___PSEUDCATEGOR_.isVisible">
-								<q-control-wrapper
-									v-show="controls.ARTIG___PSEUDCATEGOR_.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.ARTIG___PSEUDCATEGOR_.isVisible">
+								<q-col
+									v-if="controls.ARTIG___PSEUDCATEGOR_.isVisible"
+									cols="auto">
 									<q-table
-										v-show="controls.ARTIG___PSEUDCATEGOR_.isVisible"
+										v-if="controls.ARTIG___PSEUDCATEGOR_.isVisible"
 										v-bind="controls.ARTIG___PSEUDCATEGOR_"
-										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers" />
+										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers">
+										<!-- USE /[MANUAL GQT CUSTOM_TABLE ARTIG___PSEUDCATEGOR_]/ -->
+									</q-table>
 									<q-table-extra-extension
+										v-if="controls.ARTIG___PSEUDCATEGOR_.isVisible"
 										:list-ctrl="controls.ARTIG___PSEUDCATEGOR_"
 										:filter-operators="controls.ARTIG___PSEUDCATEGOR_.filterOperators"
 										v-on="controls.ARTIG___PSEUDCATEGOR_.handlers" />
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.ARTIG___ITEM_CATEGORY.isVisible">
-								<q-control-wrapper
-									v-show="controls.ARTIG___ITEM_CATEGORY.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.ARTIG___ITEM_CATEGORY.isVisible">
+								<q-col
+									v-if="controls.ARTIG___ITEM_CATEGORY.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.ARTIG___ITEM_CATEGORY.isVisible"
 										class="i-textarea"
 										v-bind="controls.ARTIG___ITEM_CATEGORY"
 										v-on="controls.ARTIG___ITEM_CATEGORY.handlers"
@@ -507,17 +534,18 @@
 											v-bind="controls.ARTIG___ITEM_CATEGORY.props"
 											v-on="controls.ARTIG___ITEM_CATEGORY.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End ARTIG___PSEUDNOVOGR06 -->
 						</q-group-collapsible>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARTIG___ITEM_DATE____.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARTIG___ITEM_DATE____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARTIG___ITEM_DATE____.isVisible">
+					<q-col
+						v-if="controls.ARTIG___ITEM_DATE____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARTIG___ITEM_DATE____.isVisible"
 							class="i-text"
 							v-bind="controls.ARTIG___ITEM_DATE____"
 							v-on="controls.ARTIG___ITEM_DATE____.handlers"
@@ -531,10 +559,10 @@
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -543,7 +571,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -552,6 +580,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -563,7 +592,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -776,7 +805,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -887,7 +920,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
 						maxLength: 15,
-						labelId: 'label_ARTIG___ITEM_ITEMCOD_',
 						controlLimits: [
 						],
 					}, this),
@@ -936,7 +968,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR01',
 						maxLength: 15,
-						labelId: 'label_ARTIG___GITEMITEMGCOD',
 						controlLimits: [
 						],
 					}, this),
@@ -1010,7 +1041,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
 						maxLength: 85,
-						labelId: 'label_ARTIG___ITEM_ITEMDES_',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -1039,7 +1069,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
 						maxLength: 1,
-						labelId: 'label_ARTIG___ITEM_ITEMTYPE',
 						arrayName: 'TipoArti',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -1155,6 +1184,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 2,
@@ -1164,6 +1194,7 @@
 								label: computed(() => this.Resources.INSTANT35907),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1173,6 +1204,7 @@
 								label: computed(() => this.Resources.TYPE00312),
 								dataLength: 8,
 								scrollData: 8,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1182,6 +1214,7 @@
 								label: computed(() => this.Resources.REF_A30225),
 								dataLength: 10,
 								scrollData: 10,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -1192,6 +1225,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 6,
@@ -1202,6 +1236,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1217,8 +1252,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -1242,7 +1276,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ITEM', 'changed-CCORR', 'changed-INDOC'],
+						globalEvents: ['changed-INDOC', 'changed-CCORR', 'changed-ITEM'],
 						uuid: 'Artig_ValContacor',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1290,6 +1324,7 @@
 								label: computed(() => this.Resources.INSTANT_ENTRANCE27379),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -1309,6 +1344,7 @@
 								cellAction: true,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 								pkColumn: 'ValCoddentr',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1320,6 +1356,7 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -1330,6 +1367,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1345,8 +1383,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -1475,7 +1512,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-WAREH', 'changed-INDOC', 'changed-LDENT', 'changed-ITEM', 'changed-CNTRY', 'changed-PESSO', 'changed-CMPNY', 'changed-WARE1'],
+						globalEvents: ['changed-WAREH', 'changed-INDOC', 'changed-LDENT', 'changed-ITEM', 'changed-WARE1', 'changed-PESSO', 'changed-CMPNY', 'changed-CNTRY'],
 						uuid: 'Artig_ValLentrada',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1508,6 +1545,7 @@
 								label: computed(() => this.Resources.EXIT_INSTANT27038),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -1527,6 +1565,7 @@
 								cellAction: true,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 								pkColumn: 'ValCodoutpt',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
@@ -1538,6 +1577,7 @@
 								scrollData: 5,
 								maxDigits: 3,
 								decimalPlaces: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -1548,6 +1588,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1563,8 +1604,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -1693,7 +1733,7 @@
 								sortOrder: 'desc'
 							}
 						},
-						globalEvents: ['changed-OUDOC', 'changed-WAREH', 'changed-OUTPU', 'changed-OUTPT', 'changed-ITEM', 'changed-WARE1'],
+						globalEvents: ['changed-WAREH', 'changed-OUDOC', 'changed-OUTPU', 'changed-OUTPT', 'changed-ITEM', 'changed-WARE1'],
 						uuid: 'Artig_ValLsaidas',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1739,6 +1779,7 @@
 								label: computed(() => this.Resources.CATEGORY_TYPE23058),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1748,6 +1789,7 @@
 								label: computed(() => this.Resources.SUB_CATEGORIA15612),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodsbcat',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -1838,6 +1880,7 @@
 								label: computed(() => this.Resources.CATEGORY_TYPE23058),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -1847,6 +1890,7 @@
 								label: computed(() => this.Resources.SUB_CATEGORIA15612),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodsbcat',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -1934,6 +1978,7 @@
 						label: computed(() => this.Resources.CATEGORIZATION17554),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						startsExpanded: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ARTIG___PSEUDCATEGORI', 'ARTIG___PSEUDESCCATEG', 'ARTIG___PSEUDCATEGOR_', 'ARTIG___ITEM_CATEGORY'],
@@ -1968,7 +2013,6 @@
 						container: 'ARTIG___PSEUDNOVOGR07',
 						isFormulaBlocked: true,
 						maxLength: 1,
-						labelId: 'label_ARTIG___ITEM_DISPONIB',
 						arrayName: 'dsiponib',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -1983,6 +2027,7 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'ARTIG___PSEUDNOVOGR07',
+						startsExpanded: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['ARTIG___ITEM_IMAGE___'],
@@ -2185,16 +2230,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -2238,16 +2297,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -2399,6 +2472,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ARTIG]/
 // eslint-disable-next-line

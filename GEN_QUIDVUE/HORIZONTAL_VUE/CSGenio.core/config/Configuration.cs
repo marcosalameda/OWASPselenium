@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Xml;
 using System.Linq;
 using System.Text;
+using System.Xml;
+
+using CSGenio.core.messaging;
 using CSGenio.core.persistence;
 using CSGenio.config;
-using CSGenio.core.messaging;
-
 
 namespace CSGenio.framework
 {
@@ -17,10 +17,9 @@ namespace CSGenio.framework
     /// </summary>
     public static class Configuration
     {
-        public enum LoginTypes {AD,NORMAL,PUREAD,MANUAL};
-		public enum PassEncTypes {ARG,QUI};
+        public enum LoginTypes { AD, NORMAL, PUREAD, MANUAL };
+		public enum PassEncTypes { ARG, QUI };
         public enum DbTypes { NORMAL, AUXILIAR, LOG, DEFINITION };
-
 
         /// <summary>
         /// Config version
@@ -42,9 +41,9 @@ namespace CSGenio.framework
         /// </summary>
         private static SerializableDictionary<string, string> maisPropriedades;
 
-
         //----------------------------------------------
         // System Identification and Versioning
+        // Note: Version-related constants are defined in VersionInfo.cs.vm
         //----------------------------------------------
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace CSGenio.framework
         /// <summary>
         /// Application version
         /// </summary>
-        public static int Version { get; } = 4107;
+        public static int Version { get; } = VersionInfo.Version;
 
         /// <summary>
         /// System id
@@ -66,6 +65,11 @@ namespace CSGenio.framework
         /// Application subsystem
         /// </summary>
         public static readonly ClientApplication Application = ClientApplication.HORIZONTAL_VUE;
+
+        /// <summary>
+        /// Modules
+        /// </summary>
+        public static readonly List<string> Modules = ["STY","PTN","GQT","IMO","REG","TBS","WMS","TRN","UIS"];
 
         /// <summary>
         /// Currency
@@ -85,36 +89,37 @@ namespace CSGenio.framework
         /// <summary>
         /// Version of the database
         /// </summary>
-        public const int VersionDbGen = 4107;
+        public const int VersionDbGen = VersionInfo.DatabaseSchema;
 
         /// <summary>
         /// Version of the database indexes
         /// </summary>
-        public const int VersionIdxDbGen = 1777;
+        public const int VersionIdxDbGen = VersionInfo.DatabaseIndex;
 
         /// <summary>
         /// Version of the latest upgrade index version
         /// </summary>
-        public const int VersionUpgrIndxGen = 2;
-		
+        public const int VersionUpgrIndxGen = VersionInfo.ChangeRoutines;
+
 		/// <summary>
 		/// Version of the latest user settings format
 		/// </summary>
-		public const int UserSettingsVersion = 2;
+		public const int UserSettingsVersion = VersionInfo.UserSettings;
 
         /// <summary>
         /// Genio generator version
         /// </summary>
-        public const string GenioVersion = "370.01";
+        public const string GenioVersion = VersionInfo.GenioVersion;
 
         /// <summary>
         /// Solution build version
         /// </summary>
-        public const int BuildVersionGen = 2932;
+        public static readonly int BuildVersionGen = VersionInfo.Build;
+
         /// <summary>
         /// Solution release version
         /// </summary>
-        public const string VersionTrackChangesGen = "0";
+        public static readonly string VersionTrackChangesGen = VersionInfo.Release;
 
         /// <summary>
         /// Agregate versioning information string
@@ -123,7 +128,7 @@ namespace CSGenio.framework
         {
             get
             {
-                return string.Format("{0}.{1}.{2}.{3}", GenioVersion.Replace('.',','), VersionDbGen, VersionTrackChangesGen.Replace('.',','), BuildVersionGen);
+                return VersionInfo.GenAssemblyVersion;
             }
         }
 
@@ -132,12 +137,11 @@ namespace CSGenio.framework
         /// </summary>
         public static bool Files2Disk { get; private set; } =  false;
 
+        /// <summary>
+        /// AI Configuration properties
+        /// </summary>
+        public static ChatBotCfg AiConfig { get; private set; } = null; 
 
-        //----------------------------------------------
-        // ChatBot
-        //----------------------------------------------
-        public static string APIEndpoint { get; private set; }
-		
         //----------------------------------------------
         // System services
         //----------------------------------------------
@@ -196,7 +200,7 @@ namespace CSGenio.framework
         /// Path for managing the reports
         /// </summary>
         public static string PathReports { get; private set; }
-		
+
         /// <summary>
         /// Elasticsearch service configuration
         /// </summary>
@@ -204,7 +208,7 @@ namespace CSGenio.framework
         {
             get { return elasticsearch; }
         }
-        private static ElasticsearchXml elasticsearch;		
+        private static ElasticsearchXml elasticsearch;
 
         //----------------------------------------------
         // Email configuration
@@ -214,7 +218,6 @@ namespace CSGenio.framework
         /// Email properties list that it's deserialized
         /// </summary>
         public static List<EmailServer> EmailProperties { get; private set; }
-
 
         public static EmailServer NewEmailServer()
         {
@@ -228,7 +231,7 @@ namespace CSGenio.framework
         /// </summary>
         public static string UserRegistrationEmail { get; private set; }
 
-         /// <summary>
+        /// <summary>
         /// Id of email server configuration used for passowrd recovery
         /// </summary>
         public static string PasswordRecoveryEmail { get; private set; }
@@ -417,7 +420,7 @@ namespace CSGenio.framework
                 //JGF 2024.04.24 Reviewed this use case to not throw exception,
                 //otherwise WebAdmin will not work while the configuration is not created
                 //and there is no safe way to recover from exceptions in static constructors.
-                //In this case a Configuration object with the default values is created. 
+                //In this case a Configuration object with the default values is created.
                 Loaded = false;
             }
         }
@@ -431,8 +434,7 @@ namespace CSGenio.framework
             var path = readXML.GetPath(Configuration.Application.Id);
             PP_Email = readXML.email_pp;
             PP_Name = readXML.nome_pp;
-            if (readXML.ChatBotConfig != null) 
-                APIEndpoint = readXML.ChatBotConfig.apiURL;
+            AiConfig = readXML.ChatBotConfig;
             Log = path.pathApp;
             GoogleMapsKey = readXML.googlemapsKey;
             QAEnvironment = Convert.ToInt16(readXML.qaEnvironment);
@@ -442,9 +444,8 @@ namespace CSGenio.framework
             PathDocuments = path.pathDocuments;
             Domain = readXML.dominio;
             SSRSServer = readXML.ssrsServer;
-			
-            elasticsearch = readXML.Elasticsearch;
 
+            elasticsearch = readXML.Elasticsearch;
             maisPropriedades = readXML.maisPropriedades;
 
             NrRegDBedit = readXML.defaultDBeditRows;
@@ -489,7 +490,6 @@ namespace CSGenio.framework
             Messaging = readXML.Messaging ?? new MessagingXml();
             Scheduler = readXML.Scheduler ?? new SchedulerXml();
         }
-
 
         /// <summary>
         /// Resolves a datasystem id into the corresponding information
@@ -557,7 +557,6 @@ namespace CSGenio.framework
         }
 
 
-
         /// <summary>
         /// Retrieve a property using its key.
         /// Returns the default value if property key is not found.
@@ -581,7 +580,6 @@ namespace CSGenio.framework
         {
             return maisPropriedades.ContainsKey(name);
         }
-
 
         /// <summary>
         /// Queries the database for its currently set versioning information
@@ -608,7 +606,6 @@ namespace CSGenio.framework
             return versionDb;
         }
 
-
         /// <summary>
         /// Queries the database for its currently set upgrade index information
         /// </summary>
@@ -633,7 +630,6 @@ namespace CSGenio.framework
             }
         }
 
-       
         /// <summary>
         /// Checks if there is any LdapIdentityProvider configured in the application
         /// </summary>

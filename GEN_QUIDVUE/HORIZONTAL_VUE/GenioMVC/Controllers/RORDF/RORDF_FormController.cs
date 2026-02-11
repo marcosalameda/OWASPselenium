@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW RORDF]/
 
 		[HttpPost]
-		public ActionResult Rordf_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Rordf_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Rordf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Rordf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordf_Show_GET",
 				AreaName = "rordf",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET RORDF]/
 		[HttpPost]
-		public ActionResult Rordf_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Rordf_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Rordf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Rordf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordf_New_GET",
 				AreaName = "rordf",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Rordf_New([FromBody]Rordf_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordf_New",
 				ViewName = "Rordf",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET RORDF]/
 		[HttpPost]
-		public ActionResult Rordf_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Rordf_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Rordf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Rordf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordf_Edit_GET",
 				AreaName = "rordf",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Rordf_Edit([FromBody]Rordf_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordf_Edit",
 				ViewName = "Rordf",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET RORDF]/
 		[HttpPost]
-		public ActionResult Rordf_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Rordf_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Rordf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Rordf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordf_Delete_GET",
 				AreaName = "rordf",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Rordf/Rordf_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST RORDF]/
 		[HttpPost]
-		public ActionResult Rordf_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Rordf_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Rordf_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Rordf_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordf_Delete",
 				ViewName = "Rordf",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET RORDF]/
 
 		[HttpPost]
-		public ActionResult Rordf_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Rordf_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Rordf_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Rordf_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordf_Duplicate_GET",
 				AreaName = "rordf",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Rordf_Duplicate([FromBody]Rordf_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Rordf_Duplicate",
 				ViewName = "Rordf",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Rordf(UserContext.Current);
+					GenioMVC.Models.Rordf model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("rordf");
 
 // USE /[MANUAL GQT BEFORE_CANCEL RORDF]/

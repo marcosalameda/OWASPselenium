@@ -35,7 +35,7 @@ public class Prope08Form : Form
 	/// <summary>
 	/// Localização
 	/// </summary>
-	public IWebElement PseudLocaliza => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudLocaliza => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE08_PSEUDLOCALIZA-container");
 
 	/// <summary>
 	/// Cidade
@@ -51,7 +51,7 @@ public class Prope08Form : Form
 	/// <summary>
 	/// Detalhes
 	/// </summary>
-	public IWebElement PseudDetails => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudDetails => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE08_PSEUDDETAILS_-container");
 
 	/// <summary>
 	/// Tamanho (m2)
@@ -71,7 +71,7 @@ public class Prope08Form : Form
 	/// <summary>
 	/// Informação do agente
 	/// </summary>
-	public IWebElement PseudAgentinf => throw new NotImplementedException();
+	public CollapsibleZoneControl PseudAgentinf => new CollapsibleZoneControl(driver, ContainerLocator, "#PROPE08_PSEUDAGENTINF-container");
 
 	/// <summary>
 	/// Name

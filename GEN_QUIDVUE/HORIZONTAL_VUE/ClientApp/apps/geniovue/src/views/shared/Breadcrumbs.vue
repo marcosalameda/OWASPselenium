@@ -12,8 +12,8 @@
 						<a
 							id="dropdown-menu-link"
 							class="dropdown-toggle dropdown n-breadcrumb__link"
-							href="javascript:void(0)"
 							role="button"
+							href="#"
 							data-toggle="dropdown"
 							aria-haspopup="true"
 							aria-expanded="false">
@@ -294,7 +294,7 @@
 				const breadcrumbType = this.getBreadcrumbType(navEntry)
 				const breadcrumbIcon = this.getBreadcrumbIcon(navEntry)
 				const breadcrumbText = this.getBreadcrumbText(navEntry)
-				const hoverText = breadcrumbType === breadcrumbTypes.home ? this.Resources[hardcodedTexts.initialPage] : breadcrumbText
+				const hoverText = breadcrumbType === breadcrumbTypes.home ? this.Resources[hardcodedTexts.initialPage] : null
 				const humanKey = this.getHumanKey(navEntry)
 				const isActive = this.isEntryActive(navEntry)
 

@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TBS_Menu_151]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.GENUS37471),
 								dataLength: 1,
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayGenconta(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayGenconta.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -164,6 +166,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -179,8 +182,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -281,6 +283,7 @@
 							rowClickAction: {
 								id: 'RCA_TBS_1511',
 								name: 'form-TPCON',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -310,6 +313,7 @@
 						uuid: 'e32f8ddf-048b-48dc-b978-3a536ed248ad',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

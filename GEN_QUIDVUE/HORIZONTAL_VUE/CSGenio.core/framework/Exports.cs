@@ -87,6 +87,8 @@ namespace CSGenio.framework
         {
             this.colunas = columns;
             PersistentSupport sp = PersistentSupport.getPersistentSupport(user.Year, user.Name);
+            // TODO: Protect against cases where it receive zero columns.
+            //  Otherwise, it will select all columns in the area.
             SelectQuery qs = sp.getSelectQueryFromListingMVC<A>(conditions, listing);
 
             return ExportList(qs, exportType, filename,namedbedit);
@@ -229,6 +231,14 @@ namespace CSGenio.framework
 
         public class QColumn
         {
+            /// <summary>
+            /// The FieldRef corresponding to the exported field.
+            /// </summary>
+            /// <remarks>
+            /// The property may be <c>null</c>.
+            /// Currently, it's only used for optimized export of list controls in Vue.
+            /// </remarks>
+            public FieldRef Field { get; private set; }
             public string Name { get; private set; }
             public FieldType Type { get; private set; }
             public FieldFormatting Formatting { get; private set; }
@@ -237,23 +247,12 @@ namespace CSGenio.framework
             public int Size { get; private set; }
             public int Decimals { get; private set; }
             public bool Visible { get; set; }
+            public bool AlwaysExportable { get; set; }
 
-
-            public QColumn(FieldRef Qfield, FieldType fieldType, string descricao, int size, int decimais, bool visivel)
+            public QColumn(FieldRef field, FieldType fieldType, string descricao, int size, int decimais, bool visivel, string arrayName = "", bool alwaysExportable = false)
             {
-                this.Name = Qfield.FullName;
-                this.Type = fieldType;
-                this.Formatting = fieldType.GetFormatting();
-                this.ArrayName = null;
-                this.Description = descricao;
-                this.Size = size;
-                this.Decimals = decimais;
-                this.Visible = visivel;
-            }
-
-            public QColumn(FieldRef Qfield, FieldType fieldType, string descricao, int size, int decimais, bool visivel, string arrayName)
-            {
-                this.Name = Qfield.FullName;
+                this.Field = field;
+                this.Name = field.FullName;
                 this.Type = fieldType;
                 this.Formatting = fieldType.GetFormatting();
                 this.ArrayName = arrayName;
@@ -261,6 +260,7 @@ namespace CSGenio.framework
                 this.Size = size;
                 this.Decimals = decimais;
                 this.Visible = visivel;
+                this.AlwaysExportable = alwaysExportable;
             }
 
             public QColumn(string fieldName, Field campoBD)

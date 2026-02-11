@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="VISIT"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.VISIT___EQUIPREGISTNR.isVisible || controls.VISIT___VISITTITLE___.isVisible || controls.VISIT___VISITSTARTDT_.isVisible || controls.VISIT___VISITDTFIM___.isVisible || controls.VISIT___VISITDESCRIPT.isVisible || controls.VISIT___VISITTODOODIA.isVisible">
-					<q-control-wrapper
-						v-show="controls.VISIT___EQUIPREGISTNR.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.VISIT___EQUIPREGISTNR.isVisible || controls.VISIT___VISITTITLE___.isVisible || controls.VISIT___VISITSTARTDT_.isVisible || controls.VISIT___VISITDTFIM___.isVisible || controls.VISIT___VISITDESCRIPT.isVisible || controls.VISIT___VISITTODOODIA.isVisible">
+					<q-col
+						v-if="controls.VISIT___EQUIPREGISTNR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VISIT___EQUIPREGISTNR.isVisible"
 							class="i-text"
 							v-bind="controls.VISIT___EQUIPREGISTNR"
 							v-on="controls.VISIT___EQUIPREGISTNR.handlers"
@@ -111,11 +120,12 @@
 								v-bind="controls.VISIT___EQUIPREGISTNR.seeMoreParams"
 								v-on="controls.VISIT___EQUIPREGISTNR.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.VISIT___VISITTITLE___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.VISIT___VISITTITLE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VISIT___VISITTITLE___.isVisible"
 							class="i-text"
 							v-bind="controls.VISIT___VISITTITLE___"
 							v-on="controls.VISIT___VISITTITLE___.handlers"
@@ -127,11 +137,12 @@
 								@blur="onBlur(controls.VISIT___VISITTITLE___, model.ValTitle.value)"
 								@change="model.ValTitle.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.VISIT___VISITSTARTDT_.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.VISIT___VISITSTARTDT_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VISIT___VISITSTARTDT_.isVisible"
 							class="i-text"
 							v-bind="controls.VISIT___VISITSTARTDT_"
 							v-on="controls.VISIT___VISITSTARTDT_.handlers"
@@ -145,11 +156,12 @@
 								@reset-icon-click="model.ValStartdt.fnUpdateValue(model.ValStartdt.originalValue ?? new Date())"
 								@update:model-value="model.ValStartdt.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.VISIT___VISITDTFIM___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.VISIT___VISITDTFIM___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VISIT___VISITDTFIM___.isVisible"
 							class="i-text"
 							v-bind="controls.VISIT___VISITDTFIM___"
 							v-on="controls.VISIT___VISITDTFIM___.handlers"
@@ -163,11 +175,12 @@
 								@reset-icon-click="model.ValDtfim.fnUpdateValue(model.ValDtfim.originalValue ?? new Date())"
 								@update:model-value="model.ValDtfim.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.VISIT___VISITDESCRIPT.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.VISIT___VISITDESCRIPT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VISIT___VISITDESCRIPT.isVisible"
 							class="i-text"
 							v-bind="controls.VISIT___VISITDESCRIPT"
 							v-on="controls.VISIT___VISITDESCRIPT.handlers"
@@ -179,11 +192,12 @@
 								v-bind="controls.VISIT___VISITDESCRIPT.props"
 								v-on="controls.VISIT___VISITDESCRIPT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.VISIT___VISITTODOODIA.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.VISIT___VISITTODOODIA.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VISIT___VISITTODOODIA.isVisible"
 							class="i-checkbox"
 							v-bind="controls.VISIT___VISITTODOODIA"
 							v-on="controls.VISIT___VISITTODOODIA.handlers"
@@ -191,19 +205,20 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.VISIT___VISITTODOODIA.isVisible"
 									v-bind="controls.VISIT___VISITTODOODIA.props"
 									v-on="controls.VISIT___VISITTODOODIA.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.VISIT___VISITCOLOR___.isVisible || controls.VISIT___VISITOBSERVAT.isVisible">
-					<q-control-wrapper
-						v-show="controls.VISIT___VISITCOLOR___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.VISIT___VISITCOLOR___.isVisible || controls.VISIT___VISITOBSERVAT.isVisible">
+					<q-col
+						v-if="controls.VISIT___VISITCOLOR___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VISIT___VISITCOLOR___.isVisible"
 							class="i-text"
 							v-bind="controls.VISIT___VISITCOLOR___"
 							v-on="controls.VISIT___VISITCOLOR___.handlers"
@@ -215,11 +230,12 @@
 								@blur="onBlur(controls.VISIT___VISITCOLOR___, model.ValColor.value)"
 								@change="model.ValColor.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.VISIT___VISITOBSERVAT.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.VISIT___VISITOBSERVAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.VISIT___VISITOBSERVAT.isVisible"
 							class="i-text"
 							v-bind="controls.VISIT___VISITOBSERVAT"
 							v-on="controls.VISIT___VISITOBSERVAT.handlers"
@@ -231,10 +247,10 @@
 								@blur="onBlur(controls.VISIT___VISITOBSERVAT, model.ValObservat.value)"
 								@change="model.ValObservat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -243,7 +259,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -252,6 +268,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -263,7 +280,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -475,7 +492,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -615,7 +636,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
-						labelId: 'label_VISIT___VISITTITLE___',
 						controlLimits: [
 						],
 					}, this),
@@ -679,7 +699,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_VISIT___VISITCOLOR___',
 						controlLimits: [
 						],
 					}, this),
@@ -693,7 +712,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_VISIT___VISITOBSERVAT',
 						controlLimits: [
 						],
 					}, this),
@@ -849,16 +867,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -902,16 +934,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1063,6 +1109,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS VISIT]/
 // eslint-disable-next-line

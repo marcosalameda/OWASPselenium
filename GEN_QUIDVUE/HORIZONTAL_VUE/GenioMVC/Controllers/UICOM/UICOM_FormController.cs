@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW UICOM]/
 
 		[HttpPost]
-		public ActionResult Uicom_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Uicom_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Uicom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Uicom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Uicom_Show_GET",
 				AreaName = "uicom",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET UICOM]/
 		[HttpPost]
-		public ActionResult Uicom_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Uicom_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Uicom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Uicom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Uicom_New_GET",
 				AreaName = "uicom",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Uicom_New([FromBody]Uicom_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Uicom_New",
 				ViewName = "Uicom",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET UICOM]/
 		[HttpPost]
-		public ActionResult Uicom_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Uicom_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Uicom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Uicom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Uicom_Edit_GET",
 				AreaName = "uicom",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Uicom_Edit([FromBody]Uicom_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Uicom_Edit",
 				ViewName = "Uicom",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET UICOM]/
 		[HttpPost]
-		public ActionResult Uicom_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Uicom_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Uicom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Uicom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Uicom_Delete_GET",
 				AreaName = "uicom",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Uicom/Uicom_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST UICOM]/
 		[HttpPost]
-		public ActionResult Uicom_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Uicom_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Uicom_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Uicom_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Uicom_Delete",
 				ViewName = "Uicom",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET UICOM]/
 
 		[HttpPost]
-		public ActionResult Uicom_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Uicom_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Uicom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Uicom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Uicom_Duplicate_GET",
 				AreaName = "uicom",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Uicom_Duplicate([FromBody]Uicom_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Uicom_Duplicate",
 				ViewName = "Uicom",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Uicom(UserContext.Current);
+					GenioMVC.Models.Uicom model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("uicom");
 
 // USE /[MANUAL GQT BEFORE_CANCEL UICOM]/

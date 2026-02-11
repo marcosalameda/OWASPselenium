@@ -1,9 +1,8 @@
 ﻿<template>
 	<q-collapsible
-		v-show="isVisible"
 		v-model="curValue"
-		:class="[$attrs.class]"
 		:id="`${controlId}-container`"
+		:class="$attrs.class"
 		:title="label"
 		:subtitle="subtitleText"
 		:width="size"
@@ -46,14 +45,6 @@
 			label: {
 				type: String,
 				required: true
-			},
-
-			/**
-			 * Whether or not the collapsible group is visible.
-			 */
-			isVisible: {
-				type: Boolean,
-				default: true
 			},
 
 			/**

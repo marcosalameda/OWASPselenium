@@ -5,7 +5,8 @@
 			:key="ctrlId">
 			<a
 				v-if="showAnchor(ctrlId)"
-				href="javascript:void(0)"
+				href="#"
+				role="button"
 				:class="getClass(ctrlId)"
 				@click.stop.prevent="anchorClicked(ctrlId)">
 				<q-icon icon="paired" />

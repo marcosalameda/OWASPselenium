@@ -87,6 +87,16 @@ namespace CSGenio.business
 			info.RegisterFieldDB(Qfield);
 
 			//- - - - - - - - - - - - - - - - - - -
+			Qfield = new Field(info.Alias, "codup_rules", FieldType.KEY_GUID);
+			Qfield.FieldDescription = "";
+			Qfield.FieldSize =  36;
+			Qfield.MQueue = false;
+			Qfield.CavDesignation = "";
+
+			Qfield.Dupmsg = "";
+			info.RegisterFieldDB(Qfield);
+
+			//- - - - - - - - - - - - - - - - - - -
 			Qfield = new Field(info.Alias, "zzstate", FieldType.INTEGER);
 			Qfield.FieldDescription = "Estado da ficha";
 			info.RegisterFieldDB(Qfield);
@@ -100,10 +110,13 @@ namespace CSGenio.business
 		{
 			// Daughters Relations
 			//------------------------------
+			info.ChildTable = new ChildRelation[1];
+			info.ChildTable[0]= new ChildRelation("down_rules", new String[] {"codregra"}, DeleteProc.NA);
 
 			// Mother Relations
 			//------------------------------
 			info.ParentTables = new Dictionary<string, Relation>();
+			info.ParentTables.Add("up_rules", new Relation("GQT", "gqtrules", "rules", "codregra", "codup_rules", "GQT", "gqtup_rules", "up_rules", "codup_rules", "codup_rules"));
 		}
 
 		/// <summary>
@@ -113,7 +126,8 @@ namespace CSGenio.business
 		{
 			// Pathways
 			//------------------------------
-			info.Pathways = new Dictionary<string, string>(0);
+			info.Pathways = new Dictionary<string, string>(1);
+			info.Pathways.Add("up_rules","up_rules");
 		}
 
 		/// <summary>
@@ -376,6 +390,17 @@ namespace CSGenio.business
 			set { insertNameValueField(FldLocal, value); }
 		}
 
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public static FieldRef FldCodup_rules { get { return m_fldCodup_rules; } }
+		private static FieldRef m_fldCodup_rules = new FieldRef("rules", "codup_rules");
+
+		/// <summary>Field : "" Tipo: "CE" Formula:  ""</summary>
+		public string ValCodup_rules
+		{
+			get { return (string)returnValueField(FldCodup_rules); }
+			set { insertNameValueField(FldCodup_rules, value); }
+		}
+
 		/// <summary>Field : "ZZSTATE" Type: "INT" Formula:  ""</summary>
 		public static FieldRef FldZzstate { get { return m_fldZzstate; } }
 		private static FieldRef m_fldZzstate = new FieldRef("rules", "zzstate");
@@ -396,16 +421,17 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
+		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioArules search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioArules search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioArules area = new CSGenioArules(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields))
+            if (sp.getRecord(area, key, fields, forUpdate))
                 return area;
 			return null;
         }
@@ -472,8 +498,7 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX RULES]/
 
      
-
-     
+      
 
 	}
 }

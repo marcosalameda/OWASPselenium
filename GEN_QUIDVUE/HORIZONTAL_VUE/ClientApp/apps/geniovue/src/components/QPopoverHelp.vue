@@ -1,19 +1,29 @@
 <template>
-	<q-button
-		:id="popoverId"
-		:title="texts?.showHelp"
-		class="btn-popover"
-		variant="ghost"
-		color="neutral">
-		<q-icon :icon="icon" />
-	</q-button>
+	<div>
+		<q-button
+			:id="popoverId"
+			:title="texts?.showHelp"
+			class="btn-popover"
+			variant="ghost"
+			color="neutral">
+			<q-icon :icon="icon" />
+		</q-button>
 
-	<q-popover
-		:anchor="anchorPopoverId"
-		:title="label"
-		:text="popoverText" />
+		<q-popover
+			v-if="!isMarkdown"
+			:anchor="anchorPopoverId"
+			:title="label"
+			:text="popoverText" />
+		<q-popover
+			v-else
+			:anchor="anchorPopoverId"
+			:title="label">
+			<q-markdown-viewer
+				id="markdownId"
+				:model-value="popoverText" />
+		</q-popover>
+	</div>
 </template>
-
 
 <script>
 	import HelpControl from '@/mixins/helpControls.js'
@@ -57,6 +67,10 @@
 
 			anchorPopoverId() {
 				return `#popover_${this.id}`
+			},
+
+			markdownId() {
+				return `markdown_${this.id}`
 			}
 		}
 	}

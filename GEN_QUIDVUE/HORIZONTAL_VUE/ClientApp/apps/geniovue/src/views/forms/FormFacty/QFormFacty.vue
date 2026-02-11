@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="FACTY"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.FACTY___FACTYTYPE____.isVisible || controls.FACTY___FACTYLAYRNAME.isVisible || controls.FACTY___FACTYICONURL_.isVisible || controls.FACTY___FACTYSHADOWUR.isVisible || controls.FACTY___FACTYICONANCX.isVisible || controls.FACTY___FACTYICONANCY.isVisible || controls.FACTY___FACTYICONHEIG.isVisible || controls.FACTY___FACTYICONWID_.isVisible || controls.FACTY___FACTYPOPUPANX.isVisible || controls.FACTY___FACTYPOPUPANY.isVisible || controls.FACTY___FACTYSHADOWAX.isVisible || controls.FACTY___FACTYSHADOWAY.isVisible || controls.FACTY___FACTYSHADOWHE.isVisible || controls.FACTY___FACTYSHADOWWI.isVisible">
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYTYPE____.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.FACTY___FACTYTYPE____.isVisible || controls.FACTY___FACTYLAYRNAME.isVisible || controls.FACTY___FACTYICONURL_.isVisible || controls.FACTY___FACTYSHADOWUR.isVisible || controls.FACTY___FACTYICONANCX.isVisible || controls.FACTY___FACTYICONANCY.isVisible || controls.FACTY___FACTYICONHEIG.isVisible || controls.FACTY___FACTYICONWID_.isVisible || controls.FACTY___FACTYPOPUPANX.isVisible || controls.FACTY___FACTYPOPUPANY.isVisible || controls.FACTY___FACTYSHADOWAX.isVisible || controls.FACTY___FACTYSHADOWAY.isVisible || controls.FACTY___FACTYSHADOWHE.isVisible || controls.FACTY___FACTYSHADOWWI.isVisible">
+					<q-col
+						v-if="controls.FACTY___FACTYTYPE____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYTYPE____.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYTYPE____"
 							v-on="controls.FACTY___FACTYTYPE____.handlers"
@@ -107,11 +116,12 @@
 								@blur="onBlur(controls.FACTY___FACTYTYPE____, model.ValType.value)"
 								@change="model.ValType.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYLAYRNAME.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYLAYRNAME.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYLAYRNAME.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYLAYRNAME"
 							v-on="controls.FACTY___FACTYLAYRNAME.handlers"
@@ -123,11 +133,12 @@
 								@blur="onBlur(controls.FACTY___FACTYLAYRNAME, model.ValLayrname.value)"
 								@change="model.ValLayrname.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYICONURL_.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYICONURL_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYICONURL_.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYICONURL_"
 							v-on="controls.FACTY___FACTYICONURL_.handlers"
@@ -139,11 +150,12 @@
 								@blur="onBlur(controls.FACTY___FACTYICONURL_, model.ValIconurl.value)"
 								@change="model.ValIconurl.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYSHADOWUR.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYSHADOWUR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYSHADOWUR.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYSHADOWUR"
 							v-on="controls.FACTY___FACTYSHADOWUR.handlers"
@@ -155,11 +167,12 @@
 								@blur="onBlur(controls.FACTY___FACTYSHADOWUR, model.ValShadowur.value)"
 								@change="model.ValShadowur.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYICONANCX.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYICONANCX.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYICONANCX.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYICONANCX"
 							v-on="controls.FACTY___FACTYICONANCX.handlers"
@@ -171,11 +184,12 @@
 								v-bind="controls.FACTY___FACTYICONANCX.props"
 								@update:model-value="model.ValIconancx.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYICONANCY.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYICONANCY.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYICONANCY.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYICONANCY"
 							v-on="controls.FACTY___FACTYICONANCY.handlers"
@@ -187,11 +201,12 @@
 								v-bind="controls.FACTY___FACTYICONANCY.props"
 								@update:model-value="model.ValIconancy.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYICONHEIG.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYICONHEIG.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYICONHEIG.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYICONHEIG"
 							v-on="controls.FACTY___FACTYICONHEIG.handlers"
@@ -203,11 +218,12 @@
 								v-bind="controls.FACTY___FACTYICONHEIG.props"
 								@update:model-value="model.ValIconheig.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYICONWID_.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYICONWID_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYICONWID_.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYICONWID_"
 							v-on="controls.FACTY___FACTYICONWID_.handlers"
@@ -219,11 +235,12 @@
 								v-bind="controls.FACTY___FACTYICONWID_.props"
 								@update:model-value="model.ValIconwid.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYPOPUPANX.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYPOPUPANX.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYPOPUPANX.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYPOPUPANX"
 							v-on="controls.FACTY___FACTYPOPUPANX.handlers"
@@ -235,11 +252,12 @@
 								v-bind="controls.FACTY___FACTYPOPUPANX.props"
 								@update:model-value="model.ValPopupanx.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYPOPUPANY.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYPOPUPANY.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYPOPUPANY.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYPOPUPANY"
 							v-on="controls.FACTY___FACTYPOPUPANY.handlers"
@@ -251,11 +269,12 @@
 								v-bind="controls.FACTY___FACTYPOPUPANY.props"
 								@update:model-value="model.ValPopupany.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYSHADOWAX.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYSHADOWAX.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYSHADOWAX.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYSHADOWAX"
 							v-on="controls.FACTY___FACTYSHADOWAX.handlers"
@@ -267,11 +286,12 @@
 								v-bind="controls.FACTY___FACTYSHADOWAX.props"
 								@update:model-value="model.ValShadowax.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYSHADOWAY.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYSHADOWAY.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYSHADOWAY.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYSHADOWAY"
 							v-on="controls.FACTY___FACTYSHADOWAY.handlers"
@@ -283,11 +303,12 @@
 								v-bind="controls.FACTY___FACTYSHADOWAY.props"
 								@update:model-value="model.ValShadoway.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYSHADOWHE.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYSHADOWHE.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYSHADOWHE.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYSHADOWHE"
 							v-on="controls.FACTY___FACTYSHADOWHE.handlers"
@@ -299,11 +320,12 @@
 								v-bind="controls.FACTY___FACTYSHADOWHE.props"
 								@update:model-value="model.ValShadowhe.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.FACTY___FACTYSHADOWWI.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.FACTY___FACTYSHADOWWI.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.FACTY___FACTYSHADOWWI.isVisible"
 							class="i-text"
 							v-bind="controls.FACTY___FACTYSHADOWWI"
 							v-on="controls.FACTY___FACTYSHADOWWI.handlers"
@@ -315,10 +337,10 @@
 								v-bind="controls.FACTY___FACTYSHADOWWI.props"
 								@update:model-value="model.ValShadowwi.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -327,7 +349,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -336,6 +358,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -347,7 +370,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -558,7 +581,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -668,7 +695,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 25,
-						labelId: 'label_FACTY___FACTYTYPE____',
 						controlLimits: [
 						],
 					}, this),
@@ -682,7 +708,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_FACTY___FACTYLAYRNAME',
 						controlLimits: [
 						],
 					}, this),
@@ -696,7 +721,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_FACTY___FACTYICONURL_',
 						controlLimits: [
 						],
 					}, this),
@@ -710,7 +734,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_FACTY___FACTYSHADOWUR',
 						controlLimits: [
 						],
 					}, this),
@@ -1012,16 +1035,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1065,16 +1102,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1226,6 +1277,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS FACTY]/
 // eslint-disable-next-line

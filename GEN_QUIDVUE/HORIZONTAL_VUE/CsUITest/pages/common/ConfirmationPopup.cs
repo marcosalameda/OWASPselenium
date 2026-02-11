@@ -2,15 +2,13 @@
 
 public class ConfirmationPopup: PageObject
 {
-    // TODO: When the "SweetAlert" dependency is removed, this should be improved so it doesn't use class names.
-    IWebElement dialogContainer => driver.FindElement(By.CssSelector(".swal2-container.swal2-backdrop-show"));
-    IWebElement dialog => driver.FindElement(By.CssSelector(".swal2-popup[role='dialog']"));
-    IWebElement buttonOk => dialog.FindElement(By.CssSelector("button.swal2-confirm"));
-    IWebElement buttonCancel => dialog.FindElement(By.CssSelector("button.swal2-cancel"));
-    IWebElement buttonDeny => dialog.FindElement(By.CssSelector("button.swal2-deny"));
-    IWebElement dialogText => dialog.FindElement(By.Id("swal2-html-container"));
-    //This is the only property SweetAlert is setting when the animation finishes.
-    bool dialogAnimationEnded => dialogContainer.GetAttribute("style").Contains("overflow-y: auto;");
+    IWebElement dialogContainer => driver.FindElement(By.CssSelector(".q-overlay"));
+    IWebElement dialog => driver.FindElement(By.CssSelector(".q-dialog"));
+    IWebElement buttonOk => dialog.FindElements(By.CssSelector("button"))?[0];
+    IWebElement buttonCancel => dialog.FindElements(By.CssSelector("button"))?[1];
+    IWebElement buttonDeny => dialog.FindElements(By.CssSelector("button"))?[2];
+    IWebElement dialogText => dialog.FindElement(By.CssSelector(".q-dialog__body-text"));
+    bool dialogAnimationEnded => !dialogContainer.GetAttribute("class").Contains("fade-enter-active");
 
     public ConfirmationPopup(IWebDriver driver): base(driver)
     {

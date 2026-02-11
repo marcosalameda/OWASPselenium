@@ -148,7 +148,7 @@ namespace CSGenio.persistence
 
             //database side keys use sequences instead of the Codigos_Sequenciais table
             Int64 codigoNovo;
-            if (DatabaseSidePk)
+            if (DatabaseSidePk || Configuration.ExistsProperty("SYS_PK_SEQUENCES"))
             {
                 var codParam = new SqlParameter("range_first_value", SqlDbType.Variant) { Direction = ParameterDirection.Output };
                 ExecuteProcedure("sp_sequence_get_range", [
@@ -166,7 +166,7 @@ namespace CSGenio.persistence
 
             if (codigoNovo < 1)
             {
-                throw new PersistenceException(null, "PersistentSupportSQLServer.generatePrimaryKey", 
+                throw new PersistenceException(null, "PersistentSupportSQLServer.generatePrimaryKey",
 				                               "The primary key generated for object with id " + id_object + ", with size " + size + " and format " + format.ToString() + " is invalid: " + codigoNovo.ToString());
             }
 
@@ -330,7 +330,7 @@ namespace CSGenio.persistence
         {
             IDbCommand setSingleUserModeCmd = Connection.CreateCommand();
             setSingleUserModeCmd.CommandText = @"
-                declare @dynsql nvarchar(1000) = N'USE Master ALTER DATABASE ' + QUOTENAME(@databaseName) + N' SET Single_User WITH Rollback Immediate' 
+                declare @dynsql nvarchar(1000) = N'USE Master ALTER DATABASE ' + QUOTENAME(@databaseName) + N' SET Single_User WITH Rollback Immediate'
                 EXEC(@dynsql)";
             setSingleUserModeCmd.Parameters.Add(new SqlParameter("@databaseName", schema));
             setSingleUserModeCmd.ExecuteNonQuery();
@@ -349,24 +349,24 @@ namespace CSGenio.persistence
                 (
                     LogicalName NVARCHAR(256),
                     PhysicalName NVARCHAR(512),
-                    [Type] VARCHAR(1), 
-                    [FileGroupName] VARCHAR(128), 
+                    [Type] VARCHAR(1),
+                    [FileGroupName] VARCHAR(128),
                     [Size] VARCHAR(128),
-                    [MaxSize] VARCHAR(128), 
-                    [FileId] VARCHAR(128), 
-                    [CreateLSN] VARCHAR(128), 
-                    [DropLSN] VARCHAR(128), 
-                    [UniqueId] VARCHAR(128), 
-                    [ReadOnlyLSN] VARCHAR(128), 
+                    [MaxSize] VARCHAR(128),
+                    [FileId] VARCHAR(128),
+                    [CreateLSN] VARCHAR(128),
+                    [DropLSN] VARCHAR(128),
+                    [UniqueId] VARCHAR(128),
+                    [ReadOnlyLSN] VARCHAR(128),
                     [ReadWriteLSN] VARCHAR(128),
-                    [BackupSizeInBytes] VARCHAR(128), 
-                    [SourceBlockSize] VARCHAR(128), 
-                    [FileGroupId] VARCHAR(128), 
-                    [LogGroupGUID] VARCHAR(128), 
-                    [DifferentialBaseLSN] VARCHAR(128), 
-                    [DifferentialBaseGUID] VARCHAR(128), 
-                    [IsReadOnly] VARCHAR(128), 
-                    [IsPresent] VARCHAR(128), 
+                    [BackupSizeInBytes] VARCHAR(128),
+                    [SourceBlockSize] VARCHAR(128),
+                    [FileGroupId] VARCHAR(128),
+                    [LogGroupGUID] VARCHAR(128),
+                    [DifferentialBaseLSN] VARCHAR(128),
+                    [DifferentialBaseGUID] VARCHAR(128),
+                    [IsReadOnly] VARCHAR(128),
+                    [IsPresent] VARCHAR(128),
                     [TDEThumbprint] VARCHAR(128),
                     [SnapshotUrl] VARCHAR(128)
                 );
@@ -375,13 +375,13 @@ namespace CSGenio.persistence
                 EXEC('RESTORE FILELISTONLY FROM DISK = ''' + @path + '''');
 
                 SELECT @dataFileName = LogicalName FROM @filelist WHERE Type = 'D';
-                SELECT @logFileName = LogicalName FROM @filelist WHERE Type = 'L';  
+                SELECT @logFileName = LogicalName FROM @filelist WHERE Type = 'L';
 
                 SELECT @defaultDataPath = CAST(SERVERPROPERTY('InstanceDefaultDataPath') AS NVARCHAR(512));
                 SELECT @defaultLogPath = CAST(SERVERPROPERTY('InstanceDefaultLogPath') AS NVARCHAR(512));
-                
+
                 DECLARE @restoreQuery NVARCHAR(1000);
-                SET @restoreQuery = 
+                SET @restoreQuery =
                     'RESTORE DATABASE ' + @databaseName + ' FROM DISK = ''' + @path + '''' +
                     ' WITH REPLACE, MOVE ''' + @dataFileName + ''' TO ''' + @defaultDataPath + '\' + @databaseName + '.mdf'', MOVE ''' +
                     @logFileName + ''' TO ''' + @defaultLogPath + '\' + @databaseName + '.ldf''';
@@ -398,12 +398,12 @@ namespace CSGenio.persistence
         {
             IDbCommand setMultiUserModeCmd = Connection.CreateCommand();
             setMultiUserModeCmd.CommandText = @"
-                declare @dynsql nvarchar(1000) = N'USE Master ALTER DATABASE ' + QUOTENAME(@databaseName) + N' SET Multi_User' 
+                declare @dynsql nvarchar(1000) = N'USE Master ALTER DATABASE ' + QUOTENAME(@databaseName) + N' SET Multi_User'
                 EXEC(@dynsql)";
             setMultiUserModeCmd.Parameters.Add(new SqlParameter("@databaseName", schema));
             setMultiUserModeCmd.ExecuteNonQuery();
         }
-		
+
 		/// <summary>
         /// Transfer log data from the system DB to the system log DB
         /// Called from log database PersistentSupport
@@ -422,7 +422,7 @@ namespace CSGenio.persistence
             }
 
             try
-            { 
+            {
                 // Open connections
                 systemSp.openConnection();
                 this.openConnection();
@@ -509,7 +509,7 @@ namespace CSGenio.persistence
                         throw new PersistenceException("Erro durante a transferência de logs.", "PersistentSupportSQLServer.transferMSMQLog", "Error transfering MSMQ log data from the database to the log: " + e.Message, e);
                     }
 
-                
+
                 }
                 // Close connections
                 systemSp.closeTransaction();
@@ -524,7 +524,7 @@ namespace CSGenio.persistence
                 throw new PersistenceException("Erro durante a transferência de logs.", "PersistentSupportSQLServer.transferMSMQLog", "Error transfering MSMQ log data from the database to the log: " + e.Message, e);
             }
         }
-		
+
         /// <summary>
         /// Transfer log data from the system DB to the system log DB
         /// Called from log database PersistentSupport
@@ -560,8 +560,8 @@ namespace CSGenio.persistence
 
                 // Open log database transaction
                 using (System.Data.SqlClient.SqlTransaction logTransaction = (System.Data.SqlClient.SqlTransaction)this.Connection.BeginTransaction())
-                {                    
-                    try 
+                {
+                    try
 	                {
 						int[] totalRows = new[] { 0, 0 };
 
@@ -587,7 +587,7 @@ namespace CSGenio.persistence
 
                         // Total rows to be copied
                         job.Total = totalRows[0] + totalRows[1];
-						
+
                         // ----------------------------------------------
                         // LogGENall transfer
                         // ----------------------------------------------
@@ -595,7 +595,7 @@ namespace CSGenio.persistence
                         if (totalRows[0] != 0)
                         {
 							job.CurrentTable = tableLogs;
-							
+
                             // Log row selection query
                             query = new SelectQuery()
                                 .Select(tableLogs, "cod", "COD")
@@ -616,7 +616,7 @@ namespace CSGenio.persistence
 
                                 // Create bulk copy object
                                 using (System.Data.SqlClient.SqlBulkCopy bulkCopy = new System.Data.SqlClient.SqlBulkCopy(
-                                    (System.Data.SqlClient.SqlConnection) this.Connection, 
+                                    (System.Data.SqlClient.SqlConnection) this.Connection,
                                     System.Data.SqlClient.SqlBulkCopyOptions.KeepIdentity,
                                     logTransaction))
                                 {
@@ -717,7 +717,7 @@ namespace CSGenio.persistence
 
                             systemSp.Execute(delete);
                         }
-						
+
                         // Commit transaction
                         logTransaction.Commit();
 
@@ -726,10 +726,10 @@ namespace CSGenio.persistence
 					{
 						logTransaction.Rollback();
                         systemSp.rollbackTransaction();
-						
+
 						job.Completed = true;
 						job.ErrorMessage = "Erro durante a transferência de logs: " + ex.UserMessage;
-						
+
 						if (ex.ExceptionSite == "PersistentSupportSQLServer.transferLog")
 							throw;
 						if (ex.UserMessage == null)
@@ -741,10 +741,10 @@ namespace CSGenio.persistence
 	                {
 		                logTransaction.Rollback();
                         systemSp.rollbackTransaction();
-						
+
 						job.Completed = true;
                         job.ErrorMessage = "Erro durante a transferência de logs: " + e.Message;
-						
+
 		                throw new PersistenceException("Erro durante a transferência de logs.", "PersistentSupportSQLServer.transferLog", "Error transfering log data from the database to the log: " + e.Message, e);
 	                }
                 }
@@ -763,8 +763,8 @@ namespace CSGenio.persistence
                 this.closeConnection();
                 throw new PersistenceException("Erro durante a transferência de logs.", "PersistentSupportSQLServer.transferLog", "Error transfering log data from the database to the log: " + e.Message, e);
             }
-        }           
-        
+        }
+
         public override int getRecordPos(User user, string module, IArea area, IList<ColumnSort> sorting, string primaryKeyValue, CriteriaSet conditions, string identifier)
         {
             try
@@ -808,7 +808,7 @@ namespace CSGenio.persistence
         public override IDbConnection GetConnectionToServer()
         {
             SqlConnectionStringBuilder builder = new SqlConnectionStringBuilder(Connection.ConnectionString);
-            
+
             if(String.IsNullOrEmpty(builder.Password))
             {
                 //After a connection is opened the first time, it's password is cleared.
@@ -821,7 +821,7 @@ namespace CSGenio.persistence
             return connection;
         }
 
-        
+
         /// <summary>
         /// Checks if a database exists
         /// </summary>
@@ -914,7 +914,7 @@ namespace CSGenio.persistence
                 foreach (RequestedField fld in row.Fields.Values)
                     dr[fld.Name] = QueryUtils.ToValidDbValue(fld.Value, info.DBFields[fld.Name]);
                 dt.Rows.Add(dr);
-            }            
+            }
 
             return dt;
         }
@@ -935,6 +935,10 @@ namespace CSGenio.persistence
             //use the first row as a header to create the update query
             UpdateQuery query = new UpdateQuery();
             QueryUtils.fillQueryUpdate(query, rows.First());
+            //if we have no columns to update then do nothing
+            if (query.SetValues.Count == 0)
+                return;
+
             var renderer = new QueryRenderer(this);
             renderer.SchemaMapping = SchemaMapping;
             var sql = renderer.GetSql(query);
@@ -974,6 +978,6 @@ namespace CSGenio.persistence
                 .In(info.TableName, info.PrimaryKeyName, tableValueParam));
 
             int linha = Execute(queryDelete);
-        }        
+        }
     }
 }

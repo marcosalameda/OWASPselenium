@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW INGROUPS]/
 
 		[HttpPost]
-		public ActionResult Ingroups_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Ingroups_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Ingroups_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Ingroups_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ingroups_Show_GET",
 				AreaName = "inpgr",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET INGROUPS]/
 		[HttpPost]
-		public ActionResult Ingroups_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Ingroups_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Ingroups_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Ingroups_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ingroups_New_GET",
 				AreaName = "inpgr",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Ingroups_New([FromBody]Ingroups_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ingroups_New",
 				ViewName = "Ingroups",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET INGROUPS]/
 		[HttpPost]
-		public ActionResult Ingroups_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Ingroups_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Ingroups_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Ingroups_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ingroups_Edit_GET",
 				AreaName = "inpgr",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Ingroups_Edit([FromBody]Ingroups_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ingroups_Edit",
 				ViewName = "Ingroups",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET INGROUPS]/
 		[HttpPost]
-		public ActionResult Ingroups_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Ingroups_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Ingroups_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Ingroups_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ingroups_Delete_GET",
 				AreaName = "inpgr",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Inpgr/Ingroups_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST INGROUPS]/
 		[HttpPost]
-		public ActionResult Ingroups_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Ingroups_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Ingroups_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Ingroups_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ingroups_Delete",
 				ViewName = "Ingroups",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET INGROUPS]/
 
 		[HttpPost]
-		public ActionResult Ingroups_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Ingroups_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Ingroups_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Ingroups_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Ingroups_Duplicate_GET",
 				AreaName = "inpgr",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Ingroups_Duplicate([FromBody]Ingroups_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Ingroups_Duplicate",
 				ViewName = "Ingroups",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Inpgr(UserContext.Current);
+					GenioMVC.Models.Inpgr model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("inpgr");
 
 // USE /[MANUAL GQT BEFORE_CANCEL INGROUPS]/

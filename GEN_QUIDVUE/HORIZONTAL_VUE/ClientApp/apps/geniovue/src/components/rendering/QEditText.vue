@@ -1,44 +1,28 @@
 ﻿<template>
-	<component
-		:is="options?.component ? options.component : 'base-input-structure'"
+	<q-text-field
 		:id="`${tableName}_${rowIndex}_${columnName}`"
-		d-flex-inline
-		:class="containerClasses"
-		:label-attrs="{ class: 'i-text__label' }"
-		:model-field-ref="modelField"
-		:error-display-type="options?.errorDisplayType">
-		<q-text-field
-			:id="`${tableName}_${rowIndex}_${columnName}`"
-			:model-value="value"
-			:max-length="options.dataLength"
-			:size="size"
-			:classes="classes"
-			:disabled="options.disabled"
-			:readonly="options.readonly"
-			:placeholder="placeholder"
-			:aria-label="options?.label"
-			@update:model-value="$emit('update', $event)" />
-	</component>
+		:model-value="value"
+		:max-length="options.dataLength"
+		:size="size"
+		:classes="classes"
+		:disabled="options.disabled"
+		:readonly="options.readonly"
+		:placeholder="placeholder"
+		:aria-label="options?.label"
+		@update:model-value="$emit('update', $event)" />
 </template>
 
 <script>
 	import _isEmpty from 'lodash-es/isEmpty'
 
 	import { inputSize } from '@quidgest/clientapp/constants/enums'
-	import { String } from '@quidgest/clientapp/models/fields'
-
-	import BaseInputStructure from '@/components/inputs/BaseInputStructure.vue'
-	import GridBaseInputStructure from '@/components/inputs/GridBaseInputStructure.vue'
 
 	export default {
 		name: 'QEditText',
 
 		emits: ['update', 'loaded'],
 
-		components: {
-			BaseInputStructure,
-			GridBaseInputStructure
-		},
+		components: {},
 
 		props: {
 			/**
@@ -98,52 +82,19 @@
 			},
 
 			/**
-			 * Additional CSS classes to apply to the input container.
-			 */
-			containerClasses: {
-				type: Array,
-				default: () => []
-			},
-
-			/**
 			 * Placeholder text for the input when empty.
 			 */
 			placeholder: {
 				type: String,
 				default: ''
-			},
-
-			/**
-			 * Array of error messages related to the input's value.
-			 */
-			errorMessages: {
-				type: Array,
-				default: () => []
 			}
 		},
 
 		expose: [],
 
-		data()
-		{
-			return {
-				modelField: new String()
-			}
-		},
-
 		mounted()
 		{
 			this.$emit('loaded')
-		},
-
-		watch: {
-			errorMessages: {
-				handler(newValue)
-				{
-					this.modelField.serverErrorMessages = newValue
-				},
-				deep: true
-			}
 		}
 	}
 </script>

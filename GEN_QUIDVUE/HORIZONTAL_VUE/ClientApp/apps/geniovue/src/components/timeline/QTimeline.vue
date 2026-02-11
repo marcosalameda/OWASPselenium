@@ -115,13 +115,15 @@
 				type: Object,
 				required: true
 			},
+
 			/**
-			* the type of the timeline.
-			*/
+			 * The type of the timeline.
+			 */
 			tipoTimeline: {
 				type: String,
 				required: true
 			},
+
 			/**
 			 * The timeline configuration.
 			 */

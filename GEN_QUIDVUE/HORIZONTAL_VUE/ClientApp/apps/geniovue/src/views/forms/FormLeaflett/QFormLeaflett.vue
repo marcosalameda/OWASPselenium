@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="LEAFLETT"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.LEAFLETTEQUIPREGISTNR.isVisible || controls.LEAFLETTTPEQUTIPOEQUI.isVisible">
-					<q-control-wrapper
-						v-show="controls.LEAFLETTEQUIPREGISTNR.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.LEAFLETTEQUIPREGISTNR.isVisible || controls.LEAFLETTTPEQUTIPOEQUI.isVisible">
+					<q-col
+						v-if="controls.LEAFLETTEQUIPREGISTNR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTEQUIPREGISTNR.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTEQUIPREGISTNR"
 							v-on="controls.LEAFLETTEQUIPREGISTNR.handlers"
@@ -111,11 +120,12 @@
 								v-bind="controls.LEAFLETTEQUIPREGISTNR.seeMoreParams"
 								v-on="controls.LEAFLETTEQUIPREGISTNR.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTTPEQUTIPOEQUI.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTTPEQUTIPOEQUI.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTTPEQUTIPOEQUI.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTTPEQUTIPOEQUI"
 							v-on="controls.LEAFLETTTPEQUTIPOEQUI.handlers"
@@ -127,13 +137,14 @@
 								@blur="onBlur(controls.LEAFLETTTPEQUTIPOEQUI, model.TpequValTipoequi.value)"
 								@change="model.TpequValTipoequi.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.LEAFLETTINSTADESCRIPT.isVisible || controls.LEAFLETTINSTADESIGNAT.isVisible || controls.LEAFLETTINSTADTINIAGE.isVisible || controls.LEAFLETTINSTADTFIMAGE.isVisible || controls.LEAFLETTINSTAALLDAY__.isVisible || controls.LEAFLETTINSTASINCE___.isVisible || controls.LEAFLETTINSTAUNTIL___.isVisible || controls.LEAFLETTINSTAHOURS___.isVisible || controls.LEAFLETTINSTAPRECOHOR.isVisible || controls.LEAFLETTINSTAVALUE___.isVisible || controls.LEAFLETTINSTACOORDGEO.isVisible">
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTADESCRIPT.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.LEAFLETTINSTADESCRIPT.isVisible || controls.LEAFLETTINSTADESIGNAT.isVisible || controls.LEAFLETTINSTADTINIAGE.isVisible || controls.LEAFLETTINSTADTFIMAGE.isVisible || controls.LEAFLETTINSTAALLDAY__.isVisible || controls.LEAFLETTINSTASINCE___.isVisible || controls.LEAFLETTINSTAUNTIL___.isVisible || controls.LEAFLETTINSTAHOURS___.isVisible || controls.LEAFLETTINSTAPRECOHOR.isVisible || controls.LEAFLETTINSTAVALUE___.isVisible || controls.LEAFLETTINSTACOORDGEO.isVisible">
+					<q-col
+						v-if="controls.LEAFLETTINSTADESCRIPT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTADESCRIPT.isVisible"
 							class="i-textarea"
 							v-bind="controls.LEAFLETTINSTADESCRIPT"
 							v-on="controls.LEAFLETTINSTADESCRIPT.handlers"
@@ -145,11 +156,12 @@
 								v-bind="controls.LEAFLETTINSTADESCRIPT.props"
 								v-on="controls.LEAFLETTINSTADESCRIPT.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTADESIGNAT.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTADESIGNAT.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTADESIGNAT.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTINSTADESIGNAT"
 							v-on="controls.LEAFLETTINSTADESIGNAT.handlers"
@@ -161,11 +173,12 @@
 								@blur="onBlur(controls.LEAFLETTINSTADESIGNAT, model.ValDesignat.value)"
 								@change="model.ValDesignat.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTADTINIAGE.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTADTINIAGE.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTADTINIAGE.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTINSTADTINIAGE"
 							v-on="controls.LEAFLETTINSTADTINIAGE.handlers"
@@ -179,11 +192,12 @@
 								@reset-icon-click="model.ValDtiniage.fnUpdateValue(model.ValDtiniage.originalValue ?? new Date())"
 								@update:model-value="model.ValDtiniage.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTADTFIMAGE.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTADTFIMAGE.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTADTFIMAGE.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTINSTADTFIMAGE"
 							v-on="controls.LEAFLETTINSTADTFIMAGE.handlers"
@@ -197,11 +211,12 @@
 								@reset-icon-click="model.ValDtfimage.fnUpdateValue(model.ValDtfimage.originalValue ?? new Date())"
 								@update:model-value="model.ValDtfimage.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTAALLDAY__.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTAALLDAY__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTAALLDAY__.isVisible"
 							class="i-checkbox"
 							v-bind="controls.LEAFLETTINSTAALLDAY__"
 							v-on="controls.LEAFLETTINSTAALLDAY__.handlers"
@@ -209,17 +224,18 @@
 							:reporting-mode-on="reportingModeCAV"
 							:suggestion-mode-on="suggestionModeOn">
 							<template #label>
-								<q-checkbox-input
+								<q-checkbox
 									v-if="controls.LEAFLETTINSTAALLDAY__.isVisible"
 									v-bind="controls.LEAFLETTINSTAALLDAY__.props"
 									v-on="controls.LEAFLETTINSTAALLDAY__.handlers" />
 							</template>
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTASINCE___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTASINCE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTASINCE___.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTINSTASINCE___"
 							v-on="controls.LEAFLETTINSTASINCE___.handlers"
@@ -233,11 +249,12 @@
 								@reset-icon-click="model.ValSince.fnUpdateValue(model.ValSince.originalValue ?? new Date())"
 								@update:model-value="model.ValSince.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTAUNTIL___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTAUNTIL___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTAUNTIL___.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTINSTAUNTIL___"
 							v-on="controls.LEAFLETTINSTAUNTIL___.handlers"
@@ -251,11 +268,12 @@
 								@reset-icon-click="model.ValUntil.fnUpdateValue(model.ValUntil.originalValue ?? new Date())"
 								@update:model-value="model.ValUntil.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTAHOURS___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTAHOURS___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTAHOURS___.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTINSTAHOURS___"
 							v-on="controls.LEAFLETTINSTAHOURS___.handlers"
@@ -267,11 +285,12 @@
 								v-bind="controls.LEAFLETTINSTAHOURS___.props"
 								@update:model-value="model.ValHours.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTAPRECOHOR.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTAPRECOHOR.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTAPRECOHOR.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTINSTAPRECOHOR"
 							v-on="controls.LEAFLETTINSTAPRECOHOR.handlers"
@@ -283,11 +302,12 @@
 								v-bind="controls.LEAFLETTINSTAPRECOHOR.props"
 								@update:model-value="model.ValPrecohor.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTAVALUE___.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTAVALUE___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTAVALUE___.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTINSTAVALUE___"
 							v-on="controls.LEAFLETTINSTAVALUE___.handlers"
@@ -299,11 +319,12 @@
 								v-bind="controls.LEAFLETTINSTAVALUE___.props"
 								@update:model-value="model.ValValue.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.LEAFLETTINSTACOORDGEO.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.LEAFLETTINSTACOORDGEO.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.LEAFLETTINSTACOORDGEO.isVisible"
 							class="i-text"
 							v-bind="controls.LEAFLETTINSTACOORDGEO"
 							v-on="controls.LEAFLETTINSTACOORDGEO.handlers"
@@ -315,10 +336,10 @@
 								@blur="onBlur(controls.LEAFLETTINSTACOORDGEO, model.ValCoordgeo.value)"
 								@change="model.ValCoordgeo.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -327,7 +348,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -336,6 +357,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -347,7 +369,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -559,7 +581,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -708,7 +734,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_LEAFLETTTPEQUTIPOEQUI',
 						controlLimits: [
 						],
 					}, this),
@@ -736,7 +761,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 85,
-						labelId: 'label_LEAFLETTINSTADESIGNAT',
 						controlLimits: [
 						],
 					}, this),
@@ -1031,16 +1055,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1084,16 +1122,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1245,6 +1297,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS LEAFLETT]/
 // eslint-disable-next-line

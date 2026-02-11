@@ -1,12 +1,6 @@
 ﻿<template>
 	<teleport
 		v-if="isReady"
-		to="#q-modal-form-suggestion-index-header">
-		<h5 class="c-modal__header-title">{{ texts.newSuggestion }}</h5>
-	</teleport>
-
-	<teleport
-		v-if="isReady"
 		to="#q-modal-form-suggestion-index-body">
 		<div
 			v-if="isEmpty(model.FieldId)"
@@ -242,14 +236,17 @@
 
 		mounted()
 		{
+			const props = {
+				title: this.texts.newSuggestion,
+				dismissible: true
+			}
+
 			const modalProps = {
 				id: 'form-suggestion-index',
-				closeButtonEnable: true,
-				dismissWithEsc: true,
 				isActive: true
 			}
 
-			this.setModal(modalProps)
+			this.setModal(props, modalProps)
 			this.fetchData()
 		},
 

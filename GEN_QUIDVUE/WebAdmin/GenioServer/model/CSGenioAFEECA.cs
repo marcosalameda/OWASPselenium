@@ -104,8 +104,8 @@ namespace CSGenio.business
 			info.Pathways.Add("flds","flds");
 			info.Pathways.Add("aero","flds");
 			info.Pathways.Add("equip","flds");
-			info.Pathways.Add("decom","flds");
 			info.Pathways.Add("wareh","flds");
+			info.Pathways.Add("decom","flds");
 			info.Pathways.Add("tpequ","flds");
 			info.Pathways.Add("room1","flds");
 			info.Pathways.Add("cmpny","flds");

@@ -54,16 +54,16 @@ export default class ViewModel extends FormViewModelBase
 		this.stopWatchers.push(watch(() => this.ValCodequip.value, (newValue, oldValue) => this.onUpdate('equip.codequip', this.ValCodequip, newValue, oldValue)))
 
 		/** The hidden foreign keys. */
-		this.ValCoditem = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCoditem',
-			originId: 'ValCoditem',
+		this.ValCodrooms = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCodrooms',
+			originId: 'ValCodrooms',
 			area: 'EQUIP',
-			field: 'CODITEM',
-			relatedArea: 'ITEM',
+			field: 'CODROOMS',
+			relatedArea: 'ROOM1',
 			isFixed: true,
 			description: '',
-		}).cloneFrom(values?.ValCoditem))
-		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('equip.coditem', this.ValCoditem, newValue, oldValue)))
+		}).cloneFrom(values?.ValCodrooms))
+		this.stopWatchers.push(watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('equip.codrooms', this.ValCodrooms, newValue, oldValue)))
 
 		this.ValCodwareh = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodwareh',
@@ -76,17 +76,6 @@ export default class ViewModel extends FormViewModelBase
 		}).cloneFrom(values?.ValCodwareh))
 		this.stopWatchers.push(watch(() => this.ValCodwareh.value, (newValue, oldValue) => this.onUpdate('equip.codwareh', this.ValCodwareh, newValue, oldValue)))
 
-		this.ValCodrooms = reactive(new modelFieldType.ForeignKey({
-			id: 'ValCodrooms',
-			originId: 'ValCodrooms',
-			area: 'EQUIP',
-			field: 'CODROOMS',
-			relatedArea: 'ROOM1',
-			isFixed: true,
-			description: '',
-		}).cloneFrom(values?.ValCodrooms))
-		this.stopWatchers.push(watch(() => this.ValCodrooms.value, (newValue, oldValue) => this.onUpdate('equip.codrooms', this.ValCodrooms, newValue, oldValue)))
-
 		this.ValCodempre = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCodempre',
 			originId: 'ValCodempre',
@@ -97,6 +86,17 @@ export default class ViewModel extends FormViewModelBase
 			description: computed(() => this.Resources._COMPANY02087),
 		}).cloneFrom(values?.ValCodempre))
 		this.stopWatchers.push(watch(() => this.ValCodempre.value, (newValue, oldValue) => this.onUpdate('equip.codempre', this.ValCodempre, newValue, oldValue)))
+
+		this.ValCoditem = reactive(new modelFieldType.ForeignKey({
+			id: 'ValCoditem',
+			originId: 'ValCoditem',
+			area: 'EQUIP',
+			field: 'CODITEM',
+			relatedArea: 'ITEM',
+			isFixed: true,
+			description: '',
+		}).cloneFrom(values?.ValCoditem))
+		this.stopWatchers.push(watch(() => this.ValCoditem.value, (newValue, oldValue) => this.onUpdate('equip.coditem', this.ValCoditem, newValue, oldValue)))
 
 		this.ValCoddeco = reactive(new modelFieldType.ForeignKey({
 			id: 'ValCoddeco',

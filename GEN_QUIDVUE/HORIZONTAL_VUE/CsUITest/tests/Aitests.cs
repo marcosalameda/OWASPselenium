@@ -36,6 +36,40 @@ public class AiTests : BaseSeleniumTest
         var wait = new WebDriverWait(Driver, TimeSpan.FromSeconds(10));
         wait.Until(d =>form.ReparTipoarea.GetValue() == "L");
     }
+    
+    [Test]
+    public void DirectAgentInteraction()
+    {
+        var app = Authenticate();
+        app.Menu.ActivateModule("PTN");
+        app.Menu.ActivateMenu("PTN", "71");
+
+        var list = new MenuListPage(Driver, "PTN", "711").List;
+        list.ClickRow(0);
+
+        var form = new Pess1Form(Driver, FORM_MODE.SHOW);
+
+        app.Sidebar.ChatbotButton.Click();
+
+        var chatbot = new ChatbotPage(Driver);
+        chatbot.ChangeChat("MockPersonCreator");
+        chatbot.SendMessage("Sugere me um valor para email e nome");
+
+        var agent = new MockPersonCreatorAgent(Driver);
+        var suggestions = agent.GetAllSuggestions();
+        Assert.That(suggestions.Count, Is.EqualTo(2));
+
+        var email = agent.GetSuggestionText(agent.Email);
+        var name = agent.GetSuggestionText(agent.Name);
+
+        agent.ApplyLatestSuggestions();
+
+        Assert.That(form.Pess1Name.GetValue(), Is.EqualTo(name));
+        Assert.That(form.Pess1Email.GetValue(), Is.EqualTo(email));
+
+        chatbot.ClearChat();
+        form.Save();
+    }
 }
 //END_MANUALCODE
 

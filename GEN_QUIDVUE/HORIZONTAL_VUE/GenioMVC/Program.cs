@@ -66,6 +66,7 @@ builder.Services.AddControllers(options =>
 // Add Http Client and Service for ChatbotAPI
 builder.Services.AddHttpClient();
 builder.Services.AddScoped<IChatbotService, ChatbotService>();
+builder.Services.AddSingleton<IToolRepo>(McpToolFactory.AllGenioTools());
 
 // Any controller that needs User information it can add UserContextService to its constructor
 builder.Services.AddHttpContextAccessor();
@@ -183,27 +184,32 @@ app.MapControllerRoute(
         controller = "Account"
     });
 
-// Chatbot API proxy endpoints
-app.MapControllerRoute(
-    name: "chatbotapi_submit",
-    pattern: "chatbotapi/prompt/submit",
-    defaults: new { controller = "ChatbotApi", action = "ChatbotApiStreamProxy" });
 
+// Add specific MCP route
 app.MapControllerRoute(
-    name: "chatbotapi_agent_response",
-    pattern: "chatbotapi/get-job-result",
-    defaults: new { controller = "ChatbotApi", action = "ChatbotApiStreamProxy" });
+    name: "mcp",
+    pattern: "mcp",
+    defaults: new { controller = "Mcp", action = "HandleMcp" });
 
-app.MapControllerRoute(
-    name: "chatbotapi_clear",
-    pattern: "chatbotapi/prompt/clear",
-    defaults: new { controller = "ChatbotApi", action = "ChatbotApiProxy" });
 
-app.MapControllerRoute(
-    name: "chatbotapi_load",
-    pattern: "chatbotapi/prompt/load",
-    defaults: new { controller = "ChatbotApi", action = "ChatbotApiProxy" });
-    
+//Chatbot API proxy endpoints
+var chatbotRoutes = new[]
+{
+    new { Name = "chatbotapi_submit", Pattern = "chatbotapi/prompt/submit", Action = "ChatbotApiStreamProxy" },
+    new { Name = "chatbotapi_agent_response", Pattern = "chatbotapi/get-job-result", Action = "ChatbotApiStreamProxy" },
+    new { Name = "chatbotapi_direct_agent_chat", Pattern = "chatbotapi/prompt/direct-agent-chat", Action = "ChatbotApiStreamProxy" },
+    new { Name = "chatbotapi_clear", Pattern = "chatbotapi/prompt/clear", Action = "ChatbotApiProxy" },
+    new { Name = "chatbotapi_load", Pattern = "chatbotapi/prompt/load", Action = "ChatbotApiProxy" },
+    new { Name = "chatbotapi_cancel_execution", Pattern = "chatbotapi/prompt/cancel-execution", Action = "ChatbotApiProxy" }
+};
+
+foreach (var route in chatbotRoutes)
+{
+    app.MapControllerRoute(
+        name: route.Name,
+        pattern: route.Pattern,
+        defaults: new { controller = "ChatbotApi", action = route.Action });
+}
 
 // Configuration and Antiforgery token
 app.MapControllerRoute("config",

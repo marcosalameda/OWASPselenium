@@ -235,7 +235,7 @@ namespace CSGenio.business
 			info.ChildTable = new ChildRelation[6];
 			info.ChildTable[0]= new ChildRelation("ccorr", new String[] {"coditem"}, DeleteProc.NA);
 			info.ChildTable[1]= new ChildRelation("ldent", new String[] {"coditem"}, DeleteProc.NA);
-			info.ChildTable[2]= new ChildRelation("itemp", new String[] {"coditem"}, DeleteProc.NA);
+			info.ChildTable[2]= new ChildRelation("itemp", new String[] {"coditem"}, DeleteProc.AP);
 			info.ChildTable[3]= new ChildRelation("outpu", new String[] {"coditem"}, DeleteProc.NA);
 			info.ChildTable[4]= new ChildRelation("itemc", new String[] {"coditem"}, DeleteProc.NA);
 			info.ChildTable[5]= new ChildRelation("equip", new String[] {"coditem"}, DeleteProc.NA);
@@ -255,8 +255,8 @@ namespace CSGenio.business
 			// Pathways
 			//------------------------------
 			info.Pathways = new Dictionary<string, string>(2);
-			info.Pathways.Add("gitem","gitem");
 			info.Pathways.Add("wareh","wareh");
+			info.Pathways.Add("gitem","gitem");
 		}
 
 		/// <summary>
@@ -591,16 +591,17 @@ namespace CSGenio.business
         /// <param name="key">The value of the primary key</param>
         /// <param name="user">The context of the user</param>
         /// <param name="fields">The fields to be filled in the area</param>
+		/// <param name="forUpdate">True if you are preparing to update this record, false otherwise</param>
         /// <returns>An area with the fields requests of the record read or null if the key does not exist</returns>
         /// <remarks>Persistence operations should not be used on a partially positioned register</remarks>
-        public static CSGenioAitem search(PersistentSupport sp, string key, User user, string[] fields = null)
+        public static CSGenioAitem search(PersistentSupport sp, string key, User user, string[] fields = null, bool forUpdate = false)
         {
 			if (string.IsNullOrEmpty(key))
 				return null;
 
 		    CSGenioAitem area = new CSGenioAitem(user, user.CurrentModule);
 
-            if (sp.getRecord(area, key, fields))
+            if (sp.getRecord(area, key, fields, forUpdate))
                 return area;
 			return null;
         }
@@ -667,7 +668,6 @@ namespace CSGenio.business
 		// USE /[MANUAL GQT TABAUX ITEM]/
 
      
-
                 
 
 	}

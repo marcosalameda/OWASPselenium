@@ -68,18 +68,11 @@
 								style="padding: 0.5rem 0 0.05rem 0.5rem">
 								<div class="col-12">
 									<q-control-wrapper class="control-join-group">
-										<base-input-structure
+										<q-checkbox
 											:id="group.internalKey"
-											class="i-checkbox"
-											label-position="left"
+											v-model="group.PageBreak"
 											:label="`${texts.group} ${idxGroup + 1} - ${texts.pageBreak}`"
-											:label-attrs="{ class: 'i-checkbox i-checkbox__label' }">
-											<template #label>
-												<q-checkbox-input
-													:id="group.internalKey"
-													v-model="group.PageBreak" />
-											</template>
-										</base-input-structure>
+											label-placement="left" />
 									</q-control-wrapper>
 								</div>
 							</div>

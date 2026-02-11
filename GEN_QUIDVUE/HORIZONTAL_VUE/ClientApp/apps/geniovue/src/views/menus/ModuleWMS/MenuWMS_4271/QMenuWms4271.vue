@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE WMS_Menu_4271]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -152,6 +153,7 @@
 								field: 'COUNTRY',
 								dataLength: 90,
 								scrollData: 90,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 2,
@@ -159,6 +161,7 @@
 								area: 'CNTRY',
 								field: 'ACTIVE',
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -167,6 +170,7 @@
 								field: 'CODIGONR',
 								dataLength: 3,
 								scrollData: 3,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -175,6 +179,7 @@
 								field: 'ALFA2',
 								dataLength: 2,
 								scrollData: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -183,6 +188,7 @@
 								field: 'ALFA3',
 								dataLength: 3,
 								scrollData: 3,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 6,
@@ -192,6 +198,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -207,8 +214,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -309,6 +315,7 @@
 							rowClickAction: {
 								id: 'RCA_WMS_42711',
 								name: 'form-CNTRY',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -342,6 +349,7 @@
 						uuid: 'abc39823-4a57-4dbd-881d-4e22e7b0b3d8',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

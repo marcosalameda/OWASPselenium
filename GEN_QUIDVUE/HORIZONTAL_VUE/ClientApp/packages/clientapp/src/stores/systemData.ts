@@ -12,12 +12,27 @@ type Module = {
 
 type Modules = Record<string, Module>
 
-export const useSystemDataStore = defineStore('systemData', () => {
+type VersionInfo = {
+	buildVersion: number
+	dbIdxVersion: number
+	dbVersion: string
+	genioVersion: string
+	trackChangesVersion: string
+	assemblyVersion: string
+	generationDate: {
+		year: number
+		month: number
+		day: number
+	}
+}
 
+export const useSystemDataStore = defineStore('systemData', () => {
 	const config = inject(FRAMEWORK_CONFIG_KEY)
 
 	if (!config) {
-		throw new Error('Framework configuration is not provided. Please ensure the framework is properly initialized.')
+		throw new Error(
+			'Framework configuration is not provided. Please ensure the framework is properly initialized.'
+		)
 	}
 
 	const locale = config.locale
@@ -46,6 +61,20 @@ export const useSystemDataStore = defineStore('systemData', () => {
 		schedulerLicense: ref<string | undefined>(undefined)
 	}
 
+	const versionInfo = ref<VersionInfo>({
+		buildVersion: 0,
+		dbIdxVersion: 0,
+		dbVersion: '',
+		genioVersion: '',
+		trackChangesVersion: '',
+		assemblyVersion: '',
+		generationDate: {
+			year: 0,
+			month: 0,
+			day: 0
+		}
+	})
+
 	//----------------------------------------------------------------
 	// Actions
 	//----------------------------------------------------------------
@@ -68,37 +97,27 @@ export const useSystemDataStore = defineStore('systemData', () => {
 		system.availableModules.value = modules
 	}
 	const setDefaultModule = (value: string | undefined) => {
-		if (typeof value !== 'string' || value.length === 0)
-			return
-		if (system.defaultModule.value === value)
-			return
-		if (!system.availableModules.value[value] && value !== 'Public')
-			return
+		if (typeof value !== 'string' || value.length === 0) return
+		if (system.defaultModule.value === value) return
+		if (!system.availableModules.value[value] && value !== 'Public') return
 
 		system.defaultModule.value = value
 	}
 	const setCurrentModule = (value: string | undefined) => {
-		if (typeof value !== 'string' || value.length === 0)
-			return
-		if (system.currentModule.value === value)
-			return
-		if (system.availableModules.value[value] === undefined && value !== 'Public')
-			return
+		if (typeof value !== 'string' || value.length === 0) return
+		if (system.currentModule.value === value) return
+		if (system.availableModules.value[value] === undefined && value !== 'Public') return
 
 		system.currentModule.value = value
 	}
 
 	// Language
 	const setCurrentLang = (value: string | undefined) => {
-		if (typeof value !== 'string' || value.length === 0)
-			return
-		if (system.currentLang.value === value)
-			return
-		if (!system.availableLocales.find(obj => obj.language === value))
-			return
+		if (typeof value !== 'string' || value.length === 0) return
+		if (system.currentLang.value === value) return
+		if (!system.availableLocales.find((obj) => obj.language === value)) return
 
 		system.currentLang.value = value
-
 	}
 
 	// Lists
@@ -111,6 +130,11 @@ export const useSystemDataStore = defineStore('systemData', () => {
 		system.schedulerLicense.value = license
 	}
 
+	// Version Info
+	const setVersionInfo = (version: VersionInfo) => {
+		versionInfo.value = version
+	}
+
 	// Utilities
 	const reset = () => {
 		system.currentSystem.value = system.defaultSystem.value
@@ -121,6 +145,7 @@ export const useSystemDataStore = defineStore('systemData', () => {
 	return {
 		// Getters
 		system,
+		versionInfo,
 
 		// Actions
 		setAvailableSystems,
@@ -132,6 +157,7 @@ export const useSystemDataStore = defineStore('systemData', () => {
 		setCurrentLang,
 		setDefaultListRows,
 		setSchedulerLicenseKey,
+		setVersionInfo,
 
 		reset
 	}

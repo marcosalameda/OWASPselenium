@@ -11,7 +11,7 @@ import genericFunctions from '@quidgest/clientapp/utils/genericFunctions'
  * projectFuntions.js v1.0.0
  * http://www.quidgest.com
  * ====================================================
- * Copyright 2025 Quidgest, S.A.
+ * Copyright 2026 Quidgest, S.A.
  *
  * All project functions will be placed here.
  * ====================================================

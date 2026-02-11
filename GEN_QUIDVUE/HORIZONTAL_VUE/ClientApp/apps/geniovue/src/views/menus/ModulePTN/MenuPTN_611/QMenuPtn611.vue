@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE PTN_Menu_611]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.AIRLINE_NAME55130),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodaero',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -162,6 +164,7 @@
 								field: 'DESCRIP',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -172,6 +175,7 @@
 								scrollData: 3,
 								maxDigits: 3,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -182,6 +186,7 @@
 								scrollData: 5,
 								maxDigits: 2,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 5,
@@ -192,6 +197,7 @@
 								scrollData: 6,
 								maxDigits: 3,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 6,
@@ -202,6 +208,7 @@
 								scrollData: 6,
 								maxDigits: 3,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 7,
@@ -211,6 +218,7 @@
 								label: computed(() => this.Resources.DATE__DD_MM_YY_57869),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 8,
@@ -220,6 +228,7 @@
 								label: computed(() => this.Resources.DATETIME61308),
 								scrollData: 16,
 								dateTimeType: 'dateTime',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 9,
@@ -229,6 +238,7 @@
 								label: computed(() => this.Resources.DATESECOND44557),
 								scrollData: 19,
 								dateTimeType: 'dateTimeSeconds',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 10,
@@ -239,6 +249,7 @@
 								dataLength: 5,
 								scrollData: 5,
 								dateTimeType: 'time',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 11,
@@ -249,6 +260,7 @@
 								scrollData: 4,
 								maxDigits: 4,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 12,
@@ -257,6 +269,7 @@
 								field: 'PRIMVIAG',
 								label: computed(() => this.Resources.LOGICAL47485),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 13,
@@ -267,6 +280,7 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 14,
@@ -276,6 +290,7 @@
 								label: computed(() => this.Resources.TEXT_ENUMERATION45668),
 								dataLength: 2,
 								scrollData: 2,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayClass(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayClass.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -288,6 +303,7 @@
 								scrollData: 1,
 								maxDigits: 1,
 								decimalPlaces: 0,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayClassnum(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayClassnum.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -298,6 +314,7 @@
 								field: 'LOGICENU',
 								label: computed(() => this.Resources.LOGICAL_ENUMERATION30276),
 								scrollData: 1,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayPrimviag(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayPrimviag.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -311,6 +328,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DocumentColumn({
 								order: 18,
@@ -321,6 +339,7 @@
 								dataLength: 50,
 								scrollData: 30,
 								sortable: false,
+								export: 1,
 								viewType: qEnums.documentViewTypeMode.print,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
@@ -334,6 +353,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 20,
@@ -343,6 +363,7 @@
 								label: computed(() => this.Resources.CREATED_BY12292),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 21,
@@ -352,6 +373,7 @@
 								label: computed(() => this.Resources.DATE_OF_CREATION__DD02208),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 22,
@@ -362,6 +384,7 @@
 								dataLength: 5,
 								scrollData: 5,
 								dateTimeType: 'time',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 23,
@@ -371,6 +394,7 @@
 								label: computed(() => this.Resources.COMPLETE_DATE_OF_CRE57046),
 								scrollData: 15,
 								dateTimeType: 'dateTimeSeconds',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 24,
@@ -380,6 +404,7 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
+								export: 1,
 								pkColumn: 'ValCodequip',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -390,6 +415,7 @@
 								label: computed(() => this.Resources.TEXT_FIELD41810),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 26,
@@ -399,6 +425,7 @@
 								label: computed(() => this.Resources.EMAIL25170),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 27,
@@ -408,6 +435,7 @@
 								label: computed(() => this.Resources.ZIPCODE21021),
 								dataLength: 8,
 								scrollData: 8,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 28,
@@ -417,6 +445,7 @@
 								label: computed(() => this.Resources.IBAN28506),
 								dataLength: 34,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 29,
@@ -426,6 +455,7 @@
 								label: computed(() => this.Resources.SOCIAL_SECURITY_NO48150),
 								dataLength: 11,
 								scrollData: 11,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 30,
@@ -435,6 +465,7 @@
 								label: computed(() => this.Resources.LICENCE_PLATE07627),
 								dataLength: 8,
 								scrollData: 8,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 31,
@@ -444,6 +475,7 @@
 								label: computed(() => this.Resources.VAT_NUMBER24236),
 								dataLength: 9,
 								scrollData: 9,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 32,
@@ -453,6 +485,7 @@
 								label: computed(() => this.Resources.BANKING_ACCOUNT_NUMB62548),
 								dataLength: 24,
 								scrollData: 24,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 33,
@@ -462,6 +495,7 @@
 								label: computed(() => this.Resources.UPPERCASE48238),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 34,
@@ -471,6 +505,7 @@
 								label: computed(() => this.Resources.PASSWORD09467),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 35,
@@ -480,6 +515,7 @@
 								label: computed(() => this.Resources.COLORPICKER39653),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 36,
@@ -488,6 +524,7 @@
 								field: 'SHWRC',
 								label: computed(() => this.Resources.SHOW_RECORD53851),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ArrayColumn({
 								order: 37,
@@ -497,6 +534,7 @@
 								label: computed(() => this.Resources.RADIO_BTN20980),
 								dataLength: 5,
 								scrollData: 5,
+								export: 1,
 								array: computed(() => new qProjArrays.QArrayRadiobtn(vm.$getResource).elements),
 								arrayType: qProjArrays.QArrayRadiobtn.type,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
@@ -514,8 +552,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -616,6 +653,7 @@
 							rowClickAction: {
 								id: 'RCA_PTN_6111',
 								name: 'form-FIELDHLP',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -641,10 +679,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-AERO', 'changed-FLDS', 'changed-EQUIP'],
+						globalEvents: ['changed-EQUIP', 'changed-FLDS', 'changed-AERO'],
 						uuid: '8c79866f-7459-4fd0-8b1b-b5434e42c174',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -65,9 +65,16 @@ export function fieldIsVisible(controls, fieldId, checkCollapsed)
 		checkCollapsed = false
 
 	const field = controls[fieldId]
+
+	var formTabs = 'formTabs'
+	if (field.type === 'Tab' && field.container) {
+		const tabContainer = controls[field.container]
+		formTabs = tabContainer ?`formTabs_${tabContainer.name}` : 'formTabs'
+	}
+
 	if (!field?.isVisible ||
 		checkCollapsed && field.type === 'Group' && field.isCollapsible && !field.modelValue ||
-		checkCollapsed && field.type === 'Tab' && controls.formTabs.selectedTab !== fieldId)
+		checkCollapsed && field.type === 'Tab' && controls[formTabs].selectedTab !== fieldId)
 		return false
 
 	const parentId = field.parent
@@ -101,8 +108,12 @@ export function makeFieldVisible(controls, fieldId, skipValidation)
 		else
 			field.setState(true)
 	}
-	else if (field.type === 'Tab')
-		controls.formTabs.selectTab(fieldId)
+	else if (field.type === 'Tab') {
+		const tabContainer = controls[field.container]
+
+		if(!tabContainer) controls.formTabs.selectTab(fieldId)
+		else controls[`formTabs_${tabContainer.name}`].selectTab(fieldId)
+	}
 
 	const parentId = field.parent
 	if (parentId)

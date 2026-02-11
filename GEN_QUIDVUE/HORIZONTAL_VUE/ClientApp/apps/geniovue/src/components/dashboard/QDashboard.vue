@@ -413,7 +413,7 @@
 				this.isDirty = false
 				this.inEditMode = false
 				this.grid.enableMove(false)
-				this.$eventHub?.emit('open-sidebar-on-tab', 'widgets-panel')
+				this.$eventHub?.emit('toggle-sidebar-on-tab', 'widgets-panel')
 			},
 
 			/**

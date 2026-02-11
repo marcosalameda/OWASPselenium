@@ -10,7 +10,8 @@
 				<a
 					ref="menuButton"
 					class="brand modules__header nav-link has-icon"
-					href="javascript:void(0)"
+					role="button"
+					href="#"
 					:aria-expanded="moduleMenuIsOpen"
 					:data-key="system.currentModule"
 					@click.stop.prevent="toggleMenu"

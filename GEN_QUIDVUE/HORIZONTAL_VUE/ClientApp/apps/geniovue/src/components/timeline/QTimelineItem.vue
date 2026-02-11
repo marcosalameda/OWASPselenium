@@ -55,7 +55,8 @@
 				v-if="tlItem.Url"
 				data-testid="popup-btn"
 				class="q-button q-button--primary q-button--size-small mt-1"
-				href="javascript:void(0)"
+				role="button"
+				href="#"
 				:style="headerStyle"
 				@click.stop.prevent="$emit('form-popup', tlItem)">
 				<q-icon

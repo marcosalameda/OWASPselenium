@@ -115,8 +115,7 @@ function createNavigationLevel(context) {
 				const historyData = {
 					location: `home-${systemDataStore.system.currentModule}`,
 					params: {
-						...context.$route.params,
-						isPopup: 'false'
+						...context.$route.params
 					}
 				}
 

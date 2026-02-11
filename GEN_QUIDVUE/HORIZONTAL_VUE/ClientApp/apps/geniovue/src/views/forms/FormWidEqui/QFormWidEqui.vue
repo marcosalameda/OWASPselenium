@@ -37,9 +37,16 @@
 								:label="btn.label"
 								:disabled="btn.disabled"
 								@click="btn.action">
-								<q-icon
-									v-if="btn.icon"
-									v-bind="btn.icon" />
+								<template v-if="btn.icon">
+									<q-badge-indicator
+										v-if="btn.badge && btn.badge.isVisible"
+										:color="btn.badge.color">
+										<q-icon v-bind="btn.icon" />
+									</q-badge-indicator>
+									<q-icon
+										v-else
+										v-bind="btn.icon" />
+								</template>
 							</q-toggle-group-item>
 						</template>
 					</q-toggle-group>
@@ -47,27 +54,30 @@
 			</div>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="WID_EQUI"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.WID_EQUIPSEUDWIDEQUI_.isVisible">
-					<q-control-wrapper
-						v-show="controls.WID_EQUIPSEUDWIDEQUI_.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.WID_EQUIPSEUDWIDEQUI_.isVisible">
+					<q-col
+						v-if="controls.WID_EQUIPSEUDWIDEQUI_.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.WID_EQUIPSEUDWIDEQUI_.isVisible"
+							v-if="controls.WID_EQUIPSEUDWIDEQUI_.isVisible"
 							v-bind="controls.WID_EQUIPSEUDWIDEQUI_"
-							v-on="controls.WID_EQUIPSEUDWIDEQUI_.handlers" />
+							v-on="controls.WID_EQUIPSEUDWIDEQUI_.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE WID_EQUIPSEUDWIDEQUI_]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.WID_EQUIPSEUDWIDEQUI_.isVisible"
 							:list-ctrl="controls.WID_EQUIPSEUDWIDEQUI_"
 							:filter-operators="controls.WID_EQUIPSEUDWIDEQUI_.filterOperators"
 							v-on="controls.WID_EQUIPSEUDWIDEQUI_.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</template>
 </template>
 
@@ -165,6 +175,7 @@
 					type: 'widget',
 					name: 'WID_EQUI',
 					route: 'form-WID_EQUI',
+					isEmptyForm: true,
 					area: 'Home',
 					designation: computed(() => this.Resources.EQUIP40887),
 					identifier: '', // Unique identifier received by route (when it's nested).
@@ -352,6 +363,7 @@
 								label: computed(() => this.Resources.DESIGNATION35876),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 2,
@@ -362,6 +374,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -371,6 +384,7 @@
 								label: computed(() => this.Resources.NO__REGISTER04207),
 								dataLength: 6,
 								scrollData: 6,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -380,6 +394,7 @@
 								label: computed(() => this.Resources.TYPE_OF_EQUIPMENT18080),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodtpequ',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
@@ -389,6 +404,7 @@
 								field: 'BOUGHT',
 								label: computed(() => this.Resources.BOUGHT32044),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -404,8 +420,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -429,7 +444,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ITEM', 'changed-WAREH', 'changed-EQUIP', 'changed-TPEQU', 'changed-ROOM1', 'changed-CMPNY', 'changed-DECOM', 'changed-PESS1'],
+						globalEvents: ['changed-PESS1', 'changed-TPEQU', 'changed-ROOM1', 'changed-WAREH', 'changed-EQUIP', 'changed-CMPNY', 'changed-ITEM', 'changed-DECOM'],
 						uuid: 'Wid_equi_ValWidequi',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -562,16 +577,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -615,16 +644,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -776,6 +819,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS WID_EQUI]/
 // eslint-disable-next-line

@@ -1,5 +1,7 @@
 ﻿<template>
-	<div class="q-counter-widget">
+	<div
+		class="q-counter-widget"
+		:data-loading="loading">
 		<h5 class="q-counter-widget__title">{{ $props.title }}</h5>
 
 		<div class="q-counter-widget__info">
@@ -49,7 +51,10 @@
 		data()
 		{
 			return {
-				count: 0
+				count: 0,
+				// Attributes with null/undefined values are not rendered by Vue,
+				// which reduces unnecessary content in the HTML
+				loading: null
 			}
 		},
 
@@ -66,6 +71,7 @@
 				if (numberToDisplay === currentDisplayedNumber)
 					return
 
+				this.loading = true
 				const interval = window.setInterval(() => {
 					if (currentDisplayedNumber < numberToDisplay)
 					{
@@ -76,8 +82,10 @@
 						if (typeof callback === 'function')
 							callback(currentDisplayedNumber)
 					}
-					else
+					else {
 						clearInterval(interval)
+						this.loading = null
+					}
 				}, 20)
 			}
 		},

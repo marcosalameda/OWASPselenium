@@ -74,14 +74,13 @@
 		width: 100%;
 	}
 
-	& > .i-text,
-	& > .i-textarea {
+	& > .i-text {
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-end;
 		align-self: flex-end;
 
-		&:not(:has(.i-switch)):has(span.q-help__subtext) {
+		&:has(span.q-help__subtext) {
 			max-width: min-content;
 		}
 	}
@@ -91,15 +90,6 @@
 
 		&--inline {
 			display: inline-flex;
-		}
-	}
-
-	.form-check-inline {
-		white-space: initial !important;
-		display: block;
-
-		.i-checkbox {
-			display: inline-block;
 		}
 	}
 
@@ -147,10 +137,6 @@
 	}
 }
 
-.active-filter-box .i-checkbox {
-	align-self: center;
-}
-
 .heading-button-group {
 	float: left;
 }
@@ -170,14 +156,6 @@
 .row-line-group {
 	& > .i-text {
 		width: 100%;
-	}
-
-	.i-textarea {
-		width: 100%;
-
-		&__field {
-			width: 100%;
-		}
 	}
 }
 
@@ -215,6 +193,53 @@
 	border-top: none;
 }
 
+.q-dialog {
+	&__header-title {
+		color: $on-background;
+		font-size: 1.25rem;
+		font-weight: 600;
+		letter-spacing: 0.02rem;
+	}
+
+	&__body {
+		padding: 1rem;
+
+		&-icon {
+			padding: 0.25rem 1rem 0.45rem 1rem;
+		}
+	}
+
+	&__footer .actions {
+		display: flex;
+		gap: 0.5rem;
+	}
+
+	&-form, &-see-more {
+		.q-dialog__header {
+			border-bottom: 1px solid $light;
+			padding-bottom: 1rem;
+		}
+		.q-dialog__footer {
+			border-top: 1px solid $light;
+			padding-top: 1rem;
+
+			&-buttons {
+				justify-content: left;
+			}
+		}
+	}
+
+	&-see-more {
+		.q-dialog__footer {
+			margin-top: 0;
+
+			&-buttons {
+				justify-content: left;
+			}
+		}
+	}
+}
+
 @media (max-width: 575.98px) {
 	.control-join-group {
 		white-space: normal;
@@ -223,5 +248,54 @@
 	.row {
 		margin-left: -5px;
 		margin-right: -5px;
+	}
+}
+
+.q-row {
+	--q-row-gutter: var(--q-spacing);
+	flex: 1;
+}
+
+.q-col {
+	display: flex;
+	gap: var(--q-spacing);
+	align-items: end;
+
+	// make label content in the same line
+	.label-container {
+		display: flex;
+		align-items: center;
+		gap: var(--q-spacing);
+	}
+
+	// makes containers inside q-cols have the height of the col
+	.container-fluid,
+	.q-table-list {
+		height: 100%;
+	}
+
+	//Make groupboxes ocupy the whole container (if whole line the q-col container has 100% width as well)
+	.c-groupbox {
+		width: 100%;
+    height: 100%;
+
+    > .q-container {
+      height: 100%;
+    }
+	}
+}
+
+// Remove the margins from containers inside groupboxes since they already add spacing
+.q-col > * .q-container {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+// Add padding to groups that have the title background style - these groups remove paddings by default
+.q-col:not(.q-col-auto),
+.q-col {
+	> .c-groupbox--title-background > .q-container {
+		padding-left: 16px;
+		padding-right: 16px;
 	}
 }

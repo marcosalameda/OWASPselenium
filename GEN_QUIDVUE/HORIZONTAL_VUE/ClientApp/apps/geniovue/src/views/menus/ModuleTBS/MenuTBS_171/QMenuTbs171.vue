@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TBS_Menu_171]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -152,6 +153,7 @@
 								field: 'HOME',
 								label: computed(() => this.Resources.HOME_TEXT11153),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -167,8 +169,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -269,6 +270,7 @@
 							rowClickAction: {
 								id: 'RCA_TBS_1711',
 								name: 'form-GLOB',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -294,10 +296,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-FACTY', 'changed-GLOB'],
+						globalEvents: ['changed-GLOB', 'changed-FACTY'],
 						uuid: '3037c567-98d1-42b3-bd1a-909bfe515217',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

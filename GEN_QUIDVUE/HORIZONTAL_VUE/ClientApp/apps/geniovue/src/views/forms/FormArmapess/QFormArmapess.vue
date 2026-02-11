@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,16 +94,17 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="ARMAPESS"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.ARMAPESSWPESSNFUNC___.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSNFUNC___.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.ARMAPESSWPESSNFUNC___.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWPESSNFUNC___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSNFUNC___.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSNFUNC___"
 							v-on="controls.ARMAPESSWPESSNFUNC___.handlers"
@@ -107,13 +116,14 @@
 								v-bind="controls.ARMAPESSWPESSNFUNC___.props"
 								@update:model-value="model.ValNfunc.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARMAPESSWPESSPFOTO___.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSPFOTO___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARMAPESSWPESSPFOTO___.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWPESSPFOTO___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSPFOTO___.isVisible"
 							class="q-image"
 							v-bind="controls.ARMAPESSWPESSPFOTO___"
 							v-on="controls.ARMAPESSWPESSPFOTO___.handlers"
@@ -125,13 +135,14 @@
 								v-bind="controls.ARMAPESSWPESSPFOTO___.props"
 								v-on="controls.ARMAPESSWPESSPFOTO___.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARMAPESSWPESSNAME____.isVisible || controls.ARMAPESSWPESSDATE____.isVisible || controls.ARMAPESSWPESSSEX_____.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSNAME____.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARMAPESSWPESSNAME____.isVisible || controls.ARMAPESSWPESSDATE____.isVisible || controls.ARMAPESSWPESSSEX_____.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWPESSNAME____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSNAME____.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSNAME____"
 							v-on="controls.ARMAPESSWPESSNAME____.handlers"
@@ -143,11 +154,12 @@
 								@blur="onBlur(controls.ARMAPESSWPESSNAME____, model.ValName.value)"
 								@change="model.ValName.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSDATE____.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.ARMAPESSWPESSDATE____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSDATE____.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSDATE____"
 							v-on="controls.ARMAPESSWPESSDATE____.handlers"
@@ -161,11 +173,12 @@
 								@reset-icon-click="model.ValDate.fnUpdateValue(model.ValDate.originalValue ?? new Date())"
 								@update:model-value="model.ValDate.fnUpdateValue($event ?? '')" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSSEX_____.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.ARMAPESSWPESSSEX_____.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSSEX_____.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSSEX_____"
 							v-on="controls.ARMAPESSWPESSSEX_____.handlers"
@@ -177,13 +190,14 @@
 								v-bind="controls.ARMAPESSWPESSSEX_____.props"
 								@update:model-value="model.ValSex.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARMAPESSWPESSNATURALI.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSNATURALI.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARMAPESSWPESSNATURALI.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWPESSNATURALI.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSNATURALI.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSNATURALI"
 							v-on="controls.ARMAPESSWPESSNATURALI.handlers"
@@ -195,13 +209,14 @@
 								@blur="onBlur(controls.ARMAPESSWPESSNATURALI, model.ValNaturali.value)"
 								@change="model.ValNaturali.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARMAPESSWPESSNACIONAL.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSNACIONAL.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARMAPESSWPESSNACIONAL.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWPESSNACIONAL.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSNACIONAL.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSNACIONAL"
 							v-on="controls.ARMAPESSWPESSNACIONAL.handlers"
@@ -213,13 +228,14 @@
 								@blur="onBlur(controls.ARMAPESSWPESSNACIONAL, model.ValNacional.value)"
 								@change="model.ValNacional.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARMAPESSWPESSADRESS__.isVisible || controls.ARMAPESSWPESSZIPCODE_.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSADRESS__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARMAPESSWPESSADRESS__.isVisible || controls.ARMAPESSWPESSZIPCODE_.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWPESSADRESS__.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSADRESS__.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSADRESS__"
 							v-on="controls.ARMAPESSWPESSADRESS__.handlers"
@@ -231,11 +247,12 @@
 								@blur="onBlur(controls.ARMAPESSWPESSADRESS__, model.ValAdress.value)"
 								@change="model.ValAdress.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSZIPCODE_.isVisible"
-						class="control-join-group">
+					</q-col>
+					<q-col
+						v-if="controls.ARMAPESSWPESSZIPCODE_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSZIPCODE_.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSZIPCODE_"
 							v-on="controls.ARMAPESSWPESSZIPCODE_.handlers"
@@ -248,13 +265,14 @@
 								:model-value="model.ValZipcode.value"
 								@change="model.ValZipcode.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARMAPESSWPESSCOUNTRY_.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSCOUNTRY_.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARMAPESSWPESSCOUNTRY_.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWPESSCOUNTRY_.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSCOUNTRY_.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSCOUNTRY_"
 							v-on="controls.ARMAPESSWPESSCOUNTRY_.handlers"
@@ -266,13 +284,14 @@
 								@blur="onBlur(controls.ARMAPESSWPESSCOUNTRY_, model.ValCountry.value)"
 								@change="model.ValCountry.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARMAPESSWPESSEMAIL___.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSEMAIL___.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARMAPESSWPESSEMAIL___.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWPESSEMAIL___.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSEMAIL___.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSEMAIL___"
 							v-on="controls.ARMAPESSWPESSEMAIL___.handlers"
@@ -285,13 +304,14 @@
 								:model-value="model.ValEmail.value"
 								@change="model.ValEmail.fnUpdateValueOnChange" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARMAPESSWPESSCELLPHON.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWPESSCELLPHON.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARMAPESSWPESSCELLPHON.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWPESSCELLPHON.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWPESSCELLPHON.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWPESSCELLPHON"
 							v-on="controls.ARMAPESSWPESSCELLPHON.handlers"
@@ -303,13 +323,14 @@
 								v-bind="controls.ARMAPESSWPESSCELLPHON.props"
 								@update:model-value="model.ValCellphon.fnUpdateValue" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.ARMAPESSWAREHWAREHDES.isVisible">
-					<q-control-wrapper
-						v-show="controls.ARMAPESSWAREHWAREHDES.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.ARMAPESSWAREHWAREHDES.isVisible">
+					<q-col
+						v-if="controls.ARMAPESSWAREHWAREHDES.isVisible"
+						cols="auto">
 						<base-input-structure
+							v-if="controls.ARMAPESSWAREHWAREHDES.isVisible"
 							class="i-text"
 							v-bind="controls.ARMAPESSWAREHWAREHDES"
 							v-on="controls.ARMAPESSWAREHWAREHDES.handlers"
@@ -325,10 +346,10 @@
 								v-bind="controls.ARMAPESSWAREHWAREHDES.seeMoreParams"
 								v-on="controls.ARMAPESSWAREHWAREHDES.handlers" />
 						</base-input-structure>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -337,7 +358,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -346,6 +367,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -357,7 +379,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -569,7 +591,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -708,7 +734,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_ARMAPESSWPESSNAME____',
 						controlLimits: [
 						],
 					}, this),
@@ -735,7 +760,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 9,
-						labelId: 'label_ARMAPESSWPESSSEX_____',
 						arrayName: 'SEXO',
 						helpShortItem: '',
 						helpDetailedItem: '',
@@ -752,7 +776,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_ARMAPESSWPESSNATURALI',
 						controlLimits: [
 						],
 					}, this),
@@ -766,7 +789,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_ARMAPESSWPESSNACIONAL',
 						controlLimits: [
 						],
 					}, this),
@@ -780,7 +802,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 100,
-						labelId: 'label_ARMAPESSWPESSADRESS__',
 						controlLimits: [
 						],
 					}, this),
@@ -794,7 +815,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 8,
-						labelId: 'label_ARMAPESSWPESSZIPCODE_',
 						controlLimits: [
 						],
 					}, this),
@@ -808,7 +828,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 50,
-						labelId: 'label_ARMAPESSWPESSCOUNTRY_',
 						controlLimits: [
 						],
 					}, this),
@@ -822,7 +841,6 @@
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						maxLength: 150,
-						labelId: 'label_ARMAPESSWPESSEMAIL___',
 						controlLimits: [
 						],
 					}, this),
@@ -1030,16 +1048,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1083,16 +1115,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1244,6 +1290,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS ARMAPESS]/
 // eslint-disable-next-line

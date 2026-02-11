@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_481]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCoditem',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -163,6 +165,7 @@
 								label: computed(() => this.Resources.CATEGORY_TYPE23058),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodtpcat',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -179,8 +182,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -281,6 +283,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_4811',
 								name: 'form-CATAR',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -306,10 +309,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-ITEMC', 'changed-CATTP', 'changed-ITEM'],
+						globalEvents: ['changed-ITEMC', 'changed-ITEM', 'changed-CATTP'],
 						uuid: '4097bafd-ae59-4acb-af77-b863f0cf03b9',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

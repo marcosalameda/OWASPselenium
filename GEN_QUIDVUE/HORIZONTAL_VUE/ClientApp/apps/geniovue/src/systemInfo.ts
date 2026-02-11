@@ -1,23 +1,16 @@
 ﻿// @ts-expect-error -- types still WIP
 import { getLayoutVariables } from '@quidgest/clientapp/utils/genericFunctions'
+import { useSystemDataStore } from '@quidgest/clientapp/stores'
 
 import layoutConfigJson from './assets/config/Layoutconfig.json'
 
 export const systemInfo = {
 	applicationName: 'Horizontal Layout - Vue',
 
-	genio: {
-		buildVersion: 2932,
-		dbIdxVersion: 1777,
-		dbVersion: '4107',
-		genioVersion: '370,01',
-		trackChangesVersion: '0',
-		assemblyVersion: '370,01.4107.0.2932',
-		generationDate: {
-			year: 2025,
-			month: 7,
-			day: 30
-		}
+	get genio() {
+		// Access the store inside the getter to ensure Pinia is initialized
+		const systemDataStore = useSystemDataStore()
+		return systemDataStore.versionInfo
 	},
 
 	system: {

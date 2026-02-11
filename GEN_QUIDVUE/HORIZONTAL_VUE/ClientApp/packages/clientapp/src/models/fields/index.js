@@ -8,7 +8,7 @@ import { Document } from './document.js'
 import { DocumentData } from './documentData.js'
 import { ForeignKey } from './foreignKey.js'
 import { Geographic } from './geographic.js'
-import { GridTableList } from './gridTableList.js'
+import { GridTableList, GridTableListValue } from './gridTableList.js'
 import { Image } from './image.js'
 import { MultiLineString } from './multiLineString.js'
 import { MultipleValues } from './multipleValues.js'
@@ -25,12 +25,13 @@ export {
 	Coordinate,
 	Date,
 	DateTime,
-	DateTimeSeconds, // FIXME: this should not be exported, Document should suffice.
+	DateTimeSeconds,
 	Document,
-	DocumentData,
+	DocumentData, // FIXME: this should not be exported, Document should suffice.
 	ForeignKey,
 	Geographic,
 	GridTableList,
+	GridTableListValue,
 	Image,
 	MultiLineString,
 	MultipleValues,
@@ -62,5 +63,6 @@ export default {
 	Document,
 	MultipleValues,
 	GridTableList,
+	GridTableListValue,
 	PropertyList
 }

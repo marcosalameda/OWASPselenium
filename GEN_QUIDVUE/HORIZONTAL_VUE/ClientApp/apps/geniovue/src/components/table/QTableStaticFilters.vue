@@ -1,98 +1,95 @@
 ﻿<template>
-	<!-- BEGIN: Static Filters -->
-	<div
-		:id="`${menuName}_filters`"
-		class="filters-container">
+	<q-row
+		v-if="hasActiveFilters || groupFilters.length > 0"
+		:gutter="0"
+		class="q-table-static-filters"
+		align="center">
 		<!-- BEGIN: Active Filters -->
-		<div
+		<q-col
 			v-if="hasActiveFilters"
-			class="active-filter-box"
-			:data-testid="`${menuName}_active_filters`">
-			<!-- BEGIN: Checkbox options -->
-			<label class="i-text__label">{{ texts.state }}:</label>
+			cols="auto">
+			<q-row :gutter="4">
+				<q-col
+					v-for="item in activeFilters.items"
+					:key="item.key"
+					class="q-table__static-filter"
+					cols="auto">
+					<q-checkbox
+						:id="`${id}-${item.id}`"
+						:model-value="activeFilters.selected?.includes(item.key)"
+						size="small"
+						:label="item.value"
+						:readonly="disabled"
+						@update:model-value="updateActiveFilterSelected(item.key, $event)" />
+				</q-col>
 
-			<base-input-structure
-				v-for="(filter, filterId) in activeFilters.options"
-				:key="filterId"
-				:id="filter.id"
-				class="i-checkbox"
-				:label="filter.value"
-				label-position="right"
-				:label-attrs="{ class: 'i-checkbox i-checkbox__label' }">
-				<template #label>
-					<q-checkbox-input
-						:id="filter.id"
-						:model-value="filter.selected"
-						@update:model-value="updateActiveFilterSelected(filterId, $event)" />
-				</template>
-			</base-input-structure>
-			<!-- END: Checkbox options -->
+				<q-col cols="auto">
+					<div class="q-table-static-filters__date">
+						<q-label :for="activeFilters.date.id">
+							{{ texts.onDate }}
+						</q-label>
 
-			<!-- BEGIN: Date -->
-			<base-input-structure
-				:id="dateValueFilter.id"
-				:class="['i-text', 'i-flex', { 'i-text--disabled': false }]"
-				:label="texts.onDate"
-				label-position="left"
-				:label-attrs="{ class: 'i-text__label' }">
-				<q-date-time-picker
-					:id="dateValueFilter.id"
-					:model-value="dateValueFilter.value"
-					:size="dateValueFilter.type === 'date' ? 'small' : 'medium'"
-					:format="dateFormat"
-					:locale="locale"
-					@update:model-value="updateActiveFilterDateValue" />
-			</base-input-structure>
-			<!-- END: Date -->
-		</div>
+						<q-date-time-picker
+							:id="`${id}-${activeFilters.date.id}`"
+							:model-value="activeFilters.date.value"
+							:size="activeFilters.date.type === 'date' ? 'small' : 'medium'"
+							:format="dateFormat"
+							:locale="locale"
+							:disabled="disabled"
+							@update:model-value="updateActiveFilterDateValue" />
+					</div>
+				</q-col>
+			</q-row>
+		</q-col>
 		<!-- END: Active Filters -->
 
 		<!-- BEGIN: Group Filters -->
-		<div
-			v-for="(entry, groupIndex) in groupFilters"
+		<q-col
+			v-for="(filter, groupIndex) in groupFilters"
 			:key="groupIndex"
-			class="static-filter-box"
-			:data-testid="`${menuName}_group_filters`">
-			<!-- BEGIN: Checkbox options -->
-			<template v-if="groupFilterIsMultiple(entry)">
-				<div
-					class="form-check-inline"
-					v-for="(filter, filterIndex) in entry.filters"
-					:key="filterIndex">
-					<base-input-structure
-						:id="filter.id"
-						class="i-checkbox"
-						:label="filter.value"
-						label-position="right"
-						:label-attrs="{ class: 'i-checkbox i-checkbox__label' }"
-						:user-help="filter.userHelp">
-						<template #label>
-							<q-checkbox-input
-								:id="filter.id"
-								:model-value="filter.selected"
-								@update:model-value="updateGroupFilterSelected(groupIndex, filterIndex, $event)" />
-						</template>
-					</base-input-structure>
-				</div>
-			</template>
-			<!-- END: Checkbox options -->
-			<!-- BEGIN: Radio button options -->
-			<q-radio-group
-				v-else
-				:model-value="entry.value"
-				orientation="horizontal"
-				@update:model-value="updateGroupFilterValue(groupIndex, $event)">
-				<q-radio-button
-					v-for="radio in entry.filters"
-					:key="radio.key"
-					:value="radio.key"
-					:label="radio.value" />
-			</q-radio-group>
-			<!-- END: Radio button options -->
-		</div>
+			cols="auto">
+			<q-row :gutter="4">
+				<q-col
+					v-if="hasActiveFilters || groupIndex > 0"
+					cols="auto">
+					<q-divider direction="vertical" />
+				</q-col>
+
+				<template v-if="filter.isMultiple">
+					<q-col
+						v-for="item in filter.items"
+						:key="item.key"
+						class="q-table__static-filter"
+						cols="auto">
+						<q-checkbox
+							:id="`${id}-${item.id}`"
+							:model-value="filter.selected?.includes(item.key)"
+							size="small"
+							:label="item.value"
+							:readonly="disabled"
+							@update:model-value="updateGroupFilterSelected(groupIndex, item.key, $event)" />
+					</q-col>
+				</template>
+				<q-col
+					v-else
+					class="q-table__static-filter"
+					cols="auto">
+					<q-radio-group
+						:model-value="filter.selected"
+						orientation="horizontal"
+						:readonly="disabled"
+						@update:model-value="updateGroupFilterSelected(groupIndex, $event)">
+						<q-radio-button
+							v-for="item in filter.items"
+							:key="item.key"
+							:value="item.key"
+							:label="item.value" />
+					</q-radio-group>
+				</q-col>
+			</q-row>
+		</q-col>
 		<!-- END: Group Filters -->
-	</div>
-	<!-- END: Static Filters -->
+	</q-row>
 </template>
 
 <script>
@@ -104,24 +101,16 @@
 			'update:groupFilters': (payload) => Array.isArray(payload)
 		},
 
-		inheritAttrs: false,
-
 		props: {
 			/**
-			 * The unique name identifying this specific set of filters, typically associated with a table or view.
+			 * The identifier of the component.
 			 */
-			menuName: {
-				type: String,
-				default: ''
-			},
+			id: String,
 
 			/**
 			 * An object representing active filters, which can be a mixture of various filter types including boolean or date.
 			 */
-			activeFilters: {
-				type: Object,
-				default: () => ({})
-			},
+			activeFilters: Object,
 
 			/**
 			 * An array representing groups of filters that apply globally to the data set, affecting all columns.
@@ -153,85 +142,59 @@
 			dateFormats: {
 				type: Object,
 				required: true
-			}
+			},
 
+			/**
+			 * Whether the control is disabled.
+			 */
+			disabled: {
+				type: Boolean,
+				default: false
+			}
 		},
 
 		expose: [],
 
 		computed: {
 			/**
-			 * The date filter.
-			 */
-			dateValueFilter()
-			{
-				return !this.hasActiveFilters ? { value: '' } : this.activeFilters.dateValue
-			},
-
-			/**
 			 * The date format.
 			 */
 			dateFormat()
 			{
-				return this.dateFormats[this.dateValueFilter.type]
+				return this.hasActiveFilters
+					? this.dateFormats[this.activeFilters.date.type]
+					: null
 			},
-
 
 			/**
 			 * True if there's an active filter, false otherwise.
 			 */
 			hasActiveFilters()
 			{
-				return Object.keys(this.activeFilters).length > 0
+				return !!this.activeFilters
 			}
 		},
 
 		methods: {
 			/**
-			 * Determine if multiple filters can be selected in group of filters.
-			 * @param entry {Object}
-			 * @returns Boolean
-			 */
-			groupFilterIsMultiple(entry)
-			{
-				return entry.isMultiple === true
-			},
-
-			/**
-			 * Emit new active filters value.
-			 * @param value {Object}
-			 */
-			emitActiveFilter(value)
-			{
-				this.$emit('update:activeFilters', value)
-			},
-
-			/**
-			 * Emit new group filters value.
-			 * @param value {Object}
-			 */
-			emitGroupFilter(value)
-			{
-				this.calcGroupFilterValues(value)
-				this.$emit('update:groupFilters', value)
-			},
-
-			/**
 			 * Update active filters.
-			 * @param filterId {String}
-			 * @param value {Boolean}
+			 * @param filterId {string}
+			 * @param value {boolean}
 			 */
 			updateActiveFilterSelected(filterId, value)
 			{
-				const options = { ...this.activeFilters.options }
-				options[filterId].selected = value
+				let selected = [...this.activeFilters.selected]
+
+				selected = selected.filter((f) => f !== filterId)
+				if (value)
+					selected.push(filterId)
 
 				const activeFilters = {
 					...this.activeFilters,
-					options
+					selected
 				}
 
-				this.emitActiveFilter(activeFilters)
+				this.$emit('update:activeFilters', activeFilters)
 			},
 
 			/**
@@ -240,88 +203,45 @@
 			 */
 			updateActiveFilterDateValue(value)
 			{
-				const dateValue = { ...this.activeFilters.dateValue }
-				dateValue.value = value
+				const date = { ...this.activeFilters.date }
+				date.value = value
 
 				const activeFilters = {
 					...this.activeFilters,
-					dateValue
+					date
 				}
 
-				this.emitActiveFilter(activeFilters)
+				this.$emit('update:activeFilters', activeFilters)
 			},
 
 			/**
 			 * Update group filters.
-			 * @param groupIndex {Int}
-			 * @param filterIndex {Int}
-			 * @param value {Object}
+			 * @param groupIndex {number}
+			 * @param selected {string}
+			 * @param value {boolean}
 			 */
-			updateGroupFilterSelected(groupIndex, filterIndex, value)
+			updateGroupFilterSelected(groupIndex, filterId, value)
 			{
-				const filters = [...this.groupFilters[groupIndex].filters]
-				filters[filterIndex] = {
-					...filters[filterIndex],
-					selected: value
-				}
-
+				const groupFilter = this.groupFilters[groupIndex]
 				const groupFilters = [...this.groupFilters]
+
+				let selected
+
+				if (groupFilter.isMultiple)
+				{
+					selected = groupFilter.selected.filter((f) => f !== filterId)
+					if (value)
+						selected.push(filterId)
+				}
+				else
+					selected = filterId
+
 				groupFilters[groupIndex] = {
 					...groupFilters[groupIndex],
-					filters
+					selected
 				}
 
-				this.emitGroupFilter(groupFilters)
-			},
-
-			/**
-			 * Update group filters.
-			 * @param groupIndex {Int}
-			 * @param value {Object}
-			 */
-			updateGroupFilterValue(groupIndex, value)
-			{
-				const groupFilters = [...this.groupFilters]
-				groupFilters[groupIndex] = {
-					...groupFilters[groupIndex],
-					value
-				}
-
-				this.emitGroupFilter(groupFilters)
-			},
-
-			/**
-			 * Get value for all radio button groups based on filter model.
-			 * @param groupFilters {Object}
-			 */
-			calcGroupFilterValues(groupFilters)
-			{
-				for (const entry of groupFilters)
-				{
-					if (entry.isMultiple === true && typeof entry.value === 'string')
-						entry.value = this.checkboxValue(entry)
-				}
-			},
-
-			/**
-			 * Get value for radio button group based on filter model.
-			 * @param entry {Object}
-			 * @returns String
-			 */
-			checkboxValue(entry)
-			{
-				if (!entry.isMultiple)
-					return ''
-
-				let multipleFilterValue = ''
-
-				for (const filter of entry.filters)
-				{
-					if (filter.selected !== false)
-						multipleFilterValue += filter.key
-				}
-
-				return multipleFilterValue
+				this.$emit('update:groupFilters', groupFilters)
 			}
 		}
 	}

@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW IDIOM]/
 
 		[HttpPost]
-		public ActionResult Idiom_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Idiom_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Idiom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Idiom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Idiom_Show_GET",
 				AreaName = "langu",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET IDIOM]/
 		[HttpPost]
-		public ActionResult Idiom_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Idiom_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Idiom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Idiom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Idiom_New_GET",
 				AreaName = "langu",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Idiom_New([FromBody]Idiom_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Idiom_New",
 				ViewName = "Idiom",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET IDIOM]/
 		[HttpPost]
-		public ActionResult Idiom_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Idiom_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Idiom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Idiom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Idiom_Edit_GET",
 				AreaName = "langu",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Idiom_Edit([FromBody]Idiom_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Idiom_Edit",
 				ViewName = "Idiom",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET IDIOM]/
 		[HttpPost]
-		public ActionResult Idiom_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Idiom_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Idiom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Idiom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Idiom_Delete_GET",
 				AreaName = "langu",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Langu/Idiom_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST IDIOM]/
 		[HttpPost]
-		public ActionResult Idiom_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Idiom_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Idiom_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Idiom_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Idiom_Delete",
 				ViewName = "Idiom",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET IDIOM]/
 
 		[HttpPost]
-		public ActionResult Idiom_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Idiom_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Idiom_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Idiom_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Idiom_Duplicate_GET",
 				AreaName = "langu",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Idiom_Duplicate([FromBody]Idiom_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Idiom_Duplicate",
 				ViewName = "Idiom",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Langu(UserContext.Current);
+					GenioMVC.Models.Langu model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("langu");
 
 // USE /[MANUAL GQT BEFORE_CANCEL IDIOM]/

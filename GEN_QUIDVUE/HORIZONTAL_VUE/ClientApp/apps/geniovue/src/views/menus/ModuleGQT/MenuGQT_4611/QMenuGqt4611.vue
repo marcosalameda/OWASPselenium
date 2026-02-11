@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE GQT_Menu_4611]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.ARTICLE60065),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 2,
@@ -162,6 +164,7 @@
 								label: computed(() => this.Resources.CODE49225),
 								dataLength: 15,
 								scrollData: 15,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 3,
@@ -172,6 +175,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 4,
@@ -182,6 +186,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 5,
@@ -192,6 +197,7 @@
 								scrollData: 10,
 								maxDigits: 10,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -202,6 +208,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 								pkColumn: 'ValCodwareh',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
@@ -213,6 +220,7 @@
 								dataLength: 85,
 								scrollData: 30,
 								isVisible: false,
+								export: 1,
 								pkColumn: 'ValCodgitem',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -229,8 +237,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -331,6 +338,7 @@
 							rowClickAction: {
 								id: 'RCA_GQT_46111',
 								name: 'form-ARTIG',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -357,7 +365,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-GITEM', 'changed-ITEM', 'changed-WAREH'],
+						globalEvents: ['changed-WAREH', 'changed-ITEM', 'changed-GITEM'],
 						uuid: 'a95f0654-5e3a-4d36-b46f-5a17074e5019',
 						allSelectedRows: 'false',
 						headerLevel: 1,
@@ -370,7 +378,8 @@
 								dependencyField: '',
 								fnValueSelector: () => vm.$route.params['wareh'],
 							},
-						]
+						],
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

@@ -273,6 +273,7 @@ export default class ViewModel extends FormViewModelBase
 			field: 'TECHSPECFK'
 		}).cloneFrom(values?.ValTechspecfk))
 		this.stopWatchers.push(watch(() => this.ValTechspecfk.value, (newValue, oldValue) => this.onUpdate('item.techspecfk', this.ValTechspecfk, newValue, oldValue)))
+
 		this.ValTechspecData = reactive(new modelFieldType.DocumentData({
 			id: 'ValTechspecData',
 			area: 'ITEM',

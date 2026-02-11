@@ -1,4 +1,4 @@
-﻿import { markRaw, toValue } from 'vue'
+﻿import { markRaw } from 'vue'
 
 import hardcodedTexts from '@/hardcodedTexts.js'
 
@@ -47,7 +47,7 @@ class SearchFilterOperator
 		this.key = key
 		this.resourceId = resourceId
 		this.fnResources = fnResources ?? emptyResourceHandler
-		this.ValueCount = valueCount
+		this.valueCount = valueCount
 		this.icon = ICONS[icon]
 
 		this.placeholderResourceId = placeholderResourceId
@@ -55,13 +55,15 @@ class SearchFilterOperator
 		this.defaultValue = defaultValue
 	}
 
-	get Title()
+	get title()
 	{
 		return this.fnResources(this.resourceId)
 	}
 
-	get Placeholder() {
-		if (!this.placeholderResourceId) return ''
+	get placeholder()
+	{
+		if (!this.placeholderResourceId)
+			return ''
 		const txt = this.fnResources(this.placeholderResourceId)
 		return `%${txt}%`
 	}
@@ -122,7 +124,7 @@ export class SearchFilterConditionOperators
 		this.enum = {
 			IS: new SearchFilterOperator('IS', hardcodedTexts.is, _getResource, 1, 'filter-equal'),
 			ISNOT: new SearchFilterOperator('ISNOT', hardcodedTexts.isNot, _getResource, 1, 'filter-different'),
-			IN: new SearchFilterOperator('IN', hardcodedTexts.oneOf, _getResource, 1, 'filter-between', { inputComponent: 'q-edit-check-list', defaultValue: [] }),
+			IN: new SearchFilterOperator('IN', hardcodedTexts.oneOf, _getResource, 1, 'filter-between', { defaultValue: [] }),
 			SET: new SearchFilterOperator('SET', hardcodedTexts.hasValue, _getResource, 0, 'filter-has-value-text'),
 			NOTSET: new SearchFilterOperator('NOTSET', hardcodedTexts.noValue, _getResource, 0, 'filter-no-value')
 		}
@@ -133,8 +135,9 @@ export class SearchFilterConditionOperators
 		this.fnResources = null
 		const opTypes = ['text', 'num', 'bool', 'date', 'enum']
 		opTypes.forEach((opType) => {
-			for(let operator in this[opType]) {
-				if(this[opType][operator] instanceof SearchFilterOperator)
+			for (let operator in this[opType])
+			{
+				if (this[opType][operator] instanceof SearchFilterOperator)
 					this[opType][operator].destroy()
 			}
 		})
@@ -155,6 +158,7 @@ export function searchBarOperator(dataType, searchValue)
 			condOperator = 'CON'
 			break
 		case 'num':
+		case 'date':
 			condOperator = 'EQ'
 			break
 		case 'bool':
@@ -164,9 +168,6 @@ export function searchBarOperator(dataType, searchValue)
 				condOperator = 'FALSE'
 			else
 				condOperator = 'TRUE'
-			break
-		case 'date':
-			condOperator = 'EQ'
 			break
 		case 'enum':
 			condOperator = 'IS'
@@ -181,6 +182,7 @@ export function defaultValue(column)
 	switch (column?.searchFieldType)
 	{
 		case 'text':
+		case 'date':
 			value = ''
 			break
 		case 'num':
@@ -189,15 +191,9 @@ export function defaultValue(column)
 		case 'bool':
 			value = false
 			break
-		case 'date':
-			value = ''
-			break
 		case 'enum':
-			for (let key in column.array)
-			{
-				value = toValue(column.array[key])
-				break
-			}
+			if (column.array?.length > 0)
+				value = column.array[0].key
 			break
 	}
 	return value

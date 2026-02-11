@@ -185,8 +185,8 @@ namespace CSGenio.business
 			//------------------------------
 			//Actualiza as seguintes somas relacionadas:
 			info.RelatedSumArgs = new List<RelatedSumArgument>();
-			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "existenc", "qtdentra", '+', true));
 			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "entries", "qtdentra", '+', true));
+			info.RelatedSumArgs.Add( new RelatedSumArgument("ldent", "item", "existenc", "qtdentra", '+', true));
 
 
 
@@ -495,10 +495,10 @@ namespace CSGenio.business
 
 			// ROW_REORDERING
 			CriteriaSet criteria = CriteriaSet.And();
+			var prefixField = DBFields[FldCoddentr.Field];
 			// For key fields, an empty prefix means 'no value', so we normalise it to null
 			// to generate a WHERE ... IS NULL filter. For non-empty values, we convert the
 			// prefix to a database-safe value (e.g. Guid) before applying the equality filter.
-			var prefixField = DBFields[FldCoddentr.Field];
 			object prefixRealValue = prefixField.isEmptyValue(ValCoddentr) ? null : QueryUtils.ToValidDbValue(ValCoddentr, prefixField);
 			criteria.Equal(FldCoddentr, prefixRealValue);
 			sp.ReorderSequence(this, DBFields[FldLine.Field], criteria);

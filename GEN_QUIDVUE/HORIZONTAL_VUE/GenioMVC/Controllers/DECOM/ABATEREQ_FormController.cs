@@ -9,6 +9,7 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Reflection;
+using System.Dynamic;
 
 using CSGenio.business;
 using CSGenio.core.persistence;
@@ -55,11 +56,11 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_SHOW ABATEREQ]/
 
 		[HttpPost]
-		public ActionResult Abatereq_Show_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Abatereq_Show_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Abatereq_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Abatereq_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abatereq_Show_GET",
 				AreaName = "decom",
@@ -84,14 +85,14 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_NEW_GET ABATEREQ]/
 		[HttpPost]
-		public ActionResult Abatereq_New_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Abatereq_New_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 			var prefillValues = requestModel.PrefillValues;
 
-			var model = new Abatereq_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Abatereq_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abatereq_New_GET",
 				AreaName = "decom",
@@ -120,7 +121,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Abatereq_New([FromBody]Abatereq_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Abatereq_New",
 				ViewName = "Abatereq",
@@ -154,11 +155,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_EDIT_GET ABATEREQ]/
 		[HttpPost]
-		public ActionResult Abatereq_Edit_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Abatereq_Edit_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Abatereq_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Abatereq_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abatereq_Edit_GET",
 				AreaName = "decom",
@@ -184,7 +185,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Abatereq_Edit([FromBody]Abatereq_ViewModel model, [FromQuery]bool redirect)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Abatereq_Edit",
 				ViewName = "Abatereq",
@@ -218,11 +219,11 @@ namespace GenioMVC.Controllers
 
 // USE /[MANUAL GQT CONTROLLER_DELETE_GET ABATEREQ]/
 		[HttpPost]
-		public ActionResult Abatereq_Delete_GET([FromBody]RequestIdModel requestModel)
+		public ActionResult Abatereq_Delete_GET([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Abatereq_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			string id = requestModel.Id;
+			Abatereq_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abatereq_Delete_GET",
 				AreaName = "decom",
@@ -246,13 +247,13 @@ namespace GenioMVC.Controllers
 		// POST: /Decom/Abatereq_Delete
 // USE /[MANUAL GQT CONTROLLER_DELETE_POST ABATEREQ]/
 		[HttpPost]
-		public ActionResult Abatereq_Delete([FromBody]RequestIdModel requestModel)
+		public ActionResult Abatereq_Delete([FromBody] RequestIdModel requestModel)
 		{
-			var id = requestModel.Id;
-			var model = new Abatereq_ViewModel (UserContext.Current, id);
+			string id = requestModel.Id;
+			Abatereq_ViewModel model = new(UserContext.Current, id);
 			model.MapFromModel();
 
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Abatereq_Delete",
 				ViewName = "Abatereq",
@@ -284,13 +285,13 @@ namespace GenioMVC.Controllers
 // USE /[MANUAL GQT CONTROLLER_DUPLICATE_GET ABATEREQ]/
 
 		[HttpPost]
-		public ActionResult Abatereq_Duplicate_GET([FromBody]RequestNewGetModel requestModel)
+		public ActionResult Abatereq_Duplicate_GET([FromBody] RequestNewGetModel requestModel)
 		{
-			var id = requestModel.Id;
-			var isNewLocation = requestModel.IsNewLocation;
+			string id = requestModel.Id;
+			bool isNewLocation = requestModel.IsNewLocation;
 
-			var model = new Abatereq_ViewModel(UserContext.Current);
-			var eventSink = new EventSink()
+			Abatereq_ViewModel model = new(UserContext.Current);
+			EventSink eventSink = new()
 			{
 				MethodName = "Abatereq_Duplicate_GET",
 				AreaName = "decom",
@@ -315,7 +316,7 @@ namespace GenioMVC.Controllers
 		[HttpPost]
 		public ActionResult Abatereq_Duplicate([FromBody]Abatereq_ViewModel model, [FromQuery]bool redirect = true)
 		{
-			var eventSink = new EventSink()
+			EventSink eventSink = new()
 			{
 				MethodName = "Abatereq_Duplicate",
 				ViewName = "Abatereq",
@@ -357,7 +358,7 @@ namespace GenioMVC.Controllers
 				PersistentSupport sp = UserContext.Current.PersistentSupport;
 				try
 				{
-					var model = new GenioMVC.Models.Decom(UserContext.Current);
+					GenioMVC.Models.Decom model = new(UserContext.Current);
 					model.klass.QPrimaryKey = Navigation.GetStrValue("decom");
 
 // USE /[MANUAL GQT BEFORE_CANCEL ABATEREQ]/

@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,25 +94,27 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="PAIS"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container v-show="controls.PAIS____PSEUDNOVOGR02.isVisible">
-					<q-control-wrapper
-						v-show="controls.PAIS____PSEUDNOVOGR02.isVisible"
-						class="control-join-group">
+				<q-row v-if="controls.PAIS____PSEUDNOVOGR02.isVisible">
+					<q-col
+						v-if="controls.PAIS____PSEUDNOVOGR02.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.PAIS____PSEUDNOVOGR02.isVisible"
 							id="PAIS____PSEUDNOVOGR02"
 							v-bind="controls.PAIS____PSEUDNOVOGR02"
 							:is-visible="controls.PAIS____PSEUDNOVOGR02.isVisible">
 							<!-- Start PAIS____PSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.PAIS____CNTRYCOUNTRY_.isVisible || controls.PAIS____CNTRYACTIVE__.isVisible">
-								<q-control-wrapper
-									v-show="controls.PAIS____CNTRYCOUNTRY_.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PAIS____CNTRYCOUNTRY_.isVisible || controls.PAIS____CNTRYACTIVE__.isVisible">
+								<q-col
+									v-if="controls.PAIS____CNTRYCOUNTRY_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PAIS____CNTRYCOUNTRY_.isVisible"
 										class="i-text"
 										v-bind="controls.PAIS____CNTRYCOUNTRY_"
 										v-on="controls.PAIS____CNTRYCOUNTRY_.handlers"
@@ -116,11 +126,12 @@
 											@blur="onBlur(controls.PAIS____CNTRYCOUNTRY_, model.ValCountry.value)"
 											@change="model.ValCountry.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PAIS____CNTRYACTIVE__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
 										class="i-checkbox"
 										v-bind="controls.PAIS____CNTRYACTIVE__"
 										v-on="controls.PAIS____CNTRYACTIVE__.handlers"
@@ -128,30 +139,28 @@
 										:reporting-mode-on="reportingModeCAV"
 										:suggestion-mode-on="suggestionModeOn">
 										<template #label>
-											<q-checkbox-input
+											<q-checkbox
 												v-if="controls.PAIS____CNTRYACTIVE__.isVisible"
 												v-bind="controls.PAIS____CNTRYACTIVE__.props"
 												v-on="controls.PAIS____CNTRYACTIVE__.handlers" />
 										</template>
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container
-								v-show="controls.PAIS____PSEUDNOVOGR01.isVisible"
-								is-large>
-								<q-control-wrapper
-									v-show="controls.PAIS____PSEUDNOVOGR01.isVisible"
-									class="row-line-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PAIS____PSEUDNOVOGR01.isVisible">
+								<q-col v-if="controls.PAIS____PSEUDNOVOGR01.isVisible">
 									<q-group-box-container
+										v-if="controls.PAIS____PSEUDNOVOGR01.isVisible"
 										id="PAIS____PSEUDNOVOGR01"
 										v-bind="controls.PAIS____PSEUDNOVOGR01"
 										:is-visible="controls.PAIS____PSEUDNOVOGR01.isVisible">
 										<!-- Start PAIS____PSEUDNOVOGR01 -->
-										<q-row-container v-show="controls.PAIS____CNTRYCODIGONR.isVisible || controls.PAIS____CNTRYALFA2___.isVisible || controls.PAIS____CNTRYALFA3___.isVisible">
-											<q-control-wrapper
-												v-show="controls.PAIS____CNTRYCODIGONR.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PAIS____CNTRYCODIGONR.isVisible || controls.PAIS____CNTRYALFA2___.isVisible || controls.PAIS____CNTRYALFA3___.isVisible">
+											<q-col
+												v-if="controls.PAIS____CNTRYCODIGONR.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PAIS____CNTRYCODIGONR.isVisible"
 													class="i-text"
 													v-bind="controls.PAIS____CNTRYCODIGONR"
 													v-on="controls.PAIS____CNTRYCODIGONR.handlers"
@@ -163,11 +172,12 @@
 														@blur="onBlur(controls.PAIS____CNTRYCODIGONR, model.ValCodigonr.value)"
 														@change="model.ValCodigonr.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PAIS____CNTRYALFA2___.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PAIS____CNTRYALFA2___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PAIS____CNTRYALFA2___.isVisible"
 													class="i-text"
 													v-bind="controls.PAIS____CNTRYALFA2___"
 													v-on="controls.PAIS____CNTRYALFA2___.handlers"
@@ -179,11 +189,12 @@
 														@blur="onBlur(controls.PAIS____CNTRYALFA2___, model.ValAlfa2.value)"
 														@change="model.ValAlfa2.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-											<q-control-wrapper
-												v-show="controls.PAIS____CNTRYALFA3___.isVisible"
-												class="control-join-group">
+											</q-col>
+											<q-col
+												v-if="controls.PAIS____CNTRYALFA3___.isVisible"
+												cols="auto">
 												<base-input-structure
+													v-if="controls.PAIS____CNTRYALFA3___.isVisible"
 													class="i-text"
 													v-bind="controls.PAIS____CNTRYALFA3___"
 													v-on="controls.PAIS____CNTRYALFA3___.handlers"
@@ -195,17 +206,18 @@
 														@blur="onBlur(controls.PAIS____CNTRYALFA3___, model.ValAlfa3.value)"
 														@change="model.ValAlfa3.fnUpdateValueOnChange" />
 												</base-input-structure>
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End PAIS____PSEUDNOVOGR01 -->
 									</q-group-box-container>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PAIS____CNTRYFLAG____.isVisible">
-								<q-control-wrapper
-									v-show="controls.PAIS____CNTRYFLAG____.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PAIS____CNTRYFLAG____.isVisible">
+								<q-col
+									v-if="controls.PAIS____CNTRYFLAG____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PAIS____CNTRYFLAG____.isVisible"
 										class="q-image"
 										v-bind="controls.PAIS____CNTRYFLAG____"
 										v-on="controls.PAIS____CNTRYFLAG____.handlers"
@@ -217,80 +229,89 @@
 											v-bind="controls.PAIS____CNTRYFLAG____.props"
 											v-on="controls.PAIS____CNTRYFLAG____.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PAIS____PSEUDNOVOGR02 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PAIS____PSEUDIMOVEL__.isVisible">
-					<q-control-wrapper
-						v-show="controls.PAIS____PSEUDIMOVEL__.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PAIS____PSEUDIMOVEL__.isVisible">
+					<q-col
+						v-if="controls.PAIS____PSEUDIMOVEL__.isVisible"
+						cols="auto">
 						<q-form-container
+							v-if="controls.PAIS____PSEUDIMOVEL__.isVisible"
 							:ref="controls.PAIS____PSEUDIMOVEL__.id"
 							v-bind="controls.PAIS____PSEUDIMOVEL__"
 							v-on="controls.PAIS____PSEUDIMOVEL__.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PAIS____PSEUDNOVOGR04.isVisible">
-					<q-control-wrapper
-						v-show="controls.PAIS____PSEUDNOVOGR04.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PAIS____PSEUDNOVOGR04.isVisible">
+					<q-col
+						v-if="controls.PAIS____PSEUDNOVOGR04.isVisible"
+						cols="auto">
 						<q-group-box-container
+							v-if="controls.PAIS____PSEUDNOVOGR04.isVisible"
 							id="PAIS____PSEUDNOVOGR04"
 							v-bind="controls.PAIS____PSEUDNOVOGR04"
 							no-border
 							:is-visible="controls.PAIS____PSEUDNOVOGR04.isVisible">
 							<!-- Start PAIS____PSEUDNOVOGR04 -->
-							<q-row-container v-show="controls.PAIS____PSEUDNOVOGR03.isVisible">
-								<q-control-wrapper
-									v-show="controls.PAIS____PSEUDNOVOGR03.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PAIS____PSEUDNOVOGR03.isVisible">
+								<q-col
+									v-if="controls.PAIS____PSEUDNOVOGR03.isVisible"
+									cols="auto">
 									<q-group-box-container
+										v-if="controls.PAIS____PSEUDNOVOGR03.isVisible"
 										id="PAIS____PSEUDNOVOGR03"
 										v-bind="controls.PAIS____PSEUDNOVOGR03"
 										no-border
 										:is-visible="controls.PAIS____PSEUDNOVOGR03.isVisible">
 										<!-- Start PAIS____PSEUDNOVOGR03 -->
-										<q-row-container v-show="controls.PAIS____PSEUDPROPRIE1.isVisible">
-											<q-control-wrapper
-												v-show="controls.PAIS____PSEUDPROPRIE1.isVisible"
-												class="control-join-group">
+										<q-row v-if="controls.PAIS____PSEUDPROPRIE1.isVisible">
+											<q-col
+												v-if="controls.PAIS____PSEUDPROPRIE1.isVisible"
+												cols="auto">
 												<q-table
-													v-show="controls.PAIS____PSEUDPROPRIE1.isVisible"
+													v-if="controls.PAIS____PSEUDPROPRIE1.isVisible"
 													v-bind="controls.PAIS____PSEUDPROPRIE1"
-													v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
+													v-on="controls.PAIS____PSEUDPROPRIE1.handlers">
+													<!-- USE /[MANUAL GQT CUSTOM_TABLE PAIS____PSEUDPROPRIE1]/ -->
+												</q-table>
 												<q-table-extra-extension
+													v-if="controls.PAIS____PSEUDPROPRIE1.isVisible"
 													:list-ctrl="controls.PAIS____PSEUDPROPRIE1"
 													:filter-operators="controls.PAIS____PSEUDPROPRIE1.filterOperators"
 													v-on="controls.PAIS____PSEUDPROPRIE1.handlers" />
-											</q-control-wrapper>
-										</q-row-container>
+											</q-col>
+										</q-row>
 										<!-- End PAIS____PSEUDNOVOGR03 -->
 									</q-group-box-container>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PAIS____PSEUDNOVOGR04 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container v-show="controls.PAIS____PSEUDPROPRIED.isVisible">
-					<q-control-wrapper
-						v-show="controls.PAIS____PSEUDPROPRIED.isVisible"
-						class="control-join-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PAIS____PSEUDPROPRIED.isVisible">
+					<q-col
+						v-if="controls.PAIS____PSEUDPROPRIED.isVisible"
+						cols="auto">
 						<q-table
-							v-show="controls.PAIS____PSEUDPROPRIED.isVisible"
+							v-if="controls.PAIS____PSEUDPROPRIED.isVisible"
 							v-bind="controls.PAIS____PSEUDPROPRIED"
-							v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
+							v-on="controls.PAIS____PSEUDPROPRIED.handlers">
+							<!-- USE /[MANUAL GQT CUSTOM_TABLE PAIS____PSEUDPROPRIED]/ -->
+						</q-table>
 						<q-table-extra-extension
+							v-if="controls.PAIS____PSEUDPROPRIED.isVisible"
 							:list-ctrl="controls.PAIS____PSEUDPROPRIED"
 							:filter-operators="controls.PAIS____PSEUDPROPRIED.filterOperators"
 							v-on="controls.PAIS____PSEUDPROPRIED.handlers" />
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -299,7 +320,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -308,6 +329,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -319,7 +341,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -530,7 +552,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -654,7 +680,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR02',
 						maxLength: 90,
-						labelId: 'label_PAIS____CNTRYCOUNTRY_',
 						controlLimits: [
 						],
 					}, this),
@@ -696,7 +721,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR01',
 						maxLength: 3,
-						labelId: 'label_PAIS____CNTRYCODIGONR',
 						controlLimits: [
 						],
 					}, this),
@@ -711,7 +735,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR01',
 						maxLength: 2,
-						labelId: 'label_PAIS____CNTRYALFA2___',
 						controlLimits: [
 						],
 					}, this),
@@ -726,7 +749,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PAIS____PSEUDNOVOGR01',
 						maxLength: 3,
-						labelId: 'label_PAIS____CNTRYALFA3___',
 						controlLimits: [
 						],
 					}, this),
@@ -813,6 +835,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -823,6 +846,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -839,8 +863,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -965,7 +988,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-PROPR', 'changed-REGIO', 'changed-TPPRO', 'changed-PESSO', 'changed-PAIS1'],
+						globalEvents: ['changed-REGIO', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO', 'changed-CNTRY', 'changed-PAIS1'],
 						uuid: 'Pais_ValProprie1',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -997,6 +1020,7 @@
 								label: computed(() => this.Resources.PROPERTY_NAME18934),
 								dataLength: 85,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -1007,6 +1031,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 3,
@@ -1015,6 +1040,7 @@
 								field: 'ENDERECO',
 								label: computed(() => this.Resources.ADDRESS04342),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -1024,6 +1050,7 @@
 								label: computed(() => this.Resources.LOCALE34521),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 5,
@@ -1033,6 +1060,7 @@
 								label: computed(() => this.Resources.ZIP_CODE56964),
 								dataLength: 20,
 								scrollData: 20,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 6,
@@ -1042,6 +1070,7 @@
 								label: computed(() => this.Resources.POSTAL_LOCATION08708),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.BooleanColumn({
 								order: 7,
@@ -1050,6 +1079,7 @@
 								field: 'MOBILADA',
 								label: computed(() => this.Resources.FURNISHED37431),
 								scrollData: 1,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 8,
@@ -1060,6 +1090,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 9,
@@ -1070,6 +1101,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.NumericColumn({
 								order: 10,
@@ -1080,6 +1112,7 @@
 								scrollData: 6,
 								maxDigits: 6,
 								decimalPlaces: 0,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.DateColumn({
 								order: 11,
@@ -1089,6 +1122,7 @@
 								label: computed(() => this.Resources.AVAILABLE_FROM53703),
 								scrollData: 8,
 								dateTimeType: 'date',
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 12,
@@ -1100,6 +1134,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 13,
@@ -1108,6 +1143,7 @@
 								field: 'DESCRIPT',
 								label: computed(() => this.Resources.DESCRIPTION07383),
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.GeographicColumn({
 								order: 14,
@@ -1119,6 +1155,7 @@
 								scrollData: 30,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
 						config: {
@@ -1134,8 +1171,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: false,
-								searchOnPressEnter: true
+								visibility: false
 							},
 							filtersVisible: false,
 							allowColumnFilters: false,
@@ -1260,7 +1296,7 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-CNTRY', 'changed-PROPR', 'changed-REGIO', 'changed-TPPRO', 'changed-PESSO', 'changed-PAIS1'],
+						globalEvents: ['changed-REGIO', 'changed-PESSO', 'changed-PROPR', 'changed-TPPRO', 'changed-CNTRY', 'changed-PAIS1'],
 						uuid: 'Pais_ValPropried',
 						allSelectedRows: 'false',
 						controlLimits: [
@@ -1420,16 +1456,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1473,16 +1523,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1634,6 +1698,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PAIS]/
 // eslint-disable-next-line

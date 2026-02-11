@@ -38,9 +38,16 @@
 									:label="btn.label"
 									:disabled="btn.disabled"
 									@click="btn.action">
-									<q-icon
-										v-if="btn.icon"
-										v-bind="btn.icon" />
+									<template v-if="btn.icon">
+										<q-badge-indicator
+											v-if="btn.badge && btn.badge.isVisible"
+											:color="btn.badge.color">
+											<q-icon v-bind="btn.icon" />
+										</q-badge-indicator>
+										<q-icon
+											v-else
+											v-bind="btn.icon" />
+									</template>
 								</q-toggle-group-item>
 							</template>
 						</q-toggle-group>
@@ -73,6 +80,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInHeading"
 						:id="`heading-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -86,27 +94,25 @@
 			</q-button-group>
 		</div>
 
-		<div
-			class="form-flow"
+		<q-container
+			fluid
 			data-key="PRODUSIM"
-			:data-loading="!formInitialDataLoaded">
+			:data-loading="!formInitialDataLoaded || !isActiveForm">
 			<template v-if="formControl.initialized && showFormBody">
-				<q-row-container
-					v-show="controls.PRODUSIMPSEUDNOVOGR01.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.PRODUSIMPSEUDNOVOGR01.isVisible"
-						class="row-line-group">
+				<q-row v-if="controls.PRODUSIMPSEUDNOVOGR01.isVisible">
+					<q-col v-if="controls.PRODUSIMPSEUDNOVOGR01.isVisible">
 						<q-group-box-container
+							v-if="controls.PRODUSIMPSEUDNOVOGR01.isVisible"
 							id="PRODUSIMPSEUDNOVOGR01"
 							v-bind="controls.PRODUSIMPSEUDNOVOGR01"
 							:is-visible="controls.PRODUSIMPSEUDNOVOGR01.isVisible">
 							<!-- Start PRODUSIMPSEUDNOVOGR01 -->
-							<q-row-container v-show="controls.PRODUSIMPRODUPRODUCT_.isVisible">
-								<q-control-wrapper
-									v-show="controls.PRODUSIMPRODUPRODUCT_.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PRODUSIMPRODUPRODUCT_.isVisible">
+								<q-col
+									v-if="controls.PRODUSIMPRODUPRODUCT_.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PRODUSIMPRODUPRODUCT_.isVisible"
 										class="i-text"
 										v-bind="controls.PRODUSIMPRODUPRODUCT_"
 										v-on="controls.PRODUSIMPRODUPRODUCT_.handlers"
@@ -118,13 +124,14 @@
 											@blur="onBlur(controls.PRODUSIMPRODUPRODUCT_, model.ValProduct.value)"
 											@change="model.ValProduct.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PRODUSIMPRODUDESCRIPT.isVisible || controls.PRODUSIMPRODUSKU_____.isVisible || controls.PRODUSIMPRODUGTIN____.isVisible">
-								<q-control-wrapper
-									v-show="controls.PRODUSIMPRODUDESCRIPT.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PRODUSIMPRODUDESCRIPT.isVisible || controls.PRODUSIMPRODUSKU_____.isVisible || controls.PRODUSIMPRODUGTIN____.isVisible">
+								<q-col
+									v-if="controls.PRODUSIMPRODUDESCRIPT.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PRODUSIMPRODUDESCRIPT.isVisible"
 										class="i-textarea"
 										v-bind="controls.PRODUSIMPRODUDESCRIPT"
 										v-on="controls.PRODUSIMPRODUDESCRIPT.handlers"
@@ -136,11 +143,12 @@
 											v-bind="controls.PRODUSIMPRODUDESCRIPT.props"
 											v-on="controls.PRODUSIMPRODUDESCRIPT.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PRODUSIMPRODUSKU_____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PRODUSIMPRODUSKU_____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PRODUSIMPRODUSKU_____.isVisible"
 										class="i-text"
 										v-bind="controls.PRODUSIMPRODUSKU_____"
 										v-on="controls.PRODUSIMPRODUSKU_____.handlers"
@@ -152,11 +160,12 @@
 											@blur="onBlur(controls.PRODUSIMPRODUSKU_____, model.ValSku.value)"
 											@change="model.ValSku.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PRODUSIMPRODUGTIN____.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PRODUSIMPRODUGTIN____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PRODUSIMPRODUGTIN____.isVisible"
 										class="i-text"
 										v-bind="controls.PRODUSIMPRODUGTIN____"
 										v-on="controls.PRODUSIMPRODUGTIN____.handlers"
@@ -168,13 +177,14 @@
 											@blur="onBlur(controls.PRODUSIMPRODUGTIN____, model.ValGtin.value)"
 											@change="model.ValGtin.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
-							<q-row-container v-show="controls.PRODUSIMPRODUSIZE____.isVisible || controls.PRODUSIMPRODUWEIGHT__.isVisible">
-								<q-control-wrapper
-									v-show="controls.PRODUSIMPRODUSIZE____.isVisible"
-									class="control-join-group">
+								</q-col>
+							</q-row>
+							<q-row v-if="controls.PRODUSIMPRODUSIZE____.isVisible || controls.PRODUSIMPRODUWEIGHT__.isVisible">
+								<q-col
+									v-if="controls.PRODUSIMPRODUSIZE____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PRODUSIMPRODUSIZE____.isVisible"
 										class="i-text"
 										v-bind="controls.PRODUSIMPRODUSIZE____"
 										v-on="controls.PRODUSIMPRODUSIZE____.handlers"
@@ -186,11 +196,12 @@
 											@blur="onBlur(controls.PRODUSIMPRODUSIZE____, model.ValSize.value)"
 											@change="model.ValSize.fnUpdateValueOnChange" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PRODUSIMPRODUWEIGHT__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PRODUSIMPRODUWEIGHT__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PRODUSIMPRODUWEIGHT__.isVisible"
 										class="i-text"
 										v-bind="controls.PRODUSIMPRODUWEIGHT__"
 										v-on="controls.PRODUSIMPRODUWEIGHT__.handlers"
@@ -202,28 +213,26 @@
 											v-bind="controls.PRODUSIMPRODUWEIGHT__.props"
 											@update:model-value="model.ValWeight.fnUpdateValue" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PRODUSIMPSEUDNOVOGR01 -->
 						</q-group-box-container>
-					</q-control-wrapper>
-				</q-row-container>
-				<q-row-container
-					v-show="controls.PRODUSIMPSEUDNOVOGR02.isVisible"
-					is-large>
-					<q-control-wrapper
-						v-show="controls.PRODUSIMPSEUDNOVOGR02.isVisible"
-						class="row-line-group">
+					</q-col>
+				</q-row>
+				<q-row v-if="controls.PRODUSIMPSEUDNOVOGR02.isVisible">
+					<q-col v-if="controls.PRODUSIMPSEUDNOVOGR02.isVisible">
 						<q-group-collapsible
+							v-if="controls.PRODUSIMPSEUDNOVOGR02.isVisible"
 							id="PRODUSIMPSEUDNOVOGR02"
 							v-bind="controls.PRODUSIMPSEUDNOVOGR02"
 							v-on="controls.PRODUSIMPSEUDNOVOGR02.handlers">
 							<!-- Start PRODUSIMPSEUDNOVOGR02 -->
-							<q-row-container v-show="controls.PRODUSIMLOCATGLN_____.isVisible || controls.PRODUSIMLCEXTGLNEXT__.isVisible">
-								<q-control-wrapper
-									v-show="controls.PRODUSIMLOCATGLN_____.isVisible"
-									class="control-join-group">
+							<q-row v-if="controls.PRODUSIMLOCATGLN_____.isVisible || controls.PRODUSIMLCEXTGLNEXT__.isVisible">
+								<q-col
+									v-if="controls.PRODUSIMLOCATGLN_____.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PRODUSIMLOCATGLN_____.isVisible"
 										class="i-text"
 										v-bind="controls.PRODUSIMLOCATGLN_____"
 										v-on="controls.PRODUSIMLOCATGLN_____.handlers"
@@ -239,11 +248,12 @@
 											v-bind="controls.PRODUSIMLOCATGLN_____.seeMoreParams"
 											v-on="controls.PRODUSIMLOCATGLN_____.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-								<q-control-wrapper
-									v-show="controls.PRODUSIMLCEXTGLNEXT__.isVisible"
-									class="control-join-group">
+								</q-col>
+								<q-col
+									v-if="controls.PRODUSIMLCEXTGLNEXT__.isVisible"
+									cols="auto">
 									<base-input-structure
+										v-if="controls.PRODUSIMLCEXTGLNEXT__.isVisible"
 										class="i-text"
 										v-bind="controls.PRODUSIMLCEXTGLNEXT__"
 										v-on="controls.PRODUSIMLCEXTGLNEXT__.handlers"
@@ -259,14 +269,14 @@
 											v-bind="controls.PRODUSIMLCEXTGLNEXT__.seeMoreParams"
 											v-on="controls.PRODUSIMLCEXTGLNEXT__.handlers" />
 									</base-input-structure>
-								</q-control-wrapper>
-							</q-row-container>
+								</q-col>
+							</q-row>
 							<!-- End PRODUSIMPSEUDNOVOGR02 -->
 						</q-group-collapsible>
-					</q-control-wrapper>
-				</q-row-container>
+					</q-col>
+				</q-row>
 			</template>
-		</div>
+		</q-container>
 	</teleport>
 
 	<hr v-if="!isPopup && showFormFooter" />
@@ -275,7 +285,7 @@
 		v-if="formModalIsReady && showFormFooter"
 		:to="`#${uiContainersId.footer}`"
 		:disabled="!isPopup || isNested">
-		<q-row-container v-if="showFormFooter">
+		<q-row v-if="showFormFooter">
 			<div id="footer-action-btns">
 				<template
 					v-for="btn in formButtons"
@@ -284,6 +294,7 @@
 						v-if="btn.isActive && btn.isVisible && btn.showInFooter"
 						:id="`bottom-${btn.id}`"
 						:label="btn.text"
+						:color="btn.color"
 						:variant="btn.variant"
 						:disabled="btn.disabled"
 						:icon-pos="btn.iconPos"
@@ -295,7 +306,7 @@
 					</q-button>
 				</template>
 			</div>
-		</q-row-container>
+		</q-row>
 	</teleport>
 </template>
 
@@ -508,7 +519,11 @@
 						showInFooter: true,
 						isActive: true,
 						isVisible: computed(() => vm.authData.isAllowed && vm.isEditable),
-						action: vm.saveForm
+						action: vm.saveForm,
+						badge: {
+							isVisible: computed(() => vm.model?.isDirty === true),
+							color: 'highlight'
+						}
 					},
 					confirmBtn: {
 						id: 'confirm-btn',
@@ -633,7 +648,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
 						maxLength: 85,
-						labelId: 'label_PRODUSIMPRODUPRODUCT_',
 						mustBeFilled: true,
 						controlLimits: [
 						],
@@ -664,7 +678,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
 						maxLength: 20,
-						labelId: 'label_PRODUSIMPRODUSKU_____',
 						controlLimits: [
 						],
 					}, this),
@@ -679,7 +692,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
 						maxLength: 14,
-						labelId: 'label_PRODUSIMPRODUGTIN____',
 						controlLimits: [
 						],
 					}, this),
@@ -694,7 +706,6 @@
 						labelPosition: computed(() => this.labelAlignment.topleft),
 						container: 'PRODUSIMPSEUDNOVOGR01',
 						maxLength: 50,
-						labelId: 'label_PRODUSIMPRODUSIZE____',
 						controlLimits: [
 						],
 					}, this),
@@ -720,6 +731,7 @@
 						label: computed(() => this.Resources.LOCATION54790),
 						placeholder: '',
 						labelPosition: computed(() => this.labelAlignment.topleft),
+						startsExpanded: false,
 						isCollapsible: true,
 						anchored: false,
 						directChildren: ['PRODUSIMLOCATGLN_____', 'PRODUSIMLCEXTGLNEXT__'],
@@ -950,16 +962,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets(true)
+				const ticketsPromise = this.model.updateFilesTickets(true)
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					applyForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					applyForm = await changesPromise
 
 					if (applyForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						applyForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1003,16 +1029,30 @@
 				for (const trigger of triggers)
 					await formFunctions.executeTriggerAction(trigger)
 
-				const canSetDocums = await this.model.updateFilesTickets()
+				const ticketsPromise = this.model.updateFilesTickets()
+				this.addBusy(ticketsPromise, this.Resources[hardcodedTexts.processing])
+				const canSetDocums = await ticketsPromise
 
 				if (canSetDocums)
 				{
-					saveForm = await this.model.setDocumentChanges()
+					let results
+					const changesPromise = this.model.setDocumentChanges()
+					this.addBusy(changesPromise, this.Resources[hardcodedTexts.processing])
+					saveForm = await changesPromise
 
 					if (saveForm)
 					{
-						const results = await this.model.saveDocuments()
+						const insertsPromise = this.model.saveDocuments()
+						this.addBusy(insertsPromise, this.Resources[hardcodedTexts.processing])
+						results = await insertsPromise
 						saveForm = results.every((e) => e === true)
+					}
+
+					if (!changesPromise || (results && !results.every((e) => e === true)))
+					{
+						this.validationErrors = {
+							Erro: this.Resources.OCORREU_UM_ERRO_AO_T51884
+						}
 					}
 				}
 
@@ -1164,6 +1204,7 @@
 
 				this.afterControlUpdate(controlField, fieldValue)
 			},
+
 /* eslint-disable indent, vue/html-indent, vue/script-indent */
 // USE /[MANUAL GQT FUNCTIONS_JS PRODUSIM]/
 // eslint-disable-next-line

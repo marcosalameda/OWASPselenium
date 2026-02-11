@@ -10,6 +10,7 @@
 				<q-table
 					v-bind="controls.menu"
 					v-on="controls.menu.handlers">
+					<!-- USE /[MANUAL GQT CUSTOM_TABLE TRN_Menu_T02PROPERTY]/ -->
 				</q-table>
 
 				<q-table-extra-extension
@@ -153,6 +154,7 @@
 								label: computed(() => this.Resources.TITLE21885),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.CurrencyColumn({
 								order: 2,
@@ -163,6 +165,7 @@
 								scrollData: 12,
 								maxDigits: 9,
 								decimalPlaces: 2,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.ImageColumn({
 								order: 3,
@@ -174,6 +177,7 @@
 								scrollData: 3,
 								sortable: false,
 								searchable: false,
+								export: 1,
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 							new listColumnTypes.TextColumn({
 								order: 4,
@@ -183,6 +187,7 @@
 								label: computed(() => this.Resources.NAME31974),
 								dataLength: 50,
 								scrollData: 30,
+								export: 1,
 								pkColumn: 'ValCodagent',
 							}, computed(() => vm.model), computed(() => vm.internalEvents)),
 						],
@@ -199,8 +204,7 @@
 							permissions: {
 							},
 							searchBarConfig: {
-								visibility: true,
-								searchOnPressEnter: true
+								visibility: true
 							},
 							filtersVisible: true,
 							allowColumnFilters: true,
@@ -301,6 +305,7 @@
 							rowClickAction: {
 								id: 'RCA_TRN_12211',
 								name: 'form-PROPE01',
+								isVisible: true,
 								params: {
 									isRoute: true,
 									limits: [
@@ -326,10 +331,11 @@
 								sortOrder: 'asc'
 							}
 						},
-						globalEvents: ['changed-PROPE', 'changed-CITY', 'changed-AGENT'],
+						globalEvents: ['changed-CITY', 'changed-AGENT', 'changed-PROPE'],
 						uuid: '755a71ec-5c0f-4abb-870b-abff608a8d4f',
 						allSelectedRows: 'false',
 						headerLevel: 1,
+						isActiveControl: computed(() => this.isActiveMenu)
 					}, this),
 				}
 			}

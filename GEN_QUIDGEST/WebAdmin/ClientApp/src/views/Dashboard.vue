@@ -70,7 +70,7 @@
 					</dl>
 					<dl class="row">
 						<dt>{{ Resources.VERSAO_DE_SISTEMA07287 }}</dt>
-						<dd>3059</dd>
+						<dd>3060</dd>
 						<dt>{{ Resources.VERSAO_DE_BASE_DE_DA46937 }}</dt>
 						<dd>{{ Model.VersionDbGen }}</dd>
 						<dt>{{ Resources.APP_MIGRATION_VERSIO41495 }}</dt>
@@ -80,7 +80,7 @@
 						<dt>{{ Resources.VERSAO_DE_GENIO44840 }}</dt>
 						<dd>376.6</dd>
 						<dt>{{ Resources.GERADO_EM27272 }}</dt>
-						<dd>02/26/2026</dd>
+						<dd>02/27/2026</dd>
 					</dl>
 					<dl class="row">
 						<span class="app-brand">
